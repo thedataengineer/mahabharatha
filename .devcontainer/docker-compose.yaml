@@ -51,6 +51,29 @@ services:
     profiles:
       - with-redis
 
+  # Worker service template (used by ContainerLauncher)
+  zerg-worker:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ${ZERG_WORKTREE_PATH:-./workspace}:/workspace
+      - ${HOME}/.claude:/home/claude/.claude:ro
+    environment:
+      - ZERG_WORKER_ID=${ZERG_WORKER_ID:-default}
+      - ZERG_TASK_ID=${ZERG_TASK_ID:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    working_dir: /workspace
+    networks:
+      - zerg-internal
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2.0'
+    profiles:
+      - worker
+
 volumes:
   zerg-claude-tasks:
     name: zerg-claude-tasks-${ZERG_FEATURE:-default}
@@ -63,3 +86,6 @@ networks:
   factory-network:
     driver: bridge
     name: factory-network-${ZERG_FEATURE:-default}
+  zerg-internal:
+    driver: bridge
+    internal: true
