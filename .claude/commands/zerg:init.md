@@ -13,6 +13,9 @@ zerg init --no-security-rules
 
 # Initialize with specific settings
 zerg init --workers 3 --security strict
+
+# Initialize and build devcontainer image
+zerg init --with-containers
 ```
 
 ## Pre-Flight Checks

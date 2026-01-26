@@ -40,6 +40,11 @@ PROJECT_PATTERNS = {
     default=True,
     help="Fetch secure coding rules from TikiTribe/claude-secure-coding-rules",
 )
+@click.option(
+    "--with-containers/--no-containers",
+    default=False,
+    help="Build devcontainer image after creating files",
+)
 @click.option("--force", is_flag=True, help="Overwrite existing configuration")
 @click.pass_context
 def init(
@@ -48,6 +53,7 @@ def init(
     workers: int,
     security: str,
     with_security_rules: bool,
+    with_containers: bool,
     force: bool,
 ) -> None:
     """Initialize ZERG for the current project.
@@ -107,8 +113,17 @@ def init(
             except Exception as e:
                 console.print(f"  [yellow]⚠[/yellow] Could not fetch security rules: {e}")
 
+        # Build devcontainer if requested
+        container_built = False
+        if with_containers:
+            console.print("\n[bold]Building devcontainer...[/bold]")
+            container_built = build_devcontainer()
+
         # Show summary
-        show_summary(workers, security, project_type, security_rules_result)
+        show_summary(
+            workers, security, project_type, security_rules_result,
+            container_built=container_built,
+        )
 
         console.print("\n[green]✓[/green] ZERG initialized successfully!")
         console.print("\nNext steps:")
@@ -351,11 +366,125 @@ def create_devcontainer(project_type: str | None, security: str) -> None:
     console.print(f"  [green]✓[/green] Created {devcontainer_path}")
 
 
+def build_devcontainer() -> bool:
+    """Build the devcontainer image.
+
+    Returns:
+        True if build succeeded
+    """
+    import subprocess
+
+    devcontainer_dir = Path(".devcontainer")
+    if not devcontainer_dir.exists():
+        console.print("  [red]✗[/red] No .devcontainer directory found")
+        return False
+
+    # Check if Docker is available
+    try:
+        result = subprocess.run(
+            ["docker", "info"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        if result.returncode != 0:
+            console.print("  [red]✗[/red] Docker is not running")
+            console.print("  [dim]Start Docker and try again[/dim]")
+            return False
+    except FileNotFoundError:
+        console.print("  [red]✗[/red] Docker not found")
+        console.print("  [dim]Install Docker to use container mode[/dim]")
+        return False
+    except subprocess.TimeoutExpired:
+        console.print("  [red]✗[/red] Docker not responding")
+        return False
+
+    # Check for devcontainer CLI
+    devcontainer_cli = None
+    try:
+        result = subprocess.run(
+            ["devcontainer", "--version"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        if result.returncode == 0:
+            devcontainer_cli = "devcontainer"
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        pass
+
+    # Build using devcontainer CLI if available
+    if devcontainer_cli:
+        console.print("  [dim]Using devcontainer CLI...[/dim]")
+        try:
+            result = subprocess.run(
+                ["devcontainer", "build", "--workspace-folder", "."],
+                capture_output=True,
+                text=True,
+                timeout=600,  # 10 minutes
+            )
+            if result.returncode == 0:
+                console.print("  [green]✓[/green] Devcontainer built successfully")
+                return True
+            else:
+                console.print(f"  [red]✗[/red] Build failed: {result.stderr[:200]}")
+                return False
+        except subprocess.TimeoutExpired:
+            console.print("  [red]✗[/red] Build timed out (10 min)")
+            return False
+
+    # Fall back to docker-compose if available
+    compose_file = devcontainer_dir / "docker-compose.yaml"
+    if compose_file.exists():
+        console.print("  [dim]Using docker-compose...[/dim]")
+        try:
+            result = subprocess.run(
+                ["docker", "compose", "-f", str(compose_file), "build"],
+                capture_output=True,
+                text=True,
+                timeout=600,
+            )
+            if result.returncode == 0:
+                console.print("  [green]✓[/green] Container image built successfully")
+                return True
+            else:
+                console.print(f"  [red]✗[/red] Build failed: {result.stderr[:200]}")
+                return False
+        except subprocess.TimeoutExpired:
+            console.print("  [red]✗[/red] Build timed out (10 min)")
+            return False
+
+    # Fall back to plain docker build
+    dockerfile = devcontainer_dir / "Dockerfile"
+    if dockerfile.exists():
+        console.print("  [dim]Using docker build...[/dim]")
+        try:
+            result = subprocess.run(
+                ["docker", "build", "-t", "zerg-worker", "-f", str(dockerfile), "."],
+                capture_output=True,
+                text=True,
+                timeout=600,
+            )
+            if result.returncode == 0:
+                console.print("  [green]✓[/green] Docker image built successfully")
+                return True
+            else:
+                console.print(f"  [red]✗[/red] Build failed: {result.stderr[:200]}")
+                return False
+        except subprocess.TimeoutExpired:
+            console.print("  [red]✗[/red] Build timed out (10 min)")
+            return False
+
+    console.print("  [yellow]⚠[/yellow] No Dockerfile found to build")
+    return False
+
+
 def show_summary(
     workers: int,
     security: str,
     project_type: str | None,
     security_rules_result: dict | None = None,
+    container_built: bool = False,
 ) -> None:
     """Show initialization summary.
 
@@ -364,6 +493,7 @@ def show_summary(
         security: Security level
         project_type: Project type
         security_rules_result: Results from security rules integration
+        container_built: Whether container was built
     """
     table = Table(title="ZERG Configuration", show_header=False)
     table.add_column("Setting", style="cyan")
@@ -374,6 +504,8 @@ def show_summary(
     table.add_row("Security Level", security)
     table.add_row("Config Location", ".zerg/config.yaml")
     table.add_row("Devcontainer", ".devcontainer/devcontainer.json")
+    if container_built:
+        table.add_row("Container Image", "[green]Built[/green]")
 
     if security_rules_result:
         stack = security_rules_result.get("stack", {})
