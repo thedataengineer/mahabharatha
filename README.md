@@ -88,13 +88,27 @@ zerg status --watch
 
 In Claude Code, use slash commands:
 
-```
-/zerg:init                    # Initialize project
-/zerg:plan user-auth          # Plan feature
-/zerg:design                  # Design architecture
-/zerg:rush --workers=5        # Launch workers
-/zerg:status                  # Monitor progress
-```
+| Command | Description |
+|---------|-------------|
+| `/zerg:init` | Initialize ZERG for the project |
+| `/zerg:plan <feature>` | Capture feature requirements |
+| `/zerg:design` | Generate architecture and task graph |
+| `/zerg:rush` | Launch parallel worker execution |
+| `/zerg:status` | Show execution progress |
+| `/zerg:stop` | Stop workers gracefully or forcefully |
+| `/zerg:logs` | Stream worker logs |
+| `/zerg:worker` | Enter worker execution mode (internal) |
+| `/zerg:retry` | Retry failed or blocked tasks |
+| `/zerg:merge` | Merge completed level branches |
+| `/zerg:cleanup` | Remove ZERG artifacts |
+| `/zerg:test` | Run tests with coverage |
+| `/zerg:build` | Build with error recovery |
+| `/zerg:analyze` | Static analysis and metrics |
+| `/zerg:review` | Two-stage code review |
+| `/zerg:troubleshoot` | Debug with root cause analysis |
+| `/zerg:refactor` | Automated code improvement |
+| `/zerg:git` | Git operations and workflow |
+| `/zerg:security` | Security rules management |
 
 ---
 
