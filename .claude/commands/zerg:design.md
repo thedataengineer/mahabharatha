@@ -146,7 +146,7 @@ Generate `task-graph.json` for the orchestrator:
 ```json
 {
   "feature": "{feature}",
-  "version": "1.0",
+  "version": "2.0",
   "generated": "{timestamp}",
   "total_tasks": {N},
   "estimated_duration_minutes": {N},
@@ -490,14 +490,14 @@ Reply with:
 - File ownership is exclusive (no conflicts)
 - User has explicitly approved
 
-## Task Graph JSON Schema
+## Task Graph JSON Schema (v2.0)
 
-The task-graph.json must conform to this schema:
+The task-graph.json must conform to the v2.0 schema:
 
 ```json
 {
   "feature": "string (required) - feature name",
-  "version": "string (required) - schema version, use 1.0",
+  "version": "string (required) - schema version, use 2.0",
   "generated": "string (required) - ISO timestamp",
   "total_tasks": "number (required) - count of tasks",
   "estimated_duration_minutes": "number (required) - total minutes",
@@ -517,13 +517,14 @@ The task-graph.json must conform to this schema:
         "modify": ["files to modify"],
         "read": ["files to read only"]
       },
+      "acceptance_criteria": ["array (required) - list of criteria for task completion"],
       "verification": {
         "command": "string (required) - command to verify completion",
         "timeout_seconds": "number (default: 60)"
       },
-      "estimate_minutes": "number (required) - time estimate",
+      "estimate_minutes": "number (optional) - time estimate",
       "critical_path": "boolean (optional) - true if on critical path",
-      "skills_required": ["optional skill tags"]
+      "agents_required": ["optional agent types: coder, reviewer, tester"]
     }
   ],
 
@@ -545,6 +546,59 @@ The task-graph.json must conform to this schema:
 2. **Exclusive Modify**: Each file can only be modified by ONE task per level
 3. **Read is Shared**: Multiple tasks can read the same file
 4. **Level Boundaries**: A file modified in level N cannot be modified again until level N+1
+
+## File Ownership Validation (v2.0)
+
+Before finalizing the task graph, validate file ownership:
+
+```bash
+# Validate using Python task_graph module
+cd .zerg && python -c "
+from task_graph import TaskGraph
+import json
+
+graph = TaskGraph.from_file('../.gsd/specs/FEATURE/task-graph.json')
+
+# Check for file ownership conflicts
+conflicts = graph.validate_file_ownership()
+if conflicts:
+    print('FILE OWNERSHIP CONFLICTS:')
+    for conflict in conflicts:
+        print(f'  - {conflict}')
+    exit(1)
+
+print('OK: No file ownership conflicts')
+print(f'Tasks: {len(graph.tasks)}')
+print(f'Levels: {len(graph.get_levels())}')
+"
+```
+
+### Conflict Types
+
+| Conflict | Description | Resolution |
+|----------|-------------|------------|
+| Create-Create | Two tasks create same file | Merge into one task or split file |
+| Create-Modify | Task A creates, Task B modifies at same level | Move modify to next level |
+| Modify-Modify | Two tasks modify same file at same level | Merge tasks or sequence them |
+
+### Validation Output
+
+```
+FILE OWNERSHIP VALIDATION
+═════════════════════════
+
+Files to Create: 8
+Files to Modify: 3
+Files Read-Only: 12
+
+Ownership Matrix:
+  src/auth/types.ts     → TASK-001 (create)
+  src/auth/service.ts   → TASK-003 (create)
+  src/auth/routes.ts    → TASK-005 (create)
+  src/db/schema/user.ts → TASK-002 (create)
+
+Conflicts: NONE ✓
+```
 
 ## Level Criteria
 
