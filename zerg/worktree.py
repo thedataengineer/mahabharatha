@@ -190,9 +190,9 @@ class WorktreeManager:
         # Create parent directory
         path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Remove if already exists
+        # Remove if already exists (force to handle dirty worktrees)
         if self.exists(path):
-            self.delete(path)
+            self.delete(path, force=True)
 
         # Create branch if it doesn't exist
         result = self._run_git("branch", "--list", branch, check=False)

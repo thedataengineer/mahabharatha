@@ -27,7 +27,7 @@ class StateManager:
         self.feature = feature
         self.state_dir = Path(state_dir or STATE_DIR)
         self._state_file = self.state_dir / f"{feature}.json"
-        self._lock = threading.Lock()
+        self._lock = threading.RLock()  # Reentrant lock for nested calls
         self._state: dict[str, Any] = {}
         self._ensure_dir()
 

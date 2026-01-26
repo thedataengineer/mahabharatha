@@ -360,13 +360,7 @@ class TestAutoDetectLauncherMode:
 
     def test_auto_detect_no_devcontainer(self, tmp_path: Path) -> None:
         """Test auto-detect when no devcontainer exists."""
-        from zerg.launcher import LauncherType
-        from zerg.config import ZergConfig
-
-        # Create minimal config
-        config = ZergConfig.load()
-
-        # Mock orchestrator's auto-detect logic
+        # Test that without a devcontainer, subprocess mode is selected
         devcontainer_path = tmp_path / ".devcontainer" / "devcontainer.json"
 
         # No devcontainer = subprocess mode
