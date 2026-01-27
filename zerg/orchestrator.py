@@ -21,6 +21,7 @@ from zerg.launcher import (
 from zerg.levels import LevelController
 from zerg.logging import get_logger
 from zerg.merge import MergeCoordinator, MergeFlowResult
+from zerg.metrics import MetricsCollector, duration_ms
 from zerg.parser import TaskParser
 from zerg.ports import PortAllocator
 from zerg.state import StateManager
@@ -262,9 +263,18 @@ class Orchestrator:
         """Get current orchestration status.
 
         Returns:
-            Status dictionary
+            Status dictionary with metrics
         """
         level_status = self.levels.get_status()
+
+        # Compute fresh metrics
+        try:
+            collector = MetricsCollector(self.state)
+            metrics = collector.compute_feature_metrics()
+            metrics_dict = metrics.to_dict()
+        except Exception as e:
+            logger.warning(f"Failed to compute metrics for status: {e}")
+            metrics_dict = None
 
         return {
             "feature": self.feature,
@@ -287,6 +297,7 @@ class Orchestrator:
             },
             "levels": level_status["levels"],
             "is_complete": level_status["is_complete"],
+            "metrics": metrics_dict,
         }
 
     def _main_loop(self) -> None:
@@ -378,6 +389,19 @@ class Orchestrator:
                 "level": level,
                 "merge_commit": merge_result.merge_commit,
             })
+
+            # Compute and store metrics
+            try:
+                collector = MetricsCollector(self.state)
+                metrics = collector.compute_feature_metrics()
+                self.state.store_metrics(metrics)
+                logger.info(
+                    f"Level {level} metrics: "
+                    f"{metrics.tasks_completed}/{metrics.tasks_total} tasks, "
+                    f"{metrics.total_duration_ms}ms total"
+                )
+            except Exception as e:
+                logger.warning(f"Failed to compute metrics: {e}")
 
             # Rebase worker branches onto merged base
             self._rebase_all_workers(level)
@@ -570,7 +594,15 @@ class Orchestrator:
                 status = self.launcher.monitor(worker_id)
 
                 if status in (WorkerStatus.RUNNING, WorkerStatus.READY, WorkerStatus.IDLE):
-                    # Worker is ready
+                    # Worker is ready - record ready_at if not already recorded
+                    if worker.ready_at is None:
+                        worker.ready_at = datetime.now()
+                        self.state.set_worker_ready(worker_id)
+                        self.state.append_event("worker_ready", {
+                            "worker_id": worker_id,
+                            "worktree": worker.worktree_path,
+                            "branch": worker.branch,
+                        })
                     worker.status = status
                     continue
                 elif status in (WorkerStatus.CRASHED, WorkerStatus.STOPPED):
@@ -755,6 +787,15 @@ class Orchestrator:
             if task:
                 verification = task.get("verification", {})
                 if verification.get("command"):
+                    # Compute and record task duration before marking complete
+                    task_id = worker.current_task
+                    task_state = self.state._state.get("tasks", {}).get(task_id, {})
+                    started_at = task_state.get("started_at")
+                    if started_at:
+                        task_duration = duration_ms(started_at, datetime.now())
+                        if task_duration:
+                            self.state.record_task_duration(task_id, task_duration)
+
                     # Task should have been verified by worker
                     self.levels.mark_task_complete(worker.current_task)
                     self.state.set_task_status(worker.current_task, TaskStatus.COMPLETE)
