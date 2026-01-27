@@ -1,6 +1,7 @@
 """Tests for zerg.git_ops module."""
 
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -155,6 +156,14 @@ class TestGitOps:
         with pytest.raises(MergeConflict):
             ops.merge("conflict")
 
+    def test_merge_reraises_git_error_on_non_conflict_failure(self, tmp_repo: Path) -> None:
+        """Test that merge re-raises GitError when failure is not a conflict."""
+        ops = GitOps(tmp_repo)
+
+        # Try to merge a non-existent branch
+        with pytest.raises(GitError):
+            ops.merge("nonexistent-branch")
+
     def test_create_staging_branch(self, tmp_repo: Path) -> None:
         """Test creating staging branch."""
         ops = GitOps(tmp_repo)
@@ -163,6 +172,29 @@ class TestGitOps:
 
         assert staging == "zerg/test-feature/staging"
         assert ops.branch_exists(staging)
+
+    def test_create_staging_branch_deletes_existing(self, tmp_repo: Path) -> None:
+        """Test that creating staging branch deletes existing one first."""
+        ops = GitOps(tmp_repo)
+        base = ops.current_branch()
+
+        # Create staging branch first time
+        staging = ops.create_staging_branch("dup-feature", base=base)
+        assert ops.branch_exists(staging)
+
+        # Make a commit on base so we can tell the difference
+        (tmp_repo / "new-file.txt").write_text("content")
+        ops.commit("New commit", add_all=True)
+        new_commit = ops.current_commit()
+
+        # Create staging branch again - should be recreated from new base
+        staging2 = ops.create_staging_branch("dup-feature", base=base)
+        assert staging2 == staging
+        assert ops.branch_exists(staging)
+
+        # Verify staging now has the new commit
+        ops.checkout(staging)
+        assert ops.current_commit() == new_commit
 
     def test_list_branches(self, tmp_repo: Path) -> None:
         """Test listing branches."""
@@ -185,6 +217,14 @@ class TestGitOps:
 
         assert len(branches) == 2
         assert all("worker-" in b.name for b in branches)
+
+    def test_list_branches_empty_result(self, tmp_repo: Path) -> None:
+        """Test listing branches with pattern that matches nothing."""
+        ops = GitOps(tmp_repo)
+
+        branches = ops.list_branches("nonexistent-*")
+
+        assert not branches
 
     def test_list_worker_branches(self, tmp_repo: Path) -> None:
         """Test listing worker branches for feature."""
@@ -240,6 +280,106 @@ class TestGitOps:
         stashed = ops.stash()
 
         assert stashed is False
+
+    def test_has_conflicts(self, tmp_repo: Path) -> None:
+        """Test has_conflicts returns False when no conflicts."""
+        ops = GitOps(tmp_repo)
+
+        assert ops.has_conflicts() is False
+
+    def test_get_conflicting_files(self, tmp_repo: Path) -> None:
+        """Test get_conflicting_files returns empty list when no conflicts."""
+        ops = GitOps(tmp_repo)
+
+        files = ops.get_conflicting_files()
+
+        assert not files
+
+    def test_rebase(self, tmp_repo: Path) -> None:
+        """Test rebasing current branch onto another."""
+        ops = GitOps(tmp_repo)
+        original = ops.current_branch()
+
+        # Create feature branch from current position
+        ops.create_branch("feature-rebase")
+
+        # Add a commit on main
+        (tmp_repo / "main-file.txt").write_text("main content")
+        ops.commit("Main commit", add_all=True)
+
+        # Switch to feature, add a commit
+        ops.checkout("feature-rebase")
+        (tmp_repo / "feature-file.txt").write_text("feature content")
+        ops.commit("Feature commit", add_all=True)
+
+        # Rebase onto main
+        ops.rebase(original)
+
+        # Feature branch should now have both commits
+        assert (tmp_repo / "main-file.txt").exists()
+        assert (tmp_repo / "feature-file.txt").exists()
+
+    def test_rebase_conflict(self, tmp_repo: Path) -> None:
+        """Test rebase with conflict raises MergeConflict."""
+        ops = GitOps(tmp_repo)
+        original = ops.current_branch()
+
+        # Create feature branch
+        ops.create_branch("conflict-rebase")
+
+        # Add conflicting change on main
+        (tmp_repo / "README.md").write_text("main rebase content")
+        ops.commit("Main rebase change", add_all=True)
+
+        # Switch to feature, add conflicting change
+        ops.checkout("conflict-rebase")
+        (tmp_repo / "README.md").write_text("feature rebase content")
+        ops.commit("Feature rebase change", add_all=True)
+
+        # Rebase should raise MergeConflict
+        with pytest.raises(MergeConflict) as exc_info:
+            ops.rebase(original)
+
+        assert "rebase" in exc_info.value.message.lower() or "conflict" in exc_info.value.message.lower()
+
+    def test_abort_rebase(self, tmp_repo: Path) -> None:
+        """Test aborting a rebase does not raise error even without active rebase."""
+        ops = GitOps(tmp_repo)
+
+        # Should not raise even if no rebase is in progress
+        ops.abort_rebase()
+
+    def test_fetch(self, tmp_repo: Path) -> None:
+        """Test fetch command."""
+        ops = GitOps(tmp_repo)
+
+        # Fetch without remote will fail, but we test the method paths
+        with pytest.raises(GitError):
+            ops.fetch("origin")
+
+    def test_fetch_with_branch(self, tmp_repo: Path) -> None:
+        """Test fetch with specific branch."""
+        ops = GitOps(tmp_repo)
+
+        # Fetch with branch arg should also fail without remote
+        with pytest.raises(GitError):
+            ops.fetch("origin", "main")
+
+    def test_push(self, tmp_repo: Path) -> None:
+        """Test push command."""
+        ops = GitOps(tmp_repo)
+
+        # Push without remote will fail
+        with pytest.raises(GitError):
+            ops.push("origin")
+
+    def test_push_with_options(self, tmp_repo: Path) -> None:
+        """Test push with various options."""
+        ops = GitOps(tmp_repo)
+
+        # Test that push command is constructed with options
+        with pytest.raises(GitError):
+            ops.push("origin", branch="main", force=True, set_upstream=True)
 
 
 class TestBranchInfo:

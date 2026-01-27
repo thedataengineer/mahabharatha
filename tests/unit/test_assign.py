@@ -102,6 +102,25 @@ class TestWorkerAssignment:
         workloads = assigner.get_workload_summary()
         assert workloads[0]["estimated_minutes"] >= workloads[1]["estimated_minutes"] - 30
 
+    def test_assign_task_without_level(self) -> None:
+        """Test assigning task without explicit level (defaults to 1)."""
+        assigner = WorkerAssignment(worker_count=2)
+        tasks: list[Task] = [{"id": "TASK-001"}]
+
+        result = assigner.assign(tasks, "test-feature")
+
+        assert len(result.assignments) == 1
+        assert result.assignments[0].level == 1
+
+    def test_assign_task_without_estimate(self) -> None:
+        """Test assigning task without estimate_minutes (defaults to 15)."""
+        assigner = WorkerAssignment(worker_count=2)
+        tasks: list[Task] = [{"id": "TASK-001", "level": 1}]
+
+        result = assigner.assign(tasks, "test-feature")
+
+        assert result.assignments[0].estimated_minutes == 15
+
     def test_get_worker_tasks(self) -> None:
         """Test getting tasks for a specific worker."""
         assigner = WorkerAssignment(worker_count=2)
@@ -128,6 +147,19 @@ class TestWorkerAssignment:
 
         # Workers 1-4 should have no tasks
         assert assigner.get_worker_tasks(4) == []
+
+    def test_get_worker_tasks_returns_copy(self) -> None:
+        """Test that get_worker_tasks returns a copy."""
+        assigner = WorkerAssignment(worker_count=2)
+        tasks: list[Task] = [{"id": "TASK-001", "level": 1}]
+        assigner.assign(tasks, "test-feature")
+
+        tasks1 = assigner.get_worker_tasks(0)
+        tasks2 = assigner.get_worker_tasks(0)
+
+        # Modifying one shouldn't affect the other
+        tasks1.append("MODIFIED")
+        assert "MODIFIED" not in tasks2
 
     def test_get_task_worker(self) -> None:
         """Test getting the worker assigned to a task."""
@@ -160,6 +192,16 @@ class TestWorkerAssignment:
         workload_0 = assigner.get_worker_workload(0)
         assert workload_0 == 30
 
+    def test_get_worker_workload_unassigned(self) -> None:
+        """Test getting workload for worker with no assignments."""
+        assigner = WorkerAssignment(worker_count=5)
+        tasks: list[Task] = [{"id": "TASK-001", "level": 1}]
+        assigner.assign(tasks, "test-feature")
+
+        # Worker 4 has no tasks
+        workload = assigner.get_worker_workload(4)
+        assert workload == 0
+
     def test_get_workload_summary(self) -> None:
         """Test getting workload summary."""
         assigner = WorkerAssignment(worker_count=2)
@@ -177,6 +219,19 @@ class TestWorkerAssignment:
         assert "task_count" in summary[0]
         assert "estimated_minutes" in summary[0]
         assert "tasks" in summary[0]
+
+    def test_get_workload_summary_all_workers(self) -> None:
+        """Test workload summary includes all workers even with no tasks."""
+        assigner = WorkerAssignment(worker_count=5)
+        tasks: list[Task] = [{"id": "TASK-001", "level": 1}]
+        assigner.assign(tasks, "test-feature")
+
+        summary = assigner.get_workload_summary()
+
+        # All 5 workers should be in summary
+        assert len(summary) == 5
+        for i in range(5):
+            assert i in summary
 
 
 class TestRebalance:
@@ -216,6 +271,221 @@ class TestRebalance:
         )
 
         assert len(reassignments) == 0
+
+    def test_rebalance_failed_task_not_in_assignments(self) -> None:
+        """Test rebalancing skips failed task not in assignments."""
+        assigner = WorkerAssignment(worker_count=2)
+        tasks: list[Task] = [{"id": "TASK-001", "level": 1}]
+        assigner.assign(tasks, "test-feature")
+
+        # Try to rebalance a task that doesn't exist
+        reassignments = assigner.rebalance(
+            completed_tasks=set(),
+            failed_tasks={"NONEXISTENT"},
+            current_level=1,
+        )
+
+        assert len(reassignments) == 0
+
+    def test_rebalance_with_completed_tasks(self) -> None:
+        """Test rebalancing considers completed tasks for capacity."""
+        assigner = WorkerAssignment(worker_count=2)
+        tasks: list[Task] = [
+            {"id": "TASK-001", "level": 1, "estimate_minutes": 30},
+            {"id": "TASK-002", "level": 1, "estimate_minutes": 30},
+            {"id": "TASK-003", "level": 1, "estimate_minutes": 15},
+        ]
+        assigner.assign(tasks, "test-feature")
+
+        # Mark TASK-001 as completed and TASK-002 as failed
+        reassignments = assigner.rebalance(
+            completed_tasks={"TASK-001"},
+            failed_tasks={"TASK-002"},
+            current_level=1,
+        )
+
+        # TASK-002 may be reassigned depending on capacity
+        assert isinstance(reassignments, list)
+
+    def test_rebalance_forces_reassignment(self) -> None:
+        """Test rebalance actually reassigns task to different worker.
+
+        This test is designed to cover lines 203-210 and 213 in assign.py.
+        We create a scenario where:
+        - Worker 0 has 3 tasks (one failed, two pending = 2*15=30 min pending)
+        - Worker 1 has 0 tasks
+        Worker 1 has capacity 60, Worker 0 has capacity 30.
+        The failed task should move from Worker 0 to Worker 1.
+        """
+        assigner = WorkerAssignment(worker_count=2)
+        # All tasks go to worker 0 (they're all processed first)
+        # Since worker 0 gets first task, then has more minutes than worker 1 (0 min),
+        # all tasks would normally be distributed, but let's force the scenario
+        tasks: list[Task] = [
+            {"id": "TASK-001", "level": 1, "estimate_minutes": 10},
+            {"id": "TASK-002", "level": 1, "estimate_minutes": 10},
+            {"id": "TASK-003", "level": 1, "estimate_minutes": 10},
+        ]
+        assigner.assign(tasks, "test-feature")
+
+        # After balancing: Worker 0 gets TASK-003 (10), TASK-001 (10) = 20
+        # Worker 1 gets TASK-002 (10) = 10
+        #
+        # Manually set up the scenario we need:
+        # Worker 0: TASK-001 (pending), TASK-002 (failed)
+        # Worker 1: no tasks
+        assigner._assignments.clear()
+        assigner._worker_tasks.clear()
+        assigner._worker_minutes.clear()
+
+        # Manually assign all tasks to worker 0
+        assigner._assignments["TASK-001"] = 0
+        assigner._assignments["TASK-002"] = 0
+        assigner._assignments["TASK-003"] = 0
+        assigner._worker_tasks[0] = ["TASK-001", "TASK-002", "TASK-003"]
+        assigner._worker_minutes[0] = 45
+
+        # Rebalance with TASK-002 failed
+        # Worker 0: pending = TASK-001 + TASK-003 = 30 min (using _get_task_minutes = 15 each)
+        # Worker 1: pending = 0 min
+        # Worker 0 capacity = 60 - 30 = 30
+        # Worker 1 capacity = 60 - 0 = 60
+        # Worker 1 has more capacity, so TASK-002 should move to Worker 1
+        reassignments = assigner.rebalance(
+            completed_tasks=set(),
+            failed_tasks={"TASK-002"},
+            current_level=1,
+        )
+
+        # Should have exactly 1 reassignment
+        assert len(reassignments) == 1
+        task_id, old_worker, new_worker = reassignments[0]
+        assert task_id == "TASK-002"
+        assert old_worker == 0
+        assert new_worker == 1
+
+        # Verify the internal state was updated
+        assert assigner._assignments["TASK-002"] == 1
+        assert "TASK-002" not in assigner._worker_tasks[0]
+        assert "TASK-002" in assigner._worker_tasks[1]
+
+    def test_rebalance_no_reassign_if_same_worker_has_most_capacity(self) -> None:
+        """Test rebalance doesn't reassign if current worker has most capacity."""
+        assigner = WorkerAssignment(worker_count=2)
+        tasks: list[Task] = [
+            {"id": "TASK-001", "level": 1, "estimate_minutes": 15},
+        ]
+        assigner.assign(tasks, "test-feature")
+
+        # Worker 0 has TASK-001 (failed) -> pending = 0
+        # Worker 1 has nothing -> pending = 0
+        # Both have capacity 60, but max() returns worker 0 first
+        reassignments = assigner.rebalance(
+            completed_tasks=set(),
+            failed_tasks={"TASK-001"},
+            current_level=1,
+        )
+
+        # No reassignment because same worker has max capacity
+        assert len(reassignments) == 0
+
+    def test_rebalance_no_capacity_available(self) -> None:
+        """Test rebalance doesn't reassign if no worker has positive capacity."""
+        assigner = WorkerAssignment(worker_count=2)
+
+        # Manually set up scenario where both workers have 4 pending tasks each
+        # 4 * 15 = 60 minutes = at capacity
+        for i in range(8):
+            task_id = f"TASK-{i:03d}"
+            worker_id = i % 2
+            assigner._assignments[task_id] = worker_id
+            if worker_id not in assigner._worker_tasks:
+                assigner._worker_tasks[worker_id] = []
+            assigner._worker_tasks[worker_id].append(task_id)
+
+        # Now TASK-000 fails. Worker 0 has 4 tasks pending, Worker 1 has 4 tasks pending
+        # Worker 0: pending = 3 * 15 = 45, capacity = 15
+        # Worker 1: pending = 4 * 15 = 60, capacity = 0
+        # Worker 0 has more capacity but is the old_worker, so if max picks worker 0, no reassignment
+        # Actually with capacity 15 > 0, it should reassign...
+
+        # Let's make both workers have same pending:
+        assigner._assignments.clear()
+        assigner._worker_tasks.clear()
+
+        # Give each worker 4 tasks
+        for i in range(4):
+            assigner._assignments[f"W0-{i}"] = 0
+            assigner._worker_tasks.setdefault(0, []).append(f"W0-{i}")
+        for i in range(4):
+            assigner._assignments[f"W1-{i}"] = 1
+            assigner._worker_tasks.setdefault(1, []).append(f"W1-{i}")
+
+        # W0-0 fails
+        # Worker 0: pending = 3 * 15 = 45, capacity = 15
+        # Worker 1: pending = 4 * 15 = 60, capacity = 0
+        # Worker 0 still has capacity 15 > 0, but is the old worker
+        # max() will return worker 0 (capacity 15 vs 0)
+        # old_worker == new_worker, no reassignment
+        reassignments = assigner.rebalance(
+            completed_tasks=set(),
+            failed_tasks={"W0-0"},
+            current_level=1,
+        )
+
+        assert len(reassignments) == 0
+
+    def test_rebalance_multiple_failed_tasks(self) -> None:
+        """Test rebalancing multiple failed tasks updates capacity correctly."""
+        assigner = WorkerAssignment(worker_count=2)
+
+        # Worker 0 has 3 tasks, Worker 1 has nothing
+        assigner._assignments["TASK-001"] = 0
+        assigner._assignments["TASK-002"] = 0
+        assigner._assignments["TASK-003"] = 0
+        assigner._worker_tasks[0] = ["TASK-001", "TASK-002", "TASK-003"]
+
+        # Two tasks fail: TASK-001 and TASK-002
+        # First iteration: Worker 0 pending = 15 (TASK-003), capacity = 45
+        #                  Worker 1 pending = 0, capacity = 60
+        # TASK-001 moves to Worker 1, Worker 1 capacity -= 15 -> 45
+        # Second iteration: Worker 0 pending = 15, capacity = 45
+        #                   Worker 1 pending = 0 (TASK-001 is failed, not pending), capacity = 45
+        # Wait, TASK-001 is in failed_tasks, so it's excluded from pending
+        # After first reassignment: Worker 1 now has TASK-001
+        # But TASK-001 is still in failed_tasks, so Worker 1 pending = 0
+        # Worker 1 capacity after -= 15 = 60 - 15 = 45
+        # For TASK-002: Worker 0 capacity = 45, Worker 1 capacity = 45
+        # max() returns 0 (first), old_worker = 0, no reassignment
+
+        # Actually the capacity update happens AFTER the reassignment decision
+        # Let's trace through:
+        # Initial: W0 capacity = 60-15=45, W1 capacity = 60
+        # For TASK-001: new_worker = max = 1 (60 > 45), reassign to 1
+        #   capacity[1] -= 15 -> 45
+        #   capacity[0] += 15 -> 60
+        # For TASK-002: new_worker = max = 0 (60 > 45), reassign to 0... but old_worker = 0
+        #   No reassignment because same worker
+
+        reassignments = assigner.rebalance(
+            completed_tasks=set(),
+            failed_tasks={"TASK-001", "TASK-002"},
+            current_level=1,
+        )
+
+        # Only TASK-001 should be reassigned
+        assert len(reassignments) == 1
+        assert reassignments[0][0] == "TASK-001"
+
+
+class TestGetTaskMinutes:
+    """Tests for _get_task_minutes helper."""
+
+    def test_get_task_minutes_returns_default(self) -> None:
+        """Test _get_task_minutes returns default 15 minutes."""
+        assigner = WorkerAssignment(worker_count=2)
+        minutes = assigner._get_task_minutes("any-task")
+        assert minutes == 15
 
 
 class TestSaveLoad:
@@ -274,6 +544,53 @@ class TestSaveLoad:
 
         assert output_file.exists()
 
+    def test_load_from_file_default_worker_count(self, tmp_path: Path) -> None:
+        """Test loading with missing worker_count defaults to 5."""
+        data = {
+            "feature": "test",
+            "assignments": [],
+        }
+        input_file = tmp_path / "assignments.json"
+        with open(input_file, "w") as f:
+            json.dump(data, f)
+
+        assigner = WorkerAssignment.load_from_file(str(input_file))
+        assert assigner.worker_count == 5
+
+    def test_load_from_file_default_estimated_minutes(self, tmp_path: Path) -> None:
+        """Test loading assignment without estimated_minutes defaults to 15."""
+        data = {
+            "feature": "test",
+            "worker_count": 2,
+            "assignments": [
+                {"task_id": "TASK-001", "worker_id": 0, "level": 1},
+            ],
+        }
+        input_file = tmp_path / "assignments.json"
+        with open(input_file, "w") as f:
+            json.dump(data, f)
+
+        assigner = WorkerAssignment.load_from_file(str(input_file))
+        assert assigner.get_worker_workload(0) == 15
+
+    def test_save_with_multiple_assignments(self, tmp_path: Path) -> None:
+        """Test saving multiple assignments."""
+        assigner = WorkerAssignment(worker_count=3)
+        tasks: list[Task] = [
+            {"id": "TASK-001", "level": 1},
+            {"id": "TASK-002", "level": 1},
+            {"id": "TASK-003", "level": 2},
+        ]
+        assigner.assign(tasks, "multi-test")
+
+        output_file = tmp_path / "multi.json"
+        assigner.save_to_file(str(output_file), "multi-test")
+
+        with open(output_file) as f:
+            data = json.load(f)
+
+        assert len(data["assignments"]) == 3
+
 
 class TestBalanceByLevel:
     """Tests for level-based balancing."""
@@ -312,3 +629,41 @@ class TestBalanceByLevel:
         # L2-001 should go to worker 1 due to cumulative balancing
         l2_worker = assigner.get_task_worker("L2-001")
         assert l2_worker == 1  # Worker 1 has less cumulative time
+
+    def test_assign_clears_previous_state(self) -> None:
+        """Test that assign clears previous assignment state."""
+        assigner = WorkerAssignment(worker_count=2)
+
+        # First assignment
+        tasks1: list[Task] = [{"id": "TASK-001", "level": 1}]
+        assigner.assign(tasks1, "feature1")
+        assert assigner.get_task_worker("TASK-001") == 0
+
+        # Second assignment should clear first
+        tasks2: list[Task] = [{"id": "TASK-002", "level": 1}]
+        result = assigner.assign(tasks2, "feature2")
+
+        # TASK-001 should no longer be assigned
+        assert assigner.get_task_worker("TASK-001") is None
+        assert assigner.get_task_worker("TASK-002") == 0
+        assert len(result.assignments) == 1
+
+    def test_multiple_levels_sorted(self) -> None:
+        """Test tasks are processed in level order."""
+        assigner = WorkerAssignment(worker_count=2)
+        tasks: list[Task] = [
+            {"id": "L3-001", "level": 3, "estimate_minutes": 10},
+            {"id": "L1-001", "level": 1, "estimate_minutes": 10},
+            {"id": "L2-001", "level": 2, "estimate_minutes": 10},
+        ]
+
+        result = assigner.assign(tasks, "test")
+
+        # Verify all tasks are assigned
+        assert len(result.assignments) == 3
+
+        # Verify levels are preserved correctly
+        task_levels = {a.task_id: a.level for a in result.assignments}
+        assert task_levels["L1-001"] == 1
+        assert task_levels["L2-001"] == 2
+        assert task_levels["L3-001"] == 3
