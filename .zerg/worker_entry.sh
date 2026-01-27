@@ -41,6 +41,10 @@ if [ -n "$ZERG_GIT_WORKTREE_DIR" ] && [ -d "$ZERG_GIT_WORKTREE_DIR" ]; then
     fi
 
     echo "Git worktree configured: LOCAL_GIT_DIR=$LOCAL_GIT_DIR"
+
+    # Configure git user identity for commits
+    git config user.email "zerg-worker@local"
+    git config user.name "ZERG Worker $WORKER_ID"
 fi
 
 # Install ZERG dependencies if not already installed
