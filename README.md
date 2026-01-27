@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo/zerg_logo.png" alt="ZERG Logo" width="400">
+</p>
+
 # ZERG
 
 **Zero-Effort Rapid Growth** - Parallel Claude Code execution system for spec-driven development.
