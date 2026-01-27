@@ -286,7 +286,7 @@ Continue until SESSION 13 final verification passes or a blocking failure occurs
 
 
 <task>
-Produce a development plan for implementing all backlog items identified in BACKLOG.md. Do so using superclaude workflows to maximize parallelization. Use the new claude tasks feature and save tasks in the task directory
+Produce a development plan for implementing all items and tasks identified in claudedocs/plan-fix-zerg-status.md. completely and successfully with no unaddressed stubs and complete integration. Ensure all dependencies downstream as a result of this refactoring are addressed (such as updating skills and commands). Create tests prior to developing to ensure 100% test coverage. Do so using "zerg rush" to maximize parallelization. Use the new claude tasks feature and save tasks in the task directory
 </task>
 
 <planning_approach>
@@ -312,6 +312,39 @@ Output task backlog as persistent artifact. Update after each development sessio
 
 the devcontainer build needs to be dynamic based on the project requirements. If the project will use python and node.js, it needs to install python and node. If it will use R and react, it needs to install R and react. Additionally, The whole purpose of the zerg:rush command/skill, or any other zerg command/skill, that will write/modify code is to spin up the maximum allowed instances of claude code to execute the parallelized rush using the new claude tasks features. That means, if the user has built a devcontainer, contianers need to be spun up, loggged into, claude code launched and the tasks executed for that instance. this all needs to be automated both for whether or not the user is using devcontainers or not.   
 
-/sc:document Create extremely detailed documentation for the entirety of this project. README.md should be detailed, step-by-step tutorial for installing zerg. Other documentation must go through every every flag of every zerg skill (grouped by zerg skill) with a detailed explanation of what each does and an example of using each. Another piece of documentation will walk a user through creating a fictitious ecommerce website that sells minerals and vespene gas of the likes you would find in the Starcraft 2 game.
+/sc:document Recreate extremely detailed documentation for the entirety of this project based on the recent. README.md should be detailed, step-by-step tutorial for installing zerg including a complete command reference that covers every flag of every zerg skill (grouped by zerg skill) with a detailed explanation of what each does and an example of using each. Another piece of documentation will walk a user through creating a fictitious ecommerce website that sells minerals and vespene gas of the likes you would find in the Starcraft 2 game using zerg from planning to implementation that includes the use of the devcontainers, secure code rules, etc... Everything must reference the slash commands (e.g. /zerg:init)
+
+  1. Update README.md with installation instructions and command reference                                                                                             
+  2. Create pre-commit hook (.zerg/hooks/pre-commit) for non-ASCII detection                                                                                           
+  3. Create/update ARCHITECTURE.md with final implementation details   
 
 /zerg:analyze Take a look at the repo at https://github.com/affaan-m/everything-claude-code  Are there any other ideas for features that we can implement into Zerg?  
+
+
+<task>
+run all tests. ensure 100% coverage.Produce a development plan to implement all findings completely and successfully with no unaddressed stubs and complete integration. Ensure all dependencies downstream as a result of this refactoring are addressed (such as updating skills and commands). Create tests prior to developimng. Do so using superclaude workflows to maximize parallelization. Use the new claude tasks feature and save tasks in the task directory
+</task>
+
+<planning_approach>
+Apply ZERG's own methodology manually:
+1. Break implementation into atomic tasks with exclusive file ownership
+2. Order tasks by dependency level
+3. Define verification command for each task
+4. Estimate parallelization potential for future ZERG self-improvement
+5. Each task must accurately update the backlog item as complete
+</planning_approach>
+
+<output>
+Task backlog in markdown with (created in the tasks directory):
+- Task ID, description, files owned, dependencies, verification command
+- Grouped by implementation level
+- Critical path highlighted
+- Total estimated sessions to completion
+</output>
+
+<state_management>
+Output task backlog as persistent artifact. Update after each development session with completion status and blockers.
+</state_management>
+
+
+in addition to Create pre-commit hook (.zerg/hooks/pre-commit) for non-ASCII detection, what else should we create pre-commit hooks for in order to maximize security and code quality (or any other use cases you can think of)?  

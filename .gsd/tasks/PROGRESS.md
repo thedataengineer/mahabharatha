@@ -1,7 +1,7 @@
 # ZERG v2 Implementation Progress
 
 **Started**: January 25, 2026
-**Updated**: January 26, 2026
+**Updated**: January 27, 2026
 **Target**: 32 tasks across 6 levels
 
 ## Summary
@@ -84,6 +84,7 @@ All 32 core tasks are now implemented. The ZERG system includes:
 |------|---------|-----------------|-------|
 | 2026-01-25 | 1-5 | L0-L4 (28 tasks) | Core implementation |
 | 2026-01-26 | 6 | L5 (4 tasks) | Plan/Design commands, cleanup |
+| 2026-01-27 | 7 | DC-012 | Integration tests (79 tests) |
 
 ---
 

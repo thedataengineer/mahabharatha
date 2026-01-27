@@ -1,0 +1,1508 @@
+{
+  "feature": "orchestrator-fixes",
+  "started_at": "2026-01-27T05:04:51.972754",
+  "current_level": 1,
+  "tasks": {
+    "OFX-001": {
+      "status": "pending",
+      "updated_at": "2026-01-27T05:04:53.392243",
+      "worker_id": 0
+    },
+    "OFX-002": {
+      "status": "pending",
+      "updated_at": "2026-01-27T05:04:53.392411",
+      "worker_id": 1
+    },
+    "OFX-003": {
+      "status": "pending",
+      "updated_at": "2026-01-27T05:04:53.392786",
+      "worker_id": 2
+    },
+    "OFX-004": {
+      "status": "pending",
+      "updated_at": "2026-01-27T05:04:53.392919",
+      "worker_id": 3
+    }
+  },
+  "workers": {
+    "0": {
+      "worker_id": 0,
+      "status": "running",
+      "current_task": null,
+      "port": 50807,
+      "container_id": null,
+      "worktree_path": "/Users/klambros/PycharmProjects/ZERG/.zerg-worktrees/orchestrator-fixes/worker-0",
+      "branch": "zerg/orchestrator-fixes/worker-0",
+      "health_check_at": null,
+      "started_at": "2026-01-27T05:08:17.544782",
+      "tasks_completed": 0,
+      "context_usage": 0.0
+    },
+    "1": {
+      "worker_id": 1,
+      "status": "running",
+      "current_task": null,
+      "port": 61024,
+      "container_id": null,
+      "worktree_path": "/Users/klambros/PycharmProjects/ZERG/.zerg-worktrees/orchestrator-fixes/worker-1",
+      "branch": "zerg/orchestrator-fixes/worker-1",
+      "health_check_at": null,
+      "started_at": "2026-01-27T05:08:17.813652",
+      "tasks_completed": 0,
+      "context_usage": 0.0
+    },
+    "2": {
+      "worker_id": 2,
+      "status": "running",
+      "current_task": null,
+      "port": 64718,
+      "container_id": null,
+      "worktree_path": "/Users/klambros/PycharmProjects/ZERG/.zerg-worktrees/orchestrator-fixes/worker-2",
+      "branch": "zerg/orchestrator-fixes/worker-2",
+      "health_check_at": null,
+      "started_at": "2026-01-27T05:08:18.081479",
+      "tasks_completed": 0,
+      "context_usage": 0.0
+    },
+    "3": {
+      "worker_id": 3,
+      "status": "running",
+      "current_task": null,
+      "port": 63944,
+      "container_id": null,
+      "worktree_path": "/Users/klambros/PycharmProjects/ZERG/.zerg-worktrees/orchestrator-fixes/worker-3",
+      "branch": "zerg/orchestrator-fixes/worker-3",
+      "health_check_at": null,
+      "started_at": "2026-01-27T05:08:18.350133",
+      "tasks_completed": 0,
+      "context_usage": 0.0
+    }
+  },
+  "levels": {
+    "1": {
+      "status": "running",
+      "updated_at": "2026-01-27T05:04:53.391802",
+      "started_at": "2026-01-27T05:04:53.391806"
+    }
+  },
+  "execution_log": [
+    {
+      "timestamp": "2026-01-27T05:04:51.972761",
+      "event": "rush_started",
+      "data": {
+        "workers": 4,
+        "total_tasks": 12
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:04:52.604840",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 49428,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:04:52.845531",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 49221,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:04:53.156088",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 52800,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:04:53.391284",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 59104,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:04:53.391957",
+      "event": "level_started",
+      "data": {
+        "level": 1,
+        "tasks": 4
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:04:53.674201",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 53199,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:04:53.945270",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 57333,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:04:54.241029",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 63185,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:04:54.516518",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 53500,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:04:59.806636",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 61197,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:00.094077",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 59604,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:00.393966",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 53286,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:00.680360",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 52495,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:05.980943",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 54883,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:06.278074",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 52070,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:06.573959",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 51209,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:07.072088",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 62014,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:12.388121",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 59957,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:12.672476",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 49299,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:12.936314",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 59552,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:13.287235",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 60589,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:18.589774",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 53547,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:18.888735",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 60202,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:19.201515",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 61393,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:19.513615",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 60627,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:24.817827",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 57135,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:25.115896",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 53468,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:25.443280",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 56455,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:25.727179",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 57272,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:31.043702",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 56051,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:31.353923",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 51332,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:31.647957",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 53365,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:31.934806",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 52611,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:37.257152",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 51078,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:37.558540",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 64388,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:37.840020",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 57459,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:38.139218",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 58026,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:43.424431",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 56156,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:43.730485",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 62382,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:44.008087",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 58533,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:44.278565",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 59613,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:49.585742",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 59808,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:49.889543",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 51961,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:50.190871",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 55538,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:50.475456",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 63277,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:55.801322",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 63329,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:56.114370",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 56802,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:56.396849",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 65303,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:05:56.688497",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 62675,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:02.004073",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 60438,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:02.310292",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 49812,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:02.615464",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 57453,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:02.883223",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 54712,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:08.160422",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 61316,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:08.442331",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 57768,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:08.717119",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 63012,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:08.984968",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 57886,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:14.312914",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 56296,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:14.599009",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 59305,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:14.884539",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 64762,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:15.159116",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 51576,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:20.467705",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 58824,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:20.748532",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 50776,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:21.020126",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 51568,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:21.294243",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 56648,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:26.593026",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 59323,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:26.891622",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 51242,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:27.181397",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 57740,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:27.469981",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 58469,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:32.773870",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 56151,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:33.033533",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 51382,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:33.282666",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 56754,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:33.552534",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 62959,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:38.860514",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 58872,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:39.142813",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 65513,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:39.422989",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 59942,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:39.700398",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 57774,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:44.994258",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 60199,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:45.279003",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 55007,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:45.594704",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 57523,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:45.895985",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 51094,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:51.214922",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 54278,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:51.528003",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 49589,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:51.852450",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 57710,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:52.123897",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 57678,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:57.412776",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 58739,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:57.710214",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 53091,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:57.982809",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 58471,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:06:58.308080",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 59965,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:03.661509",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 52522,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:03.947577",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 51271,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:04.232010",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 65106,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:04.491714",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 56084,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:09.775461",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 52939,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:10.056929",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 59259,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:10.327550",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 49703,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:10.598270",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 51415,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:16.134362",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 50519,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:16.442765",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 57293,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:16.728926",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 65053,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:17.018224",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 54576,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:22.314218",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 64230,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:22.594269",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 65105,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:22.876092",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 63043,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:23.154116",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 56035,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:28.453197",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 63604,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:28.771458",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 54901,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:29.081237",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 59974,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:29.348531",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 63504,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:34.636129",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 61933,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:34.924042",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 50217,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:35.202305",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 63335,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:35.475751",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 56980,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:40.783855",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 61240,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:41.073642",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 57235,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:41.345181",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 59138,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:41.611561",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 63013,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:46.904040",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 52379,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:47.182524",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 61214,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:47.454559",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 58969,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:47.722399",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 62074,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:53.024005",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 49449,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:53.314199",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 63069,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:53.593167",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 61059,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:53.871081",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 65240,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:59.157994",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 62657,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:59.439459",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 62453,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:07:59.746820",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 53813,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:08:00.024465",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 58835,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:08:05.311472",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 55214,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:08:05.571830",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 52546,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:08:05.841911",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 52963,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:08:06.113858",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 58089,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:08:11.408412",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 63924,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:08:11.691080",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 65011,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:08:11.997542",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 61804,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:08:12.266615",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 54401,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:08:17.545692",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 0,
+        "port": 50807,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:08:17.814662",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 1,
+        "port": 61024,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:08:18.082411",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 2,
+        "port": 64718,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    },
+    {
+      "timestamp": "2026-01-27T05:08:18.354627",
+      "event": "worker_started",
+      "data": {
+        "worker_id": 3,
+        "port": 63944,
+        "container_id": null,
+        "mode": "subprocess"
+      }
+    }
+  ],
+  "paused": false,
+  "error": null
+}
