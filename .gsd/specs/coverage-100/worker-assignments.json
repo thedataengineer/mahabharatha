@@ -1,0 +1,151 @@
+{
+  "feature": "coverage-100",
+  "worker_count": 3,
+  "assignments": [
+    {
+      "task_id": "COV-001",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-002",
+      "worker_id": 1,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-003",
+      "worker_id": 2,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-007",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-008",
+      "worker_id": 1,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-004",
+      "worker_id": 2,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-005",
+      "worker_id": 2,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-006",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-009",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-010",
+      "worker_id": 1,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-011",
+      "worker_id": 2,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-012",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-013",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-014",
+      "worker_id": 1,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-015",
+      "worker_id": 2,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-016",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-017",
+      "worker_id": 1,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-018",
+      "worker_id": 2,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-019",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-020",
+      "worker_id": 1,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-021",
+      "worker_id": 2,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-022",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-023",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "COV-024",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    }
+  ],
+  "generated_at": "2026-01-27T12:15:01.610528"
+}
