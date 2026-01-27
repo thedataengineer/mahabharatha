@@ -723,14 +723,24 @@ class ContainerLauncher(WorkerLauncher):
         main_repo = worktree_path.parent.parent.parent  # .zerg-worktrees/feature/worker-N -> repo
         state_dir = main_repo / ".zerg" / "state"
 
+        # Mount ~/.claude for OAuth credentials if it exists
+        claude_config_dir = Path.home() / ".claude"
+
         cmd = [
             "docker", "run", "-d",
             "--name", container_name,
             "-v", f"{worktree_path.absolute()}:/workspace",
             "-v", f"{state_dir.absolute()}:/workspace/.zerg/state",  # Share state with orchestrator
+        ]
+
+        # Add Claude config mount for OAuth authentication (needs write for debug logs)
+        if claude_config_dir.exists():
+            cmd.extend(["-v", f"{claude_config_dir.absolute()}:/root/.claude"])
+
+        cmd.extend([
             "-w", "/workspace",
             "--network", self.network,
-        ]
+        ])
 
         # Add environment variables
         for key, value in env.items():
