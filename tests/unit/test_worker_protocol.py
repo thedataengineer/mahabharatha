@@ -182,7 +182,7 @@ class TestWorkerProtocolInit:
 
         assert protocol.worker_id == 3
         assert protocol.feature == "my-feature"
-        mock_state_cls.assert_called_with("my-feature")
+        mock_state_cls.assert_called_with("my-feature", state_dir=None)
 
     @patch.dict(
         os.environ,

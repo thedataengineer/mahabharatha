@@ -157,15 +157,8 @@ class WorkerProtocol:
         logger.info(f"Worker {self.worker_id} starting for feature {self.feature}")
         self._started_at = datetime.now()
 
-        # Debug: Show state file being used (use print to bypass logging)
-        import sys
-        state_dir = os.environ.get("ZERG_STATE_DIR", "NOT SET")
-        print(f"[DEBUG] ZERG_STATE_DIR={state_dir}", file=sys.stderr, flush=True)
-        print(f"[DEBUG] State file: {self.state._state_file}", file=sys.stderr, flush=True)
-
         # Load state
         self.state.load()
-        print(f"[DEBUG] Loaded {len(self.state._state.get('tasks', {}))} tasks from state", file=sys.stderr, flush=True)
 
         # Signal ready to orchestrator
         self.signal_ready()
@@ -244,7 +237,6 @@ class WorkerProtocol:
         """
         # Get pending tasks for this worker
         pending = self.state.get_tasks_by_status(TaskStatus.PENDING)
-        print(f"[DEBUG] Worker {self.worker_id} found {len(pending)} pending tasks: {pending}", file=sys.stderr, flush=True)
 
         for task_id in pending:
             # Try to claim this task
