@@ -8,6 +8,13 @@ __author__ = "ZERG Team"
 
 from zerg.constants import GateResult, Level, TaskStatus, WorkerStatus
 from zerg.exceptions import ZergError
+from zerg.worker_metrics import (
+    LevelMetrics,
+    TaskExecutionMetrics,
+    WorkerMetrics,
+    WorkerMetricsCollector,
+    estimate_execution_cost,
+)
 
 __all__ = [
     "__version__",
@@ -16,4 +23,10 @@ __all__ = [
     "GateResult",
     "WorkerStatus",
     "ZergError",
+    # Worker Metrics
+    "TaskExecutionMetrics",
+    "WorkerMetrics",
+    "LevelMetrics",
+    "WorkerMetricsCollector",
+    "estimate_execution_cost",
 ]
