@@ -839,6 +839,26 @@ class ContainerLauncher(WorkerLauncher):
         Returns:
             True if execution started successfully
         """
+        # First configure git user identity for commits
+        git_config_cmd = [
+            "docker", "exec",
+            "-w", "/workspace",
+            container_id,
+            "/bin/bash", "-c",
+            "git config user.email 'zerg-worker@local' && git config user.name 'ZERG Worker'",
+        ]
+
+        try:
+            subprocess.run(
+                git_config_cmd,
+                capture_output=True,
+                text=True,
+                timeout=10,
+            )
+        except Exception as e:
+            logger.warning(f"Failed to configure git identity: {e}")
+
+        # Execute the entry script
         cmd = [
             "docker", "exec", "-d",
             "-w", "/workspace",
