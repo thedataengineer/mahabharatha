@@ -53,3 +53,4 @@ yarn-error.log*
 *.zip
 *.tar.gz
 .zerg/state/
+.git-worktree/
