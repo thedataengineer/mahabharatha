@@ -6,80 +6,119 @@
 
 ---
 
+## Welcome to ZERG
+
+Imagine you're building a house. Traditionally, you might have one contractor who does everything sequentially: foundation, then framing, then electrical, then plumbing. It works, but it's slow.
+
+Now imagine you could have five contractors working simultaneously, each handling a different part of the house that doesn't depend on the others. The foundation crew works while the electrician preps materials. As soon as the foundation is done, multiple teams pour in to frame different sections in parallel.
+
+**That's what ZERG does for software development.**
+
+ZERG takes your feature requirements, breaks them into independent tasks, and assigns them to multiple Claude Code instances (we call them "workers") that execute in parallel. Each worker operates in complete isolation with its own git branch, so there's never any conflict. When a level of tasks completes, ZERG automatically merges everything and starts the next level.
+
+The result? Features that might take hours of sequential AI-assisted development can be completed in a fraction of the time.
+
+---
+
 ## Table of Contents
 
-- [Overview](#overview)
+- [How ZERG Thinks About Work](#how-zerg-thinks-about-work)
 - [Installation](#installation)
-  - [Prerequisites](#prerequisites)
-  - [Install from Source](#install-from-source)
-  - [Verify Installation](#verify-installation)
-- [Quick Start](#quick-start)
-  - [Inception Mode (New Project)](#inception-mode-new-project)
-  - [Discovery Mode (Existing Project)](#discovery-mode-existing-project)
-- [Core Concepts](#core-concepts)
+- [Your First ZERG Project](#your-first-zerg-project)
+- [Understanding the Core Workflow](#understanding-the-core-workflow)
 - [Complete Command Reference](#complete-command-reference)
-  - [Workflow Commands](#workflow-commands)
-    - [/zerg:init](#zerginit)
-    - [/zerg:plan](#zergplan)
-    - [/zerg:design](#zergdesign)
-    - [/zerg:rush](#zergrush)
-  - [Monitoring Commands](#monitoring-commands)
-    - [/zerg:status](#zergstatus)
-    - [/zerg:logs](#zerglogs)
-    - [/zerg:stop](#zergstop)
-  - [Task Management Commands](#task-management-commands)
-    - [/zerg:retry](#zergretry)
-    - [/zerg:merge](#zergmerge)
-    - [/zerg:cleanup](#zergcleanup)
-  - [Quality Commands](#quality-commands)
-    - [/zerg:test](#zergtest)
-    - [/zerg:build](#zergbuild)
-    - [/zerg:analyze](#zerganalyze)
-    - [/zerg:review](#zergreview)
-  - [Development Commands](#development-commands)
-    - [/zerg:refactor](#zergrefactor)
-    - [/zerg:troubleshoot](#zergtroubleshoot)
-    - [/zerg:git](#zerggit)
-  - [Infrastructure Commands](#infrastructure-commands)
-    - [/zerg:security](#zergsecurity)
-    - [/zerg:worker](#zergworker)
-- [Configuration](#configuration)
-- [Architecture](#architecture)
-- [Troubleshooting](#troubleshooting)
+- [Configuration Deep Dive](#configuration-deep-dive)
+- [Architecture Explained](#architecture-explained)
+- [When Things Go Wrong](#when-things-go-wrong)
 - [Tutorial](#tutorial)
 
 ---
 
-## Overview
+## How ZERG Thinks About Work
 
-ZERG combines three powerful approaches to accelerate development:
+Before diving into commands, let's understand how ZERG approaches software development. This mental model will make everything else click.
 
-1. **GSD Methodology**: Spec-first development with fresh Claude Code instances per task
-2. **Claude Code Skills**: `/zerg:*` slash commands invoke CLI commands with structured prompts
-3. **Devcontainers**: Isolated parallel execution environments with Docker
+### The Problem with Sequential Development
 
-**How it works:**
-1. You describe what you want to build
-2. ZERG captures requirements and creates a technical design
-3. Work is broken into atomic tasks with exclusive file ownership
-4. Multiple Claude Code workers execute tasks in parallel
-5. Quality gates validate each level before merging
+When you work with a single AI assistant on a complex feature, you encounter several bottlenecks:
+
+1. **Context limits**: Long conversations hit token limits, losing important context
+2. **Sequential execution**: Tasks that could run in parallel wait on each other
+3. **Context pollution**: Debugging one issue can confuse work on another
+4. **No isolation**: A mistake in one area can cascade to others
+
+### ZERG's Solution: Spec-Driven Parallel Execution
+
+ZERG solves these problems through three key principles:
+
+**1. Specs as the Source of Truth**
+
+Instead of relying on conversation history, ZERG writes everything to spec files. Workers don't remember previous conversations—they read their task specifications fresh each time. This means:
+- No context limit issues (workers start fresh)
+- Requirements are documented and versioned
+- Any worker can pick up any task
+
+**2. Exclusive File Ownership**
+
+Every file in your project is "owned" by exactly one task at a time. If Task A creates `models.py`, no other task at that level can touch it. This eliminates merge conflicts entirely—workers can work in parallel without stepping on each other's toes.
+
+**3. Level-Based Dependency Management**
+
+Tasks are organized into "levels" based on what they depend on:
+
+```
+Level 1: Foundation (no dependencies)
+├── Create data models
+├── Set up configuration
+└── Define type schemas
+
+Level 2: Core Logic (depends on Level 1)
+├── Implement user service (needs models)
+├── Implement product service (needs models)
+└── Implement cart service (needs models, config)
+
+Level 3: API Layer (depends on Level 2)
+├── Create user endpoints (needs user service)
+├── Create product endpoints (needs product service)
+└── Create cart endpoints (needs cart service)
+```
+
+All Level 1 tasks run in parallel. When they're ALL done, ZERG merges their branches and starts Level 2. This ensures workers always have the dependencies they need.
+
+### What Happens Under the Hood
+
+When you run `zerg rush`, here's what actually happens:
+
+1. **Orchestrator starts**: The main ZERG process loads your task graph
+2. **Worktrees created**: Git worktrees give each worker an isolated copy of the codebase
+3. **Workers spawned**: Each worker is a separate Claude Code process (or Docker container)
+4. **Tasks assigned**: Workers claim tasks from the current level
+5. **Parallel execution**: Workers implement their tasks simultaneously
+6. **Verification**: Each task runs its verification command (tests, imports, etc.)
+7. **Sync point**: When all Level N tasks complete, branches merge
+8. **Quality gates**: Linting, type checking, tests run on merged code
+9. **Level advance**: If gates pass, Level N+1 begins
+10. **Repeat**: Until all levels complete
+
+This architecture means you can literally walk away while ZERG builds your feature. Come back to find everything implemented, tested, and merged.
 
 ---
 
 ## Installation
 
-### Prerequisites
+### What You'll Need
 
-| Requirement | Version | Purpose |
-|-------------|---------|---------|
-| Python | 3.11+ | Runtime environment |
-| Git | 2.x+ | Version control and worktrees |
-| Docker | 20.x+ | Container mode (optional) |
-| Claude Code CLI | Latest | AI-powered development |
-| `ANTHROPIC_API_KEY` | - | API authentication |
+Before installing ZERG, make sure you have these prerequisites. Here's why each matters:
 
-### Install from Source
+| Requirement | Version | Why It's Needed |
+|-------------|---------|-----------------|
+| **Python** | 3.11+ | ZERG is written in Python. Version 3.11+ provides the type hints and features we need |
+| **Git** | 2.x+ | ZERG uses git worktrees extensively—each worker gets its own isolated copy of your repo |
+| **Docker** | 20.x+ | *Optional*. Enables container mode where workers run in isolated Docker containers |
+| **Claude Code CLI** | Latest | Workers are Claude Code instances, so you need the CLI installed |
+| **ANTHROPIC_API_KEY** | - | Environment variable that authenticates with Anthropic's API |
+
+### Installing ZERG
 
 ```bash
 # Clone the repository
@@ -87,26 +126,29 @@ git clone https://github.com/rocklambros/zerg.git
 cd zerg
 
 # Install in development mode
+# The -e flag means "editable"—changes to the code take effect immediately
 pip install -e .
 
-# Or install with all dependencies
+# Or install with development dependencies (testing, linting, etc.)
 pip install -e ".[dev]"
 ```
 
-### Verify Installation
+### Verifying Your Installation
+
+Let's make sure everything is working:
 
 ```bash
-# Check version
+# Check ZERG is installed and see its version
 zerg --version
 
-# View available commands
+# View all available commands
 zerg --help
 
-# Verify environment
-echo $ANTHROPIC_API_KEY  # Should show your API key
+# Verify your API key is set (you should see your key, not empty output)
+echo $ANTHROPIC_API_KEY
 ```
 
-**Expected output:**
+**Expected output from `zerg --help`:**
 ```
 Usage: zerg [OPTIONS] COMMAND [ARGS]...
 
@@ -139,136 +181,469 @@ Commands:
   troubleshoot     Debug with root cause analysis
 ```
 
+If you see this output, you're ready to go.
+
 ---
 
-## Quick Start
+## Your First ZERG Project
 
-ZERG operates in two modes depending on your starting point:
+Let's walk through the complete workflow by building something real. We'll create a simple REST API—nothing fancy, but enough to see ZERG in action.
 
-### Inception Mode (New Project)
+### Step 1: Initialize Your Project
 
-Start a brand-new project from scratch with guided setup:
+ZERG has two initialization modes that activate automatically based on your directory:
 
-```bash
-# Create empty directory
-mkdir my-new-api && cd my-new-api
+**Inception Mode** (empty directory): Creates a new project from scratch with guided setup
+**Discovery Mode** (existing project): Analyzes your codebase and configures ZERG
 
-# Run ZERG init - detects empty directory, starts Inception Mode
-zerg init
-
-# Follow the interactive prompts:
-#   - Project name and description
-#   - Target platform (api, cli, web, library)
-#   - Technology stack recommendation
-#   - Project scaffolding
-```
-
-**What Inception Mode does:**
-1. **Gathers Requirements** - Interactive prompts capture project goals
-2. **Recommends Technology** - Suggests language, framework, and tools
-3. **Scaffolds Project** - Generates complete project structure
-4. **Initializes Git** - Creates initial commit with `.gitignore`
-
-### Discovery Mode (Existing Project)
-
-Add ZERG to an existing codebase:
+Let's start fresh:
 
 ```bash
-# Navigate to your existing project
-cd your-existing-project
+# Create and enter an empty directory
+mkdir my-api && cd my-api
 
-# Initialize ZERG - detects existing project, runs Discovery Mode
+# Initialize ZERG
+# Because the directory is empty, Inception Mode activates automatically
 zerg init --security standard
-
-# ZERG analyzes your project and configures itself
 ```
 
-### Complete Workflow Example
+**What's happening behind the scenes:**
+
+1. ZERG detects the empty directory and enters Inception Mode
+2. It asks you questions about your project (name, description, target platform)
+3. Based on your answers, it recommends a technology stack
+4. It generates a complete project scaffold with:
+   - Source code structure
+   - Test directory
+   - Configuration files
+   - Git repository with initial commit
+5. Then it runs Discovery Mode to add ZERG infrastructure:
+   - `.zerg/config.yaml` - ZERG configuration
+   - `.devcontainer/` - Docker container definitions for workers
+   - Security rules from TikiTribe/claude-secure-coding-rules
+
+**Why the `--security standard` flag?**
+
+This tells ZERG to configure workers with standard security isolation:
+- Network isolation (workers can't make arbitrary network calls)
+- Filesystem sandboxing (workers can only access the project directory)
+- Secrets scanning (prevents accidental commit of API keys, etc.)
+
+### Step 2: Plan Your Feature
+
+Now let's plan a feature. Planning is crucial because it creates the specification documents that workers will read.
 
 ```bash
-# 1. Initialize ZERG (one-time setup)
-zerg init --workers 5 --security standard
+# Start planning with Socratic discovery mode
+zerg plan user-auth --socratic
+```
 
-# 2. Plan a feature (captures requirements)
-zerg plan user-authentication --socratic
+**What's happening:**
 
-# 3. Review and approve requirements
-# Edit .gsd/specs/user-authentication/requirements.md if needed
+The `--socratic` flag triggers an interactive discovery session. Instead of you writing requirements, ZERG asks you structured questions in three rounds:
 
-# 4. Design the implementation (creates task graph)
-zerg design --feature user-authentication
+1. **Problem Space** (5 questions): What problem are we solving? Who's affected? Why now?
+2. **Solution Space** (5 questions): What's the ideal solution? What constraints exist? What's out of scope?
+3. **Implementation Space** (5 questions): What's the MVP? What can wait? How do we verify success?
 
-# 5. Review the design
-# Check .gsd/specs/user-authentication/design.md
-# Check .gsd/specs/user-authentication/task-graph.json
+This questioning technique (inspired by the Socratic method) helps you think through requirements you might have missed.
 
-# 6. Launch parallel workers
+**Output created:**
+
+After the session, ZERG creates `.gsd/specs/user-auth/requirements.md` containing:
+- Your answers to all questions
+- Structured problem statement
+- Solution constraints
+- Acceptance criteria
+
+**Important:** Review this file! It's what workers will read. If something's wrong or missing, edit it now before proceeding.
+
+### Step 3: Design the Architecture
+
+With requirements captured, generate the technical design:
+
+```bash
+zerg design --feature user-auth
+```
+
+**What's happening:**
+
+ZERG reads your requirements and generates:
+
+1. **design.md**: Architecture document describing the technical approach
+2. **task-graph.json**: The critical file that defines every task, its dependencies, file ownership, and verification commands
+
+**Understanding task-graph.json:**
+
+This file is the blueprint for parallel execution. Here's a simplified example:
+
+```json
+{
+  "tasks": [
+    {
+      "id": "AUTH-L1-001",
+      "title": "Create user models",
+      "level": 1,
+      "files": {
+        "create": ["src/models/user.py"],  // This task OWNS this file
+        "modify": [],
+        "read": []
+      },
+      "verification": {
+        "command": "python -c \"from src.models.user import User\""
+      }
+    }
+  ]
+}
+```
+
+Key things to understand:
+- **Level**: Determines execution order. All level 1 tasks complete before any level 2 task starts
+- **files.create**: Files this task will create. No other task at this level can create these files
+- **files.modify**: Files this task will modify. Exclusive ownership at this level
+- **files.read**: Files this task needs to read. Multiple tasks can read the same file
+- **verification.command**: How ZERG knows the task succeeded. This command must exit with code 0
+
+**Why file ownership matters:**
+
+If two workers both try to edit `models.py` at the same time, you'd get merge conflicts. By giving each task exclusive ownership of specific files, ZERG guarantees conflict-free merges.
+
+### Step 4: Launch the Rush
+
+Time to build. This is where the magic happens:
+
+```bash
+# Preview what will happen (no actual execution)
+zerg rush --dry-run
+
+# When ready, launch for real
 zerg rush --workers 5
+```
 
-# 7. Monitor progress
+**What's happening:**
+
+1. ZERG creates 5 git worktrees (isolated copies of your repo)
+2. Spawns 5 Claude Code workers (one per worktree)
+3. Each worker claims a task from Level 1
+4. Workers implement their tasks in parallel
+5. As tasks complete, workers claim more tasks
+6. When all Level 1 tasks complete:
+   - All worker branches merge into a staging branch
+   - Quality gates run (lint, typecheck, test)
+   - If gates pass, staging merges to main
+   - Workers rebase their worktrees
+   - Level 2 begins
+7. Repeat until all levels complete
+
+**Why 5 workers?**
+
+The `--workers 5` flag is a balance:
+- More workers = more parallelism = faster completion
+- But also = more API calls = higher cost
+- And = more resource usage (memory, CPU)
+
+Start with 3-5 workers for most features. You can adjust based on:
+- How many tasks can actually run in parallel at each level
+- Your API rate limits
+- Your machine's resources
+
+### Step 5: Monitor Progress
+
+While workers are running:
+
+```bash
+# See current status (one-time snapshot)
+zerg status
+
+# Watch continuously with live updates
 zerg status --watch
 
-# 8. View logs if needed
+# View worker logs in real-time
 zerg logs --follow
-
-# 9. Retry any failed tasks
-zerg retry --all-failed
-
-# 10. Clean up when done
-zerg cleanup --feature user-authentication
 ```
+
+**What the status shows:**
+
+- Overall progress (tasks completed / total)
+- Current level and worker assignments
+- Each worker's current task and status
+- Recent completions and any failures
+
+### Step 6: Handle Issues (If Any)
+
+If a task fails:
+
+```bash
+# See what went wrong
+zerg logs 1 --level error  # Logs from worker 1, errors only
+
+# Retry the failed task
+zerg retry AUTH-L2-003
+
+# Or retry all failed tasks
+zerg retry --all-failed
+```
+
+**Why tasks fail:**
+
+- Verification command fails (tests don't pass, import errors)
+- Worker hits context limit (checkpoints and exits with code 2)
+- Actual implementation error
+
+For context limit issues, workers automatically checkpoint their progress. Just run `zerg rush --resume` to continue.
+
+### Step 7: Cleanup
+
+When everything's done:
+
+```bash
+zerg cleanup --feature user-auth
+```
+
+**What gets cleaned:**
+
+- Git worktrees (`.zerg/worktrees/`)
+- Worker branches (`zerg/user-auth/worker-*`)
+- State files (`.zerg/state/user-auth.json`)
+- Log files (`.zerg/logs/worker-*.log`)
+
+**What's preserved:**
+
+- All your merged code (it's on main now)
+- Spec files (`.gsd/specs/user-auth/`) - useful documentation
+- ZERG configuration (`.zerg/config.yaml`)
 
 ---
 
-## Core Concepts
+## Understanding the Core Workflow
 
-### Levels
+Now that you've seen the full workflow, let's understand each phase more deeply.
 
-Tasks are organized into dependency levels:
+### Phase 1: Initialization (`/zerg:init`)
 
-| Level | Name | Purpose | Dependencies |
-|-------|------|---------|--------------|
-| 1 | Foundation | Types, schemas, configs | None |
-| 2 | Core | Business logic, services | Level 1 |
-| 3 | Integration | APIs, routes, handlers | Level 2 |
-| 4 | Testing | Tests, validation | Level 3 |
-| 5 | Quality | Docs, polish, cleanup | Level 4 |
+Initialization prepares your project for ZERG. It handles two scenarios:
 
-All tasks at a level run in parallel. Level N+1 starts only after Level N completes and passes quality gates.
+**Inception Mode (Empty Directory)**
 
-### File Ownership
+When you run `zerg init` in an empty directory, ZERG becomes a project bootstrapper:
 
-Each task owns specific files exclusively:
-- **Create**: Only one task can create a file
-- **Modify**: Only one task can modify a file per level
-- **Read**: Multiple tasks can read the same file
+1. **Gathers requirements**: Asks about project name, description, target platforms
+2. **Recommends technology**: Suggests language, framework, package manager based on your needs
+3. **Scaffolds project**: Generates complete project structure with:
+   - Source directory with entry point
+   - Test directory with initial tests
+   - Configuration files (pyproject.toml, package.json, etc.)
+   - README and .gitignore
+4. **Initializes git**: Creates repo with initial commit
+5. **Continues to Discovery Mode**: Adds ZERG infrastructure
 
-This prevents merge conflicts entirely.
+**Discovery Mode (Existing Project)**
 
-### Workers
+For existing projects, ZERG analyzes what you have:
 
-Workers are isolated Claude Code instances:
-- Each worker has its own git worktree
-- Workers claim and execute tasks
-- Workers commit changes to their branches
-- Orchestrator merges branches after each level
+1. **Detects stack**: Scans for package.json, pyproject.toml, Cargo.toml, etc.
+2. **Identifies frameworks**: Recognizes FastAPI, Express, React, etc.
+3. **Creates configuration**: Generates `.zerg/config.yaml` tailored to your stack
+4. **Sets up containers**: Creates `.devcontainer/` for isolated worker execution
+5. **Fetches security rules**: Downloads secure coding rules for your languages
 
-### Spec Files
+### Phase 2: Planning (`/zerg:plan`)
 
-All coordination flows through spec files in `.gsd/`:
+Planning captures requirements BEFORE any code is written. This is intentional—workers don't have access to your conversation history, only to spec files.
 
-| File | Purpose |
-|------|---------|
-| `PROJECT.md` | Project vision and constraints |
-| `INFRASTRUCTURE.md` | Technical stack and services |
-| `specs/{feature}/requirements.md` | Feature requirements |
-| `specs/{feature}/design.md` | Architecture and design |
-| `specs/{feature}/task-graph.json` | Task definitions |
-| `STATE.md` | Execution progress |
+**Why Socratic Mode?**
+
+The `--socratic` flag triggers structured discovery because:
+- You might not know what you don't know
+- Structured questions surface edge cases
+- The transcript becomes documentation
+- It forces clarity before implementation
+
+**What Gets Created:**
+
+`.gsd/specs/{feature}/requirements.md`:
+```markdown
+# Feature Requirements: user-auth
+
+## Metadata
+- **Feature**: user-auth
+- **Status**: DRAFT  # Change to APPROVED when ready
+- **Created**: 2026-01-26T10:30:00
+
+## Discovery Transcript
+### Problem Space
+**Q:** What specific problem does this feature solve?
+**A:** Users can't log in to the application...
+
+## Acceptance Criteria
+- [ ] Users can register with email/password
+- [ ] Users can log in and receive JWT token
+- [ ] Protected routes require valid token
+```
+
+**Important:** The Status field controls the workflow. Leave it as DRAFT while refining, change to APPROVED to signal "ready for design."
+
+### Phase 3: Design (`/zerg:design`)
+
+Design translates requirements into actionable tasks. This is where ZERG's parallel execution model comes to life.
+
+**What Gets Created:**
+
+1. **design.md**: High-level architecture document
+2. **task-graph.json**: The execution blueprint
+
+**Task Graph Deep Dive:**
+
+The task graph is the heart of ZERG. Let's understand its structure:
+
+```json
+{
+  "feature": "user-auth",
+  "version": "2.0",
+  "total_tasks": 12,
+  "max_parallelization": 4,  // Most tasks that can run simultaneously
+
+  "tasks": [...],  // Array of task definitions
+
+  "levels": {
+    "1": {
+      "name": "foundation",
+      "tasks": ["AUTH-L1-001", "AUTH-L1-002"],
+      "parallel": true,
+      "depends_on_levels": []  // No dependencies
+    },
+    "2": {
+      "name": "services",
+      "tasks": ["AUTH-L2-001", "AUTH-L2-002", "AUTH-L2-003"],
+      "parallel": true,
+      "depends_on_levels": [1]  // Needs level 1 complete
+    }
+  }
+}
+```
+
+**Individual Task Structure:**
+
+```json
+{
+  "id": "AUTH-L2-001",
+  "title": "Implement auth service",
+  "description": "JWT token generation and validation",
+  "level": 2,
+  "dependencies": ["AUTH-L1-001", "AUTH-L1-002"],
+
+  "files": {
+    "create": ["src/services/auth.py"],
+    "modify": ["src/services/__init__.py"],
+    "read": ["src/models/user.py", "src/config.py"]
+  },
+
+  "acceptance_criteria": [
+    "generate_token() creates valid JWT",
+    "verify_token() validates and decodes JWT",
+    "Token expiration is configurable"
+  ],
+
+  "verification": {
+    "command": "pytest tests/unit/test_auth_service.py -v",
+    "timeout_seconds": 60
+  }
+}
+```
+
+**Why This Structure?**
+
+- **id**: Unique identifier for tracking and retry
+- **level**: Controls execution order
+- **dependencies**: Explicit task-to-task dependencies (within level constraints)
+- **files**: Enables conflict-free parallel execution
+- **acceptance_criteria**: Workers know what "done" looks like
+- **verification**: Automated pass/fail determination
+
+### Phase 4: Execution (`/zerg:rush`)
+
+The rush is where workers implement your feature in parallel.
+
+**Execution Modes:**
+
+| Mode | How Workers Run | When to Use |
+|------|-----------------|-------------|
+| `subprocess` | Local Python processes | Development, debugging, no Docker |
+| `container` | Isolated Docker containers | Production, security, reproducibility |
+| `auto` | Prefers container, falls back to subprocess | Default, recommended |
+
+**What Each Worker Does:**
+
+1. **Claims a task**: Requests next available task from orchestrator
+2. **Reads specs**: Loads task definition and feature specs
+3. **Implements**: Writes code to fulfill acceptance criteria
+4. **Commits**: Makes atomic commits to its branch
+5. **Verifies**: Runs verification command
+6. **Reports**: Signals completion (or failure) to orchestrator
+7. **Repeats**: Claims next task
+
+**Level Transitions:**
+
+When all tasks at Level N complete:
+
+1. **Collect**: Orchestrator gathers all worker branches
+2. **Merge**: Sequential merge into staging branch
+3. **Gate**: Run quality checks (lint, typecheck, test)
+4. **Promote**: If gates pass, merge staging to main
+5. **Rebase**: Workers update their worktrees from main
+6. **Advance**: Begin Level N+1 tasks
+
+**Why Levels Matter:**
+
+Levels enforce dependency order. If Level 2 tasks need Level 1 code:
+- Workers at Level 2 can import from Level 1 files
+- Those files exist because Level 1 completed first
+- No import errors, no undefined references
+
+### Phase 5: Monitoring (`/zerg:status`, `/zerg:logs`)
+
+While workers execute, you need visibility into what's happening.
+
+**Status Information:**
+
+```
+Progress: ████████████░░░░░░░░ 60% (24/40 tasks)
+
+Level 3 of 5 │ Workers: 5 active
+
+┌────────┬────────────────────────────────┬──────────┬─────────┐
+│ Worker │ Current Task                   │ Progress │ Status  │
+├────────┼────────────────────────────────┼──────────┼─────────┤
+│ W-0    │ AUTH-L3-001: Create login API  │ ████░░   │ RUNNING │
+│ W-1    │ AUTH-L3-002: Create user API   │ ██████   │ VERIFY  │
+│ W-2    │ (waiting for dependency)       │ ░░░░░░   │ IDLE    │
+└────────┴────────────────────────────────┴──────────┴─────────┘
+```
+
+**Status Meanings:**
+
+| Status | What It Means | What's Happening |
+|--------|---------------|------------------|
+| RUNNING | Worker actively coding | Claude Code is implementing the task |
+| VERIFY | Running verification | Executing the verification command |
+| IDLE | Waiting for work | No available tasks at current level |
+| CHECKPOINT | Context limit hit | Worker saving progress, will resume |
+| CRASHED | Unexpected exit | Check logs for error details |
+
+**Log Levels:**
+
+| Level | What's Logged |
+|-------|---------------|
+| `debug` | Everything—very verbose, good for troubleshooting |
+| `info` | Normal operations—task starts, completions, merges |
+| `warn` | Potential issues—retry attempts, slow operations |
+| `error` | Failures—task failures, verification failures |
 
 ---
 
 ## Complete Command Reference
+
+Now let's cover every command with all its options. For each command, I'll explain not just WHAT each flag does, but WHY you'd use it.
 
 ### Workflow Commands
 
@@ -276,314 +651,284 @@ All coordination flows through spec files in `.gsd/`:
 
 #### /zerg:init
 
-**Initialize ZERG for a project.**
+**Purpose:** Initialize ZERG for a project—either creating a new project (Inception Mode) or configuring an existing one (Discovery Mode).
 
-Creates `.zerg/` configuration, `.devcontainer/` setup, and integrates security rules.
+**When to use:** Once per project, at the very beginning.
 
-**Usage:**
 ```bash
 zerg init [OPTIONS]
 ```
 
-**Options:**
+**Options Explained:**
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--detect/--no-detect` | flag | `--detect` | Auto-detect project type from files |
-| `--workers`, `-w` | integer | `5` | Default number of workers (1-10) |
-| `--security` | choice | `standard` | Security level: `minimal`, `standard`, `strict` |
-| `--with-security-rules/--no-security-rules` | flag | `--with-security-rules` | Fetch secure coding rules from TikiTribe repo |
-| `--with-containers/--no-containers` | flag | `--no-containers` | Build devcontainer image after init |
-| `--force` | flag | `false` | Overwrite existing configuration |
+| Flag | Type | Default | What It Does | When to Use It |
+|------|------|---------|--------------|----------------|
+| `--detect/--no-detect` | flag | `--detect` | Auto-detect project type from existing files | Use `--no-detect` if detection is wrong |
+| `--workers`, `-w` | integer | `5` | Default worker count for this project | Fewer for small projects, more for large ones |
+| `--security` | choice | `standard` | Security isolation level | `strict` for production, `minimal` for debugging |
+| `--with-security-rules/--no-security-rules` | flag | `--with-security-rules` | Download secure coding rules | Disable if offline or rules aren't needed |
+| `--with-containers/--no-containers` | flag | `--no-containers` | Build devcontainer image immediately | Enable if you'll use container mode |
+| `--force` | flag | `false` | Overwrite existing configuration | When reconfiguring a project |
 
-**Security Levels:**
+**Security Levels Explained:**
 
-| Level | Network Isolation | Filesystem Sandbox | Secrets Scanning | Additional |
-|-------|-------------------|--------------------|--------------------|------------|
-| `minimal` | No | No | No | - |
-| `standard` | Yes | Yes | Yes | - |
-| `strict` | Yes | Yes | Yes | Read-only root, no new privileges |
+| Level | What's Protected | Use Case |
+|-------|------------------|----------|
+| `minimal` | Nothing—workers have full access | Quick prototyping, debugging issues |
+| `standard` | Network isolation, filesystem sandbox, secrets scanning | Normal development |
+| `strict` | All above + read-only root filesystem, no privilege escalation | Production, sensitive codebases |
 
 **Examples:**
 
 ```bash
-# Basic initialization with defaults
+# Basic initialization for most projects
 zerg init
 
-# Initialize with 3 workers and strict security
-zerg init --workers 3 --security strict
+# Strict security for production codebase
+zerg init --security strict
 
-# Skip auto-detection, force reinitialize
-zerg init --no-detect --force
-
-# Build devcontainer image immediately
-zerg init --with-containers
-
-# Skip security rules (faster init)
+# Fast init without security rules (offline mode)
 zerg init --no-security-rules
+
+# Reconfigure an existing ZERG project
+zerg init --force
+
+# Prepare for container mode immediately
+zerg init --with-containers
 ```
 
-**Output:**
-- `.zerg/config.yaml` - ZERG configuration
-- `.zerg/state/` - Execution state directory
-- `.zerg/logs/` - Worker logs directory
-- `.zerg/worktrees/` - Git worktrees directory
-- `.devcontainer/devcontainer.json` - Container configuration
-- `.devcontainer/Dockerfile` - Multi-language runtime
-- `.gsd/PROJECT.md` - Project documentation
-- `.gsd/INFRASTRUCTURE.md` - Infrastructure requirements
-- `.claude/security-rules/` - Secure coding rules (if enabled)
+**What Gets Created:**
+
+```
+project/
+├── .zerg/
+│   ├── config.yaml          # ZERG settings
+│   ├── state/               # Execution state (populated during rush)
+│   ├── logs/                # Worker logs (populated during rush)
+│   └── worktrees/           # Git worktrees (populated during rush)
+├── .devcontainer/
+│   ├── devcontainer.json    # VS Code / container configuration
+│   └── Dockerfile           # Multi-language worker image
+├── .gsd/
+│   ├── PROJECT.md           # Project documentation
+│   └── INFRASTRUCTURE.md    # Technical requirements
+└── .claude/
+    └── security-rules/      # Secure coding rules (if enabled)
+```
 
 ---
 
 #### /zerg:plan
 
-**Capture comprehensive feature requirements.**
+**Purpose:** Capture comprehensive feature requirements before any code is written. This creates the specification documents that workers will read.
 
-Creates a detailed requirements document with user stories, acceptance criteria, and verification commands.
+**When to use:** At the start of each new feature.
 
-**Usage:**
 ```bash
 zerg plan [FEATURE] [OPTIONS]
 ```
 
 **Arguments:**
 
-| Argument | Required | Description |
-|----------|----------|-------------|
-| `FEATURE` | Yes* | Feature name (kebab-case). *Not required with `--from-issue` |
+| Argument | Required | What It Is |
+|----------|----------|------------|
+| `FEATURE` | Yes* | Feature name in kebab-case (e.g., `user-auth`, `payment-integration`). *Not required with `--from-issue` |
 
-**Options:**
+**Options Explained:**
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--template`, `-t` | choice | `default` | Template style: `default`, `minimal`, `detailed` |
-| `--interactive/--no-interactive` | flag | `--interactive` | Enable/disable interactive prompts |
-| `--from-issue` | string | - | Import requirements from GitHub issue URL |
-| `--socratic`, `-s` | flag | `false` | Use structured 3-round Socratic discovery |
-| `--rounds` | integer | `3` | Number of Socratic rounds (1-5) |
-| `--verbose`, `-v` | flag | `false` | Verbose output |
+| Flag | Type | Default | What It Does | When to Use It |
+|------|------|---------|--------------|----------------|
+| `--template`, `-t` | choice | `default` | Requirements document structure | `minimal` for prototypes, `detailed` for complex features |
+| `--interactive/--no-interactive` | flag | `--interactive` | Enable/disable prompts | Disable for scripted/CI usage |
+| `--from-issue` | string | - | Import from GitHub issue URL | When requirements are already in GitHub |
+| `--socratic`, `-s` | flag | `false` | Use structured 3-round discovery | Recommended for complex features |
+| `--rounds` | integer | `3` | Number of Socratic rounds | Increase for very complex features |
+| `--verbose`, `-v` | flag | `false` | Show detailed output | When debugging planning issues |
 
-**Templates:**
+**Understanding Socratic Mode:**
 
-| Template | Description | Best For |
-|----------|-------------|----------|
-| `default` | Balanced detail level | Most features |
-| `minimal` | Essential fields only | Quick prototypes |
-| `detailed` | Comprehensive sections | Complex features |
+Socratic mode guides you through structured questions:
 
-**Socratic Mode:**
+**Round 1 - Problem Space:**
+These questions ensure you understand WHAT problem you're solving:
+- What specific problem does this solve?
+- Who are the users affected?
+- What happens today without this feature?
+- Why is solving this important now?
+- How will we know when it's solved?
 
-When `--socratic` is enabled, ZERG guides you through structured discovery:
+**Round 2 - Solution Space:**
+These questions define the BOUNDARIES of your solution:
+- What does the ideal solution look like?
+- What constraints must we work within?
+- What are non-negotiable requirements?
+- What similar solutions exist?
+- What should this explicitly NOT do?
 
-1. **Round 1 - Problem Space** (5 questions)
-   - What problem does this solve?
-   - Who are the users?
-   - What's the impact of not solving this?
-
-2. **Round 2 - Solution Space** (5 questions)
-   - What are the boundaries?
-   - What's explicitly out of scope?
-   - What are the constraints?
-
-3. **Round 3 - Implementation Space** (5 questions)
-   - What are the acceptance criteria?
-   - How will we verify success?
-   - What are the dependencies?
+**Round 3 - Implementation Space:**
+These questions plan the HOW:
+- What's the minimum viable version?
+- What can be deferred to later?
+- What are the biggest technical risks?
+- How should we verify correctness?
+- What documentation is needed?
 
 **Examples:**
 
 ```bash
-# Interactive planning with default template
-zerg plan user-authentication
+# Simple feature with minimal template
+zerg plan caching --template minimal
 
-# Socratic discovery mode (recommended for complex features)
-zerg plan user-authentication --socratic
-
-# Extended Socratic with 5 rounds
+# Complex feature with extended Socratic discovery
 zerg plan user-authentication --socratic --rounds 5
 
-# Import from GitHub issue
-zerg plan --from-issue https://github.com/org/repo/issues/123
+# Import requirements from GitHub issue
+zerg plan --from-issue https://github.com/org/repo/issues/42
 
-# Non-interactive with minimal template
-zerg plan api-v2 --template minimal --no-interactive
-
-# Detailed template with verbose output
-zerg plan payment-integration --template detailed --verbose
+# Non-interactive mode (for CI/scripts)
+zerg plan api-v2 --no-interactive --template default
 ```
 
-**Output:**
-- `.gsd/specs/{feature}/requirements.md` - Requirements document
-- `.gsd/.current-feature` - Active feature marker
-- `.gsd/specs/{feature}/.started` - Creation timestamp
+**What Gets Created:**
+
+```
+.gsd/
+├── .current-feature              # Marks active feature
+└── specs/
+    └── {feature}/
+        ├── requirements.md       # Requirements document
+        └── .started              # Timestamp
+```
 
 ---
 
 #### /zerg:design
 
-**Generate technical architecture and task graph.**
+**Purpose:** Generate technical architecture and the task graph that defines parallel execution.
 
-Creates detailed architecture documentation and breaks work into parallelizable tasks with exclusive file ownership.
+**When to use:** After requirements are approved and before rushing.
 
-**Usage:**
 ```bash
 zerg design [OPTIONS]
 ```
 
-**Options:**
+**Options Explained:**
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--feature`, `-f` | string | auto-detect | Feature name (uses current if not specified) |
-| `--max-task-minutes` | integer | `30` | Maximum duration per task in minutes |
-| `--min-task-minutes` | integer | `5` | Minimum duration per task in minutes |
-| `--validate-only` | flag | `false` | Validate existing task graph without regenerating |
-| `--verbose`, `-v` | flag | `false` | Verbose output |
+| Flag | Type | Default | What It Does | When to Use It |
+|------|------|---------|--------------|----------------|
+| `--feature`, `-f` | string | auto-detect | Which feature to design | When working on multiple features |
+| `--max-task-minutes` | integer | `30` | Maximum duration per task | Decrease to create more, smaller tasks |
+| `--min-task-minutes` | integer | `5` | Minimum duration per task | Increase to avoid tiny tasks |
+| `--validate-only` | flag | `false` | Check existing task graph without regenerating | After manual edits to task-graph.json |
+| `--verbose`, `-v` | flag | `false` | Show detailed output | When debugging design issues |
 
-**Prerequisites:**
-- `.gsd/specs/{feature}/requirements.md` must exist
-- Requirements should be approved (status: APPROVED)
+**Why Task Duration Matters:**
 
-**Task Graph Schema (v2.0):**
-
-```json
-{
-  "feature": "user-auth",
-  "version": "2.0",
-  "generated": "2026-01-26T10:30:00Z",
-  "total_tasks": 15,
-  "estimated_duration_minutes": 120,
-  "max_parallelization": 5,
-  "tasks": [
-    {
-      "id": "USER-AUTH-L1-001",
-      "title": "Create user types and schemas",
-      "description": "Define User, Session, Token types",
-      "phase": "foundation",
-      "level": 1,
-      "dependencies": [],
-      "files": {
-        "create": ["src/types/user.py"],
-        "modify": [],
-        "read": ["src/types/__init__.py"]
-      },
-      "acceptance_criteria": [
-        "User type has id, email, password_hash fields",
-        "Session type has user_id, token, expires_at fields"
-      ],
-      "verification": {
-        "command": "python -c \"from src.types.user import User, Session\"",
-        "timeout_seconds": 30
-      },
-      "estimate_minutes": 10
-    }
-  ]
-}
-```
+Task size affects parallelization:
+- **Too large** (>45 min): Workers might hit context limits mid-task
+- **Too small** (<5 min): Overhead of task setup exceeds value
+- **Just right** (10-30 min): Enough work to be meaningful, not so much it risks timeout
 
 **Examples:**
 
 ```bash
-# Design current feature (auto-detected)
+# Design current feature (auto-detected from .current-feature)
 zerg design
 
 # Design specific feature
-zerg design --feature user-authentication
+zerg design --feature payment-system
 
-# Validate existing task graph without changes
+# Validate task graph after manual edits
 zerg design --validate-only
 
-# Custom task duration bounds
-zerg design --max-task-minutes 45 --min-task-minutes 10
-
-# Verbose output for debugging
-zerg design --feature api-v2 --verbose
+# Create smaller, more granular tasks
+zerg design --max-task-minutes 15 --min-task-minutes 5
 ```
 
-**Output:**
-- `.gsd/specs/{feature}/design.md` - Architecture document
-- `.gsd/specs/{feature}/task-graph.json` - Task definitions
+**What Gets Created:**
+
+```
+.gsd/specs/{feature}/
+├── requirements.md      # (already existed)
+├── design.md            # NEW: Architecture document
+└── task-graph.json      # NEW: Task definitions
+```
 
 ---
 
 #### /zerg:rush
 
-**Launch parallel worker execution.**
+**Purpose:** Launch parallel workers to implement your feature. This is where the actual building happens.
 
-Spawns multiple Claude Code workers, assigns tasks, and orchestrates parallel execution across dependency levels.
+**When to use:** After design is complete and you're ready to build.
 
-**Usage:**
 ```bash
 zerg rush [OPTIONS]
 ```
 
-**Options:**
+**Options Explained:**
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--workers`, `-w` | integer | `5` | Number of workers to launch (1-10) |
-| `--feature`, `-f` | string | auto-detect | Feature name |
-| `--level`, `-l` | integer | `1` | Start from specific level |
-| `--task-graph`, `-g` | path | auto-detect | Path to task-graph.json |
-| `--mode`, `-m` | choice | `auto` | Worker mode: `subprocess`, `container`, `auto` |
-| `--dry-run` | flag | `false` | Show execution plan without starting |
-| `--resume` | flag | `false` | Continue from previous run |
-| `--timeout` | integer | `3600` | Maximum execution time in seconds |
-| `--verbose`, `-v` | flag | `false` | Verbose output |
+| Flag | Type | Default | What It Does | When to Use It |
+|------|------|---------|--------------|----------------|
+| `--workers`, `-w` | integer | `5` | Number of workers to spawn | Balance speed vs. cost |
+| `--feature`, `-f` | string | auto-detect | Feature to build | When working on multiple features |
+| `--level`, `-l` | integer | `1` | Starting level | Skip completed levels on resume |
+| `--task-graph`, `-g` | path | auto-detect | Path to task-graph.json | Custom task graph location |
+| `--mode`, `-m` | choice | `auto` | Worker execution mode | Force subprocess or container |
+| `--dry-run` | flag | `false` | Preview execution plan | Always run first to verify |
+| `--resume` | flag | `false` | Continue from previous run | After interruption or failure |
+| `--timeout` | integer | `3600` | Max execution time (seconds) | Increase for large features |
+| `--verbose`, `-v` | flag | `false` | Show detailed output | When debugging execution |
 
-**Execution Modes:**
+**Understanding Execution Modes:**
 
-| Mode | Description | Requirements |
-|------|-------------|--------------|
-| `auto` | Auto-detect best mode | Prefers container if available |
-| `subprocess` | Local Python processes | No Docker required |
-| `container` | Isolated Docker containers | Docker + built image |
+| Mode | What Happens | Pros | Cons |
+|------|--------------|------|------|
+| `subprocess` | Workers run as local Python processes | Fast startup, easy debugging | Less isolation, shares resources |
+| `container` | Workers run in Docker containers | Full isolation, reproducible | Slower startup, needs Docker |
+| `auto` | Uses container if available, else subprocess | Best of both | Behavior depends on setup |
 
-**Auto-Detection Logic:**
-1. If `.devcontainer/devcontainer.json` exists AND worker image is built → **container mode**
-2. Otherwise → **subprocess mode**
+**Worker Count Guidelines:**
+
+| Workers | Best For | API Cost | Completion Speed |
+|---------|----------|----------|------------------|
+| 1-2 | Learning, small features | Low | Slow |
+| 3-5 | Medium features, most use cases | Medium | Balanced |
+| 6-10 | Large features, time-critical | High | Fast |
 
 **Examples:**
 
 ```bash
-# Launch 5 workers (default)
-zerg rush
-
-# Launch with specific worker count
-zerg rush --workers 3
-
-# Preview execution plan without starting
+# Preview execution plan first (always recommended)
 zerg rush --dry-run
 
-# Resume interrupted execution
+# Start with 5 workers (default)
+zerg rush
+
+# Resume after interruption
 zerg rush --resume
 
-# Resume with different worker count
-zerg rush --resume --workers 3
-
-# Start from level 2 (skip level 1)
-zerg rush --level 2
-
-# Force container mode
-zerg rush --mode container --workers 5
-
 # Force subprocess mode (no Docker)
-zerg rush --mode subprocess
+zerg rush --mode subprocess --workers 3
 
-# Extended timeout for large features
+# Skip to level 3 (levels 1-2 already done)
+zerg rush --level 3 --resume
+
+# Extended timeout for large feature
 zerg rush --timeout 7200  # 2 hours
-
-# Specific feature with verbose output
-zerg rush --feature user-auth --verbose
 ```
 
-**Output:**
-- `.zerg/state/{feature}.json` - Execution state
-- `.zerg/logs/worker-{id}.log` - Worker logs
-- `.zerg/worktrees/{feature}-worker-N/` - Git worktrees
-- `.gsd/specs/{feature}/worker-assignments.json` - Task assignments
-- `.gsd/STATE.md` - Human-readable progress
+**What Gets Created During Rush:**
+
+```
+.zerg/
+├── state/{feature}.json           # Execution state
+├── logs/
+│   ├── orchestrator.log           # Main process logs
+│   └── worker-{0-9}.log           # Individual worker logs
+└── worktrees/
+    └── {feature}-worker-{0-9}/    # Git worktrees
+```
 
 ---
 
@@ -593,62 +938,24 @@ zerg rush --feature user-auth --verbose
 
 #### /zerg:status
 
-**Display current execution status and progress.**
+**Purpose:** Display current execution status and progress. Your window into what workers are doing.
 
-Shows real-time progress across all workers and levels with optional continuous updates.
-
-**Usage:**
 ```bash
 zerg status [OPTIONS]
 ```
 
-**Options:**
+**Options Explained:**
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--feature`, `-f` | string | auto-detect | Feature to show status for |
-| `--watch`, `-w` | flag | `false` | Continuous update mode |
-| `--interval` | integer | `5` | Watch refresh interval in seconds |
-| `--level`, `-l` | integer | - | Filter to specific level |
-| `--json` | flag | `false` | Output as JSON for scripting |
+| Flag | Type | Default | What It Does | When to Use It |
+|------|------|---------|--------------|----------------|
+| `--feature`, `-f` | string | auto-detect | Feature to show status for | Multiple features in progress |
+| `--watch`, `-w` | flag | `false` | Continuous updates | During active rush |
+| `--interval` | integer | `5` | Seconds between updates | Faster for more responsive display |
+| `--level`, `-l` | integer | - | Filter to specific level | Focus on current level |
+| `--json` | flag | `false` | JSON output | For scripting/CI |
 
-**Status Icons:**
+**Understanding Status Display:**
 
-| Icon | Status | Meaning |
-|------|--------|---------|
-| `[green]` | running | Worker actively executing task |
-| `[yellow]` | idle | Worker waiting for dependencies |
-| `[blue]` | verifying | Running verification command |
-| `[dim]` | stopped | Gracefully stopped |
-| `[red]` | crashed | Exited unexpectedly |
-| `[orange]` | checkpoint | Context limit reached |
-
-**Examples:**
-
-```bash
-# Show current status
-zerg status
-
-# Watch with live updates (5 second refresh)
-zerg status --watch
-
-# Faster refresh rate
-zerg status --watch --interval 2
-
-# Filter to specific level
-zerg status --level 2
-
-# JSON output for scripting
-zerg status --json
-
-# Specific feature
-zerg status --feature user-auth
-
-# Combined options
-zerg status --feature user-auth --watch --json
-```
-
-**Sample Output:**
 ```
 ═══════════════════════════════════════════════════════════════
 Progress: ████████████░░░░░░░░ 60% (24/40 tasks)
@@ -669,124 +976,122 @@ Recent: ✓ TASK-014 (W-2) │ ✓ TASK-013 (W-1) │ ✓ TASK-012 (W-0)
 ═══════════════════════════════════════════════════════════════
 ```
 
+**Status Icon Meanings:**
+
+| Status | What Worker Is Doing |
+|--------|----------------------|
+| RUNNING | Actively implementing task code |
+| VERIFY | Running verification command |
+| IDLE | No tasks available at current level |
+| CHECKPOINT | Hit context limit, saving progress |
+| CRASHED | Exited unexpectedly (check logs) |
+
+**Examples:**
+
+```bash
+# Quick status check
+zerg status
+
+# Watch mode during active rush
+zerg status --watch
+
+# Faster refresh rate
+zerg status --watch --interval 2
+
+# JSON for scripting
+zerg status --json
+```
+
 ---
 
 #### /zerg:logs
 
-**Stream and filter worker logs.**
+**Purpose:** View worker and orchestrator logs. Essential for understanding what's happening and debugging issues.
 
-Displays worker and orchestrator logs with filtering, streaming, and export options.
-
-**Usage:**
 ```bash
 zerg logs [WORKER_ID] [OPTIONS]
 ```
 
 **Arguments:**
 
-| Argument | Required | Description |
-|----------|----------|-------------|
-| `WORKER_ID` | No | Filter to specific worker (0-9) |
+| Argument | Required | What It Is |
+|----------|----------|------------|
+| `WORKER_ID` | No | Specific worker (0-9) to show logs for. Omit for all workers |
 
-**Options:**
+**Options Explained:**
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--feature`, `-f` | string | auto-detect | Feature name |
-| `--tail`, `-n` | integer | `100` | Number of lines to show |
-| `--follow` | flag | `false` | Stream new logs continuously |
-| `--level`, `-l` | choice | `info` | Log level filter: `debug`, `info`, `warn`, `error` |
-| `--json` | flag | `false` | Raw JSON output |
+| Flag | Type | Default | What It Does | When to Use It |
+|------|------|---------|--------------|----------------|
+| `--feature`, `-f` | string | auto-detect | Feature logs to show | Multiple features |
+| `--tail`, `-n` | integer | `100` | Lines to show | Increase for more history |
+| `--follow` | flag | `false` | Stream new logs in real-time | During active execution |
+| `--level`, `-l` | choice | `info` | Log level filter | `debug` for troubleshooting |
+| `--json` | flag | `false` | Raw JSON output | For log parsing |
 
-**Log Levels:**
+**Log Levels Explained:**
 
-| Level | Color | Description |
-|-------|-------|-------------|
-| `debug` | dim | Detailed debugging information |
-| `info` | blue | Normal operational messages |
-| `warn` | yellow | Warning conditions |
-| `error` | red | Error conditions |
+| Level | What's Shown | When to Use |
+|-------|--------------|-------------|
+| `debug` | Everything including internal operations | Troubleshooting weird issues |
+| `info` | Normal operations, task starts/completions | General monitoring |
+| `warn` | Potential issues, retries, slow operations | Watching for problems |
+| `error` | Failures only | Quick failure triage |
 
 **Examples:**
 
 ```bash
-# Show recent logs from all workers
+# View recent logs from all workers
 zerg logs
-
-# Show logs from worker 1 only
-zerg logs 1
 
 # Stream logs in real-time
 zerg logs --follow
 
-# Debug level for detailed output
-zerg logs --level debug
+# Worker 1's errors only
+zerg logs 1 --level error
 
-# Last 50 error messages only
-zerg logs --tail 50 --level error
-
-# JSON output for parsing
-zerg logs --json
-
-# Combined: stream worker 0 with debug level
-zerg logs 0 --follow --level debug
-
-# Specific feature logs
-zerg logs --feature user-auth --tail 200
+# Last 200 lines with debug detail
+zerg logs --tail 200 --level debug
 ```
 
 ---
 
 #### /zerg:stop
 
-**Stop workers gracefully or forcefully.**
+**Purpose:** Stop worker execution, either gracefully (with checkpoint) or forcefully.
 
-Terminates worker execution with optional graceful shutdown and checkpoint.
-
-**Usage:**
 ```bash
 zerg stop [OPTIONS]
 ```
 
-**Options:**
+**Options Explained:**
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--feature`, `-f` | string | auto-detect | Feature to stop |
-| `--worker`, `-w` | integer | - | Stop specific worker only (0-9) |
-| `--force` | flag | `false` | Force immediate termination |
-| `--timeout` | integer | `30` | Graceful shutdown timeout in seconds |
+| Flag | Type | Default | What It Does | When to Use It |
+|------|------|---------|--------------|----------------|
+| `--feature`, `-f` | string | auto-detect | Feature to stop | Multiple features |
+| `--worker`, `-w` | integer | - | Stop only this worker | One worker having issues |
+| `--force` | flag | `false` | Immediate termination | Graceful stop isn't working |
+| `--timeout` | integer | `30` | Graceful shutdown timeout | Workers taking too long to stop |
 
-**Graceful vs Force:**
+**Graceful vs. Force:**
 
 | Aspect | Graceful (default) | Force |
 |--------|-------------------|-------|
-| Checkpoint | Yes, WIP committed | No |
-| State update | Yes | May be stale |
+| In-progress work | Checkpointed | Lost |
+| State file | Updated | May be stale |
 | Task status | PAUSED | FAILED |
-| Uncommitted work | Saved | Lost |
-| Container | Clean stop | Killed |
+| Can resume | Yes, from checkpoint | Yes, but may redo work |
 
 **Examples:**
 
 ```bash
-# Graceful stop all workers (default)
+# Graceful stop all workers
 zerg stop
 
-# Stop specific feature
-zerg stop --feature user-auth
-
-# Force immediate stop (no checkpoint)
-zerg stop --force
-
-# Stop specific worker only
+# Stop one problematic worker
 zerg stop --worker 3
 
-# Force stop specific worker
-zerg stop --worker 3 --force
-
-# Extended graceful timeout
-zerg stop --timeout 60
+# Force stop when graceful hangs
+zerg stop --force
 ```
 
 ---
@@ -797,189 +1102,160 @@ zerg stop --timeout 60
 
 #### /zerg:retry
 
-**Retry failed or blocked tasks.**
+**Purpose:** Retry failed or blocked tasks. ZERG tracks retry counts to prevent infinite loops.
 
-Resets task state and re-queues for execution with retry limit enforcement.
-
-**Usage:**
 ```bash
 zerg retry [TASK_IDS...] [OPTIONS]
 ```
 
 **Arguments:**
 
-| Argument | Required | Description |
-|----------|----------|-------------|
-| `TASK_IDS` | No | Specific task IDs to retry |
+| Argument | Required | What It Is |
+|----------|----------|------------|
+| `TASK_IDS` | No | Specific task IDs to retry (e.g., `AUTH-L2-001`) |
 
-**Options:**
+**Options Explained:**
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--feature`, `-f` | string | auto-detect | Feature name |
-| `--level`, `-l` | integer | - | Retry all failed tasks in level |
-| `--all-failed`, `-a` | flag | `false` | Retry all failed tasks |
-| `--force` | flag | `false` | Bypass retry limit (default: 3) |
-| `--timeout`, `-t` | integer | - | Override timeout in seconds |
-| `--reset` | flag | `false` | Reset retry counters |
-| `--dry-run` | flag | `false` | Show what would be retried |
-| `--worker`, `-w` | integer | - | Assign to specific worker |
-| `--verbose`, `-v` | flag | `false` | Verbose output |
+| Flag | Type | Default | What It Does | When to Use It |
+|------|------|---------|--------------|----------------|
+| `--feature`, `-f` | string | auto-detect | Feature containing tasks | Multiple features |
+| `--level`, `-l` | integer | - | Retry all failed in level | Level-wide retry |
+| `--all-failed`, `-a` | flag | `false` | Retry all failed tasks | After fixing systemic issue |
+| `--force` | flag | `false` | Bypass 3-retry limit | Task keeps failing but you need it |
+| `--timeout`, `-t` | integer | - | Override task timeout | Task needs more time |
+| `--reset` | flag | `false` | Reset retry counters | Fresh start |
+| `--dry-run` | flag | `false` | Show what would retry | Preview before action |
+| `--worker`, `-w` | integer | - | Assign to specific worker | Route to idle worker |
+
+**Why Retry Limits Exist:**
+
+ZERG limits retries (default: 3) because:
+- A task that keeps failing likely has a fundamental issue
+- Infinite retries waste API credits
+- Forces you to investigate and fix the root cause
+
+Use `--force` or `--reset` sparingly, preferably after understanding why the task failed.
 
 **Examples:**
 
 ```bash
 # Retry specific task
-zerg retry TASK-001
-
-# Retry multiple tasks
-zerg retry TASK-001 TASK-002 TASK-003
+zerg retry AUTH-L2-001
 
 # Retry all failed tasks
 zerg retry --all-failed
 
-# Retry all failed in level 2
-zerg retry --level 2
-
-# Force retry (bypass 3-attempt limit)
-zerg retry TASK-001 --force
-
-# Reset counters and retry
-zerg retry --all-failed --reset
-
-# Preview what would be retried
+# Preview what would retry
 zerg retry --all-failed --dry-run
 
-# Assign to specific worker
-zerg retry TASK-001 --worker 2
+# Force retry past limit (use sparingly)
+zerg retry AUTH-L2-001 --force
 
-# Override timeout
-zerg retry TASK-001 --timeout 120
+# Reset all counters and retry
+zerg retry --all-failed --reset
 ```
 
 ---
 
 #### /zerg:merge
 
-**Manage level merges and integrate worker branches.**
+**Purpose:** Merge worker branches after level completion. Usually automatic, but you can trigger manually.
 
-Merges worker branches after each level completes, runs quality gates, and rebases for next level.
-
-**Usage:**
 ```bash
 zerg merge [OPTIONS]
 ```
 
-**Options:**
+**Options Explained:**
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--feature`, `-f` | string | auto-detect | Feature to merge |
-| `--level`, `-l` | integer | current | Merge specific level |
-| `--force` | flag | `false` | Force merge despite conflicts |
-| `--abort` | flag | `false` | Abort in-progress merge |
-| `--dry-run` | flag | `false` | Show merge plan only |
-| `--skip-gates` | flag | `false` | Skip quality gate checks |
-| `--no-rebase` | flag | `false` | Don't rebase worker branches |
-| `--verbose`, `-v` | flag | `false` | Verbose output |
+| Flag | Type | Default | What It Does | When to Use It |
+|------|------|---------|--------------|----------------|
+| `--feature`, `-f` | string | auto-detect | Feature to merge | Multiple features |
+| `--level`, `-l` | integer | current | Specific level to merge | Manual level control |
+| `--force` | flag | `false` | Merge despite conflicts | Last resort (not recommended) |
+| `--abort` | flag | `false` | Abort in-progress merge | Merge went wrong |
+| `--dry-run` | flag | `false` | Show merge plan only | Preview before merge |
+| `--skip-gates` | flag | `false` | Skip quality checks | Debugging only |
+| `--no-rebase` | flag | `false` | Don't rebase worker branches | Preserve branch history |
 
-**Merge States:**
+**Merge Process Explained:**
 
-| State | Description |
-|-------|-------------|
-| `pending` | Level not yet complete |
-| `waiting` | Waiting for workers to finish |
-| `collecting` | Gathering worker branches |
-| `merging` | Merge in progress |
-| `validating` | Running quality gates |
-| `rebasing` | Rebasing worker branches |
-| `complete` | Merge successful |
-| `conflict` | Manual intervention needed |
-| `failed` | Merge or validation failed |
+1. **Collect**: Identify all worker branches for the level
+2. **Merge to staging**: Sequential merge into `zerg/{feature}/staging`
+3. **Quality gates**: Run lint, typecheck, tests on staging
+4. **Promote**: If gates pass, merge staging to main
+5. **Rebase**: Update worker branches from new main
+
+**Why Quality Gates?**
+
+Even with exclusive file ownership, merged code might have issues:
+- Import errors (missing dependency between tasks)
+- Type mismatches
+- Integration test failures
+
+Gates catch these before they hit main.
 
 **Examples:**
 
 ```bash
-# Merge current level
-zerg merge
+# Preview merge plan
+zerg merge --dry-run
 
 # Merge specific level
 zerg merge --level 2
 
-# Preview merge plan
-zerg merge --dry-run
-
-# Skip quality gates (use with caution)
-zerg merge --skip-gates
-
-# Force merge despite conflicts
-zerg merge --force
-
 # Abort failed merge
 zerg merge --abort
 
-# Don't rebase worker branches after
-zerg merge --no-rebase
-
-# Combined: verbose dry-run for level 3
-zerg merge --level 3 --dry-run --verbose
+# Skip gates for debugging (not for production)
+zerg merge --skip-gates
 ```
 
 ---
 
 #### /zerg:cleanup
 
-**Remove ZERG artifacts and clean up resources.**
+**Purpose:** Remove ZERG artifacts after feature completion. Preserves your code, removes infrastructure.
 
-Removes worktrees, branches, containers, and logs while preserving merged code.
-
-**Usage:**
 ```bash
 zerg cleanup [OPTIONS]
 ```
 
-**Options:**
+**Options Explained:**
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--feature`, `-f` | string | - | Feature to clean (required unless `--all`) |
-| `--all` | flag | `false` | Clean all ZERG features |
-| `--keep-logs` | flag | `false` | Preserve log files |
-| `--keep-branches` | flag | `false` | Preserve git branches |
-| `--dry-run` | flag | `false` | Preview cleanup plan |
+| Flag | Type | Default | What It Does | When to Use It |
+|------|------|---------|--------------|----------------|
+| `--feature`, `-f` | string | - | Feature to clean (required unless --all) | Normal cleanup |
+| `--all` | flag | `false` | Clean all ZERG features | Fresh start |
+| `--keep-logs` | flag | `false` | Preserve log files | Post-mortem analysis |
+| `--keep-branches` | flag | `false` | Preserve git branches | Audit trail |
+| `--dry-run` | flag | `false` | Preview without deleting | Safety check |
 
-**What Gets Cleaned:**
+**What Gets Removed:**
 
-| Category | Removed | Preserved |
-|----------|---------|-----------|
+| Category | What's Deleted | What's Preserved |
+|----------|----------------|------------------|
 | Worktrees | `.zerg/worktrees/{feature}-*` | - |
 | Branches | `zerg/{feature}/*` | main, develop |
 | State | `.zerg/state/{feature}.json` | - |
-| Logs | `.zerg/logs/worker-*.log` | With `--keep-logs` |
+| Logs | `.zerg/logs/worker-*.log` | With --keep-logs |
 | Containers | `zerg-worker-*` | - |
 | Specs | - | `.gsd/specs/{feature}/` |
-| Source code | - | All merged changes |
+| Code | - | All merged changes |
 
 **Examples:**
 
 ```bash
-# Clean specific feature
+# Clean up completed feature
 zerg cleanup --feature user-auth
 
-# Preview cleanup (no changes)
+# Preview cleanup first
 zerg cleanup --feature user-auth --dry-run
 
-# Clean all features
-zerg cleanup --all
-
-# Keep logs for debugging
+# Keep logs for post-mortem
 zerg cleanup --feature user-auth --keep-logs
 
-# Keep branches for reference
-zerg cleanup --feature user-auth --keep-branches
-
-# Clean all but keep logs and branches
-zerg cleanup --all --keep-logs --keep-branches
+# Clean everything
+zerg cleanup --all
 ```
 
 ---
@@ -990,32 +1266,29 @@ zerg cleanup --all --keep-logs --keep-branches
 
 #### /zerg:test
 
-**Execute tests with coverage analysis.**
+**Purpose:** Run tests with coverage analysis. Auto-detects your test framework.
 
-Runs language-specific test frameworks with parallel execution and coverage reporting.
-
-**Usage:**
 ```bash
 zerg test [OPTIONS]
 ```
 
-**Options:**
+**Options Explained:**
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--generate`, `-g` | flag | `false` | Generate test stubs for uncovered code |
-| `--coverage`, `-c` | flag | `false` | Report test coverage |
-| `--watch`, `-w` | flag | `false` | Watch mode (continuous testing) |
-| `--parallel`, `-p` | integer | - | Number of parallel workers |
-| `--framework` | choice | auto-detect | Framework: `pytest`, `jest`, `cargo`, `go`, `mocha`, `vitest` |
-| `--path` | path | `.` | Path to test files |
-| `--dry-run` | flag | `false` | Show what would run |
-| `--json` | flag | `false` | Output as JSON |
+| Flag | Type | Default | What It Does | When to Use It |
+|------|------|---------|--------------|----------------|
+| `--generate`, `-g` | flag | `false` | Generate test stubs for uncovered code | Bootstrapping tests |
+| `--coverage`, `-c` | flag | `false` | Report test coverage | Quality assessment |
+| `--watch`, `-w` | flag | `false` | Rerun on file changes | TDD workflow |
+| `--parallel`, `-p` | integer | - | Parallel test workers | Speed up large suites |
+| `--framework` | choice | auto-detect | Test framework | Override detection |
+| `--path` | path | `.` | Test file path | Run subset of tests |
+| `--dry-run` | flag | `false` | Show command without running | Preview |
+| `--json` | flag | `false` | JSON output | CI integration |
 
 **Auto-Detected Frameworks:**
 
-| Language | Frameworks |
-|----------|------------|
+| Language | Frameworks Detected |
+|----------|---------------------|
 | Python | pytest, unittest |
 | JavaScript/TypeScript | jest, mocha, vitest |
 | Go | go test |
@@ -1027,66 +1300,40 @@ zerg test [OPTIONS]
 # Run all tests
 zerg test
 
-# Run with coverage report
+# With coverage report
 zerg test --coverage
 
 # Watch mode for TDD
 zerg test --watch
 
-# Parallel execution
+# Parallel for speed
 zerg test --parallel 4
 
-# Generate test stubs
-zerg test --generate
-
-# Specific framework
-zerg test --framework pytest
-
-# Test specific path
+# Specific test path
 zerg test --path tests/unit/
-
-# Preview test command
-zerg test --dry-run
-
-# JSON output for CI
-zerg test --coverage --json
 ```
 
 ---
 
 #### /zerg:build
 
-**Build orchestration with error recovery.**
+**Purpose:** Build orchestration with intelligent error recovery and retry logic.
 
-Auto-detects build system and executes with intelligent error recovery and retries.
-
-**Usage:**
 ```bash
 zerg build [OPTIONS]
 ```
 
-**Options:**
+**Options Explained:**
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--target`, `-t` | string | `all` | Build target |
-| `--mode`, `-m` | choice | `dev` | Build mode: `dev`, `staging`, `prod` |
-| `--clean` | flag | `false` | Clean build artifacts first |
-| `--watch`, `-w` | flag | `false` | Watch mode (rebuild on changes) |
-| `--retry`, `-r` | integer | `3` | Retry attempts on failure |
-| `--dry-run` | flag | `false` | Show what would be built |
-| `--json` | flag | `false` | Output as JSON |
-
-**Supported Build Systems:**
-
-| Build System | Detection | Command |
-|--------------|-----------|---------|
-| npm | `package.json` | `npm run build` |
-| cargo | `Cargo.toml` | `cargo build` |
-| make | `Makefile` | `make` |
-| gradle | `build.gradle` | `./gradlew build` |
-| go | `go.mod` | `go build ./...` |
-| python | `pyproject.toml` | `python -m build` |
+| Flag | Type | Default | What It Does | When to Use It |
+|------|------|---------|--------------|----------------|
+| `--target`, `-t` | string | `all` | Build target | Specific component |
+| `--mode`, `-m` | choice | `dev` | Build mode: dev/staging/prod | Environment-specific builds |
+| `--clean` | flag | `false` | Clean before build | Fresh build |
+| `--watch`, `-w` | flag | `false` | Rebuild on changes | Development |
+| `--retry`, `-r` | integer | `3` | Retry attempts | Flaky builds |
+| `--dry-run` | flag | `false` | Show build command | Preview |
+| `--json` | flag | `false` | JSON output | CI integration |
 
 **Examples:**
 
@@ -1102,121 +1349,87 @@ zerg build --clean
 
 # Watch mode
 zerg build --watch
-
-# Specific target
-zerg build --target api
-
-# Extended retries
-zerg build --retry 5
-
-# Preview command
-zerg build --dry-run
-
-# JSON output
-zerg build --json
 ```
 
 ---
 
 #### /zerg:analyze
 
-**Static analysis, complexity metrics, and quality assessment.**
+**Purpose:** Static analysis, complexity metrics, and security scanning.
 
-Executes linting, complexity analysis, coverage checking, and security scanning.
-
-**Usage:**
 ```bash
 zerg analyze [PATH] [OPTIONS]
 ```
 
-**Arguments:**
+**Options Explained:**
 
-| Argument | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `PATH` | No | `.` | Path to analyze |
-
-**Options:**
-
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--check`, `-c` | choice | `all` | Check type: `lint`, `complexity`, `coverage`, `security`, `all` |
-| `--format`, `-f` | choice | `text` | Output format: `text`, `json`, `sarif` |
-| `--threshold`, `-t` | string | - | Custom thresholds (e.g., `complexity=10,coverage=70`) |
-| `--files` | path | - | Specific files (deprecated, use PATH) |
+| Flag | Type | Default | What It Does | When to Use It |
+|------|------|---------|--------------|----------------|
+| `--check`, `-c` | choice | `all` | Check type: lint, complexity, coverage, security | Focus on specific aspect |
+| `--format`, `-f` | choice | `text` | Output format: text, json, sarif | IDE/CI integration |
+| `--threshold`, `-t` | string | - | Custom thresholds | Project-specific standards |
 
 **Check Types:**
 
-| Check | Tools | Description |
-|-------|-------|-------------|
-| `lint` | ruff, eslint, gofmt | Code style and formatting |
-| `complexity` | radon, plato | Cyclomatic complexity |
-| `coverage` | pytest-cov, istanbul | Test coverage |
-| `security` | bandit, semgrep | Security vulnerabilities |
-| `all` | All above | Complete analysis |
+| Check | What It Analyzes | Tools Used |
+|-------|------------------|------------|
+| `lint` | Code style, formatting | ruff, eslint, gofmt |
+| `complexity` | Cyclomatic complexity | radon, plato |
+| `coverage` | Test coverage | pytest-cov, istanbul |
+| `security` | Vulnerabilities | bandit, semgrep |
+| `all` | Everything | All above |
 
 **Examples:**
 
 ```bash
-# Run all checks
+# Full analysis
 zerg analyze
 
-# Lint check only
+# Lint only
 zerg analyze --check lint
 
 # Security scan
 zerg analyze --check security
 
-# JSON output for CI
-zerg analyze --format json
-
-# SARIF for IDE integration
-zerg analyze --format sarif
-
-# Custom thresholds
+# Custom complexity threshold
 zerg analyze --check complexity --threshold complexity=15
 
-# Analyze specific path
-zerg analyze src/
-
-# Combined checks
-zerg analyze src/ --check lint,security --format json
+# SARIF for IDE
+zerg analyze --format sarif
 ```
 
 ---
 
 #### /zerg:review
 
-**Two-stage code review workflow.**
+**Purpose:** Two-stage code review workflow for spec compliance and quality.
 
-Executes spec compliance check and code quality review in structured stages.
-
-**Usage:**
 ```bash
 zerg review [OPTIONS]
 ```
 
-**Options:**
+**Options Explained:**
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--mode`, `-m` | choice | `full` | Review mode: `prepare`, `self`, `receive`, `full` |
-| `--files`, `-f` | string | - | Specific files to review |
-| `--output`, `-o` | path | - | Output file for results |
-| `--json` | flag | `false` | Output as JSON |
+| Flag | Type | Default | What It Does | When to Use It |
+|------|------|---------|--------------|----------------|
+| `--mode`, `-m` | choice | `full` | Review mode | Different review stages |
+| `--files`, `-f` | string | - | Specific files | Focused review |
+| `--output`, `-o` | path | - | Output file | Save review |
+| `--json` | flag | `false` | JSON output | Automation |
 
 **Review Modes:**
 
-| Mode | Description | Output |
-|------|-------------|--------|
-| `prepare` | Generate change summary and checklist | PR description |
-| `self` | Self-review checklist and analysis | Review checklist |
+| Mode | What It Does | Output |
+|------|--------------|--------|
+| `prepare` | Generate PR description | Summary, checklist |
+| `self` | Self-review checklist | Issues to address |
 | `receive` | Process review feedback | Action items |
-| `full` | Complete two-stage review | Full report |
+| `full` | Both stages | Complete review |
 
 **Examples:**
 
 ```bash
-# Full two-stage review
+# Full review
 zerg review
 
 # Prepare PR description
@@ -1225,17 +1438,8 @@ zerg review --mode prepare
 # Self-review before PR
 zerg review --mode self
 
-# Review specific files
-zerg review --files "src/auth/*.py"
-
-# Save report to file
+# Save to file
 zerg review --output review.md
-
-# JSON output
-zerg review --json
-
-# Combined
-zerg review --mode full --output review.md --json
 ```
 
 ---
@@ -1246,159 +1450,119 @@ zerg review --mode full --output review.md --json
 
 #### /zerg:refactor
 
-**Automated code improvement and cleanup.**
+**Purpose:** Automated code improvement and cleanup using various transforms.
 
-Applies code quality transforms including dead code removal, simplification, type strengthening, and naming improvements.
-
-**Usage:**
 ```bash
 zerg refactor [PATH] [OPTIONS]
 ```
 
-**Arguments:**
+**Options Explained:**
 
-| Argument | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `PATH` | No | `.` | Path to analyze |
+| Flag | Type | Default | What It Does | When to Use It |
+|------|------|---------|--------------|----------------|
+| `--transforms`, `-t` | string | all | Which improvements to apply | Target specific issues |
+| `--dry-run` | flag | `false` | Show changes without applying | Preview before commit |
+| `--interactive`, `-i` | flag | `false` | Approve each change | Careful refactoring |
+| `--json` | flag | `false` | JSON output | Automation |
 
-**Options:**
+**Available Transforms:**
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--transforms`, `-t` | string | all | Transforms: `dead-code`, `simplify`, `types`, `patterns`, `naming` |
-| `--dry-run` | flag | `false` | Show suggestions without applying |
-| `--interactive`, `-i` | flag | `false` | Interactive mode (approve each change) |
-| `--files`, `-f` | string | - | Specific files (deprecated, use PATH) |
-| `--json` | flag | `false` | Output as JSON |
-
-**Transforms:**
-
-| Transform | Description | Example |
-|-----------|-------------|---------|
-| `dead-code` | Remove unused code | Remove unused imports |
+| Transform | What It Does | Example |
+|-----------|--------------|---------|
+| `dead-code` | Remove unused code | Delete unused imports |
 | `simplify` | Simplify expressions | `if x == True:` → `if x:` |
-| `types` | Strengthen type hints | Replace `Any` with specific types |
+| `types` | Strengthen type hints | `Any` → specific type |
 | `patterns` | Apply design patterns | Extract repeated code |
 | `naming` | Improve variable names | `x` → `user_count` |
 
 **Examples:**
 
 ```bash
-# Apply all transforms
-zerg refactor
-
-# Preview without applying
+# All transforms, preview first
 zerg refactor --dry-run
 
 # Interactive mode
 zerg refactor --interactive
 
-# Specific transforms
-zerg refactor --transforms dead-code,simplify
+# Just remove dead code
+zerg refactor --transforms dead-code
 
-# Type improvements only
+# Type improvements
 zerg refactor --transforms types
-
-# Refactor specific path
-zerg refactor src/auth/
-
-# JSON output
-zerg refactor --dry-run --json
 ```
 
 ---
 
 #### /zerg:troubleshoot
 
-**Systematic debugging with root cause analysis.**
+**Purpose:** Systematic debugging with root cause analysis using a four-phase diagnostic process.
 
-Four-phase diagnostic process for identifying root causes of errors.
-
-**Usage:**
 ```bash
 zerg troubleshoot [OPTIONS]
 ```
 
-**Options:**
+**Options Explained:**
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--error`, `-e` | string | - | Error message to analyze |
-| `--stacktrace`, `-s` | path | - | Path to stack trace file |
-| `--verbose`, `-v` | flag | `false` | Verbose output |
-| `--output`, `-o` | path | - | Output file for diagnostic report |
-| `--json` | flag | `false` | Output as JSON |
+| Flag | Type | Default | What It Does | When to Use It |
+|------|------|---------|--------------|----------------|
+| `--error`, `-e` | string | - | Error message to analyze | Direct error input |
+| `--stacktrace`, `-s` | path | - | Stack trace file | File-based input |
+| `--verbose`, `-v` | flag | `false` | Detailed output | More diagnostic info |
+| `--output`, `-o` | path | - | Save diagnostic report | Documentation |
+| `--json` | flag | `false` | JSON output | Automation |
 
 **Diagnostic Phases:**
 
-1. **Symptom** - Parse error message/stack trace
-2. **Hypothesis** - Generate possible causes
-3. **Test** - Run diagnostic commands
-4. **Root Cause** - Determine actual cause with confidence
+1. **Symptom**: Parse error message/stack trace
+2. **Hypothesis**: Generate possible causes
+3. **Test**: Run diagnostic commands
+4. **Root Cause**: Determine actual cause with confidence level
 
 **Examples:**
 
 ```bash
 # Analyze error message
-zerg troubleshoot --error "ValueError: invalid literal for int()"
+zerg troubleshoot --error "ImportError: No module named 'foo'"
 
 # Analyze stack trace file
 zerg troubleshoot --stacktrace error.log
 
-# Verbose analysis
-zerg troubleshoot --error "ImportError: No module named 'foo'" --verbose
-
 # Save diagnostic report
 zerg troubleshoot --error "ConnectionError" --output diagnostic.md
-
-# JSON output
-zerg troubleshoot --error "TypeError" --json
 ```
 
 ---
 
 #### /zerg:git
 
-**Git operations with intelligent commits and workflow management.**
+**Purpose:** Git operations with intelligent commit messages and workflow management.
 
-Manages git operations with conventional commits and intelligent merge strategies.
-
-**Usage:**
 ```bash
 zerg git [OPTIONS]
 ```
 
-**Options:**
+**Options Explained:**
 
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--action`, `-a` | choice | `commit` | Action: `commit`, `branch`, `merge`, `sync`, `history`, `finish` |
-| `--push`, `-p` | flag | `false` | Push after commit |
-| `--base`, `-b` | string | `main` | Base branch for operations |
-| `--name`, `-n` | string | - | Branch name (for branch action) |
-| `--branch` | string | - | Branch to merge (for merge action) |
-| `--strategy` | choice | `squash` | Merge strategy: `merge`, `squash`, `rebase` |
-| `--since` | string | - | Starting point for history |
+| Flag | Type | Default | What It Does | When to Use It |
+|------|------|---------|--------------|----------------|
+| `--action`, `-a` | choice | `commit` | Git action | Different operations |
+| `--push`, `-p` | flag | `false` | Push after commit | Quick push workflow |
+| `--base`, `-b` | string | `main` | Base branch | Feature branches |
+| `--name`, `-n` | string | - | Branch name | Creating branches |
+| `--branch` | string | - | Branch to merge | Merge operations |
+| `--strategy` | choice | `squash` | Merge strategy | How to merge |
+| `--since` | string | - | Starting point | Changelog generation |
 
 **Actions:**
 
-| Action | Description | Key Options |
-|--------|-------------|-------------|
-| `commit` | Intelligent conventional commit | `--push` |
-| `branch` | Create/manage branches | `--name` |
-| `merge` | Merge with strategy | `--branch`, `--strategy` |
-| `sync` | Sync with remote | - |
-| `history` | Generate changelog | `--since` |
-| `finish` | Complete feature workflow | `--base` |
-
-**Conventional Commit Types:**
-- `feat`: New features
-- `fix`: Bug fixes
-- `docs`: Documentation
-- `style`: Formatting
-- `refactor`: Code restructuring
-- `test`: Tests
-- `chore`: Maintenance
+| Action | What It Does |
+|--------|--------------|
+| `commit` | Analyze changes, generate conventional commit message |
+| `branch` | Create feature branch with naming convention |
+| `merge` | Merge with selected strategy |
+| `sync` | Fetch and rebase from remote |
+| `history` | Generate changelog from commits |
+| `finish` | Complete feature branch workflow |
 
 **Examples:**
 
@@ -1412,17 +1576,8 @@ zerg git --action commit --push
 # Create feature branch
 zerg git --action branch --name feature/auth
 
-# Merge with squash
+# Squash merge
 zerg git --action merge --branch feature/auth --strategy squash
-
-# Sync with remote
-zerg git --action sync
-
-# Generate changelog
-zerg git --action history --since v1.0.0
-
-# Finish feature (interactive workflow)
-zerg git --action finish --base main
 ```
 
 ---
@@ -1433,324 +1588,332 @@ zerg git --action finish --base main
 
 #### /zerg:security
 
-**Security rules management.**
+**Purpose:** Manage secure coding rules from TikiTribe/claude-secure-coding-rules.
 
-Manage secure coding rules from TikiTribe/claude-secure-coding-rules.
-
-**Usage:**
 ```bash
 zerg security-rules COMMAND [OPTIONS]
 ```
 
 **Subcommands:**
 
-| Command | Description |
-|---------|-------------|
-| `detect` | Detect project stack |
-| `list` | List applicable rules |
-| `fetch` | Download security rules |
-| `integrate` | Full integration workflow |
-
-**detect Options:**
-
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--path` | path | `.` | Project path |
-| `--json-output` | flag | `false` | JSON output |
-
-**list Options:**
-
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--path` | path | `.` | Project path |
-
-**fetch Options:**
-
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--path` | path | `.` | Project path |
-| `--output` | path | `.claude/security-rules/` | Output directory |
-| `--no-cache` | flag | `false` | Force fresh download |
-
-**integrate Options:**
-
-| Flag | Type | Default | Description |
-|------|------|---------|-------------|
-| `--path` | path | `.` | Project path |
-| `--output` | path | `.claude/security-rules/` | Output directory |
-| `--no-update-claude-md` | flag | `false` | Don't update CLAUDE.md |
+| Command | What It Does | When to Use |
+|---------|--------------|-------------|
+| `detect` | Detect your project's technology stack | See what ZERG found |
+| `list` | Show applicable security rules | Review rules |
+| `fetch` | Download rules for your stack | Initial setup |
+| `integrate` | Full workflow: detect → fetch → integrate | One-command setup |
 
 **Examples:**
 
 ```bash
-# Detect project stack
+# See detected stack
 zerg security-rules detect
-
-# JSON output for scripting
-zerg security-rules detect --json-output
 
 # List applicable rules
 zerg security-rules list
 
-# Download rules
-zerg security-rules fetch
-
-# Force fresh download
-zerg security-rules fetch --no-cache
-
 # Full integration
 zerg security-rules integrate
-
-# Custom output location
-zerg security-rules fetch --output .claude/rules/
 ```
 
 ---
 
 #### /zerg:worker
 
-**Worker execution protocol (internal).**
+**Purpose:** Worker execution protocol. This is what runs INSIDE workers—you typically don't call it directly.
 
-Executed by orchestrator within containers/subprocesses. Not typically called directly by users.
+**Environment Variables Workers Use:**
 
-**Environment Variables:**
-
-| Variable | Description |
-|----------|-------------|
+| Variable | Purpose |
+|----------|---------|
 | `ZERG_WORKER_ID` | Worker identifier (0-9) |
-| `ZERG_FEATURE` | Feature name |
-| `ZERG_BRANCH` | Git branch |
-| `ZERG_SPEC_DIR` | Path to spec directory |
-| `CLAUDE_CODE_TASK_LIST_ID` | Task list ID |
+| `ZERG_FEATURE` | Feature being built |
+| `ZERG_BRANCH` | Worker's git branch |
+| `ZERG_SPEC_DIR` | Path to spec files |
 
 **Exit Codes:**
 
-| Code | Meaning |
-|------|---------|
-| 0 | All tasks completed successfully |
-| 1 | Unrecoverable error |
-| 2 | Context limit reached (checkpoint) |
-| 3 | All remaining tasks blocked |
-| 130 | Interrupted (SIGINT) |
+| Code | Meaning | What Happens Next |
+|------|---------|-------------------|
+| 0 | All tasks completed | Worker done |
+| 1 | Unrecoverable error | Task marked failed |
+| 2 | Context limit reached | Checkpoint saved, can resume |
+| 3 | All remaining tasks blocked | Worker waits |
+| 130 | Interrupted (SIGINT) | Graceful stop |
 
 ---
 
-## Configuration
+## Configuration Deep Dive
 
-### Configuration File
+### The Configuration File
 
-ZERG configuration is stored in `.zerg/config.yaml`:
+ZERG's behavior is controlled by `.zerg/config.yaml`:
 
 ```yaml
 version: "1.0"
-project_type: python
+project_type: python  # Detected or specified
 
+# Worker settings
 workers:
-  default_count: 5
-  max_count: 10
-  context_threshold: 0.7
-  timeout_seconds: 3600
+  default_count: 5      # Default for zerg rush
+  max_count: 10         # Never spawn more than this
+  context_threshold: 0.7  # Checkpoint at 70% context usage
+  timeout_seconds: 3600   # 1 hour max per task
 
+# Security settings
 security:
-  network_isolation: true
-  filesystem_sandbox: true
-  secrets_scanning: true
+  network_isolation: true      # Block external network
+  filesystem_sandbox: true     # Restrict to project directory
+  secrets_scanning: true       # Scan for leaked credentials
 
+# Quality gates (run after each level merge)
 quality_gates:
   lint:
     command: "ruff check ."
-    required: true
+    required: true           # Fail merge if this fails
   typecheck:
     command: "mypy ."
-    required: false
+    required: false          # Warning only
   test:
     command: "pytest"
     required: true
 
+# MCP servers for workers
 mcp_servers:
   - name: filesystem
     command: npx
     args: ["-y", "@anthropic/mcp-filesystem"]
 ```
 
-### Worker Scaling Guidelines
+### Tuning Worker Count
 
-| Workers | Best For | Notes |
-|---------|----------|-------|
-| 1-2 | Small features, learning | Lower API costs |
-| 3-5 | Medium features | Balanced throughput |
-| 6-10 | Large features | Maximum parallelism |
+| Scenario | Recommended Workers | Why |
+|----------|---------------------|-----|
+| Learning ZERG | 1-2 | See what's happening clearly |
+| Small feature (<10 tasks) | 2-3 | Avoid idle workers |
+| Medium feature (10-30 tasks) | 3-5 | Good balance |
+| Large feature (30+ tasks) | 5-8 | Maximize parallelism |
+| Very large feature | 8-10 | Maximum throughput |
+
+**Considerations:**
+- More workers = higher API cost (parallel calls)
+- More workers = more memory usage (worktrees)
+- Workers beyond max parallelization at any level are idle
 
 ### Environment Variables
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `ANTHROPIC_API_KEY` | Yes | Claude API authentication |
-| `ZERG_LOG_LEVEL` | No | Logging verbosity: `debug`, `info`, `warn`, `error` |
-| `ZERG_DEBUG` | No | Enable debug mode |
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `ANTHROPIC_API_KEY` | Yes | API authentication |
+| `ZERG_LOG_LEVEL` | No | Logging verbosity: debug, info, warn, error |
+| `ZERG_DEBUG` | No | Enable debug mode (very verbose) |
 
 ---
 
-## Architecture
+## Architecture Explained
 
 ### Directory Structure
 
+Understanding where things live helps troubleshoot issues:
+
 ```
 project/
-├── .zerg/                          # ZERG runtime
-│   ├── config.yaml                 # Configuration
+├── .zerg/                          # ZERG runtime (gitignored)
+│   ├── config.yaml                 # Your configuration
 │   ├── state/
 │   │   └── {feature}.json          # Execution state
 │   ├── logs/
-│   │   ├── orchestrator.log        # Orchestrator output
-│   │   └── worker-{id}.log         # Worker output
+│   │   ├── orchestrator.log        # Main process logs
+│   │   └── worker-{id}.log         # Per-worker logs
 │   ├── worktrees/
-│   │   └── {feature}-worker-N/     # Git worktrees
+│   │   └── {feature}-worker-N/     # Isolated git worktrees
 │   └── worker_entry.sh             # Worker startup script
 │
 ├── .devcontainer/                  # Container configuration
 │   ├── devcontainer.json           # VS Code devcontainer
-│   ├── Dockerfile                  # Multi-language runtime
-│   ├── post-create.sh              # Container init
-│   ├── post-start.sh               # Worker startup
-│   └── mcp-servers/
-│       ├── config.json             # MCP server config
-│       └── credentials.env.example # Credential template
+│   ├── Dockerfile                  # Worker image definition
+│   ├── post-create.sh              # Container setup script
+│   └── post-start.sh               # Worker initialization
 │
-├── .gsd/                           # GSD specification
+├── .gsd/                           # GSD specification (committed)
 │   ├── PROJECT.md                  # Project documentation
 │   ├── INFRASTRUCTURE.md           # Infrastructure requirements
-│   ├── STATE.md                    # Execution progress
+│   ├── STATE.md                    # Human-readable progress
 │   ├── .current-feature            # Active feature marker
 │   └── specs/
 │       └── {feature}/
 │           ├── requirements.md     # Feature requirements
 │           ├── design.md           # Architecture
 │           ├── task-graph.json     # Task definitions
-│           └── worker-assignments.json
+│           └── worker-assignments.json  # Who's doing what
 │
-├── .claude/                        # Claude Code config
+├── .claude/                        # Claude Code configuration
 │   └── security-rules/             # Secure coding rules
 │
-└── CLAUDE.md                       # Project instructions
+└── CLAUDE.md                       # Project instructions for Claude
 ```
 
-### Execution Flow
+### Execution Flow Diagram
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    ZERG ORCHESTRATOR                         │
-├─────────────────────────────────────────────────────────────┤
-│  1. Load task-graph.json                                    │
-│  2. Create git worktrees for each worker                    │
-│  3. Spawn workers (subprocess or container)                 │
-│  4. Assign tasks by level                                   │
-│  5. Monitor progress                                        │
-│  6. Merge branches after each level                         │
-│  7. Run quality gates                                       │
-│  8. Repeat until all levels complete                        │
-└─────────────────────────────────────────────────────────────┘
-        │
-        ▼
-┌─────────────────────────────────────────────────────────────┐
-│  Worker 0          Worker 1          Worker 2               │
-│  ┌───────────┐    ┌───────────┐    ┌───────────┐           │
-│  │ Worktree  │    │ Worktree  │    │ Worktree  │           │
-│  │ Branch    │    │ Branch    │    │ Branch    │           │
-│  │ Tasks     │    │ Tasks     │    │ Tasks     │           │
-│  └───────────┘    └───────────┘    └───────────┘           │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                    YOU RUN: zerg rush                            │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    ORCHESTRATOR STARTS                           │
+│  • Loads task-graph.json                                        │
+│  • Creates git worktrees for each worker                        │
+│  • Spawns worker processes/containers                           │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    LEVEL 1 BEGINS                                │
+│                                                                  │
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐            │
+│  │Worker 0 │  │Worker 1 │  │Worker 2 │  │Worker 3 │  ...       │
+│  │Task 001 │  │Task 002 │  │Task 003 │  │  IDLE   │            │
+│  │models.py│  │config.py│  │types.py │  │         │            │
+│  └─────────┘  └─────────┘  └─────────┘  └─────────┘            │
+│       │            │            │                               │
+│       ▼            ▼            ▼                               │
+│  [commits]    [commits]    [commits]                           │
+│  [verifies]   [verifies]   [verifies]                          │
+│       │            │            │                               │
+│       └────────────┴────────────┘                               │
+│                    │                                             │
+│                    ▼                                             │
+│          ALL LEVEL 1 COMPLETE                                   │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    SYNC POINT                                    │
+│  • Merge all worker branches → staging                          │
+│  • Run quality gates (lint, typecheck, test)                    │
+│  • If pass: merge staging → main                                │
+│  • Rebase all worker branches from main                         │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    LEVEL 2 BEGINS                                │
+│  (Workers can now import from Level 1 code)                     │
+│  ... repeat until all levels complete ...                       │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Troubleshooting
+## When Things Go Wrong
 
 ### Workers Not Starting
 
-**Symptoms:** Workers fail to spawn, container errors
+**Symptoms:** `zerg rush` hangs or workers fail to spawn
+
+**Diagnosis:**
+```bash
+# Check Docker is running (if using container mode)
+docker info
+
+# Check API key is set
+echo $ANTHROPIC_API_KEY
+
+# Check port availability (workers use 49152+)
+netstat -an | grep 49152
+```
 
 **Solutions:**
 ```bash
-# Check Docker is running
-docker info
-
-# Verify API key
-echo $ANTHROPIC_API_KEY
-
-# Check port availability
-netstat -an | grep 49152
-
-# Use subprocess mode (no Docker)
+# Force subprocess mode (no Docker needed)
 zerg rush --mode subprocess
+
+# Check orchestrator logs
+cat .zerg/logs/orchestrator.log
 ```
 
 ### Tasks Failing Verification
 
-**Symptoms:** Tasks marked as failed, verification errors
+**Symptoms:** Tasks marked as failed, verification command errors
+
+**Diagnosis:**
+```bash
+# See what the verification command is
+cat .gsd/specs/{feature}/task-graph.json | jq '.tasks[] | select(.id == "TASK-001") | .verification'
+
+# Check worker logs for details
+zerg logs 1 --level error
+
+# Run verification manually in worktree
+cd .zerg/worktrees/{feature}-worker-1
+python -c "from src.models import User"  # Or whatever the command is
+```
 
 **Solutions:**
 ```bash
-# Check worker logs
-zerg logs --follow --level debug
-
-# View specific task
-cat .gsd/specs/{feature}/task-graph.json | jq '.tasks[] | select(.id == "TASK-001")'
-
-# Troubleshoot error
-zerg troubleshoot --error "verification error message"
+# Troubleshoot the error
+zerg troubleshoot --error "ImportError: cannot import name 'User'"
 
 # Retry with extended timeout
 zerg retry TASK-001 --timeout 120
+
+# If systemic issue, fix and retry all
+zerg retry --all-failed --reset
 ```
 
 ### Merge Conflicts
 
-**Symptoms:** Merge fails, conflict state
+**Symptoms:** Merge fails, conflict messages
+
+**This should be rare** because of exclusive file ownership. If it happens:
+
+**Diagnosis:**
+```bash
+# Check task graph for file overlap
+cat .gsd/specs/{feature}/task-graph.json | jq '.tasks[].files'
+```
 
 **Solutions:**
 ```bash
-# This should not happen with exclusive file ownership
-# If it does, check task-graph.json for file overlap
+# Abort and investigate
+zerg merge --abort
 
-# View conflict details
+# Check conflict details
 zerg status --verbose
 
-# Abort and retry
-zerg merge --abort
-zerg retry --all-failed --reset
-
-# Force merge (use with caution)
-zerg merge --force
+# If task graph has file overlap, fix it and restart
+zerg design --validate-only
 ```
 
-### Context Limit Reached
+### Context Limit Reached (Exit Code 2)
 
-**Symptoms:** Worker exits with code 2, checkpoint messages
+**Symptoms:** Worker exits with "context limit reached", status shows CHECKPOINT
 
-**Solutions:**
+**This is normal behavior**, not an error. Workers checkpoint when they're running low on context.
+
+**Solution:**
 ```bash
-# This is normal behavior - workers checkpoint when context is full
-# Simply resume execution
+# Simply resume
 zerg rush --resume
 
-# Use more workers to distribute context load
-zerg rush --resume --workers 10
+# Workers will pick up from their checkpoints
 ```
 
-### Recovery Commands
+### Quick Recovery Commands
 
 ```bash
 # Resume interrupted execution
 zerg rush --resume
 
 # Check current state
-zerg status --json
+zerg status --json | jq '.levels'
 
-# Reset and restart specific level
+# Reset and retry a level
 zerg retry --level 2 --reset
 
-# Clean everything and start fresh
+# Nuclear option: clean and restart
 zerg cleanup --all
 zerg rush
 ```
@@ -1759,18 +1922,26 @@ zerg rush
 
 ## Tutorial
 
-For a complete step-by-step tutorial building a Minerals Store ecommerce application, see:
+For a hands-on, step-by-step walkthrough building a real application with ZERG, see:
 
 **[Tutorial: Building a Minerals Store with ZERG](docs/tutorial-minerals-store.md)**
 
-This tutorial covers:
-- Project setup with Inception Mode
-- Requirements planning with Socratic discovery
-- Architecture design and task decomposition
-- Parallel execution with devcontainers
-- Security rules integration
-- Quality gates and testing
-- Final deployment
+This tutorial builds a Starcraft 2 themed ecommerce API and covers:
+- Setting up a new project with Inception Mode
+- Using Socratic discovery for requirements
+- Understanding the task graph and file ownership
+- Watching parallel execution in action
+- Handling failures and retries
+- Quality gates and merging
+- Final cleanup
+
+---
+
+## Getting Help
+
+- **GitHub Issues**: [github.com/rocklambros/zerg/issues](https://github.com/rocklambros/zerg/issues)
+- **Command help**: `zerg <command> --help`
+- **Verbose mode**: Add `--verbose` to any command for more detail
 
 ---
 
@@ -1783,10 +1954,3 @@ MIT
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
----
-
-## Support
-
-- GitHub Issues: [github.com/rocklambros/zerg/issues](https://github.com/rocklambros/zerg/issues)
-- Documentation: [github.com/rocklambros/zerg/wiki](https://github.com/rocklambros/zerg/wiki)
