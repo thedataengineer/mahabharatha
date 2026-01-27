@@ -1,0 +1,278 @@
+{
+  "feature": "coverage-100",
+  "title": "100% Test Coverage Achievement",
+  "summary": "Complete test coverage for all core ZERG modules",
+  "current_coverage": {
+    "config.py": 100,
+    "git_ops.py": 100,
+    "containers.py": 100,
+    "worktree.py": 100,
+    "task_sync.py": 100,
+    "worker_protocol.py": 99,
+    "metrics.py": 99,
+    "parser.py": 98,
+    "launcher.py": 93,
+    "orchestrator.py": 91,
+    "state.py": 87,
+    "merge.py": 32
+  },
+  "target_coverage": 100,
+  "levels": [
+    {
+      "level": 1,
+      "description": "Test Infrastructure - Mocks and Fixtures",
+      "tasks": [
+        {
+          "id": "COV-001",
+          "title": "Create MockMergeCoordinator with full merge flow simulation",
+          "description": "Create comprehensive mock for MergeCoordinator that supports prepare_merge, execute_merge, run_gates, finalize_merge, and full_merge_flow methods with configurable outcomes",
+          "files": ["tests/mocks/mock_merge.py"],
+          "verification": "python -c \"from tests.mocks.mock_merge import MockMergeCoordinator; m=MockMergeCoordinator(); print('OK')\"",
+          "owner": null
+        },
+        {
+          "id": "COV-002",
+          "title": "Create MockStateManager for state.py testing",
+          "description": "Create mock StateManager with worker state, task state, level state, and event tracking simulation capabilities",
+          "files": ["tests/mocks/mock_state.py"],
+          "verification": "python -c \"from tests.mocks.mock_state import MockStateManager; m=MockStateManager(); print('OK')\"",
+          "owner": null
+        },
+        {
+          "id": "COV-003",
+          "title": "Enhance test fixtures for orchestrator edge cases",
+          "description": "Add fixtures for container launcher failures, worker spawn edge cases, and level completion scenarios",
+          "files": ["tests/fixtures/orchestrator_fixtures.py"],
+          "verification": "python -c \"from tests.fixtures.orchestrator_fixtures import *; print('OK')\"",
+          "owner": null
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "description": "Unit Tests - Merge Module (32% → 100%)",
+      "tasks": [
+        {
+          "id": "COV-004",
+          "title": "Test MergeFlowResult dataclass methods",
+          "description": "Add tests for MergeFlowResult.to_dict() covering all fields including gate_results serialization. Tests for lines 32-43.",
+          "files": ["tests/unit/test_merge_flow.py"],
+          "verification": "pytest tests/unit/test_merge_flow.py -v",
+          "dependencies": ["COV-001"],
+          "owner": null
+        },
+        {
+          "id": "COV-005",
+          "title": "Test MergeCoordinator initialization and prepare_merge",
+          "description": "Test __init__ with various config options, prepare_merge creating staging branch. Tests for lines 49-80.",
+          "files": ["tests/unit/test_merge_coordinator_init.py"],
+          "verification": "pytest tests/unit/test_merge_coordinator_init.py -v",
+          "dependencies": ["COV-001"],
+          "owner": null
+        },
+        {
+          "id": "COV-006",
+          "title": "Test run_pre_merge_gates and gate execution",
+          "description": "Test gate execution with pass/fail scenarios, summary generation. Tests for lines 82-108.",
+          "files": ["tests/unit/test_merge_gates.py"],
+          "verification": "pytest tests/unit/test_merge_gates.py -v",
+          "dependencies": ["COV-001"],
+          "owner": null
+        },
+        {
+          "id": "COV-007",
+          "title": "Test execute_merge with branches and conflicts",
+          "description": "Test merging multiple branches, handling MergeConflict exceptions, result generation. Tests for lines 110-165.",
+          "files": ["tests/unit/test_merge_execute.py"],
+          "verification": "pytest tests/unit/test_merge_execute.py -v",
+          "dependencies": ["COV-001"],
+          "owner": null
+        },
+        {
+          "id": "COV-008",
+          "title": "Test full_merge_flow and finalize_merge",
+          "description": "Test complete merge workflow, finalize to target branch, error handling. Tests for lines 170-334.",
+          "files": ["tests/unit/test_merge_full_flow.py"],
+          "verification": "pytest tests/unit/test_merge_full_flow.py -v",
+          "dependencies": ["COV-001"],
+          "owner": null
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "description": "Unit Tests - State Module (87% → 100%)",
+      "tasks": [
+        {
+          "id": "COV-009",
+          "title": "Test StateManager load/save edge cases",
+          "description": "Test load with missing/corrupt files, save with write errors. Tests for lines 150-154, 231-235.",
+          "files": ["tests/unit/test_state_persistence.py"],
+          "verification": "pytest tests/unit/test_state_persistence.py -v",
+          "dependencies": ["COV-002"],
+          "owner": null
+        },
+        {
+          "id": "COV-010",
+          "title": "Test worker state edge cases",
+          "description": "Test get_worker_state with invalid IDs, set_worker_state with None. Tests for lines 450, 469-471.",
+          "files": ["tests/unit/test_state_workers.py"],
+          "verification": "pytest tests/unit/test_state_workers.py -v",
+          "dependencies": ["COV-002"],
+          "owner": null
+        },
+        {
+          "id": "COV-011",
+          "title": "Test task state edge cases",
+          "description": "Test task status transitions, get_task_status for missing tasks. Tests for lines 506-507, 541-542, 560, 563.",
+          "files": ["tests/unit/test_state_tasks.py"],
+          "verification": "pytest tests/unit/test_state_tasks.py -v",
+          "dependencies": ["COV-002"],
+          "owner": null
+        },
+        {
+          "id": "COV-012",
+          "title": "Test level state and event tracking",
+          "description": "Test level status transitions, event filtering, history truncation. Tests for lines 578-647.",
+          "files": ["tests/unit/test_state_levels.py"],
+          "verification": "pytest tests/unit/test_state_levels.py -v",
+          "dependencies": ["COV-002"],
+          "owner": null
+        }
+      ]
+    },
+    {
+      "level": 4,
+      "description": "Unit Tests - Launcher and Orchestrator Gaps",
+      "tasks": [
+        {
+          "id": "COV-013",
+          "title": "Test ContainerLauncher error paths",
+          "description": "Test Docker command failures, container health check failures. Tests for launcher.py lines 189, 201, 214, 227.",
+          "files": ["tests/unit/test_launcher_errors.py"],
+          "verification": "pytest tests/unit/test_launcher_errors.py -v",
+          "dependencies": ["COV-003"],
+          "owner": null
+        },
+        {
+          "id": "COV-014",
+          "title": "Test ContainerLauncher network and cleanup",
+          "description": "Test network configuration, container cleanup, resource management. Tests for launcher.py lines 288-305, 902-926.",
+          "files": ["tests/unit/test_launcher_network.py"],
+          "verification": "pytest tests/unit/test_launcher_network.py -v",
+          "dependencies": ["COV-003"],
+          "owner": null
+        },
+        {
+          "id": "COV-015",
+          "title": "Test ContainerLauncher exec and process verification",
+          "description": "Test _exec_worker_entry edge cases, _verify_worker_process timeout. Tests for launcher.py lines 696-699, 773-778.",
+          "files": ["tests/unit/test_launcher_process.py"],
+          "verification": "pytest tests/unit/test_launcher_process.py -v",
+          "dependencies": ["COV-003"],
+          "owner": null
+        },
+        {
+          "id": "COV-016",
+          "title": "Test Orchestrator container mode initialization",
+          "description": "Test container mode setup, image name resolution. Tests for orchestrator.py lines 276-278.",
+          "files": ["tests/unit/test_orchestrator_container_mode.py"],
+          "verification": "pytest tests/unit/test_orchestrator_container_mode.py -v",
+          "dependencies": ["COV-003"],
+          "owner": null
+        },
+        {
+          "id": "COV-017",
+          "title": "Test Orchestrator merge timeout handling",
+          "description": "Test merge timeout with ThreadPoolExecutor, retry logic. Tests for orchestrator.py lines 395-403, 437-438.",
+          "files": ["tests/unit/test_orchestrator_timeout.py"],
+          "verification": "pytest tests/unit/test_orchestrator_timeout.py -v",
+          "dependencies": ["COV-003"],
+          "owner": null
+        },
+        {
+          "id": "COV-018",
+          "title": "Test Orchestrator error recovery paths",
+          "description": "Test recoverable error handling, pause/resume with errors. Tests for orchestrator.py lines 533-534, 643-682, 867-876.",
+          "files": ["tests/unit/test_orchestrator_recovery.py"],
+          "verification": "pytest tests/unit/test_orchestrator_recovery.py -v",
+          "dependencies": ["COV-003"],
+          "owner": null
+        }
+      ]
+    },
+    {
+      "level": 5,
+      "description": "Integration Tests - Full Module Coverage",
+      "tasks": [
+        {
+          "id": "COV-019",
+          "title": "Integration test for complete merge flow",
+          "description": "Test full merge workflow from prepare to finalize with mocked Git operations",
+          "files": ["tests/integration/test_merge_integration.py"],
+          "verification": "pytest tests/integration/test_merge_integration.py -v",
+          "dependencies": ["COV-004", "COV-005", "COV-006", "COV-007", "COV-008"],
+          "owner": null
+        },
+        {
+          "id": "COV-020",
+          "title": "Integration test for state persistence across sessions",
+          "description": "Test StateManager state persistence and recovery with file system",
+          "files": ["tests/integration/test_state_integration.py"],
+          "verification": "pytest tests/integration/test_state_integration.py -v",
+          "dependencies": ["COV-009", "COV-010", "COV-011", "COV-012"],
+          "owner": null
+        },
+        {
+          "id": "COV-021",
+          "title": "Integration test for launcher container lifecycle",
+          "description": "Test ContainerLauncher spawn, monitor, terminate cycle with mocked Docker",
+          "files": ["tests/integration/test_launcher_integration.py"],
+          "verification": "pytest tests/integration/test_launcher_integration.py -v",
+          "dependencies": ["COV-013", "COV-014", "COV-015"],
+          "owner": null
+        },
+        {
+          "id": "COV-022",
+          "title": "Integration test for orchestrator with failures",
+          "description": "Test Orchestrator handling merge failures, worker crashes, recovery",
+          "files": ["tests/integration/test_orchestrator_integration.py"],
+          "verification": "pytest tests/integration/test_orchestrator_integration.py -v",
+          "dependencies": ["COV-016", "COV-017", "COV-018"],
+          "owner": null
+        }
+      ]
+    },
+    {
+      "level": 6,
+      "description": "Coverage Verification and Documentation",
+      "tasks": [
+        {
+          "id": "COV-023",
+          "title": "Run full coverage report and verify 100%",
+          "description": "Execute comprehensive test suite with coverage and verify all core modules at 100%",
+          "files": [],
+          "verification": "pytest tests/unit/ --cov=zerg.merge --cov=zerg.state --cov=zerg.launcher --cov=zerg.orchestrator --cov-fail-under=100 -q",
+          "dependencies": ["COV-019", "COV-020", "COV-021", "COV-022"],
+          "owner": null
+        },
+        {
+          "id": "COV-024",
+          "title": "Generate coverage documentation",
+          "description": "Generate HTML coverage report and update project documentation",
+          "files": ["docs/coverage-report.md"],
+          "verification": "test -f htmlcov/index.html && test -f docs/coverage-report.md",
+          "dependencies": ["COV-023"],
+          "owner": null
+        }
+      ]
+    }
+  ],
+  "metrics": {
+    "total_tasks": 24,
+    "levels": 6,
+    "max_workers": 5,
+    "files_created": 20,
+    "estimated_new_tests": 150
+  }
+}

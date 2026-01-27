@@ -1439,6 +1439,8 @@ class TestWorkerProtocolCommitTaskChanges:
 
         mock_git = MagicMock()
         mock_git.has_changes.return_value = True
+        # BF-009: HEAD must change after commit
+        mock_git.current_commit.side_effect = ["abc123", "def456"]
         mock_git_cls.return_value = mock_git
 
         mock_state = MagicMock()

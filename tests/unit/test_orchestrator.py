@@ -285,7 +285,7 @@ class TestGetWorkerImageName:
         orch = Orchestrator("my-feature")
         image_name = orch._get_worker_image_name()
 
-        assert image_name == "zerg-worker-my-feature"
+        assert image_name == "zerg-worker"
 
 
 class TestStartMethod:
@@ -879,7 +879,8 @@ class TestPollWorkers:
         with patch.object(orch, "_handle_task_failure") as failure_mock:
             orch._poll_workers()
 
-        assert orch._workers[0].status == WorkerStatus.CRASHED
+        # Worker is removed after crash is handled (via _handle_worker_exit)
+        assert 0 not in orch._workers
         failure_mock.assert_called_with("TASK-001", 0, "Worker crashed")
 
     def test_poll_workers_checkpointing_status(

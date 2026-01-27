@@ -953,7 +953,7 @@ class TestContainerLauncherInit:
         """Test initialization with default values."""
         launcher = ContainerLauncher()
         assert launcher.image_name == "zerg-worker"
-        assert launcher.network == "zerg-internal"
+        assert launcher.network == "bridge"
         assert launcher._container_ids == {}
 
     def test_init_custom_image(self) -> None:
@@ -968,7 +968,7 @@ class TestContainerLauncherInit:
 
     def test_class_constants(self) -> None:
         """Test class constants are defined."""
-        assert ContainerLauncher.DEFAULT_NETWORK == "zerg-internal"
+        assert ContainerLauncher.DEFAULT_NETWORK == "bridge"
         assert ContainerLauncher.CONTAINER_PREFIX == "zerg-worker"
         assert ContainerLauncher.WORKER_ENTRY_SCRIPT == ".zerg/worker_entry.sh"
 
@@ -976,6 +976,7 @@ class TestContainerLauncherInit:
 class TestContainerLauncherSpawn:
     """Tests for ContainerLauncher.spawn method."""
 
+    @patch.object(ContainerLauncher, "_verify_worker_process")
     @patch.object(ContainerLauncher, "_exec_worker_entry")
     @patch.object(ContainerLauncher, "_wait_ready")
     @patch.object(ContainerLauncher, "_start_container")
@@ -984,12 +985,14 @@ class TestContainerLauncherSpawn:
         mock_start: MagicMock,
         mock_wait: MagicMock,
         mock_exec: MagicMock,
+        mock_verify: MagicMock,
         tmp_path: Path,
     ) -> None:
         """Test successful container spawn."""
         mock_start.return_value = "container-abc123"
         mock_wait.return_value = True
         mock_exec.return_value = True
+        mock_verify.return_value = True
 
         launcher = ContainerLauncher()
         result = launcher.spawn(

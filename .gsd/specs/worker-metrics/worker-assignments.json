@@ -1,6 +1,6 @@
 {
   "feature": "worker-metrics",
-  "worker_count": 1,
+  "worker_count": 3,
   "assignments": [
     {
       "task_id": "WM-001",
@@ -16,13 +16,13 @@
     },
     {
       "task_id": "WM-003",
-      "worker_id": 0,
+      "worker_id": 1,
       "level": 0,
       "estimated_minutes": 15
     },
     {
       "task_id": "WM-004",
-      "worker_id": 0,
+      "worker_id": 2,
       "level": 0,
       "estimated_minutes": 15
     },
@@ -34,7 +34,7 @@
     },
     {
       "task_id": "WM-006",
-      "worker_id": 0,
+      "worker_id": 1,
       "level": 0,
       "estimated_minutes": 15
     },
@@ -46,10 +46,10 @@
     },
     {
       "task_id": "WM-008",
-      "worker_id": 0,
+      "worker_id": 1,
       "level": 0,
       "estimated_minutes": 15
     }
   ],
-  "generated_at": "2026-01-27T08:17:56.381488"
+  "generated_at": "2026-01-27T08:45:34.499308"
 }
