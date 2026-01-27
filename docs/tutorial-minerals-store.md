@@ -1,15 +1,19 @@
 # Tutorial: Building "Minerals & Vespene Gas" Store with ZERG
 
-> **Welcome, Commander!** In this tutorial, you'll learn ZERG by building a Starcraft 2 themed ecommerce API. By the end, you'll understand not just WHAT each command does, but WHY the system works this way—and you'll have a working API built by parallel AI workers.
+> **Welcome, Commander!** In this tutorial, you'll learn ZERG by building a Starcraft 2 themed ecommerce store—complete with API **and** web UI. By the end, you'll understand not just WHAT each command does, but WHY the system works this way—and you'll have a working store you can actually use.
 
 ## What We're Building
 
-We're creating **Minerals & Vespene Gas**, a fictional ecommerce store where Starcraft 2 players can purchase game resources. The API will support:
+We're creating **Minerals & Vespene Gas**, a fictional ecommerce store where Starcraft 2 players can purchase game resources. The store will include:
 
+- **Backend API**: FastAPI REST endpoints for all operations
+- **Web UI**: A themed storefront where you can browse, add to cart, and checkout
 - **Products**: Minerals, Vespene Gas, and special bundles
 - **Factions**: Protoss, Terran, and Zerg customers with faction-specific discounts
-- **Shopping Cart**: Add items, apply discounts, checkout
-- **Orders**: Process mock payments and track orders
+- **Shopping Cart**: Add items, see discounts applied in real-time
+- **Orders**: Process mock payments and see your order confirmation
+
+**The best part?** You'll actually see your store come to life—a dark-themed Starcraft interface where faction colors glow and your discount gets applied as you shop.
 
 More importantly, we'll build this using **parallel Claude Code workers**—multiple AI instances working simultaneously on different parts of the codebase.
 
@@ -127,9 +131,9 @@ Starcraft 2 themed ecommerce API for trading minerals and vespene gas
 
 **Target platforms:**
 ```
-api
+api, web
 ```
-(Just `api`—we're building a REST API, not a web UI)
+(Both `api` and `web`—we're building a backend API and a frontend web UI)
 
 **Architecture style:**
 ```
@@ -161,14 +165,21 @@ After your answers, ZERG recommends a stack:
 ┌──────────────────┬────────────────────────────────────────────┐
 │ Component        │ Recommendation                             │
 ├──────────────────┼────────────────────────────────────────────┤
-│ Language         │ python (3.12)                              │
-│ Package Manager  │ uv                                         │
-│ Web Framework    │ fastapi                                    │
-│ ORM              │ sqlalchemy (async)                         │
-│ Database Driver  │ asyncpg                                    │
-│ Test Framework   │ pytest                                     │
+│ Backend          │                                            │
+│   Language       │ python (3.12)                              │
+│   Package Manager│ uv                                         │
+│   Web Framework  │ fastapi                                    │
+│   ORM            │ sqlalchemy (async)                         │
+│   Database       │ asyncpg (PostgreSQL)                       │
+│   Auth Library   │ python-jose                                │
+├──────────────────┼────────────────────────────────────────────┤
+│ Frontend         │                                            │
+│   Framework      │ vanilla (HTML/CSS/JS)                      │
+│   Build Tool     │ vite                                       │
+│   Styling        │ tailwindcss                                │
+├──────────────────┼────────────────────────────────────────────┤
+│ Testing          │ pytest, playwright                         │
 │ Linter           │ ruff                                       │
-│ Auth Library     │ python-jose                                │
 └──────────────────┴────────────────────────────────────────────┘
 
 Accept this stack? [Y/n]:
@@ -179,8 +190,11 @@ Accept this stack? [Y/n]:
 - **FastAPI**: Modern async Python framework, great for APIs
 - **SQLAlchemy async**: Production-grade ORM with async support
 - **asyncpg**: High-performance PostgreSQL driver
+- **Vanilla JS + Vite**: Simple, fast frontend with no framework overhead
+- **Tailwind CSS**: Utility-first CSS for rapid theming (perfect for our Starcraft look)
 - **ruff**: Fast Python linter (replaces flake8, isort, etc.)
 - **python-jose**: Industry-standard JWT library
+- **Playwright**: End-to-end browser testing
 
 Press `Y` to accept (or customize if you prefer different tools).
 
@@ -210,6 +224,13 @@ minerals-store/
 ├── minerals_store/
 │   ├── __init__.py         # Package marker
 │   └── main.py             # FastAPI app entry point
+├── frontend/
+│   ├── index.html          # Main HTML entry point
+│   ├── src/
+│   │   ├── main.js         # JavaScript entry
+│   │   └── style.css       # Tailwind imports
+│   ├── package.json        # Frontend dependencies
+│   └── vite.config.js      # Vite configuration
 ├── tests/
 │   ├── __init__.py
 │   └── test_main.py        # Initial test
@@ -223,7 +244,8 @@ minerals-store/
 
 **Why this structure?**
 
-- `minerals_store/`: Your application code goes here
+- `minerals_store/`: Your backend API code goes here
+- `frontend/`: Your web UI code goes here (Vite project)
 - `tests/`: Test files go here (ZERG workers will create more)
 - `.gsd/`: "Get Stuff Done" - ZERG's spec directory
 - `pyproject.toml`: Modern Python packaging standard
@@ -404,11 +426,12 @@ would also allow third-party integrations.
 **Q5: How will we know when the problem is solved?**
 ```
 Users can:
-1. Browse a catalog of products (minerals, vespene gas, bundles)
-2. Register and authenticate with their faction
-3. Add items to a shopping cart with automatic faction discounts
-4. Complete checkout with mock payment processing
-5. View their order history
+1. Visit a themed web store and browse products visually
+2. Register and login, selecting their faction (with faction-colored UI)
+3. See faction discounts applied in real-time as they shop
+4. Add items to cart and see the total update instantly
+5. Complete checkout and see a confirmation with order details
+6. All of this through an actual web interface they can use
 ```
 
 ### Step 3.3: Answer Solution Space Questions
@@ -423,21 +446,36 @@ These questions help us understand the BOUNDARIES of our solution.
 
 **Q1: What does the ideal solution look like?**
 ```
-A REST API built with FastAPI that provides:
+A full-stack ecommerce application with:
+
+Backend (FastAPI):
 - Product catalog with CRUD operations
 - User registration/authentication with JWT
 - Shopping cart with faction-based discounts
 - Order processing with mock payments
 - PostgreSQL database with async operations
+
+Frontend (Vanilla JS + Vite):
+- Dark Starcraft-themed UI with faction colors
+- Product grid with images and prices
+- Live cart sidebar showing discounts
+- Checkout flow with order confirmation
+- Responsive design for all screen sizes
 ```
 
 **Q2: What constraints must we work within?**
 ```
+Backend:
 - Python 3.12 with FastAPI
 - PostgreSQL with SQLAlchemy (async)
 - JWT authentication (no session-based auth)
 - REST API only (no GraphQL)
-- Must be containerizable for deployment
+
+Frontend:
+- Vanilla JavaScript (no React/Vue framework)
+- Vite for bundling and dev server
+- Tailwind CSS for styling
+- Must work in modern browsers (Chrome, Firefox, Safari)
 ```
 
 **Q3: What are the non-negotiable requirements?**
@@ -447,6 +485,8 @@ A REST API built with FastAPI that provides:
 - All passwords MUST be hashed with bcrypt
 - All database operations MUST use parameterized queries
 - Input validation on all endpoints
+- UI MUST show the discount breakdown (original price, discount, final price)
+- Faction selection MUST change UI colors (blue=Protoss, red=Terran, purple=Zerg)
 ```
 
 **Q4: What similar solutions exist? What can we learn?**
@@ -479,19 +519,28 @@ These questions help us plan HOW to build this.
 **Q1: What is the minimum viable version?**
 ```
 MVP must include:
+
+Backend:
 1. User registration and login (JWT auth)
 2. Product catalog (list, view products)
 3. Shopping cart (add, remove, view cart)
 4. Basic checkout (create order from cart)
+
+Frontend:
+5. Login/register page with faction selector
+6. Product catalog page with grid layout
+7. Cart sidebar with live discount calculation
+8. Checkout page with order confirmation
 ```
 
 **Q2: What can be deferred to future iterations?**
 ```
-- Order history and tracking
+- Order history page
 - Product search and filtering
 - Inventory management
 - Bundle products
-- Wishlist functionality
+- Animations and transitions
+- Mobile-specific optimizations
 ```
 
 **Q3: What are the biggest technical risks?**
@@ -499,14 +548,17 @@ MVP must include:
 1. Concurrent cart updates (two requests modifying same cart)
 2. Database transaction handling during checkout
 3. Correct discount calculation with floating point math
+4. JWT token refresh handling in the frontend
+5. CORS configuration between frontend and backend
 ```
 
 **Q4: How should we verify this works correctly?**
 ```
-- Unit tests for all services
+- Unit tests for all backend services
 - Integration tests for API endpoints
-- Pytest with coverage reporting
-- All tests must pass with > 80% coverage
+- E2E tests with Playwright (register, browse, add to cart, checkout)
+- Pytest with coverage reporting (>80% backend coverage)
+- Visual verification: can see products, add to cart, complete checkout
 ```
 
 **Q5: What documentation or training is needed?**
@@ -670,16 +722,16 @@ Feature: minerals-store
 Requirements: .gsd/specs/minerals-store/requirements.md (APPROVED)
 
 Analyzing requirements...
-  ✓ Parsed 4 core requirements
-  ✓ Identified 3 technical risks
-  ✓ Extracted 5 acceptance criteria
+  ✓ Parsed 6 core requirements (backend + frontend)
+  ✓ Identified 5 technical risks
+  ✓ Extracted 8 acceptance criteria
 
 Generating architecture...
-  ✓ Identified 6 components
-  ✓ Mapped 12 dependencies
+  ✓ Identified 10 components (6 backend, 4 frontend)
+  ✓ Mapped 16 dependencies
 
 Creating task graph...
-  ✓ Generated 15 tasks across 4 levels
+  ✓ Generated 19 tasks across 5 levels
   ✓ Maximum parallelization: 4 tasks
 
 Design Artifacts
@@ -712,6 +764,14 @@ cat .gsd/specs/minerals-store/design.md
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
+│                       Frontend (Vite)                        │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
+│  │  Auth    │  │ Catalog  │  │   Cart   │  │ Checkout │    │
+│  │  Pages   │  │  Page    │  │ Sidebar  │  │   Page   │    │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘    │
+└───────┴─────────────┴─────────────┴─────────────┴──────────┘
+                            │ HTTP/JSON
+┌───────────────────────────┴────────────────────────────────┐
 │                        API Layer                             │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
 │  │  Auth    │  │ Products │  │   Cart   │  │  Orders  │    │
@@ -744,6 +804,12 @@ cat .gsd/specs/minerals-store/design.md
 
 | Component | Responsibility | Dependencies |
 |-----------|----------------|--------------|
+| **Frontend** | | |
+| Auth Pages | Login/register forms, faction selector | API |
+| Catalog Page | Product grid, add to cart buttons | API, Cart Sidebar |
+| Cart Sidebar | Live cart display, discount breakdown | API |
+| Checkout Page | Order summary, confirmation | API |
+| **Backend** | | |
 | Auth Endpoints | Login, register, token refresh | Auth Service |
 | Product Endpoints | CRUD operations for products | Product Service |
 | Cart Endpoints | Cart management | Cart Service, Auth |
@@ -855,8 +921,8 @@ cat .gsd/specs/minerals-store/task-graph.json | python -m json.tool | head -100
   "feature": "minerals-store",
   "version": "2.0",
   "generated": "2026-01-26T10:45:00Z",
-  "total_tasks": 15,
-  "estimated_duration_minutes": 90,
+  "total_tasks": 19,
+  "estimated_duration_minutes": 120,
   "max_parallelization": 4,
 
   "levels": {
@@ -882,11 +948,18 @@ cat .gsd/specs/minerals-store/task-graph.json | python -m json.tool | head -100
       "depends_on_levels": [2]
     },
     "4": {
-      "name": "testing",
-      "description": "Integration tests that exercise the full stack",
+      "name": "frontend",
+      "description": "Web UI components that consume the API",
       "tasks": ["MINE-L4-001", "MINE-L4-002", "MINE-L4-003", "MINE-L4-004"],
       "parallel": true,
       "depends_on_levels": [3]
+    },
+    "5": {
+      "name": "testing",
+      "description": "Integration and E2E tests for full stack",
+      "tasks": ["MINE-L5-001", "MINE-L5-002", "MINE-L5-003"],
+      "parallel": true,
+      "depends_on_levels": [4]
     }
   },
 
@@ -920,11 +993,18 @@ Level 3 (API):
 
     ↓ All Level 3 must complete before Level 4 starts ↓
 
-Level 4 (Testing):
-├── MINE-L4-001: Auth integration tests
-├── MINE-L4-002: Product integration tests
-├── MINE-L4-003: Cart integration tests
-└── MINE-L4-004: Order/checkout integration tests
+Level 4 (Frontend):
+├── MINE-L4-001: Auth pages (login, register with faction selector)
+├── MINE-L4-002: Catalog page (product grid, add to cart)
+├── MINE-L4-003: Cart sidebar (live totals, discount breakdown)
+└── MINE-L4-004: Checkout page (order summary, confirmation)
+
+    ↓ All Level 4 must complete before Level 5 starts ↓
+
+Level 5 (Testing):
+├── MINE-L5-001: Backend integration tests
+├── MINE-L5-002: E2E tests with Playwright (full user journey)
+└── MINE-L5-003: Accessibility tests
 ```
 
 **Key insight**: Each level's tasks can run in parallel because they don't depend on each other—only on the previous level.
@@ -980,6 +1060,48 @@ Let's look at one task in detail:
 | `modify` | `services/__init__.py` | This task will MODIFY this file. No other Level 2 task can modify it. |
 | `read` | `models.py`, `config.py`, `types.py` | This task can READ these. Other tasks can also read them. |
 
+**Now let's look at a frontend task:**
+
+```json
+{
+  "id": "MINE-L4-002",
+  "title": "Create catalog page",
+  "description": "Product grid with faction-aware pricing and add-to-cart",
+  "level": 4,
+  "dependencies": ["MINE-L3-002"],
+
+  "files": {
+    "create": [
+      "frontend/src/pages/catalog.js"
+    ],
+    "modify": [
+      "frontend/src/main.js"
+    ],
+    "read": [
+      "frontend/src/api.js",
+      "frontend/tailwind.config.js"
+    ]
+  },
+
+  "acceptance_criteria": [
+    "Fetches products from /products endpoint",
+    "Displays products in responsive grid",
+    "Shows faction discount on applicable items",
+    "Add-to-cart button calls cart API",
+    "UI updates to faction color scheme"
+  ],
+
+  "verification": {
+    "command": "npx playwright test tests/e2e/catalog.spec.js",
+    "timeout_seconds": 60
+  },
+
+  "estimate_minutes": 25
+}
+```
+
+**Notice**: Frontend tasks depend on API tasks (Level 3) because they consume the API. The UI can't fetch products until the `/products` endpoint exists.
+
 **Why this matters for parallel execution:**
 
 If MINE-L2-001 (auth service) and MINE-L2-003 (cart service) both ran at the same time:
@@ -987,7 +1109,12 @@ If MINE-L2-001 (auth service) and MINE-L2-003 (cart service) both ran at the sam
 - MINE-L2-003 creates `services/cart.py`
 - No conflict! They create different files.
 
-Both might modify `services/__init__.py` to add exports—that's why the task graph should be designed so only ONE task modifies shared files at each level. ZERG's design phase handles this automatically.
+Similarly, frontend tasks run in parallel:
+- MINE-L4-001 creates `frontend/src/pages/auth.js`
+- MINE-L4-002 creates `frontend/src/pages/catalog.js`
+- No conflict! Each page is its own file.
+
+The task graph ensures only ONE task modifies shared files at each level. ZERG's design phase handles this automatically.
 
 ### Step 4.5: Validate the Task Graph
 
@@ -1011,7 +1138,7 @@ ZERG Design Validation
 
 Feature: minerals-store
 
-✓ All 15 tasks have valid IDs
+✓ All 19 tasks have valid IDs
 ✓ All dependencies reference existing tasks
 ✓ No file ownership conflicts detected
 ✓ All verification commands present
@@ -1046,12 +1173,12 @@ Execution Plan
 ┌──────────────────────┬───────────────────────────────────────────┐
 │ Setting              │ Value                                     │
 ├──────────────────────┼───────────────────────────────────────────┤
-│ Total Tasks          │ 15                                        │
-│ Levels               │ 4                                         │
+│ Total Tasks          │ 19                                        │
+│ Levels               │ 5                                         │
 │ Workers Requested    │ 5                                         │
 │ Max Parallelization  │ 4 (limited by task graph)                 │
 │ Mode                 │ auto (will use subprocess)                │
-│ Estimated Duration   │ 90 minutes (critical path)                │
+│ Estimated Duration   │ 120 minutes (critical path)               │
 └──────────────────────┴───────────────────────────────────────────┘
 
 Level 1 - foundation (3 tasks, 3 workers needed)
@@ -1076,12 +1203,43 @@ Level 2 - services (4 tasks, 4 workers needed)
 │             │                                │ W-4    │ idle  │
 └─────────────┴────────────────────────────────┴────────┴───────┘
 
+Level 3 - api (4 tasks, 4 workers needed)
+┌─────────────┬────────────────────────────────┬────────┬───────┐
+│ Task        │ Title                          │ Worker │ Est.  │
+├─────────────┼────────────────────────────────┼────────┼───────┤
+│ MINE-L3-001 │ Create auth endpoints          │ W-0    │ 15m   │
+│ MINE-L3-002 │ Create product endpoints       │ W-1    │ 15m   │
+│ MINE-L3-003 │ Create cart endpoints          │ W-2    │ 20m   │
+│ MINE-L3-004 │ ⭐ Create order endpoints      │ W-3    │ 20m   │
+│             │                                │ W-4    │ idle  │
+└─────────────┴────────────────────────────────┴────────┴───────┘
+
+Level 4 - frontend (4 tasks, 4 workers needed)
+┌─────────────┬────────────────────────────────┬────────┬───────┐
+│ Task        │ Title                          │ Worker │ Est.  │
+├─────────────┼────────────────────────────────┼────────┼───────┤
+│ MINE-L4-001 │ Create auth pages              │ W-0    │ 20m   │
+│ MINE-L4-002 │ ⭐ Create catalog page         │ W-1    │ 25m   │
+│ MINE-L4-003 │ Create cart sidebar            │ W-2    │ 20m   │
+│ MINE-L4-004 │ Create checkout page           │ W-3    │ 20m   │
+│             │                                │ W-4    │ idle  │
+└─────────────┴────────────────────────────────┴────────┴───────┘
+
+Level 5 - testing (3 tasks, 3 workers needed)
+┌─────────────┬────────────────────────────────┬────────┬───────┐
+│ Task        │ Title                          │ Worker │ Est.  │
+├─────────────┼────────────────────────────────┼────────┼───────┤
+│ MINE-L5-001 │ Backend integration tests      │ W-0    │ 15m   │
+│ MINE-L5-002 │ ⭐ E2E tests with Playwright   │ W-1    │ 25m   │
+│ MINE-L5-003 │ Accessibility tests            │ W-2    │ 15m   │
+│             │                                │ W-3    │ idle  │
+│             │                                │ W-4    │ idle  │
+└─────────────┴────────────────────────────────┴────────┴───────┘
+
 ⭐ = Critical path task (determines minimum completion time)
 
-[... Level 3 and 4 ...]
-
-Total estimated time: 90 minutes (with 5 workers)
-Single-threaded would take: ~180 minutes
+Total estimated time: 120 minutes (with 5 workers)
+Single-threaded would take: ~240 minutes
 Speedup: ~2x
 
 This is a dry run. No workers will be started.
@@ -1440,8 +1598,12 @@ Results
 ```
 ZERG Test
 
-Framework: pytest (detected)
-Path: tests/
+Detected frameworks: pytest, playwright
+Running: Backend tests → E2E tests
+
+═══════════════════════════════════════════════════════════════
+                    BACKEND TESTS (pytest)
+═══════════════════════════════════════════════════════════════
 
 ========================= test session starts ==========================
 collected 42 items
@@ -1472,8 +1634,31 @@ minerals_store/api/orders.py               40      5    88%
 -----------------------------------------------------------
 TOTAL                                     370     31    92%
 
-✓ All 42 tests passed
+═══════════════════════════════════════════════════════════════
+                    E2E TESTS (playwright)
+═══════════════════════════════════════════════════════════════
+
+Running 8 tests using 4 workers
+
+  ✓ 1 [chromium] › shopping.spec.js:12 › user can register with faction
+  ✓ 2 [chromium] › shopping.spec.js:28 › user can login
+  ✓ 3 [chromium] › shopping.spec.js:42 › catalog shows products
+  ✓ 4 [chromium] › shopping.spec.js:58 › faction discount is displayed
+  ✓ 5 [chromium] › shopping.spec.js:74 › user can add to cart
+  ✓ 6 [chromium] › shopping.spec.js:92 › cart shows discount breakdown
+  ✓ 7 [chromium] › shopping.spec.js:110 › user can complete checkout
+  ✓ 8 [chromium] › shopping.spec.js:128 › order confirmation shows savings
+
+  8 passed (12.4s)
+
+═══════════════════════════════════════════════════════════════
+                         SUMMARY
+═══════════════════════════════════════════════════════════════
+
+✓ Backend: 42 tests passed
 ✓ Coverage: 92% (threshold: 80%)
+✓ E2E: 8 tests passed
+✓ All quality gates passed!
 ```
 
 ---
@@ -1485,44 +1670,191 @@ TOTAL                                     370     31    92%
 Let's see the final project structure:
 
 ```bash
-tree minerals_store/ -L 2
+tree . -L 3 -I '__pycache__|node_modules|.git|.zerg'
 ```
 
 ```
-minerals_store/
-├── __init__.py
-├── main.py                 # FastAPI app with router mounts
-├── config.py               # Settings, database connection
-├── types.py                # Enums: Faction, ProductCategory, OrderStatus
-├── models.py               # SQLAlchemy models
-├── services/
+minerals-store/
+├── minerals_store/                  # Backend
 │   ├── __init__.py
-│   ├── auth.py             # JWT auth, password hashing
-│   ├── product.py          # Product CRUD
-│   ├── cart.py             # Cart management, discount calculation
-│   └── order.py            # Checkout, order processing
-└── api/
-    ├── __init__.py
-    ├── auth.py             # /auth/* endpoints
-    ├── products.py         # /products/* endpoints
-    ├── cart.py             # /cart/* endpoints
-    └── orders.py           # /orders/* endpoints
+│   ├── main.py                      # FastAPI app with router mounts
+│   ├── config.py                    # Settings, database connection
+│   ├── types.py                     # Enums: Faction, ProductCategory, OrderStatus
+│   ├── models.py                    # SQLAlchemy models
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── auth.py                  # JWT auth, password hashing
+│   │   ├── product.py               # Product CRUD
+│   │   ├── cart.py                  # Cart management, discount calculation
+│   │   └── order.py                 # Checkout, order processing
+│   └── api/
+│       ├── __init__.py
+│       ├── auth.py                  # /auth/* endpoints
+│       ├── products.py              # /products/* endpoints
+│       ├── cart.py                  # /cart/* endpoints
+│       └── orders.py                # /orders/* endpoints
+├── frontend/                        # Web UI
+│   ├── index.html                   # App shell, loads main.js
+│   ├── package.json                 # npm dependencies
+│   ├── vite.config.js               # Vite build configuration
+│   ├── tailwind.config.js           # Tailwind with faction colors
+│   ├── src/
+│   │   ├── main.js                  # App entry, routing, state
+│   │   ├── api.js                   # API client with JWT handling
+│   │   ├── style.css                # Tailwind imports + custom styles
+│   │   └── pages/
+│   │       ├── auth.js              # Login/register with faction picker
+│   │       ├── catalog.js           # Product grid with add-to-cart
+│   │       ├── cart.js              # Cart sidebar component
+│   │       └── checkout.js          # Order summary and confirmation
+│   └── public/
+│       └── images/                  # Product images, faction icons
+├── tests/
+│   ├── unit/                        # Backend unit tests
+│   ├── integration/                 # API integration tests
+│   └── e2e/                         # Playwright E2E tests
+│       └── shopping.spec.js         # Full user journey test
+├── pyproject.toml
+├── package.json                     # Root scripts (dev, build)
+└── README.md
 ```
 
-### Step 8.2: Test the API
+### Step 8.2: Start the Application
+
+You'll need two terminals—one for the backend, one for the frontend.
+
+**Terminal 1 - Backend:**
 
 ```bash
-# Install dependencies
+# Install Python dependencies
 uv sync  # or pip install -e .
 
-# Run the server
-uvicorn minerals_store.main:app --reload
-
-# In another terminal, test the API
-curl http://localhost:8000/docs  # OpenAPI documentation
+# Run the API server
+uvicorn minerals_store.main:app --reload --port 8000
 ```
 
-**Example requests:**
+**Terminal 2 - Frontend:**
+
+```bash
+# Install JavaScript dependencies
+cd frontend
+npm install
+
+# Run the dev server
+npm run dev  # Starts on http://localhost:5173
+```
+
+**Backend API is available at:**
+- `http://localhost:8000` - API endpoints
+- `http://localhost:8000/docs` - Interactive Swagger documentation
+
+**Frontend is available at:**
+- `http://localhost:5173` - Your Starcraft-themed store
+
+### Step 8.3: See Your Store in Action
+
+Open `http://localhost:5173` in your browser. Here's what you'll see:
+
+**Login/Register Page:**
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              MINERALS & VESPENE GAS                              │
+│                   ═══════════════                                │
+│                                                                  │
+│   ┌───────────────────────────────────────────┐                 │
+│   │  Email: [________________________]         │                 │
+│   │  Password: [________________________]      │                 │
+│   │                                            │                 │
+│   │  Select Your Faction:                      │                 │
+│   │  ┌──────────┐ ┌──────────┐ ┌──────────┐   │                 │
+│   │  │ PROTOSS  │ │  TERRAN  │ │   ZERG   │   │                 │
+│   │  │    ◇     │ │    ◆     │ │    ◈     │   │                 │
+│   │  │  (blue)  │ │   (red)  │ │ (purple) │   │                 │
+│   │  └──────────┘ └──────────┘ └──────────┘   │                 │
+│   │                                            │                 │
+│   │         [ LOGIN ]    [ REGISTER ]          │                 │
+│   └───────────────────────────────────────────┘                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Product Catalog (after login as Zerg):**
+
+The entire UI shifts to your faction's color scheme—purple for Zerg:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  MINERALS & VESPENE GAS         [Cart: 2 items]   [Logout]      │
+│  ════════════════════════════════════════════════════════════   │
+│                                                                  │
+│  Welcome, zergling@swarm.net (ZERG)     Your discount: 15% OFF  │
+│                                         on Vespene Gas!          │
+│                                                                  │
+│  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐       │
+│  │ ▒▒▒▒▒▒▒▒▒▒▒▒▒ │  │ ░░░░░░░░░░░░░ │  │ ▓▓▓▓▓▓▓▓▓▓▓▓▓ │       │
+│  │   MINERALS    │  │ VESPENE GAS   │  │   BUNDLE      │       │
+│  │               │  │               │  │               │       │
+│  │   $10.00 ea   │  │   $15.00 ea   │  │   $22.00 ea   │       │
+│  │               │  │ ───────────── │  │               │       │
+│  │  [Add to Cart]│  │ YOU PAY: $12.75│ │  [Add to Cart]│       │
+│  │               │  │  (15% OFF!)   │  │               │       │
+│  │               │  │  [Add to Cart]│  │               │       │
+│  └───────────────┘  └───────────────┘  └───────────────┘       │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Cart Sidebar:**
+
+```
+┌─────────────────────────────────┐
+│         YOUR CART               │
+│  ═══════════════════════════    │
+│                                 │
+│  Vespene Gas x 100              │
+│    Original:  $1,500.00         │
+│    Discount:   -$225.00 (15%)   │
+│    Subtotal:  $1,275.00         │
+│                                 │
+│  Minerals x 50                  │
+│    Price:      $500.00          │
+│    Subtotal:   $500.00          │
+│                                 │
+│  ─────────────────────────────  │
+│  Total Savings: $225.00         │
+│  ─────────────────────────────  │
+│  TOTAL: $1,775.00               │
+│                                 │
+│  [ CHECKOUT ]                   │
+└─────────────────────────────────┘
+```
+
+**Checkout Confirmation:**
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                   ORDER CONFIRMED!                               │
+│                   ═══════════════                                │
+│                                                                  │
+│   Order #: ORD-2026-0126-ZERG-001                               │
+│                                                                  │
+│   100x Vespene Gas    $1,275.00  (15% faction discount applied) │
+│   50x Minerals          $500.00                                  │
+│   ──────────────────────────────                                │
+│   Total:              $1,775.00                                  │
+│   You saved:           $225.00                                   │
+│                                                                  │
+│   Status: PAID                                                   │
+│                                                                  │
+│   "The Swarm grows stronger. Your resources are en route."      │
+│                                                                  │
+│   [ Continue Shopping ]                                          │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Step 8.4: Test the API Directly
+
+If you prefer testing the API without the UI:
 
 ```bash
 # Register a Zerg user
@@ -1550,7 +1882,7 @@ curl http://localhost:8000/cart \
   -H "Authorization: Bearer eyJ..."
 ```
 
-### Step 8.3: Clean Up ZERG Artifacts
+### Step 8.5: Clean Up ZERG Artifacts
 
 ```bash
 /zerg:cleanup --feature minerals-store
@@ -1618,7 +1950,7 @@ Keep them for future reference or onboarding new team members.
 
 ## Summary: What You Learned
 
-Congratulations! You've built a complete ecommerce API using ZERG. Let's recap the key concepts:
+Congratulations! You've built a **complete full-stack ecommerce application** using ZERG—both a FastAPI backend AND a themed web UI that you can actually use. Let's recap the key concepts:
 
 ### The ZERG Mental Model
 
