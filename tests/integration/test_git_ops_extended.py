@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from zerg.exceptions import GitError, MergeConflict
+from zerg.exceptions import GitError, MergeConflictError
 from zerg.git_ops import BranchInfo, GitOps
 
 
@@ -136,7 +136,7 @@ class TestMergeOperations:
         subprocess.run(["git", "add", "-A"], cwd=git_repo_with_branches, check=True)
         subprocess.run(["git", "commit", "-q", "-m", "Conflict"], cwd=git_repo_with_branches, check=True)
 
-        with pytest.raises(MergeConflict) as exc_info:
+        with pytest.raises(MergeConflictError) as exc_info:
             ops.merge("feature-1")
 
         assert "feature.py" in exc_info.value.conflicting_files

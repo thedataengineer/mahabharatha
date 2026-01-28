@@ -394,7 +394,11 @@ def select_technology(charter: ProjectCharter) -> TechStack:
     framework_options = FRAMEWORK_RECOMMENDATIONS.get(selected_lang, {}).get(primary_platform, [])
 
     if framework_options:
-        console.print(f"\n[dim]Framework options for {primary_platform}: {', '.join(framework_options)}[/dim]")
+        opts = ", ".join(framework_options)
+        console.print(
+            f"\n[dim]Framework options for {primary_platform}:"
+            f" {opts}[/dim]"
+        )
 
     selected_framework = Prompt.ask(
         "[bold]Framework[/bold]",

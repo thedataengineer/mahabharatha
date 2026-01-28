@@ -6,7 +6,7 @@ import pytest
 
 from zerg.config import QualityGate, ZergConfig
 from zerg.constants import GateResult
-from zerg.exceptions import GateFailure, MergeConflict
+from zerg.exceptions import GateFailureError, MergeConflictError
 from zerg.gates import GateRunner
 from zerg.git_ops import GitOps
 
@@ -100,7 +100,7 @@ class TestMergeFlowConflict:
         ops.commit("Main change", add_all=True)
 
         # Merge should fail with conflict
-        with pytest.raises(MergeConflict) as exc_info:
+        with pytest.raises(MergeConflictError) as exc_info:
             ops.merge("feature/conflict")
 
         assert "README.md" in exc_info.value.conflicting_files
@@ -123,7 +123,7 @@ class TestMergeFlowConflict:
         (tmp_repo / "README.md").write_text("main readme")
         ops.commit("Main readme change", add_all=True)
 
-        with pytest.raises(MergeConflict) as exc_info:
+        with pytest.raises(MergeConflictError) as exc_info:
             ops.merge("feature/multi-conflict")
 
         # Should include both conflicting files
@@ -176,7 +176,7 @@ class TestMergeFlowGateFailure:
         result = runner.run_gate_by_name("test", cwd=tmp_repo)
 
         # Check result raises on failure
-        with pytest.raises(GateFailure):
+        with pytest.raises(GateFailureError):
             runner.check_result(result, raise_on_failure=True)
 
     def test_gate_run_order(

@@ -321,10 +321,7 @@ class CommandExecutor:
             raise CommandValidationError(f"Command validation failed: {reason}")
 
         # Parse command to argument list
-        if isinstance(command, str):
-            cmd_args = self.parse_command(command)
-        else:
-            cmd_args = list(command)
+        cmd_args = self.parse_command(command) if isinstance(command, str) else list(command)
 
         # Prepare environment
         exec_env = os.environ.copy()
@@ -500,7 +497,10 @@ class CommandExecutor:
         """
         cmd_preview = " ".join(result.command)[:100]
         if result.success:
-            logger.debug(f"Command OK: {cmd_preview} (exit={result.exit_code}, {result.duration_ms}ms)")
+            logger.debug(
+                f"Command OK: {cmd_preview} "
+                f"(exit={result.exit_code}, {result.duration_ms}ms)"
+            )
         else:
             logger.warning(f"Command FAILED: {cmd_preview} (exit={result.exit_code})")
 

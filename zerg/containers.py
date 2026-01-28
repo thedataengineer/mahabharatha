@@ -91,12 +91,12 @@ class ContainerManager:
             raise ContainerError(
                 f"Docker command failed: {e.stderr.strip()}",
                 details={"command": " ".join(cmd), "exit_code": e.returncode},
-            )
+            ) from e
         except subprocess.TimeoutExpired:
             raise ContainerError(
                 f"Docker command timed out after {timeout}s",
                 details={"command": " ".join(cmd)},
-            )
+            ) from None
 
     def _run_compose(
         self,
@@ -137,12 +137,12 @@ class ContainerManager:
             raise ContainerError(
                 f"Compose command failed: {e.stderr.strip()}",
                 details={"command": " ".join(cmd), "exit_code": e.returncode},
-            )
+            ) from e
         except subprocess.TimeoutExpired:
             raise ContainerError(
                 f"Compose command timed out after {timeout}s",
                 details={"command": " ".join(cmd)},
-            )
+            ) from None
 
     def build(self, no_cache: bool = False) -> None:
         """Build the worker image.
@@ -390,7 +390,8 @@ class ContainerManager:
             if command_lower.startswith(allowed.lower()):
                 return True, None
 
-        return False, f"Command not in allowlist: {command.split()[0] if command.split() else command}"
+        cmd_name = command.split()[0] if command.split() else command
+        return False, f"Command not in allowlist: {cmd_name}"
 
     def exec_in_worker(
         self,

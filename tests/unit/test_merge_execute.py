@@ -3,7 +3,7 @@
 Tests merge operations including:
 - Successful merge of single branch
 - Successful merge of multiple branches
-- MergeConflict exception handling
+- MergeConflictError exception handling
 - MergeResult status values (MERGED, CONFLICT)
 - Conflicting files population on conflict
 """
@@ -13,7 +13,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from zerg.constants import MergeStatus
-from zerg.exceptions import MergeConflict
+from zerg.exceptions import MergeConflictError
 from zerg.merge import MergeCoordinator
 from zerg.types import MergeResult
 
@@ -134,12 +134,12 @@ class TestExecuteMergeMultipleBranches:
 
 
 class TestMergeConflictExceptionHandling:
-    """Tests for MergeConflict exception handling in execute_merge."""
+    """Tests for MergeConflictError exception handling in execute_merge."""
 
     def test_merge_conflict_raises_exception(self):
-        """MergeConflict from git should be re-raised after recording result."""
+        """MergeConflictError from git should be re-raised after recording result."""
         mock_git = MagicMock()
-        mock_git.merge.side_effect = MergeConflict(
+        mock_git.merge.side_effect = MergeConflictError(
             message="Conflict in file.py",
             source_branch="worker-0",
             target_branch="staging",
@@ -151,7 +151,7 @@ class TestMergeConflictExceptionHandling:
             coordinator.git = mock_git
             coordinator.feature = "test-feature"
 
-            with pytest.raises(MergeConflict) as exc_info:
+            with pytest.raises(MergeConflictError) as exc_info:
                 coordinator.execute_merge(
                     source_branches=["worker-0"],
                     staging_branch="staging",
@@ -164,7 +164,7 @@ class TestMergeConflictExceptionHandling:
     def test_conflict_stops_further_merges(self):
         """Conflict on first branch should prevent merging subsequent branches."""
         mock_git = MagicMock()
-        mock_git.merge.side_effect = MergeConflict(
+        mock_git.merge.side_effect = MergeConflictError(
             message="Conflict",
             source_branch="worker-0",
             target_branch="staging",
@@ -176,7 +176,7 @@ class TestMergeConflictExceptionHandling:
             coordinator.git = mock_git
             coordinator.feature = "test-feature"
 
-            with pytest.raises(MergeConflict):
+            with pytest.raises(MergeConflictError):
                 coordinator.execute_merge(
                     source_branches=["worker-0", "worker-1", "worker-2"],
                     staging_branch="staging",
@@ -191,7 +191,7 @@ class TestMergeConflictExceptionHandling:
 
         def merge_side_effect(branch, message):
             if branch == "worker-1":
-                raise MergeConflict(
+                raise MergeConflictError(
                     message="Conflict in worker-1",
                     source_branch="worker-1",
                     target_branch="staging",
@@ -206,7 +206,7 @@ class TestMergeConflictExceptionHandling:
             coordinator.git = mock_git
             coordinator.feature = "test-feature"
 
-            with pytest.raises(MergeConflict):
+            with pytest.raises(MergeConflictError):
                 coordinator.execute_merge(
                     source_branches=["worker-0", "worker-1", "worker-2"],
                     staging_branch="staging",
@@ -240,7 +240,7 @@ class TestMergeResultStatusValues:
     def test_conflict_status_on_conflict(self):
         """Conflict should produce result with CONFLICT status before raising."""
         mock_git = MagicMock()
-        mock_git.merge.side_effect = MergeConflict(
+        mock_git.merge.side_effect = MergeConflictError(
             message="Conflict",
             source_branch="worker-0",
             target_branch="staging",
@@ -254,7 +254,7 @@ class TestMergeResultStatusValues:
 
             # The method adds a CONFLICT result before re-raising
             # We can verify by catching and checking the exception details
-            with pytest.raises(MergeConflict) as exc_info:
+            with pytest.raises(MergeConflictError) as exc_info:
                 coordinator.execute_merge(
                     source_branches=["worker-0"],
                     staging_branch="staging",
@@ -276,10 +276,10 @@ class TestConflictingFilesPopulation:
     """Tests for conflicting_files field population on conflict."""
 
     def test_conflicting_files_populated_from_exception(self):
-        """Conflicting files should be captured from MergeConflict exception."""
+        """Conflicting files should be captured from MergeConflictError exception."""
         conflict_files = ["src/models/user.py", "src/services/auth.py", "tests/test_auth.py"]
         mock_git = MagicMock()
-        mock_git.merge.side_effect = MergeConflict(
+        mock_git.merge.side_effect = MergeConflictError(
             message="Multiple conflicts",
             source_branch="worker-0",
             target_branch="staging",
@@ -291,7 +291,7 @@ class TestConflictingFilesPopulation:
             coordinator.git = mock_git
             coordinator.feature = "test-feature"
 
-            with pytest.raises(MergeConflict) as exc_info:
+            with pytest.raises(MergeConflictError) as exc_info:
                 coordinator.execute_merge(
                     source_branches=["worker-0"],
                     staging_branch="staging",
@@ -318,8 +318,8 @@ class TestConflictingFilesPopulation:
         assert results[0].conflicting_files == []
 
     def test_conflicting_files_defaults_to_empty_list(self):
-        """MergeConflict with None conflicting_files should default to empty list."""
-        exception = MergeConflict(
+        """MergeConflictError with None conflicting_files should default to empty list."""
+        exception = MergeConflictError(
             message="Conflict",
             source_branch="src",
             target_branch="target",
@@ -386,11 +386,11 @@ class TestMergeResultDataclass:
 
 
 class TestMergeConflictException:
-    """Tests for MergeConflict exception class."""
+    """Tests for MergeConflictError exception class."""
 
     def test_merge_conflict_attributes(self):
-        """MergeConflict should have all expected attributes."""
-        exception = MergeConflict(
+        """MergeConflictError should have all expected attributes."""
+        exception = MergeConflictError(
             message="Conflict in merge",
             source_branch="feature-branch",
             target_branch="main",
@@ -403,10 +403,10 @@ class TestMergeConflictException:
         assert "Conflict in merge" in str(exception)
 
     def test_merge_conflict_inherits_git_error(self):
-        """MergeConflict should inherit from GitError."""
+        """MergeConflictError should inherit from GitError."""
         from zerg.exceptions import GitError
 
-        exception = MergeConflict(
+        exception = MergeConflictError(
             message="Test",
             source_branch="src",
             target_branch="tgt",
@@ -415,8 +415,8 @@ class TestMergeConflictException:
         assert isinstance(exception, GitError)
 
     def test_merge_conflict_details_populated(self):
-        """MergeConflict should populate details dict."""
-        exception = MergeConflict(
+        """MergeConflictError should populate details dict."""
+        exception = MergeConflictError(
             message="Conflict",
             source_branch="worker-0",
             target_branch="staging",

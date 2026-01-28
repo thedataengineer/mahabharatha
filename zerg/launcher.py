@@ -387,8 +387,10 @@ class SubprocessLauncher(WorkerLauncher):
                     raise ValueError(f"Invalid worker_id: {worker_id}")
                 self.config.log_dir.mkdir(parents=True, exist_ok=True)
                 # Use safe integer formatting for log file names
-                stdout_file = open(self.config.log_dir / f"worker-{int(worker_id)}.stdout.log", "w")
-                stderr_file = open(self.config.log_dir / f"worker-{int(worker_id)}.stderr.log", "w")
+                stdout_path = self.config.log_dir / f"worker-{int(worker_id)}.stdout.log"
+                stderr_path = self.config.log_dir / f"worker-{int(worker_id)}.stderr.log"
+                stdout_file = stdout_path.open("w")  # noqa: SIM115
+                stderr_file = stderr_path.open("w")  # noqa: SIM115
 
             # Spawn process
             process = subprocess.Popen(
@@ -905,7 +907,10 @@ class ContainerLauncher(WorkerLauncher):
                 logger.debug(f"Process check failed: {e}")
             _time.sleep(0.5)
 
-        logger.warning(f"Worker process not found in container {container_id[:12]} after {timeout}s")
+        logger.warning(
+            f"Worker process not found in container"
+            f" {container_id[:12]} after {timeout}s"
+        )
         return False
 
     def _cleanup_failed_container(self, container_id: str, worker_id: int) -> None:

@@ -33,7 +33,7 @@ class TaskError(ZergError):
         self.task_id = task_id
 
 
-class TaskVerificationFailed(TaskError):
+class TaskVerificationFailedError(TaskError):
     """Task verification command failed."""
 
     def __init__(
@@ -115,7 +115,7 @@ class GitError(ZergError):
         self.exit_code = exit_code
 
 
-class MergeConflict(GitError):
+class MergeConflictError(GitError):
     """Merge conflict detected during branch merge."""
 
     def __init__(
@@ -148,7 +148,7 @@ class GateError(ZergError):
         self.gate_name = gate_name
 
 
-class GateFailure(GateError):
+class GateFailureError(GateError):
     """Quality gate check failed."""
 
     def __init__(

@@ -539,7 +539,9 @@ def troubleshoot(
                 console.print(f"  Type: [yellow]{result.parsed_error.error_type}[/yellow]")
                 if result.parsed_error.file:
                     console.print(
-                        f"  Location: [cyan]{result.parsed_error.file}:{result.parsed_error.line}[/cyan]"
+                        "  Location: [cyan]"
+                        f"{result.parsed_error.file}"
+                        f":{result.parsed_error.line}[/cyan]"
                     )
             console.print()
 
@@ -577,7 +579,11 @@ def troubleshoot(
             # Root cause
             console.print(Panel("[bold]Phase 4: Root Cause[/bold]", style="cyan"))
             confidence_color = (
-                "green" if result.confidence >= 0.7 else "yellow" if result.confidence >= 0.5 else "red"
+                "green"
+                if result.confidence >= 0.7
+                else "yellow"
+                if result.confidence >= 0.5
+                else "red"
             )
             console.print(f"  Root Cause: [bold]{result.root_cause}[/bold]")
             console.print(

@@ -4,13 +4,11 @@ import json
 import threading
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from zerg.constants import GSD_DIR, STATE_DIR, LevelMergeStatus, TaskStatus, WorkerStatus
 from zerg.exceptions import StateError
 from zerg.logging import get_logger
-from typing import TYPE_CHECKING
-
 from zerg.types import ExecutionEvent, WorkerState
 
 if TYPE_CHECKING:
@@ -54,7 +52,7 @@ class StateManager:
                     with open(self._state_file) as f:
                         self._state = json.load(f)
                 except json.JSONDecodeError as e:
-                    raise StateError(f"Failed to parse state file: {e}")
+                    raise StateError(f"Failed to parse state file: {e}") from e
 
             logger.debug(f"Loaded state for feature {self.feature}")
             return self._state.copy()

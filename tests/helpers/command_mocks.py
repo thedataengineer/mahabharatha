@@ -803,8 +803,8 @@ class MockGitOps:
             raise RuntimeError(f"Simulated merge failure for {branch}")
 
         if self._has_conflicts:
-            from zerg.exceptions import MergeConflict
-            raise MergeConflict(
+            from zerg.exceptions import MergeConflictError
+            raise MergeConflictError(
                 f"Merge conflict: {branch}",
                 source_branch=branch,
                 target_branch=self._current_branch,
@@ -825,8 +825,8 @@ class MockGitOps:
             onto: Branch to rebase onto
         """
         if self._has_conflicts:
-            from zerg.exceptions import MergeConflict
-            raise MergeConflict(
+            from zerg.exceptions import MergeConflictError
+            raise MergeConflictError(
                 f"Rebase conflict onto {onto}",
                 source_branch=self._current_branch,
                 target_branch=onto,

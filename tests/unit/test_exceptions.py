@@ -6,17 +6,17 @@ from zerg.exceptions import (
     ConfigurationError,
     ContainerError,
     GateError,
-    GateFailure,
+    GateFailureError,
     GateTimeoutError,
     GitError,
     LevelError,
-    MergeConflict,
+    MergeConflictError,
     OrchestratorError,
     StateError,
     TaskDependencyError,
     TaskError,
     TaskTimeoutError,
-    TaskVerificationFailed,
+    TaskVerificationFailedError,
     ValidationError,
     WorkerCommunicationError,
     WorkerError,
@@ -77,11 +77,11 @@ class TestTaskError:
 
 
 class TestTaskVerificationFailed:
-    """Tests for TaskVerificationFailed."""
+    """Tests for TaskVerificationFailedError."""
 
     def test_verification_failed(self) -> None:
-        """Test TaskVerificationFailed creation."""
-        error = TaskVerificationFailed(
+        """Test TaskVerificationFailedError creation."""
+        error = TaskVerificationFailedError(
             message="Verification failed",
             task_id="TASK-001",
             command="pytest",
@@ -158,7 +158,7 @@ class TestWorktreeError:
 
 
 class TestGitError:
-    """Tests for GitError and MergeConflict."""
+    """Tests for GitError and MergeConflictError."""
 
     def test_git_error_basic(self) -> None:
         """Test basic GitError."""
@@ -174,11 +174,11 @@ class TestGitError:
 
 
 class TestMergeConflict:
-    """Tests for MergeConflict."""
+    """Tests for MergeConflictError."""
 
     def test_merge_conflict(self) -> None:
-        """Test MergeConflict creation."""
-        error = MergeConflict(
+        """Test MergeConflictError creation."""
+        error = MergeConflictError(
             message="Conflict",
             source_branch="feature",
             target_branch="main",
@@ -189,8 +189,8 @@ class TestMergeConflict:
         assert error.conflicting_files == ["a.py", "b.py"]
 
     def test_merge_conflict_no_files(self) -> None:
-        """Test MergeConflict without file list."""
-        error = MergeConflict(
+        """Test MergeConflictError without file list."""
+        error = MergeConflictError(
             message="Conflict",
             source_branch="feature",
             target_branch="main",
@@ -213,11 +213,11 @@ class TestGateError:
 
 
 class TestGateFailure:
-    """Tests for GateFailure."""
+    """Tests for GateFailureError."""
 
     def test_gate_failure(self) -> None:
-        """Test GateFailure creation."""
-        error = GateFailure(
+        """Test GateFailureError creation."""
+        error = GateFailureError(
             message="Lint failed",
             gate_name="lint",
             command="ruff check .",

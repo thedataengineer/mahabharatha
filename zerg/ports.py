@@ -51,14 +51,13 @@ class PortAllocator:
             RuntimeError: If not enough ports available
         """
         allocated = []
-        attempts = 0
         max_attempts = count * 10  # Allow some retries
 
         # Generate candidates in random order to avoid collisions
         candidates = list(range(self.range_start, self.range_end + 1))
         random.shuffle(candidates)
 
-        for port in candidates:
+        for attempts, port in enumerate(candidates):
             if len(allocated) >= count:
                 break
 
@@ -67,8 +66,7 @@ class PortAllocator:
                 allocated.append(port)
                 logger.debug(f"Allocated port {port}")
 
-            attempts += 1
-            if attempts >= max_attempts:
+            if attempts + 1 >= max_attempts:
                 break
 
         if len(allocated) < count:

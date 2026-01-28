@@ -34,7 +34,7 @@ from zerg.commands.git_cmd import (
     generate_commit_message,
     git_cmd,
 )
-from zerg.exceptions import GitError, MergeConflict
+from zerg.exceptions import GitError, MergeConflictError
 from zerg.git_ops import BranchInfo
 
 if TYPE_CHECKING:
@@ -513,7 +513,7 @@ class TestActionMerge:
         """Test merge with conflicts."""
         mock_git = MagicMock()
         mock_git.branch_exists.return_value = True
-        mock_git.merge.side_effect = MergeConflict(
+        mock_git.merge.side_effect = MergeConflictError(
             "Merge conflict",
             source_branch="feature",
             target_branch="main",
@@ -536,7 +536,7 @@ class TestActionMerge:
         """Test rebase with conflicts."""
         mock_git = MagicMock()
         mock_git.branch_exists.return_value = True
-        mock_git.rebase.side_effect = MergeConflict(
+        mock_git.rebase.side_effect = MergeConflictError(
             "Rebase conflict",
             source_branch="feature",
             target_branch="main",
@@ -588,7 +588,7 @@ class TestActionSync:
         """Test sync when rebase has conflict."""
         mock_git = MagicMock()
         mock_git.current_branch.return_value = "feature"
-        mock_git.rebase.side_effect = MergeConflict(
+        mock_git.rebase.side_effect = MergeConflictError(
             "Rebase conflict",
             source_branch="feature",
             target_branch="main",
@@ -727,7 +727,7 @@ class TestActionFinish:
         mock_git._run.side_effect = [
             log_result,  # git log
             pull_result,  # git pull --rebase
-            MergeConflict(
+            MergeConflictError(
                 "Merge conflict",
                 source_branch="feature",
                 target_branch="main",

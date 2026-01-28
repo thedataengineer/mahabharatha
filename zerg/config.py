@@ -102,10 +102,7 @@ class ZergConfig(BaseModel):
         Returns:
             ZergConfig instance
         """
-        if config_path is None:
-            config_path = Path(".zerg/config.yaml")
-        else:
-            config_path = Path(config_path)
+        config_path = Path(".zerg/config.yaml") if config_path is None else Path(config_path)
 
         if not config_path.exists():
             return cls()
@@ -133,10 +130,7 @@ class ZergConfig(BaseModel):
         Args:
             config_path: Path to save config. Defaults to .zerg/config.yaml
         """
-        if config_path is None:
-            config_path = Path(".zerg/config.yaml")
-        else:
-            config_path = Path(config_path)
+        config_path = Path(".zerg/config.yaml") if config_path is None else Path(config_path)
 
         config_path.parent.mkdir(parents=True, exist_ok=True)
 

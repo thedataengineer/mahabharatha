@@ -108,7 +108,7 @@ def logs(
         console.print("\n[dim]Stopped[/dim]")
     except Exception as e:
         console.print(f"\n[red]Error:[/red] {e}")
-        raise SystemExit(1)
+        raise SystemExit(1) from None
 
 
 def detect_feature() -> str | None:

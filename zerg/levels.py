@@ -121,7 +121,8 @@ class LevelController:
             tid
             for tid, task in self._tasks.items()
             if task.get("level") == level
-            and task.get("status", TaskStatus.TODO.value) in (TaskStatus.TODO.value, TaskStatus.PENDING.value)
+            and task.get("status", TaskStatus.TODO.value)
+            in (TaskStatus.TODO.value, TaskStatus.PENDING.value)
         ]
 
     def mark_task_complete(self, task_id: str) -> bool:
@@ -200,7 +201,8 @@ class LevelController:
         if level in self._levels:
             self._levels[level].in_progress_tasks += 1
 
-        logger.debug(f"Task {task_id} in progress" + (f" (worker {worker_id})" if worker_id else ""))
+        suffix = f" (worker {worker_id})" if worker_id else ""
+        logger.debug(f"Task {task_id} in progress{suffix}")
 
     def is_level_complete(self, level: int) -> bool:
         """Check if a level is complete.

@@ -1,7 +1,7 @@
 """ZERG review command - two-stage code review workflow."""
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 
@@ -257,7 +257,7 @@ class ReviewCommand:
                 path = Path(filepath)
                 if not path.exists() or not path.is_file():
                     continue
-                if not path.suffix in [".py", ".js", ".ts", ".go", ".rs", ".java"]:
+                if path.suffix not in [".py", ".js", ".ts", ".go", ".rs", ".java"]:
                     continue
 
                 content = path.read_text(encoding="utf-8")
@@ -303,7 +303,10 @@ class ReviewCommand:
                                 severity="warning",
                                 file=filepath,
                                 line=1,
-                                message=f"High average function length ({avg_lines_per_func:.0f} lines)",
+                                message=(
+                                    "High average function length"
+                                    f" ({avg_lines_per_func:.0f} lines)"
+                                ),
                                 suggestion="Consider breaking into smaller functions",
                             )
                         )
@@ -465,7 +468,7 @@ def review(
         if mode in ("self", "full"):
             console.print(Panel("[bold]Self-Review Checklist[/bold]", style="cyan"))
             checklist = reviewer.checklist.get_items()
-            for key, item in checklist:
+            for _key, item in checklist:
                 console.print(f"  ☐ {item}")
             console.print()
 
@@ -483,8 +486,16 @@ def review(
             table.add_column("Status")
             table.add_column("Details")
 
-            stage1_status = "[green]✓ PASSED[/green]" if result.spec_passed else "[red]✗ FAILED[/red]"
-            stage2_status = "[green]✓ PASSED[/green]" if result.quality_passed else "[yellow]⚠ REVIEW[/yellow]"
+            stage1_status = (
+                "[green]✓ PASSED[/green]"
+                if result.spec_passed
+                else "[red]✗ FAILED[/red]"
+            )
+            stage2_status = (
+                "[green]✓ PASSED[/green]"
+                if result.quality_passed
+                else "[yellow]⚠ REVIEW[/yellow]"
+            )
 
             table.add_row("1. Spec Compliance", stage1_status, "Requirements alignment")
             table.add_row("2. Code Quality", stage2_status, f"{result.total_items} items found")

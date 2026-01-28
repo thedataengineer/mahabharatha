@@ -205,7 +205,12 @@ class Runner:
             result = executor.execute(cmd, timeout=self.config.timeout_seconds)
             duration = time.time() - start
 
-            return self._parse_output(framework, result.stdout + result.stderr, result.exit_code, duration)
+            return self._parse_output(
+                framework,
+                result.stdout + result.stderr,
+                result.exit_code,
+                duration,
+            )
 
         except CommandValidationError as e:
             return RunResult(

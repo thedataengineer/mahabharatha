@@ -1,16 +1,17 @@
 """ZERG git command - intelligent git operations."""
 
+import contextlib
 import re
 from pathlib import Path
 
 import click
 from rich.console import Console
 from rich.panel import Panel
-from rich.prompt import Prompt, Confirm
+from rich.prompt import Confirm, Prompt
 from rich.table import Table
 
-from zerg.git_ops import GitOps, BranchInfo
-from zerg.exceptions import GitError, MergeConflict
+from zerg.exceptions import GitError, MergeConflictError
+from zerg.git_ops import GitOps
 from zerg.logging import get_logger
 
 console = Console()
@@ -62,7 +63,7 @@ def generate_commit_message(diff: str, files: list[str]) -> str:
         summary = f"update {', '.join(Path(f).stem for f in files[:3])}"
     else:
         # Group by directory
-        dirs = set(Path(f).parent.name for f in files if Path(f).parent.name)
+        dirs = {Path(f).parent.name for f in files if Path(f).parent.name}
         if dirs:
             summary = f"update {', '.join(list(dirs)[:2])} files"
         else:
@@ -87,7 +88,11 @@ def action_commit(git: GitOps, push: bool) -> int:
     unstaged_result = git._run("diff", "--name-only", check=False)
 
     staged_files = files_result.stdout.strip().split("\n") if files_result.stdout.strip() else []
-    unstaged_files = unstaged_result.stdout.strip().split("\n") if unstaged_result.stdout.strip() else []
+    unstaged_files = (
+        unstaged_result.stdout.strip().split("\n")
+        if unstaged_result.stdout.strip()
+        else []
+    )
     all_files = staged_files + unstaged_files
 
     # Stage all if nothing staged
@@ -185,7 +190,7 @@ def action_merge(git: GitOps, branch: str | None, strategy: str, base: str) -> i
             console.print(f"[green]✓[/green] Merged {branch}")
 
         return 0
-    except MergeConflict as e:
+    except MergeConflictError as e:
         console.print(f"[red]Merge conflict:[/red] {e}")
         console.print("Conflicting files:")
         for f in e.conflicting_files:
@@ -219,8 +224,8 @@ def action_sync(git: GitOps, base: str) -> int:
             try:
                 git.rebase(f"origin/{base}")
                 console.print(f"  [green]✓[/green] Rebased onto {base}")
-            except MergeConflict as e:
-                console.print(f"  [red]Rebase conflict[/red]")
+            except MergeConflictError:
+                console.print("  [red]Rebase conflict[/red]")
                 return 1
             except GitError:
                 pass
@@ -287,16 +292,14 @@ def action_finish(git: GitOps, base: str, push: bool) -> int:
         console.print(f"\n[dim]Switching to {base}...[/dim]")
         git.checkout(base)
         git.fetch()
-        try:
+        with contextlib.suppress(GitError):
             git._run("pull", "--rebase", check=False)
-        except GitError:
-            pass
 
         console.print(f"[dim]Merging {current}...[/dim]")
         try:
             git._run("merge", "--squash", current)
             # Generate message
-            diff_result = git._run("diff", "--cached", "--stat", check=False)
+            git._run("diff", "--cached", "--stat", check=False)
             suggested = f"feat: merge {current}"
             message = Prompt.ask("Commit message", default=suggested)
             git.commit(message)
@@ -310,8 +313,8 @@ def action_finish(git: GitOps, base: str, push: bool) -> int:
                 git.delete_branch(current, force=True)
                 console.print(f"[green]✓[/green] Deleted {current}")
 
-        except MergeConflict as e:
-            console.print(f"[red]Merge conflict:[/red]")
+        except MergeConflictError as e:
+            console.print("[red]Merge conflict:[/red]")
             for f in e.conflicting_files:
                 console.print(f"  - {f}")
             git.checkout(current)

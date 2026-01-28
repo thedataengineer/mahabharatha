@@ -13,7 +13,7 @@ import pytest
 
 from zerg.config import QualityGate, ZergConfig
 from zerg.constants import GateResult, MergeStatus
-from zerg.exceptions import MergeConflict
+from zerg.exceptions import MergeConflictError
 from zerg.merge import MergeCoordinator, MergeFlowResult
 from zerg.types import GateRunResult, MergeResult
 
@@ -296,7 +296,7 @@ class TestMergeConflictHandling:
             conflicting_files=["conflicting_file.py"],
         )
 
-        with pytest.raises(MergeConflict) as exc_info:
+        with pytest.raises(MergeConflictError) as exc_info:
             mock_merger.execute_merge(
                 source_branches=["zerg/test/worker-0", "zerg/test/worker-1"],
                 staging_branch="staging",
@@ -318,7 +318,7 @@ class TestMergeConflictHandling:
                 source_branches=["worker-conflict"],
                 staging_branch="staging",
             )
-        except MergeConflict:
+        except MergeConflictError:
             pass
 
         conflict_merges = mock_merger.get_conflict_merges()
@@ -338,7 +338,7 @@ class TestMergeConflictHandling:
                 source_branches=["worker-0", "worker-1", "worker-2"],
                 staging_branch="staging",
             )
-        except MergeConflict:
+        except MergeConflictError:
             pass
 
         successful = mock_merger.get_successful_merges()
@@ -776,7 +776,7 @@ class TestRealMergeCoordinatorIntegration:
         tmp_path: Path,
     ) -> None:
         """Test real coordinator handles merge conflict."""
-        mock_git_ops.merge.side_effect = MergeConflict(
+        mock_git_ops.merge.side_effect = MergeConflictError(
             "Conflict in file.py",
             source_branch="worker-0",
             target_branch="staging",

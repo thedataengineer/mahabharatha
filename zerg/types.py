@@ -130,7 +130,11 @@ class WorkerState:
             "health_check_at": self.health_check_at.isoformat() if self.health_check_at else None,
             "started_at": self.started_at.isoformat() if self.started_at else None,
             "ready_at": self.ready_at.isoformat() if self.ready_at else None,
-            "last_task_completed_at": self.last_task_completed_at.isoformat() if self.last_task_completed_at else None,
+            "last_task_completed_at": (
+                self.last_task_completed_at.isoformat()
+                if self.last_task_completed_at
+                else None
+            ),
             "tasks_completed": self.tasks_completed,
             "context_usage": self.context_usage,
         }

@@ -11,7 +11,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from zerg.exceptions import GitError, MergeConflict
+from zerg.exceptions import GitError, MergeConflictError
 
 
 @dataclass
@@ -310,14 +310,14 @@ class MockGitOps:
             Merge commit SHA
 
         Raises:
-            MergeConflict: If merge has conflicts
+            MergeConflictError: If merge has conflicts
             GitError: If merge fails
         """
         if branch in self._fail_merge_branches:
             raise GitError(f"Simulated merge failure for {branch}")
 
         if self._has_conflicts:
-            raise MergeConflict(
+            raise MergeConflictError(
                 f"Merge conflict: {branch}",
                 source_branch=branch,
                 target_branch=self._current_branch,
@@ -338,10 +338,10 @@ class MockGitOps:
             onto: Branch to rebase onto
 
         Raises:
-            MergeConflict: If rebase has conflicts
+            MergeConflictError: If rebase has conflicts
         """
         if self._has_conflicts:
-            raise MergeConflict(
+            raise MergeConflictError(
                 f"Rebase conflict onto {onto}",
                 source_branch=self._current_branch,
                 target_branch=onto,

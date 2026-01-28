@@ -16,7 +16,7 @@ import pytest
 
 from zerg.config import QualityGate, ZergConfig
 from zerg.constants import GateResult, MergeStatus
-from zerg.exceptions import MergeConflict
+from zerg.exceptions import MergeConflictError
 from zerg.merge import MergeCoordinator, MergeFlowResult
 from zerg.types import GateRunResult
 
@@ -430,7 +430,7 @@ class TestFullMergeFlowMergeConflicts:
 
     @pytest.fixture
     def mock_git_ops_with_conflict(self):
-        """Create mock GitOps that raises MergeConflict."""
+        """Create mock GitOps that raises MergeConflictError."""
         mock = MagicMock()
         mock.create_staging_branch.return_value = "zerg/test-feature/staging"
         mock.checkout.return_value = None
@@ -439,7 +439,7 @@ class TestFullMergeFlowMergeConflicts:
         mock.abort_merge.return_value = None
 
         # First merge succeeds, second causes conflict
-        conflict = MergeConflict(
+        conflict = MergeConflictError(
             message="Merge conflict detected",
             source_branch="worker-1",
             target_branch="zerg/test-feature/staging",
@@ -530,7 +530,7 @@ class TestFullMergeFlowMergeConflicts:
         mock_git_ops.branch_exists.return_value = True
         mock_git_ops.abort_merge.return_value = None
 
-        conflict = MergeConflict(
+        conflict = MergeConflictError(
             message="Conflict in single branch",
             source_branch="worker-0",
             target_branch="staging",

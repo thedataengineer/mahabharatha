@@ -6,7 +6,7 @@ from pathlib import Path
 from zerg.command_executor import CommandExecutor, CommandValidationError
 from zerg.config import QualityGate, ZergConfig
 from zerg.constants import GateResult
-from zerg.exceptions import GateFailure, GateTimeoutError
+from zerg.exceptions import GateFailureError, GateTimeoutError
 from zerg.logging import get_logger
 from zerg.types import GateRunResult
 
@@ -196,7 +196,7 @@ class GateRunner:
             True if gate passed
 
         Raises:
-            GateFailure: If gate failed and raise_on_failure is True
+            GateFailureError: If gate failed and raise_on_failure is True
             GateTimeoutError: If gate timed out and raise_on_failure is True
         """
         if result.result == GateResult.PASS:
@@ -215,7 +215,7 @@ class GateRunner:
                 timeout_seconds=result.duration_ms // 1000,
             )
 
-        raise GateFailure(
+        raise GateFailureError(
             f"Gate {result.gate_name} failed",
             gate_name=result.gate_name,
             command=result.command,

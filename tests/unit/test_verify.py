@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.exceptions import TaskTimeoutError, TaskVerificationFailed
+from zerg.exceptions import TaskTimeoutError, TaskVerificationFailedError
 from zerg.verify import VerificationExecutionResult, VerificationExecutor
 
 
@@ -257,7 +257,7 @@ class TestCheckResult:
             command="pytest test/",
         )
 
-        with pytest.raises(TaskVerificationFailed) as exc_info:
+        with pytest.raises(TaskVerificationFailedError) as exc_info:
             executor.check_result(result, raise_on_failure=True)
 
         assert exc_info.value.task_id == "TASK-001"

@@ -17,7 +17,6 @@ from zerg.constants import TaskStatus, WorkerStatus
 from zerg.logging import get_logger
 from zerg.metrics import MetricsCollector
 from zerg.state import StateManager
-from zerg.types import FeatureMetrics, LevelMetrics, WorkerMetrics
 
 if TYPE_CHECKING:
     from zerg.state import StateManager
@@ -87,7 +86,10 @@ def status(
 
         if not feature:
             console.print("[red]Error:[/red] No active feature found")
-            console.print("Specify a feature with [cyan]--feature[/cyan] or run from a feature directory")
+            console.print(
+                "Specify a feature with [cyan]--feature[/cyan]"
+                " or run from a feature directory"
+            )
             raise SystemExit(1)
 
         # Load state
@@ -111,7 +113,7 @@ def status(
         console.print("\n[dim]Stopped watching[/dim]")
     except Exception as e:
         console.print(f"\n[red]Error:[/red] {e}")
-        raise SystemExit(1)
+        raise SystemExit(1) from None
 
 
 def detect_feature() -> str | None:
@@ -431,8 +433,6 @@ def show_status(state: StateManager, feature: str, level_filter: int | None) -> 
     # Get task stats
     all_tasks = state._state.get("tasks", {})
     completed = len(state.get_tasks_by_status(TaskStatus.COMPLETE))
-    failed = len(state.get_tasks_by_status(TaskStatus.FAILED))
-    in_progress = len(state.get_tasks_by_status(TaskStatus.IN_PROGRESS))
     total = len(all_tasks) if all_tasks else 42  # Fallback estimate
 
     # Progress bar
@@ -585,22 +585,50 @@ def show_recent_events(state: StateManager, limit: int = 5) -> None:
 
         # Format event
         if event_type == "task_complete":
-            console.print(f"  [{ts}] [green]✓[/green] {data.get('task_id')} completed by worker-{data.get('worker_id')}")
+            task_id = data.get("task_id")
+            worker_id = data.get("worker_id")
+            console.print(
+                f"  [{ts}] [green]✓[/green] {task_id}"
+                f" completed by worker-{worker_id}"
+            )
         elif event_type == "task_failed":
-            console.print(f"  [{ts}] [red]✗[/red] {data.get('task_id')} failed: {data.get('error', 'unknown')}")
+            task_id = data.get("task_id")
+            error = data.get("error", "unknown")
+            console.print(
+                f"  [{ts}] [red]✗[/red] {task_id}"
+                f" failed: {error}"
+            )
         elif event_type == "level_started":
-            console.print(f"  [{ts}] [cyan]▶[/cyan] Level {data.get('level')} started with {data.get('tasks')} tasks")
+            level = data.get("level")
+            tasks = data.get("tasks")
+            console.print(
+                f"  [{ts}] [cyan]▶[/cyan] Level {level}"
+                f" started with {tasks} tasks"
+            )
         elif event_type == "level_complete":
-            console.print(f"  [{ts}] [green]✓[/green] Level {data.get('level')} complete")
+            console.print(
+                f"  [{ts}] [green]✓[/green]"
+                f" Level {data.get('level')} complete"
+            )
         elif event_type == "worker_started":
-            console.print(f"  [{ts}] [cyan]+[/cyan] Worker {data.get('worker_id')} started on port {data.get('port')}")
+            wid = data.get("worker_id")
+            port = data.get("port")
+            console.print(
+                f"  [{ts}] [cyan]+[/cyan] Worker {wid}"
+                f" started on port {port}"
+            )
         else:
             console.print(f"  [{ts}] {event_type}")
 
     console.print()
 
 
-def show_watch_status(state: StateManager, feature: str, level_filter: int | None, interval: int) -> None:
+def show_watch_status(
+    state: StateManager,
+    feature: str,
+    level_filter: int | None,
+    interval: int,
+) -> None:
     """Show continuously updating status.
 
     Args:

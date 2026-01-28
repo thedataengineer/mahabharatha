@@ -1,5 +1,6 @@
 """ZERG analyze command - static analysis and quality assessment."""
 
+import contextlib
 import json
 import shlex
 from dataclasses import dataclass, field
@@ -307,10 +308,8 @@ def _parse_thresholds(threshold_args: tuple[str, ...]) -> dict[str, int]:
     for arg in threshold_args:
         if "=" in arg:
             key, value = arg.split("=", 1)
-            try:
+            with contextlib.suppress(ValueError):
                 thresholds[key.strip()] = int(value.strip())
-            except ValueError:
-                pass
     return thresholds
 
 

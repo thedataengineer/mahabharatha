@@ -8,7 +8,6 @@ from pathlib import Path
 
 import click
 from rich.console import Console
-from rich.panel import Panel
 from rich.prompt import Confirm
 from rich.table import Table
 
@@ -532,10 +531,14 @@ def refactor(
 
             # Status
             if result.total_suggestions == 0:
-                console.print("\n[green]No refactoring suggestions found - code looks good![/green]")
+                console.print(
+                    "\n[green]No refactoring suggestions"
+                    " found - code looks good![/green]"
+                )
             elif dry_run:
                 console.print(
-                    f"\n[yellow]Run without --dry-run to apply {result.total_suggestions} suggestions[/yellow]"
+                    "\n[yellow]Run without --dry-run to apply "
+                    f"{result.total_suggestions} suggestions[/yellow]"
                 )
             else:
                 console.print(f"\n[green]Applied {result.applied} changes[/green]")

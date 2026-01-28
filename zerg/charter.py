@@ -182,7 +182,10 @@ def gather_requirements() -> ProjectCharter:
     )
 
     # Data storage
-    console.print("\n[dim]Data storage (comma-separated): postgresql, mysql, sqlite, mongodb, redis, none[/dim]")
+    console.print(
+        "\n[dim]Data storage (comma-separated):"
+        " postgresql, mysql, sqlite, mongodb, redis, none[/dim]"
+    )
     storage_input = Prompt.ask(
         "[bold]Data storage[/bold]",
         default="none",

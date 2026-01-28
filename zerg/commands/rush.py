@@ -1,5 +1,6 @@
 """ZERG rush command - launch parallel execution."""
 
+import contextlib
 from pathlib import Path
 
 import click
@@ -74,11 +75,7 @@ def rush(
         config = ZergConfig.load()
 
         # Auto-detect feature and task graph
-        if task_graph:
-            task_graph_path = Path(task_graph)
-        else:
-            # Look for task-graph.json
-            task_graph_path = find_task_graph(feature)
+        task_graph_path = Path(task_graph) if task_graph else find_task_graph(feature)
 
         if not task_graph_path or not task_graph_path.exists():
             console.print("[red]Error:[/red] No task-graph.json found")
@@ -115,10 +112,9 @@ def rush(
             raise SystemExit(1 if report.has_errors else 0)
 
         # Confirm before starting
-        if not resume:
-            if not click.confirm("\nStart execution?", default=True):
-                console.print("[yellow]Aborted[/yellow]")
-                return
+        if not resume and not click.confirm("\nStart execution?", default=True):
+            console.print("[yellow]Aborted[/yellow]")
+            return
 
         # Create orchestrator and start
         orchestrator = Orchestrator(feature, config, launcher_mode=mode)
@@ -129,13 +125,15 @@ def rush(
         def _on_task_done(tid: str) -> None:
             console.print(f"[green]✓[/green] Task {tid} complete")
             if backlog_path.exists():
-                try:
+                with contextlib.suppress(Exception):
                     update_backlog_task_status(backlog_path, tid, "COMPLETE")
-                except Exception:
-                    pass  # Backlog update is best-effort
 
         orchestrator.on_task_complete(_on_task_done)
-        orchestrator.on_level_complete(lambda lvl: console.print(f"\n[bold green]Level {lvl} complete![/bold green]\n"))
+        orchestrator.on_level_complete(
+            lambda lvl: console.print(
+                f"\n[bold green]Level {lvl} complete![/bold green]\n"
+            )
+        )
 
         # Start execution
         console.print(f"\n[bold]Starting {workers} workers...[/bold]\n")
@@ -152,16 +150,19 @@ def rush(
         if status["is_complete"]:
             console.print("\n[bold green]✓ All tasks complete![/bold green]")
         else:
-            console.print(f"\n[yellow]Execution stopped at {status['progress']['percent']:.0f}%[/yellow]")
+            pct = status["progress"]["percent"]
+            console.print(
+                f"\n[yellow]Execution stopped at {pct:.0f}%[/yellow]"
+            )
 
     except KeyboardInterrupt:
         console.print("\n[yellow]Interrupted[/yellow]")
-        raise SystemExit(130)
+        raise SystemExit(130) from None
     except Exception as e:
         console.print(f"\n[red]Error:[/red] {e}")
         if verbose:
             console.print_exception()
-        raise SystemExit(1)
+        raise SystemExit(1) from None
 
 
 def find_task_graph(feature: str | None) -> Path | None:
@@ -250,7 +251,10 @@ def show_dry_run(task_data: dict, workers: int, feature: str) -> None:
 
     for level_num in sorted(level_tasks.keys()):
         level_info = levels.get(str(level_num), {})
-        console.print(f"[bold cyan]Level {level_num}[/bold cyan] - {level_info.get('name', 'unnamed')}")
+        level_name = level_info.get("name", "unnamed")
+        console.print(
+            f"[bold cyan]Level {level_num}[/bold cyan] - {level_name}"
+        )
 
         table = Table(show_header=True)
         table.add_column("Task", style="cyan", width=15)

@@ -35,7 +35,10 @@ HOOK_PATTERNS = {
         "openai_key": r"sk-[a-zA-Z0-9]{48}",
         "anthropic_key": r"sk-ant-[a-zA-Z0-9\-]{90,}",
         "private_key": r"-----BEGIN (RSA|DSA|EC|OPENSSH|PGP) PRIVATE KEY-----",
-        "generic_secret": r"(password|secret|api_key|apikey|access_token|auth_token)\s*[=:]\s*['\"][^'\"]{8,}['\"]",
+        "generic_secret": (
+            r"(password|secret|api_key|apikey|access_token|auth_token)"
+            r"\s*[=:]\s*['\"][^'\"]{8,}['\"]"
+        ),
         "shell_injection": r"(shell\s*=\s*True|os\.system\s*\(|os\.popen\s*\()",
         "code_injection": r"^[^#]*\b(eval|exec)\s*\(",
         "pickle_load": r"pickle\.(load|loads)\s*\(",
@@ -316,7 +319,8 @@ def run_security_scan(path: str | Path = ".") -> dict:
     all_files = []
     for root, dirs, files in os.walk(scan_path):
         # Skip git and cache directories
-        dirs[:] = [d for d in dirs if d not in [".git", "__pycache__", "node_modules", ".venv", "venv"]]
+        skip = {".git", "__pycache__", "node_modules", ".venv", "venv"}
+        dirs[:] = [d for d in dirs if d not in skip]
 
         for f in files:
             all_files.append(os.path.join(root, f))

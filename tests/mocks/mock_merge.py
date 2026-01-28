@@ -512,9 +512,9 @@ class MockMergeCoordinator:
             List of MergeResult for each merge
 
         Raises:
-            MergeConflict simulation via return value with CONFLICT status
+            MergeConflictError simulation via return value with CONFLICT status
         """
-        from zerg.exceptions import MergeConflict
+        from zerg.exceptions import MergeConflictError
 
         results = []
 
@@ -534,7 +534,7 @@ class MockMergeCoordinator:
                 )
                 results.append(result)
                 self._merge_results.append(result)
-                raise MergeConflict(
+                raise MergeConflictError(
                     f"Merge conflict: {branch}",
                     source_branch=branch,
                     target_branch=staging_branch,

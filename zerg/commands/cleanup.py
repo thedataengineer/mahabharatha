@@ -55,10 +55,7 @@ def cleanup(
         config = ZergConfig.load()
 
         # Get features to clean
-        if all_features:
-            features = discover_features()
-        else:
-            features = [feature] if feature else []
+        features = discover_features() if all_features else [feature] if feature else []
 
         if not features:
             console.print("[yellow]No features found to clean[/yellow]")
@@ -86,7 +83,7 @@ def cleanup(
 
     except Exception as e:
         console.print(f"\n[red]Error:[/red] {e}")
-        raise SystemExit(1)
+        raise SystemExit(1) from None
 
 
 def discover_features() -> list[str]:
@@ -210,13 +207,25 @@ def show_cleanup_plan(plan: dict, dry_run: bool) -> None:
 
     # Worktrees
     if plan["worktrees"]:
-        table.add_row("Worktrees", "\n".join(plan["worktrees"][:3]) + ("..." if len(plan["worktrees"]) > 3 else ""), str(len(plan["worktrees"])))
+        wt_preview = "\n".join(plan["worktrees"][:3])
+        wt_suffix = "..." if len(plan["worktrees"]) > 3 else ""
+        table.add_row(
+            "Worktrees",
+            wt_preview + wt_suffix,
+            str(len(plan["worktrees"])),
+        )
     else:
         table.add_row("Worktrees", "-", "0")
 
     # Branches
     if plan["branches"]:
-        table.add_row("Branches", "\n".join(plan["branches"][:3]) + ("..." if len(plan["branches"]) > 3 else ""), str(len(plan["branches"])))
+        br_preview = "\n".join(plan["branches"][:3])
+        br_suffix = "..." if len(plan["branches"]) > 3 else ""
+        table.add_row(
+            "Branches",
+            br_preview + br_suffix,
+            str(len(plan["branches"])),
+        )
     else:
         table.add_row("Branches", "-", "0")
 
@@ -281,7 +290,10 @@ def execute_cleanup(plan: dict, config: ZergConfig) -> None:
         try:
             stopped = container_mgr.stop_matching(pattern)
             if stopped:
-                console.print(f"  [green]✓[/green] Stopped {stopped} container(s) matching {pattern}")
+                console.print(
+                    f"  [green]✓[/green] Stopped {stopped}"
+                    f" container(s) matching {pattern}"
+                )
             else:
                 console.print(f"  [dim]-[/dim] No containers matching {pattern}")
         except Exception as e:

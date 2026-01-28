@@ -11,7 +11,7 @@ import pytest
 
 from zerg.config import QualityGate, ZergConfig
 from zerg.constants import MergeStatus
-from zerg.exceptions import MergeConflict
+from zerg.exceptions import MergeConflictError
 from zerg.merge import MergeCoordinator, MergeFlowResult
 from zerg.types import GateRunResult
 
@@ -170,7 +170,7 @@ class TestExecuteMerge:
         self, mock_git_ops, mock_gates, sample_config, tmp_path: Path
     ) -> None:
         """Test merge conflict raises exception."""
-        mock_git_ops.merge.side_effect = MergeConflict(
+        mock_git_ops.merge.side_effect = MergeConflictError(
             "Merge conflict",
             source_branch="worker-0",
             target_branch="staging",
@@ -179,7 +179,7 @@ class TestExecuteMerge:
 
         coordinator = MergeCoordinator("test-feature", sample_config, tmp_path)
 
-        with pytest.raises(MergeConflict):
+        with pytest.raises(MergeConflictError):
             coordinator.execute_merge(["worker-0"], "staging")
 
 
@@ -321,7 +321,7 @@ class TestFullMergeFlow:
         self, mock_git_ops, mock_gates, sample_config, tmp_path: Path
     ) -> None:
         """Test merge flow handles conflict."""
-        mock_git_ops.merge.side_effect = MergeConflict(
+        mock_git_ops.merge.side_effect = MergeConflictError(
             "Conflict",
             source_branch="worker-0",
             target_branch="staging",

@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 import pytest
 
-from zerg.exceptions import GitError, MergeConflict
+from zerg.exceptions import GitError, MergeConflictError
 from zerg.git_ops import BranchInfo, GitOps
 
 
@@ -139,7 +139,7 @@ class TestGitOps:
         assert isinstance(commit, str)
 
     def test_merge_conflict(self, tmp_repo: Path) -> None:
-        """Test merge with conflict raises MergeConflict."""
+        """Test merge with conflict raises MergeConflictError."""
         ops = GitOps(tmp_repo)
         original = ops.current_branch()
 
@@ -153,7 +153,7 @@ class TestGitOps:
         (tmp_repo / "README.md").write_text("main content")
         ops.commit("Main change", add_all=True)
 
-        with pytest.raises(MergeConflict):
+        with pytest.raises(MergeConflictError):
             ops.merge("conflict")
 
     def test_merge_reraises_git_error_on_non_conflict_failure(self, tmp_repo: Path) -> None:
@@ -320,7 +320,7 @@ class TestGitOps:
         assert (tmp_repo / "feature-file.txt").exists()
 
     def test_rebase_conflict(self, tmp_repo: Path) -> None:
-        """Test rebase with conflict raises MergeConflict."""
+        """Test rebase with conflict raises MergeConflictError."""
         ops = GitOps(tmp_repo)
         original = ops.current_branch()
 
@@ -336,8 +336,8 @@ class TestGitOps:
         (tmp_repo / "README.md").write_text("feature rebase content")
         ops.commit("Feature rebase change", add_all=True)
 
-        # Rebase should raise MergeConflict
-        with pytest.raises(MergeConflict) as exc_info:
+        # Rebase should raise MergeConflictError
+        with pytest.raises(MergeConflictError) as exc_info:
             ops.rebase(original)
 
         assert "rebase" in exc_info.value.message.lower() or "conflict" in exc_info.value.message.lower()

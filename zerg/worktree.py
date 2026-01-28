@@ -73,7 +73,7 @@ class WorktreeManager:
             raise WorktreeError(
                 f"Git command failed: {e.stderr.strip()}",
                 details={"command": " ".join(cmd), "exit_code": e.returncode},
-            )
+            ) from e
 
     def list_worktrees(self) -> list[WorktreeInfo]:
         """List all worktrees in the repository.
@@ -139,10 +139,7 @@ class WorktreeManager:
             True if worktree exists
         """
         path = Path(path).resolve()
-        for wt in self.list_worktrees():
-            if wt.path == path:
-                return True
-        return False
+        return any(wt.path == path for wt in self.list_worktrees())
 
     def get_branch_name(self, feature: str, worker_id: int) -> str:
         """Generate branch name for a worker.

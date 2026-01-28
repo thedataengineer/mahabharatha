@@ -85,10 +85,9 @@ def stop(
         show_workers_to_stop(workers, force)
 
         # Confirm if not forcing
-        if not force:
-            if not click.confirm("\nProceed with graceful shutdown?", default=True):
-                console.print("[yellow]Aborted[/yellow]")
-                return
+        if not force and not click.confirm("\nProceed with graceful shutdown?", default=True):
+            console.print("[yellow]Aborted[/yellow]")
+            return
 
         # Stop workers
         if force:
@@ -102,7 +101,7 @@ def stop(
         console.print("\n[yellow]Aborted[/yellow]")
     except Exception as e:
         console.print(f"\n[red]Error:[/red] {e}")
-        raise SystemExit(1)
+        raise SystemExit(1) from None
 
 
 def detect_feature() -> str | None:
@@ -247,7 +246,7 @@ def stop_workers_force(
 
     container_mgr = ContainerManager(config)
 
-    for worker_id, worker in workers.items():
+    for worker_id, _worker in workers.items():
         try:
             container_name = f"zerg-worker-{state.feature}-{worker_id}"
 

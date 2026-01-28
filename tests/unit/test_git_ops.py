@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.exceptions import GitError, MergeConflict
+from zerg.exceptions import GitError, MergeConflictError
 from zerg.git_ops import BranchInfo, GitOps
 
 
@@ -254,7 +254,7 @@ class TestGitOpsMerge:
         assert len(commit) == 40
 
     def test_merge_conflict(self, tmp_repo: Path) -> None:
-        """Test merge with conflict raises MergeConflict."""
+        """Test merge with conflict raises MergeConflictError."""
         ops = GitOps(tmp_repo)
         original = ops.current_branch()
 
@@ -268,7 +268,7 @@ class TestGitOpsMerge:
         (tmp_repo / "README.md").write_text("main content")
         ops.commit("Main change", add_all=True)
 
-        with pytest.raises(MergeConflict) as exc_info:
+        with pytest.raises(MergeConflictError) as exc_info:
             ops.merge("conflict")
 
         assert exc_info.value.source_branch == "conflict"
@@ -305,7 +305,7 @@ class TestGitOpsRebase:
         ops.rebase(original)
 
     def test_rebase_conflict(self, tmp_repo: Path) -> None:
-        """Test rebase with conflict raises MergeConflict."""
+        """Test rebase with conflict raises MergeConflictError."""
         ops = GitOps(tmp_repo)
         original = ops.current_branch()
 
@@ -322,7 +322,7 @@ class TestGitOpsRebase:
 
         # Try to rebase feature onto main
         ops.checkout("rebase-conflict")
-        with pytest.raises(MergeConflict):
+        with pytest.raises(MergeConflictError):
             ops.rebase(original)
 
     def test_abort_rebase(self, tmp_repo: Path) -> None:

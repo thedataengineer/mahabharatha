@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from zerg.command_executor import CommandExecutor, CommandValidationError
-from zerg.exceptions import TaskTimeoutError, TaskVerificationFailed
+from zerg.exceptions import TaskTimeoutError, TaskVerificationFailedError
 from zerg.logging import get_logger
 from zerg.types import Task
 
@@ -231,7 +231,7 @@ class VerificationExecutor:
             True if verification passed
 
         Raises:
-            TaskVerificationFailed: If verification failed
+            TaskVerificationFailedError: If verification failed
             TaskTimeoutError: If verification timed out
         """
         if result.success:
@@ -247,7 +247,7 @@ class VerificationExecutor:
                 timeout_seconds=result.duration_ms // 1000,
             )
 
-        raise TaskVerificationFailed(
+        raise TaskVerificationFailedError(
             f"Task {result.task_id} verification failed",
             task_id=result.task_id,
             command=result.command,

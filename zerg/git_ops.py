@@ -4,7 +4,7 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
-from zerg.exceptions import GitError, MergeConflict
+from zerg.exceptions import GitError, MergeConflictError
 from zerg.logging import get_logger
 
 logger = get_logger("git_ops")
@@ -76,7 +76,7 @@ class GitOps:
                 f"Git command failed: {e.stderr.strip() if e.stderr else str(e)}",
                 command=" ".join(cmd),
                 exit_code=e.returncode,
-            )
+            ) from e
 
     def current_branch(self) -> str:
         """Get the current branch name.
@@ -226,7 +226,7 @@ class GitOps:
             Merge commit SHA
 
         Raises:
-            MergeConflict: If merge has conflicts
+            MergeConflictError: If merge has conflicts
         """
         args = ["merge", branch]
         if no_ff:
@@ -240,12 +240,12 @@ class GitOps:
             if self.has_conflicts():
                 conflicts = self.get_conflicting_files()
                 self.abort_merge()
-                raise MergeConflict(
+                raise MergeConflictError(
                     f"Merge conflict: {branch} into {self.current_branch()}",
                     source_branch=branch,
                     target_branch=self.current_branch(),
                     conflicting_files=conflicts,
-                )
+                ) from None
             raise
 
         commit = self.current_commit()
@@ -264,7 +264,7 @@ class GitOps:
             onto: Branch to rebase onto
 
         Raises:
-            MergeConflict: If rebase has conflicts
+            MergeConflictError: If rebase has conflicts
         """
         try:
             self._run("rebase", onto)
@@ -272,12 +272,12 @@ class GitOps:
             if self.has_conflicts():
                 conflicts = self.get_conflicting_files()
                 self.abort_rebase()
-                raise MergeConflict(
+                raise MergeConflictError(
                     f"Rebase conflict onto {onto}",
                     source_branch=self.current_branch(),
                     target_branch=onto,
                     conflicting_files=conflicts,
-                )
+                ) from None
             raise
 
         logger.info(f"Rebased onto {onto}")

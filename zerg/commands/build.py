@@ -155,12 +155,36 @@ class BuildRunner:
     """Execute builds for different systems."""
 
     COMMANDS = {
-        BuildSystem.NPM: {"dev": "npm run dev", "staging": "npm run build", "prod": "npm run build"},
-        BuildSystem.CARGO: {"dev": "cargo build", "staging": "cargo build", "prod": "cargo build --release"},
-        BuildSystem.MAKE: {"dev": "make", "staging": "make", "prod": "make release"},
-        BuildSystem.GRADLE: {"dev": "gradle build", "staging": "gradle build", "prod": "gradle build -Penv=prod"},
-        BuildSystem.GO: {"dev": "go build ./...", "staging": "go build ./...", "prod": "go build -ldflags='-s -w' ./..."},
-        BuildSystem.PYTHON: {"dev": "pip install -e .", "staging": "python -m build", "prod": "python -m build"},
+        BuildSystem.NPM: {
+            "dev": "npm run dev",
+            "staging": "npm run build",
+            "prod": "npm run build",
+        },
+        BuildSystem.CARGO: {
+            "dev": "cargo build",
+            "staging": "cargo build",
+            "prod": "cargo build --release",
+        },
+        BuildSystem.MAKE: {
+            "dev": "make",
+            "staging": "make",
+            "prod": "make release",
+        },
+        BuildSystem.GRADLE: {
+            "dev": "gradle build",
+            "staging": "gradle build",
+            "prod": "gradle build -Penv=prod",
+        },
+        BuildSystem.GO: {
+            "dev": "go build ./...",
+            "staging": "go build ./...",
+            "prod": "go build -ldflags='-s -w' ./...",
+        },
+        BuildSystem.PYTHON: {
+            "dev": "pip install -e .",
+            "staging": "python -m build",
+            "prod": "python -m build",
+        },
     }
 
     def _get_executor(self, cwd: str = ".") -> CommandExecutor:
@@ -340,7 +364,8 @@ def _watch_loop(builder: BuildCommand, system: BuildSystem | None, cwd: str) -> 
                 if result.success:
                     console.print("[green]Build succeeded[/green]")
                 else:
-                    console.print(f"[red]Build failed:[/red] {result.errors[0] if result.errors else 'Unknown'}")
+                    err = result.errors[0] if result.errors else "Unknown"
+                    console.print(f"[red]Build failed:[/red] {err}")
 
                 last_hashes = current_hashes
                 last_build_time = time.time()

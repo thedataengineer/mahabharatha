@@ -129,7 +129,7 @@ class MetricsCollector:
         total_task_duration_ms = 0
         task_durations: list[int] = []
 
-        for task_id, task_data in self._state_data.get("tasks", {}).items():
+        for _task_id, task_data in self._state_data.get("tasks", {}).items():
             if task_data.get("worker_id") != worker_id:
                 continue
 
@@ -223,7 +223,7 @@ class MetricsCollector:
         task_durations: list[int] = []
 
         # Find tasks for this level by checking task data
-        for task_id, task_data in self._state_data.get("tasks", {}).items():
+        for _task_id, task_data in self._state_data.get("tasks", {}).items():
             task_level = task_data.get("level")
             if task_level != level:
                 continue
@@ -276,10 +276,10 @@ class MetricsCollector:
         for level_data in all_levels.values():
             if level_data.get("status") == "complete":
                 lvl_completed = level_data.get("completed_at")
-                if lvl_completed:
-                    if feature_completed_at is None:
-                        feature_completed_at = lvl_completed
-                    elif lvl_completed > feature_completed_at:
+                if lvl_completed and (
+                    feature_completed_at is None
+                    or lvl_completed > feature_completed_at
+                ):
                         feature_completed_at = lvl_completed
 
         end_time = feature_completed_at or now.isoformat()
@@ -310,13 +310,13 @@ class MetricsCollector:
         # Compute per-worker metrics
         worker_metrics = [
             self.compute_worker_metrics(int(wid))
-            for wid in workers_data.keys()
+            for wid in workers_data
         ]
 
         # Compute per-level metrics
         level_metrics = [
             self.compute_level_metrics(int(lvl))
-            for lvl in all_levels.keys()
+            for lvl in all_levels
         ]
 
         return FeatureMetrics(

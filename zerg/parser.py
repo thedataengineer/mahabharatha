@@ -252,9 +252,6 @@ class TaskParser:
         pred: dict[str, str | None] = dict.fromkeys(self._tasks)
 
         for task_id in topo_order:
-            task = self._tasks[task_id]
-            duration = task.get("estimate_minutes", 0)
-
             for dep in self._dependencies.get(task_id, []):
                 dep_dist = dist[dep] + self._tasks[dep].get("estimate_minutes", 0)
                 if dep_dist > dist[task_id]:
@@ -262,7 +259,13 @@ class TaskParser:
                     pred[task_id] = dep
 
         # Find the end of critical path (max distance)
-        end_task = max(topo_order, key=lambda tid: dist[tid] + self._tasks[tid].get("estimate_minutes", 0))
+        end_task = max(
+            topo_order,
+            key=lambda tid: (
+                dist[tid]
+                + self._tasks[tid].get("estimate_minutes", 0)
+            ),
+        )
 
         # Reconstruct path
         path = [end_task]

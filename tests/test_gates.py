@@ -8,7 +8,7 @@ import pytest
 from zerg.command_executor import CommandValidationError
 from zerg.config import QualityGate, ZergConfig
 from zerg.constants import GateResult
-from zerg.exceptions import GateFailure, GateTimeoutError
+from zerg.exceptions import GateFailureError, GateTimeoutError
 from zerg.gates import GateRunner
 from zerg.types import GateRunResult
 
@@ -295,7 +295,7 @@ class TestGateRunner:
             duration_ms=100,
         )
 
-        with pytest.raises(GateFailure):
+        with pytest.raises(GateFailureError):
             runner.check_result(result, raise_on_failure=True)
 
     def test_check_result_timeout_raises(self, sample_config: ZergConfig) -> None:
@@ -323,7 +323,7 @@ class TestGateRunner:
             duration_ms=100,
         )
 
-        with pytest.raises(GateFailure):
+        with pytest.raises(GateFailureError):
             runner.check_result(result, raise_on_failure=True)
 
     def test_check_result_no_raise(self, sample_config: ZergConfig) -> None:

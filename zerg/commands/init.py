@@ -83,11 +83,9 @@ def is_empty_project(path: Path | None = None) -> bool:
 
     # Check for any source code files
     code_extensions = {".py", ".js", ".ts", ".go", ".rs", ".java", ".rb", ".cs", ".cpp", ".c"}
-    for entry in entries:
-        if entry.is_file() and entry.suffix in code_extensions:
-            return False
-
-    return True
+    return all(
+        not (entry.is_file() and entry.suffix in code_extensions) for entry in entries
+    )
 
 
 @click.command()

@@ -7,7 +7,7 @@ from typing import Any
 
 from zerg.config import ZergConfig
 from zerg.constants import MergeStatus
-from zerg.exceptions import MergeConflict
+from zerg.exceptions import MergeConflictError
 from zerg.gates import GateRunner
 from zerg.git_ops import GitOps
 from zerg.logging import get_logger
@@ -122,7 +122,7 @@ class MergeCoordinator:
             List of MergeResult for each merge
 
         Raises:
-            MergeConflict: If any merge has conflicts
+            MergeConflictError: If any merge has conflicts
         """
         results = []
 
@@ -147,7 +147,7 @@ class MergeCoordinator:
                 )
                 logger.info(f"Merged {branch}: {commit[:8]}")
 
-            except MergeConflict as e:
+            except MergeConflictError as e:
                 results.append(
                     MergeResult(
                         source_branch=branch,
@@ -318,7 +318,7 @@ class MergeCoordinator:
                 gate_results=gate_results,
             )
 
-        except MergeConflict as e:
+        except MergeConflictError as e:
             self.abort(staging_branch)
             return MergeFlowResult(
                 success=False,
