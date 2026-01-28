@@ -146,7 +146,19 @@ Level: $LEVEL
 "
 ```
 
-#### 4.6 Handle Failure
+#### 4.6 Update Claude Task Status
+
+After successful verification and commit:
+  Call TaskUpdate:
+    - taskId: (Claude Task ID for this ZERG task)
+    - status: "completed"
+
+If task failed after all retries:
+  Call TaskUpdate:
+    - taskId: (Claude Task ID)
+    - status: "in_progress" (orchestrator manages failure state)
+
+#### 4.7 Handle Failure
 
 If verification fails:
 

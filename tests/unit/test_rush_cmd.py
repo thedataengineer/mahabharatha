@@ -1382,3 +1382,131 @@ class TestRushTaskGraphValidation:
 
         assert result.exit_code == 1
         assert "Error" in result.output
+
+
+# =============================================================================
+# Test Backlog Callback Integration
+# =============================================================================
+
+
+class TestRushBacklog:
+    """Tests for rush command backlog callback integration."""
+
+    def test_rush_registers_backlog_callback(
+        self,
+        tmp_path: Path,
+        task_graph_file_setup: Path,
+        monkeypatch: MonkeyPatch,
+        mock_orchestrator: MagicMock,
+    ) -> None:
+        """Test the registered callback invokes update_backlog_task_status when backlog exists."""
+        monkeypatch.chdir(tmp_path)
+
+        # Create a backlog file so the callback path is exercised
+        backlog_dir = tmp_path / "tasks"
+        backlog_dir.mkdir()
+        backlog_file = backlog_dir / "TEST-FEATURE-BACKLOG.md"
+        backlog_file.write_text(
+            "| **L1-001** | First Task | src/a.py | - | TODO | cmd |\n"
+        )
+
+        runner = CliRunner()
+        with (
+            patch("zerg.commands.rush.ZergConfig") as mock_config_cls,
+            patch("zerg.commands.rush.Orchestrator") as mock_orch_cls,
+            patch("zerg.commands.rush.update_backlog_task_status") as mock_update,
+        ):
+            mock_config = MagicMock()
+            mock_config_cls.load.return_value = mock_config
+            mock_orch_cls.return_value = mock_orchestrator
+
+            runner.invoke(
+                cli,
+                ["rush", "--task-graph", str(task_graph_file_setup), "--resume"],
+            )
+
+            # Extract the callback and invoke it
+            callback = mock_orchestrator.on_task_complete.call_args[0][0]
+            callback("L1-001")
+
+        mock_update.assert_called_once_with(
+            Path("tasks/TEST-FEATURE-BACKLOG.md"), "L1-001", "COMPLETE"
+        )
+
+    def test_backlog_update_on_complete(
+        self,
+        tmp_path: Path,
+        task_graph_file_setup: Path,
+        monkeypatch: MonkeyPatch,
+        mock_orchestrator: MagicMock,
+    ) -> None:
+        """Test callback updates the backlog file content on task completion."""
+        monkeypatch.chdir(tmp_path)
+
+        # Create a backlog file with a TODO task row
+        backlog_dir = tmp_path / "tasks"
+        backlog_dir.mkdir()
+        backlog_file = backlog_dir / "TEST-FEATURE-BACKLOG.md"
+        backlog_file.write_text(
+            "# Backlog\n\n"
+            "| ID | Description | Files | Deps | Status | Verification |\n"
+            "|---|---|---|---|---|---|\n"
+            "| **L1-001** | First Task | src/a.py | - | TODO | python -c 'print(1)' |\n"
+            "| **L1-002** | Second Task | src/b.py | - | TODO | python -c 'print(2)' |\n"
+        )
+
+        runner = CliRunner()
+        with (
+            patch("zerg.commands.rush.ZergConfig") as mock_config_cls,
+            patch("zerg.commands.rush.Orchestrator") as mock_orch_cls,
+        ):
+            mock_config = MagicMock()
+            mock_config_cls.load.return_value = mock_config
+            mock_orch_cls.return_value = mock_orchestrator
+
+            runner.invoke(
+                cli,
+                ["rush", "--task-graph", str(task_graph_file_setup), "--resume"],
+            )
+
+            # Extract the callback and invoke it with the real backlog on disk
+            callback = mock_orchestrator.on_task_complete.call_args[0][0]
+            callback("L1-001")
+
+        # Verify the file now contains COMPLETE for L1-001
+        updated_content = backlog_file.read_text()
+        assert "COMPLETE" in updated_content
+        # L1-002 should still be TODO
+        assert "TODO" in updated_content
+
+    def test_no_backlog_graceful(
+        self,
+        tmp_path: Path,
+        task_graph_file_setup: Path,
+        monkeypatch: MonkeyPatch,
+        mock_orchestrator: MagicMock,
+    ) -> None:
+        """Test callback handles missing backlog file gracefully (no error)."""
+        monkeypatch.chdir(tmp_path)
+
+        # Do NOT create a backlog file - tasks/ dir does not exist
+
+        runner = CliRunner()
+        with (
+            patch("zerg.commands.rush.ZergConfig") as mock_config_cls,
+            patch("zerg.commands.rush.Orchestrator") as mock_orch_cls,
+        ):
+            mock_config = MagicMock()
+            mock_config_cls.load.return_value = mock_config
+            mock_orch_cls.return_value = mock_orchestrator
+
+            runner.invoke(
+                cli,
+                ["rush", "--task-graph", str(task_graph_file_setup), "--resume"],
+            )
+
+            # Extract the callback and invoke it - no backlog file exists
+            callback = mock_orchestrator.on_task_complete.call_args[0][0]
+
+            # Should not raise any exception
+            callback("L1-001")

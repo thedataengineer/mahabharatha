@@ -420,6 +420,19 @@ Reply with:
 ═══════════════════════════════════════════════════════════════
 ```
 
+### Track in Claude Task System
+
+After user approves requirements, call TaskCreate:
+  - subject: "[Plan] Requirements: {feature}"
+  - description: "Requirements captured and approved for {feature}. Ready for /zerg:design."
+  - activeForm: "Planning {feature}"
+
+Then call TaskUpdate to mark it completed:
+  - taskId: (the Claude Task ID)
+  - status: "completed"
+
+This creates a visible record in the task system that planning is done.
+
 ## Status Markers
 
 Use these markers in requirements.md to track status:

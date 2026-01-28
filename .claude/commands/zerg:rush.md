@@ -119,15 +119,22 @@ Assign tasks to workers based on:
 
 ### Step 4: Create Native Tasks
 
-Register tasks in Claude Code's native Tasks system:
+Register ALL tasks from task-graph.json in Claude Code's Task system:
 
-```bash
-# Set the shared task list ID
-export CLAUDE_CODE_TASK_LIST_ID="$FEATURE"
+For each task in task-graph.json, call TaskCreate:
+  - subject: "[L{level}] {title}"
+  - description: "{description}\n\nFiles: {files.create + files.modify}\nVerification: {verification.command}"
+  - activeForm: "Executing {title}"
 
-# For each task in task-graph.json, create in native Tasks
-# (This is done via Claude Code's /tasks command internally)
-```
+After all TaskCreate calls, wire dependencies using TaskUpdate:
+  - For each task with dependencies, call TaskUpdate with addBlockedBy
+
+When a worker claims a task, call TaskUpdate:
+  - taskId: the task's Claude Task ID
+  - status: "in_progress"
+  - activeForm: "Worker {N} executing {title}"
+
+Verify with TaskList that all tasks appear correctly.
 
 ### Step 5: Launch Containers
 

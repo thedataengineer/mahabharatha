@@ -6,6 +6,7 @@ import click
 from rich.console import Console
 from rich.table import Table
 
+from zerg.backlog import update_backlog_task_status
 from zerg.config import ZergConfig
 from zerg.logging import get_logger, setup_logging
 from zerg.orchestrator import Orchestrator
@@ -122,8 +123,18 @@ def rush(
         # Create orchestrator and start
         orchestrator = Orchestrator(feature, config, launcher_mode=mode)
 
-        # Register callbacks
-        orchestrator.on_task_complete(lambda tid: console.print(f"[green]✓[/green] Task {tid} complete"))
+        # Register task completion callback with backlog update
+        backlog_path = Path(f"tasks/{feature.upper()}-BACKLOG.md")
+
+        def _on_task_done(tid: str) -> None:
+            console.print(f"[green]✓[/green] Task {tid} complete")
+            if backlog_path.exists():
+                try:
+                    update_backlog_task_status(backlog_path, tid, "COMPLETE")
+                except Exception:
+                    pass  # Backlog update is best-effort
+
+        orchestrator.on_task_complete(_on_task_done)
         orchestrator.on_level_complete(lambda lvl: console.print(f"\n[bold green]Level {lvl} complete![/bold green]\n"))
 
         # Start execution

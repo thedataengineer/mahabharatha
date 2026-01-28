@@ -8,6 +8,7 @@ import click
 from rich.console import Console
 from rich.table import Table
 
+from zerg.backlog import generate_backlog_markdown
 from zerg.logging import get_logger
 
 console = Console()
@@ -19,6 +20,7 @@ logger = get_logger("design")
 @click.option("--max-task-minutes", default=30, type=int, help="Maximum minutes per task")
 @click.option("--min-task-minutes", default=5, type=int, help="Minimum minutes per task")
 @click.option("--validate-only", is_flag=True, help="Validate existing task graph only")
+@click.option("--update-backlog", is_flag=True, help="Regenerate backlog from existing task graph")
 @click.option("--verbose", "-v", is_flag=True, help="Verbose output")
 @click.pass_context
 def design(
@@ -27,6 +29,7 @@ def design(
     max_task_minutes: int,
     min_task_minutes: int,
     validate_only: bool,
+    update_backlog: bool,
     verbose: bool,
 ) -> None:
     """Generate architecture and task graph.
@@ -95,6 +98,21 @@ def design(
             validate_task_graph(task_graph_path)
             return
 
+        # Update-backlog mode
+        if update_backlog:
+            task_graph_path = spec_dir / "task-graph.json"
+            if not task_graph_path.exists():
+                console.print(f"[red]Error:[/red] No task graph found: {task_graph_path}")
+                raise SystemExit(1)
+
+            task_data = _load_task_graph(task_graph_path)
+            backlog_path = generate_backlog_markdown(
+                task_data=task_data,
+                feature=feature,
+            )
+            console.print(f"[green]✓[/green] Regenerated {backlog_path}")
+            return
+
         # Generate design artifacts
         console.print("[bold]Generating design artifacts...[/bold]\n")
 
@@ -112,6 +130,13 @@ def design(
             min_minutes=min_task_minutes,
         )
         console.print(f"  [green]✓[/green] Created {task_graph_path}")
+
+        # Generate backlog markdown
+        backlog_path = generate_backlog_markdown(
+            task_data=_load_task_graph(task_graph_path),
+            feature=feature,
+        )
+        console.print(f"  [green]✓[/green] Created {backlog_path}")
 
         # Show summary
         show_design_summary(spec_dir, feature)
@@ -617,3 +642,10 @@ def show_design_summary(spec_dir: Path, feature: str) -> None:
     table.add_row("Task Graph", str(spec_dir / "task-graph.json"))
 
     console.print(table)
+
+
+def _load_task_graph(path: Path) -> dict:
+    """Load task graph JSON data."""
+    import json
+    with open(path) as f:
+        return json.load(f)
