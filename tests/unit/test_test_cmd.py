@@ -999,6 +999,7 @@ class TestWatchLoop:
         tester = TestCommand()
 
         call_count = [0]
+        sleep_count = [0]
         original_result = TestResult(total=1, passed=1, failed=0, skipped=0)
 
         def mock_run(*args, **kwargs):
@@ -1006,17 +1007,29 @@ class TestWatchLoop:
             return original_result
 
         def mock_sleep(duration):
-            if call_count[0] == 0:
+            sleep_count[0] += 1
+            # Safety limit to prevent infinite loop
+            if sleep_count[0] > 10:
+                raise KeyboardInterrupt
+            if sleep_count[0] == 1:
                 # First iteration, modify file
                 test_file.write_text("# modified")
-            elif call_count[0] >= 2:
-                # Stop after detecting changes
+            elif call_count[0] >= 1:
+                # Stop after detecting changes and running tests
                 raise KeyboardInterrupt
+
+        # Mock time.time to bypass the 2-second debounce check
+        fake_time = [100.0]
+
+        def mock_time():
+            fake_time[0] += 3.0  # Advance 3 seconds each call
+            return fake_time[0]
 
         with patch.object(tester, "run", side_effect=mock_run):
             with patch("time.sleep", side_effect=mock_sleep):
-                with patch("zerg.commands.test_cmd.console.print"):
-                    _watch_loop(tester, TestFramework.PYTEST, str(tmp_path))
+                with patch("time.time", side_effect=mock_time):
+                    with patch("zerg.commands.test_cmd.console.print"):
+                        _watch_loop(tester, TestFramework.PYTEST, str(tmp_path))
 
 
 # =============================================================================
