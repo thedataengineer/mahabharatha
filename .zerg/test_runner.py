@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from zerg.command_executor import CommandExecutor, CommandValidationError
 
 
-class TestFramework(Enum):
+class Framework(Enum):
     """Supported test frameworks."""
 
     PYTEST = "pytest"
@@ -22,8 +22,12 @@ class TestFramework(Enum):
     VITEST = "vitest"
 
 
+# Backward compat aliases (will be removed in v3)
+TestFramework = Framework
+
+
 @dataclass
-class TestConfig:
+class RunConfig:
     """Configuration for test execution."""
 
     parallel: bool = True
@@ -35,8 +39,12 @@ class TestConfig:
     filter: str = ""
 
 
+# Backward compat aliases (will be removed in v3)
+TestConfig = RunConfig
+
+
 @dataclass
-class TestResult:
+class RunResult:
     """Result of test execution."""
 
     total: int
@@ -60,6 +68,10 @@ class TestResult:
         return (self.passed / self.total) * 100
 
 
+# Backward compat aliases (will be removed in v3)
+TestResult = RunResult
+
+
 @dataclass
 class CoverageReport:
     """Coverage analysis report."""
@@ -78,12 +90,12 @@ class FrameworkDetector:
     """Detect test frameworks from project structure."""
 
     FRAMEWORK_MARKERS = {
-        TestFramework.PYTEST: ["pytest.ini", "pyproject.toml", "conftest.py"],
-        TestFramework.JEST: ["jest.config.js", "jest.config.ts", "package.json"],
-        TestFramework.CARGO: ["Cargo.toml"],
-        TestFramework.GO: ["go.mod"],
-        TestFramework.MOCHA: [".mocharc.js", ".mocharc.json"],
-        TestFramework.VITEST: ["vitest.config.ts", "vitest.config.js"],
+        Framework.PYTEST: ["pytest.ini", "pyproject.toml", "conftest.py"],
+        Framework.JEST: ["jest.config.js", "jest.config.ts", "package.json"],
+        Framework.CARGO: ["Cargo.toml"],
+        Framework.GO: ["go.mod"],
+        Framework.MOCHA: [".mocharc.js", ".mocharc.json"],
+        Framework.VITEST: ["vitest.config.ts", "vitest.config.js"],
     }
 
     def detect(self, project_path: Path) -> list[TestFramework]:
@@ -114,33 +126,33 @@ class FrameworkDetector:
                         **pkg.get("dependencies", {}),
                         **pkg.get("devDependencies", {}),
                     }
-                    if "jest" in deps and TestFramework.JEST not in detected:
-                        detected.append(TestFramework.JEST)
-                    if "vitest" in deps and TestFramework.VITEST not in detected:
-                        detected.append(TestFramework.VITEST)
-                    if "mocha" in deps and TestFramework.MOCHA not in detected:
-                        detected.append(TestFramework.MOCHA)
+                    if "jest" in deps and Framework.JEST not in detected:
+                        detected.append(Framework.JEST)
+                    if "vitest" in deps and Framework.VITEST not in detected:
+                        detected.append(Framework.VITEST)
+                    if "mocha" in deps and Framework.MOCHA not in detected:
+                        detected.append(Framework.MOCHA)
             except (json.JSONDecodeError, OSError):
                 pass
 
         return detected
 
 
-class TestRunner:
+class Runner:
     """Execute tests with various frameworks."""
 
     COMMANDS = {
-        TestFramework.PYTEST: "python -m pytest",
-        TestFramework.JEST: "npx jest",
-        TestFramework.CARGO: "cargo test",
-        TestFramework.GO: "go test ./...",
-        TestFramework.MOCHA: "npx mocha",
-        TestFramework.VITEST: "npx vitest run",
+        Framework.PYTEST: "python -m pytest",
+        Framework.JEST: "npx jest",
+        Framework.CARGO: "cargo test",
+        Framework.GO: "go test ./...",
+        Framework.MOCHA: "npx mocha",
+        Framework.VITEST: "npx vitest run",
     }
 
-    def __init__(self, config: TestConfig | None = None):
+    def __init__(self, config: RunConfig | None = None):
         """Initialize test runner."""
-        self.config = config or TestConfig()
+        self.config = config or RunConfig()
 
     def _get_executor(self, cwd: str = ".") -> CommandExecutor:
         """Get command executor for test execution."""
@@ -150,7 +162,7 @@ class TestRunner:
             timeout=self.config.timeout_seconds,
         )
 
-    def get_command(self, framework: TestFramework) -> str:
+    def get_command(self, framework: Framework) -> str:
         """Get test command for framework.
 
         Args:
@@ -161,7 +173,7 @@ class TestRunner:
         """
         base_cmd = self.COMMANDS.get(framework, "pytest")
 
-        if framework == TestFramework.PYTEST:
+        if framework == Framework.PYTEST:
             args = []
             if self.config.coverage:
                 args.append("--cov")
@@ -173,7 +185,7 @@ class TestRunner:
                 args.append(f"-k '{self.config.filter}'")
             return f"{base_cmd} {' '.join(args)}".strip()
 
-        elif framework == TestFramework.JEST:
+        elif framework == Framework.JEST:
             args = []
             if self.config.coverage:
                 args.append("--coverage")
@@ -183,7 +195,7 @@ class TestRunner:
                 args.append("--watch")
             return f"{base_cmd} {' '.join(args)}".strip()
 
-        elif framework == TestFramework.CARGO:
+        elif framework == Framework.CARGO:
             args = []
             if self.config.parallel:
                 args.append(f"-- --test-threads={self.config.workers}")
@@ -192,8 +204,8 @@ class TestRunner:
         return base_cmd
 
     def run(
-        self, framework: TestFramework, path: str = "."
-    ) -> TestResult:
+        self, framework: Framework, path: str = "."
+    ) -> RunResult:
         """Run tests and return results.
 
         Args:
@@ -214,7 +226,7 @@ class TestRunner:
             return self._parse_output(framework, result.stdout, result.exit_code)
 
         except CommandValidationError as e:
-            return TestResult(
+            return RunResult(
                 total=0,
                 passed=0,
                 failed=0,
@@ -222,7 +234,7 @@ class TestRunner:
                 errors=[f"Command validation failed: {e}"],
             )
         except Exception as e:
-            return TestResult(
+            return RunResult(
                 total=0,
                 passed=0,
                 failed=0,
@@ -231,37 +243,41 @@ class TestRunner:
             )
 
     def _parse_output(
-        self, framework: TestFramework, output: str, returncode: int
-    ) -> TestResult:
+        self, framework: Framework, output: str, returncode: int
+    ) -> RunResult:
         """Parse test output to extract results."""
         # Basic parsing - real implementation would be framework-specific
         if returncode == 0:
-            return TestResult(total=1, passed=1, failed=0, skipped=0)
+            return RunResult(total=1, passed=1, failed=0, skipped=0)
         else:
-            return TestResult(
+            return RunResult(
                 total=1, passed=0, failed=1, skipped=0, errors=[output[:500]]
             )
 
 
-class TestCommand:
+# Backward compat alias (will be removed in v3)
+TestRunner = Runner
+
+
+class Command:
     """Main test command orchestrator."""
 
-    def __init__(self, config: TestConfig | None = None):
+    def __init__(self, config: RunConfig | None = None):
         """Initialize test command."""
-        self.config = config or TestConfig()
+        self.config = config or RunConfig()
         self.detector = FrameworkDetector()
-        self.runner = TestRunner(config=self.config)
+        self.runner = Runner(config=self.config)
 
     def supported_frameworks(self) -> list[str]:
         """Return list of supported frameworks."""
-        return [f.value for f in TestFramework]
+        return [f.value for f in Framework]
 
     def run(
         self,
-        framework: TestFramework | None = None,
+        framework: Framework | None = None,
         path: str = ".",
         dry_run: bool = False,
-    ) -> TestResult:
+    ) -> RunResult:
         """Run tests.
 
         Args:
@@ -273,15 +289,15 @@ class TestCommand:
             TestResult with execution details
         """
         if dry_run:
-            return TestResult(total=0, passed=0, failed=0, skipped=0)
+            return RunResult(total=0, passed=0, failed=0, skipped=0)
 
         if framework is None:
             detected = self.detector.detect(Path(path))
-            framework = detected[0] if detected else TestFramework.PYTEST
+            framework = detected[0] if detected else Framework.PYTEST
 
         return self.runner.run(framework, path)
 
-    def format_result(self, result: TestResult, format: str = "text") -> str:
+    def format_result(self, result: RunResult, format: str = "text") -> str:
         """Format test result.
 
         Args:
@@ -327,7 +343,11 @@ class TestCommand:
         return "\n".join(lines)
 
 
-class TestStubGenerator:
+# Backward compat alias (will be removed in v3)
+TestCommand = Command
+
+
+class StubGenerator:
     """Generate test stubs for uncovered code."""
 
     TEMPLATES = {
@@ -371,12 +391,24 @@ class TestStubGenerator:
         return template.format(name=name, class_name=class_name)
 
 
+# Backward compat alias (will be removed in v3)
+TestStubGenerator = StubGenerator
+
+
 __all__ = [
+    # New names
+    "Framework",
+    "RunConfig",
+    "RunResult",
+    "CoverageReport",
+    "FrameworkDetector",
+    "Runner",
+    "Command",
+    "StubGenerator",
+    # Backward compat aliases (will be removed in v3)
     "TestFramework",
     "TestConfig",
     "TestResult",
-    "CoverageReport",
-    "FrameworkDetector",
     "TestRunner",
     "TestCommand",
     "TestStubGenerator",
