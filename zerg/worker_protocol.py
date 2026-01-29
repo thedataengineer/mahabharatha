@@ -10,14 +10,14 @@ from pathlib import Path
 from typing import Any
 
 from zerg.config import ZergConfig
-from zerg.constants import DEFAULT_CONTEXT_THRESHOLD, ExitCode, TaskStatus
+from zerg.constants import DEFAULT_CONTEXT_THRESHOLD, ExitCode, TaskStatus, WorkerStatus
 from zerg.context_tracker import ContextTracker
 from zerg.git_ops import GitOps
 from zerg.logging import get_logger, set_worker_context
 from zerg.parser import TaskParser
 from zerg.spec_loader import SpecLoader
 from zerg.state import StateManager
-from zerg.types import Task
+from zerg.types import Task, WorkerState
 from zerg.verify import VerificationExecutor
 
 logger = get_logger("worker_protocol")
@@ -25,6 +25,9 @@ logger = get_logger("worker_protocol")
 # Default Claude Code invocation settings
 CLAUDE_CLI_DEFAULT_TIMEOUT = 1800  # 30 minutes
 CLAUDE_CLI_COMMAND = "claude"
+
+# Sentinel for distinguishing "not provided" from None
+_SENTINEL = object()
 
 
 @dataclass
@@ -149,6 +152,40 @@ class WorkerProtocol:
         # Set logging context
         set_worker_context(worker_id=self.worker_id, feature=self.feature)
 
+    def _update_worker_state(
+        self,
+        status: WorkerStatus,
+        current_task: object = _SENTINEL,
+        tasks_completed: int | None = None,
+    ) -> None:
+        """Update worker state in shared state file using read-modify-write.
+
+        Reloads state from disk first to avoid clobbering orchestrator writes,
+        then updates the worker's own fields and saves.
+
+        Args:
+            status: New worker status
+            current_task: Current task ID (use _SENTINEL to leave unchanged, None to clear)
+            tasks_completed: Tasks completed count (None to leave unchanged)
+        """
+        self.state.load()  # Reload to avoid clobbering orchestrator writes
+        worker_state = self.state.get_worker_state(self.worker_id)
+        if not worker_state:
+            worker_state = WorkerState(
+                worker_id=self.worker_id,
+                status=status,
+                branch=self.branch,
+                worktree_path=str(self.worktree_path),
+                started_at=self._started_at,
+            )
+        worker_state.status = status
+        if current_task is not _SENTINEL:
+            worker_state.current_task = current_task  # type: ignore[assignment]
+        if tasks_completed is not None:
+            worker_state.tasks_completed = tasks_completed
+        worker_state.context_usage = self.check_context_usage()
+        self.state.set_worker_state(worker_state)
+
     def start(self) -> None:
         """Start the worker protocol.
 
@@ -162,29 +199,35 @@ class WorkerProtocol:
 
         # Signal ready to orchestrator
         self.signal_ready()
+        self._update_worker_state(WorkerStatus.RUNNING)
 
         # Main execution loop
-        while True:
-            # Check context usage
-            if self.should_checkpoint():
-                self.checkpoint_and_exit()
-                return
+        try:
+            while True:
+                # Check context usage
+                if self.should_checkpoint():
+                    self.checkpoint_and_exit()
+                    return
 
-            # Claim next task
-            task = self.claim_next_task()
-            if not task:
-                logger.info("No more tasks available")
-                break
+                # Claim next task
+                task = self.claim_next_task()
+                if not task:
+                    logger.info("No more tasks available")
+                    break
 
-            # Execute task
-            success = self.execute_task(task)
+                # Execute task
+                success = self.execute_task(task)
 
-            if success:
-                self.report_complete(task["id"])
-            else:
-                self.report_failed(task["id"], "Task execution failed")
+                if success:
+                    self.report_complete(task["id"])
+                else:
+                    self.report_failed(task["id"], "Task execution failed")
+        except Exception:
+            self._update_worker_state(WorkerStatus.CRASHED, current_task=None)
+            raise
 
         # Clean exit
+        self._update_worker_state(WorkerStatus.STOPPED, current_task=None)
         logger.info(f"Worker {self.worker_id} completed {self.tasks_completed} tasks")
         sys.exit(ExitCode.SUCCESS)
 
@@ -295,6 +338,9 @@ class WorkerProtocol:
 
         # Update status
         self.state.set_task_status(task_id, TaskStatus.IN_PROGRESS, worker_id=self.worker_id)
+        self._update_worker_state(WorkerStatus.RUNNING, current_task=task_id)
+
+        task_start_time = time.time()
 
         try:
             # Step 1: Invoke Claude Code to implement the task
@@ -322,6 +368,10 @@ class WorkerProtocol:
 
             # Step 4: Track context usage
             self.context_tracker.track_task_execution(task_id)
+
+            # Step 5: Record task duration
+            duration = int((time.time() - task_start_time) * 1000)
+            self.state.record_task_duration(task_id, duration)
 
             return True
 
@@ -627,6 +677,11 @@ class WorkerProtocol:
 
         self.tasks_completed += 1
         self.current_task = None
+        self._update_worker_state(
+            WorkerStatus.RUNNING,
+            current_task=None,
+            tasks_completed=self.tasks_completed,
+        )
 
     def report_failed(self, task_id: str, error: str | None = None) -> None:
         """Report task failure.
@@ -650,6 +705,7 @@ class WorkerProtocol:
         })
 
         self.current_task = None
+        self._update_worker_state(WorkerStatus.RUNNING, current_task=None)
 
     def check_context_usage(self) -> float:
         """Check current context usage.
@@ -712,6 +768,7 @@ class WorkerProtocol:
             "current_task": self.current_task["id"] if self.current_task else None,
         })
 
+        self._update_worker_state(WorkerStatus.CHECKPOINTING)
         logger.info(f"Worker {self.worker_id} checkpointed - exiting")
         sys.exit(ExitCode.CHECKPOINT)
 

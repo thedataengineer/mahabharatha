@@ -4,13 +4,15 @@ Tests for worker spawn, terminate, restart, state transitions,
 worktree cleanup, and spawn failure handling.
 """
 
-import pytest
+from datetime import datetime
 from pathlib import Path
-from unittest.mock import MagicMock, patch, PropertyMock
-from typing import Any
+from unittest.mock import MagicMock, patch
 
-from zerg.constants import WorkerStatus
-from zerg.launcher import SubprocessLauncher, SpawnResult, WorkerHandle
+import pytest
+
+from zerg.constants import ExitCode, WorkerStatus
+from zerg.launcher import SpawnResult, SubprocessLauncher, WorkerHandle
+from zerg.worker_protocol import WorkerProtocol
 
 
 class TestWorkerSpawn:
@@ -348,3 +350,188 @@ class TestLauncherStateConsistency:
         for i in range(3):
             status = launcher.monitor(i)
             assert status in [WorkerStatus.STOPPED, WorkerStatus.CRASHED]
+
+
+class TestWorkerProtocolStateWrites:
+    """Test WorkerProtocol writes WorkerState through its lifecycle."""
+
+    @pytest.fixture
+    def mock_state_manager(self) -> MagicMock:
+        """Create mock state manager."""
+        mock = MagicMock()
+        mock.load.return_value = {}
+        mock.get_tasks_by_status.return_value = []
+        mock.get_worker_state.return_value = None
+        return mock
+
+    @pytest.fixture
+    def mock_git_ops(self) -> MagicMock:
+        """Create mock git ops."""
+        mock = MagicMock()
+        mock.has_changes.return_value = False
+        return mock
+
+    @pytest.fixture
+    def protocol(
+        self,
+        tmp_path: Path,
+        mock_state_manager: MagicMock,
+        mock_git_ops: MagicMock,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> WorkerProtocol:
+        """Create WorkerProtocol with mocked dependencies."""
+        monkeypatch.setenv("ZERG_WORKER_ID", "0")
+        monkeypatch.setenv("ZERG_FEATURE", "test-feature")
+        monkeypatch.setenv("ZERG_WORKTREE", str(tmp_path))
+        monkeypatch.chdir(tmp_path)
+        (tmp_path / ".zerg").mkdir()
+
+        with (
+            patch("zerg.worker_protocol.StateManager", return_value=mock_state_manager),
+            patch("zerg.worker_protocol.GitOps", return_value=mock_git_ops),
+            patch("zerg.worker_protocol.VerificationExecutor"),
+        ):
+            p = WorkerProtocol(worker_id=0, feature="test-feature")
+            p._started_at = datetime.now()
+            return p
+
+    def test_start_sets_running_worker_state(
+        self, protocol: WorkerProtocol, mock_state_manager: MagicMock
+    ) -> None:
+        """After signal_ready, start() writes WorkerState with RUNNING."""
+        # Make claim_next_task return None immediately (no tasks)
+        mock_state_manager.get_tasks_by_status.return_value = []
+
+        with pytest.raises(SystemExit) as exc_info:
+            protocol.start()
+        assert exc_info.value.code == ExitCode.SUCCESS
+
+        # Find set_worker_state calls with RUNNING status
+        calls = mock_state_manager.set_worker_state.call_args_list
+        running_calls = [
+            c for c in calls
+            if c[0][0].status == WorkerStatus.RUNNING
+        ]
+        assert len(running_calls) >= 1, "Expected at least one RUNNING state write"
+
+    def test_start_clean_exit_sets_stopped(
+        self, protocol: WorkerProtocol, mock_state_manager: MagicMock
+    ) -> None:
+        """Clean exit from start() writes STOPPED status."""
+        mock_state_manager.get_tasks_by_status.return_value = []
+
+        with pytest.raises(SystemExit) as exc_info:
+            protocol.start()
+        assert exc_info.value.code == ExitCode.SUCCESS
+
+        # Last set_worker_state call should be STOPPED
+        last_call = mock_state_manager.set_worker_state.call_args_list[-1]
+        assert last_call[0][0].status == WorkerStatus.STOPPED
+
+    def test_execute_task_sets_current_task(
+        self, protocol: WorkerProtocol, mock_state_manager: MagicMock
+    ) -> None:
+        """execute_task updates WorkerState with current_task."""
+        task = {"id": "TASK-001", "title": "Test task"}
+
+        # Mock Claude CLI to succeed
+        with patch.object(protocol, "invoke_claude_code") as mock_invoke:
+            mock_invoke.return_value = MagicMock(success=True)
+            with patch.object(protocol, "commit_task_changes", return_value=True):
+                protocol.execute_task(task)
+
+        # Find the call that sets current_task to TASK-001
+        calls = mock_state_manager.set_worker_state.call_args_list
+        task_calls = [
+            c for c in calls
+            if c[0][0].current_task == "TASK-001"
+        ]
+        assert len(task_calls) >= 1, "Expected WorkerState with current_task='TASK-001'"
+
+    def test_report_complete_clears_current_task(
+        self, protocol: WorkerProtocol, mock_state_manager: MagicMock
+    ) -> None:
+        """report_complete clears current_task and increments tasks_completed."""
+        protocol.current_task = {"id": "TASK-001"}
+        protocol.tasks_completed = 0
+
+        protocol.report_complete("TASK-001")
+
+        # Should write state with current_task=None and tasks_completed=1
+        last_call = mock_state_manager.set_worker_state.call_args_list[-1]
+        ws = last_call[0][0]
+        assert ws.current_task is None
+        assert ws.tasks_completed == 1
+
+    def test_report_failed_clears_current_task(
+        self, protocol: WorkerProtocol, mock_state_manager: MagicMock
+    ) -> None:
+        """report_failed writes WorkerState with current_task=None."""
+        protocol.current_task = {"id": "TASK-001"}
+
+        protocol.report_failed("TASK-001", "Test error")
+
+        last_call = mock_state_manager.set_worker_state.call_args_list[-1]
+        ws = last_call[0][0]
+        assert ws.current_task is None
+        assert ws.status == WorkerStatus.RUNNING
+
+    def test_exception_sets_crashed(
+        self, protocol: WorkerProtocol, mock_state_manager: MagicMock
+    ) -> None:
+        """Unhandled exception in start() loop writes CRASHED status."""
+        # Make claim_next_task raise an exception
+        mock_state_manager.get_tasks_by_status.side_effect = RuntimeError("boom")
+
+        with pytest.raises(RuntimeError, match="boom"):
+            protocol.start()
+
+        # Find CRASHED state write
+        calls = mock_state_manager.set_worker_state.call_args_list
+        crashed_calls = [
+            c for c in calls
+            if c[0][0].status == WorkerStatus.CRASHED
+        ]
+        assert len(crashed_calls) >= 1, "Expected CRASHED state write on exception"
+
+    def test_execute_task_records_duration(
+        self, protocol: WorkerProtocol, mock_state_manager: MagicMock
+    ) -> None:
+        """execute_task records duration_ms via state.record_task_duration."""
+        task = {"id": "TASK-001", "title": "Test task"}
+
+        with patch.object(protocol, "invoke_claude_code") as mock_invoke:
+            mock_invoke.return_value = MagicMock(success=True)
+            with patch.object(protocol, "commit_task_changes", return_value=True):
+                result = protocol.execute_task(task)
+
+        assert result is True
+        mock_state_manager.record_task_duration.assert_called_once()
+        call_args = mock_state_manager.record_task_duration.call_args
+        assert call_args[0][0] == "TASK-001"
+        assert call_args[0][1] >= 0  # duration_ms should be non-negative
+
+    def test_context_usage_written(
+        self, protocol: WorkerProtocol, mock_state_manager: MagicMock
+    ) -> None:
+        """WorkerState writes include context_usage > 0 or == 0 (a float)."""
+        protocol._update_worker_state(WorkerStatus.RUNNING)
+
+        call = mock_state_manager.set_worker_state.call_args_list[-1]
+        ws = call[0][0]
+        assert isinstance(ws.context_usage, float)
+
+    def test_checkpoint_sets_checkpointing(
+        self, protocol: WorkerProtocol, mock_state_manager: MagicMock
+    ) -> None:
+        """checkpoint_and_exit writes CHECKPOINTING status."""
+        with pytest.raises(SystemExit) as exc_info:
+            protocol.checkpoint_and_exit()
+        assert exc_info.value.code == ExitCode.CHECKPOINT
+
+        calls = mock_state_manager.set_worker_state.call_args_list
+        checkpoint_calls = [
+            c for c in calls
+            if c[0][0].status == WorkerStatus.CHECKPOINTING
+        ]
+        assert len(checkpoint_calls) >= 1

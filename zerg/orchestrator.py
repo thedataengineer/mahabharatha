@@ -717,6 +717,9 @@ class Orchestrator:
 
     def _poll_workers(self) -> None:
         """Poll worker status and handle completions."""
+        # Reload state from disk to pick up worker-written changes
+        self.state.load()
+
         # Sync Claude Tasks with current state
         self.task_sync.sync_state()
 
@@ -837,10 +840,11 @@ class Orchestrator:
                 verification = task.get("verification", {})
                 if verification.get("command"):
                     # Compute and record task duration before marking complete
+                    # Guard: only record if worker didn't already record it
                     task_id = worker.current_task
                     task_state = self.state._state.get("tasks", {}).get(task_id, {})
                     started_at = task_state.get("started_at")
-                    if started_at:
+                    if started_at and task_state.get("duration_ms") is None:
                         task_duration = duration_ms(started_at, datetime.now())
                         if task_duration:
                             self.state.record_task_duration(task_id, task_duration)

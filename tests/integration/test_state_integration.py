@@ -890,3 +890,80 @@ class TestStateMdGeneration:
         content2 = (gsd_dir / "STATE.md").read_text(encoding="utf-8")
         assert "**Level:** 3" in content2
         assert "**Level:** 1" not in content2
+
+
+class TestCrossProcessStateVisibility:
+    """Test that separate StateManager instances see each other's writes after load()."""
+
+    def test_cross_process_state_visibility(self, tmp_path: Path) -> None:
+        """Two StateManager instances on same file see each other's writes."""
+        state_dir = tmp_path / "state"
+
+        # Instance A (simulating worker process)
+        manager_a = StateManager("test-feature", state_dir=state_dir)
+        manager_a.load()
+
+        # Instance B (simulating orchestrator process)
+        manager_b = StateManager("test-feature", state_dir=state_dir)
+        manager_b.load()
+
+        # Worker (A) writes its own WorkerState
+        worker_state = WorkerState(
+            worker_id=0,
+            status=WorkerStatus.RUNNING,
+            current_task="TASK-001",
+            branch="zerg/test/worker-0",
+            worktree_path="/tmp/wt",
+            started_at=datetime.now(),
+            tasks_completed=2,
+            context_usage=0.35,
+        )
+        manager_a.set_worker_state(worker_state)
+
+        # Orchestrator (B) hasn't reloaded yet — stale in-memory state
+        stale_worker = manager_b.get_worker_state(0)
+        assert stale_worker is None, "Before load(), B should not see A's write"
+
+        # Orchestrator (B) reloads from disk
+        manager_b.load()
+        fresh_worker = manager_b.get_worker_state(0)
+
+        assert fresh_worker is not None
+        assert fresh_worker.status == WorkerStatus.RUNNING
+        assert fresh_worker.current_task == "TASK-001"
+        assert fresh_worker.tasks_completed == 2
+        assert fresh_worker.context_usage == 0.35
+
+    def test_cross_process_worker_and_orchestrator_non_overlapping(self, tmp_path: Path) -> None:
+        """Worker writes worker state, orchestrator writes task state — no clobbering."""
+        state_dir = tmp_path / "state"
+
+        # Both start from same initial state
+        worker_mgr = StateManager("test-feature", state_dir=state_dir)
+        worker_mgr.load()
+
+        orch_mgr = StateManager("test-feature", state_dir=state_dir)
+        orch_mgr.load()
+
+        # Orchestrator writes task status
+        orch_mgr.set_task_status("TASK-001", TaskStatus.PENDING, worker_id=0)
+
+        # Worker reads latest state, then writes its own worker state
+        worker_mgr.load()
+        ws = WorkerState(
+            worker_id=0,
+            status=WorkerStatus.RUNNING,
+            current_task="TASK-001",
+            branch="zerg/test/worker-0",
+            worktree_path="/tmp/wt",
+            started_at=datetime.now(),
+        )
+        worker_mgr.set_worker_state(ws)
+
+        # Orchestrator reloads — should see both task status and worker state
+        orch_mgr.load()
+        assert orch_mgr.get_task_status("TASK-001") == TaskStatus.PENDING.value
+        loaded_ws = orch_mgr.get_worker_state(0)
+        assert loaded_ws is not None
+        assert loaded_ws.status == WorkerStatus.RUNNING
+        assert loaded_ws.current_task == "TASK-001"
