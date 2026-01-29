@@ -1,0 +1,127 @@
+{
+  "feature": "production-dogfooding",
+  "worker_count": 2,
+  "assignments": [
+    {
+      "task_id": "DF-L1-002",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L1-003",
+      "worker_id": 1,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L1-001",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L1-004",
+      "worker_id": 1,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L1-005",
+      "worker_id": 1,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L2-002",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L2-003",
+      "worker_id": 1,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L2-001",
+      "worker_id": 1,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L2-004",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L2-005",
+      "worker_id": 1,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L3-001",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L3-002",
+      "worker_id": 1,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L3-003",
+      "worker_id": 1,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L3-004",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L3-005",
+      "worker_id": 1,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L4-001",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L4-002",
+      "worker_id": 1,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L4-004",
+      "worker_id": 1,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L4-003",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    },
+    {
+      "task_id": "DF-L4-005",
+      "worker_id": 0,
+      "level": 0,
+      "estimated_minutes": 15
+    }
+  ],
+  "generated_at": "2026-01-29T16:49:09.086929"
+}

@@ -158,7 +158,7 @@
       "description": "Create tests/e2e/test_full_pipeline.py. TestFullPipeline class with tests: test_mock_pipeline_completes (use E2EHarness with sample_e2e_task_graph, 5 workers, assert E2EResult.success), test_mock_pipeline_creates_files (verify files from task graph exist after run), test_mock_pipeline_merges_levels (verify git log contains merge commits), test_mock_pipeline_state_consistent (verify .zerg/state JSON shows all tasks complete), test_mock_pipeline_handles_task_failure (configure MockWorker to fail one task, verify partial completion). Use fixtures from conftest.",
       "phase": "core",
       "level": 2,
-      "dependencies": ["DF-L2-001"],
+      "dependencies": ["DF-L1-001", "DF-L1-002"],
       "files": {
         "create": ["tests/e2e/test_full_pipeline.py"],
         "modify": [],
