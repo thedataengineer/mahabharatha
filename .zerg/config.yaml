@@ -40,6 +40,8 @@ resources:
   cpu_cores: 2
   memory_gb: 4
   disk_gb: 10
+  container_memory_limit: "4g"
+  container_cpu_limit: 2.0
 
 logging:
   level: info

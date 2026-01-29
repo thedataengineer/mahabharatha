@@ -1,6 +1,7 @@
 """ZERG build command - build orchestration with error recovery."""
 
 import json
+import subprocess
 import time
 from dataclasses import dataclass, field
 from enum import Enum
@@ -327,6 +328,48 @@ class BuildCommand:
         return "\n".join(lines)
 
 
+def _build_docker_image() -> None:
+    """Build the zerg-worker Docker image."""
+    dockerfile = Path(".devcontainer/Dockerfile")
+    if not dockerfile.exists():
+        console.print("[red]No .devcontainer/Dockerfile found[/red]")
+        raise SystemExit(1)
+
+    console.print("[cyan]Building zerg-worker Docker image...[/cyan]")
+    cmd = ["docker", "build", "-t", "zerg-worker", "-f", str(dockerfile), "."]
+
+    try:
+        result = subprocess.run(cmd, timeout=600)
+    except FileNotFoundError:
+        console.print("[red]Docker not found. Is Docker installed and running?[/red]")
+        raise SystemExit(1) from None
+    except subprocess.TimeoutExpired:
+        console.print("[red]Docker build timed out[/red]")
+        raise SystemExit(1) from None
+
+    if result.returncode == 0:
+        # Show image size
+        try:
+            inspect = subprocess.run(
+                ["docker", "image", "inspect", "--format",
+                 "{{.Size}}", "zerg-worker"],
+                capture_output=True, text=True, timeout=10,
+            )
+            if inspect.returncode == 0:
+                size_bytes = int(inspect.stdout.strip())
+                size_mb = size_bytes / (1024 * 1024)
+                console.print(
+                    f"[green]Image built: zerg-worker ({size_mb:.0f} MB)[/green]"
+                )
+            else:
+                console.print("[green]Image built: zerg-worker[/green]")
+        except Exception:
+            console.print("[green]Image built: zerg-worker[/green]")
+    else:
+        console.print("[red]Docker build failed[/red]")
+        raise SystemExit(1)
+
+
 def _watch_loop(builder: BuildCommand, system: BuildSystem | None, cwd: str) -> None:
     """Simple watch loop using polling."""
     import hashlib
@@ -389,6 +432,7 @@ def _watch_loop(builder: BuildCommand, system: BuildSystem | None, cwd: str) -> 
 @click.option("--retry", "-r", default=3, type=int, help="Number of retries on failure")
 @click.option("--dry-run", is_flag=True, help="Show what would be built without building")
 @click.option("--json", "json_output", is_flag=True, help="Output as JSON")
+@click.option("--docker", is_flag=True, help="Build the zerg-worker Docker image")
 @click.pass_context
 def build(
     ctx: click.Context,
@@ -399,6 +443,7 @@ def build(
     retry: int,
     dry_run: bool,
     json_output: bool,
+    docker: bool,
 ) -> None:
     """Build orchestration with error recovery.
 
@@ -416,6 +461,10 @@ def build(
         zerg build --dry-run
     """
     try:
+        if docker:
+            _build_docker_image()
+            return
+
         console.print("\n[bold cyan]ZERG Build[/bold cyan]\n")
 
         cwd = str(Path.cwd())

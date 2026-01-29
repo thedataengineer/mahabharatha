@@ -1,0 +1,301 @@
+{
+  "feature": "container-execution",
+  "version": "2.0",
+  "generated": "2026-01-28T20:00:00Z",
+  "total_tasks": 11,
+  "max_parallelization": 3,
+
+  "tasks": [
+    {
+      "id": "CE-L1-001",
+      "title": "Add container resource config fields",
+      "description": "Extend ResourcesConfig in config.py with container_memory_limit (str, default '4g') and container_cpu_limit (float, default 2.0). Update .zerg/config.yaml with new fields under resources section. Ensure ZergConfig.load() populates defaults correctly.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": ["zerg/config.py", ".zerg/config.yaml"],
+        "read": []
+      },
+      "acceptance_criteria": [
+        "ResourcesConfig has container_memory_limit: str = '4g' field",
+        "ResourcesConfig has container_cpu_limit: float = 2.0 field",
+        ".zerg/config.yaml has container_memory_limit and container_cpu_limit under resources",
+        "ZergConfig.load() returns correct defaults"
+      ],
+      "verification": {
+        "command": "python -c \"from zerg.config import ZergConfig; c = ZergConfig.load(); print(c.resources.container_memory_limit, c.resources.container_cpu_limit)\"",
+        "timeout_seconds": 30
+      },
+      "critical_path": true
+    },
+    {
+      "id": "CE-L1-002",
+      "title": "Harden Dockerfile for multi-platform",
+      "description": "Update .devcontainer/Dockerfile: add HEALTHCHECK instruction (test -f /tmp/.zerg-alive), ensure builds on ARM64 and x86_64, optimize layer caching by separating apt and pip installs.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": [".devcontainer/Dockerfile"],
+        "read": []
+      },
+      "acceptance_criteria": [
+        "Dockerfile has HEALTHCHECK instruction",
+        "docker build -t zerg-worker -f .devcontainer/Dockerfile . succeeds on current platform",
+        "docker run --rm zerg-worker python3 --version succeeds",
+        "docker run --rm zerg-worker node --version succeeds"
+      ],
+      "verification": {
+        "command": "docker build -t zerg-worker -f .devcontainer/Dockerfile . && docker run --rm zerg-worker python3 --version",
+        "timeout_seconds": 300
+      }
+    },
+    {
+      "id": "CE-L1-003",
+      "title": "Security-harden docker-compose.yaml",
+      "description": "Remove privileged: true from workspace service in .devcontainer/docker-compose.yaml. Add security_opt: no-new-privileges. Keep existing volume mounts and network config.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": [".devcontainer/docker-compose.yaml"],
+        "read": []
+      },
+      "acceptance_criteria": [
+        "No privileged: true in any service definition",
+        "security_opt includes no-new-privileges for workspace service",
+        "YAML is valid (parseable)"
+      ],
+      "verification": {
+        "command": "python -c \"import yaml; d=yaml.safe_load(open('.devcontainer/docker-compose.yaml')); ws=d['services']['workspace']; assert 'privileged' not in ws or ws['privileged'] is not True, 'privileged still set'; print('OK')\"",
+        "timeout_seconds": 30
+      }
+    },
+    {
+      "id": "CE-L2-001",
+      "title": "Wire resource limits into ContainerLauncher",
+      "description": "Add memory_limit and cpu_limit parameters to ContainerLauncher.__init__. In _start_container(), add '--memory' and '--cpus' flags to the docker run command. Read defaults from config.resources.container_memory_limit and container_cpu_limit. Orchestrator._create_launcher() passes config values to ContainerLauncher constructor.",
+      "phase": "core",
+      "level": 2,
+      "dependencies": ["CE-L1-001"],
+      "files": {
+        "create": [],
+        "modify": ["zerg/launcher.py"],
+        "read": ["zerg/config.py", "zerg/orchestrator.py"]
+      },
+      "acceptance_criteria": [
+        "ContainerLauncher.__init__ accepts memory_limit and cpu_limit",
+        "_start_container docker run cmd includes --memory and --cpus flags",
+        "Default values from ResourcesConfig flow through"
+      ],
+      "verification": {
+        "command": "python -c \"from zerg.launcher import ContainerLauncher; cl = ContainerLauncher(memory_limit='8g', cpu_limit=4.0); print(cl.memory_limit, cl.cpu_limit)\"",
+        "timeout_seconds": 30
+      },
+      "critical_path": true
+    },
+    {
+      "id": "CE-L2-002",
+      "title": "Add orphan cleanup and health check to orchestrator",
+      "description": "Add _cleanup_orphan_containers() method called during orchestrator __init__ (only when launcher_type is container). Finds all containers matching 'zerg-worker-*' prefix and removes them. Add _check_container_health() called from _poll_workers() that marks workers as CRASHED if they exceed the configured timeout. Update _create_launcher() to pass resource limits from config to ContainerLauncher.",
+      "phase": "core",
+      "level": 2,
+      "dependencies": ["CE-L1-001"],
+      "files": {
+        "create": [],
+        "modify": ["zerg/orchestrator.py"],
+        "read": ["zerg/launcher.py", "zerg/config.py"]
+      },
+      "acceptance_criteria": [
+        "_cleanup_orphan_containers removes containers matching zerg-worker-* prefix",
+        "Cleanup runs during orchestrator init when container mode detected",
+        "Cleanup handles missing Docker gracefully (no crash)",
+        "_check_container_health marks timed-out workers as CRASHED",
+        "_create_launcher passes memory/cpu limits to ContainerLauncher"
+      ],
+      "verification": {
+        "command": "python -m pytest tests/unit/test_orchestrator_workers.py tests/unit/test_orchestrator_recovery.py -x -q",
+        "timeout_seconds": 60
+      }
+    },
+    {
+      "id": "CE-L2-003",
+      "title": "Add container log support to logs command",
+      "description": "In zerg/commands/logs.py, add _get_container_logs(worker_id) helper that runs 'docker logs zerg-worker-{id}'. In the main log discovery logic, check launcher type (from state file or config). If container mode, fetch logs via docker logs instead of filesystem. Handle docker not available gracefully.",
+      "phase": "core",
+      "level": 2,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": ["zerg/commands/logs.py"],
+        "read": ["zerg/config.py"]
+      },
+      "acceptance_criteria": [
+        "_get_container_logs(worker_id) returns string from docker logs",
+        "Handles missing Docker gracefully (returns None)",
+        "Log discovery checks launcher type and uses appropriate source",
+        "Existing file-based log path unaffected"
+      ],
+      "verification": {
+        "command": "python -m pytest tests/unit/test_logs_cmd.py -x -q",
+        "timeout_seconds": 60
+      }
+    },
+    {
+      "id": "CE-L3-001",
+      "title": "Add --docker flag to build command",
+      "description": "Add --docker flag to the build Click command in zerg/commands/build.py. When set, call _build_docker_image() which runs 'docker build -t zerg-worker -f .devcontainer/Dockerfile .' with progress output via Rich console. Handle build failures, missing Dockerfile, missing Docker daemon. Show image size on success.",
+      "phase": "integration",
+      "level": 3,
+      "dependencies": ["CE-L2-001", "CE-L2-002"],
+      "files": {
+        "create": [],
+        "modify": ["zerg/commands/build.py"],
+        "read": [".devcontainer/Dockerfile"]
+      },
+      "acceptance_criteria": [
+        "zerg build --docker builds the zerg-worker image",
+        "Handles missing Dockerfile with clear error",
+        "Handles missing Docker daemon with clear error",
+        "Shows success message with image name"
+      ],
+      "verification": {
+        "command": "python -m pytest tests/unit/test_build_cmd.py -x -q",
+        "timeout_seconds": 60
+      }
+    },
+    {
+      "id": "CE-L3-002",
+      "title": "Add healthcheck marker to worker_entry.sh",
+      "description": "In .zerg/worker_entry.sh, create /tmp/.zerg-alive marker file before exec'ing worker_main. This file is checked by the Dockerfile HEALTHCHECK. Add trap to remove marker on exit. This enables Docker's built-in health monitoring.",
+      "phase": "integration",
+      "level": 3,
+      "dependencies": ["CE-L2-002"],
+      "files": {
+        "create": [],
+        "modify": [".zerg/worker_entry.sh"],
+        "read": []
+      },
+      "acceptance_criteria": [
+        "worker_entry.sh creates /tmp/.zerg-alive before exec",
+        "trap removes marker on EXIT signal",
+        "Existing worker startup logic unaffected"
+      ],
+      "verification": {
+        "command": "bash -n .zerg/worker_entry.sh && grep -q 'zerg-alive' .zerg/worker_entry.sh",
+        "timeout_seconds": 10
+      }
+    },
+    {
+      "id": "CE-L4-001",
+      "title": "Unit tests for container resource and health features",
+      "description": "Create tests/unit/test_container_resources.py with tests: ContainerLauncher passes --memory/--cpus to docker run command; config loads container resource fields; orchestrator passes limits to launcher; orphan cleanup handles no-docker; health check marks timed-out workers; logs command fetches docker logs. All tests use mocked subprocess/Docker.",
+      "phase": "testing",
+      "level": 4,
+      "dependencies": ["CE-L3-001", "CE-L3-002"],
+      "files": {
+        "create": ["tests/unit/test_container_resources.py"],
+        "modify": [],
+        "read": ["zerg/launcher.py", "zerg/orchestrator.py", "zerg/config.py", "zerg/commands/logs.py", "zerg/commands/build.py"]
+      },
+      "acceptance_criteria": [
+        "Tests for resource limit flags in docker run command",
+        "Tests for config field defaults and loading",
+        "Tests for orphan cleanup with mocked docker",
+        "Tests for health check timeout logic",
+        "Tests for docker log fetching",
+        "Tests for build --docker flag",
+        "All tests pass"
+      ],
+      "verification": {
+        "command": "python -m pytest tests/unit/test_container_resources.py -x -q",
+        "timeout_seconds": 60
+      }
+    },
+    {
+      "id": "CE-L4-002",
+      "title": "Integration tests for live Docker container execution",
+      "description": "Create tests/integration/test_container_e2e_live.py with tests gated by @pytest.mark.skipif(not docker_available()). Tests: image builds, container spawns with resource limits (verify via docker inspect), orphan cleanup works, container logs accessible. Uses real Docker daemon.",
+      "phase": "testing",
+      "level": 4,
+      "dependencies": ["CE-L3-001", "CE-L3-002"],
+      "files": {
+        "create": ["tests/integration/test_container_e2e_live.py"],
+        "modify": [],
+        "read": ["zerg/launcher.py", "zerg/orchestrator.py", ".devcontainer/Dockerfile"]
+      },
+      "acceptance_criteria": [
+        "Tests skip gracefully when Docker not available",
+        "Image build test verifies zerg-worker image exists after build",
+        "Container spawn test verifies resource limits via docker inspect",
+        "Orphan cleanup test creates and removes test containers",
+        "Container log test reads output from a test container",
+        "All tests pass (or skip cleanly)"
+      ],
+      "verification": {
+        "command": "python -m pytest tests/integration/test_container_e2e_live.py -x -q -v",
+        "timeout_seconds": 120
+      }
+    },
+    {
+      "id": "CE-L5-001",
+      "title": "Full suite verification and lint",
+      "description": "Run full test suite to verify no regressions. Run ruff linter on all changed files. Verify subprocess mode still works. This is a read-only verification task.",
+      "phase": "quality",
+      "level": 5,
+      "dependencies": ["CE-L4-001", "CE-L4-002"],
+      "files": {
+        "create": [],
+        "modify": [],
+        "read": []
+      },
+      "acceptance_criteria": [
+        "python -m pytest tests/unit/ passes (excluding known timeout tests)",
+        "python -m pytest tests/integration/ passes",
+        "python -m ruff check zerg/ has no new errors",
+        "Subprocess mode unaffected"
+      ],
+      "verification": {
+        "command": "python -m ruff check zerg/ && python -m pytest tests/unit/test_container_resources.py tests/unit/test_launcher.py tests/unit/test_orchestrator_workers.py tests/unit/test_build_cmd.py tests/unit/test_logs_cmd.py tests/unit/test_config.py -x -q",
+        "timeout_seconds": 120
+      }
+    }
+  ],
+
+  "levels": {
+    "1": {
+      "name": "foundation",
+      "tasks": ["CE-L1-001", "CE-L1-002", "CE-L1-003"],
+      "parallel": true,
+      "depends_on_levels": []
+    },
+    "2": {
+      "name": "core",
+      "tasks": ["CE-L2-001", "CE-L2-002", "CE-L2-003"],
+      "parallel": true,
+      "depends_on_levels": [1]
+    },
+    "3": {
+      "name": "integration",
+      "tasks": ["CE-L3-001", "CE-L3-002"],
+      "parallel": true,
+      "depends_on_levels": [2]
+    },
+    "4": {
+      "name": "testing",
+      "tasks": ["CE-L4-001", "CE-L4-002"],
+      "parallel": true,
+      "depends_on_levels": [3]
+    },
+    "5": {
+      "name": "quality",
+      "tasks": ["CE-L5-001"],
+      "parallel": false,
+      "depends_on_levels": [4]
+    }
+  }
+}

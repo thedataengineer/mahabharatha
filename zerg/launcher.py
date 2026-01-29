@@ -598,6 +598,8 @@ class ContainerLauncher(WorkerLauncher):
         config: LauncherConfig | None = None,
         image_name: str = "zerg-worker",
         network: str | None = None,
+        memory_limit: str = "4g",
+        cpu_limit: float = 2.0,
     ) -> None:
         """Initialize container launcher.
 
@@ -605,10 +607,14 @@ class ContainerLauncher(WorkerLauncher):
             config: Launcher configuration
             image_name: Docker image name for workers
             network: Docker network name (default: zerg-internal)
+            memory_limit: Docker --memory limit (e.g., '4g', '512m')
+            cpu_limit: Docker --cpus limit (e.g., 2.0)
         """
         super().__init__(config)
         self.image_name = image_name
         self.network = network or self.DEFAULT_NETWORK
+        self.memory_limit = memory_limit
+        self.cpu_limit = cpu_limit
         self._container_ids: dict[int, str] = {}
 
     def spawn(
@@ -783,6 +789,10 @@ class ContainerLauncher(WorkerLauncher):
         if claude_config_dir.exists():
             cmd.extend(["-v", f"{claude_config_dir.absolute()}:{home_dir}/.claude"])
             cmd.extend(["-e", f"HOME={home_dir}"])
+
+        # Resource limits
+        cmd.extend(["--memory", self.memory_limit])
+        cmd.extend(["--cpus", str(self.cpu_limit)])
 
         cmd.extend([
             "-w", "/workspace",

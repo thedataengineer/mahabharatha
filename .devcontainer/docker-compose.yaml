@@ -27,7 +27,8 @@ services:
     stdin_open: true
     tty: true
     init: true
-    privileged: true
+    security_opt:
+      - no-new-privileges:true
 
   # Optional: PostgreSQL for projects that need it
   postgres:

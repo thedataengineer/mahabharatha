@@ -1,6 +1,7 @@
 """ZERG logs command - stream worker logs."""
 
 import json
+import subprocess
 import time
 from pathlib import Path
 
@@ -71,6 +72,18 @@ def logs(
             console.print("Specify a feature with [cyan]--feature[/cyan]")
             raise SystemExit(1)
 
+        # Check if container mode — try docker logs first
+        launcher_type = _get_launcher_type()
+        if launcher_type == "container" and worker_id is not None:
+            container_output = _get_container_logs(worker_id)
+            if container_output is not None:
+                if not json_output:
+                    console.print(
+                        f"[dim]Container logs for worker {worker_id}:[/dim]\n"
+                    )
+                console.print(container_output)
+                return
+
         # Find log files
         log_dir = Path(".zerg/logs")
         if not log_dir.exists():
@@ -109,6 +122,40 @@ def logs(
     except Exception as e:
         console.print(f"\n[red]Error:[/red] {e}")
         raise SystemExit(1) from None
+
+
+def _get_launcher_type() -> str:
+    """Detect launcher type from config.
+
+    Returns:
+        'container' or 'subprocess'
+    """
+    try:
+        from zerg.config import ZergConfig
+        config = ZergConfig.load()
+        return config.workers.launcher_type
+    except Exception:
+        return "subprocess"
+
+
+def _get_container_logs(worker_id: int) -> str | None:
+    """Fetch logs from a running or stopped container.
+
+    Args:
+        worker_id: Worker ID
+
+    Returns:
+        Log output string or None if unavailable
+    """
+    name = f"zerg-worker-{worker_id}"
+    try:
+        result = subprocess.run(
+            ["docker", "logs", name],
+            capture_output=True, text=True, timeout=10,
+        )
+        return result.stdout if result.returncode == 0 else None
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        return None
 
 
 def detect_feature() -> str | None:

@@ -47,6 +47,15 @@ if [ -n "$ZERG_GIT_WORKTREE_DIR" ] && [ -d "$ZERG_GIT_WORKTREE_DIR" ]; then
     git config user.name "ZERG Worker $WORKER_ID"
 fi
 
+# Create healthcheck marker file (checked by Dockerfile HEALTHCHECK)
+touch /tmp/.zerg-alive
+
+# Remove marker on exit to signal unhealthy state
+cleanup() {
+    rm -f /tmp/.zerg-alive
+}
+trap cleanup EXIT
+
 # Install ZERG dependencies if not already installed
 if ! python3 -c "import pydantic" 2>/dev/null; then
     echo "Installing ZERG dependencies..."

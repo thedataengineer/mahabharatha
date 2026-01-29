@@ -6,7 +6,7 @@ ARG PYTHON_VERSION=3.12
 # Prevent interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
-# System dependencies
+# System dependencies (separated from pip for layer caching)
 RUN apt-get update && apt-get install -y \
     curl \
     wget \
@@ -39,7 +39,7 @@ RUN npm install -g \
 # Create worker home directory with write access for non-root users
 RUN mkdir -p /home/worker/.claude && chmod -R 777 /home/worker
 
-# Install Python dependencies for ZERG
+# Install Python dependencies for ZERG (separate layer for caching)
 RUN pip3 install --break-system-packages \
     pyyaml \
     requests \
@@ -58,6 +58,10 @@ RUN git config --system user.email "zerg-worker@local" && \
 
 # Set working directory
 WORKDIR /workspace
+
+# Health check: verify worker is alive via marker file
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD test -f /tmp/.zerg-alive || exit 1
 
 # Default command
 CMD ["bash"]

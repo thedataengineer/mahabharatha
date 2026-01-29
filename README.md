@@ -1740,6 +1740,39 @@ mcp_servers:
 - More zerglings = more memory usage (worktrees)
 - Zerglings beyond max parallelization at any level are idle
 
+### Container Worker Memory Requirements
+
+When running in container mode (`--mode container`), each zergling runs in a Docker container with the following processes:
+
+| Component | Typical Memory |
+|-----------|---------------|
+| Ubuntu base OS | ~150 MB |
+| Node.js + Claude Code CLI | ~450 MB |
+| MCP servers (filesystem, github, fetch) | ~300 MB |
+| Python 3.12 + ZERG worker process | ~250 MB |
+| Git operations | ~10 MB |
+| Buffer/overhead | ~400 MB |
+| **Total** | **~1.6 GB** |
+
+**Recommended limits:**
+
+| Setting | Memory | Use Case |
+|---------|--------|----------|
+| Minimum | `2g` | Simple tasks, tight resources, no MCP servers |
+| Safe minimum | `3g` | Most workloads with comfortable headroom |
+| **Default** | **`4g`** | **Recommended for production use** |
+| Heavy workloads | `6g`-`8g` | Large file operations, complex tasks |
+
+Configure in `.zerg/config.yaml`:
+
+```yaml
+resources:
+  container_memory_limit: "4g"   # Docker --memory flag
+  container_cpu_limit: 2.0       # Docker --cpus flag
+```
+
+**Planning total host memory:** Each zergling needs its own container. With 5 zerglings at 4 GB each, plan for ~20 GB available to Docker. The orchestrator itself runs on the host and uses minimal memory (~100 MB).
+
 ### Environment Variables
 
 | Variable | Required | Purpose |

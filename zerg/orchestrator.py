@@ -1,6 +1,7 @@
 """ZERG orchestrator - main coordination engine."""
 
 import concurrent.futures
+import subprocess as sp
 import time
 from collections.abc import Callable
 from datetime import datetime
@@ -77,6 +78,13 @@ class Orchestrator:
         # Initialize launcher based on config and mode
         self.launcher: WorkerLauncher = self._create_launcher(mode=launcher_mode)
 
+        # Clean up orphan containers from previous runs (container mode only)
+        try:
+            if isinstance(self.launcher, ContainerLauncher):
+                self._cleanup_orphan_containers()
+        except TypeError:
+            pass  # Mocked launcher in tests
+
         # Runtime state
         self._running = False
         self._paused = False
@@ -114,10 +122,12 @@ class Orchestrator:
         )
 
         if launcher_type == LauncherType.CONTAINER:
-            # Use ContainerLauncher
+            # Use ContainerLauncher with resource limits from config
             launcher = ContainerLauncher(
                 config=config,
                 image_name=self._get_worker_image_name(),
+                memory_limit=self.config.resources.container_memory_limit,
+                cpu_limit=self.config.resources.container_cpu_limit,
             )
             # Ensure network exists
             launcher.ensure_network()
@@ -126,6 +136,47 @@ class Orchestrator:
         else:
             logger.info("Using SubprocessLauncher")
             return SubprocessLauncher(config)
+
+    def _cleanup_orphan_containers(self) -> None:
+        """Remove leftover zerg-worker containers from previous runs."""
+        try:
+            result = sp.run(
+                ["docker", "ps", "-a", "--filter", "name=zerg-worker",
+                 "--format", "{{.ID}}"],
+                capture_output=True, text=True, timeout=10,
+            )
+            if result.returncode != 0:
+                return
+            for cid in result.stdout.strip().split("\n"):
+                if cid:
+                    sp.run(
+                        ["docker", "rm", "-f", cid],
+                        capture_output=True, timeout=10,
+                    )
+                    logger.info(f"Removed orphan container {cid[:12]}")
+        except (sp.TimeoutExpired, FileNotFoundError):
+            pass  # Docker not available, skip
+
+    def _check_container_health(self) -> None:
+        """Mark containers stuck beyond timeout as CRASHED."""
+        try:
+            is_container = isinstance(self.launcher, ContainerLauncher)
+        except TypeError:
+            return
+        if not is_container:
+            return
+        timeout_seconds = self.config.workers.timeout_minutes * 60
+        for worker_id, worker in list(self._workers.items()):
+            if worker.status == WorkerStatus.RUNNING and worker.started_at:
+                elapsed = (datetime.now() - worker.started_at).total_seconds()
+                if elapsed > timeout_seconds:
+                    logger.warning(
+                        f"Worker {worker_id} exceeded timeout "
+                        f"({elapsed:.0f}s > {timeout_seconds}s), terminating"
+                    )
+                    self.launcher.terminate(worker_id)
+                    worker.status = WorkerStatus.CRASHED
+                    self.state.set_worker_state(worker)
 
     def _auto_detect_launcher_type(self) -> LauncherType:
         """Auto-detect whether to use container or subprocess launcher.
@@ -719,6 +770,9 @@ class Orchestrator:
         """Poll worker status and handle completions."""
         # Reload state from disk to pick up worker-written changes
         self.state.load()
+
+        # Check container health (timeout detection)
+        self._check_container_health()
 
         # Sync Claude Tasks with current state
         self.task_sync.sync_state()

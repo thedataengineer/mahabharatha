@@ -61,6 +61,8 @@ class ResourcesConfig(BaseModel):
     cpu_cores: int = Field(default=2, ge=1, le=32)
     memory_gb: int = Field(default=4, ge=1, le=64)
     disk_gb: int = Field(default=10, ge=1, le=500)
+    container_memory_limit: str = Field(default="4g")
+    container_cpu_limit: float = Field(default=2.0, ge=0.1, le=32.0)
 
 
 class LoggingConfig(BaseModel):
