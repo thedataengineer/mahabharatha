@@ -78,6 +78,24 @@ Feature: {feature}
 Context-Usage: {percentage}%
 ```
 
+## Task System Updates
+
+After checkpoint/stop completes, update Claude Code Tasks to reflect stopped state:
+
+**Graceful Stop:**
+1. Call TaskList to find all in_progress tasks
+2. For each in_progress task, call TaskUpdate:
+   - taskId: the task's Claude Task ID
+   - description: Append "PAUSED: Graceful stop at {timestamp}. Resume with /zerg:rush --resume"
+   - (Keep status as "in_progress" — no "paused" status exists in the Task system)
+
+**Force Stop (--force):**
+1. Call TaskList to find all in_progress tasks
+2. For each in_progress task, call TaskUpdate:
+   - taskId: the task's Claude Task ID
+   - description: Append "FORCE STOPPED: {timestamp}. Uncommitted work may be lost."
+   - (Keep status as "in_progress" — orchestrator will decide next action on resume)
+
 ## Recovery After Stop
 
 Resume execution:

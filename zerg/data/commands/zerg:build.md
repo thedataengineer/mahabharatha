@@ -47,6 +47,23 @@ Supported build systems:
 /zerg:build --watch
 ```
 
+## Task Tracking
+
+On invocation, create a Claude Code Task to track this command:
+
+Call TaskCreate:
+  - subject: "[Build] Build {target}"
+  - description: "Build orchestration for {target}. Mode: {mode}. Clean: {clean}."
+  - activeForm: "Building {target}"
+
+Immediately call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "in_progress"
+
+On completion, call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "completed"
+
 ## Exit Codes
 
 - 0: Build successful

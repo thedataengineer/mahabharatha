@@ -136,6 +136,12 @@ When a worker claims a task, call TaskUpdate:
 
 Verify with TaskList that all tasks appear correctly.
 
+**Error Handling for Task System:**
+- If TaskCreate or TaskUpdate fails for any task, log a warning but continue execution
+- State JSON (`.zerg/state/{feature}.json`) serves as fallback if Task system is unavailable
+- Note in progress output: `⚠️ Task system partially unavailable — using state JSON as fallback`
+- On `--resume`: Call TaskList first; only create tasks that don't already exist (match by subject prefix `[L{level}] {title}`)
+
 ### Step 5: Launch Containers
 
 ```bash
@@ -331,7 +337,7 @@ Options:
   -f, --feature TEXT       Feature name (auto-detected if not provided)
   -l, --level INTEGER      Start from specific level (default: 1)
   -g, --task-graph PATH    Path to task-graph.json
-  -m, --mode TEXT          Worker execution mode: subprocess, container, auto (default: auto)
+  -m, --mode TEXT          Worker execution mode: subprocess, container, task, auto (default: auto)
   --dry-run                Show execution plan without starting workers
   --resume                 Continue from previous run
   --timeout INTEGER        Max execution time in seconds (default: 3600)
@@ -347,8 +353,10 @@ zerg rush --mode auto
 ```
 
 Auto-detection logic:
-1. If `.devcontainer/devcontainer.json` exists AND worker image is built → **container mode**
-2. Otherwise → **subprocess mode**
+1. If `--mode` is explicitly set → use that mode
+2. If `.devcontainer/devcontainer.json` exists AND worker image is built → **container mode**
+3. If running as a Claude Code slash command (`/zerg:rush`) → **task mode**
+4. Otherwise → **subprocess mode**
 
 ### Subprocess Mode
 
@@ -392,6 +400,119 @@ The ContainerLauncher:
 - Mounts worktrees as bind volumes
 - Passes ANTHROPIC_API_KEY to containers
 - Executes `.zerg/worker_entry.sh` in each container
+
+### Task Tool Mode (Slash Command)
+
+```bash
+zerg rush --mode task
+```
+
+- Used automatically when `/zerg:rush` is invoked as a Claude Code slash command
+- Launches parallel Task tool subagents (type: `general-purpose`)
+- No Docker, worktrees, or orchestrator process needed
+- File ownership from task-graph.json prevents conflicts in the shared workspace
+- Level sync is natural: launch N Task tools in one message, wait for all to return
+
+## Task Tool Execution
+
+When running in task mode, the orchestrator (you, the slash command executor) drives execution directly through the Task tool. No external processes are spawned.
+
+### Level Execution Loop
+
+```
+FOR each level in task-graph.json (ascending order):
+  1. Collect all tasks at this level
+  2. IF tasks > WORKERS:
+       Split into batches of WORKERS
+     ELSE:
+       Single batch = all tasks
+  3. FOR each batch:
+       Launch all tasks in the batch as parallel Task tool calls
+         (one Task tool invocation per task, all in a single message)
+       Wait for all to return
+       Record results (pass/fail) per task
+  4. Handle failures:
+       - Retry each failed task ONCE (single Task tool call)
+       - If retry fails: mark task as blocked, warn, continue
+       - If ALL tasks in level failed: ABORT execution
+  5. After all batches complete:
+       Run quality gates (lint, typecheck) on the workspace
+       IF gates fail: ABORT with diagnostics
+  6. Proceed to next level
+END FOR
+```
+
+### Subagent Prompt Template
+
+Each Task tool call uses subagent_type `general-purpose` with the following prompt structure:
+
+```
+You are ZERG Worker executing task {TASK_ID} for feature "{FEATURE}".
+
+## Task
+- **ID**: {TASK_ID}
+- **Title**: {title}
+- **Description**: {description}
+- **Level**: {level}
+
+## Files
+- **Create**: {files.create}
+- **Modify**: {files.modify}
+- **Read (context only)**: {files.read}
+
+IMPORTANT: Only touch files listed above. Other files are owned by other tasks.
+
+## Design Context
+Read these files for architectural guidance:
+- .gsd/specs/{feature}/requirements.md
+- .gsd/specs/{feature}/design.md
+- .gsd/specs/{feature}/task-graph.json (your task entry)
+
+## Acceptance Criteria
+{acceptance_criteria}
+
+## Verification
+After implementation, run:
+```
+{verification.command}
+```
+Expected: exit code 0
+
+## On Completion
+1. Stage ONLY your owned files: git add {files.create + files.modify}
+2. Commit with message: "feat({feature}): {TASK_ID} - {title}"
+3. Report: list files changed, verification result, any warnings
+```
+
+### Batching
+
+When the number of tasks at a level exceeds `WORKERS`:
+
+- Split tasks into chunks of size `WORKERS`
+- Execute each chunk as a parallel batch
+- Wait for the batch to complete before launching the next
+- Example: 12 tasks, 5 workers → batch 1 (5), batch 2 (5), batch 3 (2)
+
+### Error Handling (Task Mode)
+
+| Scenario | Behavior |
+|----------|----------|
+| Task fails verification | Retry once with error context appended to prompt |
+| Task fails retry | Mark blocked, log error, continue with remaining tasks |
+| All tasks at level fail | Abort execution, display diagnostics |
+| Partial failures at level | Warn, continue to next level with passing tasks |
+
+### Differences from Container/Subprocess Modes
+
+| Aspect | Container/Subprocess | Task Tool |
+|--------|---------------------|-----------|
+| Isolation | Git worktrees per worker | Shared workspace, file ownership |
+| Branching | Worker branches + merge | Single branch, sequential commits |
+| Orchestrator | External Python process | Slash command executor (you) |
+| Health checks | Docker health / process poll | Task tool return status |
+| Port allocation | Per-worker ports | Not needed |
+| Resume | State file checkpoint | Re-run `/zerg:rush --resume` |
+| Context management | 70% threshold per worker | Per-subagent (fresh context each) |
 
 ## Resume Instructions
 

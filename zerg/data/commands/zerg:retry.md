@@ -53,6 +53,17 @@ For each failed task:
 jq '.tasks["TASK-ID"].status = "pending" | .tasks["TASK-ID"].error = null | .tasks["TASK-ID"].retry_count += 1' "$STATE_FILE" > tmp && mv tmp "$STATE_FILE"
 ```
 
+### Step 3.5: Update Claude Task System
+
+After resetting state JSON, sync with Claude Code Tasks:
+
+1. Call TaskList to find the task (match subject `[L{level}] {title}`)
+2. Call TaskGet with the task ID to read current state
+3. Call TaskUpdate:
+   - taskId: the Claude Task ID
+   - status: "pending"
+   - description: Append "RETRY #{retry_count}: Reset at {timestamp}. Previous error: {error_summary}"
+
 ### Step 4: Check Retry Limits
 
 ```bash
@@ -79,6 +90,13 @@ else
   python -m zerg.orchestrator retry-task --task TASK-ID --feature "$FEATURE"
 fi
 ```
+
+After reassigning the task, update the Claude Task:
+
+Call TaskUpdate:
+  - taskId: the Claude Task ID for this task
+  - status: "in_progress"
+  - activeForm: "Retrying {title}"
 
 ## Retry Strategies
 

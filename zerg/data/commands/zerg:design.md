@@ -438,7 +438,26 @@ graph TD
 | Engineering | | | PENDING |
 ```
 
-## Phase 4.5: Register Tasks in Claude Task System
+## Phase 4.5: Track Design in Claude Task System
+
+At the START of design (before Phase 1), create a tracking task:
+
+Call TaskCreate:
+  - subject: "[Design] Architecture for {feature}"
+  - description: "Design phase for {feature}. Generating architecture and task graph via /zerg:design."
+  - activeForm: "Designing {feature}"
+
+Immediately call TaskUpdate to set it in_progress:
+  - taskId: (the Claude Task ID just created)
+  - status: "in_progress"
+
+After task registration succeeds (Phase 4.6 below), mark the design task completed:
+
+Call TaskUpdate:
+  - taskId: (the design task's Claude Task ID)
+  - status: "completed"
+
+## Phase 4.6: Register Tasks in Claude Task System
 
 After generating task-graph.json, create a Claude Task for every task using the TaskCreate tool.
 

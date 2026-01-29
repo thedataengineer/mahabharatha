@@ -422,16 +422,23 @@ Reply with:
 
 ### Track in Claude Task System
 
-After user approves requirements, call TaskCreate:
-  - subject: "[Plan] Requirements: {feature}"
-  - description: "Requirements captured and approved for {feature}. Ready for /zerg:design."
+At the START of planning (before Phase 1), create a tracking task:
+
+Call TaskCreate:
+  - subject: "[Plan] Capture requirements: {feature}"
+  - description: "Planning phase for {feature}. Gathering requirements via /zerg:plan."
   - activeForm: "Planning {feature}"
 
-Then call TaskUpdate to mark it completed:
-  - taskId: (the Claude Task ID)
-  - status: "completed"
+Immediately call TaskUpdate to set it in_progress:
+  - taskId: (the Claude Task ID just created)
+  - status: "in_progress"
 
-This creates a visible record in the task system that planning is done.
+After user approves requirements, call TaskUpdate to mark completed:
+  - taskId: (the same Claude Task ID)
+  - status: "completed"
+  - description: "Requirements captured and approved for {feature}. Ready for /zerg:design."
+
+This ensures the task system tracks the full lifecycle: start → in_progress → completed.
 
 ## Status Markers
 

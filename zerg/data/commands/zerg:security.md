@@ -116,6 +116,23 @@ Health Insurance Portability and Accountability Act security requirements.
 /zerg:security --format sarif > security.sarif
 ```
 
+## Task Tracking
+
+On invocation, create a Claude Code Task to track this command:
+
+Call TaskCreate:
+  - subject: "[Security] Scan {preset}"
+  - description: "Running security scan. Preset: {preset}. Autofix: {autofix}. Format: {format}."
+  - activeForm: "Running security scan"
+
+Immediately call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "in_progress"
+
+On completion, call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "completed"
+
 ## Exit Codes
 
 - 0: No vulnerabilities found

@@ -72,6 +72,23 @@ Auto-generated commit types:
 - `test`: Tests
 - `chore`: Maintenance
 
+## Task Tracking
+
+On invocation, create a Claude Code Task to track this command:
+
+Call TaskCreate:
+  - subject: "[Git] {action} operation"
+  - description: "Git {action} operation. Push: {push}. Base: {base}."
+  - activeForm: "Running git {action}"
+
+Immediately call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "in_progress"
+
+On completion, call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "completed"
+
 ## Exit Codes
 
 - 0: Operation successful

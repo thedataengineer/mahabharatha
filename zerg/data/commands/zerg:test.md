@@ -58,6 +58,23 @@ Pass Rate: 100.0%
 Duration: 4.88s
 ```
 
+## Task Tracking
+
+On invocation, create a Claude Code Task to track this command:
+
+Call TaskCreate:
+  - subject: "[Test] Execute test suite"
+  - description: "Running tests. Framework: {framework}. Coverage: {coverage}. Parallel: {parallel}."
+  - activeForm: "Running tests"
+
+Immediately call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "in_progress"
+
+On completion, call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "completed"
+
 ## Exit Codes
 
 - 0: All tests passed

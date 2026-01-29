@@ -69,6 +69,23 @@ Suggestions:
       + if authenticated:
 ```
 
+## Task Tracking
+
+On invocation, create a Claude Code Task to track this command:
+
+Call TaskCreate:
+  - subject: "[Refactor] Apply {transforms}"
+  - description: "Applying refactoring transforms: {transforms}. Dry-run: {dry_run}."
+  - activeForm: "Refactoring code"
+
+Immediately call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "in_progress"
+
+On completion, call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "completed"
+
 ## Exit Codes
 
 - 0: No issues (or all applied)

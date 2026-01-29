@@ -98,6 +98,17 @@ FILES_READ=$(echo $TASK | jq -r '.files.read[]' 2>/dev/null)
 VERIFICATION=$(echo $TASK | jq -r '.verification.command')
 ```
 
+#### 4.1.1 Claim Task in Claude Task System
+
+Before starting work, claim the task:
+
+Call TaskUpdate:
+  - taskId: (Claude Task ID for this ZERG task — find via TaskList, match subject prefix `[L{level}] {title}`)
+  - status: "in_progress"
+  - activeForm: "Worker {WORKER_ID} executing {title}"
+
+This signals to other workers and the orchestrator that this task is actively being worked on.
+
 #### 4.2 Read Dependencies
 
 ```bash
@@ -156,7 +167,14 @@ After successful verification and commit:
 If task failed after all retries:
   Call TaskUpdate:
     - taskId: (Claude Task ID)
-    - status: "in_progress" (orchestrator manages failure state)
+    - status: "in_progress" (no "failed" status exists; orchestrator manages failure state)
+    - description: Append error details: "BLOCKED: {error_message} after {retry_count} retries"
+
+If exiting due to checkpoint (context limit):
+  Call TaskUpdate:
+    - taskId: (Claude Task ID for current in-progress task)
+    - status: "in_progress" (keep as in_progress for resume)
+    - description: Append checkpoint context: "CHECKPOINT: {percentage}% complete. Next action: {next_step}"
 
 #### 4.7 Handle Failure
 
@@ -280,6 +298,11 @@ Final commit: {hash}
 Worker shutting down.
 ═══════════════════════════════════════════════════════════════
 ```
+
+After displaying completion output, verify all assigned tasks are marked complete:
+
+Call TaskList to retrieve all tasks. For each task assigned to this worker, confirm status is "completed".
+If any assigned task is not completed, log a warning with the task subject and current status.
 
 ## Exit Codes
 

@@ -47,6 +47,23 @@ SAST scanning for vulnerabilities (bandit, semgrep).
 - **json**: Machine-parseable JSON
 - **sarif**: Static Analysis Results Interchange Format (IDE integration)
 
+## Task Tracking
+
+On invocation, create a Claude Code Task to track this command:
+
+Call TaskCreate:
+  - subject: "[Analyze] Run {check} analysis"
+  - description: "Running {check} analysis. Format: {format}. Thresholds: {thresholds}."
+  - activeForm: "Running analysis"
+
+Immediately call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "in_progress"
+
+On completion, call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "completed"
+
 ## Exit Codes
 
 - 0: All checks passed

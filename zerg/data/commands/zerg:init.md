@@ -649,3 +649,20 @@ Next: Run /zerg:plan {feature-name} to start planning
 
 ═══════════════════════════════════════════════════════════════
 ```
+
+## Task Tracking
+
+On invocation, create a Claude Code Task to track this command:
+
+Call TaskCreate:
+  - subject: "[Init] Initialize {project_name}"
+  - description: "ZERG initialization for {project_name}. Mode: {inception|discovery}."
+  - activeForm: "Initializing ZERG"
+
+Immediately call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "in_progress"
+
+On completion (after output summary), call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "completed"

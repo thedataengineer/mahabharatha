@@ -134,6 +134,18 @@ if [ ${#GATE_FAILURES[@]} -gt 0 ]; then
 fi
 ```
 
+### Step 5.5: Update Task System After Merge
+
+After quality gates pass, update Claude Code Tasks for this level:
+
+1. Call TaskList to get all tasks
+2. For each task at the current level (match subject prefix `[L{CURRENT_LEVEL}]`):
+   - If quality gates passed: Call TaskUpdate with status "completed"
+   - If quality gates failed: Do NOT update task status (leave as in_progress for retry)
+3. Log any tasks that could not be updated
+
+If quality gates failed, skip this step entirely — tasks remain in_progress for the orchestrator to handle.
+
 ### Step 6: Finalize Merge
 
 ```bash
@@ -145,6 +157,11 @@ jq ".levels[\"$CURRENT_LEVEL\"].status = \"complete\" | .levels[\"$CURRENT_LEVEL
 
 echo "Level $CURRENT_LEVEL merge complete"
 ```
+
+After finalization, verify Task system consistency:
+
+Call TaskList and confirm all tasks at level `$CURRENT_LEVEL` show status "completed".
+If any task is not completed, log a warning: `⚠️ Task {subject} not marked completed in Task system`.
 
 ### Step 7: Rebase Worker Branches
 

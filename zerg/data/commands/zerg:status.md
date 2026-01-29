@@ -39,6 +39,7 @@ Elapsed:      {elapsed_time}
                               PROGRESS
 ───────────────────────────────────────────────────────────────────────────────
 
+Task System: {X}/{Y} tasks ({Z} pending, {W} active)
 Overall: {progress_bar} {percent}% ({completed}/{total} tasks)
 
 Level 1 (Foundation):   {bar} {status} ({n}/{n} tasks)
@@ -104,10 +105,19 @@ Commands:
 
 ### Task Status from Native Tasks
 
-```bash
-# Read from Claude Code's native Tasks
-# CLAUDE_CODE_TASK_LIST_ID is set to feature name
-```
+Call TaskList to retrieve all Claude Code tasks for this feature.
+
+Cross-reference with state JSON (`.zerg/state/{feature}.json`):
+- For each task, compare Task system status vs state JSON status
+- **Task system is authoritative** — if statuses disagree, prefer Task system
+- Flag mismatches in output:
+  ```
+  ⚠️ Status mismatch: TASK-003 — Task system: "completed", state JSON: "in_progress"
+  ```
+
+Aggregate Task system data for the summary line:
+- Count tasks by status: pending, in_progress, completed
+- Calculate: `Task System: {completed + in_progress + pending}/{total} tasks ({pending} pending, {in_progress} active)`
 
 ### Worker Status from Docker
 
@@ -141,7 +151,12 @@ tail -20 ".gsd/specs/$FEATURE/progress.md"
 
 ### /zerg:status --tasks
 
-Show all tasks with their status:
+Show all tasks with their status. **Primary source**: TaskList + TaskGet from Claude Code Task system. Fall back to state JSON for worker assignment details not stored in Tasks.
+
+For each task:
+1. Call TaskList to get all tasks
+2. For each task, use TaskGet if full description is needed
+3. Supplement with worker assignment info from `.zerg/state/{feature}.json`
 
 ```
 ┌───────────┬────────────────────────────────────┬─────────┬──────────┬──────────┐

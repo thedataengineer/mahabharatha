@@ -61,6 +61,23 @@ Stage 1 (Spec): ✓
 Stage 2 (Quality): ✓
 ```
 
+## Task Tracking
+
+On invocation, create a Claude Code Task to track this command:
+
+Call TaskCreate:
+  - subject: "[Review] Code review {mode}"
+  - description: "Running code review in {mode} mode for current feature."
+  - activeForm: "Running code review"
+
+Immediately call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "in_progress"
+
+On completion, call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "completed"
+
 ## Exit Codes
 
 - 0: Review passed

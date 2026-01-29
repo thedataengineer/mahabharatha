@@ -176,6 +176,35 @@ zerg cleanup --all --dry-run && \
   echo "y" | zerg cleanup --all
 ```
 
+## Task Tracking
+
+On invocation, create a Claude Code Task to track this command:
+
+Call TaskCreate:
+  - subject: "[Cleanup] Clean {feature}"
+  - description: "Removing ZERG artifacts for {feature}. Flags: {flags}."
+  - activeForm: "Cleaning up {feature}"
+
+Immediately call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "in_progress"
+
+On completion, call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "completed"
+
+**Task History Cleanup:**
+
+After cleaning artifacts, ask the user whether to delete task history:
+
+Call AskUserQuestion:
+  - "Delete task history for {feature}?"
+  - Options: "Keep as history" / "Delete tasks"
+
+If user chooses "Delete tasks":
+  - Call TaskList to find all tasks with subject prefix matching the feature (e.g., `[L1]`, `[L2]`, `[Plan]`, `[Design]`)
+  - For each matching task, call TaskUpdate with status "deleted"
+
 ## Safety Features
 
 1. **Dry run by default**: Preview shows exact resources

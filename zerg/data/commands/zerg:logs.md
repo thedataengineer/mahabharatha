@@ -107,6 +107,23 @@ zerg logs --follow
 
 Press `Ctrl+C` to stop streaming.
 
+## Task Tracking
+
+On invocation, create a Claude Code Task to track this command:
+
+Call TaskCreate:
+  - subject: "[Logs] View worker logs"
+  - description: "Viewing logs for {feature}. Filters: worker={worker_id}, level={level}."
+  - activeForm: "Viewing worker logs"
+
+Immediately call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "in_progress"
+
+On completion, call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "completed"
+
 ## Integration with Other Commands
 
 ```bash

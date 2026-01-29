@@ -31,6 +31,96 @@ These are Claude Code slash commands. Use them inside a Claude Code session:
 
 **Verification**: Every task has an automated verification command. Pass or fail, no subjectivity.
 
+## Claude Code Task Ecosystem (MANDATORY — READ THIS FIRST)
+
+> **This section has been rearchitected before due to drift. Pay close attention.**
+
+**The Claude Code Task system is the authoritative backbone for all ZERG task state.** Every ZERG command MUST use Claude Code Tasks (TaskCreate, TaskUpdate, TaskList, TaskGet) for tracking work. This is non-negotiable.
+
+### Core Rules
+
+1. **Tasks are the source of truth.** State JSON files (`.zerg/state/`) are supplementary. If Task system and state JSON disagree, the Task system wins.
+2. **Every command tracks itself.** All `/zerg:*` commands must TaskCreate on start, TaskUpdate to `in_progress`, and TaskUpdate to `completed` on finish.
+3. **Workers claim via Tasks.** Before executing a ZERG task, workers MUST call TaskUpdate with `status: "in_progress"`. After completion or failure, update accordingly.
+4. **Dependencies use Task fields.** Use `blocks`/`blockedBy` via TaskUpdate — not just task-graph.json.
+5. **Sessions share via CLAUDE_CODE_TASK_LIST_ID.** All workers launched by `/zerg:rush` MUST use `CLAUDE_CODE_TASK_LIST_ID={feature}` so they share the same task list.
+6. **Tasks persist in `~/.claude/tasks/`.** They survive session restarts. They are the coordination mechanism between parallel Claude Code instances.
+7. **Resume checks existing Tasks.** `/zerg:rush --resume` calls TaskList first and only creates tasks that don't already exist.
+
+### Task Subject Convention
+
+All ZERG tasks use bracketed prefixes for discoverability:
+- `[Plan] Capture requirements: {feature}`
+- `[Design] Architecture for {feature}`
+- `[L{level}] {task title}` — execution tasks from task-graph.json
+- `[Init]`, `[Cleanup]`, `[Review]`, `[Build]`, `[Test]`, `[Security]`, etc. — utility commands
+
+### Why This Matters
+
+Without Task ecosystem integration, parallel workers can't coordinate, sessions lose state on restart, and `/zerg:status` has no authoritative data source. The Task system IS the project management layer for ZERG.
+
+### Anti-Drift Rules
+
+**This system has drifted before. These rules exist to prevent it from happening again.**
+
+1. **Never remove Task tool calls from command files.** If a command file references TaskCreate, TaskUpdate, TaskList, or TaskGet, those references are load-bearing. Do not remove, comment out, or "simplify" them.
+
+2. **Every command file MUST contain Task tool calls.** All 19 command files in `zerg/data/commands/` are required to have Task ecosystem integration. There are zero exceptions. The minimum pattern for any command is:
+   ```
+   On invocation:  TaskCreate (subject with bracketed prefix)
+   Immediately:    TaskUpdate status "in_progress"
+   On completion:  TaskUpdate status "completed"
+   ```
+
+3. **Backbone commands have additional requirements.** These 5 files have deeper integration beyond the minimum pattern. Do not reduce them to the minimum:
+   - `zerg:worker.md` — TaskUpdate to claim tasks, TaskUpdate for failures/checkpoints, TaskList at completion
+   - `zerg:status.md` — TaskList as primary data source, cross-reference with state JSON, flag mismatches
+   - `zerg:merge.md` — TaskUpdate after quality gates per level, TaskList verification at finalize
+   - `zerg:stop.md` — TaskUpdate with PAUSED/FORCE STOPPED annotations
+   - `zerg:retry.md` — TaskGet to read state, TaskUpdate to reset to pending, TaskUpdate on reassignment
+
+4. **State JSON is the fallback, not the primary.** If you find yourself writing code that reads `.zerg/state/` without also consulting TaskList, you are drifting. State JSON supplements Tasks, not the other way around.
+
+5. **New commands get Task integration on creation.** If you create a new `/zerg:*` command file, it MUST include the minimum Task tracking pattern before it is considered complete.
+
+### Drift Detection Checklist
+
+Run this check when modifying any ZERG command file. If any check fails, fix it before committing.
+
+```bash
+# 1. All 19 command files must reference Task tools
+grep -rL "TaskCreate\|TaskUpdate\|TaskList\|TaskGet" zerg/data/commands/zerg:*.md
+# Expected output: (empty — no files missing Task references)
+
+# 2. Backbone files must have deeper integration
+for f in worker status merge stop retry; do
+  count=$(grep -c "TaskUpdate\|TaskList\|TaskGet" "zerg/data/commands/zerg:$f.md")
+  echo "zerg:$f.md — $count Task references (expect ≥3)"
+done
+
+# 3. No command file should reference state JSON without also referencing TaskList
+for f in zerg/data/commands/zerg:*.md; do
+  has_state=$(grep -c "state.*json\|STATE_FILE\|\.zerg/state" "$f")
+  has_tasks=$(grep -c "TaskList\|TaskGet" "$f")
+  if [ "$has_state" -gt 0 ] && [ "$has_tasks" -eq 0 ]; then
+    echo "DRIFT: $f reads state JSON but has no TaskList/TaskGet"
+  fi
+done
+```
+
+### What Drift Looks Like
+
+Watch for these patterns — they are symptoms of drift:
+
+- **"Simplified" commands** — Someone removes Task calls to make a command file shorter or "cleaner." The Task calls are not boilerplate; they are coordination infrastructure.
+- **State JSON as primary** — Code that reads/writes `.zerg/state/` and skips the Task system entirely. State JSON is a cache, not the source of truth.
+- **Missing subject prefixes** — Tasks created without `[Bracketed]` prefixes break discoverability for `/zerg:status` and `/zerg:cleanup`.
+- **Workers not claiming tasks** — If workers execute tasks without calling TaskUpdate(in_progress), other workers and the orchestrator have no visibility.
+- **New commands without tracking** — A new `/zerg:*` command that lacks TaskCreate/TaskUpdate is incomplete, even if it "works."
+- **TaskCreate without lifecycle** — Creating a task but never updating it to in_progress or completed is worse than not creating it (it pollutes the task list with stale entries).
+
+**If you are modifying any ZERG command file and it lacks Task tool calls, add them.** Do not create or modify ZERG commands without Task ecosystem integration.
+
 ## Configuration
 
 Edit `.zerg/config.yaml` for:

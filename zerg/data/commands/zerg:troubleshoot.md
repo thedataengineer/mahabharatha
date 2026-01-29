@@ -332,6 +332,23 @@ Description: "<category> - <root cause> - <recommendation>"
 
 ---
 
+## Task Tracking
+
+On invocation, create a Claude Code Task to track this command:
+
+Call TaskCreate:
+  - subject: "[Troubleshoot] Diagnose {category}"
+  - description: "Troubleshooting {feature}. Problem: {arguments_or_description}."
+  - activeForm: "Troubleshooting {feature}"
+
+Immediately call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "in_progress"
+
+On completion (after report is saved), call TaskUpdate:
+  - taskId: (the Claude Task ID)
+  - status: "completed"
+
 ## Output Format
 
 Always output findings using the structured templates above.
