@@ -174,9 +174,23 @@ def main() -> int:
     try:
         from zerg.worker_protocol import WorkerProtocol
 
+        # Resolve task graph path: explicit arg > env > auto-detect from spec dir
+        task_graph_path = args.task_graph
+        if not task_graph_path:
+            env_tg = os.environ.get("ZERG_TASK_GRAPH")
+            if env_tg:
+                task_graph_path = Path(env_tg)
+            else:
+                spec_dir = os.environ.get("ZERG_SPEC_DIR")
+                if spec_dir:
+                    candidate = Path(spec_dir) / "task-graph.json"
+                    if candidate.exists():
+                        task_graph_path = candidate
+
         protocol = WorkerProtocol(
             worker_id=args.worker_id,
             feature=args.feature,
+            task_graph_path=task_graph_path,
         )
         protocol.start()
         return 0
