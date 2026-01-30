@@ -343,16 +343,21 @@ class CommandExecutor:
         # Prepare working directory
         exec_cwd = Path(cwd) if cwd else self.working_dir
 
+        # Detect if shell mode is needed (trusted commands with shell operators)
+        cmd_str_raw = command if isinstance(command, str) else " ".join(command)
+        _shell_operators = ("&&", "||", "|", ">", "<", "2>&1", ";", "$(",  "`")
+        needs_shell = self.trust_commands and any(op in cmd_str_raw for op in _shell_operators)
+
         # Execute command
         try:
             result = subprocess.run(
-                cmd_args,
+                cmd_str_raw if needs_shell else cmd_args,
                 cwd=str(exec_cwd),
                 env=exec_env,
                 capture_output=capture_output,
                 text=True,
                 timeout=timeout or self.timeout,
-                shell=False,  # NEVER use shell=True
+                shell=needs_shell,
             )
 
             duration_ms = int((time.time() - start_time) * 1000)
