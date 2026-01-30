@@ -28,7 +28,7 @@ Implemented 7 CLI commands + 22 test modules using ZERG methodology.
 - [x] CLI-L1-004: Create refactor.py stub
 - [x] CLI-L1-005: Create review.py stub
 - [x] CLI-L1-006: Create test_cmd.py stub
-- [x] CLI-L1-007: Create troubleshoot.py stub
+- [x] CLI-L1-007: Create debug.py stub
 
 ### Level 3: CLI Wiring ✓
 - [x] CLI-L3-001: Wire all commands to CLI
@@ -40,7 +40,7 @@ Implemented 7 CLI commands + 22 test modules using ZERG methodology.
 - [x] CLI-L4-004: tests/integration/test_refactor.py
 - [x] CLI-L4-005: tests/integration/test_review.py
 - [x] CLI-L4-006: tests/integration/test_test_cmd.py
-- [x] CLI-L4-007: tests/integration/test_troubleshoot.py
+- [x] CLI-L4-007: tests/integration/test_debug.py
 
 ### Level 5: High-Priority Unit Tests ✓
 - [x] TEST-L5-001: tests/unit/test_cli.py
@@ -73,7 +73,7 @@ zerg/commands/git_cmd.py
 zerg/commands/refactor.py
 zerg/commands/review.py
 zerg/commands/test_cmd.py
-zerg/commands/troubleshoot.py
+zerg/commands/debug.py
 ```
 
 ### Modified Files (2)
@@ -90,7 +90,7 @@ tests/integration/test_git_cmd.py
 tests/integration/test_refactor.py
 tests/integration/test_review.py
 tests/integration/test_test_cmd.py
-tests/integration/test_troubleshoot.py
+tests/integration/test_debug.py
 ```
 
 ### Unit Tests (15)
@@ -124,10 +124,10 @@ pytest tests/unit/test_cli.py tests/unit/test_validation.py tests/unit/test_cmd_
        tests/integration/test_analyze.py tests/integration/test_build.py \
        tests/integration/test_git_cmd.py tests/integration/test_refactor.py \
        tests/integration/test_review.py tests/integration/test_test_cmd.py \
-       tests/integration/test_troubleshoot.py -v
+       tests/integration/test_debug.py -v
 
 # CLI commands available
-zerg --help | grep -E "(analyze|build|git|refactor|review|test|troubleshoot)"
+zerg --help | grep -E "(analyze|build|git|refactor|review|test|debug)"
 ```
 
 ---

@@ -268,7 +268,7 @@ Implement two-stage code review workflow.
 
 ---
 
-# L3-TASK-007: /zerg:troubleshoot Command
+# L3-TASK-007: /zerg:debug Command
 
 ## Objective
 
@@ -278,10 +278,10 @@ Implement systematic debugging with root cause analysis.
 
 ```
 .claude/commands/
-└── zerg:troubleshoot.md
+└── zerg:debug.md
 
 .zerg/
-└── troubleshoot.py
+└── debug.py
 ```
 
 ## Four-Phase Process
@@ -301,7 +301,7 @@ Implement systematic debugging with root cause analysis.
 ## Usage
 
 ```bash
-/zerg:troubleshoot [--error "error message"]
+/zerg:debug [--error "error message"]
                    [--stacktrace path/to/trace]
                    [--verbose]
 ```

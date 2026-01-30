@@ -12,7 +12,7 @@
 - [x] L2-002: Workflow Commands reference (init, plan, design, rush)
 - [x] L2-003: Monitoring Commands reference (status, stop, logs)
 - [x] L2-004: Task Commands reference (retry, merge, cleanup)
-- [x] L2-005: Quality Commands reference (test, build, analyze, review, troubleshoot, refactor)
+- [x] L2-005: Quality Commands reference (test, build, analyze, review, debug, refactor)
 - [x] L2-006: Infrastructure Commands reference (git, security-rules)
 
 ## Level 3: Tutorial
@@ -40,5 +40,5 @@ All 18 commands documented:
 - Workflow: init, plan, design, rush
 - Monitoring: status, stop, logs
 - Task: retry, merge, cleanup
-- Quality: test, build, analyze, review, troubleshoot, refactor
+- Quality: test, build, analyze, review, debug, refactor
 - Infrastructure: git, security-rules

@@ -31,7 +31,7 @@
 | `L1-TASK-004-prompt-templates.md` | 1 | Worker/reviewer templates |
 | `L1-TASK-005-metrics-collector.md` | 1 | Metrics and cost tracking |
 | `L2-core-commands.md` | 6 | Init, rush, worker, status, plan, design |
-| `L3-quality-commands.md` | 7 | Gates, analyze, test, security, refactor, review, troubleshoot |
+| `L3-quality-commands.md` | 7 | Gates, analyze, test, security, refactor, review, debug |
 | `L4-advanced-commands.md` | 6 | Git, build, session, index, document, purge |
 | `L5-meta-commands.md` | 4 | Explain, research, estimate, spawn |
 
@@ -86,7 +86,7 @@ Session 11: L3-TASK-003 (Test)
 Session 12: L3-TASK-004 (Security)
 Session 12: L3-TASK-005 (Refactor)
 Session 13: L3-TASK-006 (Review)
-Session 13: L3-TASK-007 (Troubleshoot)
+Session 13: L3-TASK-007 (Debug)
 ```
 
 ### Phase 5: Advanced (Sessions 14-17)
