@@ -212,6 +212,9 @@ class TestWorkerProtocolInit:
         """Test initialization from environment variables."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -244,6 +247,9 @@ class TestWorkerProtocolInit:
         """Test initialization defaults when no environment vars set."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -281,6 +287,9 @@ class TestWorkerProtocolInit:
         """Test initialization with task graph from environment."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -317,6 +326,9 @@ class TestWorkerProtocolInit:
         """Test initialization with task graph path argument."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -357,6 +369,9 @@ class TestWorkerProtocolInit:
         """Test that task parser errors are handled gracefully."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -400,6 +415,9 @@ class TestWorkerProtocolInit:
         """Test initialization with ZERG_SPEC_DIR environment variable."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -435,6 +453,9 @@ class TestWorkerProtocolSignalReady:
         """Test signaling ready status."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -473,6 +494,9 @@ class TestWorkerProtocolWaitForReady:
         """Test wait_for_ready when already ready."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -504,6 +528,9 @@ class TestWorkerProtocolWaitForReady:
         """Test wait_for_ready times out when not ready."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -535,6 +562,9 @@ class TestWorkerProtocolWaitForReady:
         """Test is_ready property."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -569,6 +599,9 @@ class TestWorkerProtocolClaimTask:
         """Test successfully claiming a task."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -605,6 +638,9 @@ class TestWorkerProtocolClaimTask:
         """Test claiming when no pending tasks."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -638,6 +674,9 @@ class TestWorkerProtocolClaimTask:
         """Test claiming when claim fails (already claimed by another worker)."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -676,6 +715,9 @@ class TestWorkerProtocolLoadTaskDetails:
         """Test loading task details from task parser."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -718,6 +760,9 @@ class TestWorkerProtocolLoadTaskDetails:
         """Test fallback to stub when task not in parser."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -755,6 +800,9 @@ class TestWorkerProtocolLoadTaskDetails:
         """Test fallback stub when no parser available."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -791,6 +839,9 @@ class TestWorkerProtocolBuildTaskPrompt:
         """Test building basic task prompt."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -828,6 +879,9 @@ class TestWorkerProtocolBuildTaskPrompt:
         """Test building prompt with description."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -866,6 +920,9 @@ class TestWorkerProtocolBuildTaskPrompt:
         """Test building prompt with file specifications."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -910,6 +967,9 @@ class TestWorkerProtocolBuildTaskPrompt:
         """Test building prompt with verification command."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -950,6 +1010,9 @@ class TestWorkerProtocolBuildTaskPrompt:
         """Test building prompt with spec context prefix."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -987,6 +1050,9 @@ class TestWorkerProtocolBuildTaskPrompt:
         """Test using task ID when title is missing."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1028,6 +1094,9 @@ class TestWorkerProtocolInvokeClaudeCode:
         """Test successful Claude Code invocation."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1070,6 +1139,9 @@ class TestWorkerProtocolInvokeClaudeCode:
         """Test failed Claude Code invocation."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1111,6 +1183,9 @@ class TestWorkerProtocolInvokeClaudeCode:
         """Test Claude Code invocation timeout."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1150,6 +1225,9 @@ class TestWorkerProtocolInvokeClaudeCode:
         """Test Claude CLI not found."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1187,6 +1265,9 @@ class TestWorkerProtocolInvokeClaudeCode:
         """Test generic exception during Claude Code invocation."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1224,6 +1305,9 @@ class TestWorkerProtocolInvokeClaudeCode:
         """Test Claude Code invocation with custom timeout."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1267,6 +1351,9 @@ class TestWorkerProtocolRunVerification:
         """Test successful verification."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1313,6 +1400,9 @@ class TestWorkerProtocolRunVerification:
         """Test failed verification."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1360,6 +1450,9 @@ class TestWorkerProtocolRunVerification:
         """Test verification auto-passes when no spec."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1392,6 +1485,9 @@ class TestWorkerProtocolRunVerification:
         """Test verification auto-passes when command is empty."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1431,6 +1527,9 @@ class TestWorkerProtocolCommitTaskChanges:
         """Test successful commit."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1475,6 +1574,9 @@ class TestWorkerProtocolCommitTaskChanges:
         """Test commit when no changes."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1511,6 +1613,9 @@ class TestWorkerProtocolCommitTaskChanges:
         """Test commit failure handling."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1555,6 +1660,9 @@ class TestWorkerProtocolExecuteTask:
         """Test successful task execution."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1612,6 +1720,9 @@ class TestWorkerProtocolExecuteTask:
         """Test task execution when Claude Code fails."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1658,6 +1769,9 @@ class TestWorkerProtocolExecuteTask:
         """Test task execution when verification fails."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1706,6 +1820,9 @@ class TestWorkerProtocolExecuteTask:
         """Test task execution when commit fails."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1750,6 +1867,9 @@ class TestWorkerProtocolExecuteTask:
         """Test task execution handles exceptions."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1791,6 +1911,9 @@ class TestWorkerProtocolReporting:
         """Test reporting task completion."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1830,6 +1953,9 @@ class TestWorkerProtocolReporting:
         """Test reporting task failure."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1871,6 +1997,9 @@ class TestWorkerProtocolContextTracking:
         """Test checking context usage."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1906,6 +2035,9 @@ class TestWorkerProtocolContextTracking:
         """Test should_checkpoint delegation."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1940,6 +2072,9 @@ class TestWorkerProtocolContextTracking:
         """Test tracking file reads."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -1972,6 +2107,9 @@ class TestWorkerProtocolContextTracking:
         """Test tracking tool calls."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -2010,6 +2148,9 @@ class TestWorkerProtocolCheckpointAndExit:
         """Test checkpoint and exit with pending changes."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -2055,6 +2196,9 @@ class TestWorkerProtocolCheckpointAndExit:
         """Test checkpoint and exit without pending changes."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -2096,6 +2240,9 @@ class TestWorkerProtocolCheckpointAndExit:
         """Test checkpoint when no current task."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -2139,6 +2286,9 @@ class TestWorkerProtocolGetStatus:
         """Test getting worker status."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -2183,6 +2333,9 @@ class TestWorkerProtocolGetStatus:
         """Test status when no current task."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -2228,6 +2381,9 @@ class TestWorkerProtocolStart:
         """Test start when no tasks available."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -2267,6 +2423,9 @@ class TestWorkerProtocolStart:
         """Test start executes available tasks."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -2278,8 +2437,13 @@ class TestWorkerProtocolStart:
         mock_context_cls.return_value = mock_context
 
         mock_state = MagicMock()
-        # First call returns tasks, second returns empty
-        mock_state.get_tasks_by_status.side_effect = [["TASK-001"], []]
+        # First call returns tasks, subsequent calls return empty (infinite iterator)
+        def get_tasks_side_effect(*args):
+            if not hasattr(get_tasks_side_effect, 'called'):
+                get_tasks_side_effect.called = True
+                return ["TASK-001"]
+            return []
+        mock_state.get_tasks_by_status.side_effect = get_tasks_side_effect
         mock_state.claim_task.return_value = True
         mock_state_cls.return_value = mock_state
 
@@ -2313,6 +2477,9 @@ class TestWorkerProtocolStart:
         """Test start handles task execution failure and calls report_failed."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
@@ -2324,8 +2491,13 @@ class TestWorkerProtocolStart:
         mock_context_cls.return_value = mock_context
 
         mock_state = MagicMock()
-        # First call returns task, second returns empty (exit loop)
-        mock_state.get_tasks_by_status.side_effect = [["TASK-001"], []]
+        # First call returns task, subsequent calls return empty (infinite iterator)
+        def get_tasks_side_effect(*args):
+            if not hasattr(get_tasks_side_effect, 'called'):
+                get_tasks_side_effect.called = True
+                return ["TASK-001"]
+            return []
+        mock_state.get_tasks_by_status.side_effect = get_tasks_side_effect
         mock_state.claim_task.return_value = True
         mock_state_cls.return_value = mock_state
 
@@ -2366,6 +2538,9 @@ class TestWorkerProtocolStart:
         """Test start checkpoints when context threshold exceeded."""
         mock_config = MagicMock()
         mock_config.context_threshold = 0.70
+        mock_config.plugins = MagicMock()
+        mock_config.plugins.enabled = False
+        mock_config.logging = MagicMock()
         mock_config_cls.load.return_value = mock_config
 
         mock_spec_loader = MagicMock()
