@@ -672,6 +672,12 @@ class ContainerLauncher(WorkerLauncher):
 
             container_name = f"{self.CONTAINER_PREFIX}-{int(worker_id)}"
 
+            # Remove any existing container with the same name
+            subprocess.run(
+                ["docker", "rm", "-f", container_name],
+                capture_output=True,
+            )
+
             # Build environment
             container_env = {
                 "ZERG_WORKER_ID": str(worker_id),

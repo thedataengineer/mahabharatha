@@ -217,10 +217,10 @@ class LevelController:
             return False
 
         level_status = self._levels[level]
-        return (
-            level_status.completed_tasks == level_status.total_tasks
-            and level_status.failed_tasks == 0
-        )
+        # Level is complete when all tasks are resolved (completed + failed = total)
+        # Failed tasks don't block advancement; the orchestrator logs warnings.
+        resolved = level_status.completed_tasks + level_status.failed_tasks
+        return resolved == level_status.total_tasks
 
     def can_advance(self) -> bool:
         """Check if we can advance to the next level.

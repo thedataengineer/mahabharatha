@@ -219,7 +219,8 @@ class TaskSyncBridge:
         if not level_tasks:
             return True
 
-        return all(t.status == "completed" for t in level_tasks)
+        # Level is resolved when all tasks are either completed or failed
+        return all(t.status in ("completed", "failed") for t in level_tasks)
 
     def get_task(self, task_id: str) -> ClaudeTask | None:
         """Get a specific task.
