@@ -361,7 +361,19 @@ class Orchestrator:
         # Wait for workers to initialize before starting level
         self._wait_for_initialization(timeout=600)
 
-        self._start_level(start_level or 1)
+        effective_start = start_level or 1
+        # When resuming from a later level, mark all prior levels as complete
+        # so the dependency check in LevelController.start_level() passes.
+        if effective_start > 1:
+            for prev in range(1, effective_start):
+                if prev in self.levels._levels:
+                    lvl = self.levels._levels[prev]
+                    lvl.completed_tasks = lvl.total_tasks
+                    lvl.failed_tasks = 0
+                    lvl.status = "complete"
+                    logger.info(f"Pre-marked level {prev} as complete (resuming from {effective_start})")
+
+        self._start_level(effective_start)
         self._main_loop()
 
     def stop(self, force: bool = False) -> None:

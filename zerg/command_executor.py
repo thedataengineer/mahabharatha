@@ -183,6 +183,7 @@ class CommandExecutor:
         custom_allowlist: dict[str, CommandCategory] | None = None,
         timeout: int = 300,
         audit_log: bool = True,
+        trust_commands: bool = False,
     ):
         """Initialize command executor.
 
@@ -192,11 +193,14 @@ class CommandExecutor:
             custom_allowlist: Additional allowed command prefixes
             timeout: Default timeout in seconds
             audit_log: Whether to log all command executions
+            trust_commands: If True, skip dangerous pattern checks (for trusted
+                sources like task-graph verification commands)
         """
         self.working_dir = Path(working_dir) if working_dir else Path.cwd()
         self.allow_unlisted = allow_unlisted
         self.timeout = timeout
         self.audit_log = audit_log
+        self.trust_commands = trust_commands
 
         # Build allowlist
         self.allowlist = ALLOWED_COMMAND_PREFIXES.copy()
@@ -224,14 +228,16 @@ class CommandExecutor:
         if not cmd_str:
             return False, "Empty command", None
 
-        # Check for dangerous patterns.
-        # Strip quoted strings first so patterns inside quotes (e.g., python -c
-        # "import foo; print('OK')") don't trigger false positives.
-        cmd_unquoted = re.sub(r'"[^"]*"', '""', cmd_str)
-        cmd_unquoted = re.sub(r"'[^']*'", "''", cmd_unquoted)
-        for pattern in _DANGEROUS_REGEX:
-            if pattern.search(cmd_unquoted):
-                return False, f"Dangerous pattern detected: {pattern.pattern}", None
+        # Check for dangerous patterns (skipped for trusted command sources
+        # like task-graph.json verification commands).
+        if not self.trust_commands:
+            # Strip quoted strings first so patterns inside quotes (e.g., python -c
+            # "import foo; print('OK')") don't trigger false positives.
+            cmd_unquoted = re.sub(r'"[^"]*"', '""', cmd_str)
+            cmd_unquoted = re.sub(r"'[^']*'", "''", cmd_unquoted)
+            for pattern in _DANGEROUS_REGEX:
+                if pattern.search(cmd_unquoted):
+                    return False, f"Dangerous pattern detected: {pattern.pattern}", None
 
         # Check against allowlist
         for prefix, category in self.allowlist.items():
