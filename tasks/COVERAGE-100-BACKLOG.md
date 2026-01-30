@@ -56,7 +56,7 @@
 | `zerg/config.py` | 91% | 7 | P3 |
 | `zerg/git_ops.py` | 91% | 14 | P3 |
 | `zerg/commands/review.py` | 91% | 24 | P3 |
-| `zerg/commands/troubleshoot.py` | 92% | 21 | P3 |
+| `zerg/commands/debug.py` | 92% | 21 | P3 |
 | Others (93-98%) | 93-98% | ~43 | P4 |
 
 ### Zero Coverage - 7 lines
@@ -136,7 +136,7 @@ Target: All remaining files to 100%
 | **COV-L5-003** | Tests for security_rules.py (22 lines) | `tests/unit/test_security_rules_full.py` | L0-* | `pytest tests/unit/test_security_rules_full.py -v --cov=zerg/security_rules` |
 | **COV-L5-004** | Tests for assign.py, config.py, git_ops.py | `tests/unit/test_core_utils_full.py` | L0-* | `pytest tests/unit/test_core_utils_full.py -v` |
 | **COV-L5-005** | Tests for review.py (24 lines) | `tests/unit/test_review_cmd_full.py` | L0-* | `pytest tests/unit/test_review_cmd_full.py -v --cov=zerg/commands/review` |
-| **COV-L5-006** | Tests for troubleshoot.py (21 lines) | `tests/unit/test_troubleshoot_full.py` | L0-* | `pytest tests/unit/test_troubleshoot_full.py -v --cov=zerg/commands/troubleshoot` |
+| **COV-L5-006** | Tests for debug.py (21 lines) | `tests/unit/test_debug_full.py` | L0-* | `pytest tests/unit/test_debug_full.py -v --cov=zerg/commands/debug` |
 | **COV-L5-007** | Tests for __main__.py (3 lines) | `tests/unit/test_main_entry.py` | L0-* | `pytest tests/unit/test_main_entry.py -v --cov=zerg/__main__` |
 | **COV-L5-008** | Tests for schemas/__init__.py (4 lines) | `tests/unit/test_schemas.py` | L0-* | `pytest tests/unit/test_schemas.py -v --cov=zerg/schemas` |
 | **COV-L5-009** | Tests for remaining 93-98% files | `tests/unit/test_final_coverage.py` | L0-* | `pytest tests/unit/test_final_coverage.py -v` |
