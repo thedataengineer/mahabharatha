@@ -5,8 +5,10 @@ Workers remain subprocess-isolated using JSON state; this provides a one-way syn
 from JSON state to Claude Tasks for the orchestrator.
 """
 
+import json
 from dataclasses import dataclass, field
 from datetime import datetime
+from pathlib import Path
 from typing import Any
 
 from zerg.constants import TaskStatus
@@ -14,6 +16,34 @@ from zerg.logging import get_logger
 from zerg.state import StateManager
 
 logger = get_logger("task_sync")
+
+DESIGN_MANIFEST_FILENAME = "design-tasks-manifest.json"
+
+
+def load_design_manifest(spec_dir: Path) -> list[dict] | None:
+    """Load the design tasks manifest written by design.py.
+
+    The manifest bridges the CLI (which cannot call Claude Task tools) with
+    the rush orchestrator (which registers Claude Tasks). design.py writes
+    this file for every execution path so the orchestrator can pick it up.
+
+    Args:
+        spec_dir: Path to the feature spec directory, e.g.
+            ``.gsd/specs/{feature}/``.
+
+    Returns:
+        The ``tasks`` list from the manifest, or ``None`` if the manifest
+        file does not exist.
+    """
+    manifest_path = spec_dir / DESIGN_MANIFEST_FILENAME
+    if not manifest_path.exists():
+        logger.debug("No design manifest at %s", manifest_path)
+        return None
+
+    data = json.loads(manifest_path.read_text(encoding="utf-8"))
+    tasks = data.get("tasks", [])
+    logger.info("Loaded design manifest with %d tasks from %s", len(tasks), manifest_path)
+    return tasks
 
 
 @dataclass
@@ -88,12 +118,14 @@ class TaskSyncBridge:
     ) -> list[ClaudeTask]:
         """Create Claude Task representations for a level.
 
-        Note: This creates internal representations. Actual Claude Task creation
-        would require integration with Claude's task API when available.
+        Tasks can originate from the task graph JSON or from the design
+        manifest (see :func:`load_design_manifest`).  The manifest is the
+        standard handoff mechanism between ``design.py`` and the rush
+        orchestrator.
 
         Args:
             level: Level number
-            tasks: List of task specifications from task graph
+            tasks: List of task specifications from task graph or manifest
 
         Returns:
             List of created ClaudeTask objects
