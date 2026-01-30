@@ -11,6 +11,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 from unittest.mock import MagicMock, call, patch
 
 import pytest
@@ -26,6 +27,7 @@ from zerg.launcher import (
     SubprocessLauncher,
     WorkerHandle,
     WorkerLauncher,
+    get_plugin_launcher,
     validate_env_vars,
 )
 
@@ -1749,3 +1751,68 @@ class TestLauncherEdgeCases:
         """Test worker in IDLE state is considered alive."""
         handle = WorkerHandle(worker_id=0, status=WorkerStatus.IDLE)
         assert handle.is_alive() is True
+
+
+# =============================================================================
+# Plugin Launcher Integration Tests
+# =============================================================================
+
+
+class TestGetPluginLauncher:
+    """Tests for get_plugin_launcher function."""
+
+    def test_get_plugin_launcher_none_registry(self) -> None:
+        """Test get_plugin_launcher returns None when registry is None."""
+        result = get_plugin_launcher("test-launcher", None)
+        assert result is None
+
+    def test_get_plugin_launcher_not_found(self) -> None:
+        """Test get_plugin_launcher returns None when launcher not in registry."""
+        from zerg.plugins import PluginRegistry
+
+        registry = PluginRegistry()
+        result = get_plugin_launcher("nonexistent", registry)
+        assert result is None
+
+    def test_get_plugin_launcher_success(self) -> None:
+        """Test get_plugin_launcher returns launcher from registry."""
+        from zerg.plugins import LauncherPlugin, PluginRegistry
+
+        # Create a test launcher plugin
+        class TestLauncherPlugin(LauncherPlugin):
+            @property
+            def name(self) -> str:
+                return "test-launcher"
+
+            def create_launcher(self, config: Any) -> Any:
+                return SubprocessLauncher()
+
+        registry = PluginRegistry()
+        plugin = TestLauncherPlugin()
+        registry.register_launcher(plugin)
+
+        result = get_plugin_launcher("test-launcher", registry)
+
+        assert result is not None
+        assert isinstance(result, SubprocessLauncher)
+
+    def test_get_plugin_launcher_exception(self) -> None:
+        """Test get_plugin_launcher returns None when create_launcher raises."""
+        from zerg.plugins import LauncherPlugin, PluginRegistry
+
+        # Create a test launcher plugin that fails
+        class FailingLauncherPlugin(LauncherPlugin):
+            @property
+            def name(self) -> str:
+                return "failing-launcher"
+
+            def create_launcher(self, config: Any) -> Any:
+                raise RuntimeError("Failed to create launcher")
+
+        registry = PluginRegistry()
+        plugin = FailingLauncherPlugin()
+        registry.register_launcher(plugin)
+
+        result = get_plugin_launcher("failing-launcher", registry)
+
+        assert result is None
