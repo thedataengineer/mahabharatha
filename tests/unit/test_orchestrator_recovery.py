@@ -347,6 +347,7 @@ class TestWorkerRespawnAfterCrash:
         orch._spawn_worker(0)
         orch._workers[0].current_task = "TASK-001"
         orch._running = True
+        orch._worker_manager.running = True
 
         # Reset spawn call count after initial spawn
         mock_orchestrator_deps["subprocess_launcher"].spawn.reset_mock()
@@ -516,6 +517,7 @@ class TestWorktreeCleanupOnRecovery:
         orch = Orchestrator("test-feature")
         orch._spawn_worker(0)
         orch._running = True
+        orch._worker_manager.running = True
 
         # Reset delete call count after initial spawn
         mock_orchestrator_deps["worktree"].delete.reset_mock()
@@ -661,6 +663,7 @@ class TestRecoveryIntegration:
         orch = Orchestrator("test-feature")
         orch._spawn_worker(0)
         orch._running = True
+        orch._worker_manager.running = True
         orch._paused = True  # Paused state
 
         # Reset spawn call count

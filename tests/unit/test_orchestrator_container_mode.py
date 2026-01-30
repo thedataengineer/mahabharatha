@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.config import ZergConfig, WorkersConfig, LoggingConfig, PortsConfig, ResourcesConfig
+from zerg.config import ZergConfig, WorkersConfig, LoggingConfig, PortsConfig, ResourcesConfig, ErrorRecoveryConfig
 from zerg.launcher import ContainerLauncher, LauncherConfig, LauncherType, SubprocessLauncher
 from zerg.orchestrator import Orchestrator
 
@@ -97,6 +97,8 @@ class TestGetWorkerImageName:
         mock_config.logging = LoggingConfig()
         mock_config.ports = PortsConfig()
         mock_config.resources = ResourcesConfig()
+        mock_config.error_recovery = ErrorRecoveryConfig()
+        mock_config.plugins = MagicMock(enabled=False)
 
         orchestrator = Orchestrator(
             feature="test-feature",
@@ -270,6 +272,8 @@ class TestContainerLauncherConfiguration:
         mock_config.logging = LoggingConfig()
         mock_config.ports = PortsConfig()
         mock_config.resources = ResourcesConfig()
+        mock_config.error_recovery = ErrorRecoveryConfig()
+        mock_config.plugins = MagicMock(enabled=False)
 
         orchestrator = Orchestrator(
             feature="test-feature",
@@ -316,6 +320,8 @@ class TestContainerLauncherConfiguration:
         mock_config.logging = LoggingConfig(directory="/custom/log/dir")
         mock_config.ports = PortsConfig()
         mock_config.resources = ResourcesConfig()
+        mock_config.error_recovery = ErrorRecoveryConfig()
+        mock_config.plugins = MagicMock(enabled=False)
 
         orchestrator = Orchestrator(
             feature="test-feature",
@@ -363,6 +369,8 @@ class TestContainerLauncherConfiguration:
         mock_config.logging = LoggingConfig()
         mock_config.ports = PortsConfig()
         mock_config.resources = ResourcesConfig()
+        mock_config.error_recovery = ErrorRecoveryConfig()
+        mock_config.plugins = MagicMock(enabled=False)
 
         orchestrator = Orchestrator(
             feature="test-feature",

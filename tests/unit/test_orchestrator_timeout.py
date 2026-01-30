@@ -17,6 +17,7 @@ from unittest.mock import MagicMock, patch, PropertyMock
 
 import pytest
 
+from zerg.config import ErrorRecoveryConfig
 from zerg.constants import LevelMergeStatus, TaskStatus, WorkerStatus
 from zerg.merge import MergeFlowResult
 from zerg.orchestrator import Orchestrator
@@ -44,6 +45,8 @@ class TestMergeTimeoutTriggersRetry:
         mock_config.ports.range_end = 9000
         mock_config.logging.directory = "/tmp/logs"
         mock_config.quality_gates = []
+        mock_config.error_recovery = ErrorRecoveryConfig()
+        mock_config.plugins = MagicMock(enabled=False)
         mock_config.merge_timeout_seconds = 1  # Very short for test
         mock_config.merge_max_retries = 3
         mock_config_cls.load.return_value = mock_config
@@ -129,6 +132,8 @@ class TestMergeTimeoutTriggersRetry:
         mock_config.ports.range_end = 9000
         mock_config.logging.directory = "/tmp/logs"
         mock_config.quality_gates = []
+        mock_config.error_recovery = ErrorRecoveryConfig()
+        mock_config.plugins = MagicMock(enabled=False)
         mock_config.merge_timeout_seconds = 0.1  # Very short
         mock_config.merge_max_retries = 1  # Only 1 retry
         mock_config_cls.load.return_value = mock_config
@@ -210,7 +215,7 @@ class TestExponentialBackoffBetweenRetries:
         for i in range(1, len(backoffs)):
             assert backoffs[i] == backoffs[i - 1] * 2
 
-    @patch("zerg.orchestrator.time.sleep")
+    @patch("zerg.level_coordinator.time.sleep")
     @patch("zerg.orchestrator.MergeCoordinator")
     @patch("zerg.orchestrator.StateManager")
     @patch("zerg.orchestrator.ZergConfig")
@@ -229,6 +234,8 @@ class TestExponentialBackoffBetweenRetries:
         mock_config.ports.range_end = 9000
         mock_config.logging.directory = "/tmp/logs"
         mock_config.quality_gates = []
+        mock_config.error_recovery = ErrorRecoveryConfig()
+        mock_config.plugins = MagicMock(enabled=False)
         mock_config.merge_timeout_seconds = 600
         mock_config.merge_max_retries = 3
         mock_config_cls.load.return_value = mock_config
@@ -301,7 +308,7 @@ class TestExponentialBackoffBetweenRetries:
 class TestMaxRetriesReachedPausesOrchestrator:
     """Test that max retries reached pauses orchestrator."""
 
-    @patch("zerg.orchestrator.time.sleep")
+    @patch("zerg.level_coordinator.time.sleep")
     @patch("zerg.orchestrator.MergeCoordinator")
     @patch("zerg.orchestrator.StateManager")
     @patch("zerg.orchestrator.ZergConfig")
@@ -320,6 +327,8 @@ class TestMaxRetriesReachedPausesOrchestrator:
         mock_config.ports.range_end = 9000
         mock_config.logging.directory = "/tmp/logs"
         mock_config.quality_gates = []
+        mock_config.error_recovery = ErrorRecoveryConfig()
+        mock_config.plugins = MagicMock(enabled=False)
         mock_config.merge_timeout_seconds = 600
         mock_config.merge_max_retries = 2
         mock_config_cls.load.return_value = mock_config
@@ -372,7 +381,7 @@ class TestMaxRetriesReachedPausesOrchestrator:
         mock_state.set_paused.assert_called_with(True)
         mock_state.set_error.assert_called()
 
-    @patch("zerg.orchestrator.time.sleep")
+    @patch("zerg.level_coordinator.time.sleep")
     @patch("zerg.orchestrator.MergeCoordinator")
     @patch("zerg.orchestrator.StateManager")
     @patch("zerg.orchestrator.ZergConfig")
@@ -391,6 +400,8 @@ class TestMaxRetriesReachedPausesOrchestrator:
         mock_config.ports.range_end = 9000
         mock_config.logging.directory = "/tmp/logs"
         mock_config.quality_gates = []
+        mock_config.error_recovery = ErrorRecoveryConfig()
+        mock_config.plugins = MagicMock(enabled=False)
         mock_config.merge_timeout_seconds = 600
         mock_config.merge_max_retries = 1
         mock_config_cls.load.return_value = mock_config
@@ -444,7 +455,7 @@ class TestMaxRetriesReachedPausesOrchestrator:
         ]
         assert len(event_calls) == 1
 
-    @patch("zerg.orchestrator.time.sleep")
+    @patch("zerg.level_coordinator.time.sleep")
     @patch("zerg.orchestrator.MergeCoordinator")
     @patch("zerg.orchestrator.StateManager")
     @patch("zerg.orchestrator.ZergConfig")
@@ -463,6 +474,8 @@ class TestMaxRetriesReachedPausesOrchestrator:
         mock_config.ports.range_end = 9000
         mock_config.logging.directory = "/tmp/logs"
         mock_config.quality_gates = []
+        mock_config.error_recovery = ErrorRecoveryConfig()
+        mock_config.plugins = MagicMock(enabled=False)
         mock_config.merge_timeout_seconds = 600
         mock_config.merge_max_retries = 1
         mock_config_cls.load.return_value = mock_config
@@ -518,7 +531,7 @@ class TestMaxRetriesReachedPausesOrchestrator:
 class TestSuccessfulMergeAfterRetry:
     """Test successful merge after initial failures."""
 
-    @patch("zerg.orchestrator.time.sleep")
+    @patch("zerg.level_coordinator.time.sleep")
     @patch("zerg.orchestrator.MergeCoordinator")
     @patch("zerg.orchestrator.StateManager")
     @patch("zerg.orchestrator.ZergConfig")
@@ -537,6 +550,8 @@ class TestSuccessfulMergeAfterRetry:
         mock_config.ports.range_end = 9000
         mock_config.logging.directory = "/tmp/logs"
         mock_config.quality_gates = []
+        mock_config.error_recovery = ErrorRecoveryConfig()
+        mock_config.plugins = MagicMock(enabled=False)
         mock_config.merge_timeout_seconds = 600
         mock_config.merge_max_retries = 3
         mock_config_cls.load.return_value = mock_config
@@ -605,7 +620,7 @@ class TestSuccessfulMergeAfterRetry:
             {"level": 1, "merge_commit": "abc123"},
         )
 
-    @patch("zerg.orchestrator.time.sleep")
+    @patch("zerg.level_coordinator.time.sleep")
     @patch("zerg.orchestrator.MergeCoordinator")
     @patch("zerg.orchestrator.StateManager")
     @patch("zerg.orchestrator.ZergConfig")
@@ -624,6 +639,8 @@ class TestSuccessfulMergeAfterRetry:
         mock_config.ports.range_end = 9000
         mock_config.logging.directory = "/tmp/logs"
         mock_config.quality_gates = []
+        mock_config.error_recovery = ErrorRecoveryConfig()
+        mock_config.plugins = MagicMock(enabled=False)
         mock_config.merge_timeout_seconds = 600
         mock_config.merge_max_retries = 5
         mock_config_cls.load.return_value = mock_config
@@ -693,7 +710,7 @@ class TestSuccessfulMergeAfterRetry:
             1, LevelMergeStatus.COMPLETE
         )
 
-    @patch("zerg.orchestrator.time.sleep")
+    @patch("zerg.level_coordinator.time.sleep")
     @patch("zerg.orchestrator.MergeCoordinator")
     @patch("zerg.orchestrator.StateManager")
     @patch("zerg.orchestrator.ZergConfig")
@@ -712,6 +729,8 @@ class TestSuccessfulMergeAfterRetry:
         mock_config.ports.range_end = 9000
         mock_config.logging.directory = "/tmp/logs"
         mock_config.quality_gates = []
+        mock_config.error_recovery = ErrorRecoveryConfig()
+        mock_config.plugins = MagicMock(enabled=False)
         mock_config.merge_timeout_seconds = 600
         mock_config.merge_max_retries = 3
         mock_config_cls.load.return_value = mock_config
@@ -805,6 +824,8 @@ class TestTimeoutConfigurationFromConfig:
         mock_config.ports.range_end = 9000
         mock_config.logging.directory = "/tmp/logs"
         mock_config.quality_gates = []
+        mock_config.error_recovery = ErrorRecoveryConfig()
+        mock_config.plugins = MagicMock(enabled=False)
         # Remove merge_timeout_seconds attribute to test default
         del mock_config.merge_timeout_seconds
         mock_config.merge_max_retries = 3
@@ -860,7 +881,7 @@ class TestTimeoutConfigurationFromConfig:
             {"level": 1, "merge_commit": "abc123"},
         )
 
-    @patch("zerg.orchestrator.time.sleep")
+    @patch("zerg.level_coordinator.time.sleep")
     @patch("zerg.orchestrator.MergeCoordinator")
     @patch("zerg.orchestrator.StateManager")
     @patch("zerg.orchestrator.ZergConfig")
@@ -879,6 +900,8 @@ class TestTimeoutConfigurationFromConfig:
         mock_config.ports.range_end = 9000
         mock_config.logging.directory = "/tmp/logs"
         mock_config.quality_gates = []
+        mock_config.error_recovery = ErrorRecoveryConfig()
+        mock_config.plugins = MagicMock(enabled=False)
         mock_config.merge_timeout_seconds = 600
         # Remove merge_max_retries attribute to test default
         del mock_config.merge_max_retries
@@ -952,6 +975,8 @@ class TestTimeoutConfigurationFromConfig:
         mock_config.ports.range_end = 9000
         mock_config.logging.directory = "/tmp/logs"
         mock_config.quality_gates = []
+        mock_config.error_recovery = ErrorRecoveryConfig()
+        mock_config.plugins = MagicMock(enabled=False)
         mock_config.merge_timeout_seconds = 1200  # 20 minutes
         mock_config.merge_max_retries = 5
         mock_config_cls.load.return_value = mock_config
@@ -1002,7 +1027,7 @@ class TestTimeoutConfigurationFromConfig:
         assert mock_config.merge_timeout_seconds == 1200
         assert mock_config.merge_max_retries == 5
 
-    @patch("zerg.orchestrator.time.sleep")
+    @patch("zerg.level_coordinator.time.sleep")
     @patch("zerg.orchestrator.MergeCoordinator")
     @patch("zerg.orchestrator.StateManager")
     @patch("zerg.orchestrator.ZergConfig")
@@ -1021,6 +1046,8 @@ class TestTimeoutConfigurationFromConfig:
         mock_config.ports.range_end = 9000
         mock_config.logging.directory = "/tmp/logs"
         mock_config.quality_gates = []
+        mock_config.error_recovery = ErrorRecoveryConfig()
+        mock_config.plugins = MagicMock(enabled=False)
         mock_config.merge_timeout_seconds = 600
         mock_config.merge_max_retries = 5  # Custom value
         mock_config_cls.load.return_value = mock_config

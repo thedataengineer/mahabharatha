@@ -442,6 +442,7 @@ class TestWorkerExit:
         orch._spawn_worker(0)
         # Must set _running to True for respawn to occur
         orch._running = True
+        orch._worker_manager.running = True
 
         # First spawn call is in setup
         initial_spawn_count = mock_orchestrator_deps["launcher"].spawn.call_count
