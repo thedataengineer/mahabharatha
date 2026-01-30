@@ -259,6 +259,7 @@ class TestOrchestratorWorkerCrashRecovery:
             # Create orchestrator
             orch = Orchestrator(test_fixture.feature)
             orch._running = True
+            orch._worker_manager.running = True
 
             # Spawn initial worker
             worker_state = orch._spawn_worker(0)
