@@ -147,7 +147,7 @@ class GateRunner:
         if required_only:
             gates = [g for g in gates if g.required]
 
-        if not gates:
+        if not gates and not self._plugin_registry:
             logger.info("No gates to run")
             return True, []
 
