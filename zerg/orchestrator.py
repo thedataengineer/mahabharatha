@@ -431,6 +431,7 @@ class Orchestrator:
     def _main_loop(self) -> None:
         """Main orchestration loop."""
         logger.info("Starting main loop")
+        _handled_levels: set[int] = set()  # Guard against re-triggering
 
         while self._running:
             try:
@@ -440,15 +441,23 @@ class Orchestrator:
                 # Check for tasks ready to retry after backoff
                 self._check_retry_ready_tasks()
 
-                # Check level completion
-                if self.levels.is_level_complete(self.levels.current_level):
-                    self._on_level_complete_handler(self.levels.current_level)
+                # Check level completion (guard: only handle each level once)
+                current = self.levels.current_level
+                if (
+                    current > 0
+                    and current not in _handled_levels
+                    and self.levels.is_level_complete(current)
+                ):
+                    _handled_levels.add(current)
+                    self._on_level_complete_handler(current)
 
                     # Advance to next level if possible
                     if self.levels.can_advance():
                         next_level = self.levels.advance_level()
                         if next_level:
                             self._start_level(next_level)
+                            # Respawn workers for the new level
+                            self._respawn_workers_for_level(next_level)
                     else:
                         # Check if all done
                         status = self.levels.get_status()
@@ -456,6 +465,20 @@ class Orchestrator:
                             logger.info("All tasks complete!")
                             self._running = False
                             break
+
+                # Check if all workers are gone but tasks remain
+                active_workers = [
+                    w for w in self._workers.values()
+                    if w.status not in (WorkerStatus.STOPPED, WorkerStatus.CRASHED)
+                ]
+                if not active_workers and self._running:
+                    remaining = self._get_remaining_tasks_for_level(current)
+                    if remaining:
+                        logger.warning(
+                            f"All workers exited but {len(remaining)} tasks remain "
+                            f"at level {current}. Respawning workers."
+                        )
+                        self._respawn_workers_for_level(current)
 
                 # Sleep before next poll
                 time.sleep(self._poll_interval)
@@ -908,10 +931,41 @@ class Orchestrator:
 
         del self._workers[worker_id]
 
+    def _sync_levels_from_state(self) -> None:
+        """Sync LevelController with task completions from disk state.
+
+        Workers write task completions directly to the shared state JSON.
+        The orchestrator's in-memory LevelController must be updated to
+        reflect these completions so level advancement can trigger.
+        """
+        tasks_state = self.state._state.get("tasks", {})
+        for task_id, task_state in tasks_state.items():
+            disk_status = task_state.get("status", "")
+            level_status = self.levels.get_task_status(task_id)
+
+            # Task is complete on disk but not in LevelController
+            if disk_status == TaskStatus.COMPLETE.value and level_status != TaskStatus.COMPLETE.value:
+                self.levels.mark_task_complete(task_id)
+                logger.info(f"Synced task {task_id} completion to LevelController")
+
+            # Task is failed on disk but not in LevelController
+            elif disk_status == TaskStatus.FAILED.value and level_status != TaskStatus.FAILED.value:
+                self.levels.mark_task_failed(task_id)
+                logger.info(f"Synced task {task_id} failure to LevelController")
+
+            # Task is in progress on disk but not in LevelController
+            elif disk_status in (TaskStatus.IN_PROGRESS.value, TaskStatus.CLAIMED.value):
+                if level_status not in (TaskStatus.IN_PROGRESS.value, TaskStatus.CLAIMED.value):
+                    worker_id = task_state.get("worker_id")
+                    self.levels.mark_task_in_progress(task_id, worker_id)
+
     def _poll_workers(self) -> None:
         """Poll worker status and handle completions."""
         # Reload state from disk to pick up worker-written changes
         self.state.load()
+
+        # Sync disk state to in-memory LevelController
+        self._sync_levels_from_state()
 
         # Check container health (timeout detection)
         self._check_container_health()
@@ -1118,6 +1172,68 @@ class Orchestrator:
         """
         pending = self.levels.get_pending_tasks_for_level(level)
         return pending
+
+    def _respawn_workers_for_level(self, level: int) -> int:
+        """Respawn workers for a new level.
+
+        After a level completes and the next level starts, workers may have
+        already exited. This method spawns fresh workers to execute the new
+        level's tasks.
+
+        Args:
+            level: Level number that needs workers
+
+        Returns:
+            Number of workers successfully spawned
+        """
+        # Determine how many workers we need
+        remaining = self._get_remaining_tasks_for_level(level)
+        if not remaining:
+            return 0
+
+        # Count still-active workers
+        active = [
+            wid for wid, w in self._workers.items()
+            if w.status not in (WorkerStatus.STOPPED, WorkerStatus.CRASHED)
+        ]
+
+        # Determine target worker count from original assignments
+        target_count = len(self.assigner.assignments) if self.assigner else 2
+        need = min(target_count - len(active), len(remaining))
+
+        if need <= 0:
+            return 0
+
+        logger.info(f"Respawning {need} workers for level {level} ({len(remaining)} tasks remaining)")
+
+        spawned = 0
+        # Find available worker IDs (prefer reusing IDs from stopped workers)
+        used_ids = set(self._workers.keys())
+        available_ids = [i for i in range(target_count) if i not in used_ids]
+
+        # Also add IDs from stopped/crashed workers after cleaning them out
+        stopped_ids = [
+            wid for wid, w in list(self._workers.items())
+            if w.status in (WorkerStatus.STOPPED, WorkerStatus.CRASHED)
+        ]
+        for wid in stopped_ids:
+            del self._workers[wid]
+            available_ids.append(wid)
+
+        available_ids = sorted(set(available_ids))[:need]
+
+        for worker_id in available_ids:
+            try:
+                self._spawn_worker(worker_id)
+                spawned += 1
+            except Exception as e:
+                logger.error(f"Failed to respawn worker {worker_id}: {e}")
+
+        if spawned > 0:
+            # Wait for new workers to initialize
+            self._wait_for_initialization(timeout=300)
+
+        return spawned
 
     def _print_plan(self, assignments: Any) -> None:
         """Print execution plan (for dry run).
