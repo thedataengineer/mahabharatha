@@ -971,6 +971,46 @@ class Orchestrator:
                     worker_id = task_state.get("worker_id")
                     self.levels.mark_task_in_progress(task_id, worker_id)
 
+    def _reassign_stranded_tasks(self) -> None:
+        """Reassign tasks stuck on stopped/crashed workers.
+
+        When a worker exits, tasks pre-assigned to it (via worker_id in state)
+        remain stuck because claim_task() blocks cross-worker claims.
+        This method clears the worker_id for pending tasks whose assigned
+        worker is no longer active, allowing any worker to claim them.
+        """
+        tasks_state = self.state._state.get("tasks", {})
+        workers_state = self.state._state.get("workers", {})
+
+        # Build set of active worker IDs
+        active_worker_ids = set()
+        for wid_str, wdata in workers_state.items():
+            status = wdata.get("status", "")
+            if status not in ("stopped", "crashed"):
+                active_worker_ids.add(int(wid_str))
+
+        # Also check in-memory workers
+        for wid, w in self._workers.items():
+            if w.status not in (WorkerStatus.STOPPED, WorkerStatus.CRASHED):
+                active_worker_ids.add(wid)
+
+        for task_id, task_state in tasks_state.items():
+            status = task_state.get("status", "")
+            worker_id = task_state.get("worker_id")
+
+            # Only reassign pending/todo tasks with a dead worker assignment
+            if status in (TaskStatus.PENDING.value, TaskStatus.TODO.value, "pending", "todo"):
+                if worker_id is not None and worker_id not in active_worker_ids:
+                    # Clear the worker assignment so any worker can claim it
+                    task_state["worker_id"] = None
+                    logger.info(
+                        f"Reassigned stranded task {task_id} "
+                        f"(was worker {worker_id}, now unassigned)"
+                    )
+
+        # Persist changes
+        self.state.save()
+
     def _poll_workers(self) -> None:
         """Poll worker status and handle completions."""
         # Reload state from disk to pick up worker-written changes
@@ -978,6 +1018,9 @@ class Orchestrator:
 
         # Sync disk state to in-memory LevelController
         self._sync_levels_from_state()
+
+        # Reassign tasks stuck on dead workers
+        self._reassign_stranded_tasks()
 
         # Check container health (timeout detection)
         self._check_container_health()
