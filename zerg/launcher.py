@@ -1004,10 +1004,10 @@ class ContainerLauncher(WorkerLauncher):
             return WorkerStatus.STOPPED
 
         try:
-            # Check container state
+            # Check container state and health
             result = subprocess.run(
                 ["docker", "inspect", "-f",
-                 "{{.State.Running}},{{.State.ExitCode}}",
+                 "{{.State.Running}},{{.State.ExitCode}},{{.State.Health.Status}}",
                  container_id],
                 capture_output=True,
                 text=True,
@@ -1018,9 +1018,19 @@ class ContainerLauncher(WorkerLauncher):
                 handle.status = WorkerStatus.STOPPED
                 return WorkerStatus.STOPPED
 
-            running, exit_code = result.stdout.strip().split(",")
+            parts = result.stdout.strip().split(",")
+            running = parts[0]
+            exit_code = parts[1]
+            health = parts[2] if len(parts) > 2 else ""
 
             if running == "true":
+                # Container is running, but check if worker process exited
+                # (the CMD sleep keeps container alive after worker exits).
+                # Docker HEALTHCHECK tests /tmp/.zerg-alive marker file.
+                if health == "unhealthy":
+                    logger.info(f"Worker {worker_id} container unhealthy (worker process exited)")
+                    handle.status = WorkerStatus.STOPPED
+                    return WorkerStatus.STOPPED
                 if handle.status == WorkerStatus.INITIALIZING:
                     handle.status = WorkerStatus.RUNNING
                 return handle.status
