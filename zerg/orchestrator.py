@@ -371,6 +371,11 @@ class Orchestrator:
                     lvl.completed_tasks = lvl.total_tasks
                     lvl.failed_tasks = 0
                     lvl.status = "complete"
+                    # Also mark individual tasks so _sync_levels_from_state
+                    # won't double-count them when it sees them complete on disk.
+                    for tid, task in self.levels._tasks.items():
+                        if task.get("level") == prev:
+                            task["status"] = TaskStatus.COMPLETE.value
                     logger.info(f"Pre-marked level {prev} as complete (resuming from {effective_start})")
 
         self._start_level(effective_start)
