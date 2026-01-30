@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from zerg.log_aggregator import LogAggregator, LogQuery
+from zerg.log_aggregator import LogAggregator
 
 
 def _write_jsonl(path: Path, entries: list[dict]) -> None:

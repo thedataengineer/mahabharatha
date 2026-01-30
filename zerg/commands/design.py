@@ -139,7 +139,6 @@ def design(
             task_graph_path,
             feature,
             max_minutes=max_task_minutes,
-            min_minutes=min_task_minutes,
         )
         console.print(f"  [green]✓[/green] Created {task_graph_path}")
 
@@ -352,7 +351,6 @@ def create_task_graph_template(
     path: Path,
     feature: str,
     max_minutes: int = 30,
-    min_minutes: int = 5,
 ) -> None:
     """Create task-graph.json template.
 
@@ -360,7 +358,6 @@ def create_task_graph_template(
         path: Output path
         feature: Feature name
         max_minutes: Max minutes per task
-        min_minutes: Min minutes per task
     """
     timestamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
