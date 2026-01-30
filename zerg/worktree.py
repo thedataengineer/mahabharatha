@@ -196,8 +196,8 @@ class WorktreeManager:
         if not result.stdout.strip():
             self._run_git("branch", branch, base_branch)
 
-        # Create worktree
-        self._run_git("worktree", "add", str(path), branch)
+        # Create worktree (--force handles leftover directories from prior runs)
+        self._run_git("worktree", "add", "--force", str(path), branch)
 
         logger.info(f"Created worktree at {path} on branch {branch}")
 
