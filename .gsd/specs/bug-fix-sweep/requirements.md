@@ -1,21 +1,22 @@
 # Requirements: bug-fix-sweep
 
-**Status: APPROVED**
+**Status**: APPROVED
+**Feature**: bug-fix-sweep
+**Created**: 2026-01-30
 
 ## Summary
 
-Systematic fix of 11 outstanding bugs across the ZERG codebase, ranging from HIGH (NotImplementedError stubs, bare except clauses) to LOW (stale state files, hardcoded paths).
+Fix 5 pre-existing test failures across 3 root causes.
 
-## Bugs
+## Failures
 
-1. **NotImplementedError stubs** — `analyze.py:BaseChecker.check()`, `refactor.py:BaseTransform.analyze()/apply()` raise NotImplementedError as abstract base classes but aren't using ABC
-2. **Bare `except Exception: pass`** — 24 locations silently swallow errors without logging
-3. **Missing .gitignore entries** — `.coverage`, `htmlcov/`, `.pytest_cache/` not ignored
-4. **Stale STATE.md** — Contains error from a bug that was already fixed
-5. **Flaky test** — `test_rebalance_multiple_failed_tasks` has isolation issues
-6. **5 hanging tests** — `claim_next_task` / `start` tests in `tests/unit/test_worker_protocol.py` don't mock `time.sleep`
-7. **E2E test timeout** — `test_launcher_spawn_creates_container` needs longer timeout
-8. **E2E test borderline** — `test_recoverable_error_allows_resume` borderline 30s
-9. **Hardcoded container paths** — `/home/worker`, `/tmp/.zerg-alive` in launcher.py
-10. **Silent lock release** — `state.py` file lock unlock in bare except
-11. **Debug print statements** — `status.py` uses `console.print` where `logger` would be appropriate
+### Bug 1: StateManager TOCTOU race condition (2 tests)
+- `test_concurrent_claims` - 5 threads claim same task, multiple succeed
+- `test_concurrent_event_appending` - 10 threads append events, some lost
+
+### Bug 2: VerificationExecutor bypasses validation (1 test)
+- `test_verify_invalid_command` - `trust_commands=True` skips dangerous pattern checks
+
+### Bug 3: WorkerProtocol tests hang on 120s polling (2 tests)
+- `test_start_sets_running_worker_state` - hangs in claim_next_task()
+- `test_start_clean_exit_sets_stopped` - hangs in claim_next_task()
