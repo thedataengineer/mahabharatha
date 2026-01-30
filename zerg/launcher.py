@@ -1004,10 +1004,10 @@ class ContainerLauncher(WorkerLauncher):
             return WorkerStatus.STOPPED
 
         try:
-            # Check container state and health
+            # Check container state
             result = subprocess.run(
                 ["docker", "inspect", "-f",
-                 "{{.State.Running}},{{.State.ExitCode}},{{.State.Health.Status}}",
+                 "{{.State.Running}},{{.State.ExitCode}}",
                  container_id],
                 capture_output=True,
                 text=True,
@@ -1018,19 +1018,27 @@ class ContainerLauncher(WorkerLauncher):
                 handle.status = WorkerStatus.STOPPED
                 return WorkerStatus.STOPPED
 
-            parts = result.stdout.strip().split(",")
-            running = parts[0]
-            exit_code = parts[1]
-            health = parts[2] if len(parts) > 2 else ""
+            running, exit_code = result.stdout.strip().split(",")
 
             if running == "true":
-                # Container is running, but check if worker process exited
-                # (the CMD sleep keeps container alive after worker exits).
-                # Docker HEALTHCHECK tests /tmp/.zerg-alive marker file.
-                if health == "unhealthy":
-                    logger.info(f"Worker {worker_id} container unhealthy (worker process exited)")
-                    handle.status = WorkerStatus.STOPPED
-                    return WorkerStatus.STOPPED
+                # Container is running, but the CMD sleep keeps it alive after
+                # the worker process exits. Check /tmp/.zerg-alive marker file
+                # which the entry script removes on exit.
+                # Only check after a grace period (marker created during init).
+                if handle.started_at:
+                    from datetime import timedelta
+                    age = datetime.now() - handle.started_at
+                    if age > timedelta(seconds=60):
+                        alive_check = subprocess.run(
+                            ["docker", "exec", container_id,
+                             "test", "-f", "/tmp/.zerg-alive"],
+                            capture_output=True,
+                            timeout=5,
+                        )
+                        if alive_check.returncode != 0:
+                            logger.info(f"Worker {worker_id} process exited (marker file absent)")
+                            handle.status = WorkerStatus.STOPPED
+                            return WorkerStatus.STOPPED
                 if handle.status == WorkerStatus.INITIALIZING:
                     handle.status = WorkerStatus.RUNNING
                 return handle.status
