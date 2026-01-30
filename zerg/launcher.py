@@ -3,6 +3,7 @@
 Provides pluggable launcher backends for spawning and managing worker processes.
 """
 
+import asyncio
 import os
 import subprocess
 import sys
@@ -331,6 +332,76 @@ class WorkerLauncher(ABC):
 
         return results
 
+    async def spawn_async(
+        self,
+        worker_id: int,
+        feature: str,
+        worktree_path: Path,
+        branch: str,
+        env: dict[str, str] | None = None,
+    ) -> SpawnResult:
+        """Spawn a new worker process asynchronously.
+
+        Default implementation falls back to sync spawn via asyncio.to_thread().
+        Subclasses should override for native async behavior.
+
+        Args:
+            worker_id: Unique worker identifier
+            feature: Feature name being worked on
+            worktree_path: Path to worker's git worktree
+            branch: Git branch for worker
+            env: Additional environment variables
+
+        Returns:
+            SpawnResult with handle or error
+        """
+        return await asyncio.to_thread(
+            self.spawn, worker_id, feature, worktree_path, branch, env
+        )
+
+    async def terminate_async(self, worker_id: int, force: bool = False) -> bool:
+        """Terminate a worker asynchronously.
+
+        Default implementation falls back to sync terminate via asyncio.to_thread().
+        Subclasses should override for native async behavior.
+
+        Args:
+            worker_id: Worker to terminate
+            force: Force termination without graceful shutdown
+
+        Returns:
+            True if termination succeeded
+        """
+        return await asyncio.to_thread(self.terminate, worker_id, force)
+
+    async def wait_all_async(self, worker_ids: list[int]) -> dict[int, WorkerStatus]:
+        """Wait for multiple workers to complete asynchronously.
+
+        Uses asyncio.gather() to poll all workers concurrently.
+
+        Args:
+            worker_ids: List of worker IDs to wait for
+
+        Returns:
+            Dictionary of worker_id to final WorkerStatus
+        """
+
+        async def _wait_single(wid: int) -> tuple[int, WorkerStatus]:
+            """Wait for a single worker to finish."""
+            while True:
+                status = await asyncio.to_thread(self.monitor, wid)
+                if status not in (
+                    WorkerStatus.INITIALIZING,
+                    WorkerStatus.READY,
+                    WorkerStatus.RUNNING,
+                    WorkerStatus.IDLE,
+                ):
+                    return wid, status
+                await asyncio.sleep(1.0)
+
+        results = await asyncio.gather(*[_wait_single(wid) for wid in worker_ids])
+        return dict(results)
+
 
 class SubprocessLauncher(WorkerLauncher):
     """Launch workers as subprocess instances.
@@ -611,6 +682,202 @@ class SubprocessLauncher(WorkerLauncher):
             time.sleep(1)
 
         return {wid: h.status for wid, h in self._workers.items()}
+
+    async def spawn_async(
+        self,
+        worker_id: int,
+        feature: str,
+        worktree_path: Path,
+        branch: str,
+        env: dict[str, str] | None = None,
+    ) -> SpawnResult:
+        """Spawn a new worker subprocess asynchronously.
+
+        Uses asyncio.create_subprocess_exec() instead of subprocess.Popen
+        for non-blocking process creation.
+
+        Args:
+            worker_id: Unique worker identifier
+            feature: Feature name being worked on
+            worktree_path: Path to worker's git worktree
+            branch: Git branch for worker
+            env: Additional environment variables
+
+        Returns:
+            SpawnResult with handle or error
+        """
+        try:
+            # Build environment with ZERG-specific vars
+            repo_path = Path.cwd().resolve()
+            worker_env = os.environ.copy()
+            log_dir = repo_path / LOGS_WORKERS_DIR.rsplit("/", 1)[0]
+            worker_env.update({
+                "ZERG_WORKER_ID": str(worker_id),
+                "ZERG_FEATURE": feature,
+                "ZERG_WORKTREE": str(worktree_path),
+                "ZERG_BRANCH": branch,
+                "ZERG_SPEC_DIR": str(worktree_path / ".gsd" / "specs" / feature),
+                "ZERG_STATE_DIR": str(repo_path / ".zerg" / "state"),
+                "ZERG_REPO_PATH": str(repo_path),
+                "ZERG_LOG_DIR": str(log_dir),
+            })
+
+            # Ensure structured log directories exist
+            (repo_path / LOGS_WORKERS_DIR).mkdir(parents=True, exist_ok=True)
+            (repo_path / LOGS_TASKS_DIR).mkdir(parents=True, exist_ok=True)
+
+            # Validate additional env vars from config
+            if self.config.env_vars:
+                validated_config_env = validate_env_vars(self.config.env_vars)
+                worker_env.update(validated_config_env)
+            # Validate additional env vars from caller
+            if env:
+                validated_env = validate_env_vars(env)
+                worker_env.update(validated_env)
+
+            # Build command arguments (first element is the program)
+            program = sys.executable
+            args = [
+                "-m", "zerg.worker_main",
+                "--worker-id", str(worker_id),
+                "--feature", feature,
+                "--worktree", str(worktree_path),
+                "--branch", branch,
+            ]
+
+            # Set working directory
+            cwd = str(self.config.working_dir or worktree_path)
+
+            # Set up log file if configured
+            stdout_target: int | None = asyncio.subprocess.PIPE
+            stderr_target: int | None = asyncio.subprocess.PIPE
+            stdout_file = None
+            stderr_file = None
+            if self.config.log_dir:
+                if not isinstance(worker_id, int) or worker_id < 0:
+                    raise ValueError(f"Invalid worker_id: {worker_id}")
+                self.config.log_dir.mkdir(parents=True, exist_ok=True)
+                stdout_path = self.config.log_dir / f"worker-{int(worker_id)}.stdout.log"
+                stderr_path = self.config.log_dir / f"worker-{int(worker_id)}.stderr.log"
+                stdout_file = stdout_path.open("w")  # noqa: SIM115
+                stderr_file = stderr_path.open("w")  # noqa: SIM115
+                stdout_target = stdout_file.fileno()
+                stderr_target = stderr_file.fileno()
+
+            # Spawn process asynchronously
+            process = await asyncio.create_subprocess_exec(
+                program, *args,
+                env=worker_env,
+                cwd=cwd,
+                stdout=stdout_target,
+                stderr=stderr_target,
+            )
+
+            # Create handle
+            handle = WorkerHandle(
+                worker_id=worker_id,
+                pid=process.pid,
+                status=WorkerStatus.INITIALIZING,
+            )
+
+            # Store references - store the async process for wait_async
+            self._workers[worker_id] = handle
+            if not hasattr(self, "_async_processes"):
+                self._async_processes: dict[int, asyncio.subprocess.Process] = {}
+            self._async_processes[worker_id] = process
+            self._output_buffers[worker_id] = []
+
+            logger.info(f"Spawned async worker {worker_id} with PID {process.pid}")
+            return SpawnResult(success=True, worker_id=worker_id, handle=handle)
+
+        except Exception as e:
+            logger.error(f"Failed to spawn async worker {worker_id}: {e}")
+            return SpawnResult(success=False, worker_id=worker_id, error=str(e))
+
+    async def wait_async(self, worker_id: int) -> WorkerStatus:
+        """Wait for a worker subprocess to complete asynchronously.
+
+        Uses process.wait() on the async process handle if available,
+        otherwise falls back to polling via asyncio.to_thread().
+
+        Args:
+            worker_id: Worker to wait for
+
+        Returns:
+            Final worker status
+        """
+        if hasattr(self, "_async_processes") and worker_id in self._async_processes:
+            process = self._async_processes[worker_id]
+            await process.wait()
+
+            handle = self._workers.get(worker_id)
+            if handle:
+                exit_code = process.returncode
+                handle.exit_code = exit_code
+                if exit_code == 0:
+                    handle.status = WorkerStatus.STOPPED
+                elif exit_code == 2:
+                    handle.status = WorkerStatus.CHECKPOINTING
+                elif exit_code == 3:
+                    handle.status = WorkerStatus.BLOCKED
+                else:
+                    handle.status = WorkerStatus.CRASHED
+                return handle.status
+
+        return await asyncio.to_thread(self.monitor, worker_id)
+
+    async def terminate_async(self, worker_id: int, force: bool = False) -> bool:
+        """Terminate a worker subprocess asynchronously.
+
+        If an async process handle exists, terminates it directly.
+        Otherwise falls back to sync terminate via asyncio.to_thread().
+
+        Args:
+            worker_id: Worker to terminate
+            force: Force termination with SIGKILL
+
+        Returns:
+            True if termination succeeded
+        """
+        if hasattr(self, "_async_processes") and worker_id in self._async_processes:
+            process = self._async_processes[worker_id]
+            handle = self._workers.get(worker_id)
+
+            if not handle:
+                return False
+
+            try:
+                if force:
+                    process.kill()
+                else:
+                    process.terminate()
+
+                try:
+                    await asyncio.wait_for(process.wait(), timeout=10)
+                except asyncio.TimeoutError:
+                    process.kill()
+                    await process.wait()
+
+                handle.status = WorkerStatus.STOPPED
+                handle.exit_code = process.returncode
+
+                logger.info(
+                    f"Async terminated worker {worker_id} "
+                    f"(exit code: {handle.exit_code})"
+                )
+                return True
+
+            except Exception as e:
+                logger.error(f"Failed to async terminate worker {worker_id}: {e}")
+                return False
+
+            finally:
+                if worker_id in self._async_processes:
+                    del self._async_processes[worker_id]
+                if worker_id in self._workers:
+                    del self._workers[worker_id]
+
+        return await asyncio.to_thread(self.terminate, worker_id, force)
 
 
 class ContainerLauncher(WorkerLauncher):
@@ -1210,3 +1477,291 @@ class ContainerLauncher(WorkerLauncher):
         except Exception as e:
             logger.debug(f"Container check failed: {e}")
             return False
+
+    async def spawn_async(
+        self,
+        worker_id: int,
+        feature: str,
+        worktree_path: Path,
+        branch: str,
+        env: dict[str, str] | None = None,
+    ) -> SpawnResult:
+        """Spawn a new worker container asynchronously.
+
+        Uses asyncio.create_subprocess_exec() for docker commands
+        instead of blocking subprocess.run().
+
+        Args:
+            worker_id: Unique worker identifier
+            feature: Feature name being worked on
+            worktree_path: Path to worker's git worktree
+            branch: Git branch for worker
+            env: Additional environment variables
+
+        Returns:
+            SpawnResult with handle or error
+        """
+        try:
+            # Validate worker_id
+            if not isinstance(worker_id, int) or worker_id < 0:
+                raise ValueError(f"Invalid worker_id: {worker_id}")
+
+            container_name = f"{self.CONTAINER_PREFIX}-{int(worker_id)}"
+
+            # Remove any existing container with the same name
+            proc = await asyncio.create_subprocess_exec(
+                "docker", "rm", "-f", container_name,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            await proc.communicate()
+
+            # Build environment
+            container_env: dict[str, str] = {
+                "ZERG_WORKER_ID": str(worker_id),
+                "ZERG_FEATURE": feature,
+                "ZERG_WORKTREE": "/workspace",
+                "ZERG_BRANCH": branch,
+                "ZERG_SPEC_DIR": f"/workspace/.gsd/specs/{feature}",
+            }
+
+            # Add API key from environment or .env file
+            api_key = os.environ.get("ANTHROPIC_API_KEY")
+            if not api_key:
+                env_file = Path(".env")
+                if env_file.exists():
+                    for line in env_file.read_text().splitlines():
+                        line = line.strip()
+                        if line.startswith("ANTHROPIC_API_KEY"):
+                            _, _, val = line.partition("=")
+                            api_key = val.strip().strip("'\"")
+                            break
+            if api_key:
+                container_env["ANTHROPIC_API_KEY"] = api_key
+
+            # Validate and add additional env vars
+            if self.config.env_vars:
+                validated = validate_env_vars(self.config.env_vars)
+                container_env.update(validated)
+            if env:
+                validated = validate_env_vars(env)
+                container_env.update(validated)
+
+            # Start container asynchronously
+            container_id = await self._start_container_async(
+                container_name=container_name,
+                worktree_path=worktree_path,
+                env=container_env,
+            )
+
+            if not container_id:
+                return SpawnResult(
+                    success=False,
+                    worker_id=worker_id,
+                    error="Failed to start container",
+                )
+
+            # Create handle
+            handle = WorkerHandle(
+                worker_id=worker_id,
+                container_id=container_id,
+                status=WorkerStatus.INITIALIZING,
+            )
+
+            # Store references
+            self._workers[worker_id] = handle
+            self._container_ids[worker_id] = container_id
+
+            # Wait for container ready (fall back to sync for complex checks)
+            ready = await asyncio.to_thread(self._wait_ready, container_id, 30)
+            if not ready:
+                return SpawnResult(
+                    success=False,
+                    worker_id=worker_id,
+                    error="Container failed to become ready",
+                )
+
+            # Verify worker process
+            verified = await asyncio.to_thread(
+                self._verify_worker_process, container_id, 120.0
+            )
+            if not verified:
+                logger.error(f"Worker process failed to start for worker {worker_id}")
+                await asyncio.to_thread(
+                    self._cleanup_failed_container, container_id, worker_id
+                )
+                return SpawnResult(
+                    success=False,
+                    worker_id=worker_id,
+                    error="Worker process failed to start",
+                )
+
+            handle.status = WorkerStatus.RUNNING
+            logger.info(f"Spawned async container {container_name} ({container_id[:12]})")
+
+            return SpawnResult(success=True, worker_id=worker_id, handle=handle)
+
+        except Exception as e:
+            logger.error(f"Failed to spawn async container for worker {worker_id}: {e}")
+            return SpawnResult(success=False, worker_id=worker_id, error=str(e))
+
+    async def _start_container_async(
+        self,
+        container_name: str,
+        worktree_path: Path,
+        env: dict[str, str],
+    ) -> str | None:
+        """Start a Docker container asynchronously.
+
+        Args:
+            container_name: Name for the container
+            worktree_path: Host path to mount as workspace
+            env: Environment variables for container
+
+        Returns:
+            Container ID or None on failure
+        """
+        # Build docker run command
+        main_repo = worktree_path.parent.parent.parent
+        state_dir = main_repo / ".zerg" / "state"
+
+        worktree_name = worktree_path.name
+        main_git_dir = main_repo / ".git"
+        git_worktree_dir = main_git_dir / "worktrees" / worktree_name
+
+        claude_config_dir = Path.home() / ".claude"
+        uid = os.getuid()
+        gid = os.getgid()
+        home_dir = CONTAINER_HOME_DIR
+
+        cmd_args = [
+            "run", "-d",
+            "--name", container_name,
+            "--user", f"{uid}:{gid}",
+            "-v", f"{worktree_path.absolute()}:/workspace",
+            "-v", f"{state_dir.absolute()}:/workspace/.zerg/state",
+        ]
+
+        if main_git_dir.exists() and git_worktree_dir.exists():
+            cmd_args.extend(["-v", f"{main_git_dir.absolute()}:/repo/.git"])
+            cmd_args.extend(["-v", f"{git_worktree_dir.absolute()}:/workspace/.git-worktree"])
+            env["ZERG_GIT_WORKTREE_DIR"] = "/workspace/.git-worktree"
+            env["ZERG_GIT_MAIN_DIR"] = "/repo/.git"
+
+        if claude_config_dir.exists():
+            cmd_args.extend(["-v", f"{claude_config_dir.absolute()}:{home_dir}/.claude"])
+            cmd_args.extend(["-e", f"HOME={home_dir}"])
+
+        claude_config_file = Path.home() / ".claude.json"
+        if claude_config_file.exists():
+            cmd_args.extend(["-v", f"{claude_config_file.absolute()}:{home_dir}/.claude.json"])
+
+        cmd_args.extend(["--memory", self.memory_limit])
+        cmd_args.extend(["--cpus", str(self.cpu_limit)])
+
+        cmd_args.extend([
+            "-w", "/workspace",
+            "--network", self.network,
+        ])
+
+        for key, value in env.items():
+            cmd_args.extend(["-e", f"{key}={value}"])
+
+        cmd_args.extend([
+            self.image_name,
+            "bash", "-c",
+            f"bash /workspace/{self.WORKER_ENTRY_SCRIPT} 2>&1; "
+            f"echo 'Worker entry exited with code '$?; sleep infinity",
+        ])
+
+        try:
+            proc = await asyncio.create_subprocess_exec(
+                "docker", *cmd_args,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=60)
+
+            if proc.returncode == 0:
+                container_id = stdout.decode().strip()
+                return container_id
+            else:
+                logger.error(f"Docker run failed: {stderr.decode()}")
+                return None
+
+        except asyncio.TimeoutError:
+            logger.error("Docker run timed out")
+            return None
+        except Exception as e:
+            logger.error(f"Docker run error: {e}")
+            return None
+
+    async def terminate_async(self, worker_id: int, force: bool = False) -> bool:
+        """Terminate a worker container asynchronously.
+
+        Uses asyncio.create_subprocess_exec() for docker stop/kill commands.
+
+        Args:
+            worker_id: Worker to terminate
+            force: Force termination (docker kill vs docker stop)
+
+        Returns:
+            True if termination succeeded
+        """
+        container_id = self._container_ids.get(worker_id)
+        handle = self._workers.get(worker_id)
+
+        if not container_id or not handle:
+            return False
+
+        try:
+            action = "kill" if force else "stop"
+            timeout = 10 if force else 30
+
+            proc = await asyncio.create_subprocess_exec(
+                "docker", action, container_id,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            stdout, stderr = await asyncio.wait_for(
+                proc.communicate(), timeout=timeout
+            )
+
+            if proc.returncode == 0:
+                handle.status = WorkerStatus.STOPPED
+                logger.info(f"Async terminated container for worker {worker_id}")
+
+                # Remove container
+                rm_proc = await asyncio.create_subprocess_exec(
+                    "docker", "rm", "-f", container_id,
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE,
+                )
+                await asyncio.wait_for(rm_proc.communicate(), timeout=10)
+
+                return True
+            else:
+                logger.error(f"Failed to stop container: {stderr.decode()}")
+                return False
+
+        except asyncio.TimeoutError:
+            # Force kill on timeout
+            kill_proc = await asyncio.create_subprocess_exec(
+                "docker", "kill", container_id,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            await kill_proc.communicate()
+            handle.status = WorkerStatus.STOPPED
+            return True
+
+        except Exception as e:
+            logger.error(f"Failed to async terminate container: {e}")
+            return False
+
+        finally:
+            # Clean up references
+            if worker_id in self._container_ids:
+                del self._container_ids[worker_id]
+            if worker_id in self._workers:
+                del self._workers[worker_id]
