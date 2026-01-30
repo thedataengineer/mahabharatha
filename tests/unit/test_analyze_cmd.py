@@ -170,16 +170,14 @@ class TestAnalysisResult:
 class TestBaseChecker:
     """Tests for BaseChecker base class."""
 
-    def test_check_raises_not_implemented(self) -> None:
-        """Test that check method raises NotImplementedError."""
-        checker = BaseChecker()
-        with pytest.raises(NotImplementedError):
-            checker.check(["file.py"])
+    def test_cannot_instantiate_abstract_class(self) -> None:
+        """Test that BaseChecker cannot be instantiated directly (abstract)."""
+        with pytest.raises(TypeError, match="abstract"):
+            BaseChecker()
 
     def test_name_attribute(self) -> None:
         """Test that base checker has name attribute."""
-        checker = BaseChecker()
-        assert checker.name == "base"
+        assert BaseChecker.name == "base"
 
 
 # =============================================================================

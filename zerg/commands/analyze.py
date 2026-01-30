@@ -3,6 +3,7 @@
 import contextlib
 import json
 import shlex
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
@@ -52,14 +53,15 @@ class AnalysisResult:
         return f"{self.check_type.name}: {status} (score: {self.score:.1f})"
 
 
-class BaseChecker:
+class BaseChecker(ABC):
     """Base class for analysis checkers."""
 
     name: str = "base"
 
+    @abstractmethod
     def check(self, files: list[str]) -> AnalysisResult:
         """Run the check on given files."""
-        raise NotImplementedError
+        ...
 
 
 class LintChecker(BaseChecker):

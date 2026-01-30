@@ -303,19 +303,10 @@ class TestBaseTransform:
         """Test name class attribute."""
         assert BaseTransform.name == "base"
 
-    def test_analyze_not_implemented(self) -> None:
-        """Test analyze raises NotImplementedError."""
-        transform = BaseTransform()
-
-        with pytest.raises(NotImplementedError):
-            transform.analyze("content", "file.py")
-
-    def test_apply_not_implemented(self) -> None:
-        """Test apply raises NotImplementedError."""
-        transform = BaseTransform()
-
-        with pytest.raises(NotImplementedError):
-            transform.apply("content", [])
+    def test_cannot_instantiate_abstract_class(self) -> None:
+        """Test that BaseTransform cannot be instantiated directly (abstract)."""
+        with pytest.raises(TypeError, match="abstract"):
+            BaseTransform()
 
 
 # =============================================================================

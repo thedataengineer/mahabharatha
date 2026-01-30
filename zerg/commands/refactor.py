@@ -2,6 +2,7 @@
 
 import json
 import re
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
@@ -87,18 +88,20 @@ class RefactorResult:
         return result
 
 
-class BaseTransform:
+class BaseTransform(ABC):
     """Base class for refactoring transforms."""
 
     name: str = "base"
 
+    @abstractmethod
     def analyze(self, content: str, filename: str) -> list[RefactorSuggestion]:
         """Analyze content and return suggestions."""
-        raise NotImplementedError
+        ...
 
+    @abstractmethod
     def apply(self, content: str, suggestions: list[RefactorSuggestion]) -> str:
         """Apply suggestions to content."""
-        raise NotImplementedError
+        ...
 
 
 class DeadCodeTransform(BaseTransform):
