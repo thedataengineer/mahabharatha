@@ -1,0 +1,452 @@
+{
+  "feature": "troubleshoot-enhancement",
+  "version": "2.0",
+  "generated": "2026-01-30T00:00:00Z",
+  "total_tasks": 15,
+  "estimated_duration_minutes": 180,
+  "max_parallelization": 5,
+
+  "tasks": [
+    {
+      "id": "TE-L1-001",
+      "title": "Create diagnostic types and data models",
+      "description": "Create zerg/diagnostics/types.py with all shared types: ErrorSeverity, ErrorCategory, ErrorFingerprint, TimelineEvent, Evidence, ScoredHypothesis, DiagnosticContext, and related dataclasses. These are the foundation types used by all other diagnostic modules. Import patterns: use dataclasses, enums, typing. Follow existing patterns from zerg/diagnostics/state_introspector.py for dataclass style (to_dict methods, field factories). ErrorFingerprint must include: hash (str), language (str - python/javascript/go/rust/java/cpp), error_type (str), message_template (str), file (str), line (int), column (int), function (str), module (str), chain (list of ErrorFingerprint for caused-by). ErrorCategory enum: WORKER_FAILURE, TASK_FAILURE, STATE_CORRUPTION, INFRASTRUCTURE, CODE_ERROR, DEPENDENCY, MERGE_CONFLICT, ENVIRONMENT, CONFIGURATION, UNKNOWN. Evidence dataclass: description (str), source (str - log/state/git/system/code), confidence (float 0-1), data (dict). ScoredHypothesis: description (str), category (ErrorCategory), prior_probability (float), evidence_for (list[Evidence]), evidence_against (list[Evidence]), posterior_probability (float), test_command (str), test_result (str|None), suggested_fix (str). TimelineEvent: timestamp (str), worker_id (int), event_type (str), message (str), source_file (str), line_number (int), correlation_id (str). DiagnosticContext: feature (str), worker_id (int|None), error_text (str), stack_trace (str), deep (bool), auto_fix (bool), interactive (bool), verbose (bool). All dataclasses must have to_dict() methods. Use __all__ to export all public types.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": ["zerg/diagnostics/types.py"],
+        "modify": [],
+        "read": ["zerg/diagnostics/state_introspector.py", "zerg/diagnostics/recovery.py"]
+      },
+      "acceptance_criteria": [
+        "All types defined with proper type hints",
+        "All dataclasses have to_dict() methods",
+        "__all__ exports all public types",
+        "No import errors when importing from zerg.diagnostics.types",
+        "ruff check passes",
+        "mypy passes"
+      ],
+      "verification": {
+        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -c 'from zerg.diagnostics.types import ErrorSeverity, ErrorCategory, ErrorFingerprint, TimelineEvent, Evidence, ScoredHypothesis, DiagnosticContext; print(\"OK\")' && python -m ruff check zerg/diagnostics/types.py && python -m mypy zerg/diagnostics/types.py --ignore-missing-imports",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 15
+    },
+    {
+      "id": "TE-L1-002",
+      "title": "Create failure pattern knowledge base",
+      "description": "Create zerg/diagnostics/knowledge_base.py containing a comprehensive knowledge base of known failure patterns for ZERG and general software debugging. This module provides the prior probabilities and known patterns for the hypothesis engine. Structure: KnownPattern dataclass with fields: name (str), category (str matching ErrorCategory values), symptoms (list[str] - regex patterns), prior_probability (float 0-1), common_causes (list[str]), fix_templates (list[str]), related_patterns (list[str]). Create KNOWN_PATTERNS as a list[KnownPattern] containing at minimum 25 patterns covering: Python errors (ImportError, TypeError, ValueError, KeyError, AttributeError, RecursionError, MemoryError, FileNotFoundError, PermissionError, SyntaxError, AssertionError, OSError, ConnectionError, TimeoutError), ZERG-specific patterns (worker crash, state corruption, task timeout, merge conflict, port conflict, worktree orphan, disk space, docker failure, config error), and general patterns (dependency conflict, version mismatch, env misconfiguration). Each pattern must have at least 3 symptom regexes, a realistic prior probability, 2+ common causes, and 1+ fix templates. Create a PatternMatcher class with methods: match(error_text: str) -> list[tuple[KnownPattern, float]] returning matched patterns with match score, get_prior(category: str) -> float returning base probability for category, get_related(pattern_name: str) -> list[KnownPattern]. Use __all__ to export public API.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": ["zerg/diagnostics/knowledge_base.py"],
+        "modify": [],
+        "read": ["zerg/commands/troubleshoot.py"]
+      },
+      "acceptance_criteria": [
+        "At least 25 known patterns defined",
+        "PatternMatcher.match() returns scored matches",
+        "Each pattern has symptoms, causes, fixes",
+        "ruff check passes",
+        "mypy passes"
+      ],
+      "verification": {
+        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -c 'from zerg.diagnostics.knowledge_base import KNOWN_PATTERNS, PatternMatcher; m=PatternMatcher(); r=m.match(\"ImportError: No module named foo\"); print(f\"Patterns: {len(KNOWN_PATTERNS)}, Matches: {len(r)}\"); assert len(KNOWN_PATTERNS) >= 25' && python -m ruff check zerg/diagnostics/knowledge_base.py && python -m mypy zerg/diagnostics/knowledge_base.py --ignore-missing-imports",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 20
+    },
+    {
+      "id": "TE-L2-001",
+      "title": "Build multi-language error intelligence engine",
+      "description": "Create zerg/diagnostics/error_intel.py - a comprehensive multi-language error parser and intelligence engine. This replaces/extends the basic ErrorParser and StackTraceAnalyzer from the current troubleshoot.py. Import types from zerg.diagnostics.types (ErrorFingerprint, ErrorCategory, ErrorSeverity, Evidence). Classes to create: 1) LanguageDetector with method detect(error_text: str) -> str returning 'python'|'javascript'|'typescript'|'go'|'rust'|'java'|'cpp'|'unknown'. Detection based on stack trace format, error type naming, file extensions. 2) MultiLangErrorParser with method parse(error_text: str) -> ErrorFingerprint. Must handle: Python (File \"...\", line N patterns, Exception: msg), JavaScript/TypeScript (at Function (file:line:col), Error: msg), Go (goroutine N, file.go:N), Rust (error[ENNN]: msg, --> file:N:N), Java (at package.Class.method(File.java:N), Exception: msg), C++ (file:N:N: error: msg). Each language parser is a private method. 3) ErrorChainAnalyzer with method analyze_chain(error_text: str) -> list[ErrorFingerprint]. Extracts caused-by chains: Python 'The above exception was the direct cause', Java 'Caused by:', Go 'caused by:', Rust chained errors. 4) ErrorFingerprinter with method fingerprint(error: ErrorFingerprint) -> str generating a stable hash for deduplication (hash error_type + message_template + file, ignoring variable parts like line numbers in messages). 5) ErrorIntelEngine - facade class combining all above with methods: analyze(error_text: str, stack_trace: str = '') -> ErrorFingerprint, classify(fingerprint: ErrorFingerprint) -> tuple[ErrorCategory, ErrorSeverity], get_evidence(fingerprint: ErrorFingerprint) -> list[Evidence], deduplicate(fingerprints: list[ErrorFingerprint]) -> list[ErrorFingerprint]. Classification maps error types to ErrorCategory using pattern matching. Severity is determined by error type (MemoryError=CRITICAL, TypeError=ERROR, etc). Follow existing code style from zerg/diagnostics/ (use get_logger, from __future__ import annotations, type hints everywhere).",
+      "phase": "core",
+      "level": 2,
+      "dependencies": ["TE-L1-001"],
+      "files": {
+        "create": ["zerg/diagnostics/error_intel.py"],
+        "modify": [],
+        "read": ["zerg/diagnostics/types.py", "zerg/commands/troubleshoot.py"]
+      },
+      "acceptance_criteria": [
+        "Parses Python, JS/TS, Go, Rust, Java, C++ errors",
+        "Error chain analysis extracts caused-by relationships",
+        "Fingerprinting produces stable hashes for dedup",
+        "Classification maps to ErrorCategory and ErrorSeverity",
+        "ruff check and mypy pass"
+      ],
+      "verification": {
+        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -c 'from zerg.diagnostics.error_intel import ErrorIntelEngine; e=ErrorIntelEngine(); fp=e.analyze(\"ValueError: invalid literal for int()\", \"File \\\"test.py\\\", line 42\"); print(f\"type={fp.error_type}, file={fp.file}, line={fp.line}, lang={fp.language}\"); cat,sev=e.classify(fp); print(f\"cat={cat}, sev={sev}\")' && python -m ruff check zerg/diagnostics/error_intel.py && python -m mypy zerg/diagnostics/error_intel.py --ignore-missing-imports",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 25
+    },
+    {
+      "id": "TE-L2-002",
+      "title": "Build log correlation engine",
+      "description": "Create zerg/diagnostics/log_correlator.py - a cross-worker log correlation engine that builds timelines and finds causal relationships between errors. Import types from zerg.diagnostics.types (TimelineEvent, Evidence). Import LogAnalyzer from zerg.diagnostics.log_analyzer for low-level log reading. Classes to create: 1) TimelineBuilder with method build(logs_dir: Path) -> list[TimelineEvent]. Reads all worker logs (both stdout and stderr), parses timestamps where available (ISO format, epoch, relative), assigns synthetic timestamps based on line order when no timestamp present. Returns sorted timeline. Must handle JSONL logs (parse JSON lines) and plaintext logs. 2) TemporalClusterer with method cluster(events: list[TimelineEvent], window_seconds: float = 5.0) -> list[list[TimelineEvent]]. Groups events occurring within the time window. For events without timestamps, uses line proximity. 3) CrossWorkerCorrelator with method correlate(events: list[TimelineEvent]) -> list[tuple[TimelineEvent, TimelineEvent, float]]. Finds error events from different workers with similar messages, returns pairs with similarity score (Jaccard similarity on tokenized messages). 4) ErrorEvolutionTracker with method track(patterns: list[LogPattern]) -> list[dict]. Tracks how the same error pattern changes over time (message variations, frequency changes). 5) LogCorrelationEngine - facade class with methods: analyze(logs_dir: Path, worker_id: int | None = None) -> dict containing 'timeline' (list[TimelineEvent]), 'clusters' (list of event clusters), 'correlations' (cross-worker pairs), 'evolution' (pattern evolution), 'evidence' (list[Evidence]). The evidence list should contain Evidence objects for each significant finding (e.g., 'Error X appeared in 3/5 workers within 2 seconds'). Use existing LogAnalyzer internally for log scanning. Follow existing code patterns in zerg/diagnostics/.",
+      "phase": "core",
+      "level": 2,
+      "dependencies": ["TE-L1-001"],
+      "files": {
+        "create": ["zerg/diagnostics/log_correlator.py"],
+        "modify": [],
+        "read": ["zerg/diagnostics/types.py", "zerg/diagnostics/log_analyzer.py"]
+      },
+      "acceptance_criteria": [
+        "Builds timeline from worker logs",
+        "Clusters temporally related events",
+        "Correlates errors across workers",
+        "Tracks error pattern evolution",
+        "Produces Evidence objects for findings",
+        "ruff check and mypy pass"
+      ],
+      "verification": {
+        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -c 'from zerg.diagnostics.log_correlator import LogCorrelationEngine, TimelineBuilder, TemporalClusterer, CrossWorkerCorrelator; print(\"OK\")' && python -m ruff check zerg/diagnostics/log_correlator.py && python -m mypy zerg/diagnostics/log_correlator.py --ignore-missing-imports",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 25
+    },
+    {
+      "id": "TE-L2-003",
+      "title": "Build Bayesian hypothesis engine",
+      "description": "Create zerg/diagnostics/hypothesis_engine.py - a Bayesian hypothesis ranking and testing engine. Import types from zerg.diagnostics.types (ScoredHypothesis, Evidence, ErrorCategory, ErrorFingerprint). Import PatternMatcher from zerg.diagnostics.knowledge_base. Classes to create: 1) BayesianScorer with methods: compute_posterior(prior: float, evidence_for: list[Evidence], evidence_against: list[Evidence]) -> float. Uses simplified Bayesian update: for each evidence item, updates probability using P(H|E) = P(E|H)*P(H) / P(E). evidence.confidence maps to likelihood ratio. Also: rank(hypotheses: list[ScoredHypothesis]) -> list[ScoredHypothesis] sorted by posterior_probability descending. 2) HypothesisGenerator with method generate(fingerprint: ErrorFingerprint, evidence: list[Evidence], kb_matches: list) -> list[ScoredHypothesis]. Generates hypotheses from: a) error fingerprint (location-specific hypothesis), b) knowledge base matches (pattern-based hypotheses), c) evidence (evidence-driven hypotheses). Each hypothesis gets a prior from the knowledge base or a default. Max 10 hypotheses. 3) HypothesisTestRunner with methods: can_test(hypothesis: ScoredHypothesis) -> bool (checks if test_command is non-empty and safe), test(hypothesis: ScoredHypothesis, timeout: int = 30) -> ScoredHypothesis (runs test_command via subprocess, updates test_result and adjusts posterior). Safety: only run commands that start with known-safe prefixes (python, pip, git, ls, cat, zerg, docker). 4) HypothesisChainer with method chain(confirmed: ScoredHypothesis, candidates: list[ScoredHypothesis]) -> list[ScoredHypothesis]. When a hypothesis is confirmed, boost related hypotheses and suppress contradictory ones. 5) HypothesisEngine - facade with methods: analyze(fingerprint: ErrorFingerprint, evidence: list[Evidence]) -> list[ScoredHypothesis], auto_test(hypotheses: list[ScoredHypothesis], max_tests: int = 3) -> list[ScoredHypothesis], get_top_hypothesis(hypotheses: list[ScoredHypothesis]) -> ScoredHypothesis | None. Follow code patterns from zerg/diagnostics/.",
+      "phase": "core",
+      "level": 2,
+      "dependencies": ["TE-L1-001", "TE-L1-002"],
+      "files": {
+        "create": ["zerg/diagnostics/hypothesis_engine.py"],
+        "modify": [],
+        "read": ["zerg/diagnostics/types.py", "zerg/diagnostics/knowledge_base.py"]
+      },
+      "acceptance_criteria": [
+        "Bayesian scoring produces float probabilities",
+        "Hypothesis generation uses knowledge base",
+        "Test runner has safety checks on commands",
+        "Hypothesis chaining adjusts related probabilities",
+        "ruff check and mypy pass"
+      ],
+      "verification": {
+        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -c 'from zerg.diagnostics.hypothesis_engine import HypothesisEngine, BayesianScorer; s=BayesianScorer(); p=s.compute_posterior(0.5, [], []); assert 0 <= p <= 1, f\"Bad probability: {p}\"; print(f\"posterior={p}\"); print(\"OK\")' && python -m ruff check zerg/diagnostics/hypothesis_engine.py && python -m mypy zerg/diagnostics/hypothesis_engine.py --ignore-missing-imports",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 25
+    },
+    {
+      "id": "TE-L2-004",
+      "title": "Build code-aware recovery fixer",
+      "description": "Create zerg/diagnostics/code_fixer.py - a code-aware recovery planning module that understands dependencies, git state, and generates intelligent fix suggestions. Import types from zerg.diagnostics.types (ErrorFingerprint, Evidence, ErrorCategory). Import existing RecoveryStep, RecoveryPlan from zerg.diagnostics.recovery. Classes to create: 1) DependencyAnalyzer with methods: analyze_imports(file_path: str) -> list[str] (parse Python imports from a file, return module names), find_missing_deps(error_text: str) -> list[str] (extract module names from ImportError/ModuleNotFoundError messages), trace_import_chain(module: str, project_root: Path) -> list[str] (find the import chain leading to the module). 2) GitContextAnalyzer with methods: get_recent_changes(file_path: str, n: int = 5) -> list[dict] (git log for file, returns list of {hash, author, date, message}), get_blame_context(file_path: str, line: int, context: int = 3) -> list[dict] (git blame for lines around error, returns {line, hash, author, content}), suggest_bisect(good_ref: str, bad_ref: str) -> str (return git bisect command). All git methods use subprocess with timeouts and return empty results on failure. 3) FixSuggestionGenerator with methods: suggest(fingerprint: ErrorFingerprint, evidence: list[Evidence]) -> list[str] (generate human-readable fix suggestions based on error type, location, and evidence), generate_recovery_steps(fingerprint: ErrorFingerprint, evidence: list[Evidence]) -> list[RecoveryStep] (generate executable recovery steps). Map error categories to fix strategies: CODE_ERROR -> review code at location, DEPENDENCY -> install/upgrade package, INFRASTRUCTURE -> restart/reconfigure service, etc. 4) CodeAwareFixer - facade with methods: analyze(fingerprint: ErrorFingerprint, evidence: list[Evidence], project_root: Path) -> dict containing 'dependencies' (import analysis), 'git_context' (blame/log), 'suggestions' (fix suggestions), 'recovery_steps' (list[RecoveryStep]). Follow code patterns from zerg/diagnostics/recovery.py.",
+      "phase": "core",
+      "level": 2,
+      "dependencies": ["TE-L1-001"],
+      "files": {
+        "create": ["zerg/diagnostics/code_fixer.py"],
+        "modify": [],
+        "read": ["zerg/diagnostics/types.py", "zerg/diagnostics/recovery.py"]
+      },
+      "acceptance_criteria": [
+        "Dependency analysis parses Python imports",
+        "Git context retrieves blame and log safely",
+        "Fix suggestions map error categories to actions",
+        "Recovery steps use existing RecoveryStep format",
+        "ruff check and mypy pass"
+      ],
+      "verification": {
+        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -c 'from zerg.diagnostics.code_fixer import CodeAwareFixer, DependencyAnalyzer, GitContextAnalyzer, FixSuggestionGenerator; print(\"OK\")' && python -m ruff check zerg/diagnostics/code_fixer.py && python -m mypy zerg/diagnostics/code_fixer.py --ignore-missing-imports",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 20
+    },
+    {
+      "id": "TE-L2-005",
+      "title": "Build enhanced environment diagnostics",
+      "description": "Create zerg/diagnostics/env_diagnostics.py - enhanced environment diagnostics beyond the existing system_diagnostics.py. This module adds Python-specific, Docker-specific, and resource-specific diagnostics. Import types from zerg.diagnostics.types (Evidence). Classes to create: 1) PythonEnvDiagnostics with methods: check_venv() -> dict (is venv active, path, python version), check_packages(required: list[str] | None = None) -> dict (installed packages list, missing from required, version conflicts), check_imports(modules: list[str]) -> dict (which modules import successfully, which fail and why). All checks use subprocess (pip list --format=json, python -c 'import X') with timeouts. 2) DockerDiagnostics with methods: check_health() -> dict (daemon status, version, disk usage via docker system df), check_containers(label: str = 'zerg') -> dict (running/stopped containers, resource usage), check_images() -> dict (available images, dangling images). Uses subprocess with docker commands. 3) ResourceDiagnostics with methods: check_memory() -> dict (total, available, used percent - use shutil or /proc/meminfo), check_cpu() -> dict (load average - os.getloadavg()), check_file_descriptors() -> dict (open fds, limit - use resource module), check_disk_detailed() -> dict (usage per partition, inodes). 4) ConfigValidator with methods: validate(config_path: Path) -> list[str] (validate .zerg/config.yaml against expected schema, return list of issues). Check: required keys exist, values are correct types, paths referenced exist, port ranges are valid. 5) EnvDiagnosticsEngine - facade with methods: run_all(config_path: Path | None = None) -> dict with keys 'python', 'docker', 'resources', 'config', 'evidence' (list[Evidence]). Each subsystem produces Evidence objects for significant findings. Follow code patterns from zerg/diagnostics/system_diagnostics.py (same _run_cmd pattern, same logging).",
+      "phase": "core",
+      "level": 2,
+      "dependencies": ["TE-L1-001"],
+      "files": {
+        "create": ["zerg/diagnostics/env_diagnostics.py"],
+        "modify": [],
+        "read": ["zerg/diagnostics/types.py", "zerg/diagnostics/system_diagnostics.py"]
+      },
+      "acceptance_criteria": [
+        "Python env checks work (venv, packages, imports)",
+        "Docker diagnostics handle missing docker gracefully",
+        "Resource checks work on macOS and Linux",
+        "Config validator checks .zerg/config.yaml",
+        "ruff check and mypy pass"
+      ],
+      "verification": {
+        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -c 'from zerg.diagnostics.env_diagnostics import EnvDiagnosticsEngine, PythonEnvDiagnostics; p=PythonEnvDiagnostics(); r=p.check_venv(); print(f\"venv={r}\"); print(\"OK\")' && python -m ruff check zerg/diagnostics/env_diagnostics.py && python -m mypy zerg/diagnostics/env_diagnostics.py --ignore-missing-imports",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 20
+    },
+    {
+      "id": "TE-L3-001",
+      "title": "Integrate all engines into TroubleshootCommand",
+      "description": "Modify zerg/commands/troubleshoot.py to integrate all new diagnostic engines into the existing TroubleshootCommand. The existing CLI interface must remain backward-compatible. Changes: 1) Add new imports at top: from zerg.diagnostics.types import (DiagnosticContext, ErrorCategory, ErrorSeverity, Evidence, ScoredHypothesis, TimelineEvent, ErrorFingerprint). from zerg.diagnostics.error_intel import ErrorIntelEngine. from zerg.diagnostics.log_correlator import LogCorrelationEngine. from zerg.diagnostics.hypothesis_engine import HypothesisEngine. from zerg.diagnostics.code_fixer import CodeAwareFixer. from zerg.diagnostics.env_diagnostics import EnvDiagnosticsEngine. 2) Add new fields to DiagnosticResult: error_intel (ErrorFingerprint|None), timeline (list[TimelineEvent]), scored_hypotheses (list[ScoredHypothesis]), correlations (list), env_report (dict|None), fix_suggestions (list[str]), and update to_dict() to include them. 3) Add new CLI options to the click command: --interactive/-i (flag for wizard mode - placeholder for now, just prints 'Interactive mode coming soon'), --env (flag to run environment diagnostics), --report (path to write full markdown report). 4) Enhance TroubleshootCommand.run() to: a) Use ErrorIntelEngine.analyze() instead of basic ErrorParser for primary analysis, b) Use LogCorrelationEngine.analyze() when feature is provided, c) Use HypothesisEngine.analyze() for hypothesis generation with Bayesian scoring, d) Use CodeAwareFixer.analyze() for fix suggestions, e) Use EnvDiagnosticsEngine.run_all() when --env or --deep is set. 5) Keep all existing functionality working - the new engines add to results, they don't replace existing fields. The old hypotheses list stays populated for backward compat, but scored_hypotheses provides richer data. 6) Update format_result() to include new sections when data is available. 7) Wrap all new engine calls in try/except with logger.warning() on failure, so degraded operation is seamless. Read the full current file before making changes. Preserve all existing tests passing.",
+      "phase": "integration",
+      "level": 3,
+      "dependencies": ["TE-L2-001", "TE-L2-002", "TE-L2-003", "TE-L2-004", "TE-L2-005"],
+      "files": {
+        "create": [],
+        "modify": ["zerg/commands/troubleshoot.py"],
+        "read": [
+          "zerg/diagnostics/types.py",
+          "zerg/diagnostics/error_intel.py",
+          "zerg/diagnostics/log_correlator.py",
+          "zerg/diagnostics/hypothesis_engine.py",
+          "zerg/diagnostics/code_fixer.py",
+          "zerg/diagnostics/env_diagnostics.py"
+        ]
+      },
+      "acceptance_criteria": [
+        "Existing CLI options still work",
+        "New --env, --interactive, --report options added",
+        "ErrorIntelEngine used for primary analysis",
+        "HypothesisEngine provides scored hypotheses",
+        "All new engine failures handled gracefully",
+        "Existing tests still pass",
+        "ruff check and mypy pass"
+      ],
+      "verification": {
+        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -c 'from zerg.commands.troubleshoot import TroubleshootCommand, TroubleshootConfig; cmd=TroubleshootCommand(TroubleshootConfig()); r=cmd.run(error=\"ValueError: bad value\"); print(f\"root_cause={r.root_cause}, confidence={r.confidence}\"); print(\"OK\")' && python -m ruff check zerg/commands/troubleshoot.py && python -m mypy zerg/commands/troubleshoot.py --ignore-missing-imports",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 30
+    },
+    {
+      "id": "TE-L3-002",
+      "title": "Update diagnostics __init__.py exports",
+      "description": "Modify zerg/diagnostics/__init__.py to export all new public types and classes from the new modules. Add imports for: from zerg.diagnostics.types import (ErrorSeverity, ErrorCategory, ErrorFingerprint, TimelineEvent, Evidence, ScoredHypothesis, DiagnosticContext). from zerg.diagnostics.knowledge_base import KnownPattern, PatternMatcher, KNOWN_PATTERNS. from zerg.diagnostics.error_intel import ErrorIntelEngine, MultiLangErrorParser, ErrorChainAnalyzer, ErrorFingerprinter, LanguageDetector. from zerg.diagnostics.log_correlator import LogCorrelationEngine, TimelineBuilder, TemporalClusterer, CrossWorkerCorrelator. from zerg.diagnostics.hypothesis_engine import HypothesisEngine, BayesianScorer, HypothesisGenerator, HypothesisTestRunner. from zerg.diagnostics.code_fixer import CodeAwareFixer, DependencyAnalyzer, GitContextAnalyzer, FixSuggestionGenerator. from zerg.diagnostics.env_diagnostics import EnvDiagnosticsEngine, PythonEnvDiagnostics, DockerDiagnostics, ResourceDiagnostics, ConfigValidator. Update __all__ to include all new exports alongside existing ones. Keep all existing imports intact.",
+      "phase": "integration",
+      "level": 3,
+      "dependencies": ["TE-L2-001", "TE-L2-002", "TE-L2-003", "TE-L2-004", "TE-L2-005"],
+      "files": {
+        "create": [],
+        "modify": ["zerg/diagnostics/__init__.py"],
+        "read": [
+          "zerg/diagnostics/types.py",
+          "zerg/diagnostics/knowledge_base.py",
+          "zerg/diagnostics/error_intel.py",
+          "zerg/diagnostics/log_correlator.py",
+          "zerg/diagnostics/hypothesis_engine.py",
+          "zerg/diagnostics/code_fixer.py",
+          "zerg/diagnostics/env_diagnostics.py"
+        ]
+      },
+      "acceptance_criteria": [
+        "All new modules importable via zerg.diagnostics",
+        "Existing imports preserved",
+        "__all__ is comprehensive",
+        "ruff check and mypy pass"
+      ],
+      "verification": {
+        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -c 'from zerg.diagnostics import ErrorIntelEngine, LogCorrelationEngine, HypothesisEngine, CodeAwareFixer, EnvDiagnosticsEngine, PatternMatcher, BayesianScorer, ErrorFingerprint, Evidence, ScoredHypothesis; print(\"All imports OK\")' && python -m ruff check zerg/diagnostics/__init__.py && python -m mypy zerg/diagnostics/__init__.py --ignore-missing-imports",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 10
+    },
+    {
+      "id": "TE-L4-001",
+      "title": "Write tests for types and knowledge base",
+      "description": "Create tests/unit/test_diagnostics/test_types.py and tests/unit/test_diagnostics/test_knowledge_base.py. For types: test all dataclass instantiation with defaults, test to_dict() for each dataclass, test enum values, test ErrorFingerprint chain nesting, test Evidence confidence bounds. For knowledge_base: test PatternMatcher.match() with known error strings, test that each pattern has required fields (symptoms, causes, fixes), test get_prior() returns valid probabilities, test get_related() returns related patterns, test match returns empty list for unrecognized errors, test at least 25 patterns exist. Use pytest. Create tests/unit/test_diagnostics/__init__.py if it doesn't exist. Follow test patterns from existing tests/unit/test_diagnostics/test_system_diagnostics.py.",
+      "phase": "testing",
+      "level": 4,
+      "dependencies": ["TE-L3-001", "TE-L3-002"],
+      "files": {
+        "create": [
+          "tests/unit/test_diagnostics/__init__.py",
+          "tests/unit/test_diagnostics/test_types.py",
+          "tests/unit/test_diagnostics/test_knowledge_base.py"
+        ],
+        "modify": [],
+        "read": ["zerg/diagnostics/types.py", "zerg/diagnostics/knowledge_base.py", "tests/unit/test_diagnostics/test_system_diagnostics.py"]
+      },
+      "acceptance_criteria": [
+        "All types tests pass",
+        "All knowledge base tests pass",
+        "Coverage for types.py >= 90%",
+        "Coverage for knowledge_base.py >= 90%"
+      ],
+      "verification": {
+        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -m pytest tests/unit/test_diagnostics/test_types.py tests/unit/test_diagnostics/test_knowledge_base.py -v --tb=short 2>&1 | tail -20",
+        "timeout_seconds": 60
+      },
+      "estimate_minutes": 20
+    },
+    {
+      "id": "TE-L4-002",
+      "title": "Write tests for error intelligence engine",
+      "description": "Create tests/unit/test_diagnostics/test_error_intel.py. Tests: 1) LanguageDetector: detect Python from 'File \"test.py\", line 42', detect JS from 'at Object.<anonymous> (test.js:10:5)', detect Go from 'goroutine 1 [running]: main.go:42', detect Rust from 'error[E0308]: mismatched types', detect Java from 'at com.example.Main.run(Main.java:15)', detect unknown for unrecognizable text. 2) MultiLangErrorParser: parse Python ValueError with file+line, parse JS TypeError, parse Go panic, parse Rust error, parse Java NullPointerException. Verify ErrorFingerprint fields populated correctly for each. 3) ErrorChainAnalyzer: test Python chained exceptions ('The above exception was the direct cause'), test Java Caused by chains, test single error with no chain. 4) ErrorFingerprinter: test same error produces same hash, test different line numbers produce same hash (template-based), test different error types produce different hashes. 5) ErrorIntelEngine: test full analyze() flow, test classify() returns correct ErrorCategory, test get_evidence() returns Evidence objects. Use pytest fixtures for sample error texts. All subprocess calls must be mocked.",
+      "phase": "testing",
+      "level": 4,
+      "dependencies": ["TE-L3-001", "TE-L3-002"],
+      "files": {
+        "create": ["tests/unit/test_diagnostics/test_error_intel.py"],
+        "modify": [],
+        "read": ["zerg/diagnostics/error_intel.py"]
+      },
+      "acceptance_criteria": [
+        "All language detection tests pass",
+        "All parser tests pass for each language",
+        "Chain analysis tests pass",
+        "Fingerprint stability tests pass",
+        "Coverage for error_intel.py >= 90%"
+      ],
+      "verification": {
+        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -m pytest tests/unit/test_diagnostics/test_error_intel.py -v --tb=short 2>&1 | tail -20",
+        "timeout_seconds": 60
+      },
+      "estimate_minutes": 20
+    },
+    {
+      "id": "TE-L4-003",
+      "title": "Write tests for log correlator",
+      "description": "Create tests/unit/test_diagnostics/test_log_correlator.py. Tests: 1) TimelineBuilder: test building timeline from mock log files (create tmp_path fixture with worker log files), test JSONL parsing, test plaintext parsing, test sorting by timestamp, test handling missing/empty logs. 2) TemporalClusterer: test clustering events within window, test events outside window are separate clusters, test single event is own cluster, test empty input. 3) CrossWorkerCorrelator: test correlating similar errors across workers, test no correlation for different errors, test similarity scoring. 4) ErrorEvolutionTracker: test tracking same error changing over time, test no evolution for single occurrence. 5) LogCorrelationEngine: test full analyze() flow with mock logs dir, test with no logs dir, test with single worker. Use pytest tmp_path fixture to create temporary log files. Mock no subprocess calls - use real file I/O on temp files.",
+      "phase": "testing",
+      "level": 4,
+      "dependencies": ["TE-L3-001", "TE-L3-002"],
+      "files": {
+        "create": ["tests/unit/test_diagnostics/test_log_correlator.py"],
+        "modify": [],
+        "read": ["zerg/diagnostics/log_correlator.py"]
+      },
+      "acceptance_criteria": [
+        "All timeline building tests pass",
+        "Clustering tests pass",
+        "Correlation tests pass",
+        "Coverage for log_correlator.py >= 90%"
+      ],
+      "verification": {
+        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -m pytest tests/unit/test_diagnostics/test_log_correlator.py -v --tb=short 2>&1 | tail -20",
+        "timeout_seconds": 60
+      },
+      "estimate_minutes": 20
+    },
+    {
+      "id": "TE-L4-004",
+      "title": "Write tests for hypothesis engine",
+      "description": "Create tests/unit/test_diagnostics/test_hypothesis_engine.py. Tests: 1) BayesianScorer: test posterior with no evidence equals prior, test positive evidence increases probability, test negative evidence decreases probability, test probability stays in [0,1] bounds, test ranking sorts by posterior descending. 2) HypothesisGenerator: test generates hypotheses from fingerprint, test generates from knowledge base matches, test max 10 hypotheses, test empty input produces empty list. 3) HypothesisTestRunner: test can_test() returns True for safe commands, test can_test() returns False for unsafe commands (e.g., 'rm -rf /'), test test() with mocked subprocess, test timeout handling. Mock subprocess.run for all test runner tests. 4) HypothesisChainer: test confirmed hypothesis boosts related, test confirmed hypothesis suppresses contradictory. 5) HypothesisEngine: test full analyze() flow, test auto_test() with mocked commands, test get_top_hypothesis(). Use pytest fixtures for ErrorFingerprint and Evidence objects.",
+      "phase": "testing",
+      "level": 4,
+      "dependencies": ["TE-L3-001", "TE-L3-002"],
+      "files": {
+        "create": ["tests/unit/test_diagnostics/test_hypothesis_engine.py"],
+        "modify": [],
+        "read": ["zerg/diagnostics/hypothesis_engine.py"]
+      },
+      "acceptance_criteria": [
+        "Bayesian scoring tests pass",
+        "Safety checks prevent dangerous commands",
+        "All subprocess calls are mocked",
+        "Coverage for hypothesis_engine.py >= 90%"
+      ],
+      "verification": {
+        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -m pytest tests/unit/test_diagnostics/test_hypothesis_engine.py -v --tb=short 2>&1 | tail -20",
+        "timeout_seconds": 60
+      },
+      "estimate_minutes": 20
+    },
+    {
+      "id": "TE-L4-005",
+      "title": "Write tests for code fixer and env diagnostics",
+      "description": "Create tests/unit/test_diagnostics/test_code_fixer.py and tests/unit/test_diagnostics/test_env_diagnostics.py. For code_fixer: 1) DependencyAnalyzer: test analyze_imports with mock Python file (use tmp_path), test find_missing_deps from ImportError message, test trace_import_chain. 2) GitContextAnalyzer: test get_recent_changes with mocked git log, test get_blame_context with mocked git blame, test suggest_bisect returns valid command. Mock all subprocess.run calls. 3) FixSuggestionGenerator: test suggest() for CODE_ERROR, DEPENDENCY, INFRASTRUCTURE categories, test generate_recovery_steps returns RecoveryStep objects. 4) CodeAwareFixer: test full analyze() flow with mocks. For env_diagnostics: 1) PythonEnvDiagnostics: test check_venv (mock sys.prefix), test check_packages (mock pip subprocess), test check_imports (mock importlib). 2) DockerDiagnostics: test check_health (mock docker info), test with docker not available. 3) ResourceDiagnostics: test check_memory, test check_cpu (mock os.getloadavg), test check_disk_detailed. 4) ConfigValidator: test validate with valid config, test with missing keys, test with invalid values. 5) EnvDiagnosticsEngine: test run_all(). All external calls (subprocess, os) must be mocked.",
+      "phase": "testing",
+      "level": 4,
+      "dependencies": ["TE-L3-001", "TE-L3-002"],
+      "files": {
+        "create": [
+          "tests/unit/test_diagnostics/test_code_fixer.py",
+          "tests/unit/test_diagnostics/test_env_diagnostics.py"
+        ],
+        "modify": [],
+        "read": ["zerg/diagnostics/code_fixer.py", "zerg/diagnostics/env_diagnostics.py"]
+      },
+      "acceptance_criteria": [
+        "All code fixer tests pass",
+        "All env diagnostics tests pass",
+        "All subprocess calls mocked",
+        "Coverage >= 90% for both modules"
+      ],
+      "verification": {
+        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -m pytest tests/unit/test_diagnostics/test_code_fixer.py tests/unit/test_diagnostics/test_env_diagnostics.py -v --tb=short 2>&1 | tail -20",
+        "timeout_seconds": 60
+      },
+      "estimate_minutes": 25
+    },
+    {
+      "id": "TE-L5-001",
+      "title": "Update troubleshoot command documentation and run quality gates",
+      "description": "Modify zerg/data/commands/zerg:troubleshoot.md to document all new capabilities. Add sections for: 1) New flags: --env (environment diagnostics), --interactive (wizard mode placeholder), --report <path> (full report output). 2) Enhanced phases: update Phase 2 (Symptom Classification) to mention ErrorIntelEngine multi-language support. Update Phase 3 (Evidence Collection) to mention LogCorrelationEngine timeline and cross-worker correlation. Update Phase 4 (Hypothesis Testing) to mention Bayesian scoring and auto-testing. Update Phase 6 (Recovery Plan) to mention CodeAwareFixer and dependency analysis. 3) Add new section 'Phase 2.5: Error Intelligence' describing multi-language parsing, error fingerprinting, and chain analysis. 4) Add new section 'Phase 3.5: Log Correlation' describing timeline reconstruction and temporal clustering. 5) Update Quick Reference with new diagnostic capabilities. Then run the full quality gate: ruff check on all changed files, mypy on all changed files, pytest on all new tests, and verify existing tests still pass. IMPORTANT: This task also verifies all existing tests pass by running the full test suite for the troubleshoot and diagnostics modules.",
+      "phase": "quality",
+      "level": 5,
+      "dependencies": ["TE-L4-001", "TE-L4-002", "TE-L4-003", "TE-L4-004", "TE-L4-005"],
+      "files": {
+        "create": [],
+        "modify": ["zerg/data/commands/zerg:troubleshoot.md"],
+        "read": [
+          "zerg/commands/troubleshoot.py",
+          "zerg/diagnostics/error_intel.py",
+          "zerg/diagnostics/log_correlator.py",
+          "zerg/diagnostics/hypothesis_engine.py",
+          "zerg/diagnostics/code_fixer.py",
+          "zerg/diagnostics/env_diagnostics.py"
+        ]
+      },
+      "acceptance_criteria": [
+        "Command doc updated with all new capabilities",
+        "All new tests pass",
+        "All existing troubleshoot tests pass",
+        "ruff check clean on all diagnostics files",
+        "mypy clean on all diagnostics files"
+      ],
+      "verification": {
+        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -m ruff check zerg/diagnostics/ zerg/commands/troubleshoot.py && python -m mypy zerg/diagnostics/ zerg/commands/troubleshoot.py --ignore-missing-imports && python -m pytest tests/unit/test_diagnostics/ tests/unit/test_troubleshoot_cmd.py tests/integration/test_troubleshoot.py -v --tb=short 2>&1 | tail -30",
+        "timeout_seconds": 120
+      },
+      "estimate_minutes": 20
+    }
+  ],
+
+  "levels": {
+    "1": {
+      "name": "foundation",
+      "tasks": ["TE-L1-001", "TE-L1-002"],
+      "parallel": true,
+      "estimated_minutes": 20,
+      "depends_on_levels": []
+    },
+    "2": {
+      "name": "core",
+      "tasks": ["TE-L2-001", "TE-L2-002", "TE-L2-003", "TE-L2-004", "TE-L2-005"],
+      "parallel": true,
+      "estimated_minutes": 25,
+      "depends_on_levels": [1]
+    },
+    "3": {
+      "name": "integration",
+      "tasks": ["TE-L3-001", "TE-L3-002"],
+      "parallel": true,
+      "estimated_minutes": 30,
+      "depends_on_levels": [2]
+    },
+    "4": {
+      "name": "testing",
+      "tasks": ["TE-L4-001", "TE-L4-002", "TE-L4-003", "TE-L4-004", "TE-L4-005"],
+      "parallel": true,
+      "estimated_minutes": 25,
+      "depends_on_levels": [3]
+    },
+    "5": {
+      "name": "quality",
+      "tasks": ["TE-L5-001"],
+      "parallel": false,
+      "estimated_minutes": 20,
+      "depends_on_levels": [4]
+    }
+  }
+}
