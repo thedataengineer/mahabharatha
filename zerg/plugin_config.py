@@ -8,7 +8,7 @@ class HookConfig(BaseModel):
 
     event: str = Field(..., description="Lifecycle event name (from PluginHookEvent enum)")
     command: str = Field(..., description="Shell command to execute")
-    timeout: int = Field(default=60, ge=1, le=3600, description="Timeout in seconds")
+    timeout: int = Field(default=60, ge=1, le=600, description="Timeout in seconds")
 
 
 class PluginGateConfig(BaseModel):
