@@ -1,5 +1,6 @@
 """Worker protocol handler for ZERG workers."""
 
+import asyncio
 import contextlib
 import os
 import subprocess
@@ -305,6 +306,25 @@ class WorkerProtocol:
             time.sleep(0.1)
         return False
 
+    async def wait_for_ready_async(self, timeout: float = 30.0) -> bool:
+        """Wait until worker is ready (async version).
+
+        Async counterpart of wait_for_ready() using asyncio.sleep
+        instead of time.sleep for non-blocking polling.
+
+        Args:
+            timeout: Maximum seconds to wait
+
+        Returns:
+            True if ready, False if timeout
+        """
+        start = time.time()
+        while time.time() - start < timeout:
+            if self._is_ready:
+                return True
+            await asyncio.sleep(0.1)
+        return False
+
     @property
     def is_ready(self) -> bool:
         """Check if worker is ready for tasks."""
@@ -361,6 +381,62 @@ class WorkerProtocol:
                 )
 
             time.sleep(interval)
+            interval = min(interval * 1.5, 10.0)  # backoff, cap at 10s
+
+    async def claim_next_task_async(
+        self,
+        max_wait: float = 120.0,
+        poll_interval: float = 2.0,
+    ) -> Task | None:
+        """Claim the next available task, polling if none are ready yet (async version).
+
+        Async counterpart of claim_next_task() using asyncio.sleep
+        instead of time.sleep for non-blocking polling.
+
+        Workers may start before the orchestrator assigns tasks via _start_level().
+        This method polls with backoff to handle the timing gap between worker
+        readiness and task assignment.
+
+        Args:
+            max_wait: Maximum seconds to wait for tasks to appear (default: 120s)
+            poll_interval: Initial poll interval in seconds (doubles each attempt, cap 10s)
+
+        Returns:
+            Task to execute or None if no tasks available after waiting
+        """
+        start_time = time.time()
+        interval = poll_interval
+        attempt = 0
+
+        while True:
+            # Reload state from disk to pick up orchestrator writes
+            self.state.load()
+
+            # Get pending tasks for this worker
+            pending = self.state.get_tasks_by_status(TaskStatus.PENDING)
+
+            for task_id in pending:
+                # Try to claim this task
+                if self.state.claim_task(task_id, self.worker_id):
+                    # Load full task from task graph if available
+                    task = self._load_task_details(task_id)
+                    self.current_task = task
+                    logger.info(f"Claimed task {task_id}: {task.get('title', 'untitled')}")
+                    return task
+
+            # Check if we've waited long enough
+            elapsed = time.time() - start_time
+            if elapsed >= max_wait:
+                logger.info(f"No tasks found after {elapsed:.1f}s of polling")
+                return None
+
+            attempt += 1
+            if attempt == 1:
+                logger.info(
+                    f"No tasks available yet, polling (max {max_wait}s)..."
+                )
+
+            await asyncio.sleep(interval)
             interval = min(interval * 1.5, 10.0)  # backoff, cap at 10s
 
     def _load_task_details(self, task_id: str) -> Task:
