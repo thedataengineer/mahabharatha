@@ -553,7 +553,7 @@ class TestFetchCommand:
             result = runner.invoke(cli, ["security-rules", "fetch"])
 
         assert result.exit_code == 0
-        assert "security-rules" in result.output
+        assert "rules/security" in result.output
 
     def test_fetch_with_path_option(
         self, tmp_path: Path, monkeypatch: MonkeyPatch
@@ -605,7 +605,7 @@ class TestIntegrateCommand:
             mock_integrate.return_value = {
                 "stack": {"languages": ["python"], "frameworks": [], "databases": []},
                 "rules_fetched": 2,
-                "rules_dir": str(tmp_path / ".claude" / "security-rules"),
+                "rules_dir": str(tmp_path / ".claude" / "rules" / "security"),
             }
 
             runner = CliRunner()
@@ -627,7 +627,7 @@ class TestIntegrateCommand:
             mock_integrate.return_value = {
                 "stack": {"languages": ["python"], "frameworks": ["fastapi"]},
                 "rules_fetched": 3,
-                "rules_dir": str(tmp_path / ".claude" / "security-rules"),
+                "rules_dir": str(tmp_path / ".claude" / "rules" / "security"),
             }
 
             runner = CliRunner()
@@ -651,7 +651,7 @@ class TestIntegrateCommand:
             mock_integrate.return_value = {
                 "stack": {"languages": ["python"]},
                 "rules_fetched": 5,
-                "rules_dir": str(tmp_path / ".claude" / "security-rules"),
+                "rules_dir": str(tmp_path / ".claude" / "rules" / "security"),
             }
 
             runner = CliRunner()
@@ -666,7 +666,7 @@ class TestIntegrateCommand:
         """Test integrate shows rules directory path."""
         monkeypatch.chdir(tmp_path)
         (tmp_path / "app.py").write_text("print('hello')")
-        rules_dir = tmp_path / ".claude" / "security-rules"
+        rules_dir = tmp_path / ".claude" / "rules" / "security"
 
         with patch(
             "zerg.commands.security_rules_cmd.integrate_security_rules"
@@ -696,7 +696,7 @@ class TestIntegrateCommand:
             mock_integrate.return_value = {
                 "stack": {"languages": ["python"]},
                 "rules_fetched": 2,
-                "rules_dir": str(tmp_path / ".claude" / "security-rules"),
+                "rules_dir": str(tmp_path / ".claude" / "rules" / "security"),
             }
 
             runner = CliRunner()
@@ -719,7 +719,7 @@ class TestIntegrateCommand:
             mock_integrate.return_value = {
                 "stack": {"languages": ["python"]},
                 "rules_fetched": 2,
-                "rules_dir": str(tmp_path / ".claude" / "security-rules"),
+                "rules_dir": str(tmp_path / ".claude" / "rules" / "security"),
             }
 
             runner = CliRunner()
@@ -742,7 +742,7 @@ class TestIntegrateCommand:
             mock_integrate.return_value = {
                 "stack": {"languages": ["python"]},
                 "rules_fetched": 2,
-                "rules_dir": str(tmp_path / ".claude" / "security-rules"),
+                "rules_dir": str(tmp_path / ".claude" / "rules" / "security"),
             }
 
             runner = CliRunner()
@@ -801,7 +801,7 @@ class TestIntegrateCommand:
             mock_integrate.return_value = {
                 "stack": {"languages": ["python"]},
                 "rules_fetched": 2,
-                "rules_dir": str(subdir / ".claude" / "security-rules"),
+                "rules_dir": str(subdir / ".claude" / "rules" / "security"),
             }
 
             runner = CliRunner()
@@ -835,7 +835,7 @@ class TestIntegrateCommand:
                     "rag": False,
                 },
                 "rules_fetched": 5,
-                "rules_dir": str(tmp_path / ".claude" / "security-rules"),
+                "rules_dir": str(tmp_path / ".claude" / "rules" / "security"),
             }
 
             runner = CliRunner()
@@ -866,7 +866,7 @@ class TestIntegrateCommand:
                     "rag": False,  # Falsy
                 },
                 "rules_fetched": 2,
-                "rules_dir": str(tmp_path / ".claude" / "security-rules"),
+                "rules_dir": str(tmp_path / ".claude" / "rules" / "security"),
             }
 
             runner = CliRunner()
@@ -908,11 +908,11 @@ class TestEdgeCases:
             runner = CliRunner()
             runner.invoke(cli, ["security-rules", "fetch"])
 
-        # Should use path / .claude / security-rules as default
+        # Should use path / .claude / rules / security as default
         mock_fetch.assert_called_once()
         call_args = mock_fetch.call_args
         output_dir = call_args[0][1]
-        assert "security-rules" in str(output_dir)
+        assert str(output_dir).endswith(str(Path(".claude") / "rules" / "security"))
 
     def test_integrate_passes_correct_parameters(
         self, tmp_path: Path, monkeypatch: MonkeyPatch
@@ -966,7 +966,7 @@ class TestEdgeCases:
             ) as mock_rules:
                 mock_rules.return_value = [
                     "rules/_core/owasp-2025.md",
-                    "rules/languages/python.md",
+                    "rules/languages/python/CLAUDE.md",
                 ]
 
                 runner = CliRunner()

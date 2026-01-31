@@ -84,7 +84,7 @@ def list_command(path: Path) -> None:
     "-o",
     type=click.Path(path_type=Path),
     default=None,
-    help="Output directory for rules (default: .claude/security-rules/)",
+    help="Output directory for rules (default: .claude/rules/security)",
 )
 @click.option("--no-cache", is_flag=True, help="Force re-fetch even if cached")
 def fetch_command(path: Path, output: Path | None, no_cache: bool) -> None:
@@ -92,7 +92,7 @@ def fetch_command(path: Path, output: Path | None, no_cache: bool) -> None:
     stack = detect_project_stack(path)
     rules = get_required_rules(stack)
 
-    output_dir = output or (path / ".claude" / "security-rules")
+    output_dir = output or (path / ".claude" / "rules" / "security")
 
     click.echo(f"Fetching {len(rules)} security rule files...")
     fetched = fetch_rules(rules, output_dir, use_cache=not no_cache)
@@ -115,7 +115,7 @@ def fetch_command(path: Path, output: Path | None, no_cache: bool) -> None:
     "-o",
     type=click.Path(path_type=Path),
     default=None,
-    help="Output directory for rules (default: .claude/security-rules/)",
+    help="Output directory for rules (default: .claude/rules/security)",
 )
 @click.option(
     "--no-update-claude-md",

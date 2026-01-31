@@ -332,13 +332,13 @@ class TestFetchRules:
 
         with patch("subprocess.run", return_value=mock_result) as mock_run:
             result = fetch_rules(
-                ["rules/languages/python.md"],
+                ["rules/languages/python/CLAUDE.md"],
                 tmp_path,
                 use_cache=True,
             )
 
         mock_run.assert_called_once()
-        assert "rules/languages/python.md" in result
+        assert "rules/languages/python/CLAUDE.md" in result
 
 
 class TestGenerateClaudeMdSection:
@@ -388,7 +388,7 @@ class TestIntegrateSecurityRules:
 
             result = integrate_security_rules(
                 tmp_path,
-                output_dir=tmp_path / ".claude" / "security-rules",
+                output_dir=tmp_path / ".claude" / "rules" / "security",
                 update_claude_md=False,
             )
 

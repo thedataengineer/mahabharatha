@@ -514,31 +514,35 @@ zerg security-rules list
 
 # Example output for Python + FastAPI project:
 #   - rules/_core/owasp-2025.md
-#   - rules/languages/python.md
-#   - rules/backend/fastapi.md
+#   - rules/languages/python/CLAUDE.md
+#   - rules/backend/fastapi/CLAUDE.md
 ```
 
 ### Step 3: Download Rules
 
 ```bash
-# Fetch rules to .claude/security-rules/
+# Fetch rules to .claude/rules/security/
 zerg security-rules fetch
 ```
 
-Rules are cached locally in `.claude/security-rules/` with directory structure:
+Rules are cached locally in `.claude/rules/security/` with directory structure:
 ```
-.claude/security-rules/
+.claude/rules/security/
 ├── _core/
 │   └── owasp-2025.md
 ├── languages/
-│   └── python.md
+│   └── python/
+│       └── CLAUDE.md
 └── backend/
-    └── fastapi.md
+    └── fastapi/
+        └── CLAUDE.md
 ```
+
+Claude Code automatically loads all files under `.claude/rules/`, so no `@-imports` are needed.
 
 ### Step 4: Update CLAUDE.md
 
-The integration updates `CLAUDE.md` with imports:
+The integration updates `CLAUDE.md` with an informational section (no imports needed):
 
 ```markdown
 <!-- SECURITY_RULES_START -->
@@ -551,10 +555,10 @@ Auto-generated from TikiTribe/claude-secure-coding-rules
 - **Frameworks**: fastapi
 - **AI/ML**: Yes
 
-## Imported Rules
-@.claude/security-rules/_core/owasp-2025.md
-@.claude/security-rules/languages/python.md
-@.claude/security-rules/backend/fastapi.md
+## Fetched Rules
+- `_core/owasp-2025.md`
+- `languages/python/CLAUDE.md`
+- `backend/fastapi/CLAUDE.md`
 <!-- SECURITY_RULES_END -->
 ```
 
@@ -623,7 +627,7 @@ Infrastructure:
 Security Rules:
   • Detected Stack: {languages}, {frameworks}
   • Rules Fetched: {N} files
-  • Location: .claude/security-rules/
+  • Location: .claude/rules/security/
 
 Files Created:
   • .zerg/config.yaml              ✓
@@ -632,7 +636,7 @@ Files Created:
   • .devcontainer/post-create.sh    ✓
   • .devcontainer/post-start.sh     ✓
   • .devcontainer/mcp-servers/      ✓
-  • .claude/security-rules/         ✓
+  • .claude/rules/security/         ✓
   • .gsd/PROJECT.md                 ✓
   • .gsd/INFRASTRUCTURE.md          ✓
   • CLAUDE.md (updated)             ✓

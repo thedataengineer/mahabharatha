@@ -959,13 +959,13 @@ class TestFetchRules:
 
         with patch("subprocess.run", return_value=mock_result) as mock_run:
             result = fetch_rules(
-                ["rules/languages/python.md"],
+                ["rules/languages/python/CLAUDE.md"],
                 tmp_path,
                 use_cache=True,
             )
 
         mock_run.assert_called_once()
-        assert "rules/languages/python.md" in result
+        assert "rules/languages/python/CLAUDE.md" in result
 
     def test_fetch_no_cache(self, tmp_path: Path) -> None:
         """Test fetching without cache."""
@@ -1007,23 +1007,23 @@ class TestFetchRules:
         """Test fetching handles timeout."""
         with patch("subprocess.run", side_effect=subprocess.TimeoutExpired("curl", 30)):
             result = fetch_rules(
-                ["rules/languages/python.md"],
+                ["rules/languages/python/CLAUDE.md"],
                 tmp_path,
                 use_cache=True,
             )
 
-        assert "rules/languages/python.md" not in result
+        assert "rules/languages/python/CLAUDE.md" not in result
 
     def test_fetch_handles_generic_exception(self, tmp_path: Path) -> None:
         """Test fetching handles generic exceptions."""
         with patch("subprocess.run", side_effect=Exception("Network error")):
             result = fetch_rules(
-                ["rules/languages/python.md"],
+                ["rules/languages/python/CLAUDE.md"],
                 tmp_path,
                 use_cache=True,
             )
 
-        assert "rules/languages/python.md" not in result
+        assert "rules/languages/python/CLAUDE.md" not in result
 
     def test_fetch_creates_directories(self, tmp_path: Path) -> None:
         """Test fetching creates necessary directories."""
@@ -1097,8 +1097,8 @@ class TestGenerateClaudeMdSection:
 
         section = generate_claude_md_section(stack, rules_dir)
 
-        assert "@" in section  # @import syntax
-        assert "Imported Rules" in section
+        assert "- `" in section  # Rule file listings (no @-imports)
+        assert "Fetched Rules" in section
 
 
 class TestUpdateClaudeMd:
@@ -1179,7 +1179,7 @@ class TestIntegrateSecurityRules:
 
             result = integrate_security_rules(
                 tmp_path,
-                output_dir=tmp_path / ".claude" / "security-rules",
+                output_dir=tmp_path / ".claude" / "rules" / "security",
                 update_claude_md=False,
             )
 
@@ -1198,7 +1198,7 @@ class TestIntegrateSecurityRules:
                 update_claude_md=False,
             )
 
-        expected_dir = str(tmp_path / ".claude" / "security-rules")
+        expected_dir = str(tmp_path / ".claude" / "rules" / "security")
         assert result["rules_dir"] == expected_dir
 
     def test_integration_updates_claude_md(self, tmp_path: Path) -> None:
@@ -1210,7 +1210,7 @@ class TestIntegrateSecurityRules:
 
             integrate_security_rules(
                 tmp_path,
-                output_dir=tmp_path / ".claude" / "security-rules",
+                output_dir=tmp_path / ".claude" / "rules" / "security",
                 update_claude_md=True,
             )
 
@@ -1226,7 +1226,7 @@ class TestIntegrateSecurityRules:
 
         with patch("zerg.security_rules.fetch_rules") as mock_fetch:
             mock_fetch.return_value = {
-                "rules/languages/python.md": tmp_path / "python.md",
+                "rules/languages/python/CLAUDE.md": tmp_path / "python.md",
                 "rules/backend/fastapi.md": tmp_path / "fastapi.md",
             }
 

@@ -158,10 +158,12 @@ Auto-generated from [TikiTribe/claude-secure-coding-rules](https://github.com/Ti
 
 ## Detected Stack
 
-- **Languages**: python
+- **Languages**: javascript, python
 
-## Imported Rules
+## Fetched Rules
 
-@security-rules/_core/owasp-2025.md
+- `_core/owasp-2025.md`
+- `languages/javascript/CLAUDE.md`
+- `languages/python/CLAUDE.md`
 
 <!-- SECURITY_RULES_END -->

@@ -131,7 +131,8 @@ INFRASTRUCTURE_DETECTION: dict[str, str] = {
     ".gitlab-ci.yml": "gitlab-ci",
 }
 
-# Mapping of detected tech to rule paths in the repository
+# Mapping of detected tech to rule paths in the upstream repository.
+# Core rules are flat .md files; everything else uses {category}/{name}/CLAUDE.md.
 RULE_PATHS: dict[str, list[str]] = {
     # Core rules (always included)
     "_core": [
@@ -142,58 +143,58 @@ RULE_PATHS: dict[str, list[str]] = {
         "rules/_core/ai-security.md",
         "rules/_core/agent-security.md",
     ],
-    # RAG rules
+    # RAG core rules
     "rag": [
         "rules/_core/rag-security.md",
     ],
     # Languages
-    "python": ["rules/languages/python.md"],
-    "javascript": ["rules/languages/javascript.md"],
-    "typescript": ["rules/languages/typescript.md"],
-    "go": ["rules/languages/go.md"],
-    "rust": ["rules/languages/rust.md"],
-    "java": ["rules/languages/java.md"],
-    "csharp": ["rules/languages/csharp.md"],
-    "ruby": ["rules/languages/ruby.md"],
-    "r": ["rules/languages/r.md"],
-    "cpp": ["rules/languages/cpp.md"],
-    "julia": ["rules/languages/julia.md"],
-    "sql": ["rules/languages/sql.md"],
+    "python": ["rules/languages/python/CLAUDE.md"],
+    "javascript": ["rules/languages/javascript/CLAUDE.md"],
+    "typescript": ["rules/languages/typescript/CLAUDE.md"],
+    "go": ["rules/languages/go/CLAUDE.md"],
+    "rust": ["rules/languages/rust/CLAUDE.md"],
+    "java": ["rules/languages/java/CLAUDE.md"],
+    "csharp": ["rules/languages/csharp/CLAUDE.md"],
+    "ruby": ["rules/languages/ruby/CLAUDE.md"],
+    "r": ["rules/languages/r/CLAUDE.md"],
+    "cpp": ["rules/languages/cpp/CLAUDE.md"],
+    "julia": ["rules/languages/julia/CLAUDE.md"],
+    "sql": ["rules/languages/sql/CLAUDE.md"],
     # Backend frameworks
-    "fastapi": ["rules/backend/fastapi.md"],
-    "django": ["rules/backend/django.md"],
-    "flask": ["rules/backend/flask.md"],
-    "express": ["rules/backend/express.md"],
-    "nestjs": ["rules/backend/nestjs.md"],
-    "langchain": ["rules/backend/langchain.md"],
-    "crewai": ["rules/backend/crewai.md"],
-    "autogen": ["rules/backend/autogen.md"],
-    "transformers": ["rules/backend/transformers.md"],
-    "mlflow": ["rules/backend/mlflow.md"],
-    "bentoml": ["rules/backend/bentoml.md"],
-    "ray": ["rules/backend/ray-serve.md"],
+    "fastapi": ["rules/backend/fastapi/CLAUDE.md"],
+    "django": ["rules/backend/django/CLAUDE.md"],
+    "flask": ["rules/backend/flask/CLAUDE.md"],
+    "express": ["rules/backend/express/CLAUDE.md"],
+    "nestjs": ["rules/backend/nestjs/CLAUDE.md"],
+    "langchain": ["rules/backend/langchain/CLAUDE.md"],
+    "crewai": ["rules/backend/crewai/CLAUDE.md"],
+    "autogen": ["rules/backend/autogen/CLAUDE.md"],
+    "transformers": ["rules/backend/transformers/CLAUDE.md"],
+    "mlflow": ["rules/backend/mlflow/CLAUDE.md"],
+    "bentoml": ["rules/backend/bentoml/CLAUDE.md"],
+    "ray": ["rules/backend/ray-serve/CLAUDE.md"],
     # Frontend frameworks
-    "react": ["rules/frontend/react.md"],
-    "nextjs": ["rules/frontend/nextjs.md"],
-    "vue": ["rules/frontend/vue.md"],
-    "angular": ["rules/frontend/angular.md"],
-    "svelte": ["rules/frontend/svelte.md"],
+    "react": ["rules/frontend/react/CLAUDE.md"],
+    "nextjs": ["rules/frontend/nextjs/CLAUDE.md"],
+    "vue": ["rules/frontend/vue/CLAUDE.md"],
+    "angular": ["rules/frontend/angular/CLAUDE.md"],
+    "svelte": ["rules/frontend/svelte/CLAUDE.md"],
     # RAG tools
-    "llamaindex": ["rules/rag/llamaindex.md"],
-    "pinecone": ["rules/rag/pinecone.md"],
-    "weaviate": ["rules/rag/weaviate.md"],
-    "chroma": ["rules/rag/chroma.md"],
-    "qdrant": ["rules/rag/qdrant.md"],
-    "milvus": ["rules/rag/milvus.md"],
-    "pgvector": ["rules/rag/pgvector.md"],
-    "neo4j": ["rules/rag/neo4j.md"],
+    "llamaindex": ["rules/rag/orchestration/llamaindex/CLAUDE.md"],
+    "pinecone": ["rules/rag/vector-managed/pinecone/CLAUDE.md"],
+    "weaviate": ["rules/rag/vector-selfhosted/weaviate/CLAUDE.md"],
+    "chroma": ["rules/rag/vector-selfhosted/chroma/CLAUDE.md"],
+    "qdrant": ["rules/rag/vector-selfhosted/qdrant/CLAUDE.md"],
+    "milvus": ["rules/rag/vector-selfhosted/milvus/CLAUDE.md"],
+    "pgvector": ["rules/rag/vector-selfhosted/pgvector/CLAUDE.md"],
+    "neo4j": ["rules/rag/graph/neo4j/CLAUDE.md"],
     # Infrastructure
-    "docker": ["rules/containers/docker.md"],
-    "kubernetes": ["rules/containers/kubernetes.md"],
-    "terraform": ["rules/iac/terraform.md"],
-    "pulumi": ["rules/iac/pulumi.md"],
-    "github-actions": ["rules/cicd/github-actions.md"],
-    "gitlab-ci": ["rules/cicd/gitlab-ci.md"],
+    "docker": ["rules/containers/docker/CLAUDE.md"],
+    "kubernetes": ["rules/containers/kubernetes/CLAUDE.md"],
+    "terraform": ["rules/iac/terraform/CLAUDE.md"],
+    "pulumi": ["rules/iac/pulumi/CLAUDE.md"],
+    "github-actions": ["rules/cicd/github-actions/CLAUDE.md"],
+    "gitlab-ci": ["rules/cicd/gitlab-ci/CLAUDE.md"],
 }
 
 
@@ -467,14 +468,15 @@ def generate_claude_md_section(
     if stack.rag:
         lines.append("- **RAG**: Yes")
 
-    lines.extend(["", "## Imported Rules", ""])
+    lines.extend(["", "## Fetched Rules", ""])
 
-    # List the rule files with @import syntax for Claude
+    # List fetched rule files for reference (no @-imports needed;
+    # Claude Code auto-loads everything under .claude/rules/).
     rules_dir = Path(rules_dir)
     if rules_dir.exists():
         for rule_file in sorted(rules_dir.rglob("*.md")):
-            rel_path = rule_file.relative_to(rules_dir.parent)
-            lines.append(f"@{rel_path}")
+            rel_path = rule_file.relative_to(rules_dir)
+            lines.append(f"- `{rel_path}`")
 
     lines.append("")
     return "\n".join(lines)
@@ -489,14 +491,14 @@ def integrate_security_rules(
 
     Args:
         project_path: Path to the project root
-        output_dir: Where to store rules (default: .claude/security-rules/)
+        output_dir: Where to store rules (default: .claude/rules/security)
         update_claude_md: Whether to update/create CLAUDE.md
 
     Returns:
         Dictionary with integration results
     """
     project_path = Path(project_path)
-    output_dir = output_dir or project_path / ".claude" / "security-rules"
+    output_dir = output_dir or project_path / ".claude" / "rules" / "security"
 
     # Step 1: Detect stack
     logger.info("Detecting project stack...")
