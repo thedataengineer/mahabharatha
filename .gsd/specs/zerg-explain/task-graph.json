@@ -1,0 +1,146 @@
+{
+  "feature": "zerg-explain",
+  "version": "2.0",
+  "generated": "2026-01-31T23:00:00Z",
+  "total_tasks": 4,
+  "estimated_duration_minutes": 30,
+  "max_parallelization": 2,
+  "critical_path_minutes": 25,
+
+  "tasks": [
+    {
+      "id": "EXPLAIN-L1-001",
+      "title": "Create zerg:explain.core.md",
+      "description": "Create the core command file with split marker, flags (--scope, --save, --format, --no-diagrams), pre-flight (target parsing, scope auto-detection), 4-layer workflow overview referencing details.md, task tracking (TaskCreate/TaskUpdate), and completion criteria.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": ["zerg/data/commands/zerg:explain.core.md"],
+        "modify": [],
+        "read": ["zerg/data/commands/zerg:estimate.core.md", "zerg/data/commands/zerg:debug.core.md"]
+      },
+      "acceptance_criteria": [
+        "File exists with <!-- SPLIT: core --> marker",
+        "Contains all flags: --scope, --save, --format, --no-diagrams",
+        "Contains pre-flight with scope auto-detection logic",
+        "References all 4 layers with brief descriptions",
+        "Contains TaskCreate and TaskUpdate calls",
+        "Under 150 lines"
+      ],
+      "verification": {
+        "command": "test -f zerg/data/commands/zerg:explain.core.md && grep -q TaskCreate zerg/data/commands/zerg:explain.core.md && grep -q 'SPLIT' zerg/data/commands/zerg:explain.core.md",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 10,
+      "critical_path": true
+    },
+    {
+      "id": "EXPLAIN-L1-002",
+      "title": "Create zerg:explain.details.md",
+      "description": "Create the details reference file with: all 4 layer output templates (Summary, Logic Flow, Implementation Details, Design Decisions), python -c snippets for SymbolExtractor/DependencyMapper/ComponentDetector/MermaidGenerator, Mermaid diagram generation instructions, --save file format and path schema, edge cases (non-Python files, missing doc_engine, empty targets).",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": ["zerg/data/commands/zerg:explain.details.md"],
+        "modify": [],
+        "read": ["zerg/data/commands/zerg:estimate.details.md", "zerg/doc_engine/extractor.py", "zerg/doc_engine/dependencies.py", "zerg/doc_engine/mermaid.py", "zerg/doc_engine/detector.py"]
+      },
+      "acceptance_criteria": [
+        "File exists with <!-- SPLIT: details --> marker",
+        "Contains templates for all 4 layers",
+        "Contains python -c snippets for SymbolExtractor, DependencyMapper, ComponentDetector, MermaidGenerator",
+        "Contains Mermaid diagram generation instructions",
+        "Contains --save file schema",
+        "Contains edge case handling",
+        "Under 300 lines"
+      ],
+      "verification": {
+        "command": "test -f zerg/data/commands/zerg:explain.details.md && grep -c 'LAYER' zerg/data/commands/zerg:explain.details.md && grep -q 'MermaidGenerator' zerg/data/commands/zerg:explain.details.md",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 15,
+      "critical_path": true
+    },
+    {
+      "id": "EXPLAIN-L2-001",
+      "title": "Create zerg:explain.md parent + update backlog",
+      "description": "Create the parent command file (copy of core content for backward compatibility, with SPLIT marker referencing core and details). Update claudedocs/backlog.md to mark zerg:explain as DONE.",
+      "phase": "integration",
+      "level": 2,
+      "dependencies": ["EXPLAIN-L1-001", "EXPLAIN-L1-002"],
+      "files": {
+        "create": ["zerg/data/commands/zerg:explain.md"],
+        "modify": ["claudedocs/backlog.md"],
+        "read": ["zerg/data/commands/zerg:explain.core.md"]
+      },
+      "acceptance_criteria": [
+        "Parent file exists with content matching core",
+        "Parent has SPLIT marker referencing core and details files",
+        "claudedocs/backlog.md shows zerg:explain as DONE"
+      ],
+      "verification": {
+        "command": "test -f zerg/data/commands/zerg:explain.md && grep -q 'SPLIT' zerg/data/commands/zerg:explain.md && grep 'explain' claudedocs/backlog.md | grep -q 'DONE'",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 5,
+      "critical_path": true
+    },
+    {
+      "id": "EXPLAIN-L3-001",
+      "title": "Validate command structure and drift detection",
+      "description": "Run verification checks: all 3 files exist, TaskCreate/TaskUpdate present in all files, split markers correct, all 4 layers referenced in details, Mermaid present, drift detection passes, backlog updated. Run existing test suite to confirm no regressions.",
+      "phase": "quality",
+      "level": 3,
+      "dependencies": ["EXPLAIN-L2-001"],
+      "files": {
+        "create": [],
+        "modify": [],
+        "read": ["zerg/data/commands/zerg:explain.md", "zerg/data/commands/zerg:explain.core.md", "zerg/data/commands/zerg:explain.details.md", "claudedocs/backlog.md"]
+      },
+      "acceptance_criteria": [
+        "All 3 explain command files exist",
+        "All files contain Task tracking references",
+        "Split markers present and correct",
+        "Drift detection shows no missing Task refs",
+        "Existing tests pass"
+      ],
+      "verification": {
+        "command": "ls zerg/data/commands/zerg:explain.md zerg/data/commands/zerg:explain.core.md zerg/data/commands/zerg:explain.details.md && python -m pytest tests/ -x -q --ignore=tests/test_doc_engine.py 2>&1 | tail -5",
+        "timeout_seconds": 600
+      },
+      "estimate_minutes": 5,
+      "critical_path": true
+    }
+  ],
+
+  "levels": {
+    "1": {
+      "name": "foundation",
+      "tasks": ["EXPLAIN-L1-001", "EXPLAIN-L1-002"],
+      "parallel": true,
+      "estimated_minutes": 15,
+      "depends_on_levels": []
+    },
+    "2": {
+      "name": "integration",
+      "tasks": ["EXPLAIN-L2-001"],
+      "parallel": false,
+      "estimated_minutes": 5,
+      "depends_on_levels": [1]
+    },
+    "3": {
+      "name": "quality",
+      "tasks": ["EXPLAIN-L3-001"],
+      "parallel": false,
+      "estimated_minutes": 5,
+      "depends_on_levels": [2]
+    }
+  },
+
+  "conflict_matrix": {
+    "description": "No file ownership conflicts — each file created by exactly one task",
+    "conflicts": []
+  }
+}
