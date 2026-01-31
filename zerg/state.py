@@ -179,6 +179,18 @@ class StateManager:
                 logger.debug(f"Lock release failed: {e}")
             lock_fd.close()
 
+    def inject_state(self, state_dict: dict[str, Any]) -> None:
+        """Inject external state for read-only display (no disk write).
+
+        Used by the dashboard to display state from Claude Code Tasks
+        when the state JSON file has no task data.
+
+        Args:
+            state_dict: State dictionary to inject.
+        """
+        with self._lock:
+            self._state = state_dict
+
     async def load_async(self) -> dict[str, Any]:
         """Async version of load() - wraps blocking file I/O in thread.
 

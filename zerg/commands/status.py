@@ -186,15 +186,17 @@ def compact_progress_bar(percent: float, width: int = 20) -> str:
 class DashboardRenderer:
     """Compact real-time dashboard renderer."""
 
-    def __init__(self, state: StateManager, feature: str):
+    def __init__(self, state: StateManager, feature: str, data_source: str = "state"):
         """Initialize the dashboard renderer.
 
         Args:
             state: State manager instance
             feature: Feature name
+            data_source: Data source label ("state" or "tasks")
         """
         self.state = state
         self.feature = feature
+        self.data_source = data_source
         self.start_time = datetime.now()
 
     def render(self) -> RenderableType:
@@ -218,7 +220,10 @@ class DashboardRenderer:
         header_text = Text()
         header_text.append("ZERG Dashboard: ", style="bold cyan")
         header_text.append(self.feature, style="bold white")
-        header_text.append(" " * 20)
+        header_text.append(" " * 10)
+        source_label = "Tasks" if self.data_source == "tasks" else "State"
+        header_text.append(f"[{source_label}]", style="dim cyan")
+        header_text.append(" " * 10)
         header_text.append(f"Elapsed: {elapsed}", style="dim")
         from rich import box as rich_box
         return Panel(header_text, box=rich_box.SIMPLE, padding=(0, 1))
@@ -339,7 +344,13 @@ class DashboardRenderer:
 
             lines.append(line)
 
-        content = Text("[dim]No workers active[/dim]") if not lines else Text("\n").join(lines)
+        if not lines:
+            if self.data_source == "tasks":
+                content = Text("N/A (task-based execution)", style="dim")
+            else:
+                content = Text("[dim]No workers active[/dim]")
+        else:
+            content = Text("\n").join(lines)
         return Panel(content, title="[bold]WORKERS[/bold]", title_align="left", padding=(0, 1))
 
     def _render_retry_info(self) -> Panel:
@@ -470,17 +481,39 @@ class DashboardRenderer:
 def show_dashboard(state: StateManager, feature: str, interval: int = 1) -> None:
     """Real-time dashboard view.
 
+    Falls back to reading Claude Code Tasks from disk when the state JSON
+    has no task data (e.g., when workers were launched via slash commands).
+
     Args:
         state: State manager
         feature: Feature name
         interval: Refresh interval in seconds
     """
-    renderer = DashboardRenderer(state, feature)
+    # Determine data source: state JSON or Claude Code Tasks
+    reader = None
+    task_list_dir = None
+    data_source = "state"
+
+    state.load()
+    if not state._state.get("tasks"):
+        from zerg.claude_tasks_reader import ClaudeTasksReader
+
+        reader = ClaudeTasksReader()
+        task_list_dir = reader.find_feature_task_list(feature)
+        if task_list_dir:
+            state.inject_state(reader.read_tasks(task_list_dir))
+            data_source = "tasks"
+            logger.info("Dashboard using Claude Tasks from %s", task_list_dir.name)
+
+    renderer = DashboardRenderer(state, feature, data_source=data_source)
 
     with Live(console=console, refresh_per_second=1, screen=True) as live:
         try:
             while True:
-                state.load()
+                if reader and task_list_dir:
+                    state.inject_state(reader.read_tasks(task_list_dir))
+                else:
+                    state.load()
                 live.update(renderer.render())
                 time.sleep(interval)
         except KeyboardInterrupt:
