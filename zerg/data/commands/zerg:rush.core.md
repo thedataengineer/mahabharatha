@@ -175,7 +175,7 @@ for i in $(seq 0 $((WORKERS - 1))); do
     -e ZERG_FEATURE=$FEATURE \
     -e ZERG_BRANCH=$WORKER_BRANCH \
     -e ZERG_PORT=$WORKER_PORT \
-    -e CLAUDE_CODE_TASK_LIST_ID=$FEATURE \
+    -e CLAUDE_CODE_TASK_LIST_ID=${CLAUDE_CODE_TASK_LIST_ID:-} \
     -p "$WORKER_PORT:$WORKER_PORT" \
     -v "$(realpath $WORKTREE):/workspace" \
     workspace \
@@ -192,6 +192,7 @@ python3 .zerg/orchestrator.py \
   --feature "$FEATURE" \
   --workers "$WORKERS" \
   --config ".zerg/config.yaml" \
+  --task-graph "$SPEC_DIR/task-graph.json" \
   --assignments "$SPEC_DIR/worker-assignments.json" \
   &
 

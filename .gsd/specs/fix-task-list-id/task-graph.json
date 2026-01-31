@@ -1,0 +1,128 @@
+{
+  "feature": "fix-task-list-id",
+  "version": "2.0",
+  "generated": "2026-01-31T00:00:00Z",
+  "total_tasks": 4,
+  "estimated_duration_minutes": 30,
+  "max_parallelization": 2,
+
+  "tasks": [
+    {
+      "id": "TASK-L1-001",
+      "title": "Fix CLAUDE_CODE_TASK_LIST_ID propagation in launcher.py",
+      "description": "Remove feature fallback from all 4 spawn methods. Only propagate env var if orchestrator has it set. Subprocess sites (~462, ~734): replace setdefault with conditional. Container sites (~974, ~1543): use conditional dict merge.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": ["zerg/launcher.py"],
+        "read": []
+      },
+      "acceptance_criteria": [
+        "No spawn site uses feature as fallback for CLAUDE_CODE_TASK_LIST_ID",
+        "Env var only set in worker env when orchestrator has it",
+        "ALLOWED_ENV_VARS entry preserved"
+      ],
+      "verification": {
+        "command": "python -m pytest tests/unit/test_orchestrator.py tests/unit/test_orchestrator_recovery.py -x -q 2>/dev/null; grep -c 'feature' zerg/launcher.py | grep -v CLAUDE_CODE_TASK_LIST_ID || true",
+        "timeout_seconds": 120
+      }
+    },
+    {
+      "id": "TASK-L1-002",
+      "title": "Remove CLAUDE_CODE_TASK_LIST_ID safety net in worker_main.py",
+      "description": "Delete lines ~116-117 that force CLAUDE_CODE_TASK_LIST_ID = args.feature when unset. Workers should inherit from orchestrator or have no value.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": ["zerg/worker_main.py"],
+        "read": []
+      },
+      "acceptance_criteria": [
+        "worker_main.py has zero references to CLAUDE_CODE_TASK_LIST_ID",
+        "No other behavioral changes in worker env setup"
+      ],
+      "verification": {
+        "command": "grep -c CLAUDE_CODE_TASK_LIST_ID zerg/worker_main.py | grep '^0$'",
+        "timeout_seconds": 30
+      }
+    },
+    {
+      "id": "TASK-L2-001",
+      "title": "Update rush.core.md container template and CLAUDE.md docs",
+      "description": "In zerg:rush.core.md line ~178, change -e CLAUDE_CODE_TASK_LIST_ID=$FEATURE to -e CLAUDE_CODE_TASK_LIST_ID=${CLAUDE_CODE_TASK_LIST_ID:-}. In CLAUDE.md, update rule 5 to document inheritance behavior and lower drift check #5 threshold from ≥5 to ≥4.",
+      "phase": "integration",
+      "level": 2,
+      "dependencies": ["TASK-L1-001", "TASK-L1-002"],
+      "files": {
+        "create": [],
+        "modify": ["zerg/data/commands/zerg:rush.core.md", "CLAUDE.md"],
+        "read": []
+      },
+      "acceptance_criteria": [
+        "rush.core.md uses ${CLAUDE_CODE_TASK_LIST_ID:-} not $FEATURE",
+        "CLAUDE.md rule 5 documents inheritance",
+        "Drift check #5 expects ≥4"
+      ],
+      "verification": {
+        "command": "grep 'CLAUDE_CODE_TASK_LIST_ID' zerg/data/commands/zerg:rush.core.md | grep -v FEATURE",
+        "timeout_seconds": 30
+      }
+    },
+    {
+      "id": "TASK-L3-001",
+      "title": "Run full verification suite",
+      "description": "Run all existing tests, verify grep patterns match expected counts, confirm no regressions.",
+      "phase": "testing",
+      "level": 3,
+      "dependencies": ["TASK-L2-001"],
+      "files": {
+        "create": [],
+        "modify": [],
+        "read": ["zerg/launcher.py", "zerg/worker_main.py", "zerg/data/commands/zerg:rush.core.md", "CLAUDE.md"]
+      },
+      "acceptance_criteria": [
+        "All existing tests pass",
+        "launcher.py has no feature fallback in CLAUDE_CODE_TASK_LIST_ID lines",
+        "worker_main.py has 0 CLAUDE_CODE_TASK_LIST_ID references",
+        "Drift detection check passes with ≥4 threshold"
+      ],
+      "verification": {
+        "command": "python -m pytest tests/ -x -q",
+        "timeout_seconds": 180
+      }
+    }
+  ],
+
+  "levels": {
+    "1": {
+      "name": "foundation",
+      "tasks": ["TASK-L1-001", "TASK-L1-002"],
+      "parallel": true,
+      "estimated_minutes": 10,
+      "depends_on_levels": []
+    },
+    "2": {
+      "name": "integration",
+      "tasks": ["TASK-L2-001"],
+      "parallel": false,
+      "estimated_minutes": 10,
+      "depends_on_levels": [1]
+    },
+    "3": {
+      "name": "testing",
+      "tasks": ["TASK-L3-001"],
+      "parallel": false,
+      "estimated_minutes": 10,
+      "depends_on_levels": [2]
+    }
+  },
+
+  "conflict_matrix": {
+    "description": "No file ownership conflicts - each file modified by exactly one task",
+    "conflicts": []
+  }
+}

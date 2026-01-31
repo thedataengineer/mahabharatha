@@ -1,0 +1,97 @@
+{
+  "feature": "align-state-paths",
+  "version": "2.0",
+  "generated": "2026-01-31T00:00:00Z",
+  "total_tasks": 3,
+  "estimated_duration_minutes": 30,
+  "max_parallelization": 2,
+
+  "tasks": [
+    {
+      "id": "ASP-L1-001",
+      "title": "v2 orchestrator state path alignment + __main__ entrypoint",
+      "description": "Add feature parameter to v2 Orchestrator.__init__, change _state_path to .zerg/state/{feature}.json, and add __main__ block with argparse accepting --feature, --workers, --config, --task-graph.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": [".zerg/orchestrator.py"],
+        "read": []
+      },
+      "acceptance_criteria": [
+        "Orchestrator.__init__ accepts feature param with default 'default'",
+        "_state_path uses .zerg/state/{feature}.json format",
+        "__main__ block parses --feature, --workers, --config, --task-graph",
+        "Existing tests pass"
+      ],
+      "verification": {
+        "command": "python -m pytest .zerg/tests/test_orchestrator.py -x -q",
+        "timeout_seconds": 60
+      },
+      "estimate_minutes": 15
+    },
+    {
+      "id": "ASP-L1-002",
+      "title": "CLI orchestrator early state persist",
+      "description": "Add self.state.save() immediately after self.state.load() in the CLI orchestrator's start() method to ensure state file exists on disk before any work begins.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": ["zerg/orchestrator.py"],
+        "read": []
+      },
+      "acceptance_criteria": [
+        "self.state.save() called right after self.state.load()",
+        "State file exists on disk after start() initializes",
+        "Existing tests pass"
+      ],
+      "verification": {
+        "command": "python -m pytest tests/unit/test_orchestrator.py tests/unit/test_orchestrator_recovery.py -x -q",
+        "timeout_seconds": 120
+      },
+      "estimate_minutes": 10
+    },
+    {
+      "id": "ASP-L2-001",
+      "title": "Slash command --task-graph passthrough",
+      "description": "Update the zerg:rush.core.md slash command to pass --task-graph argument to the v2 orchestrator __main__ entrypoint.",
+      "phase": "integration",
+      "level": 2,
+      "dependencies": ["ASP-L1-001"],
+      "files": {
+        "create": [],
+        "modify": ["zerg/data/commands/zerg:rush.core.md"],
+        "read": []
+      },
+      "acceptance_criteria": [
+        "v2 orchestrator launch command includes --task-graph arg",
+        "Markdown is syntactically correct"
+      ],
+      "verification": {
+        "command": "grep -q 'task-graph' zerg/data/commands/zerg:rush.core.md",
+        "timeout_seconds": 10
+      },
+      "estimate_minutes": 5
+    }
+  ],
+
+  "levels": {
+    "1": {
+      "name": "foundation",
+      "tasks": ["ASP-L1-001", "ASP-L1-002"],
+      "parallel": true,
+      "estimated_minutes": 15,
+      "depends_on_levels": []
+    },
+    "2": {
+      "name": "integration",
+      "tasks": ["ASP-L2-001"],
+      "parallel": false,
+      "estimated_minutes": 5,
+      "depends_on_levels": [1]
+    }
+  }
+}

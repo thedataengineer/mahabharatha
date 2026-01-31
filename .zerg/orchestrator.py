@@ -62,16 +62,18 @@ class Orchestrator:
     enforcing level-based task ordering and quality gates.
     """
 
-    def __init__(self, config_path: str = ".zerg/config.yaml"):
+    def __init__(self, config_path: str = ".zerg/config.yaml", feature: str = "default"):
         """Load configuration and initialize state.
 
         Args:
             config_path: Path to ZERG configuration file
+            feature: Feature name for state isolation
         """
         self._config_path = Path(config_path)
         self._config = self._load_config()
         self._state = OrchestratorState.IDLE
-        self._state_path = ".zerg/state.json"
+        self._feature = feature
+        self._state_path = f".zerg/state/{feature}.json"
         self._log_path = Path(self._config.get("logging", {}).get("directory", ".zerg/logs"))
 
         # Worker management
@@ -444,3 +446,25 @@ class Orchestrator:
     def current_level(self) -> int:
         """Current execution level."""
         return self._current_level
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="ZERG v2 Orchestrator")
+    parser.add_argument("--feature", required=True, help="Feature name")
+    parser.add_argument("--workers", type=int, default=5, help="Number of workers")
+    parser.add_argument("--config", default=".zerg/config.yaml", help="Config file path")
+    parser.add_argument("--task-graph", required=True, help="Path to task-graph.json")
+    parser.add_argument("--assignments", help="Path to worker-assignments.json")
+    parser.add_argument("--resume", action="store_true", help="Resume from checkpoint")
+    parser.add_argument("--dry-run", action="store_true", help="Show plan without executing")
+    args = parser.parse_args()
+
+    orch = Orchestrator(config_path=args.config, feature=args.feature)
+    orch.start(
+        task_graph_path=args.task_graph,
+        workers=args.workers,
+        resume=args.resume,
+        dry_run=args.dry_run,
+    )

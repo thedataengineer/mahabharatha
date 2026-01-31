@@ -331,8 +331,8 @@ class TestSymbolExtractor:
         f.write_text("", encoding="utf-8")
         table = extractor.extract(f)
         assert table.module_docstring is None
-        assert table.classes == []
-        assert table.functions == []
+        assert table.not classes
+        assert table.not functions
 
     def test_extract_syntax_error_raises(
         self, extractor: SymbolExtractor, tmp_path: Path
@@ -448,7 +448,7 @@ class TestDependencyMapper:
         (pkg / "core.py").write_text("import os\nimport json\n", encoding="utf-8")
         graph = DependencyMapper.build(tmp_path, package="mypkg")
         node = graph.modules["mypkg.core"]
-        assert node.imports == []  # os, json are external
+        assert node.not imports  # os, json are external
 
     def test_syntax_error_file_skipped(self, tmp_path: Path) -> None:
         pkg = tmp_path / "mypkg"
@@ -857,8 +857,8 @@ class TestDataClasses:
     def test_module_node(self) -> None:
         node = ModuleNode(name="pkg.mod", path=Path("/fake"))
         assert node.name == "pkg.mod"
-        assert node.imports == []
-        assert node.imported_by == []
+        assert node.not imports
+        assert node.not imported_by
 
     def test_dependency_graph_empty(self) -> None:
         graph = DependencyGraph()
@@ -877,7 +877,7 @@ class TestDataClasses:
             type_aliases=[],
         )
         assert table.path == simple_py
-        assert table.classes == []
+        assert table.not classes
 
     def test_glossary_entry(self) -> None:
         entry = GlossaryEntry(
@@ -893,4 +893,4 @@ class TestDataClasses:
     def test_sidebar_config(self) -> None:
         cfg = SidebarConfig()
         assert cfg.title == "ZERG Wiki"
-        assert cfg.sections == []
+        assert cfg.not sections

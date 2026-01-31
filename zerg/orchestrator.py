@@ -416,6 +416,7 @@ class Orchestrator:
 
         # Initialize state
         self.state.load()
+        self.state.save()  # Persist initial state to disk immediately
         self.state.append_event("rush_started", {
             "workers": worker_count,
             "total_tasks": len(tasks),

@@ -112,10 +112,6 @@ def setup_environment(args: argparse.Namespace) -> dict[str, str]:
     elif not env.get("ZERG_BRANCH"):
         env["ZERG_BRANCH"] = f"zerg/{args.feature}/worker-{args.worker_id}"
 
-    # Propagate task list ID for cross-session coordination
-    if not env.get("CLAUDE_CODE_TASK_LIST_ID"):
-        env["CLAUDE_CODE_TASK_LIST_ID"] = args.feature
-
     return env
 
 

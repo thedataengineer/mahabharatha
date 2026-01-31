@@ -43,7 +43,7 @@ These are Claude Code slash commands. Use them inside a Claude Code session:
 2. **Every command tracks itself.** All `/zerg:*` commands must TaskCreate on start, TaskUpdate to `in_progress`, and TaskUpdate to `completed` on finish.
 3. **Workers claim via Tasks.** Before executing a ZERG task, workers MUST call TaskUpdate with `status: "in_progress"`. After completion or failure, update accordingly.
 4. **Dependencies use Task fields.** Use `blocks`/`blockedBy` via TaskUpdate — not just task-graph.json.
-5. **Sessions share via CLAUDE_CODE_TASK_LIST_ID.** All workers launched by `/zerg:rush` MUST use `CLAUDE_CODE_TASK_LIST_ID={feature}` so they share the same task list.
+5. **Sessions share via CLAUDE_CODE_TASK_LIST_ID.** Workers inherit the orchestrator's `CLAUDE_CODE_TASK_LIST_ID` by default. If the orchestrator has no value set, workers use the same default task list. Teams can explicitly `export CLAUDE_CODE_TASK_LIST_ID=feature` before starting Claude Code for feature-scoped lists.
 6. **Tasks persist in `~/.claude/tasks/`.** They survive session restarts. They are the coordination mechanism between parallel Claude Code instances.
 7. **Resume checks existing Tasks.** `/zerg:rush --resume` calls TaskList first and only creates tasks that don't already exist.
 
@@ -110,9 +110,9 @@ done
 # 4. CLAUDE_CODE_TASK_LIST_ID in launcher allowlist
 grep -q "CLAUDE_CODE_TASK_LIST_ID" zerg/launcher.py || echo "DRIFT: missing from ALLOWED_ENV_VARS"
 
-# 5. All spawn methods inject CLAUDE_CODE_TASK_LIST_ID
+# 5. All spawn methods conditionally inject CLAUDE_CODE_TASK_LIST_ID
 count=$(grep -c "CLAUDE_CODE_TASK_LIST_ID" zerg/launcher.py)
-echo "launcher.py — $count CLAUDE_CODE_TASK_LIST_ID refs (expect ≥5)"
+echo "launcher.py — $count CLAUDE_CODE_TASK_LIST_ID refs (expect ≥4)"
 ```
 
 ### What Drift Looks Like

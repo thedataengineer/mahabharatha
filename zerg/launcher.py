@@ -460,10 +460,9 @@ class SubprocessLauncher(WorkerLauncher):
             })
 
             # Cross-session task list coordination
-            worker_env.setdefault(
-                "CLAUDE_CODE_TASK_LIST_ID",
-                os.environ.get("CLAUDE_CODE_TASK_LIST_ID", feature),
-            )
+            task_list_id = os.environ.get("CLAUDE_CODE_TASK_LIST_ID")
+            if task_list_id:
+                worker_env.setdefault("CLAUDE_CODE_TASK_LIST_ID", task_list_id)
 
             # Ensure structured log directories exist
             (repo_path / LOGS_WORKERS_DIR).mkdir(parents=True, exist_ok=True)
@@ -731,10 +730,9 @@ class SubprocessLauncher(WorkerLauncher):
             })
 
             # Cross-session task list coordination
-            worker_env.setdefault(
-                "CLAUDE_CODE_TASK_LIST_ID",
-                os.environ.get("CLAUDE_CODE_TASK_LIST_ID", feature),
-            )
+            task_list_id = os.environ.get("CLAUDE_CODE_TASK_LIST_ID")
+            if task_list_id:
+                worker_env.setdefault("CLAUDE_CODE_TASK_LIST_ID", task_list_id)
 
             # Ensure structured log directories exist
             (repo_path / LOGS_WORKERS_DIR).mkdir(parents=True, exist_ok=True)
@@ -971,9 +969,8 @@ class ContainerLauncher(WorkerLauncher):
                 "ZERG_WORKTREE": "/workspace",
                 "ZERG_BRANCH": branch,
                 "ZERG_SPEC_DIR": f"/workspace/.gsd/specs/{feature}",
-                "CLAUDE_CODE_TASK_LIST_ID": os.environ.get(
-                    "CLAUDE_CODE_TASK_LIST_ID", feature
-                ),
+                **({"CLAUDE_CODE_TASK_LIST_ID": os.environ["CLAUDE_CODE_TASK_LIST_ID"]}
+                   if "CLAUDE_CODE_TASK_LIST_ID" in os.environ else {}),
             }
 
             # Add API key from environment or .env file
@@ -1540,9 +1537,8 @@ class ContainerLauncher(WorkerLauncher):
                 "ZERG_WORKTREE": "/workspace",
                 "ZERG_BRANCH": branch,
                 "ZERG_SPEC_DIR": f"/workspace/.gsd/specs/{feature}",
-                "CLAUDE_CODE_TASK_LIST_ID": os.environ.get(
-                    "CLAUDE_CODE_TASK_LIST_ID", feature
-                ),
+                **({"CLAUDE_CODE_TASK_LIST_ID": os.environ["CLAUDE_CODE_TASK_LIST_ID"]}
+                   if "CLAUDE_CODE_TASK_LIST_ID" in os.environ else {}),
             }
 
             # Add API key from environment or .env file
