@@ -20,7 +20,7 @@ ZERG coordinates multiple Claude Code sessions to build features in parallel. Yo
 | Section | Description |
 |---------|-------------|
 | [[Command Reference]] | All `/zerg:*` slash commands with flags and examples |
-| Architecture | System internals: orchestrator, launcher, task graph, state management |
+| [[Architecture Overview]] | System internals: orchestrator, launcher, task graph, state management |
 | [[Configuration]] | `.zerg/config.yaml` options: workers, quality gates, resources, plugins |
 | [[Tuning Guide]] | Performance tuning: worker count, timeouts, resource limits |
 | [[Troubleshooting]] | Common issues, error messages, and recovery procedures |
