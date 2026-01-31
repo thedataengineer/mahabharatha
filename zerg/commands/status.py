@@ -117,29 +117,13 @@ def status(
 
 
 def detect_feature() -> str | None:
-    """Detect active feature from state files.
+    """Detect active feature. Re-exported from shared utility.
 
-    Checks .zerg/state/ for the most recent state JSON first,
-    then falls back to .gsd/.current-feature.
-
-    Returns:
-        Feature name or None
+    See :func:`zerg.commands._utils.detect_feature` for details.
     """
-    state_dir = Path(".zerg/state")
-    if state_dir.exists():
-        state_files = list(state_dir.glob("*.json"))
-        if state_files:
-            state_files.sort(key=lambda p: p.stat().st_mtime, reverse=True)
-            return state_files[0].stem
+    from zerg.commands._utils import detect_feature as _detect
 
-    # Fallback: check .gsd/.current-feature
-    current_feature = Path(".gsd/.current-feature")
-    if current_feature.exists():
-        name = current_feature.read_text().strip()
-        if name:
-            return name
-
-    return None
+    return _detect()
 
 
 def format_elapsed(start: datetime) -> str:
