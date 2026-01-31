@@ -106,6 +106,13 @@ for f in zerg/data/commands/zerg:*.md; do
     echo "DRIFT: $f reads state JSON but has no TaskList/TaskGet"
   fi
 done
+
+# 4. CLAUDE_CODE_TASK_LIST_ID in launcher allowlist
+grep -q "CLAUDE_CODE_TASK_LIST_ID" zerg/launcher.py || echo "DRIFT: missing from ALLOWED_ENV_VARS"
+
+# 5. All spawn methods inject CLAUDE_CODE_TASK_LIST_ID
+count=$(grep -c "CLAUDE_CODE_TASK_LIST_ID" zerg/launcher.py)
+echo "launcher.py — $count CLAUDE_CODE_TASK_LIST_ID refs (expect ≥5)"
 ```
 
 ### What Drift Looks Like

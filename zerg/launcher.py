@@ -33,6 +33,8 @@ ALLOWED_ENV_VARS = {
     "ZERG_REPO_PATH",
     "ZERG_LOG_LEVEL",
     "ZERG_DEBUG",
+    # Claude Code cross-session coordination
+    "CLAUDE_CODE_TASK_LIST_ID",
     # Common development env vars
     "CI",
     "DEBUG",
@@ -457,6 +459,12 @@ class SubprocessLauncher(WorkerLauncher):
                 "ZERG_LOG_DIR": str(log_dir),
             })
 
+            # Cross-session task list coordination
+            worker_env.setdefault(
+                "CLAUDE_CODE_TASK_LIST_ID",
+                os.environ.get("CLAUDE_CODE_TASK_LIST_ID", feature),
+            )
+
             # Ensure structured log directories exist
             (repo_path / LOGS_WORKERS_DIR).mkdir(parents=True, exist_ok=True)
             (repo_path / LOGS_TASKS_DIR).mkdir(parents=True, exist_ok=True)
@@ -722,6 +730,12 @@ class SubprocessLauncher(WorkerLauncher):
                 "ZERG_LOG_DIR": str(log_dir),
             })
 
+            # Cross-session task list coordination
+            worker_env.setdefault(
+                "CLAUDE_CODE_TASK_LIST_ID",
+                os.environ.get("CLAUDE_CODE_TASK_LIST_ID", feature),
+            )
+
             # Ensure structured log directories exist
             (repo_path / LOGS_WORKERS_DIR).mkdir(parents=True, exist_ok=True)
             (repo_path / LOGS_TASKS_DIR).mkdir(parents=True, exist_ok=True)
@@ -957,6 +971,9 @@ class ContainerLauncher(WorkerLauncher):
                 "ZERG_WORKTREE": "/workspace",
                 "ZERG_BRANCH": branch,
                 "ZERG_SPEC_DIR": f"/workspace/.gsd/specs/{feature}",
+                "CLAUDE_CODE_TASK_LIST_ID": os.environ.get(
+                    "CLAUDE_CODE_TASK_LIST_ID", feature
+                ),
             }
 
             # Add API key from environment or .env file
@@ -1523,6 +1540,9 @@ class ContainerLauncher(WorkerLauncher):
                 "ZERG_WORKTREE": "/workspace",
                 "ZERG_BRANCH": branch,
                 "ZERG_SPEC_DIR": f"/workspace/.gsd/specs/{feature}",
+                "CLAUDE_CODE_TASK_LIST_ID": os.environ.get(
+                    "CLAUDE_CODE_TASK_LIST_ID", feature
+                ),
             }
 
             # Add API key from environment or .env file

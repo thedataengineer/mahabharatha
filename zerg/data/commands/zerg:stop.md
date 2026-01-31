@@ -78,6 +78,13 @@ Feature: {feature}
 Context-Usage: {percentage}%
 ```
 
+## Cross-Session Coordination
+
+```bash
+FEATURE=$(cat .gsd/.current-feature 2>/dev/null)
+TASK_LIST=${CLAUDE_CODE_TASK_LIST_ID:-$FEATURE}
+```
+
 ## Task System Updates
 
 After checkpoint/stop completes, update Claude Code Tasks to reflect stopped state:

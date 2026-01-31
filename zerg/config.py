@@ -41,6 +41,10 @@ class WorkersConfig(BaseModel):
     )
     backoff_base_seconds: int = Field(default=30, ge=1, le=600)
     backoff_max_seconds: int = Field(default=300, ge=1, le=3600)
+    task_list_id: str | None = Field(
+        default=None,
+        description="Override CLAUDE_CODE_TASK_LIST_ID (default: feature name)",
+    )
 
 
 class PortsConfig(BaseModel):

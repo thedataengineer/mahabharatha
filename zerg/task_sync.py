@@ -6,6 +6,7 @@ from JSON state to Claude Tasks for the orchestrator.
 """
 
 import json
+import os
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -60,6 +61,7 @@ class ClaudeTask:
     created_at: datetime = field(default_factory=datetime.now)
     updated_at: datetime = field(default_factory=datetime.now)
     active_form: str | None = None
+    task_list_id: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for API calls."""
@@ -74,6 +76,7 @@ class ClaudeTask:
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
             "active_form": self.active_form,
+            "task_list_id": self.task_list_id,
         }
 
 
@@ -100,14 +103,19 @@ class TaskSyncBridge:
         self,
         feature: str,
         state_manager: StateManager | None = None,
+        task_list_id: str | None = None,
     ) -> None:
         """Initialize task sync bridge.
 
         Args:
             feature: Feature name for task context
             state_manager: Optional state manager (created if not provided)
+            task_list_id: CLAUDE_CODE_TASK_LIST_ID for cross-session coordination
         """
         self.feature = feature
+        self.task_list_id = task_list_id or os.environ.get(
+            "CLAUDE_CODE_TASK_LIST_ID", feature
+        )
         self.state = state_manager or StateManager(feature)
         self._synced_tasks: dict[str, ClaudeTask] = {}
 
@@ -145,6 +153,7 @@ class TaskSyncBridge:
                 level=level,
                 feature=self.feature,
                 active_form=f"Executing {subject}",
+                task_list_id=self.task_list_id,
             )
 
             self._synced_tasks[task_id] = claude_task
@@ -154,6 +163,39 @@ class TaskSyncBridge:
 
         logger.info(f"Created {len(created)} Claude tasks for level {level}")
         return created
+
+    def create_level_tasks_resumable(
+        self,
+        level: int,
+        tasks: list[dict[str, Any]],
+        existing_subjects: set[str] | None = None,
+    ) -> list[ClaudeTask]:
+        """Create tasks, skipping any that already exist (resume-safe).
+
+        Args:
+            level: Level number
+            tasks: List of task specifications from task graph or manifest
+            existing_subjects: Set of existing task subjects to skip
+
+        Returns:
+            List of newly created ClaudeTask objects
+        """
+        if existing_subjects is None:
+            return self.create_level_tasks(level, tasks)
+
+        new_tasks = []
+        for task in tasks:
+            title = task.get("title", f"Task {task.get('id', '')}")
+            subject = f"[L{level}] {title}"
+            if subject not in existing_subjects:
+                new_tasks.append(task)
+            else:
+                logger.info("Skipping existing task: %s", subject)
+
+        if not new_tasks:
+            logger.info("All %d tasks at level %d already exist", len(tasks), level)
+            return []
+        return self.create_level_tasks(level, new_tasks)
 
     def sync_state(self, state: dict[str, Any] | None = None) -> int:
         """Sync ZERG state to Claude Tasks.

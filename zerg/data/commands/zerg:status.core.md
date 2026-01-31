@@ -7,6 +7,7 @@ Display current factory execution status.
 
 ```bash
 FEATURE=$(cat .gsd/.current-feature 2>/dev/null)
+TASK_LIST=${CLAUDE_CODE_TASK_LIST_ID:-$FEATURE}
 SPEC_DIR=".gsd/specs/$FEATURE"
 
 if [ -z "$FEATURE" ]; then
@@ -31,6 +32,7 @@ fi
 ═══════════════════════════════════════════════════════════════════════════════
 
 Feature:      {feature}
+Task List:    $TASK_LIST
 Phase:        {phase: PLANNING | DESIGNING | EXECUTING | MERGING | COMPLETE}
 Orchestrator: {orch_status}
 Started:      {start_time}

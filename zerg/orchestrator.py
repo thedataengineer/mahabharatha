@@ -10,6 +10,7 @@ Delegates to extracted components:
 
 import asyncio
 import contextlib
+import os
 import time
 from collections.abc import Callable
 from datetime import datetime
@@ -129,7 +130,10 @@ class Orchestrator:
         )
         self.assigner: WorkerAssignment | None = None
         self.merger = MergeCoordinator(feature, self.config, repo_path)
-        self.task_sync = TaskSyncBridge(feature, self.state)
+        self.task_sync = TaskSyncBridge(
+            feature, self.state,
+            task_list_id=os.environ.get("CLAUDE_CODE_TASK_LIST_ID", feature),
+        )
 
         # Create extracted components
         self._launcher_config = LauncherConfigurator(

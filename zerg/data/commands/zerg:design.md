@@ -6,6 +6,7 @@ Generate technical architecture and prepare for parallel execution.
 
 ```bash
 FEATURE=$(cat .gsd/.current-feature 2>/dev/null)
+TASK_LIST=${CLAUDE_CODE_TASK_LIST_ID:-$FEATURE}
 
 if [ -z "$FEATURE" ]; then
   echo "ERROR: No active feature. Run /zerg:plan first"

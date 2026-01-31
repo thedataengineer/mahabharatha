@@ -22,6 +22,9 @@ fi
 # Sanitize feature name (lowercase, hyphens only)
 FEATURE=$(echo "$FEATURE" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | tr -cd 'a-z0-9-')
 
+# Cross-session task list coordination
+TASK_LIST=${CLAUDE_CODE_TASK_LIST_ID:-$FEATURE}
+
 # Create spec directory
 mkdir -p ".gsd/specs/$FEATURE"
 echo "$FEATURE" > .gsd/.current-feature

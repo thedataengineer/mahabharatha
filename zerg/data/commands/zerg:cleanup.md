@@ -31,6 +31,20 @@ Options:
   --dry-run            Show cleanup plan without executing
 ```
 
+## Pre-Flight
+
+```bash
+FEATURE=$(cat .gsd/.current-feature 2>/dev/null)
+TASK_LIST=${CLAUDE_CODE_TASK_LIST_ID:-$FEATURE}
+```
+
+## Task Archive
+
+Before removing state, archive the task list:
+1. Call TaskList to get all tasks for this feature
+2. Write to `.zerg/archive/{feature}/tasks-{timestamp}.json`
+3. Log: "Archived {N} tasks to .zerg/archive/{feature}/"
+
 ## Cleanup Scope
 
 ### What Gets Removed
@@ -49,6 +63,7 @@ Options:
 - Merged changes (already in target branch)
 - Spec files (`.gsd/specs/{feature}/`)
 - Task graph and design docs
+- Task history (`.zerg/archive/{feature}/`)
 
 ## Dry Run Mode
 

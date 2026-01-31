@@ -6,6 +6,7 @@ Retry failed or blocked tasks.
 
 ```bash
 FEATURE=$(cat .gsd/.current-feature 2>/dev/null)
+TASK_LIST=${CLAUDE_CODE_TASK_LIST_ID:-$FEATURE}
 STATE_FILE=".zerg/state/$FEATURE.json"
 
 # Validate prerequisites

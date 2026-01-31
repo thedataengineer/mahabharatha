@@ -6,6 +6,7 @@ Launch parallel workers to execute the task graph.
 
 ```bash
 FEATURE=$(cat .gsd/.current-feature 2>/dev/null)
+TASK_LIST=${CLAUDE_CODE_TASK_LIST_ID:-$FEATURE}
 SPEC_DIR=".gsd/specs/$FEATURE"
 
 # Validate prerequisites
