@@ -1,0 +1,68 @@
+{
+  "feature": "launcher-mode-verification",
+  "version": "2.0",
+  "generated": "2026-01-31T22:00:00Z",
+  "total_tasks": 2,
+  "estimated_duration_minutes": 10,
+  "max_parallelization": 1,
+  "critical_path_minutes": 10,
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "title": "Enhance rush launcher mode output",
+      "description": "Replace class name display with human-friendly mode label and worker count. Add mode to completion summary.",
+      "phase": "fix",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": ["zerg/commands/rush.py"],
+        "read": []
+      },
+      "verification": {
+        "command": "python -c \"from zerg.commands.rush import rush; print('ok')\"",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 5,
+      "skills_required": ["python"]
+    },
+    {
+      "id": "TASK-002",
+      "title": "Update rush tests for new output format",
+      "description": "Update any test assertions checking for old 'Launcher:' output to match new 'Launcher mode:' format.",
+      "phase": "testing",
+      "level": 2,
+      "dependencies": ["TASK-001"],
+      "files": {
+        "create": [],
+        "modify": ["tests/unit/test_rush_cmd.py"],
+        "read": []
+      },
+      "verification": {
+        "command": "python -m pytest tests/unit/test_rush_cmd.py -v --tb=short",
+        "timeout_seconds": 60
+      },
+      "estimate_minutes": 5,
+      "skills_required": ["python", "pytest"]
+    }
+  ],
+  "levels": {
+    "1": {
+      "name": "fix",
+      "tasks": ["TASK-001"],
+      "parallel": false,
+      "estimated_minutes": 5
+    },
+    "2": {
+      "name": "testing",
+      "tasks": ["TASK-002"],
+      "parallel": false,
+      "estimated_minutes": 5,
+      "depends_on_levels": [1]
+    }
+  },
+  "conflict_matrix": {
+    "description": "Sequential — TASK-002 depends on TASK-001",
+    "conflicts": []
+  }
+}

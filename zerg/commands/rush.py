@@ -157,7 +157,9 @@ def rush(
         # Create orchestrator and start
         orchestrator = Orchestrator(feature, config, launcher_mode=mode)
         launcher_name = type(orchestrator.launcher).__name__
-        console.print(f"Launcher: [bold]{launcher_name}[/bold]")
+        mode_label = "container (Docker)" if "Container" in launcher_name else "subprocess"
+        console.print(f"Launcher mode: [bold]{mode_label}[/bold]")
+        console.print(f"Workers: [bold]{workers}[/bold]")
 
         # Register task completion callback with backlog update
         backlog_path = Path(f"tasks/{feature.upper()}-BACKLOG.md")
@@ -188,7 +190,7 @@ def rush(
         # Show final status
         status = orchestrator.status()
         if status["is_complete"]:
-            console.print("\n[bold green]✓ All tasks complete![/bold green]")
+            console.print(f"\n[bold green]✓ All tasks complete![/bold green] (mode: {mode_label})")
         else:
             pct = status["progress"]["percent"]
             console.print(
