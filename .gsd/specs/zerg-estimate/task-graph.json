@@ -1,0 +1,157 @@
+{
+  "feature": "zerg-estimate",
+  "version": "2.0",
+  "generated": "2026-01-31T00:00:00Z",
+  "total_tasks": 4,
+  "estimated_duration_minutes": 60,
+  "max_parallelization": 2,
+
+  "tasks": [
+    {
+      "id": "TASK-L1-001",
+      "title": "Create zerg:estimate.core.md",
+      "description": "Create the core command file with: split marker, flags (--pre/--post/--calibrate/--workers/--format/--verbose/--history), pre-flight (auto-detect feature and mode), workflow overview (3 modes: pre-estimate, post-compare, calibrate), task tracking lifecycle (TaskCreate/TaskUpdate), completion criteria. Follow zerg:debug.core.md pattern.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": ["zerg/data/commands/zerg:estimate.core.md"],
+        "modify": [],
+        "read": ["zerg/data/commands/zerg:debug.core.md", "zerg/data/commands/zerg:analyze.md"]
+      },
+      "acceptance_criteria": [
+        "File contains <!-- SPLIT: core, parent: zerg:estimate.md --> marker",
+        "All flags documented: --pre, --post, --calibrate, --workers, --format, --verbose, --history",
+        "Pre-flight with auto-detection logic",
+        "Workflow overview referencing details file for full templates",
+        "TaskCreate/TaskUpdate lifecycle present",
+        "< 150 lines"
+      ],
+      "verification": {
+        "command": "test -f zerg/data/commands/zerg:estimate.core.md && grep -q 'SPLIT' zerg/data/commands/zerg:estimate.core.md && grep -q 'TaskCreate' zerg/data/commands/zerg:estimate.core.md && echo OK",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 20
+    },
+    {
+      "id": "TASK-L1-002",
+      "title": "Create zerg:estimate.details.md",
+      "description": "Create the details reference file with: split marker, PERT formula with risk weighting (O/M/P derivation from risk_score, mean/stddev/P50/P80/P95), per-task output template, per-level output template, feature summary template, post-execution comparison table template, calibration algorithm (bias factor, per-grade breakdown, MAE), JSON schemas (history + calibration files), cost projection model (python -c snippets using .zerg/estimate.py ResourceEstimator), python -c snippets for RiskScorer and WhatIfEngine, edge cases (no task-graph, no state, no history).",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": ["zerg/data/commands/zerg:estimate.details.md"],
+        "modify": [],
+        "read": [
+          "zerg/data/commands/zerg:debug.details.md",
+          "zerg/risk_scoring.py",
+          "zerg/whatif.py",
+          "zerg/metrics.py",
+          ".zerg/estimate.py"
+        ]
+      },
+      "acceptance_criteria": [
+        "File contains <!-- SPLIT: details, parent: zerg:estimate.md --> marker",
+        "PERT formula documented with O/M/P derivation from risk_score",
+        "Confidence interval math: P50, P80, P95 with stddev multipliers",
+        "Pre-execution output template with task/level/feature tables",
+        "Post-execution comparison table template",
+        "Calibration algorithm: bias = mean(actual/estimated), per-grade, MAE",
+        "JSON schema for .gsd/estimates/{feature}-estimate.json",
+        "JSON schema for .gsd/estimates/calibration.json",
+        "Cost projection with python -c using ResourceEstimator",
+        "python -c snippets for RiskScorer and WhatIfEngine",
+        "Edge case handling documented"
+      ],
+      "verification": {
+        "command": "test -f zerg/data/commands/zerg:estimate.details.md && grep -q 'PERT' zerg/data/commands/zerg:estimate.details.md && grep -q 'calibration' zerg/data/commands/zerg:estimate.details.md && grep -q 'schema' zerg/data/commands/zerg:estimate.details.md && echo OK",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 30
+    },
+    {
+      "id": "TASK-L2-001",
+      "title": "Create parent zerg:estimate.md and update backlog",
+      "description": "Create zerg:estimate.md as parent file (copy of core content for backward compatibility, with SPLIT reference comment at bottom). Update claudedocs/backlog.md to mark zerg:estimate as DONE.",
+      "phase": "integration",
+      "level": 2,
+      "dependencies": ["TASK-L1-001"],
+      "files": {
+        "create": ["zerg/data/commands/zerg:estimate.md"],
+        "modify": ["claudedocs/backlog.md"],
+        "read": ["zerg/data/commands/zerg:estimate.core.md"]
+      },
+      "acceptance_criteria": [
+        "Parent file content matches core file",
+        "Parent file has SPLIT reference comment at bottom",
+        "claudedocs/backlog.md shows zerg:estimate as DONE"
+      ],
+      "verification": {
+        "command": "test -f zerg/data/commands/zerg:estimate.md && grep -q 'SPLIT' zerg/data/commands/zerg:estimate.md && grep 'estimate' claudedocs/backlog.md | grep -q 'DONE' && echo OK",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 5
+    },
+    {
+      "id": "TASK-L3-001",
+      "title": "Validate command structure and drift detection",
+      "description": "Verify all 3 estimate files exist, contain Task tracking, have split markers, PERT formula present in details, drift detection passes (no command files missing Task refs), backlog updated, existing tests pass.",
+      "phase": "testing",
+      "level": 3,
+      "dependencies": ["TASK-L2-001"],
+      "files": {
+        "create": [],
+        "modify": [],
+        "read": [
+          "zerg/data/commands/zerg:estimate.md",
+          "zerg/data/commands/zerg:estimate.core.md",
+          "zerg/data/commands/zerg:estimate.details.md",
+          "claudedocs/backlog.md"
+        ]
+      },
+      "acceptance_criteria": [
+        "All 3 files exist",
+        "grep -c TaskCreate on all 3 files returns non-zero",
+        "Split markers present in core and details",
+        "PERT/optimistic/pessimistic in details file",
+        "Drift detection: no command files missing Task refs",
+        "Existing tests still pass"
+      ],
+      "verification": {
+        "command": "ls zerg/data/commands/zerg:estimate.md zerg/data/commands/zerg:estimate.core.md zerg/data/commands/zerg:estimate.details.md && grep -rL 'TaskCreate\\|TaskUpdate\\|TaskList\\|TaskGet' zerg/data/commands/zerg:*.md | wc -l | grep '^0$' && echo OK",
+        "timeout_seconds": 120
+      },
+      "estimate_minutes": 5
+    }
+  ],
+
+  "levels": {
+    "1": {
+      "name": "foundation",
+      "tasks": ["TASK-L1-001", "TASK-L1-002"],
+      "parallel": true,
+      "estimated_minutes": 30,
+      "depends_on_levels": []
+    },
+    "2": {
+      "name": "integration",
+      "tasks": ["TASK-L2-001"],
+      "parallel": false,
+      "estimated_minutes": 5,
+      "depends_on_levels": [1]
+    },
+    "3": {
+      "name": "testing",
+      "tasks": ["TASK-L3-001"],
+      "parallel": false,
+      "estimated_minutes": 5,
+      "depends_on_levels": [2]
+    }
+  },
+
+  "conflict_matrix": {
+    "description": "No file ownership conflicts — each file created by exactly one task",
+    "conflicts": []
+  }
+}
