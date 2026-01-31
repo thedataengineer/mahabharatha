@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo/zerg_logo.png" alt="ZERG Logo" width="300">
+</p>
+
 # ZERG
 
 **Zero-Effort Rapid Growth** — Parallel Claude Code execution system. Overwhelm features with coordinated zergling instances.
