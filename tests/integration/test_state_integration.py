@@ -805,10 +805,9 @@ class TestStateBackupRestore:
         assert state["tasks"] == {}
         assert state["error"] is None
 
+    @pytest.mark.skipif(os.name == "nt", reason="File permission tests not applicable on Windows")
     def test_backup_preserves_file_permissions(self, tmp_path: Path) -> None:
         """Test that backup/restore preserves file attributes."""
-        if os.name == "nt":
-            pytest.skip("File permission tests not applicable on Windows")
 
         state_dir = tmp_path / "state"
         backup_dir = tmp_path / "backup"
