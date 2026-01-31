@@ -189,6 +189,17 @@ Use `/zerg:status` to view the CONTEXT BUDGET section showing:
 - Per-task context population rate
 - Security rule filtering stats
 
+## PR Documentation Rules
+
+When creating a pull request, **always update CHANGELOG.md** under the `[Unreleased]` section with a brief entry describing the change. Use the appropriate category:
+
+- **Added** — new features or capabilities
+- **Changed** — modifications to existing functionality
+- **Fixed** — bug fixes
+- **Removed** — removed features or deprecated code
+
+If the PR is trivial (typo fix, CI config, test-only), apply the `skip-changelog` label instead. A CI check enforces this — PRs without a CHANGELOG update or the `skip-changelog` label will fail.
+
 ## Troubleshooting
 
 Zerglings not starting? Check Docker, ANTHROPIC_API_KEY, and port availability.
