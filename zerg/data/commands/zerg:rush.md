@@ -192,10 +192,27 @@ python3 .zerg/orchestrator.py \
   --workers "$WORKERS" \
   --config ".zerg/config.yaml" \
   --assignments "$SPEC_DIR/worker-assignments.json" \
-  --dashboard-port 8080 &
+  &
 
 ORCHESTRATOR_PID=$!
 echo $ORCHESTRATOR_PID > ".zerg/.orchestrator.pid"
+```
+
+### Monitoring During Execution
+
+> Slash commands are single-threaded — you cannot run `/zerg:status` in this session while rush is active.
+
+Tell the user to open a **separate terminal** for live monitoring:
+
+```bash
+# Recommended: live TUI dashboard
+zerg status --dashboard
+
+# Lighter text-based refresh
+zerg status --watch --interval 2
+
+# One-shot check
+zerg status
 ```
 
 

@@ -59,6 +59,16 @@ Commands:
 ═══════════════════════════════════════════════════════════════════════════════
 ```
 
+## Live Dashboard (CLI)
+
+This slash command produces a text snapshot. For a **live-updating TUI dashboard** with progress bars, worker context usage, retries, and event streaming, use the CLI in a separate terminal:
+
+```bash
+zerg status --dashboard           # Full TUI (recommended during rush)
+zerg status --dashboard -i 2      # Custom refresh interval
+zerg status --watch               # Lighter text-based refresh
+```
+
 ## Data Sources
 
 ### Task Status from Native Tasks

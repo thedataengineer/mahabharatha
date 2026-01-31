@@ -26,15 +26,17 @@ Worker Status:
 │ worker-4 │ 49156  │ zerg/{feature}/worker-4 │ Starting │
 └──────────┴────────┴────────────────────────────┴──────────┘
 
-Dashboard: http://localhost:8080
+Monitor:  zerg status --dashboard  (run in separate terminal)
 
 ───────────────────────────────────────────────────────────────
 
-Commands:
-  /zerg:status     - Check progress
+Commands (after rush completes):
+  /zerg:status     - Check progress snapshot
   /zerg:logs N     - Stream logs from worker N
   /zerg:stop       - Stop all workers
-  /zerg:stop N     - Stop worker N
+
+Live monitoring (separate terminal):
+  zerg status --dashboard
 
 ═══════════════════════════════════════════════════════════════
 ```

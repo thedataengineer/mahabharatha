@@ -342,6 +342,9 @@ Display real-time execution progress.
 
 **When to use**: While `/zerg:rush` is running, or after execution to see final state.
 
+> **Note**: `/zerg:status` inside Claude Code produces a text snapshot. For live monitoring
+> while `/zerg:rush` is running, open a separate terminal: `zerg status --dashboard`
+
 #### Usage
 
 ```bash
@@ -357,6 +360,10 @@ Display real-time execution progress.
 
 # JSON output for scripting
 /zerg:status --json
+
+# Live TUI dashboard (CLI, separate terminal)
+zerg status --dashboard
+zerg status --dashboard --interval 2
 ```
 
 #### Flags
@@ -368,6 +375,7 @@ Display real-time execution progress.
 | `--interval N` | — | Watch refresh interval in seconds | 5 |
 | `--level N` | `-l` | Filter to specific level | All |
 | `--json` | — | Output as JSON | Off |
+| `--dashboard` | `-d` | Real-time TUI dashboard (CLI only, requires terminal) | Off |
 
 #### Detailed Views
 

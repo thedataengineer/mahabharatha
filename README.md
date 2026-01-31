@@ -127,8 +127,8 @@ zerg init
 # 4. Review and approve architecture, then launch:
 /zerg:rush --workers=5
 
-# 5. Monitor progress:
-/zerg:status
+# 5. Monitor progress (in a separate terminal):
+zerg status --dashboard
 ```
 
 ### What Happens When You Run `zerg init`
