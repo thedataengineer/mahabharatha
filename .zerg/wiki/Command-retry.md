@@ -1,16 +1,16 @@
-# zerg retry
+# /zerg:retry
 
 Retry failed or blocked tasks.
 
 ## Synopsis
 
 ```
-zerg retry [TASK_IDS]... [OPTIONS]
+/zerg:retry [TASK_IDS]... [OPTIONS]
 ```
 
 ## Description
 
-`zerg retry` identifies failed tasks, resets their state, and re-queues them for execution. It can target specific tasks, all failed tasks in a level, or all failed tasks across the feature.
+`/zerg:retry` identifies failed tasks, resets their state, and re-queues them for execution. It can target specific tasks, all failed tasks in a level, or all failed tasks across the feature.
 
 ### Retry Protocol
 
@@ -27,10 +27,10 @@ For each task being retried, the command:
 
 | Strategy | Command | Description |
 |----------|---------|-------------|
-| Single task | `zerg retry TASK-001` | Retry one specific task |
-| Level retry | `zerg retry --level 2` | Retry all failed tasks in a level |
-| Full retry | `zerg retry --all` | Retry all failed and blocked tasks |
-| Force retry | `zerg retry --force TASK-001` | Bypass retry limit, reset counter to 0 |
+| Single task | `/zerg:retry TASK-001` | Retry one specific task |
+| Level retry | `/zerg:retry --level 2` | Retry all failed tasks in a level |
+| Full retry | `/zerg:retry --all` | Retry all failed and blocked tasks |
+| Force retry | `/zerg:retry --force TASK-001` | Bypass retry limit, reset counter to 0 |
 
 ### Common Failure Patterns
 
@@ -56,35 +56,35 @@ For each task being retried, the command:
 
 ## Prerequisites
 
-- `zerg rush` must have been run (state file must exist)
+- `/zerg:rush` must have been run (state file must exist)
 - An active feature must be set in `.gsd/.current-feature`
 
 ## Examples
 
 ```bash
 # Retry all failed tasks
-zerg retry
+/zerg:retry
 
 # Retry a specific task
-zerg retry TASK-003
+/zerg:retry TASK-003
 
 # Retry all failed tasks in level 2
-zerg retry --level 2
+/zerg:retry --level 2
 
 # Retry everything
-zerg retry --all
+/zerg:retry --all
 
 # Force retry past the limit
-zerg retry --force TASK-003
+/zerg:retry --force TASK-003
 
 # Retry with increased timeout
-zerg retry --timeout 3600
+/zerg:retry --timeout 3600
 
 # Preview without executing
-zerg retry --dry-run
+/zerg:retry --dry-run
 
 # Reset retry counters and retry
-zerg retry --reset
+/zerg:retry --reset
 ```
 
 ## Investigating Failures Before Retry
@@ -94,10 +94,10 @@ zerg retry --reset
 jq '.tasks["TASK-003"]' .zerg/state/<feature>.json
 
 # View worker logs for the task
-zerg logs --task TASK-003
+/zerg:logs --task TASK-003
 
 # View verification output
-zerg logs --artifacts TASK-003
+/zerg:logs --artifacts TASK-003
 
 # Check verification command manually
 cat .gsd/specs/<feature>/task-graph.json | jq '.tasks[] | select(.id == "TASK-003") | .verification'

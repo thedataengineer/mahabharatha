@@ -39,6 +39,10 @@
   * [[plugins|Command-plugins]]
   * [[document|Command-document]]
   * [[index|Command-index]]
+  * _Documentation & AI_
+  * [[estimate|Command-estimate]]
+  * [[explain|Command-explain]]
+  * [[select-tool|Command-select-tool]]
 
 **Architecture**
 

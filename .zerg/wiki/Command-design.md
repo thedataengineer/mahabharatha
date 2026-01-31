@@ -1,18 +1,18 @@
-# zerg design
+# /zerg:design
 
 Generate technical architecture and a task graph for parallel execution.
 
 ## Synopsis
 
 ```
-zerg design
+/zerg:design
 ```
 
 ## Description
 
-`zerg design` reads the approved requirements for the active feature and produces two key artifacts: a technical design document (`design.md`) and a task graph (`task-graph.json`). Together, these define the architecture and break the work into parallelizable tasks with exclusive file ownership.
+`/zerg:design` reads the approved requirements for the active feature and produces two key artifacts: a technical design document (`design.md`) and a task graph (`task-graph.json`). Together, these define the architecture and break the work into parallelizable tasks with exclusive file ownership.
 
-The command requires that `zerg plan` has been run and that the resulting `requirements.md` has been marked as `APPROVED`.
+The command requires that `/zerg:plan` has been run and that the resulting `requirements.md` has been marked as `APPROVED`.
 
 ### Design Phases
 
@@ -64,15 +64,15 @@ This command takes no options. It operates on the active feature detected from `
 
 ## Prerequisites
 
-- `zerg init` must have been run
-- `zerg plan <feature>` must have been run
+- `/zerg:init` must have been run
+- `/zerg:plan <feature>` must have been run
 - `requirements.md` must exist with `Status: APPROVED`
 
 ## Examples
 
 ```bash
 # Generate design for the active feature
-zerg design
+/zerg:design
 ```
 
 ## Output

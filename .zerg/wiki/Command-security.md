@@ -11,10 +11,10 @@ Security review, vulnerability scanning, secure coding rules, and hardening reco
 ```
 
 ```
-zerg security-rules detect
-zerg security-rules list
-zerg security-rules fetch
-zerg security-rules integrate
+/zerg:security-rules detect
+/zerg:security-rules list
+/zerg:security-rules fetch
+/zerg:security-rules integrate
 ```
 
 ## Description
@@ -95,9 +95,9 @@ Generate SARIF output for IDE integration:
 Detect the project stack and fetch matching rules:
 
 ```
-zerg security-rules detect
-zerg security-rules fetch
-zerg security-rules integrate
+/zerg:security-rules detect
+/zerg:security-rules fetch
+/zerg:security-rules integrate
 ```
 
 ## Exit Codes

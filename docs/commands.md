@@ -1,6 +1,6 @@
 # ZERG Command Reference
 
-Complete documentation for all 20 ZERG slash commands. Each command is available inside Claude Code sessions after running `zerg install`.
+Complete documentation for all 25 ZERG slash commands. Each command is available inside Claude Code sessions after running `zerg install`.
 
 Commands can be invoked in two ways:
 - **Slash command**: `/zerg:rush --workers=5` (inside Claude Code)
@@ -34,6 +34,12 @@ Commands can be invoked in two ways:
   - [/zerg:debug](#zergdebug) — Deep diagnostics
   - [/zerg:worker](#zergworker) — Worker execution protocol
   - [/zerg:plugins](#zergplugins) — Plugin management
+- **Documentation & AI**
+  - [/zerg:document](#zergdocument) — Component documentation
+  - [/zerg:index](#zergindex) — Project wiki generation
+  - [/zerg:estimate](#zergestimate) — Effort estimation
+  - [/zerg:explain](#zergexplain) — Educational explanations
+  - [/zerg:select-tool](#zergselect-tool) — Intelligent tool routing
 
 ---
 
@@ -1164,6 +1170,250 @@ See the [Plugin System](docs/plugins.md) documentation for complete details.
 | YAML hooks | Simple | Shell commands in `.zerg/config.yaml` |
 | YAML gates | Simple | Shell commands in `.zerg/config.yaml` |
 | Python entry points | Advanced | Python classes registered via `pyproject.toml` |
+
+---
+
+## Documentation & AI
+
+---
+
+### /zerg:document
+
+Generate structured documentation for a single component, module, or command.
+
+**When to use**: To document a specific file or module with the doc_engine pipeline.
+
+#### Usage
+
+```
+/zerg:document <target> [OPTIONS]
+```
+
+#### Flags
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `<target>` | (required) | Path to the file or module to document |
+| `--type` | `auto` | Component type: `auto`, `module`, `command`, `config`, `api`, `types` |
+| `--output` | stdout | Output path for generated documentation |
+| `--depth` | `standard` | Depth level: `shallow`, `standard`, `deep` |
+| `--update` | off | Update existing documentation in-place |
+
+#### Description
+
+Runs a 7-step pipeline: Detect component type, Extract symbols from AST, Map dependencies, Generate Mermaid diagrams, Render with type-specific template, Cross-reference with glossary, Output to specified path.
+
+**Depth levels**:
+- `shallow` — Public classes and functions only
+- `standard` — Public + internal methods, imports, basic diagram
+- `deep` — All methods including private, usage examples, full dependency graph
+
+#### Examples
+
+```bash
+# Document a module
+/zerg:document zerg/launcher.py
+
+# Deep documentation to a file
+/zerg:document zerg/doc_engine/extractor.py --depth deep --output docs/extractor.md
+
+# Update existing docs in-place
+/zerg:document zerg/launcher.py --output docs/launcher.md --update
+```
+
+---
+
+### /zerg:index
+
+Generate a complete documentation wiki for the ZERG project.
+
+**When to use**: To create or update the full project wiki with cross-references and sidebar navigation.
+
+#### Usage
+
+```
+/zerg:index [OPTIONS]
+```
+
+#### Flags
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--full` | off | Regenerate all pages from scratch (vs incremental) |
+| `--push` | off | Push generated wiki to `{repo}.wiki.git` |
+| `--dry-run` | off | Preview what would be generated without writing |
+| `--output` | `.zerg/wiki/` | Output directory for generated pages |
+
+#### Description
+
+Discovers all documentable components, classifies them, extracts symbols, generates markdown pages, builds cross-references, creates architecture diagrams, and assembles a navigable wiki with sidebar.
+
+By default operates in **incremental mode** — only regenerating pages for source files that changed since last generation. Use `--full` to regenerate everything.
+
+#### Examples
+
+```bash
+# Generate full wiki
+/zerg:index --full
+
+# Preview changes
+/zerg:index --dry-run
+
+# Generate and push to GitHub Wiki
+/zerg:index --full --push
+
+# Custom output directory
+/zerg:index --output docs/wiki/
+```
+
+---
+
+### /zerg:estimate
+
+Full-lifecycle effort estimation with PERT confidence intervals, post-execution comparison, and historical calibration.
+
+**When to use**: Before `/zerg:rush` to project effort and cost, or after execution to compare actual vs estimated.
+
+#### Usage
+
+```
+/zerg:estimate [<feature>] [OPTIONS]
+```
+
+#### Flags
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `<feature>` | auto-detect | Feature to estimate (from `.gsd/.current-feature`) |
+| `--pre` | auto | Force pre-execution estimation mode |
+| `--post` | auto | Force post-execution comparison mode |
+| `--calibrate` | off | Show historical accuracy and compute bias factors |
+| `--workers N` | config | Worker count for wall-clock projection |
+| `--format` | `text` | Output format: `text`, `json`, `md` |
+| `--verbose` | off | Show per-task breakdown |
+| `--history` | off | Show past estimates for this feature |
+| `--no-calibration` | off | Skip applying calibration bias |
+
+#### Description
+
+Operates in three modes:
+
+- **Pre-execution**: Analyzes task graph, scores complexity, calculates PERT estimates, projects wall-clock time and API cost
+- **Post-execution**: Compares actual vs estimated duration/tokens/cost, calculates accuracy percentage
+- **Calibration**: Analyzes historical accuracy across features, computes per-task-type bias factors
+
+#### Examples
+
+```bash
+# Estimate before launching
+/zerg:estimate user-auth
+
+# Compare actual vs estimated
+/zerg:estimate user-auth --post
+
+# Per-task breakdown
+/zerg:estimate --verbose
+
+# Historical calibration
+/zerg:estimate --calibrate
+```
+
+---
+
+### /zerg:explain
+
+Educational code explanations with four progressive depth layers, powered by doc_engine AST extractors.
+
+**When to use**: To understand unfamiliar code at any scope — from a single function to an entire system.
+
+#### Usage
+
+```
+/zerg:explain <target> [OPTIONS]
+```
+
+#### Flags
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `<target>` | (required) | File, function (`file:func`), directory, or dotted module path |
+| `--scope` | auto-detect | Override: `function`, `file`, `module`, `system` |
+| `--save` | off | Write to `claudedocs/explanations/{target}.md` |
+| `--format` | `text` | Output format: `text`, `md`, `json` |
+| `--no-diagrams` | off | Skip Mermaid diagram generation |
+
+#### Description
+
+Generates layered explanations through four progressive depth levels:
+
+1. **Summary** — What the code does, who calls it, why it exists
+2. **Logic Flow** — Step-by-step execution walkthrough with flowchart
+3. **Implementation Details** — Data structures, algorithms, edge cases
+4. **Design Decisions** — Architectural rationale, trade-offs, alternatives
+
+Auto-detects scope from target format: `file:func` → function, file path → file, directory → module.
+
+#### Examples
+
+```bash
+# Explain a file
+/zerg:explain zerg/launcher.py
+
+# Explain a specific function
+/zerg:explain zerg/launcher.py:spawn_worker
+
+# Explain a module
+/zerg:explain zerg/doc_engine/ --scope module
+
+# Save explanation
+/zerg:explain zerg/launcher.py --save
+```
+
+---
+
+### /zerg:select-tool
+
+Intelligent tool routing across MCP servers, native tools, and Task agent subtypes.
+
+**When to use**: To determine the optimal tool combination for a given task before starting work.
+
+#### Usage
+
+```
+/zerg:select-tool <task description> [OPTIONS]
+```
+
+#### Flags
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `<task description>` | (required) | Free-text description of the task |
+| `--domain` | auto-detect | Override: `ui`, `backend`, `infra`, `docs`, `test`, `security`, `perf` |
+| `--format` | `text` | Output format: `text`, `json`, `md` |
+| `--verbose` | off | Show per-dimension scoring breakdown |
+| `--no-agents` | off | Exclude Task agent recommendations |
+| `--no-mcp` | off | Exclude MCP server recommendations |
+
+#### Description
+
+Evaluates tasks across five scoring axes (file_count, analysis_depth, domain, parallelism, interactivity) and recommends tools from three categories:
+
+- **Native Tools** — Read, Write, Edit, Grep, Glob, Bash
+- **MCP Servers** — Context7, Sequential, Playwright, Magic, Morphllm, Serena
+- **Task Agents** — Explore, Plan, general-purpose, python-expert, etc.
+
+#### Examples
+
+```bash
+# Get recommendations
+/zerg:select-tool "refactor the authentication module across 12 files"
+
+# Force domain
+/zerg:select-tool "optimize the query layer" --domain perf
+
+# Detailed scoring
+/zerg:select-tool "add a responsive navbar with accessibility" --verbose
+```
 
 ---
 

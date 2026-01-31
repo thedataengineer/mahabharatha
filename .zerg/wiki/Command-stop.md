@@ -1,16 +1,16 @@
-# zerg stop
+# /zerg:stop
 
 Stop ZERG workers gracefully or forcefully.
 
 ## Synopsis
 
 ```
-zerg stop [OPTIONS]
+/zerg:stop [OPTIONS]
 ```
 
 ## Description
 
-`zerg stop` halts running ZERG workers. By default it performs a graceful shutdown that allows workers to checkpoint their progress. With `--force`, it terminates workers immediately.
+`/zerg:stop` halts running ZERG workers. By default it performs a graceful shutdown that allows workers to checkpoint their progress. With `--force`, it terminates workers immediately.
 
 ### Graceful Stop (Default)
 
@@ -18,7 +18,7 @@ zerg stop [OPTIONS]
 2. Workers create a WIP (work-in-progress) commit with their current changes.
 3. Workers update state with checkpoint information.
 4. Containers stop cleanly.
-5. State is preserved for later resume with `zerg rush --resume`.
+5. State is preserved for later resume with `/zerg:rush --resume`.
 
 In-progress tasks are annotated with `PAUSED` in the Claude Code Task system.
 
@@ -70,41 +70,41 @@ Context-Usage: <percentage>%
 
 ```bash
 # Graceful stop of all workers
-zerg stop
+/zerg:stop
 
 # Force stop all workers immediately
-zerg stop --force
+/zerg:stop --force
 
 # Stop only worker 2
-zerg stop --worker 2
+/zerg:stop --worker 2
 
 # Force stop a specific worker
-zerg stop --worker 3 --force
+/zerg:stop --worker 3 --force
 
 # Graceful stop with extended timeout
-zerg stop --timeout 60
+/zerg:stop --timeout 60
 
 # Quick timeout
-zerg stop --timeout 10
+/zerg:stop --timeout 10
 ```
 
 ## Recovery After Stop
 
 ```bash
 # Resume execution from checkpoint
-zerg rush --resume
+/zerg:rush --resume
 
 # Resume with a different worker count
-zerg rush --resume --workers 3
+/zerg:rush --resume --workers 3
 
 # Check what was in progress
-zerg status
+/zerg:status
 
 # View errors before resuming
-zerg logs --level error
+/zerg:logs --level error
 
 # Retry failed tasks
-zerg retry --all-failed
+/zerg:retry --all-failed
 ```
 
 ## See Also

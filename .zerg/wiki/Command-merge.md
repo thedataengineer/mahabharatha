@@ -1,16 +1,16 @@
-# zerg merge
+# /zerg:merge
 
 Manually trigger or manage level merge operations.
 
 ## Synopsis
 
 ```
-zerg merge [OPTIONS]
+/zerg:merge [OPTIONS]
 ```
 
 ## Description
 
-`zerg merge` combines worker branches into a staging branch after all tasks in a level complete. It runs quality gates (lint, tests, type checking) on the merged result and rebases worker branches onto the new base for the next level.
+`/zerg:merge` combines worker branches into a staging branch after all tasks in a level complete. It runs quality gates (lint, tests, type checking) on the merged result and rebases worker branches onto the new base for the next level.
 
 During normal execution, the orchestrator triggers merges automatically between levels. This command is primarily used for manual intervention or recovery scenarios.
 
@@ -52,7 +52,7 @@ When merge conflicts occur, three options are available:
 
 1. **Resolve manually** -- Edit conflicting files, `git add` them, and commit.
 2. **Accept one side** -- Use `git checkout --theirs <file>` or `git checkout --ours <file>`.
-3. **Re-run the task** -- Use `zerg retry TASK-ID --on-base` to re-execute the conflicting task on the merged base.
+3. **Re-run the task** -- Use `/zerg:retry TASK-ID --on-base` to re-execute the conflicting task on the merged base.
 
 ## Options
 
@@ -70,32 +70,32 @@ When merge conflicts occur, three options are available:
 
 ```bash
 # Merge the current level
-zerg merge
+/zerg:merge
 
 # Merge a specific level
-zerg merge --level 2
+/zerg:merge --level 2
 
 # Preview what the merge would do
-zerg merge --dry-run
+/zerg:merge --dry-run
 
 # Force merge with conflicts
-zerg merge --force
+/zerg:merge --force
 
 # Abort an in-progress merge
-zerg merge --abort
+/zerg:merge --abort
 
 # Skip quality gates (not recommended for production)
-zerg merge --skip-gates
+/zerg:merge --skip-gates
 
 # Merge without rebasing workers
-zerg merge --no-rebase
+/zerg:merge --no-rebase
 ```
 
 ## Troubleshooting
 
 ### "Level has incomplete tasks"
 
-All tasks in the level must finish before merging. Check for blocked or failed tasks with `zerg status`. Use `--force` only if a partial merge is acceptable.
+All tasks in the level must finish before merging. Check for blocked or failed tasks with `/zerg:status`. Use `--force` only if a partial merge is acceptable.
 
 ### "Merge conflict detected"
 

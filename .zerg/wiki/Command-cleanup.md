@@ -1,16 +1,16 @@
-# zerg cleanup
+# /zerg:cleanup
 
 Remove ZERG artifacts and clean up resources after a feature is complete or abandoned.
 
 ## Synopsis
 
 ```
-zerg cleanup [OPTIONS]
+/zerg:cleanup [OPTIONS]
 ```
 
 ## Description
 
-`zerg cleanup` removes temporary resources created during ZERG execution, including git worktrees, worker branches, Docker containers, state files, and log files. It preserves spec files, design documents, merged code, and task archives.
+`/zerg:cleanup` removes temporary resources created during ZERG execution, including git worktrees, worker branches, Docker containers, state files, and log files. It preserves spec files, design documents, merged code, and task archives.
 
 Before removing any state, the command archives the Claude Code Task list to `.zerg/archive/<feature>/tasks-<timestamp>.json`.
 
@@ -45,19 +45,19 @@ Before removing any state, the command archives the Claude Code Task list to `.z
 
 ```bash
 # Clean up a specific feature
-zerg cleanup --feature user-auth
+/zerg:cleanup --feature user-auth
 
 # Preview what will be cleaned
-zerg cleanup --all --dry-run
+/zerg:cleanup --all --dry-run
 
 # Clean all features
-zerg cleanup --all
+/zerg:cleanup --all
 
 # Keep logs for debugging
-zerg cleanup --feature user-auth --keep-logs
+/zerg:cleanup --feature user-auth --keep-logs
 
 # Keep branches for inspection
-zerg cleanup --feature user-auth --keep-branches
+/zerg:cleanup --feature user-auth --keep-branches
 ```
 
 ## Dry Run
@@ -65,7 +65,7 @@ zerg cleanup --feature user-auth --keep-branches
 Always preview before cleaning:
 
 ```bash
-zerg cleanup --all --dry-run
+/zerg:cleanup --all --dry-run
 ```
 
 The dry run output lists every resource that would be removed, grouped by category (worktrees, branches, containers, state files, log files), with item counts.
@@ -78,10 +78,10 @@ If you might need to resume later:
 
 ```bash
 # Check status first
-zerg status
+/zerg:status
 
 # Export logs
-zerg logs --json > feature-logs.jsonl
+/zerg:logs --json > feature-logs.jsonl
 
 # Backup state
 cp .zerg/state/<feature>.json feature-backup.json
@@ -99,7 +99,7 @@ git reflog | grep "zerg/<feature>"
 git checkout -b zerg/<feature>/worker-0 <commit-hash>
 ```
 
-Worktrees must be recreated by running `zerg rush` again.
+Worktrees must be recreated by running `/zerg:rush` again.
 
 ## Safety Features
 

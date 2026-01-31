@@ -1,16 +1,16 @@
-# zerg logs
+# /zerg:logs
 
 Stream, filter, and aggregate worker logs for debugging and monitoring.
 
 ## Synopsis
 
 ```
-zerg logs [WORKER_ID] [OPTIONS]
+/zerg:logs [WORKER_ID] [OPTIONS]
 ```
 
 ## Description
 
-`zerg logs` provides access to structured JSONL logs written by workers and the orchestrator. It supports filtering by worker, task, log level, execution phase, event type, and time range. Logs can be viewed in human-readable format or exported as raw JSON.
+`/zerg:logs` provides access to structured JSONL logs written by workers and the orchestrator. It supports filtering by worker, task, log level, execution phase, event type, and time range. Logs can be viewed in human-readable format or exported as raw JSON.
 
 ### Log Format
 
@@ -95,40 +95,40 @@ Each task produces artifact files that can be viewed with `--artifacts`:
 
 ```bash
 # Show recent logs from all workers
-zerg logs
+/zerg:logs
 
 # Show logs from worker 1
-zerg logs 1
+/zerg:logs 1
 
 # Follow logs in real-time
-zerg logs --follow
+/zerg:logs --follow
 
 # Show only errors
-zerg logs --level error
+/zerg:logs --level error
 
 # Show more lines
-zerg logs --tail 200
+/zerg:logs --tail 200
 
 # Aggregate all worker logs by timestamp
-zerg logs --aggregate
+/zerg:logs --aggregate
 
 # Filter to a specific task
-zerg logs --task TASK-015
+/zerg:logs --task TASK-015
 
 # Show task artifacts (Claude output, verification, git diff)
-zerg logs --artifacts TASK-015
+/zerg:logs --artifacts TASK-015
 
 # Filter by phase and event
-zerg logs --aggregate --phase verify --event verification_failed
+/zerg:logs --aggregate --phase verify --event verification_failed
 
 # Time range filtering
-zerg logs --aggregate --since 2026-01-28T10:00:00Z --until 2026-01-28T12:00:00Z
+/zerg:logs --aggregate --since 2026-01-28T10:00:00Z --until 2026-01-28T12:00:00Z
 
 # Text search
-zerg logs --aggregate --search "failed"
+/zerg:logs --aggregate --search "failed"
 
 # Export structured logs for external analysis
-zerg logs --aggregate --json > logs.jsonl
+/zerg:logs --aggregate --json > logs.jsonl
 ```
 
 ## Log Locations

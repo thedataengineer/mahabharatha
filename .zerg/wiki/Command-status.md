@@ -1,16 +1,16 @@
-# zerg status
+# /zerg:status
 
 Display current execution status and progress.
 
 ## Synopsis
 
 ```
-zerg status [OPTIONS]
+/zerg:status [OPTIONS]
 ```
 
 ## Description
 
-`zerg status` produces a snapshot of the current ZERG execution state, including feature name, phase, orchestrator status, elapsed time, and per-level progress bars.
+`/zerg:status` produces a snapshot of the current ZERG execution state, including feature name, phase, orchestrator status, elapsed time, and per-level progress bars.
 
 ### Data Sources
 
@@ -47,19 +47,19 @@ The status report shows the current phase of the feature:
 
 ```bash
 # One-shot status check
-zerg status
+/zerg:status
 
 # Detailed task list
-zerg status --tasks
+/zerg:status --tasks
 
 # Live TUI dashboard (run in a separate terminal during rush)
-zerg status --dashboard
+/zerg:status --dashboard
 
 # Auto-refreshing text output
-zerg status --watch --interval 2
+/zerg:status --watch --interval 2
 
 # JSON output for scripting
-zerg status --json
+/zerg:status --json
 ```
 
 ## Output

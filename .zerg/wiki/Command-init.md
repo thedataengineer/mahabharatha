@@ -1,16 +1,16 @@
-# zerg init
+# /zerg:init
 
 Initialize ZERG for a project. Detects the project state and operates in one of two modes.
 
 ## Synopsis
 
 ```
-zerg init [OPTIONS]
+/zerg:init [OPTIONS]
 ```
 
 ## Description
 
-`zerg init` prepares a project for ZERG by creating the `.zerg/` directory structure, detecting languages and frameworks, and generating configuration files.
+`/zerg:init` prepares a project for ZERG by creating the `.zerg/` directory structure, detecting languages and frameworks, and generating configuration files.
 
 The command operates in two modes depending on whether the current directory contains existing code:
 
@@ -57,25 +57,25 @@ For multi-language projects, ZERG generates a devcontainer configuration with ap
 ```bash
 # Initialize a new project from scratch (Inception Mode)
 mkdir my-api && cd my-api
-zerg init
+/zerg:init
 
 # Initialize an existing project (Discovery Mode)
 cd my-existing-project
-zerg init
+/zerg:init
 
 # Initialize with custom settings
-zerg init --workers 3 --security strict
+/zerg:init --workers 3 --security strict
 
 # Skip security rules
-zerg init --no-security-rules
+/zerg:init --no-security-rules
 
 # Build devcontainer image after init
-zerg init --with-containers
+/zerg:init --with-containers
 ```
 
 ## Generated Structure
 
-After running `zerg init` on an existing project, the following directories are created:
+After running `/zerg:init` on an existing project, the following directories are created:
 
 ```
 project/

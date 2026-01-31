@@ -77,7 +77,7 @@ and specs    graph     workers    run quality
 /zerg:retry <task-id>    Retry a failed task
 ```
 
-See the Command Reference page for the full list of 19 commands.
+See the Command Reference page for the full list of 25 commands.
 
 ---
 

@@ -1,16 +1,16 @@
-# zerg plan
+# /zerg:plan
 
 Capture complete requirements for a feature through interactive discovery.
 
 ## Synopsis
 
 ```
-zerg plan <feature-name> [OPTIONS]
+/zerg:plan <feature-name> [OPTIONS]
 ```
 
 ## Description
 
-`zerg plan` starts an interactive requirements gathering session for the named feature. It creates a spec directory at `.gsd/specs/<feature>/`, explores the existing codebase for context, asks clarifying questions, and produces a `requirements.md` document for user approval.
+`/zerg:plan` starts an interactive requirements gathering session for the named feature. It creates a spec directory at `.gsd/specs/<feature>/`, explores the existing codebase for context, asks clarifying questions, and produces a `requirements.md` document for user approval.
 
 The command follows a five-phase workflow:
 
@@ -53,13 +53,13 @@ The requirements document progresses through these states:
 
 ```bash
 # Plan a feature
-zerg plan user-auth
+/zerg:plan user-auth
 
 # Plan with Socratic discovery
-zerg plan user-auth --socratic
+/zerg:plan user-auth --socratic
 
 # Socratic mode with 5 rounds
-zerg plan payment-api --socratic --rounds 5
+/zerg:plan payment-api --socratic --rounds 5
 ```
 
 ## Output

@@ -405,6 +405,12 @@ ZERG is composed of 80+ Python modules organized into functional groups.
 | `/zerg:refactor` | `refactor.py` | Automated code improvement |
 | `/zerg:git` | `git_cmd.py` | Intelligent git operations |
 | `/zerg:plugins` | (command spec) | Plugin system management |
+| `/zerg:document` | `document.py` | Documentation generation for components |
+| `/zerg:estimate` | `estimate.py` | Effort estimation with PERT intervals |
+| `/zerg:explain` | `explain.py` | Educational code explanations |
+| `/zerg:index` | `index.py` | Project documentation wiki generation |
+| `/zerg:select-tool` | `select_tool.py` | Intelligent tool routing |
+| `/zerg:worker` | `worker.py` | Zergling execution protocol |
 | `install_commands.py` | | Install/uninstall slash commands |
 
 ---
