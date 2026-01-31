@@ -1,10 +1,10 @@
+# ZERG
+
 <p align="center">
   <img src="logo/zerg_logo.png" alt="ZERG Logo" width="300">
 </p>
 
-# ZERG
-
-**Zero-Effort Rapid Growth** — Parallel Claude Code execution system. Overwhelm features with coordinated zergling instances.
+**Zero-Effort Rapid Growth** — Parallel Claude Code execution system. Overwhelm features with coordinated zergling swarms.
 
 ZERG coordinates multiple Claude Code instances to build software features in parallel. You describe what to build, ZERG breaks the work into atomic tasks with exclusive file ownership, then launches a swarm of zerglings to execute them simultaneously across dependency levels.
 
