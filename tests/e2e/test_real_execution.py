@@ -50,7 +50,6 @@ requires_real_auth = pytest.mark.skipif(
 )
 
 
-@pytest.mark.skip(reason="Requires Claude CLI")
 @pytest.mark.real_e2e
 class TestRealExecution:
     """E2E tests with real Claude CLI execution."""
