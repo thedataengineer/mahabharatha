@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- GitHub Actions workflow to enforce CHANGELOG.md updates on PRs (skippable with `skip-changelog` label)
+- Claude Code instruction in CLAUDE.md to proactively update changelog when creating PRs
+
 ## [0.1.0] - 2026-01-31
 
 ### Added
