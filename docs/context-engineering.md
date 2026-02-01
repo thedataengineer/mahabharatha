@@ -191,3 +191,19 @@ Status reads context engineering metrics from:
 **Monitor the context rate.** If the "Task context rate" in `/zerg:status` shows less than 80% populated, your spec documents may not have enough section structure for effective matching. Adding headers and clear section breaks to requirements.md helps.
 
 **Let fallback work.** Keep `fallback_to_full: true` unless you have a specific reason to disable it. A worker that falls back to full context is better than a worker that fails because it couldn't load its instructions.
+
+---
+
+## Automated Validation
+
+Run `python -m zerg.validate_commands` to check all command files for:
+
+- **Task ecosystem integration** — every base `.md` file has TaskCreate/TaskUpdate/TaskList/TaskGet
+- **Backbone command depth** — worker, status, merge, stop, retry have ≥3 Task refs each
+- **Split file pair consistency** — `.core.md` ↔ `.details.md` ↔ parent `.md` all exist
+- **Oversized unsplit files** — files ≥300 lines without `.core.md` split
+- **State JSON cross-referencing** — files referencing `.zerg/state` must also reference TaskList/TaskGet
+
+Use `--auto-split` to automatically split oversized files via `CommandSplitter`.
+
+This runs in CI (`.github/workflows/command-validation.yml`) and as a pre-commit hook.

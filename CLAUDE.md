@@ -117,6 +117,8 @@ count=$(grep -c "CLAUDE_CODE_TASK_LIST_ID" zerg/launcher.py)
 echo "launcher.py — $count CLAUDE_CODE_TASK_LIST_ID refs (expect ≥4)"
 ```
 
+**Automated:** Run `python -m zerg.validate_commands` to execute all drift checks programmatically. Use `--auto-split` to fix oversized files automatically. This runs in CI and pre-commit.
+
 ### What Drift Looks Like
 
 Watch for these patterns — they are symptoms of drift:

@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Context engineering guardrails: automated drift detection and command validation (`python -m zerg.validate_commands`)
+- Command template (`_template.md`) for new commands to inherit CE patterns by default
+- CI workflow and pre-commit hook for command file validation
 - `/zerg:brainstorm` command for open-ended feature discovery with competitive research, Socratic ideation, and automated GitHub issue creation
 - 8 new feature issues for open-source release roadmap
 - GitHub Actions workflow to enforce CHANGELOG.md updates on PRs (skippable with `skip-changelog` label)

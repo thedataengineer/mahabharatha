@@ -23,3 +23,12 @@ repos:
       - id: bandit
         args: [-c, pyproject.toml]
         additional_dependencies: ["bandit[toml]"]
+
+  - repo: local
+    hooks:
+      - id: validate-commands
+        name: Validate ZERG command files
+        entry: python -m zerg.validate_commands --auto-split
+        language: system
+        files: 'zerg/data/commands/.*\.md$'
+        pass_filenames: false
