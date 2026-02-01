@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `zerg status` now distinguishes between planned, in-design, and designed-but-not-executing features instead of a single generic message
 - `zerg status` now shows "planned but not yet executed" instead of cryptic error for features with specs but no state
 - `zerg cleanup` now clears `.gsd/.current-feature` when it points to a cleaned feature
 - `zerg cleanup` now removes orphaned `.gsd/specs/{feature}/` directories

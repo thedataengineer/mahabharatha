@@ -273,8 +273,8 @@ class TestStatusCommand:
         result = runner.invoke(cli, ["status", "--feature", "my-feature"])
 
         assert result.exit_code != 0
-        assert "planned but not yet executed" in result.output.lower()
-        assert "zerg rush" in result.output.lower()
+        assert "planned but not yet designed" in result.output.lower()
+        assert "zerg design" in result.output.lower()
         assert "zerg cleanup" in result.output.lower()
 
     def test_status_basic_display(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
