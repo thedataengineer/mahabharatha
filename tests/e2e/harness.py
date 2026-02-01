@@ -49,7 +49,7 @@ class E2EHarness:
             tmp_path: Temporary directory for the test (typically from pytest).
             feature: Feature name used in spec paths and state tracking.
             mode: Execution mode - "mock" for simulated workers,
-                  "real" for actual Claude CLI (not yet implemented).
+                  "real" for actual Claude CLI invocation.
         """
         self.tmp_path = tmp_path
         self.feature = feature
@@ -193,7 +193,8 @@ class E2EHarness:
 
         Simulates the orchestrator flow without spawning real subprocess
         workers. Loads the task graph, processes tasks level-by-level,
-        and uses MockWorker for task execution in mock mode.
+        and uses MockWorker for task execution in mock mode, or the
+        actual Claude CLI in real mode.
 
         Args:
             workers: Number of simulated workers (used for concurrency tracking).
@@ -203,16 +204,9 @@ class E2EHarness:
 
         Raises:
             RuntimeError: If setup_repo has not been called first.
-            NotImplementedError: If mode is "real".
         """
-        if self.mode == "real":
-            raise NotImplementedError("Real mode requires Claude CLI")
-
         if self.repo_path is None:
             raise RuntimeError("setup_repo() must be called before run()")
-
-        # Import MockWorker here to avoid circular imports
-        from tests.e2e.mock_worker import MockWorker
 
         start_time = time.monotonic()
 
@@ -234,36 +228,76 @@ class E2EHarness:
         tasks_completed = 0
         tasks_failed = 0
         levels_completed = 0
-        merge_commits: list[str] = []
+        merge_commits = []
 
-        # Single mock worker instance shared across all tasks
-        mock_worker = MockWorker()
-
-        # Save original cwd and switch to repo for relative file ops
         import os
 
         original_cwd = os.getcwd()
         os.chdir(self.repo_path)
 
         try:
-            # Process levels in order
-            for level_num in sorted(tasks_by_level.keys()):
-                level_tasks = tasks_by_level[level_num]
-                level_success = True
+            if self.mode == "real":
+                for level_num in sorted(tasks_by_level.keys()):
+                    level_tasks = tasks_by_level[level_num]
+                    level_success = True
 
-                for task in level_tasks:
-                    result = mock_worker.invoke_claude_code(task)
+                    for task in level_tasks:
+                        prompt = self._build_real_prompt(task)
+                        timeout = (
+                            task.get("verification", {}).get("timeout_seconds", 120)
+                        )
 
-                    if result.success:
-                        tasks_completed += 1
-                    else:
-                        tasks_failed += 1
-                        level_success = False
+                        try:
+                            subprocess.run(
+                                [
+                                    "claude",
+                                    "--print",
+                                    "--dangerously-skip-permissions",
+                                    prompt,
+                                ],
+                                cwd=self.repo_path,
+                                capture_output=True,
+                                text=True,
+                                timeout=timeout,
+                                check=False,
+                            )
+                        except subprocess.TimeoutExpired:
+                            tasks_failed += 1
+                            level_success = False
+                            continue
 
-                if level_success:
-                    levels_completed += 1
-                    commit_hash = f"e2e-merge-level-{level_num}"
-                    merge_commits.append(commit_hash)
+                        if self._run_verification(task):
+                            tasks_completed += 1
+                        else:
+                            tasks_failed += 1
+                            level_success = False
+
+                    if level_success:
+                        levels_completed += 1
+                        commit_hash = f"e2e-merge-level-{level_num}"
+                        merge_commits.append(commit_hash)
+            else:
+                from tests.e2e.mock_worker import MockWorker
+
+                mock_worker = MockWorker()
+
+                for level_num in sorted(tasks_by_level.keys()):
+                    level_tasks = tasks_by_level[level_num]
+                    level_success = True
+
+                    for task in level_tasks:
+                        result = mock_worker.invoke_claude_code(task)
+
+                        if result.success:
+                            tasks_completed += 1
+                        else:
+                            tasks_failed += 1
+                            level_success = False
+
+                    if level_success:
+                        levels_completed += 1
+                        commit_hash = f"e2e-merge-level-{level_num}"
+                        merge_commits.append(commit_hash)
         finally:
             os.chdir(original_cwd)
 
@@ -279,6 +313,63 @@ class E2EHarness:
             merge_commits=merge_commits,
             duration_s=round(elapsed, 3),
         )
+
+    @staticmethod
+    def _build_real_prompt(task: dict) -> str:
+        """Build a prompt for the Claude CLI from a task dict.
+
+        Args:
+            task: Task dictionary from the task graph.
+
+        Returns:
+            Prompt string for Claude CLI.
+        """
+        files = task.get("files", {})
+        create_list = files.get("create", [])
+        modify_list = files.get("modify", [])
+
+        parts = [
+            "Create the following files as specified:",
+            f"Title: {task.get('title', '')}",
+            f"Description: {task.get('description', '')}",
+        ]
+
+        if create_list:
+            parts.append(f"Files to create: {', '.join(create_list)}")
+        if modify_list:
+            parts.append(f"Files to modify: {', '.join(modify_list)}")
+
+        return "\n".join(parts)
+
+    def _run_verification(self, task: dict) -> bool:
+        """Run a task's verification command.
+
+        Args:
+            task: Task dictionary containing a verification.command field.
+
+        Returns:
+            True if verification passed, False otherwise.
+        """
+        verification = task.get("verification", {})
+        command = verification.get("command")
+        if not command:
+            return True
+
+        timeout = verification.get("timeout_seconds", 30)
+
+        try:
+            result = subprocess.run(
+                command,
+                shell=True,  # noqa: S602 — verification commands are test-defined
+                cwd=self.repo_path,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                check=False,
+            )
+            return result.returncode == 0
+        except subprocess.TimeoutExpired:
+            return False
 
 
 def _git_env() -> dict[str, str]:
