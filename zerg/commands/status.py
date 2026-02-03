@@ -54,6 +54,9 @@ WORKER_COLORS = {
 @click.option("--json", "json_output", is_flag=True, help="Output as JSON")
 @click.option("--level", "-l", type=int, help="Filter to specific level")
 @click.option("--interval", default=1, type=int, help="Refresh interval in seconds (default: 1)")
+@click.option("--tasks", "tasks_view", is_flag=True, help="Show all tasks with status, level, and worker")
+@click.option("--workers", "workers_view", is_flag=True, help="Show detailed per-worker info")
+@click.option("--commits", "commits_view", is_flag=True, help="Show recent commits per worker branch")
 @click.pass_context
 def status(
     ctx: click.Context,
@@ -63,6 +66,9 @@ def status(
     json_output: bool,
     level: int | None,
     interval: int,
+    tasks_view: bool,
+    workers_view: bool,
+    commits_view: bool,
 ) -> None:
     """Show execution progress.
 
@@ -159,7 +165,13 @@ def status(
         if not state._state:
             state.load()
 
-        if json_output:
+        if tasks_view:
+            show_tasks_view(state, level)
+        elif workers_view:
+            show_workers_view(state)
+        elif commits_view:
+            show_commits_view(state, feature)
+        elif json_output:
             show_json_status(state, level)
         elif dashboard:
             show_dashboard(state, feature, interval)
@@ -767,6 +779,163 @@ def show_recent_events(state: StateManager, limit: int = 5) -> None:
             console.print(f"  [{ts}] {event_type}")
 
     console.print()
+
+
+def show_tasks_view(state: StateManager, level_filter: int | None) -> None:
+    """Show detailed task table.
+
+    Args:
+        state: State manager
+        level_filter: Level to filter to
+    """
+    console.print()
+    console.print(Panel("[bold cyan]Task Details[/bold cyan]"))
+    console.print()
+
+    table = Table(show_header=True)
+    table.add_column("Task ID")
+    table.add_column("Status")
+    table.add_column("Level", justify="center")
+    table.add_column("Worker", justify="center")
+    table.add_column("Description")
+
+    all_tasks = state._state.get("tasks", {})
+
+    if not all_tasks:
+        console.print("[dim]No tasks found[/dim]")
+        return
+
+    for task_id, task in sorted(all_tasks.items()):
+        task_level = task.get("level", 1)
+        if level_filter and task_level != level_filter:
+            continue
+
+        status = task.get("status", "pending")
+        if status == TaskStatus.COMPLETE.value:
+            status_display = "[green]complete[/green]"
+        elif status == TaskStatus.IN_PROGRESS.value:
+            status_display = "[yellow]in_progress[/yellow]"
+        elif status == TaskStatus.FAILED.value:
+            status_display = "[red]failed[/red]"
+        else:
+            status_display = f"[dim]{status}[/dim]"
+
+        worker_id = task.get("worker_id")
+        worker_display = f"W{worker_id}" if worker_id is not None else "-"
+
+        desc = task.get("description", task.get("title", ""))[:50]
+
+        table.add_row(task_id, status_display, str(task_level), worker_display, desc)
+
+    console.print(table)
+
+
+def show_workers_view(state: StateManager) -> None:
+    """Show detailed per-worker info.
+
+    Args:
+        state: State manager
+    """
+    console.print()
+    console.print(Panel("[bold cyan]Worker Details[/bold cyan]"))
+    console.print()
+
+    table = Table(show_header=True)
+    table.add_column("Worker")
+    table.add_column("Status")
+    table.add_column("Container")
+    table.add_column("Port", justify="center")
+    table.add_column("Branch")
+    table.add_column("Current Task")
+    table.add_column("Progress")
+
+    workers = state.get_all_workers()
+    workers_data = state._state.get("workers", {})
+
+    if not workers:
+        console.print("[dim]No workers active[/dim]")
+        return
+
+    for worker_id, worker in sorted(workers.items()):
+        color = WORKER_COLORS.get(worker.status, "white")
+        status_display = f"[{color}]{worker.status.value}[/{color}]"
+
+        worker_info = workers_data.get(str(worker_id), {})
+        container = worker_info.get("container", f"zerg-worker-{worker_id}")
+        branch = worker_info.get("branch", f"zerg/{state.feature}/worker-{worker_id}")
+
+        ctx_pct = int(worker.context_usage * 100)
+        progress = f"{ctx_pct}% ctx"
+
+        table.add_row(
+            f"worker-{worker_id}",
+            status_display,
+            container,
+            str(worker.port) if worker.port else "-",
+            branch,
+            worker.current_task or "-",
+            progress,
+        )
+
+    console.print(table)
+
+
+def show_commits_view(state: StateManager, feature: str) -> None:
+    """Show recent commits per worker branch.
+
+    Args:
+        state: State manager
+        feature: Feature name
+    """
+    import subprocess
+
+    console.print()
+    console.print(Panel("[bold cyan]Worker Commits[/bold cyan]"))
+    console.print()
+
+    table = Table(show_header=True)
+    table.add_column("Worker")
+    table.add_column("Branch")
+    table.add_column("Commits", justify="center")
+    table.add_column("Latest Commit")
+
+    workers = state.get_all_workers()
+    workers_data = state._state.get("workers", {})
+
+    if not workers:
+        console.print("[dim]No workers active[/dim]")
+        return
+
+    for worker_id, worker in sorted(workers.items()):
+        worker_info = workers_data.get(str(worker_id), {})
+        branch = worker_info.get("branch", f"zerg/{feature}/worker-{worker_id}")
+
+        try:
+            result = subprocess.run(
+                ["git", "log", "--oneline", "-5", branch],
+                capture_output=True,
+                text=True,
+                timeout=5,
+            )
+            if result.returncode == 0:
+                lines = result.stdout.strip().split("\n")
+                commit_count = len([line for line in lines if line])
+                latest = lines[0][:60] if lines and lines[0] else "-"
+            else:
+                commit_count = 0
+                latest = "[dim]branch not found[/dim]"
+        except Exception:
+            commit_count = 0
+            latest = "[dim]error[/dim]"
+
+        table.add_row(
+            f"worker-{worker_id}",
+            branch,
+            str(commit_count),
+            latest,
+        )
+
+    console.print(table)
 
 
 def show_watch_status(

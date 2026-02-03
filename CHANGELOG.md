@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `/zerg:status` missing documented flags `--tasks`, `--workers`, `--commits` (#103)
+
 ### Added
 
 - 6 new `/z:analyze` check types: `dead-code`, `wiring`, `cross-file`, `conventions`, `import-chain`, `context-engineering`
