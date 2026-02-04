@@ -537,81 +537,11 @@ class TestStartLevel:
 
 
 class TestLevelCompleteHandler:
-    """Tests for _on_level_complete_handler."""
+    """Tests for _on_level_complete_handler.
 
-    def test_level_complete_generates_state_md(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
-        """Test level completion generates STATE.md."""
-        monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
-
-        orch = Orchestrator("test-feature")
-        orch._on_level_complete_handler(1)
-
-        mock_orchestrator_deps["state"].generate_state_md.assert_called()
-
-    def test_level_complete_state_md_failure(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
-        """Test level completion handles STATE.md generation failure."""
-        monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
-
-        mock_orchestrator_deps["state"].generate_state_md.side_effect = Exception("Generation failed")
-
-        orch = Orchestrator("test-feature")
-
-        # Should not raise
-        orch._on_level_complete_handler(1)
-
-    @patch("time.sleep")
-    def test_level_complete_merge_conflict_pauses(
-        self, mock_sleep, mock_orchestrator_deps, tmp_path: Path, monkeypatch
-    ) -> None:
-        """Test level completion pauses on merge conflict."""
-        monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
-
-        # Make merge fail with conflict
-        merge_result = MagicMock()
-        merge_result.success = False
-        merge_result.error = "CONFLICT in src/file.py"
-        mock_orchestrator_deps["merge"].full_merge_flow.return_value = merge_result
-
-        orch = Orchestrator("test-feature")
-        orch._spawn_worker(0)  # Need a worker to have branches
-
-        orch._on_level_complete_handler(1)
-
-        assert orch._paused is True
-        mock_orchestrator_deps["state"].set_level_merge_status.assert_any_call(
-            1, LevelMergeStatus.CONFLICT, details={"error": "CONFLICT in src/file.py"}
-        )
-
-    @patch("time.sleep")
-    def test_level_complete_merge_other_failure_pauses(
-        self, mock_sleep, mock_orchestrator_deps, tmp_path: Path, monkeypatch
-    ) -> None:
-        """Test level completion pauses on non-conflict merge failure.
-
-        BF-007: Changed from stop to recoverable error state (pause).
-        """
-        monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
-
-        # Make merge fail without conflict
-        merge_result = MagicMock()
-        merge_result.success = False
-        merge_result.error = "Pre-merge gate failed"
-        mock_orchestrator_deps["merge"].full_merge_flow.return_value = merge_result
-
-        orch = Orchestrator("test-feature")
-        orch._spawn_worker(0)  # Need a worker to have branches
-        orch._running = True
-
-        orch._on_level_complete_handler(1)
-
-        # BF-007: Now pauses instead of stopping
-        assert orch._paused is True
-        mock_orchestrator_deps["state"].set_level_merge_status.assert_any_call(1, LevelMergeStatus.FAILED)
-        mock_orchestrator_deps["state"].set_paused.assert_called_with(True)
+    Note: Tests for immediate merge behavior (state_md generation, merge conflict pause,
+    merge failure pause) were removed because PR #120 introduced deferred merge by default.
+    """
 
     def test_level_complete_invokes_callbacks(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test level completion invokes registered callbacks."""

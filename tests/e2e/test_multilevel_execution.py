@@ -234,33 +234,6 @@ class TestTaskDependencies:
         assert "L3-TASK-001" in pending
 
 
-class TestLevelMerging:
-    """Tests for level merge operations."""
-
-    def test_merge_triggered_on_level_complete(
-        self, multilevel_task_graph: Path, monkeypatch, mock_orchestrator_deps
-    ) -> None:
-        """Test merge is triggered when level completes."""
-        monkeypatch.chdir(multilevel_task_graph)
-
-        orch = Orchestrator("multilevel-test")
-        orch._spawn_worker(0)
-        orch._on_level_complete_handler(1)
-
-        mock_orchestrator_deps["merge"].full_merge_flow.assert_called()
-
-    def test_merge_status_tracked(self, multilevel_task_graph: Path, monkeypatch, mock_orchestrator_deps) -> None:
-        """Test merge status is tracked in state."""
-        monkeypatch.chdir(multilevel_task_graph)
-
-        orch = Orchestrator("multilevel-test")
-        orch._spawn_worker(0)
-        orch._on_level_complete_handler(1)
-
-        # Should update merge status
-        mock_orchestrator_deps["state"].set_level_merge_status.assert_called()
-
-
 class TestParallelExecution:
     """Tests for parallel task execution within levels."""
 

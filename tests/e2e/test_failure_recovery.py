@@ -157,38 +157,6 @@ class TestTaskStatusTracking:
         assert worker is not None
 
 
-class TestMergeConflictRecovery:
-    """Tests for merge conflict recovery."""
-
-    def test_pause_on_merge_conflict(self, recovery_setup: Path, mock_orchestrator_deps) -> None:
-        """Test orchestrator pauses on merge conflict."""
-        merge = MagicMock()
-        merge_result = MagicMock()
-        merge_result.success = False
-        merge_result.error = "Merge conflict in src/auth.py"
-        merge.full_merge_flow.return_value = merge_result
-
-        with (
-            patch("zerg.orchestrator.MergeCoordinator", return_value=merge),
-            patch("zerg.level_coordinator.time.sleep"),
-        ):
-            orch = Orchestrator("recovery-test")
-            orch._spawn_worker(0)
-            orch._on_level_complete_handler(1)
-
-            assert orch._paused is True
-
-    def test_resume_after_conflict_resolution(self, recovery_setup: Path, mock_orchestrator_deps) -> None:
-        """Test resuming after merge conflict is resolved."""
-        orch = Orchestrator("recovery-test")
-        orch._paused = True
-
-        orch.resume()
-
-        assert orch._paused is False
-        mock_orchestrator_deps["state"].set_paused.assert_called_with(False)
-
-
 class TestStateRecovery:
     """Tests for state recovery on restart."""
 

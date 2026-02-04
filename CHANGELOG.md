@@ -36,8 +36,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `ImportChainChecker` skips imports inside `if TYPE_CHECKING:` blocks (#106)
 - Level filter applied in task claiming to respect current level (#111)
 
+### Removed
+
+- `tests/e2e/test_bugfix_e2e.py` — obsolete tests for pre-deferred-merge behavior
+- `tests/integration/test_level_advancement.py` — obsolete tests expecting immediate merge after level completion
+- Obsolete test classes expecting immediate merge: `TestOrchestratorMergeFailurePause`, `TestOrchestratorLevelAdvancement`, `TestMergeConflictRecovery`, `TestLevelMerging`
+- `tests/unit/test_orchestrator_timeout.py` — all tests expected immediate merge during `_on_level_complete_handler`
+
 ### Fixed
 
+- Added `__all__` exports to `config.py` and `types.py` to clarify public APIs (#106, #107)
+- Documented lazy import pattern in `verify.py` to prevent future regressions (#106)
 - `DependencyChecker` now uses `TaskStatus.COMPLETE.value` instead of hardcoded "COMPLETE" string (#OCF)
 - `WorkerProtocol` now initializes and passes `DependencyChecker` to claim_task for runtime dependency enforcement (#OCF)
 - Lint issues resolved by PR #117 (#104)

@@ -615,7 +615,7 @@ class TestWorkerProtocolClaimTask:
 
         assert task is not None
         assert task["id"] == "TASK-001"
-        mock_state.claim_task.assert_called_with("TASK-001", 1)
+        mock_state.claim_task.assert_called_with("TASK-001", 1, dependency_checker=None)
 
     @patch("zerg.worker_protocol.StateManager")
     @patch("zerg.worker_protocol.VerificationExecutor")
