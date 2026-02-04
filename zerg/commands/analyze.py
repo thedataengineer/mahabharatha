@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 import click
+import yaml
 from rich.console import Console
 from rich.table import Table
 
@@ -54,6 +55,84 @@ class AnalyzeConfig:
     conventions_require_task_prefixes: bool = True
     import_chain_max_depth: int = 10
     context_engineering_auto_split: bool = False
+
+
+def load_analyze_config(config_path: Path | None = None) -> AnalyzeConfig:
+    """Load AnalyzeConfig from .zerg/config.yaml analyze section.
+
+    Args:
+        config_path: Optional path to config file. Defaults to .zerg/config.yaml.
+
+    Returns:
+        AnalyzeConfig with values from yaml or defaults if not found.
+    """
+    if config_path is None:
+        config_path = Path(".zerg/config.yaml")
+
+    config = AnalyzeConfig()
+
+    if not config_path.exists():
+        return config
+
+    try:
+        with config_path.open() as f:
+            data = yaml.safe_load(f)
+
+        if not data or "analyze" not in data:
+            return config
+
+        analyze_cfg = data["analyze"]
+
+        # Dead code config
+        if "dead_code" in analyze_cfg:
+            dead_code = analyze_cfg["dead_code"]
+            if "min_confidence" in dead_code:
+                val = dead_code["min_confidence"]
+                if isinstance(val, int) and 0 <= val <= 100:
+                    config.dead_code_min_confidence = val
+
+        # Wiring config
+        if "wiring" in analyze_cfg:
+            wiring = analyze_cfg["wiring"]
+            if "strict" in wiring:
+                config.wiring_strict = bool(wiring["strict"])
+            if "exclude_patterns" in wiring:
+                patterns = wiring["exclude_patterns"]
+                if isinstance(patterns, list):
+                    config.wiring_exclude_patterns = [str(p) for p in patterns]
+
+        # Cross-file config
+        if "cross_file" in analyze_cfg:
+            cross_file = analyze_cfg["cross_file"]
+            if "scope" in cross_file:
+                config.cross_file_scope = str(cross_file["scope"])
+
+        # Conventions config
+        if "conventions" in analyze_cfg:
+            conventions = analyze_cfg["conventions"]
+            if "naming" in conventions:
+                config.conventions_naming = str(conventions["naming"])
+            if "require_task_prefixes" in conventions:
+                config.conventions_require_task_prefixes = bool(conventions["require_task_prefixes"])
+
+        # Import chain config
+        if "import_chain" in analyze_cfg:
+            import_chain = analyze_cfg["import_chain"]
+            if "max_depth" in import_chain:
+                val = import_chain["max_depth"]
+                if isinstance(val, int) and val > 0:
+                    config.import_chain_max_depth = val
+
+        # Context engineering config
+        if "context_engineering" in analyze_cfg:
+            ctx_eng = analyze_cfg["context_engineering"]
+            if "auto_split" in ctx_eng:
+                config.context_engineering_auto_split = bool(ctx_eng["auto_split"])
+
+    except (yaml.YAMLError, OSError) as e:
+        logger.warning("Failed to load analyze config from %s: %s", config_path, e)
+
+    return config
 
 
 @dataclass
@@ -853,8 +932,9 @@ def analyze(
         # Parse thresholds
         thresholds = _parse_thresholds(threshold)
 
-        # Build config
-        config = AnalyzeConfig()
+        # Build config from .zerg/config.yaml (with defaults for missing values)
+        config = load_analyze_config()
+        # CLI thresholds override config file values
         if "complexity" in thresholds:
             config.complexity_threshold = thresholds["complexity"]
         if "coverage" in thresholds:
