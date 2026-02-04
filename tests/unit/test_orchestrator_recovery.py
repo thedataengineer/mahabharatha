@@ -333,8 +333,8 @@ class TestWorkerRespawnAfterCrash:
         # Worker should be respawned
         assert mock_orchestrator_deps["subprocess_launcher"].spawn.call_count == 1
 
-    def test_crashed_worker_marks_task_failed(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
-        """Test crashed worker marks current task as failed."""
+    def test_crashed_worker_reassigns_task(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
+        """Test crashed worker reassigns current task for retry."""
         monkeypatch.chdir(tmp_path)
         (tmp_path / ".zerg").mkdir()
 
@@ -345,10 +345,11 @@ class TestWorkerRespawnAfterCrash:
         orch._workers[0].current_task = "TASK-001"
         orch._running = True
 
-        with patch.object(orch, "_handle_task_failure") as failure_mock:
+        # Worker crashes now call _handle_worker_crash to reassign the task
+        with patch.object(orch, "_handle_worker_crash") as crash_mock:
             orch._poll_workers()
 
-        failure_mock.assert_called_with("TASK-001", 0, "Worker crashed")
+        crash_mock.assert_called_with("TASK-001", 0)
 
     def test_crashed_worker_no_respawn_when_stopped(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test crashed worker does not respawn when orchestrator stopped."""

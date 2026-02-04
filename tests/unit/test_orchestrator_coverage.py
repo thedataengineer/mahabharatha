@@ -427,12 +427,12 @@ class TestMainLoopMergeFailure:
 
 
 # ===========================================================================
-# Lines 595-599: main loop respawn when all workers exited but tasks remain
+# Lines 843-851: main loop auto-respawn when all workers exited but tasks remain
 # ===========================================================================
 
 
 class TestMainLoopRespawnOnAllWorkersExited:
-    """Cover lines 595-599: respawn workers when all exited with tasks remaining."""
+    """Cover lines 843-851: auto-respawn workers when all exited with tasks remaining."""
 
     def test_respawn_when_workers_all_exited(self, tmp_path):
         orch, mocks, patches = _build_orchestrator(tmp_path)
@@ -449,8 +449,9 @@ class TestMainLoopRespawnOnAllWorkersExited:
             # All workers are stopped
             orch._workers[0] = WorkerState(worker_id=0, status=WorkerStatus.STOPPED)
 
+            # The code now calls _auto_respawn_workers instead of _respawn_workers_for_level
             respawn_mock = MagicMock()
-            orch._respawn_workers_for_level = respawn_mock
+            orch._auto_respawn_workers = respawn_mock
 
             iteration = 0
 
@@ -463,7 +464,8 @@ class TestMainLoopRespawnOnAllWorkersExited:
             with patch("time.sleep", side_effect=fake_sleep):
                 orch._main_loop()
 
-            respawn_mock.assert_called_once_with(1)
+            # _auto_respawn_workers is called with (level, remaining_task_count)
+            respawn_mock.assert_called_once_with(1, 2)
         finally:
             _stop_patches(patches)
 
@@ -787,7 +789,7 @@ class TestMainLoopAsync:
             _stop_patches(patches)
 
     def test_main_loop_async_respawn_workers(self, tmp_path):
-        """Async loop respawns workers when all exited but tasks remain."""
+        """Async loop auto-respawns workers when all exited but tasks remain."""
         orch, mocks, patches = _build_orchestrator(tmp_path)
         try:
             orch._running = True
@@ -800,7 +802,8 @@ class TestMainLoopAsync:
             levels.get_pending_tasks_for_level.return_value = ["T1"]
 
             orch._workers[0] = WorkerState(worker_id=0, status=WorkerStatus.STOPPED)
-            orch._respawn_workers_for_level = MagicMock()
+            # The code now calls _auto_respawn_workers instead of _respawn_workers_for_level
+            orch._auto_respawn_workers = MagicMock()
 
             iteration = 0
 
@@ -813,7 +816,8 @@ class TestMainLoopAsync:
             with patch("asyncio.sleep", side_effect=fake_sleep):
                 asyncio.run(orch._main_loop_async())
 
-            orch._respawn_workers_for_level.assert_called_with(1)
+            # _auto_respawn_workers is called with (level, remaining_task_count)
+            orch._auto_respawn_workers.assert_called_with(1, 1)
         finally:
             _stop_patches(patches)
 
@@ -859,7 +863,7 @@ class TestPollWorkersAsync:
     """Cover lines 882-909: async worker polling."""
 
     def test_poll_workers_async_crashed(self, tmp_path):
-        """Async poll detects crashed worker."""
+        """Async poll detects crashed worker and reassigns task."""
         orch, mocks, patches = _build_orchestrator(tmp_path)
         try:
             worker = WorkerState(worker_id=0, status=WorkerStatus.RUNNING, current_task="T1")
@@ -877,14 +881,16 @@ class TestPollWorkersAsync:
             orch._reassign_stranded_tasks = MagicMock()
             orch._check_container_health = MagicMock()
             orch.task_sync = MagicMock()
-            orch._handle_task_failure = MagicMock()
+            # The code now calls _handle_worker_crash to reassign instead of failing
+            orch._handle_worker_crash = MagicMock()
             orch._handle_worker_exit = MagicMock()
 
             asyncio.run(orch._poll_workers_async())
 
             assert worker.status == WorkerStatus.CRASHED
             sm.set_worker_state.assert_called()
-            orch._handle_task_failure.assert_called_once_with("T1", 0, "Worker crashed")
+            # When worker crashes with a task, _handle_worker_crash is called to reassign
+            orch._handle_worker_crash.assert_called_once_with("T1", 0)
             orch._handle_worker_exit.assert_called_once_with(0)
         finally:
             _stop_patches(patches)
