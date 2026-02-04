@@ -1,0 +1,57 @@
+{
+  "feature": "test-suite-optimization",
+  "generated": "2026-02-04T07:35:00-07:00",
+  "workers": [
+    {
+      "id": 0,
+      "branch": "main",
+      "worktree": ".",
+      "port": 49152,
+      "assignments": {
+        "1": ["TASK-001"],
+        "2": ["TASK-004"],
+        "3": ["TASK-007"]
+      }
+    },
+    {
+      "id": 1,
+      "branch": "main",
+      "worktree": ".",
+      "port": 49153,
+      "assignments": {
+        "1": ["TASK-002"],
+        "2": ["TASK-005"]
+      }
+    },
+    {
+      "id": 2,
+      "branch": "main",
+      "worktree": ".",
+      "port": 49154,
+      "assignments": {
+        "1": ["TASK-003"],
+        "2": ["TASK-006"]
+      }
+    }
+  ],
+  "execution_plan": [
+    {
+      "level": 1,
+      "workers_active": [0, 1, 2],
+      "tasks": ["TASK-001", "TASK-002", "TASK-003"],
+      "merge_after": false
+    },
+    {
+      "level": 2,
+      "workers_active": [0, 1, 2],
+      "tasks": ["TASK-004", "TASK-005", "TASK-006"],
+      "merge_after": false
+    },
+    {
+      "level": 3,
+      "workers_active": [0],
+      "tasks": ["TASK-007"],
+      "merge_after": false
+    }
+  ]
+}

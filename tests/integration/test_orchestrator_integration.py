@@ -191,10 +191,27 @@ class TestOrchestratorWorkerCrashRecovery:
             # Poll should detect crash
             orch._poll_workers()
 
-            # Verify task failure handling was called (now with next_retry_at kwarg)
-            state_mock.increment_task_retry.assert_called_once()
-            call_args = state_mock.increment_task_retry.call_args
-            assert call_args[0][0] == "TASK-001"
+            # Verify crash handling: task marked FAILED then reset to PENDING
+            # Worker crashes do NOT increment retry count (infrastructure failure)
+            state_mock.increment_task_retry.assert_not_called()
+
+            # Verify task was marked failed then reset to pending
+            # Filter to only TASK-001 status changes
+            task_status_calls = [c for c in state_mock.set_task_status.call_args_list if c[0][0] == "TASK-001"]
+            # Should have FAILED then PENDING (crash handling pattern)
+            failed_calls = [c for c in task_status_calls if c[0][1] == TaskStatus.FAILED]
+            pending_calls = [c for c in task_status_calls if c[0][1] == TaskStatus.PENDING]
+            assert len(failed_calls) >= 1, "Task should be marked FAILED on crash"
+            assert len(pending_calls) >= 1, "Task should be reset to PENDING after crash"
+            # FAILED should include the crash error
+            assert "Worker crashed" in failed_calls[0][1].get("error", "")
+
+            # Verify crash event was recorded
+            state_mock.append_event.assert_called()
+            event_calls = [c for c in state_mock.append_event.call_args_list if c[0][0] == "task_crash_reassign"]
+            assert len(event_calls) == 1
+            assert event_calls[0][0][1]["task_id"] == "TASK-001"
+            assert event_calls[0][0][1]["retry_count_incremented"] is False
 
     def test_worker_crash_respawns_worker(self, test_fixture: OrchestratorTestFixture) -> None:
         """Worker crash should trigger respawn if tasks remain."""

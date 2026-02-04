@@ -96,8 +96,9 @@ filterwarnings = [
     "ignore:.*found in sys.modules after import of package.*:RuntimeWarning",
 ]
 markers = [
-    "real_e2e: Tests requiring real Claude API access",
-    "slow: Slow-running tests",
+    "smoke: Critical path tests (< 30s total)",
+    "slow: Slow-running tests (excluded from fast tier)",
     "docker: Tests requiring a running Docker daemon",
-    "e2e: end-to-end tests requiring external services",
+    "e2e: End-to-end tests requiring external services",
+    "real_e2e: Tests requiring real Claude API access",
 ]

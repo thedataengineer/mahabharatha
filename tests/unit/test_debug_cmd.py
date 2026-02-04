@@ -21,6 +21,7 @@ import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
+import pytest
 from click.testing import CliRunner
 
 from zerg.commands.debug import (
@@ -470,253 +471,62 @@ ValueError: division by zero"""
 class TestStackTraceAnalyzer:
     """Tests for StackTraceAnalyzer class."""
 
-    def test_analyze_detects_recursion(self) -> None:
-        """Test analyze detects recursion patterns."""
+    # Parameterized test for all pattern detection (replaces 31 individual tests)
+    @pytest.mark.parametrize(
+        "error_input,expected_pattern",
+        [
+            # Recursion patterns
+            ("RecursionError: maximum recursion depth", "recursion"),
+            ("stack overflow in thread", "recursion"),
+            # Memory patterns
+            ("MemoryError: unable to allocate", "memory"),
+            ("out of memory error", "memory"),
+            ("JavaScript heap out of memory", "memory"),
+            # Timeout patterns
+            ("TimeoutError: operation timed out", "timeout"),
+            ("deadline exceeded", "timeout"),
+            # Connection patterns
+            ("ConnectionError: connection refused", "connection"),
+            ("Error: connect ECONNREFUSED", "connection"),
+            # Permission patterns
+            ("PermissionError: permission denied", "permission"),
+            ("Error: EACCES, permission denied", "permission"),
+            # Import patterns
+            ("ImportError: No module named 'foo'", "import"),
+            ("ModuleNotFoundError: No module named 'bar'", "import"),
+            ("Error: Cannot find module 'express'", "import"),
+            # Type patterns
+            ("TypeError: expected str, got int", "type"),
+            ("incompatible types: String vs Integer", "type"),
+            # Value patterns
+            ("ValueError: invalid value", "value"),
+            ("Error: invalid argument provided", "value"),
+            # Key patterns
+            ("KeyError: 'missing_key'", "key"),
+            ("undefined key in dictionary", "key"),
+            # Attribute patterns
+            ("AttributeError: 'NoneType' has no attribute 'x'", "attribute"),
+            ("Cannot read undefined property 'foo'", "attribute"),
+            # Index patterns
+            ("IndexError: list index out of range", "index"),
+            ("array index out of bounds", "index"),
+            # File patterns
+            ("FileNotFoundError: no such file", "file"),
+            ("Error: ENOENT, no such file or directory", "file"),
+            # Syntax patterns
+            ("SyntaxError: invalid syntax", "syntax"),
+            ("unexpected token at line 10", "syntax"),
+            ("parse error near keyword", "syntax"),
+            # Assertion patterns
+            ("AssertionError: expected True", "assertion"),
+            ("assertion failed: x > 0", "assertion"),
+        ],
+    )
+    def test_analyze_detects_pattern(self, error_input: str, expected_pattern: str) -> None:
+        """Test analyze detects various error patterns."""
         analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("RecursionError: maximum recursion depth")
-
-        assert "recursion" in patterns
-
-    def test_analyze_detects_stack_overflow(self) -> None:
-        """Test analyze detects stack overflow."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("stack overflow in thread")
-
-        assert "recursion" in patterns
-
-    def test_analyze_detects_memory(self) -> None:
-        """Test analyze detects memory patterns."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("MemoryError: unable to allocate")
-
-        assert "memory" in patterns
-
-    def test_analyze_detects_oom(self) -> None:
-        """Test analyze detects OOM."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("out of memory error")
-
-        assert "memory" in patterns
-
-    def test_analyze_detects_heap(self) -> None:
-        """Test analyze detects heap issues."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("JavaScript heap out of memory")
-
-        assert "memory" in patterns
-
-    def test_analyze_detects_timeout(self) -> None:
-        """Test analyze detects timeout patterns."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("TimeoutError: operation timed out")
-
-        assert "timeout" in patterns
-
-    def test_analyze_detects_deadline_exceeded(self) -> None:
-        """Test analyze detects deadline exceeded."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("deadline exceeded")
-
-        assert "timeout" in patterns
-
-    def test_analyze_detects_connection(self) -> None:
-        """Test analyze detects connection patterns."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("ConnectionError: connection refused")
-
-        assert "connection" in patterns
-
-    def test_analyze_detects_econnrefused(self) -> None:
-        """Test analyze detects ECONNREFUSED."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("Error: connect ECONNREFUSED")
-
-        assert "connection" in patterns
-
-    def test_analyze_detects_permission(self) -> None:
-        """Test analyze detects permission patterns."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("PermissionError: permission denied")
-
-        assert "permission" in patterns
-
-    def test_analyze_detects_eacces(self) -> None:
-        """Test analyze detects EACCES."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("Error: EACCES, permission denied")
-
-        assert "permission" in patterns
-
-    def test_analyze_detects_import(self) -> None:
-        """Test analyze detects import patterns."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("ImportError: No module named 'foo'")
-
-        assert "import" in patterns
-
-    def test_analyze_detects_module_not_found(self) -> None:
-        """Test analyze detects ModuleNotFoundError."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("ModuleNotFoundError: No module named 'bar'")
-
-        assert "import" in patterns
-
-    def test_analyze_detects_cannot_find_module(self) -> None:
-        """Test analyze detects cannot find module."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("Error: Cannot find module 'express'")
-
-        assert "import" in patterns
-
-    def test_analyze_detects_type_error(self) -> None:
-        """Test analyze detects type error patterns."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("TypeError: expected str, got int")
-
-        assert "type" in patterns
-
-    def test_analyze_detects_incompatible_types(self) -> None:
-        """Test analyze detects incompatible types."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("incompatible types: String vs Integer")
-
-        assert "type" in patterns
-
-    def test_analyze_detects_value_error(self) -> None:
-        """Test analyze detects value error patterns."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("ValueError: invalid value")
-
-        assert "value" in patterns
-
-    def test_analyze_detects_invalid_argument(self) -> None:
-        """Test analyze detects invalid argument."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("Error: invalid argument provided")
-
-        assert "value" in patterns
-
-    def test_analyze_detects_key_error(self) -> None:
-        """Test analyze detects key error patterns."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("KeyError: 'missing_key'")
-
-        assert "key" in patterns
-
-    def test_analyze_detects_undefined_key(self) -> None:
-        """Test analyze detects undefined key."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("undefined key in dictionary")
-
-        assert "key" in patterns
-
-    def test_analyze_detects_attribute_error(self) -> None:
-        """Test analyze detects attribute error patterns."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("AttributeError: 'NoneType' has no attribute 'x'")
-
-        assert "attribute" in patterns
-
-    def test_analyze_detects_undefined_property(self) -> None:
-        """Test analyze detects undefined property."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("Cannot read undefined property 'foo'")
-
-        assert "attribute" in patterns
-
-    def test_analyze_detects_index_error(self) -> None:
-        """Test analyze detects index error patterns."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("IndexError: list index out of range")
-
-        assert "index" in patterns
-
-    def test_analyze_detects_out_of_bounds(self) -> None:
-        """Test analyze detects out of bounds."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("array index out of bounds")
-
-        assert "index" in patterns
-
-    def test_analyze_detects_file_error(self) -> None:
-        """Test analyze detects file error patterns."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("FileNotFoundError: no such file")
-
-        assert "file" in patterns
-
-    def test_analyze_detects_enoent(self) -> None:
-        """Test analyze detects ENOENT."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("Error: ENOENT, no such file or directory")
-
-        assert "file" in patterns
-
-    def test_analyze_detects_syntax_error(self) -> None:
-        """Test analyze detects syntax error patterns."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("SyntaxError: invalid syntax")
-
-        assert "syntax" in patterns
-
-    def test_analyze_detects_unexpected_token(self) -> None:
-        """Test analyze detects unexpected token."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("unexpected token at line 10")
-
-        assert "syntax" in patterns
-
-    def test_analyze_detects_parse_error(self) -> None:
-        """Test analyze detects parse error."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("parse error near keyword")
-
-        assert "syntax" in patterns
-
-    def test_analyze_detects_assertion(self) -> None:
-        """Test analyze detects assertion patterns."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("AssertionError: expected True")
-
-        assert "assertion" in patterns
-
-    def test_analyze_detects_assertion_failed(self) -> None:
-        """Test analyze detects assertion failed."""
-        analyzer = StackTraceAnalyzer()
-
-        patterns = analyzer.analyze("assertion failed: x > 0")
-
-        assert "assertion" in patterns
+        patterns = analyzer.analyze(error_input)
+        assert expected_pattern in patterns
 
     def test_analyze_no_patterns(self) -> None:
         """Test analyze with no matching patterns."""

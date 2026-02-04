@@ -1,0 +1,213 @@
+{
+  "feature": "test-suite-optimization",
+  "version": "2.0",
+  "generated": "2026-02-04T07:30:00-07:00",
+  "total_tasks": 7,
+  "estimated_duration_minutes": 75,
+  "max_parallelization": 3,
+
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "title": "Configure pytest markers for test tiering",
+      "description": "Add smoke, slow markers to pyproject.toml and register in conftest.py. This establishes the foundation for three-tier test execution.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": ["pyproject.toml", "tests/conftest.py"],
+        "read": []
+      },
+      "verification": {
+        "command": "pytest --markers | grep -E 'smoke|slow' && echo 'Markers configured'",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 10,
+      "skills_required": ["python", "pytest"],
+      "consumers": ["TASK-004", "TASK-005"],
+      "integration_test": null,
+      "context": "## Spec Context\nImplement three-tier test execution via pytest markers:\n- smoke: Critical path tests (< 30s total)\n- slow: Slow-running tests (excluded from fast tier)\n\n## Implementation\nAdd to pyproject.toml [tool.pytest.ini_options].markers:\n```\nmarkers = [\n    \"smoke: Critical path tests (< 30s total)\",\n    \"slow: Slow-running tests (excluded from fast tier)\",\n    \"docker: Tests requiring a running Docker daemon\",\n    \"e2e: End-to-end tests requiring external services\",\n    \"real_e2e: Tests requiring real Claude API access\",\n]\n```\n\n## Security (Python)\n- No user input handling in this task\n- Config-only changes"
+    },
+    {
+      "id": "TASK-002",
+      "title": "Update quality gate configuration",
+      "description": "Add smoke gate to .zerg/config.yaml with 60s timeout. Reduce test gate timeout from 600s to 180s. Add -m 'not slow' to test gate command.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": [".zerg/config.yaml"],
+        "read": []
+      },
+      "verification": {
+        "command": "python -c \"import yaml; c=yaml.safe_load(open('.zerg/config.yaml')); gates=[g['name'] for g in c['quality_gates']]; assert 'smoke' in gates, 'smoke gate missing'; print('Gates OK:', gates)\"",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 10,
+      "skills_required": ["yaml", "zerg"],
+      "consumers": ["TASK-007"],
+      "integration_test": null,
+      "context": "## Spec Context\nUpdate quality gates:\n- Add smoke gate (60s timeout)\n- Reduce test gate timeout to 180s (was 600s)\n- Add -m 'not slow' to fast test command\n\n## Target Config\n```yaml\nquality_gates:\n  - name: lint\n    command: ruff check .\n    required: true\n    timeout: 300\n  - name: smoke\n    command: pytest -m smoke -x --timeout=5 -q\n    required: true\n    timeout: 60\n  - name: test\n    command: pytest tests/unit -m \"not slow\" -x --timeout=15 -q\n    required: true\n    timeout: 180\n  - name: typecheck\n    command: mypy zerg/ --ignore-missing-imports\n    required: false\n    timeout: 180\n  - name: security\n    command: ruff check . --select S\n    required: false\n    timeout: 60\n```\n\n## Security (YAML)\n- Use yaml.safe_load() for verification\n- No shell injection vectors"
+    },
+    {
+      "id": "TASK-003",
+      "title": "Optimize CI workflow with smoke job",
+      "description": "Update .github/workflows/pytest.yml to add a smoke job that runs first and gates other jobs. Add pip caching for faster installs.",
+      "phase": "foundation",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": [".github/workflows/pytest.yml"],
+        "read": []
+      },
+      "verification": {
+        "command": "grep -q 'smoke' .github/workflows/pytest.yml && grep -q 'needs:' .github/workflows/pytest.yml && echo 'CI workflow updated'",
+        "timeout_seconds": 30
+      },
+      "estimate_minutes": 15,
+      "skills_required": ["github-actions", "yaml"],
+      "consumers": ["TASK-007"],
+      "integration_test": null,
+      "context": "## Spec Context\nUpdate CI workflow:\n- Add smoke job that runs first\n- Other jobs depend on smoke job (needs: smoke)\n- Add pip caching for faster installs\n\n## Target Structure\n```yaml\njobs:\n  smoke:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-python@v5\n        with:\n          python-version: '3.12'\n          cache: 'pip'\n      - run: pip install -e \".[dev]\"\n      - run: pytest -m smoke -x --timeout=5 -q\n\n  test:\n    needs: smoke\n    runs-on: ubuntu-latest\n    # ... existing test job\n```\n\n## Security (CI)\n- No secrets exposed\n- Use pinned action versions (@v4, @v5)"
+    },
+    {
+      "id": "TASK-004",
+      "title": "Add smoke markers to critical test files",
+      "description": "Add pytestmark = pytest.mark.smoke to test_config.py, test_state.py, test_validation.py, and test_constants.py. These files contain critical path tests.",
+      "phase": "core",
+      "level": 2,
+      "dependencies": ["TASK-001"],
+      "files": {
+        "create": [],
+        "modify": [
+          "tests/unit/test_config.py",
+          "tests/unit/test_state.py",
+          "tests/unit/test_validation.py",
+          "tests/unit/test_constants.py"
+        ],
+        "read": []
+      },
+      "verification": {
+        "command": "pytest -m smoke --collect-only 2>/dev/null | grep -E 'test_config|test_state|test_validation|test_constants' | head -5 && echo 'Smoke tests collected'",
+        "timeout_seconds": 60
+      },
+      "estimate_minutes": 15,
+      "skills_required": ["python", "pytest"],
+      "consumers": ["TASK-007"],
+      "integration_test": null,
+      "context": "## Spec Context\nAdd smoke marker to critical test files for fast feedback tier.\n\n## Implementation\nAdd at top of each file (after imports):\n```python\nimport pytest\n\npytestmark = pytest.mark.smoke\n```\n\nFiles to modify:\n- tests/unit/test_config.py — Configuration validation (critical)\n- tests/unit/test_state.py — State management (critical)\n- tests/unit/test_validation.py — Input validation (critical)\n- tests/unit/test_constants.py — Constants/enums (fast, foundational)\n\n## Dependencies\nTASK-001 adds the smoke marker definition to pyproject.toml\n\n## Security (Python)\n- No security implications for marker additions"
+    },
+    {
+      "id": "TASK-005",
+      "title": "Parameterize TestStackTraceAnalyzer tests",
+      "description": "Replace 31 identical test_analyze_detects_* methods in test_debug_cmd.py with a single parameterized test. Maintain same coverage with ~1100 LOC reduction.",
+      "phase": "core",
+      "level": 2,
+      "dependencies": ["TASK-001"],
+      "files": {
+        "create": [],
+        "modify": ["tests/unit/test_debug_cmd.py"],
+        "read": []
+      },
+      "verification": {
+        "command": "pytest tests/unit/test_debug_cmd.py::TestStackTraceAnalyzer -v --tb=no 2>&1 | grep -c PASSED",
+        "timeout_seconds": 120
+      },
+      "estimate_minutes": 30,
+      "skills_required": ["python", "pytest", "refactoring"],
+      "consumers": ["TASK-007"],
+      "integration_test": null,
+      "context": "## Spec Context\nReduce test code via parameterization. Target: TestStackTraceAnalyzer class (lines 521-719).\n\n## Current Structure (31 tests)\n```python\ndef test_analyze_detects_recursion(self): ...\ndef test_analyze_detects_memory(self): ...\ndef test_analyze_detects_timeout(self): ...\n# ... 28 more identical pattern\n```\n\n## Target Structure (1 parameterized test)\n```python\n@pytest.mark.parametrize(\"error_input,expected_pattern\", [\n    (\"RecursionError: maximum recursion depth exceeded\", \"recursion\"),\n    (\"RuntimeError: maximum recursion depth exceeded\", \"recursion\"),\n    (\"stack overflow\", \"recursion\"),\n    (\"MemoryError: unable to allocate\", \"memory\"),\n    (\"JavaScript heap out of memory\", \"memory\"),\n    (\"OutOfMemoryError\", \"memory\"),\n    (\"killed by OOM\", \"memory\"),\n    (\"TimeoutError\", \"timeout\"),\n    (\"deadline exceeded\", \"timeout\"),\n    (\"context deadline exceeded\", \"timeout\"),\n    (\"operation timed out\", \"timeout\"),\n    (\"ConnectionError: connection refused\", \"connection\"),\n    (\"ECONNREFUSED\", \"connection\"),\n    (\"PermissionError: permission denied\", \"permission\"),\n    (\"EACCES, permission denied\", \"permission\"),\n    (\"ImportError: No module named 'foo'\", \"import\"),\n    (\"ModuleNotFoundError: No module named 'bar'\", \"import\"),\n    (\"Cannot find module 'express'\", \"import\"),\n    (\"TypeError: expected str, got int\", \"type\"),\n    (\"incompatible types: String vs Integer\", \"type\"),\n    (\"ValueError: invalid value\", \"value\"),\n    (\"invalid argument provided\", \"value\"),\n    (\"KeyError: 'missing_key'\", \"key\"),\n    (\"undefined key in dictionary\", \"key\"),\n    (\"AttributeError: 'NoneType' has no attribute 'x'\", \"attribute\"),\n    (\"Cannot read undefined property 'foo'\", \"attribute\"),\n    (\"IndexError: list index out of range\", \"index\"),\n    (\"array index out of bounds\", \"index\"),\n    (\"FileNotFoundError: no such file\", \"file\"),\n    (\"ENOENT, no such file or directory\", \"file\"),\n    (\"SyntaxError: invalid syntax\", \"syntax\"),\n    (\"unexpected token at line 10\", \"syntax\"),\n    (\"parse error near keyword\", \"syntax\"),\n    (\"AssertionError: expected True\", \"assertion\"),\n    (\"assertion failed: x > 0\", \"assertion\"),\n])\ndef test_analyze_detects_pattern(self, error_input, expected_pattern):\n    analyzer = StackTraceAnalyzer()\n    patterns = analyzer.analyze(error_input)\n    assert expected_pattern in patterns\n```\n\n## Security (Python)\n- No user input handling\n- Test-only refactoring"
+    },
+    {
+      "id": "TASK-006",
+      "title": "Consolidate launcher test files",
+      "description": "Merge launcher test files from 8 to 3. Merge coverage/errors/extended into test_launcher.py. Merge process/network/exec into new test_launcher_container.py. Keep test_launcher_configurator.py separate.",
+      "phase": "core",
+      "level": 2,
+      "dependencies": ["TASK-001"],
+      "files": {
+        "create": ["tests/unit/test_launcher_container.py"],
+        "modify": ["tests/unit/test_launcher.py"],
+        "delete": [
+          "tests/unit/test_launcher_coverage.py",
+          "tests/unit/test_launcher_errors.py",
+          "tests/unit/test_launcher_extended.py",
+          "tests/unit/test_launcher_process.py",
+          "tests/unit/test_launcher_network.py",
+          "tests/unit/test_launcher_exec.py"
+        ],
+        "read": [
+          "tests/unit/test_launcher_coverage.py",
+          "tests/unit/test_launcher_errors.py",
+          "tests/unit/test_launcher_extended.py",
+          "tests/unit/test_launcher_process.py",
+          "tests/unit/test_launcher_network.py",
+          "tests/unit/test_launcher_exec.py"
+        ]
+      },
+      "verification": {
+        "command": "count=$(ls tests/unit/test_launcher*.py 2>/dev/null | wc -l | tr -d ' '); test $count -eq 3 && pytest tests/unit/test_launcher*.py --collect-only 2>/dev/null | tail -1",
+        "timeout_seconds": 120
+      },
+      "estimate_minutes": 45,
+      "skills_required": ["python", "pytest", "refactoring"],
+      "consumers": ["TASK-007"],
+      "integration_test": null,
+      "context": "## Spec Context\nConsolidate launcher test files from 8 to 3 for better maintainability.\n\n## Current Structure (8 files, 6427 LOC)\n- test_launcher.py (2099 LOC) — Core subprocess launcher\n- test_launcher_coverage.py (1258 LOC) — Coverage gaps\n- test_launcher_errors.py (865 LOC) — Error handling\n- test_launcher_extended.py (531 LOC) — Extended scenarios\n- test_launcher_process.py (652 LOC) — Process management\n- test_launcher_network.py (503 LOC) — Network isolation\n- test_launcher_exec.py (336 LOC) — Execution modes\n- test_launcher_configurator.py (183 LOC) — Configuration\n\n## Target Structure (3 files)\n1. test_launcher.py — Merge: coverage, errors, extended (4753 LOC → ~3500 after dedup)\n2. test_launcher_container.py — Merge: process, network, exec (1491 LOC)\n3. test_launcher_configurator.py — Keep as-is (183 LOC, distinct responsibility)\n\n## Merge Strategy\n1. Read all source files\n2. Identify duplicate test fixtures/setup\n3. Consolidate imports\n4. Group by test class where appropriate\n5. Delete source files after merge\n6. Run pytest to verify no tests lost\n\n## Security (Python)\n- Test-only changes\n- No production code modified"
+    },
+    {
+      "id": "TASK-007",
+      "title": "Verify optimization results",
+      "description": "Run smoke tests to verify < 30s execution. Run full test suite to verify no regressions. Document results.",
+      "phase": "verification",
+      "level": 3,
+      "dependencies": ["TASK-002", "TASK-003", "TASK-004", "TASK-005", "TASK-006"],
+      "files": {
+        "create": [],
+        "modify": [],
+        "read": []
+      },
+      "verification": {
+        "command": "time pytest -m smoke -x --timeout=5 -q 2>&1 | tail -5",
+        "timeout_seconds": 60
+      },
+      "estimate_minutes": 10,
+      "skills_required": ["testing"],
+      "consumers": [],
+      "integration_test": null,
+      "context": "## Spec Context\nFinal verification that optimization goals are met.\n\n## Success Criteria\n1. Smoke tests complete in < 30 seconds\n2. All tests pass (no regressions)\n3. Coverage remains >= 80%\n\n## Verification Commands\n```bash\n# Smoke tier timing\ntime pytest -m smoke -x --timeout=5 -q\n\n# Fast tier timing\ntime pytest tests/unit -m \"not slow\" -x --timeout=15 -q\n\n# Full regression\npytest tests/unit --tb=short\n\n# Coverage check\npytest tests/unit --cov=zerg --cov-fail-under=80 -q\n```\n\n## Expected Results\n- Smoke: < 30s\n- Fast: < 90s\n- Full: < 5 min\n- Coverage: >= 80%"
+    }
+  ],
+
+  "levels": {
+    "1": {
+      "name": "foundation",
+      "tasks": ["TASK-001", "TASK-002", "TASK-003"],
+      "parallel": true,
+      "estimated_minutes": 15
+    },
+    "2": {
+      "name": "core",
+      "tasks": ["TASK-004", "TASK-005", "TASK-006"],
+      "parallel": true,
+      "estimated_minutes": 45,
+      "depends_on_levels": [1]
+    },
+    "3": {
+      "name": "verification",
+      "tasks": ["TASK-007"],
+      "parallel": false,
+      "estimated_minutes": 10,
+      "depends_on_levels": [2]
+    }
+  },
+
+  "conflict_matrix": {
+    "description": "Tasks that cannot run in parallel due to shared files",
+    "conflicts": []
+  }
+}

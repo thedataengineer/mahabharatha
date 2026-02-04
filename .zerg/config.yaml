@@ -25,23 +25,27 @@ quality_gates:
     command: ruff check .
     required: true
     timeout: 300
+  - name: smoke
+    command: pytest -m smoke -x --timeout=5 -q
+    required: true
+    timeout: 60
+  - name: test
+    command: pytest tests/unit/ -m "not slow" -x --timeout=15 -q --ignore=tests/unit/test_analyze_cmd.py --ignore=tests/unit/test_perf_adapters_coverage.py
+    required: true
+    timeout: 180
   - name: typecheck
     command: mypy zerg/ --ignore-missing-imports
     required: false
-    timeout: 300
-  - name: test
-    command: pytest tests/unit/ -x --timeout=30 --ignore=tests/unit/test_analyze_cmd.py --ignore=tests/unit/test_perf_adapters_coverage.py
-    required: true
-    timeout: 600
+    timeout: 180
   - name: coverage
     command: pytest tests/unit/ --cov=zerg --cov-fail-under=80 -q --timeout=30
     required: false
-    timeout: 600
+    timeout: 300
     coverage_threshold: 80
   - name: security
     command: ruff check . --select S
     required: false
-    timeout: 120
+    timeout: 60
 
 mcp_servers:
   - filesystem
