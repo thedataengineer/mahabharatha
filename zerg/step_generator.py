@@ -1,41 +1,40 @@
-"""Step generator for bite-sized task planning.
+"""Step generation for bite-sized task planning.
 
 Generates TDD-style execution steps for tasks based on detail level.
-Supports three detail levels:
-- standard: No steps (backward compatible, classic mode)
-- medium: TDD sequence without code snippets
-- high: TDD sequence with code snippets from AST analysis
-
-Steps follow the TDD red-green-refactor cycle:
-1. write_test - Create test file with failing test
-2. verify_fail - Verify test fails (expected to fail)
-3. implement - Write implementation code
-4. verify_pass - Verify test passes
-5. format - Run formatter on changed files
+For medium/high detail, produces a 6-step TDD sequence:
+1. write_test - Write failing test
+2. verify_fail - Verify test fails (exit_code_nonzero)
+3. implement - Write implementation
+4. verify_pass - Verify test passes (exit_code)
+5. format - Run code formatter
 6. commit - Commit changes
+
+For high detail, includes code_snippet with realistic patterns.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from zerg.formatter_detector import FormatterConfig, FormatterDetector
+
 if TYPE_CHECKING:
-    from zerg.ast_cache import ASTCache
+    pass
 
 
-class DetailLevel(Enum):
-    """Task detail level for step generation."""
+class DetailLevel(str, Enum):
+    """Detail level for step generation."""
 
-    STANDARD = "standard"  # No steps (classic mode)
+    STANDARD = "standard"  # No steps (backward compatible)
     MEDIUM = "medium"  # TDD steps without code snippets
     HIGH = "high"  # TDD steps with code snippets
 
 
-class StepAction(Enum):
-    """Step action types matching task_graph.json schema."""
+class StepAction(str, Enum):
+    """Action types for execution steps."""
 
     WRITE_TEST = "write_test"
     VERIFY_FAIL = "verify_fail"
@@ -45,11 +44,11 @@ class StepAction(Enum):
     COMMIT = "commit"
 
 
-class VerifyMode(Enum):
-    """Verification mode for step commands."""
+class VerifyMode(str, Enum):
+    """Verification modes for step execution."""
 
     EXIT_CODE = "exit_code"  # 0 = success
-    EXIT_CODE_NONZERO = "exit_code_nonzero"  # non-0 = success (for verify_fail)
+    EXIT_CODE_NONZERO = "exit_code_nonzero"  # non-0 = success
     NONE = "none"  # No verification
 
 
@@ -69,7 +68,6 @@ class Step:
         result: dict[str, Any] = {
             "step": self.step,
             "action": self.action.value,
-            "verify": self.verify.value,
         }
         if self.file:
             result["file"] = self.file
@@ -77,456 +75,389 @@ class Step:
             result["code_snippet"] = self.code_snippet
         if self.run:
             result["run"] = self.run
+        result["verify"] = self.verify.value
         return result
 
 
 @dataclass
-class FormatterConfig:
-    """Formatter configuration for a project."""
+class TaskDefinition:
+    """Task definition from task-graph.json."""
 
-    format_cmd: str
-    fix_cmd: str
-    file_patterns: list[str]
+    id: str
+    title: str
+    description: str = ""
+    files: dict[str, list[str]] = field(default_factory=dict)
+    verification: dict[str, Any] = field(default_factory=dict)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> TaskDefinition:
+        """Create TaskDefinition from dictionary."""
+        return cls(
+            id=data.get("id", ""),
+            title=data.get("title", ""),
+            description=data.get("description", ""),
+            files=data.get("files", {}),
+            verification=data.get("verification", {}),
+        )
 
 
 class StepGenerator:
-    """Generates execution steps for tasks based on detail level.
+    """Generates TDD execution steps for tasks based on detail level.
 
-    For medium and high detail levels, generates a TDD-style sequence:
-    1. Write test (red)
-    2. Verify test fails
-    3. Implement code (green)
-    4. Verify test passes
-    5. Format code
-    6. Commit changes
+    For standard detail: Returns empty list (backward compatible).
+    For medium detail: Returns 6-step TDD sequence without snippets.
+    For high detail: Returns 6-step TDD sequence with code snippets.
 
-    For high detail, code snippets are included using AST analysis.
+    Uses FormatterDetector to populate format step commands and
+    optionally integrates with ASTAnalyzer for realistic snippets.
     """
+
+    # TDD step sequence with descriptions
+    TDD_SEQUENCE = [
+        (StepAction.WRITE_TEST, "Write failing test for {title}"),
+        (StepAction.VERIFY_FAIL, "Verify test fails (TDD red phase)"),
+        (StepAction.IMPLEMENT, "Implement {title}"),
+        (StepAction.VERIFY_PASS, "Verify test passes (TDD green phase)"),
+        (StepAction.FORMAT, "Format code with {formatter}"),
+        (StepAction.COMMIT, "Commit changes"),
+    ]
 
     def __init__(
         self,
-        project_root: Path | None = None,
-        ast_cache: ASTCache | None = None,
+        project_root: Path | str | None = None,
+        ast_analyzer: Any | None = None,
     ) -> None:
         """Initialize step generator.
 
         Args:
-            project_root: Root directory of the project for formatter detection.
-            ast_cache: Optional AST cache for code snippet generation.
+            project_root: Root directory of the project. Defaults to cwd.
+            ast_analyzer: Optional ASTAnalyzer for code snippet generation.
         """
-        self.project_root = project_root or Path.cwd()
-        self.ast_cache = ast_cache
-        self._formatter: FormatterConfig | None = None
-        self._formatter_detected = False
+        self.project_root = Path(project_root) if project_root else Path.cwd()
+        self.formatter_detector = FormatterDetector(self.project_root)
+        self.ast_analyzer = ast_analyzer
+        self._formatter_cache: FormatterConfig | None = None
+        self._formatter_cached: bool = False
 
-    def _detect_formatter(self) -> FormatterConfig | None:
-        """Detect project formatter from config files.
+    @property
+    def formatter(self) -> FormatterConfig | None:
+        """Get detected formatter, caching the result."""
+        if not self._formatter_cached:
+            self._formatter_cache = self.formatter_detector.detect()
+            self._formatter_cached = True
+        return self._formatter_cache
 
-        Attempts to import FormatterDetector if available, otherwise
-        uses simple heuristics based on config file presence.
-
-        Returns:
-            FormatterConfig if detected, None otherwise.
-        """
-        if self._formatter_detected:
-            return self._formatter
-
-        self._formatter_detected = True
-
-        # Try to use FormatterDetector if available
-        try:
-            from zerg.formatter_detector import FormatterDetector
-
-            detector = FormatterDetector(self.project_root)
-            self._formatter = detector.detect()
-            return self._formatter
-        except ImportError:
-            pass
-
-        # Fallback: Simple detection based on config files
-        pyproject = self.project_root / "pyproject.toml"
-        if pyproject.exists():
-            content = pyproject.read_text()
-            if "[tool.ruff]" in content:
-                self._formatter = FormatterConfig(
-                    format_cmd="ruff format",
-                    fix_cmd="ruff check --fix",
-                    file_patterns=["*.py"],
-                )
-            elif "[tool.black]" in content:
-                self._formatter = FormatterConfig(
-                    format_cmd="black",
-                    fix_cmd="black",
-                    file_patterns=["*.py"],
-                )
-
-        if self._formatter is None:
-            # Check for prettier
-            if (self.project_root / ".prettierrc").exists() or (self.project_root / ".prettierrc.json").exists():
-                self._formatter = FormatterConfig(
-                    format_cmd="prettier --write",
-                    fix_cmd="prettier --write",
-                    file_patterns=["*.js", "*.ts", "*.jsx", "*.tsx"],
-                )
-
-        return self._formatter
-
-    def _get_test_file(self, impl_file: str) -> str:
-        """Generate test file path from implementation file.
-
-        Args:
-            impl_file: Implementation file path (e.g., 'zerg/foo.py')
-
-        Returns:
-            Test file path (e.g., 'tests/unit/test_foo.py')
-        """
-        path = Path(impl_file)
-
-        # Handle different conventions
-        if path.suffix == ".py":
-            # Python: zerg/foo.py -> tests/unit/test_foo.py
-            return f"tests/unit/test_{path.stem}.py"
-        elif path.suffix in (".ts", ".tsx", ".js", ".jsx"):
-            # JavaScript/TypeScript: src/foo.ts -> src/__tests__/foo.test.ts
-            parent = path.parent
-            return str(parent / "__tests__" / f"{path.stem}.test{path.suffix}")
-
-        # Fallback
-        return f"tests/test_{path.stem}{path.suffix}"
-
-    def _get_verification_cmd(self, task: dict[str, Any]) -> str:
-        """Get verification command from task or generate default.
-
-        Args:
-            task: Task definition dictionary.
-
-        Returns:
-            Verification command string.
-        """
-        verification = task.get("verification", {})
-        if isinstance(verification, dict) and verification.get("command"):
-            return verification["command"]
-
-        # Generate default based on file patterns
-        files = task.get("files", {})
-        create_files = files.get("create", [])
-        modify_files = files.get("modify", [])
-
-        all_files = create_files + modify_files
-        if all_files:
-            first_file = all_files[0]
-            if first_file.endswith(".py"):
-                test_file = self._get_test_file(first_file)
-                return f"pytest {test_file} -v --tb=short"
-
-        return "pytest -v --tb=short"
-
-    def _generate_code_snippet(
+    def generate_steps(
         self,
-        task: dict[str, Any],
-        action: StepAction,
-    ) -> str | None:
-        """Generate code snippet for high detail level.
-
-        Uses AST analysis to extract patterns from existing code.
-
-        Args:
-            task: Task definition dictionary.
-            action: The step action type.
-
-        Returns:
-            Code snippet string or None if not applicable.
-        """
-        if action == StepAction.WRITE_TEST:
-            return self._generate_test_snippet(task)
-        elif action == StepAction.IMPLEMENT:
-            return self._generate_impl_snippet(task)
-        return None
-
-    def _generate_test_snippet(self, task: dict[str, Any]) -> str:
-        """Generate a test snippet based on task description.
-
-        Args:
-            task: Task definition dictionary.
-
-        Returns:
-            Test code snippet.
-        """
-        title = task.get("title", "feature")
-        # Convert title to function name
-        func_name = title.lower().replace(" ", "_").replace("-", "_")
-        # Sanitize
-        func_name = "".join(c for c in func_name if c.isalnum() or c == "_")
-
-        files = task.get("files", {})
-        create_files = files.get("create", [])
-
-        if create_files:
-            # Extract module name from first created file
-            first_file = create_files[0]
-            module_path = Path(first_file)
-            module_name = module_path.stem
-            package_path = str(module_path.parent).replace("/", ".")
-
-            return f'''"""Tests for {module_name}."""
-
-import pytest
-from {package_path}.{module_name} import {func_name.title().replace("_", "")}
-
-
-class Test{func_name.title().replace("_", "")}:
-    """Test cases for {title}."""
-
-    def test_{func_name}_basic(self) -> None:
-        """Test basic functionality."""
-        # Arrange
-        # TODO: Set up test data
-
-        # Act
-        # TODO: Call the function/method
-
-        # Assert
-        # TODO: Verify expected behavior
-        assert False, "Test not implemented"
-'''
-
-        return f'''"""Tests for {title}."""
-
-import pytest
-
-
-def test_{func_name}() -> None:
-    """Test {title}."""
-    # TODO: Implement test
-    assert False, "Test not implemented"
-'''
-
-    def _generate_impl_snippet(self, task: dict[str, Any]) -> str:
-        """Generate an implementation snippet based on task description.
-
-        Args:
-            task: Task definition dictionary.
-
-        Returns:
-            Implementation code snippet.
-        """
-        title = task.get("title", "Module")
-        description = task.get("description", "")
-
-        files = task.get("files", {})
-        create_files = files.get("create", [])
-
-        if create_files:
-            first_file = create_files[0]
-            module_path = Path(first_file)
-            module_name = module_path.stem
-
-            # Generate class name from module name
-            class_name = "".join(word.title() for word in module_name.split("_"))
-
-            return f'''"""{title}.
-
-{description}
-"""
-
-from __future__ import annotations
-
-from dataclasses import dataclass
-
-
-@dataclass
-class {class_name}:
-    """{title} implementation.
-
-    TODO: Add fields and methods.
-    """
-
-    def __init__(self) -> None:
-        """Initialize {class_name}."""
-        pass
-'''
-
-        return f'''"""{title}.
-
-{description}
-"""
-
-from __future__ import annotations
-
-
-# TODO: Implement {title}
-'''
-
-    def generate(
-        self,
-        task: dict[str, Any],
+        task: TaskDefinition | dict[str, Any],
         detail_level: DetailLevel | str = DetailLevel.STANDARD,
     ) -> list[Step]:
         """Generate execution steps for a task.
 
         Args:
-            task: Task definition dictionary with id, title, description, files, etc.
+            task: Task definition (TaskDefinition or dict).
             detail_level: Detail level (standard/medium/high).
 
         Returns:
-            List of Step objects. Empty list for standard detail level.
+            List of Step objects. Empty for standard detail.
         """
-        # Normalize detail level
+        # Normalize inputs
+        if isinstance(task, dict):
+            task = TaskDefinition.from_dict(task)
         if isinstance(detail_level, str):
-            detail_level = DetailLevel(detail_level.lower())
+            detail_level = DetailLevel(detail_level)
 
-        # Standard detail: no steps (backward compatible)
+        # Standard detail = no steps (backward compatible)
         if detail_level == DetailLevel.STANDARD:
             return []
 
+        # Medium/High detail = TDD sequence
         steps: list[Step] = []
-        step_num = 0
-
-        # Get file information
-        files = task.get("files", {})
-        create_files = files.get("create", [])
-        modify_files = files.get("modify", [])
-
-        # Determine primary implementation file
-        impl_files = create_files or modify_files
-        impl_file = impl_files[0] if impl_files else None
-
-        # Determine test file
-        test_file = self._get_test_file(impl_file) if impl_file else None
-
-        # Get verification command
-        verify_cmd = self._get_verification_cmd(task)
-
-        # Include code snippets only for high detail
         include_snippets = detail_level == DetailLevel.HIGH
 
-        # Step 1: Write test (red)
-        step_num += 1
-        steps.append(
-            Step(
-                step=step_num,
-                action=StepAction.WRITE_TEST,
-                file=test_file,
-                code_snippet=(self._generate_code_snippet(task, StepAction.WRITE_TEST) if include_snippets else None),
-                run=None,
-                verify=VerifyMode.NONE,
+        # Get files from task definition
+        create_files = task.files.get("create", [])
+        modify_files = task.files.get("modify", [])
+        target_files = create_files + modify_files
+
+        # Determine test file and impl file
+        test_file, impl_file = self._determine_files(task, target_files)
+
+        # Get verification command from task
+        verify_cmd = task.verification.get("command", "pytest -xvs")
+
+        # Generate TDD steps
+        for step_num, (action, desc_template) in enumerate(self.TDD_SEQUENCE, start=1):
+            step = self._create_step(
+                step_num=step_num,
+                action=action,
+                desc_template=desc_template,
+                task=task,
+                test_file=test_file,
+                impl_file=impl_file,
+                verify_cmd=verify_cmd,
+                include_snippets=include_snippets,
             )
-        )
-
-        # Step 2: Verify test fails
-        step_num += 1
-        steps.append(
-            Step(
-                step=step_num,
-                action=StepAction.VERIFY_FAIL,
-                file=None,
-                code_snippet=None,
-                run=verify_cmd,
-                verify=VerifyMode.EXIT_CODE_NONZERO,  # Expects failure
-            )
-        )
-
-        # Step 3: Implement
-        step_num += 1
-        steps.append(
-            Step(
-                step=step_num,
-                action=StepAction.IMPLEMENT,
-                file=impl_file,
-                code_snippet=(self._generate_code_snippet(task, StepAction.IMPLEMENT) if include_snippets else None),
-                run=None,
-                verify=VerifyMode.NONE,
-            )
-        )
-
-        # Step 4: Verify test passes
-        step_num += 1
-        steps.append(
-            Step(
-                step=step_num,
-                action=StepAction.VERIFY_PASS,
-                file=None,
-                code_snippet=None,
-                run=verify_cmd,
-                verify=VerifyMode.EXIT_CODE,  # Expects success
-            )
-        )
-
-        # Step 5: Format
-        step_num += 1
-        formatter = self._detect_formatter()
-        format_cmd = formatter.format_cmd if formatter else "ruff format"
-
-        # Build file list for format command
-        all_files = [f for f in [test_file, impl_file] if f]
-        if all_files:
-            files_arg = " ".join(all_files)
-            format_run = f"{format_cmd} {files_arg}"
-        else:
-            format_run = format_cmd
-
-        steps.append(
-            Step(
-                step=step_num,
-                action=StepAction.FORMAT,
-                file=None,
-                code_snippet=None,
-                run=format_run,
-                verify=VerifyMode.EXIT_CODE,
-            )
-        )
-
-        # Step 6: Commit
-        step_num += 1
-        task_id = task.get("id", "TASK")
-        task_title = task.get("title", "Implement task")
-        commit_msg = f"feat({task_id}): {task_title}"
-
-        steps.append(
-            Step(
-                step=step_num,
-                action=StepAction.COMMIT,
-                file=None,
-                code_snippet=None,
-                run=f'git add -A && git commit -m "{commit_msg}"',
-                verify=VerifyMode.EXIT_CODE,
-            )
-        )
+            steps.append(step)
 
         return steps
 
-    def generate_steps_dict(
+    def _determine_files(
         self,
-        task: dict[str, Any],
-        detail_level: DetailLevel | str = DetailLevel.STANDARD,
-    ) -> list[dict[str, Any]]:
-        """Generate steps as dictionaries for JSON serialization.
+        task: TaskDefinition,
+        target_files: list[str],
+    ) -> tuple[str | None, str | None]:
+        """Determine test file and implementation file for a task.
 
         Args:
-            task: Task definition dictionary.
-            detail_level: Detail level (standard/medium/high).
+            task: Task definition.
+            target_files: List of files from task.
 
         Returns:
-            List of step dictionaries ready for task-graph.json.
+            Tuple of (test_file, impl_file).
         """
-        steps = self.generate(task, detail_level)
-        return [step.to_dict() for step in steps]
+        test_file: str | None = None
+        impl_file: str | None = None
+
+        for f in target_files:
+            if "test" in f.lower() or f.startswith("tests/"):
+                test_file = f
+            elif f.endswith(".py"):
+                impl_file = f
+
+        # If no explicit test file, infer from impl file
+        if not test_file and impl_file:
+            # zerg/foo.py -> tests/unit/test_foo.py
+            impl_path = Path(impl_file)
+            test_file = f"tests/unit/test_{impl_path.stem}.py"
+
+        # If no impl file but test file exists, infer impl
+        if not impl_file and test_file:
+            # tests/unit/test_foo.py -> zerg/foo.py
+            test_path = Path(test_file)
+            stem = test_path.stem.replace("test_", "")
+            impl_file = f"zerg/{stem}.py"
+
+        return test_file, impl_file
+
+    def _create_step(
+        self,
+        step_num: int,
+        action: StepAction,
+        desc_template: str,
+        task: TaskDefinition,
+        test_file: str | None,
+        impl_file: str | None,
+        verify_cmd: str,
+        include_snippets: bool,
+    ) -> Step:
+        """Create a single execution step.
+
+        Args:
+            step_num: Step number (1-6).
+            action: Step action type.
+            desc_template: Description template.
+            task: Task definition.
+            test_file: Test file path.
+            impl_file: Implementation file path.
+            verify_cmd: Verification command.
+            include_snippets: Whether to include code snippets.
+
+        Returns:
+            Step object.
+        """
+        step = Step(
+            step=step_num,
+            action=action,
+        )
+
+        # Set step-specific properties
+        if action == StepAction.WRITE_TEST:
+            step.file = test_file
+            step.verify = VerifyMode.NONE
+            if include_snippets:
+                step.code_snippet = self._generate_test_snippet(task, test_file)
+
+        elif action == StepAction.VERIFY_FAIL:
+            step.run = verify_cmd
+            step.verify = VerifyMode.EXIT_CODE_NONZERO  # Test must fail
+
+        elif action == StepAction.IMPLEMENT:
+            step.file = impl_file
+            step.verify = VerifyMode.NONE
+            if include_snippets:
+                step.code_snippet = self._generate_impl_snippet(task, impl_file)
+
+        elif action == StepAction.VERIFY_PASS:
+            step.run = verify_cmd
+            step.verify = VerifyMode.EXIT_CODE  # Test must pass
+
+        elif action == StepAction.FORMAT:
+            if self.formatter:
+                step.run = self.formatter.fix_cmd
+            else:
+                step.run = "echo 'No formatter detected, skipping'"
+            step.verify = VerifyMode.EXIT_CODE
+
+        elif action == StepAction.COMMIT:
+            step.run = 'git add -A && git diff --cached --quiet || echo "Changes staged"'
+            step.verify = VerifyMode.NONE  # Commit handled by worker protocol
+
+        return step
+
+    def _generate_test_snippet(
+        self,
+        task: TaskDefinition,
+        test_file: str | None,
+    ) -> str:
+        """Generate a test code snippet.
+
+        Uses ASTAnalyzer if available, otherwise provides a generic template.
+
+        Args:
+            task: Task definition.
+            test_file: Test file path.
+
+        Returns:
+            Test code snippet.
+        """
+        # Try ASTAnalyzer if available
+        if self.ast_analyzer and test_file:
+            try:
+                patterns = self.ast_analyzer.extract_patterns(Path(test_file))
+                if patterns and patterns.imports:
+                    # Build snippet from extracted patterns
+                    lines = []
+                    for imp in patterns.imports[:5]:
+                        lines.append(imp.to_import_line())
+                    lines.append("")
+                    lines.append(f"def test_{self._snake_case(task.title)}():")
+                    lines.append(f'    """Test {task.title}."""')
+                    lines.append("    # TODO: Implement test")
+                    lines.append("    assert False, 'Not implemented'")
+                    return "\n".join(lines)
+            except Exception:
+                pass  # Fall through to generic template
+
+        # Generic test template
+        module_name = self._extract_module_name(task)
+        return f'''"""Tests for {task.title}."""
+
+import pytest
+from {module_name} import ...  # TODO: Import target
+
+
+class Test{self._pascal_case(task.title)}:
+    """Tests for {task.title}."""
+
+    def test_basic_functionality(self):
+        """Test basic functionality."""
+        # TODO: Implement test
+        assert False, "Not implemented"
+'''
+
+    def _generate_impl_snippet(
+        self,
+        task: TaskDefinition,
+        impl_file: str | None,
+    ) -> str:
+        """Generate an implementation code snippet.
+
+        Uses ASTAnalyzer if available, otherwise provides a generic template.
+
+        Args:
+            task: Task definition.
+            impl_file: Implementation file path.
+
+        Returns:
+            Implementation code snippet.
+        """
+        # Try ASTAnalyzer if available
+        if self.ast_analyzer and impl_file:
+            try:
+                patterns = self.ast_analyzer.extract_patterns(Path(impl_file))
+                if patterns and patterns.imports:
+                    lines = []
+                    for imp in patterns.imports[:5]:
+                        lines.append(imp.to_import_line())
+                    lines.append("")
+                    lines.append(f"def {self._snake_case(task.title)}():")
+                    lines.append(f'    """Implement {task.title}."""')
+                    lines.append("    # TODO: Implement")
+                    lines.append("    raise NotImplementedError")
+                    return "\n".join(lines)
+            except Exception:
+                pass  # Fall through to generic template
+
+        # Generic implementation template
+        return f'''"""{task.title}
+
+{task.description}
+"""
+
+from __future__ import annotations
+
+
+def {self._snake_case(task.title)}():
+    """{task.title}.
+
+    TODO: Implement according to task description.
+    """
+    raise NotImplementedError("TODO: Implement {task.title}")
+'''
+
+    def _extract_module_name(self, task: TaskDefinition) -> str:
+        """Extract module name from task files."""
+        create_files = task.files.get("create", [])
+        modify_files = task.files.get("modify", [])
+
+        for f in create_files + modify_files:
+            if f.endswith(".py") and not f.startswith("tests/"):
+                # zerg/foo.py -> zerg.foo
+                return f.replace("/", ".").replace(".py", "")
+
+        return "module"
+
+    @staticmethod
+    def _snake_case(text: str) -> str:
+        """Convert text to snake_case identifier."""
+        # Remove non-alphanumeric, convert to lowercase
+        result = ""
+        prev_lower = False
+        for c in text:
+            if c.isalnum():
+                if c.isupper() and prev_lower:
+                    result += "_"
+                result += c.lower()
+                prev_lower = c.islower()
+            else:
+                if result and not result.endswith("_"):
+                    result += "_"
+                prev_lower = False
+        return result.strip("_")[:50]  # Limit length
+
+    @staticmethod
+    def _pascal_case(text: str) -> str:
+        """Convert text to PascalCase identifier."""
+        words = text.replace("-", " ").replace("_", " ").split()
+        return "".join(word.capitalize() for word in words)[:50]
 
 
 def generate_steps_for_task(
-    task: dict[str, Any],
+    task: dict[str, Any] | TaskDefinition,
     detail_level: str = "standard",
-    project_root: Path | None = None,
+    project_root: Path | str | None = None,
 ) -> list[dict[str, Any]]:
-    """Convenience function to generate steps for a single task.
+    """Convenience function to generate steps for a task.
 
     Args:
-        task: Task definition dictionary.
-        detail_level: Detail level string (standard/medium/high).
-        project_root: Project root directory for formatter detection.
+        task: Task definition (dict or TaskDefinition).
+        detail_level: Detail level (standard/medium/high).
+        project_root: Project root for formatter detection.
 
     Returns:
-        List of step dictionaries.
+        List of step dictionaries for JSON serialization.
     """
     generator = StepGenerator(project_root=project_root)
-    return generator.generate_steps_dict(task, detail_level)
+    steps = generator.generate_steps(task, detail_level)
+    return [step.to_dict() for step in steps]
