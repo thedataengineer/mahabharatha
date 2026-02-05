@@ -641,7 +641,7 @@ Display real-time execution progress.
 
 Status displays progress across levels, worker states, and task completion. Data sources include the Claude Code Task system (authoritative), state JSON (supplementary), Docker (container status), and Git (commit counts per branch).
 
-Worker state icons: Running, Idle, Verifying, Checkpoint, Stopped, Crashed, Stalled.
+Worker state icons: 🟢 Running, 🟡 Idle, 🔵 Verifying, 🟠 Checkpoint, ⬜ Stopped, 🔴 Crashed, ⚠️ Stalled.
 
 When worker intelligence is active, additional panels show heartbeats (per-worker heartbeat age and status), escalations (unresolved issues from workers), and progress (per-worker progress bars with current step).
 
