@@ -1,0 +1,98 @@
+{
+  "feature": "plan-validation-checks",
+  "version": "2.0",
+  "generated": "2026-02-05T12:00:00Z",
+  "total_tasks": 3,
+  "estimated_duration_minutes": 15,
+  "max_parallelization": 2,
+
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "title": "Add Phase 0 validation to plan.core.md",
+      "description": "Insert Phase 0: Pre-Execution Validation section before '## Enter Plan Mode' in plan.core.md. The section includes: 1) Extract objective from requirements.md, 2) Check git log --oneline -20, 3) Check gh pr list, 4) Grep codebase for key terms, 5) Present AskUserQuestion if conflicts found.",
+      "phase": "core",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": ["zerg/data/commands/plan.core.md"],
+        "read": [".gsd/specs/plan-validation-checks/requirements.md", ".gsd/specs/plan-validation-checks/design.md"]
+      },
+      "verification": {
+        "command": "grep -q 'Phase 0: Pre-Execution Validation' zerg/data/commands/plan.core.md && echo 'OK'",
+        "timeout_seconds": 10
+      },
+      "estimate_minutes": 5,
+      "skills_required": ["markdown"],
+      "consumers": [],
+      "integration_test": null,
+      "context": "## Spec Context\nAdd validation that checks git log, gh pr list, and codebase before proceeding with /z:plan. If conflicts found, use AskUserQuestion with options: Update plan, Archive, Proceed anyway.\n\n## Implementation\nInsert new section before '## Enter Plan Mode'. Include bash code blocks for git log --oneline -20 | grep -i \"$FEATURE\" and gh pr list --state open | grep -i \"$FEATURE\"."
+    },
+    {
+      "id": "TASK-002",
+      "title": "Add Phase 0 validation to design.core.md",
+      "description": "Insert Phase 0: Pre-Execution Validation section before '## Load Context' in design.core.md. The section includes: 1) Read requirements.md, 2) Check git log --oneline -20, 3) Check gh pr list, 4) Check if target files exist, 5) Grep for key identifiers, 6) Present conflict options if needed.",
+      "phase": "core",
+      "level": 1,
+      "dependencies": [],
+      "files": {
+        "create": [],
+        "modify": ["zerg/data/commands/design.core.md"],
+        "read": [".gsd/specs/plan-validation-checks/requirements.md", ".gsd/specs/plan-validation-checks/design.md"]
+      },
+      "verification": {
+        "command": "grep -q 'Phase 0: Pre-Execution Validation' zerg/data/commands/design.core.md && echo 'OK'",
+        "timeout_seconds": 10
+      },
+      "estimate_minutes": 5,
+      "skills_required": ["markdown"],
+      "consumers": [],
+      "integration_test": null,
+      "context": "## Spec Context\nAdd validation that checks git log, gh pr list, and whether target files exist before proceeding with /z:design. For design, also check if requirements.md is missing (ERROR: Run /z:plan first).\n\n## Implementation\nInsert new section before '## Load Context'. Include bash code blocks and AskUserQuestion for conflict resolution."
+    },
+    {
+      "id": "TASK-003",
+      "title": "Update CHANGELOG.md",
+      "description": "Add entry under [Unreleased] section documenting the new pre-execution validation feature for /z:plan and /z:design commands.",
+      "phase": "quality",
+      "level": 2,
+      "dependencies": ["TASK-001", "TASK-002"],
+      "files": {
+        "create": [],
+        "modify": ["CHANGELOG.md"],
+        "read": []
+      },
+      "verification": {
+        "command": "grep -q 'pre-execution validation' CHANGELOG.md && echo 'OK'",
+        "timeout_seconds": 10
+      },
+      "estimate_minutes": 5,
+      "skills_required": [],
+      "consumers": [],
+      "integration_test": null,
+      "context": "## Spec Context\nDocument the new feature: Pre-execution validation for /z:plan and /z:design commands that checks git history, open PRs, and codebase for conflicts before proceeding."
+    }
+  ],
+
+  "levels": {
+    "1": {
+      "name": "core",
+      "tasks": ["TASK-001", "TASK-002"],
+      "parallel": true,
+      "estimated_minutes": 5
+    },
+    "2": {
+      "name": "quality",
+      "tasks": ["TASK-003"],
+      "parallel": false,
+      "estimated_minutes": 5,
+      "depends_on_levels": [1]
+    }
+  },
+
+  "conflict_matrix": {
+    "description": "Tasks that cannot run in parallel due to shared files",
+    "conflicts": []
+  }
+}
