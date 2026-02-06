@@ -354,22 +354,24 @@ class WorkerLauncher(ABC):
 
         return results
 
-    def spawn_with_retry(
+    async def _spawn_with_retry_impl(
         self,
         worker_id: int,
         feature: str,
         worktree_path: Path,
         branch: str,
-        env: dict[str, str] | None = None,
-        max_attempts: int = 3,
-        backoff_strategy: str = "exponential",
-        backoff_base_seconds: float = 2.0,
-        backoff_max_seconds: float = 30.0,
+        env: dict[str, str] | None,
+        max_attempts: int,
+        backoff_strategy: str,
+        backoff_base_seconds: float,
+        backoff_max_seconds: float,
+        spawn_fn: Any,
+        sleep_fn: Any,
     ) -> SpawnResult:
-        """Spawn a worker with retry logic using exponential backoff.
+        """Core retry logic for spawning workers. Single source of truth.
 
-        Attempts to spawn a worker, retrying on transient failures with
-        configurable backoff. Uses RetryBackoffCalculator for delay calculation.
+        Both spawn_with_retry() and spawn_with_retry_async() delegate here,
+        passing appropriate spawn and sleep callables for sync vs async contexts.
 
         Args:
             worker_id: Unique worker identifier
@@ -377,10 +379,12 @@ class WorkerLauncher(ABC):
             worktree_path: Path to worker's git worktree
             branch: Git branch for worker
             env: Additional environment variables
-            max_attempts: Maximum number of spawn attempts (default: 3)
+            max_attempts: Maximum number of spawn attempts
             backoff_strategy: Backoff strategy (exponential, linear, fixed)
             backoff_base_seconds: Base delay in seconds for backoff
             backoff_max_seconds: Maximum delay cap in seconds
+            spawn_fn: Awaitable callable that spawns a worker and returns SpawnResult
+            sleep_fn: Awaitable callable for delaying between retries
 
         Returns:
             SpawnResult with handle on success, or error after all attempts fail
@@ -390,7 +394,7 @@ class WorkerLauncher(ABC):
         for attempt in range(1, max_attempts + 1):
             logger.info(f"Spawn attempt {attempt}/{max_attempts} for worker {worker_id}")
 
-            result = self.spawn(worker_id, feature, worktree_path, branch, env)
+            result = await spawn_fn(worker_id, feature, worktree_path, branch, env)
 
             if result.success:
                 if attempt > 1:
@@ -409,7 +413,7 @@ class WorkerLauncher(ABC):
                     max_seconds=int(backoff_max_seconds),
                 )
                 logger.info(f"Waiting {delay:.2f}s before retry {attempt + 1}/{max_attempts}")
-                time.sleep(delay)
+                await sleep_fn(delay)
 
         # All attempts exhausted
         logger.error(f"All {max_attempts} spawn attempts failed for worker {worker_id}. Last error: {last_error}")
@@ -417,6 +421,60 @@ class WorkerLauncher(ABC):
             success=False,
             error=f"All {max_attempts} spawn attempts failed. Last error: {last_error}",
             worker_id=worker_id,
+        )
+
+    def spawn_with_retry(
+        self,
+        worker_id: int,
+        feature: str,
+        worktree_path: Path,
+        branch: str,
+        env: dict[str, str] | None = None,
+        max_attempts: int = 3,
+        backoff_strategy: str = "exponential",
+        backoff_base_seconds: float = 2.0,
+        backoff_max_seconds: float = 30.0,
+    ) -> SpawnResult:
+        """Spawn a worker with retry logic using exponential backoff.
+
+        Sync wrapper that delegates to _spawn_with_retry_impl() with
+        sync-compatible callables (self.spawn wrapped as coroutine, time.sleep).
+
+        Args:
+            worker_id: Unique worker identifier
+            feature: Feature name being worked on
+            worktree_path: Path to worker's git worktree
+            branch: Git branch for worker
+            env: Additional environment variables
+            max_attempts: Maximum number of spawn attempts (default: 3)
+            backoff_strategy: Backoff strategy (exponential, linear, fixed)
+            backoff_base_seconds: Base delay in seconds for backoff
+            backoff_max_seconds: Maximum delay cap in seconds
+
+        Returns:
+            SpawnResult with handle on success, or error after all attempts fail
+        """
+
+        async def _sync_spawn(wid: int, feat: str, wt: Path, br: str, e: dict[str, str] | None) -> SpawnResult:
+            return self.spawn(wid, feat, wt, br, e)
+
+        async def _sync_sleep(delay: float) -> None:
+            time.sleep(delay)
+
+        return asyncio.run(
+            self._spawn_with_retry_impl(
+                worker_id=worker_id,
+                feature=feature,
+                worktree_path=worktree_path,
+                branch=branch,
+                env=env,
+                max_attempts=max_attempts,
+                backoff_strategy=backoff_strategy,
+                backoff_base_seconds=backoff_base_seconds,
+                backoff_max_seconds=backoff_max_seconds,
+                spawn_fn=_sync_spawn,
+                sleep_fn=_sync_sleep,
+            )
         )
 
     async def spawn_with_retry_async(
@@ -433,8 +491,8 @@ class WorkerLauncher(ABC):
     ) -> SpawnResult:
         """Spawn a worker with retry logic asynchronously.
 
-        Async version of spawn_with_retry() using asyncio.sleep() for non-blocking
-        delays between retry attempts.
+        Async wrapper that delegates to _spawn_with_retry_impl() with
+        native async callables (self.spawn_async, asyncio.sleep).
 
         Args:
             worker_id: Unique worker identifier
@@ -450,38 +508,18 @@ class WorkerLauncher(ABC):
         Returns:
             SpawnResult with handle on success, or error after all attempts fail
         """
-        last_error: str = ""
-
-        for attempt in range(1, max_attempts + 1):
-            logger.info(f"Async spawn attempt {attempt}/{max_attempts} for worker {worker_id}")
-
-            result = await self.spawn_async(worker_id, feature, worktree_path, branch, env)
-
-            if result.success:
-                if attempt > 1:
-                    logger.info(f"Worker {worker_id} spawned successfully on attempt {attempt}")
-                return result
-
-            last_error = result.error or "Unknown error"
-            logger.warning(f"Async spawn attempt {attempt}/{max_attempts} failed for worker {worker_id}: {last_error}")
-
-            # Don't sleep after the last attempt
-            if attempt < max_attempts:
-                delay = RetryBackoffCalculator.calculate_delay(
-                    attempt=attempt,
-                    strategy=backoff_strategy,
-                    base_seconds=int(backoff_base_seconds),
-                    max_seconds=int(backoff_max_seconds),
-                )
-                logger.info(f"Waiting {delay:.2f}s before async retry {attempt + 1}/{max_attempts}")
-                await asyncio.sleep(delay)
-
-        # All attempts exhausted
-        logger.error(f"All {max_attempts} async spawn attempts failed for worker {worker_id}. Last error: {last_error}")
-        return SpawnResult(
-            success=False,
-            error=f"All {max_attempts} spawn attempts failed. Last error: {last_error}",
+        return await self._spawn_with_retry_impl(
             worker_id=worker_id,
+            feature=feature,
+            worktree_path=worktree_path,
+            branch=branch,
+            env=env,
+            max_attempts=max_attempts,
+            backoff_strategy=backoff_strategy,
+            backoff_base_seconds=backoff_base_seconds,
+            backoff_max_seconds=backoff_max_seconds,
+            spawn_fn=self.spawn_async,
+            sleep_fn=asyncio.sleep,
         )
 
     async def spawn_async(
@@ -821,7 +859,6 @@ class SubprocessLauncher(WorkerLauncher):
         Returns:
             True if worker became ready
         """
-        import time
 
         start = time.time()
         while time.time() - start < timeout:
@@ -842,7 +879,6 @@ class SubprocessLauncher(WorkerLauncher):
         Returns:
             Final status of all workers
         """
-        import time
 
         start = time.time()
         while True:
@@ -1232,23 +1268,25 @@ class ContainerLauncher(WorkerLauncher):
             logger.error(f"Failed to spawn container for worker {worker_id}: {e}")
             return SpawnResult(success=False, worker_id=worker_id, error=str(e))
 
-    def _start_container(
+    def _build_container_cmd(
         self,
         container_name: str,
         worktree_path: Path,
         env: dict[str, str],
-    ) -> str | None:
-        """Start a Docker container.
+    ) -> list[str]:
+        """Build docker run command array. Single source of truth for container command construction.
+
+        Both _start_container_impl (async) and its sync wrapper use this method
+        to build identical docker run commands.
 
         Args:
             container_name: Name for the container
             worktree_path: Host path to mount as workspace
-            env: Environment variables for container
+            env: Environment variables for container (may be mutated to add git env vars)
 
         Returns:
-            Container ID or None on failure
+            Complete docker run command as list of strings
         """
-        # Build docker run command
         # Mount worktree as workspace and share state directory from main repo
         main_repo = worktree_path.parent.parent.parent  # .zerg-worktrees/feature/worker-N -> repo
         state_dir = main_repo / ".zerg" / "state"
@@ -1334,27 +1372,85 @@ class ContainerLauncher(WorkerLauncher):
             ]
         )
 
+        return cmd
+
+    async def _start_container_impl(
+        self,
+        container_name: str,
+        worktree_path: Path,
+        env: dict[str, str],
+        run_fn: Any,
+    ) -> str | None:
+        """Core container start logic. Single source of truth.
+
+        Both _start_container() and _start_container_async() delegate here,
+        passing appropriate run callables for sync vs async contexts.
+
+        Args:
+            container_name: Name for the container
+            worktree_path: Host path to mount as workspace
+            env: Environment variables for container
+            run_fn: Awaitable callable that executes the docker command and returns
+                     (returncode, stdout, stderr) tuple
+
+        Returns:
+            Container ID or None on failure
+        """
+        cmd = self._build_container_cmd(container_name, worktree_path, env)
+
         try:
+            returncode, stdout, stderr = await run_fn(cmd)
+
+            if returncode == 0:
+                container_id = stdout.strip()
+                return container_id
+            else:
+                logger.error(f"Docker run failed: {stderr}")
+                return None
+
+        except (subprocess.TimeoutExpired, TimeoutError):
+            logger.error("Docker run timed out")
+            return None
+        except Exception as e:
+            logger.error(f"Docker run error: {e}")
+            return None
+
+    def _start_container(
+        self,
+        container_name: str,
+        worktree_path: Path,
+        env: dict[str, str],
+    ) -> str | None:
+        """Start a Docker container (sync wrapper).
+
+        Delegates to _start_container_impl() with a sync-compatible callable.
+
+        Args:
+            container_name: Name for the container
+            worktree_path: Host path to mount as workspace
+            env: Environment variables for container
+
+        Returns:
+            Container ID or None on failure
+        """
+
+        async def _sync_run(cmd: list[str]) -> tuple[int, str, str]:
             result = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
                 timeout=60,
             )
+            return result.returncode, result.stdout, result.stderr
 
-            if result.returncode == 0:
-                container_id = result.stdout.strip()
-                return container_id
-            else:
-                logger.error(f"Docker run failed: {result.stderr}")
-                return None
-
-        except subprocess.TimeoutExpired:
-            logger.error("Docker run timed out")
-            return None
-        except Exception as e:
-            logger.error(f"Docker run error: {e}")
-            return None
+        return asyncio.run(
+            self._start_container_impl(
+                container_name=container_name,
+                worktree_path=worktree_path,
+                env=env,
+                run_fn=_sync_run,
+            )
+        )
 
     def _wait_ready(self, container_id: str, timeout: float = 30) -> bool:
         """Wait for container to be ready.
@@ -1366,7 +1462,6 @@ class ContainerLauncher(WorkerLauncher):
         Returns:
             True if container is running
         """
-        import time
 
         start = time.time()
         while time.time() - start < timeout:
@@ -1554,12 +1649,22 @@ class ContainerLauncher(WorkerLauncher):
             if handle:
                 handle.health_check_at = datetime.now()
 
-    def terminate(self, worker_id: int, force: bool = False) -> bool:
-        """Terminate a worker container.
+    async def _terminate_impl(
+        self,
+        worker_id: int,
+        force: bool,
+        run_fn: Any,
+    ) -> bool:
+        """Core terminate logic. Single source of truth.
+
+        Both terminate() and terminate_async() delegate here,
+        passing appropriate run callables for sync vs async contexts.
 
         Args:
             worker_id: Worker to terminate
             force: Force termination (docker kill vs docker stop)
+            run_fn: Awaitable callable that executes a docker command and returns
+                     (returncode, stdout, stderr) tuple
 
         Returns:
             True if termination succeeded
@@ -1572,37 +1677,28 @@ class ContainerLauncher(WorkerLauncher):
 
         try:
             # Stop or kill container
-            cmd = ["docker", "kill" if force else "stop", container_id]
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=30 if not force else 10,
-            )
+            action = "kill" if force else "stop"
+            cmd = ["docker", action, container_id]
+            returncode, _stdout, stderr = await run_fn(cmd, 10 if force else 30)
 
-            if result.returncode == 0:
+            if returncode == 0:
                 handle.status = WorkerStatus.STOPPED
                 logger.info(f"Terminated container for worker {worker_id}")
 
                 # Remove container
-                subprocess.run(
-                    ["docker", "rm", "-f", container_id],
-                    capture_output=True,
-                    timeout=10,
-                )
+                await run_fn(["docker", "rm", "-f", container_id], 10)
 
                 return True
             else:
-                logger.error(f"Failed to stop container: {result.stderr}")
+                logger.error(f"Failed to stop container: {stderr}")
                 return False
 
-        except subprocess.TimeoutExpired:
-            # Force kill on timeout
-            subprocess.run(
-                ["docker", "kill", container_id],
-                capture_output=True,
-                timeout=5,
-            )
+        except (subprocess.TimeoutExpired, TimeoutError):
+            # Force kill on timeout — best effort, ignore secondary failures
+            try:
+                await run_fn(["docker", "kill", container_id], 5)
+            except (subprocess.TimeoutExpired, TimeoutError, Exception):
+                logger.debug(f"Force kill also failed for worker {worker_id}, proceeding with cleanup")
             handle.status = WorkerStatus.STOPPED
             return True
 
@@ -1617,6 +1713,37 @@ class ContainerLauncher(WorkerLauncher):
             # Also remove from worker handles to prevent stale state
             if worker_id in self._workers:
                 del self._workers[worker_id]
+
+    def terminate(self, worker_id: int, force: bool = False) -> bool:
+        """Terminate a worker container.
+
+        Sync wrapper that delegates to _terminate_impl() with a
+        sync-compatible callable.
+
+        Args:
+            worker_id: Worker to terminate
+            force: Force termination (docker kill vs docker stop)
+
+        Returns:
+            True if termination succeeded
+        """
+
+        async def _sync_run(cmd: list[str], timeout: int) -> tuple[int, str, str]:
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+            )
+            return result.returncode, result.stdout, result.stderr
+
+        return asyncio.run(
+            self._terminate_impl(
+                worker_id=worker_id,
+                force=force,
+                run_fn=_sync_run,
+            )
+        )
 
     def get_output(self, worker_id: int, tail: int = 100) -> str:
         """Get worker container logs.
@@ -1838,6 +1965,9 @@ class ContainerLauncher(WorkerLauncher):
     ) -> str | None:
         """Start a Docker container asynchronously.
 
+        Async wrapper that delegates to _start_container_impl() with
+        native async callable (asyncio.create_subprocess_exec).
+
         Args:
             container_name: Name for the container
             worktree_path: Host path to mount as workspace
@@ -1846,98 +1976,28 @@ class ContainerLauncher(WorkerLauncher):
         Returns:
             Container ID or None on failure
         """
-        # Build docker run command
-        main_repo = worktree_path.parent.parent.parent
-        state_dir = main_repo / ".zerg" / "state"
 
-        worktree_name = worktree_path.name
-        main_git_dir = main_repo / ".git"
-        git_worktree_dir = main_git_dir / "worktrees" / worktree_name
-
-        claude_config_dir = Path.home() / ".claude"
-        uid = os.getuid()
-        gid = os.getgid()
-        home_dir = CONTAINER_HOME_DIR
-
-        cmd_args = [
-            "run",
-            "-d",
-            "--name",
-            container_name,
-            "--user",
-            f"{uid}:{gid}",
-            "-v",
-            f"{worktree_path.absolute()}:/workspace",
-            "-v",
-            f"{state_dir.absolute()}:/workspace/.zerg/state",
-        ]
-
-        if main_git_dir.exists() and git_worktree_dir.exists():
-            cmd_args.extend(["-v", f"{main_git_dir.absolute()}:/repo/.git"])
-            cmd_args.extend(["-v", f"{git_worktree_dir.absolute()}:/workspace/.git-worktree"])
-            env["ZERG_GIT_WORKTREE_DIR"] = "/workspace/.git-worktree"
-            env["ZERG_GIT_MAIN_DIR"] = "/repo/.git"
-
-        if claude_config_dir.exists():
-            cmd_args.extend(["-v", f"{claude_config_dir.absolute()}:{home_dir}/.claude"])
-            cmd_args.extend(["-e", f"HOME={home_dir}"])
-
-        claude_config_file = Path.home() / ".claude.json"
-        if claude_config_file.exists():
-            cmd_args.extend(["-v", f"{claude_config_file.absolute()}:{home_dir}/.claude.json"])
-
-        cmd_args.extend(["--memory", self.memory_limit])
-        cmd_args.extend(["--cpus", str(self.cpu_limit)])
-
-        cmd_args.extend(
-            [
-                "-w",
-                "/workspace",
-                "--network",
-                self.network,
-            ]
-        )
-
-        for key, value in env.items():
-            cmd_args.extend(["-e", f"{key}={value}"])
-
-        cmd_args.extend(
-            [
-                self.image_name,
-                "bash",
-                "-c",
-                f"bash /workspace/{self.WORKER_ENTRY_SCRIPT} 2>&1; "
-                f"echo 'Worker entry exited with code '$?; sleep infinity",
-            ]
-        )
-
-        try:
+        async def _async_run(cmd: list[str]) -> tuple[int, str, str]:
             proc = await asyncio.create_subprocess_exec(
-                "docker",
-                *cmd_args,
+                *cmd,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )
             stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=60)
+            return proc.returncode or 0, stdout.decode(), stderr.decode()
 
-            if proc.returncode == 0:
-                container_id = stdout.decode().strip()
-                return container_id
-            else:
-                logger.error(f"Docker run failed: {stderr.decode()}")
-                return None
-
-        except TimeoutError:
-            logger.error("Docker run timed out")
-            return None
-        except Exception as e:
-            logger.error(f"Docker run error: {e}")
-            return None
+        return await self._start_container_impl(
+            container_name=container_name,
+            worktree_path=worktree_path,
+            env=env,
+            run_fn=_async_run,
+        )
 
     async def terminate_async(self, worker_id: int, force: bool = False) -> bool:
         """Terminate a worker container asynchronously.
 
-        Uses asyncio.create_subprocess_exec() for docker stop/kill commands.
+        Async wrapper that delegates to _terminate_impl() with
+        native async callable (asyncio.create_subprocess_exec).
 
         Args:
             worker_id: Worker to terminate
@@ -1946,65 +2006,18 @@ class ContainerLauncher(WorkerLauncher):
         Returns:
             True if termination succeeded
         """
-        container_id = self._container_ids.get(worker_id)
-        handle = self._workers.get(worker_id)
 
-        if not container_id or not handle:
-            return False
-
-        try:
-            action = "kill" if force else "stop"
-            timeout = 10 if force else 30
-
+        async def _async_run(cmd: list[str], timeout: int) -> tuple[int, str, str]:
             proc = await asyncio.create_subprocess_exec(
-                "docker",
-                action,
-                container_id,
+                *cmd,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )
             stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=timeout)
+            return proc.returncode or 0, stdout.decode(), stderr.decode()
 
-            if proc.returncode == 0:
-                handle.status = WorkerStatus.STOPPED
-                logger.info(f"Async terminated container for worker {worker_id}")
-
-                # Remove container
-                rm_proc = await asyncio.create_subprocess_exec(
-                    "docker",
-                    "rm",
-                    "-f",
-                    container_id,
-                    stdout=asyncio.subprocess.PIPE,
-                    stderr=asyncio.subprocess.PIPE,
-                )
-                await asyncio.wait_for(rm_proc.communicate(), timeout=10)
-
-                return True
-            else:
-                logger.error(f"Failed to stop container: {stderr.decode()}")
-                return False
-
-        except TimeoutError:
-            # Force kill on timeout
-            kill_proc = await asyncio.create_subprocess_exec(
-                "docker",
-                "kill",
-                container_id,
-                stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE,
-            )
-            await kill_proc.communicate()
-            handle.status = WorkerStatus.STOPPED
-            return True
-
-        except Exception as e:
-            logger.error(f"Failed to async terminate container: {e}")
-            return False
-
-        finally:
-            # Clean up references
-            if worker_id in self._container_ids:
-                del self._container_ids[worker_id]
-            if worker_id in self._workers:
-                del self._workers[worker_id]
+        return await self._terminate_impl(
+            worker_id=worker_id,
+            force=force,
+            run_fn=_async_run,
+        )
