@@ -27,6 +27,7 @@ from zerg.plugins import LifecycleEvent, PluginRegistry
 from zerg.ports import PortAllocator
 from zerg.state import StateManager
 from zerg.types import WorkerState
+from zerg.worker_registry import WorkerRegistry
 from zerg.worktree import WorktreeManager
 
 if TYPE_CHECKING:
@@ -35,12 +36,28 @@ if TYPE_CHECKING:
 logger = get_logger("worker_manager")
 
 
+def _register_worker(workers: dict[int, WorkerState] | WorkerRegistry, worker_id: int, worker: WorkerState) -> None:
+    """Register a worker using the appropriate method for the container type."""
+    if isinstance(workers, WorkerRegistry):
+        workers.register(worker_id, worker)
+    else:
+        workers[worker_id] = worker
+
+
+def _unregister_worker(workers: dict[int, WorkerState] | WorkerRegistry, worker_id: int) -> None:
+    """Unregister a worker using the appropriate method for the container type."""
+    if isinstance(workers, WorkerRegistry):
+        workers.unregister(worker_id)
+    else:
+        workers.pop(worker_id, None)
+
+
 class WorkerManager:
     """Manages worker lifecycle: spawning, initialization, termination, and exit handling.
 
     This component owns worker spawning, monitoring initialization, termination,
-    and respawning logic. The workers dict is shared by reference with the
-    Orchestrator so both see the same state.
+    and respawning logic. Accepts either a raw ``dict[int, WorkerState]`` (legacy)
+    or a ``WorkerRegistry`` (preferred) for worker state storage.
     """
 
     def __init__(
@@ -55,7 +72,7 @@ class WorkerManager:
         ports: PortAllocator,
         assigner: WorkerAssignment | None,
         plugin_registry: PluginRegistry,
-        workers: dict[int, WorkerState],
+        workers: dict[int, WorkerState] | WorkerRegistry,
         on_task_complete: list[Callable[[str], None]],
         on_task_failure: Callable[[str, int, str], bool] | None = None,
         structured_writer: StructuredLogWriter | None = None,
@@ -75,7 +92,8 @@ class WorkerManager:
             ports: Port allocator for worker ports
             assigner: Worker assignment mapper (may be None before start)
             plugin_registry: Plugin registry for lifecycle events
-            workers: Shared workers dict (passed by reference from Orchestrator)
+            workers: Worker state container — WorkerRegistry (preferred) or
+                dict[int, WorkerState] (legacy, for backward compatibility)
             on_task_complete: Shared callbacks list for task completion
             on_task_failure: Callback for task failure/retry (from TaskRetryManager)
             structured_writer: Optional structured log writer
@@ -159,7 +177,7 @@ class WorkerManager:
             started_at=datetime.now(),
         )
 
-        self._workers[worker_id] = worker_state
+        _register_worker(self._workers, worker_id, worker_state)
         self.state.set_worker_state(worker_state)
         self.state.append_event(
             "worker_started",
@@ -209,7 +227,7 @@ class WorkerManager:
 
         Polls worker status via the launcher until all workers report as ready,
         or until the timeout elapses. Workers that fail during initialization
-        are removed from the workers dict.
+        are removed from the worker registry.
 
         Args:
             timeout: Maximum wait time in seconds (default 600 = 10 minutes)
@@ -255,7 +273,7 @@ class WorkerManager:
             # Handle failed workers
             for worker_id in failed_workers:
                 if worker_id in self._workers:
-                    del self._workers[worker_id]
+                    _unregister_worker(self._workers, worker_id)
 
             if all_ready and self._workers:
                 elapsed = time.time() - start_time
@@ -275,7 +293,7 @@ class WorkerManager:
         """Terminate a worker.
 
         Stops the worker via the launcher, deletes its worktree, releases its
-        port, updates state, and removes it from the workers dict.
+        port, updates state, and removes it from the worker registry.
 
         Args:
             worker_id: Worker identifier
@@ -306,7 +324,7 @@ class WorkerManager:
         self.state.set_worker_state(worker)
         self.state.append_event("worker_stopped", {"worker_id": worker_id})
 
-        del self._workers[worker_id]
+        _unregister_worker(self._workers, worker_id)
 
     def handle_worker_exit(self, worker_id: int) -> None:
         """Handle worker exit.
@@ -368,7 +386,7 @@ class WorkerManager:
         # Remove worker from tracking FIRST to prevent respawn loops
         old_worktree = worker.worktree_path
         old_port = worker.port
-        del self._workers[worker_id]
+        _unregister_worker(self._workers, worker_id)
 
         # Release port
         if old_port:
@@ -433,7 +451,7 @@ class WorkerManager:
             wid for wid, w in list(self._workers.items()) if w.status in (WorkerStatus.STOPPED, WorkerStatus.CRASHED)
         ]
         for wid in stopped_ids:
-            del self._workers[wid]
+            _unregister_worker(self._workers, wid)
             available_ids.append(wid)
 
         available_ids = sorted(set(available_ids))[:need]
