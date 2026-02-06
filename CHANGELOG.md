@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `WorkerRegistry` (thread-safe, `RLock`-backed) replacing raw shared `_workers` dict across orchestrator, worker_manager, level_coordinator, launcher_configurator, and state_sync_service (#138)
+
 ### Changed
 
 - Split `launcher.py` (2,010L) into `launchers/` subpackage: `base.py`, `subprocess_launcher.py`, `container_launcher.py`, plus `launcher_types.py` and `env_validator.py` (#132)

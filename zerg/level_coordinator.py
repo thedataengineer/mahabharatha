@@ -36,7 +36,8 @@ from zerg.parser import TaskParser
 from zerg.plugins import LifecycleEvent, PluginRegistry
 from zerg.state import StateManager
 from zerg.task_sync import TaskSyncBridge, load_design_manifest
-from zerg.types import GateRunResult, WorkerState
+from zerg.types import GateRunResult
+from zerg.worker_registry import WorkerRegistry
 
 if TYPE_CHECKING:
     from zerg.backpressure import BackpressureController
@@ -62,7 +63,7 @@ class LevelCoordinator:
         merger: MergeCoordinator,
         task_sync: TaskSyncBridge,
         plugin_registry: PluginRegistry,
-        workers: dict[int, WorkerState],
+        workers: WorkerRegistry,
         on_level_complete_callbacks: list[Callable[[int], None]],
         assigner: WorkerAssignment | None = None,
         structured_writer: StructuredLogWriter | None = None,
@@ -79,7 +80,7 @@ class LevelCoordinator:
             merger: Merge coordinator instance
             task_sync: Task sync bridge instance
             plugin_registry: Plugin registry instance
-            workers: Workers dict (passed by reference from Orchestrator)
+            workers: WorkerRegistry instance (shared from Orchestrator)
             on_level_complete_callbacks: Callbacks list (passed by reference)
             assigner: Optional worker assignment instance
             structured_writer: Optional structured log writer

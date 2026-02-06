@@ -52,6 +52,7 @@ from zerg.task_retry_manager import TaskRetryManager
 from zerg.task_sync import TaskSyncBridge
 from zerg.types import WorkerState
 from zerg.worker_manager import WorkerManager
+from zerg.worker_registry import WorkerRegistry
 from zerg.worktree import WorktreeManager
 
 logger = get_logger("orchestrator")
@@ -125,7 +126,7 @@ class Orchestrator:
 
         self._running = False
         self._paused = False
-        self._workers: dict[int, WorkerState] = {}
+        self.registry = WorkerRegistry()
         self._on_task_complete: list[Callable[[str], None]] = [
             lambda tid: self.event_emitter.emit("task_complete", {"task_id": tid})]
         self._on_level_complete: list[Callable[[int], None]] = [
@@ -152,7 +153,7 @@ class Orchestrator:
         self._worker_manager = WorkerManager(
             feature=self.feature, config=self.config, state=self.state, levels=self.levels,
             parser=self.parser, launcher=self.launcher, worktrees=self.worktrees, ports=self.ports,
-            assigner=self.assigner, plugin_registry=self._plugin_registry, workers=self._workers,
+            assigner=self.assigner, plugin_registry=self._plugin_registry, workers=self.registry,
             on_task_complete=self._on_task_complete, on_task_failure=self._retry_manager.handle_task_failure,
             structured_writer=self._structured_writer, circuit_breaker=self._circuit_breaker,
             capabilities=self._capabilities,
@@ -160,7 +161,7 @@ class Orchestrator:
         self._level_coord = LevelCoordinator(
             feature=self.feature, config=self.config, state=self.state, levels=self.levels,
             parser=self.parser, merger=self.merger, task_sync=self.task_sync,
-            plugin_registry=self._plugin_registry, workers=self._workers,
+            plugin_registry=self._plugin_registry, workers=self.registry,
             on_level_complete_callbacks=self._on_level_complete, assigner=self.assigner,
             structured_writer=self._structured_writer, backpressure=self._backpressure,
         )
@@ -188,6 +189,14 @@ class Orchestrator:
             bm = self.config.behavioral_modes
             det = ModeDetector(auto_detect=bm.auto_detect, default_mode=me, log_transitions=bm.log_transitions)
             self._mode_context = det.detect(explicit_mode=me, depth_tier=self._capabilities.depth_tier)
+
+    @property
+    def _workers(self) -> WorkerRegistry:
+        """Backward-compatible alias so existing callers (tests, components)
+        that reference ``self._workers`` keep working transparently.
+        The registry exposes a dict-like interface (__getitem__, __contains__,
+        items, keys, __len__, __iter__)."""
+        return self.registry
 
     def _create_launcher(self, mode: str | None = None) -> WorkerLauncher:
         if mode and mode not in ("subprocess", "container", "auto"):
@@ -423,7 +432,7 @@ class Orchestrator:
                         self._running = False
                         break
                 ended = (WorkerStatus.STOPPED, WorkerStatus.CRASHED)
-                active = [w for w in self._workers.values()
+                active = [w for _, w in self.registry.items()
                           if w.status not in ended]
                 if not active and self._running:
                     rem = self.levels.get_pending_tasks_for_level(cur)

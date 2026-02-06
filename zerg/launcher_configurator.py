@@ -19,7 +19,7 @@ from zerg.launchers import (
 )
 from zerg.logging import get_logger
 from zerg.plugins import PluginRegistry
-from zerg.types import WorkerState
+from zerg.worker_registry import WorkerRegistry
 
 logger = get_logger("launcher_configurator")
 
@@ -162,13 +162,13 @@ class LauncherConfigurator:
 
     def _check_container_health(
         self,
-        workers: dict[int, WorkerState],
+        workers: WorkerRegistry,
         launcher: WorkerLauncher,
     ) -> None:
         """Mark containers stuck beyond timeout as CRASHED.
 
         Args:
-            workers: Dictionary of worker_id to WorkerState (owned by Orchestrator)
+            workers: WorkerRegistry instance (owned by Orchestrator)
             launcher: The active WorkerLauncher instance (owned by Orchestrator)
         """
         try:
