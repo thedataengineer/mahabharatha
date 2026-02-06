@@ -669,7 +669,12 @@ class TestMainLoopLevelTransitions:
     def test_main_loop_calls_poll_workers_with_all_features(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        """_poll_workers within _main_loop includes escalation, progress, and stall detection."""
+        """_poll_workers within _main_loop includes escalation, progress, and stall detection.
+
+        After the god-class refactor, _check_escalations and _aggregate_progress were
+        inlined into _poll_workers. We now verify _poll_workers and _check_stale_tasks
+        are called (stale task check remains a separate method).
+        """
         monkeypatch.chdir(tmp_path)
         (tmp_path / ".zerg" / "state").mkdir(parents=True)
         (tmp_path / ".zerg" / "logs").mkdir(parents=True)
@@ -702,9 +707,7 @@ class TestMainLoopLevelTransitions:
             orch._running = True
             orch._worker_manager.running = True
 
-            # Patch the methods to track calls
-            orch._check_escalations = MagicMock()
-            orch._aggregate_progress = MagicMock()
+            # _check_stale_tasks is still a separate method; patch to track calls
             orch._check_stale_tasks = MagicMock()
 
             # Add a running worker so the auto-respawn logic doesn't trigger
@@ -721,10 +724,11 @@ class TestMainLoopLevelTransitions:
 
             orch._main_loop(sleep_fn=counting_sleep)
 
-            # All three features should have been called from _poll_workers
-            orch._check_escalations.assert_called()
-            orch._aggregate_progress.assert_called()
+            # _check_stale_tasks should have been called from _poll_workers
             orch._check_stale_tasks.assert_called()
+            # Escalation and progress logic are now inline in _poll_workers;
+            # verify state was loaded (proves _poll_workers ran)
+            state_mock.load.assert_called()
 
 
 # =============================================================================
@@ -942,7 +946,7 @@ class TestNoRegressions:
             orch = Orchestrator("test-feature")
 
             # Simulate worker crash with a task
-            orch._handle_worker_crash("TASK-001", worker_id=0)
+            orch._handle_worker_crash("TASK-001", wid=0)
 
             # Should have marked failed first, then pending
             set_calls = state_mock.set_task_status.call_args_list
