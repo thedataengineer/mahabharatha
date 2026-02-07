@@ -38,6 +38,9 @@ The goal was simple: stop repeating myself and start shipping faster. ZERG is th
 
 ```bash
 # Install ZERG
+pip install zerg-ai
+
+# Or install from source (contributors)
 git clone https://github.com/rocklambros/zerg.git && cd zerg
 pip install -e ".[dev]"
 zerg install  # Install slash commands into your project
@@ -62,7 +65,13 @@ zerg install  # Install slash commands into your project
 | Claude Code CLI | `claude --version` | Worker instances |
 | Docker 20.x+ | `docker info` | Container mode (optional) |
 
-### Step 1: Clone and Install
+### Step 1: Install
+
+```bash
+pip install zerg-ai
+```
+
+### Step 1b: Install from Source (Contributors)
 
 ```bash
 git clone https://github.com/rocklambros/zerg.git

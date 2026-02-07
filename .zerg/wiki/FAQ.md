@@ -38,7 +38,7 @@ See [[Installation]] for full setup instructions.
 ### How do I install ZERG?
 
 ```bash
-pip install zerg
+pip install zerg-ai
 ```
 
 Then initialize your project:

@@ -38,10 +38,11 @@ jobs:
           tag = os.environ["GITHUB_REF_NAME"].lstrip("v")
           with open("pyproject.toml", "rb") as f:
               version = tomllib.load(f)["project"]["version"]
-          if tag != version:
+          # Allow pre-release tags like v0.2.0-rc1 to match version 0.2.0
+          if tag != version and not tag.startswith(version + "-"):
               print(f"::error::Tag {tag} != pyproject.toml version {version}")
               sys.exit(1)
-          print(f"Version OK: {version}")
+          print(f"Version OK: {version} (tag: {tag})")
           EOF
 
       - name: Install build tools

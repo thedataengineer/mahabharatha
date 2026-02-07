@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "zerg"
-version = "0.1.0"
+name = "zerg-ai"
+version = "0.2.0"
 description = "Parallel Claude Code execution system"
 readme = "README.md"
 license = {text = "MIT"}
@@ -45,7 +45,7 @@ dev = [
 ]
 metrics = ["anthropic>=0.40.0"]
 performance = ["orjson>=3.9.0"]
-all = ["zerg[dev]", "zerg[metrics]", "zerg[performance]"]
+all = ["zerg-ai[dev]", "zerg-ai[metrics]", "zerg-ai[performance]"]
 
 [project.scripts]
 zerg = "zerg.cli:cli"

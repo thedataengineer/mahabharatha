@@ -7,7 +7,7 @@ All functions guarantee str return types (never bytes), even when orjson
 is the backend (orjson natively returns bytes from dumps).
 
 Install the 'performance' extra to enable orjson:
-    pip install zerg[performance]
+    pip install zerg-ai[performance]
 """
 
 from __future__ import annotations
