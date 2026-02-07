@@ -1,10 +1,10 @@
 """Task graph parsing and dependency management."""
 
-import json
 from pathlib import Path
 from typing import Any
 
 from zerg.exceptions import TaskDependencyError, ValidationError
+from zerg.json_utils import load as json_load
 from zerg.logging import get_logger
 from zerg.types import Task, TaskGraph, VerificationSpec
 from zerg.validation import validate_dependencies, validate_file_ownership, validate_task_graph
@@ -40,7 +40,7 @@ class TaskParser:
             raise ValidationError(f"Task graph not found: {path}", field="path")
 
         with open(path) as f:
-            data = json.load(f)
+            data = json_load(f)
 
         return self.parse_dict(data)
 
@@ -83,8 +83,9 @@ class TaskParser:
                 details={"errors": errors},
             )
 
-        # Build internal structures
-        self._graph = data  # type: ignore
+        # Build internal structures — data dict conforms to TaskGraph TypedDict
+        # after validation above, so the cast is safe.
+        self._graph: TaskGraph = data  # type: ignore[assignment]  # validated above
         self._tasks.clear()
         self._dependencies.clear()
         self._dependents.clear()

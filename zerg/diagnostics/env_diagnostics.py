@@ -11,7 +11,9 @@ from pathlib import Path
 from typing import Any
 
 from zerg.diagnostics.types import Evidence
+from zerg.json_utils import loads as json_loads
 from zerg.logging import get_logger
+from zerg.types import DiagnosticResultDict
 
 __all__ = [
     "ConfigValidator",
@@ -66,7 +68,7 @@ class PythonEnvDiagnostics:
             return result
 
         try:
-            packages = json.loads(stdout)
+            packages = json_loads(stdout)
         except (json.JSONDecodeError, ValueError):
             logger.warning("Failed to parse pip list output")
             return result
@@ -393,7 +395,7 @@ class EnvDiagnosticsEngine:
         self._resources = ResourceDiagnostics()
         self._config = ConfigValidator()
 
-    def run_all(self, config_path: Path | None = None) -> dict[str, Any]:
+    def run_all(self, config_path: Path | None = None) -> DiagnosticResultDict:
         """Run all environment diagnostics and return consolidated results."""
         evidence: list[Evidence] = []
 
@@ -477,10 +479,10 @@ class EnvDiagnosticsEngine:
                 )
             )
 
-        return {
-            "python": python_results,
-            "docker": docker_results,
-            "resources": resource_results,
-            "config": config_issues,
-            "evidence": [e.to_dict() for e in evidence],
-        }
+        return DiagnosticResultDict(
+            python=python_results,
+            docker=docker_results,
+            resources=resource_results,
+            config=config_issues,
+            evidence=[e.to_dict() for e in evidence],
+        )

@@ -7,13 +7,9 @@ and returns appropriate commands for formatting code.
 from __future__ import annotations
 
 import json
+import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
-
-try:
-    import tomllib
-except ImportError:
-    import tomli as tomllib  # type: ignore[import-not-found,no-redef]
 
 
 @dataclass
@@ -128,7 +124,7 @@ class FormatterDetector:
                     fix_cmd="ruff format .",
                     file_patterns=["*.py"],
                 )
-        except Exception:
+        except (OSError, tomllib.TOMLDecodeError, KeyError):
             pass
 
         return None
@@ -150,7 +146,7 @@ class FormatterDetector:
                     fix_cmd="black .",
                     file_patterns=["*.py"],
                 )
-        except Exception:
+        except (OSError, tomllib.TOMLDecodeError, KeyError):
             pass
 
         return None
@@ -183,7 +179,7 @@ class FormatterDetector:
                     data = json.load(f)
                 if "prettier" in data:
                     return self._create_prettier_config()
-            except Exception:
+            except (OSError, json.JSONDecodeError, KeyError):
                 pass
 
         return None

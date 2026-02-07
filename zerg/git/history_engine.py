@@ -111,7 +111,7 @@ def _get_lines_changed(runner: GitRunner, sha: str) -> int:
                 dels = int(parts[1]) if parts[1] != "-" else 0
                 total += ins + dels
         return total
-    except Exception:
+    except (GitError, ValueError):
         return 0
 
 
@@ -353,7 +353,7 @@ class HistoryAnalyzer:
                     parts = f.split("/", 1)
                     d = parts[0] if len(parts) > 1 else "."
                     dirs[d] = dirs.get(d, 0) + 1
-                primary_dir = max(dirs, key=dirs.get)  # type: ignore[arg-type]
+                primary_dir = max(dirs, key=lambda k: dirs[k])
             else:
                 primary_dir = "."
 
@@ -468,7 +468,7 @@ class RewritePlanner:
             ct = c.commit_type or CommitType.CHORE
             type_counts[ct] = type_counts.get(ct, 0) + 1
 
-        primary_type = max(type_counts, key=type_counts.get)  # type: ignore[arg-type]
+        primary_type = max(type_counts, key=lambda k: type_counts[k])
 
         # Collect all unique files
         all_files: set[str] = set()
@@ -575,7 +575,7 @@ class SafeRewriter:
             env = os.environ.copy()
             env["GIT_SEQUENCE_EDITOR"] = f"python3 {script_path}"
 
-            import subprocess
+            import subprocess  # noqa: PLC0415
 
             cmd = [
                 "git",
@@ -602,7 +602,7 @@ class SafeRewriter:
             logger.info("Squash rebase completed successfully")
             return True
 
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 — intentional: rebase must always abort + cleanup on any failure
             logger.error("Squash execution failed: %s", exc)
             self.runner._run("rebase", "--abort", check=False)
             return False
@@ -666,7 +666,7 @@ class SafeRewriter:
             env = os.environ.copy()
             env["GIT_SEQUENCE_EDITOR"] = f"python3 {script_path}"
 
-            import subprocess
+            import subprocess  # noqa: PLC0415
 
             cmd = [
                 "git",
@@ -692,7 +692,7 @@ class SafeRewriter:
             logger.info("Reorder rebase completed successfully")
             return True
 
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 — intentional: rebase must always abort + cleanup on any failure
             logger.error("Reorder execution failed: %s", exc)
             self.runner._run("rebase", "--abort", check=False)
             return False

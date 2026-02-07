@@ -41,9 +41,11 @@ dev = [
     "ruff>=0.14,<0.15",
     "pip-audit>=2.7.0",
     "pre-commit>=3.0",
+    "types-pyyaml>=6.0.12",
 ]
 metrics = ["anthropic>=0.40.0"]
-all = ["zerg[dev]", "zerg[metrics]"]
+performance = ["orjson>=3.9.0"]
+all = ["zerg[dev]", "zerg[metrics]", "zerg[performance]"]
 
 [project.scripts]
 zerg = "zerg.cli:cli"
@@ -66,6 +68,8 @@ zerg = ["py.typed", "schemas/*.json", "data/commands/*.md"]
 python_version = "3.12"
 warn_return_any = true
 warn_unused_configs = true
+warn_unused_ignores = true
+show_error_codes = true
 disallow_untyped_defs = true
 strict = true
 exclude = ["tests/fixtures"]
@@ -76,7 +80,7 @@ line-length = 120
 exclude = [".zerg", "tests/fixtures"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP"]
+select = ["E", "F", "I", "UP", "BLE001"]
 fixable = ["ALL"]
 ignore = []
 

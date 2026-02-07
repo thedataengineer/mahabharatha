@@ -30,6 +30,25 @@ __all__ = [
     "TaskMetrics",
     "LevelMetrics",
     "FeatureMetrics",
+    # Backlog types
+    "BacklogItemDict",
+    # Diagnostics types
+    "DiagnosticResultDict",
+    # Graph validation types
+    "GraphNodeDict",
+    # State types
+    "StateDict",
+    # Worker metrics types (batch 2)
+    "WorkerMetricsSummaryDict",
+    "WorkerMetricsDict",
+    # Status formatter types (batch 2)
+    "HeartbeatDict",
+    "EscalationDict",
+    "StatusFormatterDict",
+    # Task sync types (batch 2)
+    "TaskSyncDict",
+    # PR data types (batch 2)
+    "PRDataDict",
 ]
 
 from dataclasses import dataclass, field
@@ -125,6 +144,208 @@ class TaskGraph(TypedDict, total=False):
     critical_path_minutes: int
     tasks: list[Task]
     levels: dict[str, LevelSpec]
+
+
+# ============================================================================
+# Backlog types
+# ============================================================================
+
+
+class BacklogItemDict(TypedDict, total=False):
+    """A task item as used by backlog generation and rendering.
+
+    Mirrors the Task TypedDict but is used specifically in backlog contexts
+    where tasks flow through grouping, rendering, and status-update functions.
+    """
+
+    id: str
+    title: str
+    description: str
+    level: int
+    dependencies: list[str]
+    files: FileSpec
+    verification: VerificationSpec
+    estimate_minutes: int
+    status: str
+    execution: TaskExecution
+    critical_path: bool
+    consumers: list[str]
+
+
+# ============================================================================
+# Diagnostics types
+# ============================================================================
+
+
+class DiagnosticResultDict(TypedDict, total=False):
+    """Consolidated environment diagnostics result from EnvDiagnosticsEngine.run_all().
+
+    Contains sub-dicts for each diagnostic domain plus collected evidence.
+    """
+
+    python: dict[str, Any]
+    docker: dict[str, Any]
+    resources: dict[str, Any]
+    config: list[str]
+    evidence: list[dict[str, Any]]
+
+
+# ============================================================================
+# Graph validation types
+# ============================================================================
+
+
+class GraphNodeDict(TypedDict, total=False):
+    """A task node as consumed by graph validation functions.
+
+    Contains fields needed for dependency analysis, cycle detection,
+    consumer verification, and reachability checks.
+    """
+
+    id: str
+    title: str
+    level: int
+    dependencies: list[str]
+    consumers: list[str]
+    integration_test: str
+
+
+# ============================================================================
+# State types
+# ============================================================================
+
+
+class StateDict(TypedDict, total=False):
+    """Top-level ZERG execution state persisted to disk.
+
+    Represents the structure created by PersistenceLayer._create_initial_state()
+    and managed by all state/ submodules.
+    """
+
+    feature: str
+    started_at: str
+    current_level: int
+    tasks: dict[str, Any]
+    workers: dict[str, Any]
+    levels: dict[str, Any]
+    execution_log: list[dict[str, Any]]
+    metrics: dict[str, Any] | None
+    paused: bool
+    error: str | None
+
+
+# ============================================================================
+# Worker metrics summary types (batch 2)
+# ============================================================================
+
+
+class WorkerMetricsSummaryDict(TypedDict, total=False):
+    """Aggregate execution summary returned by WorkerMetricsCollector.get_summary().
+
+    Contains high-level statistics across all workers for a feature execution.
+    """
+
+    execution_id: str
+    feature: str
+    started_at: str
+    completed_at: str | None
+    duration_seconds: float
+    worker_count: int
+    levels_completed: int
+    total_levels: int
+    total_tasks: int
+    completed_tasks: int
+    failed_tasks: int
+    success_rate: float
+    total_task_duration_seconds: float
+    total_idle_seconds: float
+    avg_worker_utilization: float
+    avg_context_usage: float
+    peak_context_usage: float
+    parallel_efficiency: float
+
+
+# ============================================================================
+# Status formatter types (batch 2)
+# ============================================================================
+
+
+class HeartbeatDict(TypedDict, total=False):
+    """Worker heartbeat data consumed by status_formatter.format_health_table().
+
+    Each entry represents a single heartbeat snapshot from a running worker.
+    """
+
+    worker_id: int
+    timestamp: str
+    task_id: str | None
+    step: str
+    progress_pct: int
+
+
+class EscalationDict(TypedDict, total=False):
+    """Escalation event consumed by status_formatter.format_escalations().
+
+    Tracks unresolved worker issues surfaced to the orchestrator.
+    """
+
+    worker_id: int
+    task_id: str
+    category: str
+    message: str
+    resolved: bool
+
+
+# ============================================================================
+# Task sync types (batch 2)
+# ============================================================================
+
+
+class TaskSyncDict(TypedDict, total=False):
+    """Serialized ClaudeTask representation from TaskSyncBridge.
+
+    Mirrors ClaudeTask.to_dict() output for orchestrator visibility.
+    """
+
+    task_id: str
+    subject: str
+    description: str
+    status: str
+    level: int
+    feature: str
+    worker_id: int | None
+    created_at: str
+    updated_at: str
+    active_form: str | None
+    task_list_id: str
+
+
+# ============================================================================
+# PR data types (batch 2)
+# ============================================================================
+
+
+class PRDataDict(TypedDict, total=False):
+    """Generated PR content from PRGenerator.generate().
+
+    Contains the structured data needed to create a pull request.
+    """
+
+    title: str
+    body: str
+    labels: list[str]
+    reviewers: list[str]
+
+
+# ============================================================================
+# Batch 2 convenience aliases
+# ============================================================================
+
+#: Alias for WorkerMetricsSummaryDict (task-graph compatibility name).
+WorkerMetricsDict = WorkerMetricsSummaryDict
+
+#: Alias grouping the two status-formatter dicts under one name.
+StatusFormatterDict = HeartbeatDict
 
 
 # ============================================================================
