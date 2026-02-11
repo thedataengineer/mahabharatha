@@ -313,6 +313,32 @@ AI-powered binary search for bug-introducing commits via BisectEngine.
 
 Non-interactive by default. Uses `mode=auto` for commit generation.
 
+### Pre-flight: Feature Detection
+
+Before executing the ship pipeline, detect the active ZERG feature:
+
+```bash
+FEATURE=${ZERG_FEATURE:-$(cat .gsd/.current-feature 2>/dev/null)}
+```
+
+This checks the `ZERG_FEATURE` environment variable first, falling back to the `.gsd/.current-feature` file. The result determines whether feature-scoped shipping applies.
+
+### Feature-Scoped Ship
+
+When `FEATURE` is set (ZERG multi-epic workflow):
+
+- **Source branch**: current branch or `zerg/$FEATURE/base` (the feature integration branch)
+- **Target**: main (or `--base` override)
+- **Scope commits**: only include commits from `zerg/$FEATURE/*` branches
+- **PR title format**: `feat($FEATURE): $SUMMARY`
+- **PR body**: includes the feature name, task summary, and references to feature-scoped work
+- **Branch detection**: if an integration branch exists (e.g., `zerg/$FEATURE/base` or `zerg/$FEATURE/main`), use it as the source branch for the PR instead of the current working branch
+
+When `FEATURE` is **not** set (standard non-ZERG workflow):
+
+- Ship works exactly as before — no scoping, no title prefix, no branch detection changes
+- Full backward compatibility with existing behavior
+
 ```bash
 # Ship current branch to main
 /zerg:git --action ship
@@ -328,12 +354,18 @@ Non-interactive by default. Uses `mode=auto` for commit generation.
 
 # Ship with admin merge (repo owner bypassing branch protection)
 /zerg:git --action ship --admin
+
+# Ship a feature-scoped branch (auto-detected via ZERG_FEATURE or .gsd/.current-feature)
+/zerg:git --action ship
+# → PR title: "feat(user-auth): Add authentication system"
+# → Source: zerg/user-auth/base → Target: main
 ```
 
 **Pipeline steps:**
 
-1. **Commit** — Stage all changes, auto-generate conventional commit message, commit
-2. **CHANGELOG check** — Run `git diff {base}...HEAD -- CHANGELOG.md`. If no changes found, use AskUserQuestion to warn:
+1. **Feature detection** — Run `FEATURE=${ZERG_FEATURE:-$(cat .gsd/.current-feature 2>/dev/null)}`. If FEATURE is set, apply feature-scoped behavior for subsequent steps.
+2. **Commit** — Stage all changes, auto-generate conventional commit message, commit
+3. **CHANGELOG check** — Run `git diff {base}...HEAD -- CHANGELOG.md`. If no changes found, use AskUserQuestion to warn:
    - question: "CHANGELOG.md has no changes. PRs without CHANGELOG updates will fail CI."
    - header: "CHANGELOG"
    - options:
@@ -342,13 +374,13 @@ Non-interactive by default. Uses `mode=auto` for commit generation.
      - label: "Continue without CHANGELOG"
        description: "Push anyway — use skip-changelog label on the PR if intentional"
    - If user picks "Add CHANGELOG entry now", stop the pipeline and instruct them to edit CHANGELOG.md, then re-run `/zerg:git --action ship`
-   - If user picks "Continue without CHANGELOG", proceed to step 3
-3. **Push** — Push branch to remote with `--set-upstream`
-4. **Create PR** — Create pull request via `gh pr create` with full context
-5. **Merge** — Merge PR via `gh pr merge --squash` (falls back to `--admin` if blocked; with `--admin` flag, uses admin merge directly)
-6. **Cleanup** — Switch to base, pull latest, delete feature branch (local + remote)
+   - If user picks "Continue without CHANGELOG", proceed to step 4
+4. **Push** — Push branch to remote with `--set-upstream`. If FEATURE is set and the integration branch `zerg/$FEATURE/base` exists, push that branch.
+5. **Create PR** — Create pull request via `gh pr create` with full context. If FEATURE is set: use `feat($FEATURE): $SUMMARY` as the PR title; include feature name and task summary in the PR body; scope the diff to only commits from `zerg/$FEATURE/*` branches.
+6. **Merge** — Merge PR via `gh pr merge --squash` (falls back to `--admin` if blocked; with `--admin` flag, uses admin merge directly)
+7. **Cleanup** — Switch to base, pull latest, delete feature branch (local + remote). If FEATURE is set, also clean up `zerg/$FEATURE/*` branches that were merged.
 
-If `--no-merge` is set, stops after step 4. If any step fails, the pipeline stops and reports the failure point.
+If `--no-merge` is set, stops after step 5. If any step fails, the pipeline stops and reports the failure point.
 
 ---
 
