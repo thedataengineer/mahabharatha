@@ -28,7 +28,7 @@ After Phase 5.5 completes, the command STOPS. The user must manually run `/z:des
 ## Pre-Flight
 
 ```bash
-FEATURE="$ARGUMENTS"
+FEATURE=${ZERG_FEATURE:-"$ARGUMENTS"}
 
 # Validate feature name
 if [ -z "$FEATURE" ]; then
@@ -162,9 +162,20 @@ Update `.gsd/INFRASTRUCTURE.md` if needed.
 
 ### Phase 5: User Approval
 
-Present requirements for approval. User replies with:
-- "APPROVED" — proceed to design phase
-- "REJECTED" — describe what needs to change
+Present requirements for approval, then call AskUserQuestion to capture the decision:
+
+Call AskUserQuestion:
+  - question: "Do you approve these requirements?"
+  - header: "Approval"
+  - options:
+    - label: "Approve"
+      description: "Lock requirements and stop. You will run /z:design separately."
+    - label: "Request changes"
+      description: "Describe what needs to change"
+
+User replies with:
+- "APPROVED" / "Approve" — requirements are complete and locked
+- "REJECTED" / "Request changes" — describe what needs to change
 - Specific questions or concerns
 
 ---
@@ -173,40 +184,28 @@ Present requirements for approval. User replies with:
 
 After the user replies "APPROVED":
 
-1. First, call TaskUpdate to mark the plan task `completed`
-2. Update requirements.md with `Status: APPROVED`
-3. Then use AskUserQuestion to prompt the user for next steps:
-
-Call AskUserQuestion:
-  - question: "Requirements approved! How would you like to proceed?"
-  - header: "Next step"
-  - options:
-    - label: "Clear context, then /z:design (Recommended)"
-      description: "Run /compact to free token budget, then start /z:design in a fresh context"
-    - label: "Stop here"
-      description: "I'll run /z:design later in a new session"
-
-Based on user response:
-- **"Clear context, then /z:design"**: Output: "Run `/compact` to clear context, then run `/z:design` to begin architecture."
-- **"Stop here"**: Command completes normally with no further output.
-
-**⛔ DO NOT auto-run /z:design. DO NOT write code. The user must manually invoke the next command.**
-
-Output this banner to the user:
+**FIRST**, immediately output this banner before ANY tool calls:
 
 ```
 ═══════════════════════════════════════════════════════════════
                     ⛔ PLANNING COMPLETE ⛔
 ═══════════════════════════════════════════════════════════════
 
-This command has finished. DO NOT proceed to implementation.
-The user must manually run /z:design to continue.
+Requirements are complete and locked.
+Planning is DONE. Run /z:design as a separate step to continue.
 
 EXIT NOW — do not write code, do not invoke other commands.
 ═══════════════════════════════════════════════════════════════
 ```
 
-**After outputting this banner, the command is DONE. Do not take any further action. Do not write code. Do not call any tools. STOP.**
+**THEN** perform these cleanup steps:
+
+1. Call TaskUpdate to mark the plan task `completed`
+2. Update requirements.md with `Status: APPROVED`
+
+**⛔ DO NOT auto-run /z:design. DO NOT write code. The user must manually invoke the next command.**
+
+**After outputting the banner and completing cleanup, the command is DONE. Do not take any further action. Do not write code. Do not call any tools. STOP.**
 
 ---
 
