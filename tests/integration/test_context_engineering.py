@@ -15,7 +15,7 @@ import pytest
 from zerg.context_plugin import ContextEngineeringPlugin
 from zerg.plugin_config import ContextEngineeringConfig
 from zerg.plugins import ContextPlugin, PluginRegistry
-from zerg.security_rules import filter_rules_for_files, summarize_rules
+from zerg.security.rules import filter_rules_for_files, summarize_rules
 
 # ---------------------------------------------------------------------------
 # Fixtures

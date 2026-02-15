@@ -406,7 +406,7 @@ class TestInitMultiLanguage:
         (tmp_path / "requirements.txt").write_text("fastapi\npydantic\n")
         (tmp_path / "pyproject.toml").write_text("[project]\nname = 'test'\n")
 
-        from zerg.security_rules import detect_project_stack
+        from zerg.security.rules import detect_project_stack
 
         stack = detect_project_stack(tmp_path)
 
@@ -422,7 +422,7 @@ class TestInitMultiLanguage:
         # Create JavaScript indicators
         (tmp_path / "package.json").write_text('{"name": "test", "dependencies": {"react": "^18.0.0"}}')
 
-        from zerg.security_rules import detect_project_stack
+        from zerg.security.rules import detect_project_stack
 
         stack = detect_project_stack(tmp_path)
 

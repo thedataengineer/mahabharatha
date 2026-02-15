@@ -141,13 +141,13 @@ class TestSecurityScan:
         (tmp_path / "src").mkdir()
         (tmp_path / "src" / "app.py").write_text("print('hello')")
         results = run_security_scan(tmp_path)
-        assert results["passed"] is True
+        assert results.passed is True
 
     def test_scan_finds_secrets(self, tmp_path: Path) -> None:
         (tmp_path / "config.py").write_text('api_key = "sk-aBcDeFgHiJkLmNoPqRsTuVwXyZaBcDeFgHiJkLmNoPq"')
         results = run_security_scan(tmp_path)
-        assert results["passed"] is False
-        assert len(results["secrets_found"]) > 0
+        assert results.passed is False
+        assert len([f for f in results.findings if f.category == "secret_detection"]) > 0
 
     def test_scan_skips_git_dir(self, tmp_path: Path) -> None:
         """Scanning should skip .git directory."""
@@ -155,7 +155,7 @@ class TestSecurityScan:
         git_dir.mkdir()
         (git_dir / "config").write_text('password = "supersecretpassword123"')
         results = run_security_scan(tmp_path)
-        assert len(results["secrets_found"]) == 0
+        assert len([f for f in results.findings if f.category == "secret_detection"]) == 0
 
 
 class TestSecretPatterns:

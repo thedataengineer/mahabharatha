@@ -22,7 +22,7 @@ from zerg.commands.init import (
     save_config,
     show_summary,
 )
-from zerg.security_rules import ProjectStack
+from zerg.security.rules import ProjectStack
 
 if TYPE_CHECKING:
     from pytest import MonkeyPatch

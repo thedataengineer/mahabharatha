@@ -14,7 +14,7 @@ from unittest import mock
 import pytest
 
 from zerg.repo_map import _SKIP_DIRS, _collect_files
-from zerg.security_rules import detect_project_stack
+from zerg.security.rules import detect_project_stack
 
 
 class TestDetectProjectStackSingleTraversal:
