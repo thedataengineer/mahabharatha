@@ -14,7 +14,7 @@ class TestFollowlinksExplicit:
 
     def test_os_walk_called_with_followlinks_false(self, tmp_path):
         """os.walk should be called with followlinks=False."""
-        with patch("zerg.security.os.walk") as mock_walk:
+        with patch("zerg.security.scanner.os.walk") as mock_walk:
             # Make mock return empty to avoid further processing
             mock_walk.return_value = iter([])
             run_security_scan(tmp_path)
