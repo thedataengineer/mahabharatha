@@ -76,6 +76,7 @@ from zerg.security.scanner import (  # noqa: E402
     HOOK_PATTERNS,
     SECRET_PATTERNS,
     SENSITIVE_FILES,
+    _legacy_scan,
     check_file_size,
     check_for_non_ascii_filenames,
     check_for_secrets,
@@ -89,7 +90,7 @@ __all__ = [
     # Data models
     "SecurityFinding",
     "SecurityResult",
-    # Scanner
+    # Scanner (run_security_scan now returns SecurityResult)
     "SECRET_PATTERNS",
     "HOOK_PATTERNS",
     "SENSITIVE_FILES",
@@ -100,6 +101,7 @@ __all__ = [
     "check_file_size",
     "get_large_files",
     "run_security_scan",
+    "_legacy_scan",
     # Hooks
     "install_hooks",
     "uninstall_hooks",
