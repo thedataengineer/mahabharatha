@@ -13,6 +13,7 @@ from rich.table import Table
 from zerg.fs_utils import collect_files
 from zerg.json_utils import dumps as json_dumps
 from zerg.logging import get_logger
+from zerg.security import SecurityFinding, SecurityResult, run_security_scan
 
 console = Console()
 logger = get_logger("review")
@@ -70,11 +71,13 @@ class ReviewResult:
     quality_passed: bool
     stage1_details: str = ""
     stage2_details: str = ""
+    security_passed: bool = True
+    security_result: SecurityResult | None = None
 
     @property
     def overall_passed(self) -> bool:
-        """Check if both stages passed."""
-        return self.spec_passed and self.quality_passed
+        """Check if all stages passed."""
+        return self.spec_passed and self.quality_passed and self.security_passed
 
     @property
     def total_items(self) -> int:
@@ -126,11 +129,6 @@ class CodeAnalyzer:
             "pattern": r"(TODO|FIXME|HACK|XXX)",
             "message": "TODO/FIXME comment found",
             "severity": "info",
-        },
-        "hardcoded_secret": {
-            "pattern": r"(password|secret|api_key|token)\s*=\s*['\"][^'\"]+['\"]",
-            "message": "Potential hardcoded secret",
-            "severity": "error",
         },
         "long_line": {
             "pattern": None,  # Special handling
@@ -191,11 +189,14 @@ class ReviewCommand:
         self,
         files: list[str],
         mode: str = "full",
+        no_security: bool = False,
     ) -> ReviewResult:
         """Run code review."""
         items: list[ReviewItem] = []
         spec_passed = True
         quality_passed = True
+        security_passed = True
+        security_result: SecurityResult | None = None
         stage1_details = ""
         stage2_details = ""
 
@@ -210,6 +211,9 @@ class ReviewCommand:
             quality_passed, stage2_details, quality_items = self._run_quality_review(files)
             items.extend(quality_items)
 
+        if mode in ("receive", "full") and not no_security:
+            security_passed, _sec_details, security_result = self._run_security_review()
+
         return ReviewResult(
             files_reviewed=len(files),
             items=items,
@@ -217,6 +221,8 @@ class ReviewCommand:
             quality_passed=quality_passed,
             stage1_details=stage1_details,
             stage2_details=stage2_details,
+            security_passed=security_passed,
+            security_result=security_result,
         )
 
     def _run_spec_review(self, files: list[str]) -> tuple[bool, str]:
@@ -323,15 +329,48 @@ class ReviewCommand:
 
         return passed, "\n".join(details_lines), items
 
+    def _run_security_review(self, path: str = ".") -> tuple[bool, str, SecurityResult]:
+        """Stage 3: Security scan."""
+        result = run_security_scan(path=path)
+        passed = result.passed
+        details = f"{result.files_scanned} files scanned, {len(result.findings)} findings"
+        return passed, details, result
+
     def format_result(self, result: ReviewResult, fmt: str = "text") -> str:
         """Format review result."""
         if fmt == "json":
+            security_data: dict[str, Any] = {}
+            if result.security_result is not None:
+                security_data = {
+                    "security_passed": result.security_passed,
+                    "files_scanned": result.security_result.files_scanned,
+                    "findings_count": len(result.security_result.findings),
+                    "summary": result.security_result.summary,
+                    "findings": [
+                        {
+                            "category": f.category,
+                            "severity": f.severity,
+                            "file": f.file,
+                            "line": f.line,
+                            "message": f.message,
+                            "cwe": f.cwe,
+                        }
+                        for f in result.security_result.findings
+                    ],
+                }
+            else:
+                security_data = {
+                    "security_passed": result.security_passed,
+                    "skipped": True,
+                }
+
             return json_dumps(
                 {
                     "files_reviewed": result.files_reviewed,
                     "overall_passed": result.overall_passed,
                     "spec_passed": result.spec_passed,
                     "quality_passed": result.quality_passed,
+                    "security": security_data,
                     "total_items": result.total_items,
                     "error_count": result.error_count,
                     "warning_count": result.warning_count,
@@ -341,6 +380,10 @@ class ReviewCommand:
             )
 
         status = "PASSED" if result.overall_passed else "NEEDS ATTENTION"
+        sec_status = "✓" if result.security_passed else "✗"
+        if result.security_result is None:
+            sec_status = "SKIPPED"
+
         lines = [
             "Code Review Results",
             "=" * 40,
@@ -349,6 +392,7 @@ class ReviewCommand:
             "",
             f"Stage 1 (Spec): {'✓' if result.spec_passed else '✗'}",
             f"Stage 2 (Quality): {'✓' if result.quality_passed else '✗'}",
+            f"Stage 3 (Security): {sec_status}",
             "",
         ]
 
@@ -358,6 +402,15 @@ class ReviewCommand:
                 severity_icon = {"error": "❌", "warning": "⚠", "info": "ℹ"}.get(item.severity, "•")
                 lines.append(f"  {severity_icon} [{item.severity}] {item.file}:{item.line}")
                 lines.append(f"     {item.message}")
+
+        if result.security_result and result.security_result.findings:
+            lines.append("")
+            lines.append("Security Findings:")
+            for finding in result.security_result.findings[:10]:
+                cwe_str = f" ({finding.cwe})" if finding.cwe else ""
+                lines.append(
+                    f"  [{finding.severity.upper()}] {finding.file}:{finding.line} - {finding.message}{cwe_str}"
+                )
 
         return "\n".join(lines)
 
@@ -413,6 +466,7 @@ def _collect_files(path: str | None, mode: str) -> list[str]:
 @click.option("--files", "-f", help="Specific files to review")
 @click.option("--output", "-o", help="Output file for review results")
 @click.option("--json", "json_output", is_flag=True, help="Output as JSON")
+@click.option("--no-security", is_flag=True, default=False, help="Skip security scan (Stage 3)")
 @click.pass_context
 def review(
     ctx: click.Context,
@@ -420,14 +474,15 @@ def review(
     files: str | None,
     output: str | None,
     json_output: bool,
+    no_security: bool,
 ) -> None:
-    """Two-stage code review workflow.
+    """Three-stage code review workflow.
 
     Modes:
     - prepare: Generate change summary and review checklist
     - self: Self-review checklist and automated analysis
-    - receive: Process code quality review
-    - full: Complete two-stage review (spec + quality)
+    - receive: Process code quality review + security scan
+    - full: Complete three-stage review (spec + quality + security)
 
     Examples:
 
@@ -437,11 +492,16 @@ def review(
 
         zerg review --mode self
 
+        zerg review --no-security
+
         zerg review --output review.md
     """
     try:
         console.print("\n[bold cyan]ZERG Review[/bold cyan]\n")
         console.print(f"Mode: [cyan]{mode}[/cyan]")
+
+        if no_security:
+            console.print("[yellow]Warning: Security scan (Stage 3) skipped via --no-security[/yellow]")
 
         # Collect files
         file_list = _collect_files(files, mode)
@@ -456,7 +516,7 @@ def review(
         # Run review
         config = ReviewConfig(mode=mode)
         reviewer = ReviewCommand(config)
-        result = reviewer.run(file_list, mode)
+        result = reviewer.run(file_list, mode, no_security=no_security)
 
         # Show checklist for self-review mode
         if mode in ("self", "full"):
@@ -483,8 +543,24 @@ def review(
             stage1_status = "[green]✓ PASSED[/green]" if result.spec_passed else "[red]✗ FAILED[/red]"
             stage2_status = "[green]✓ PASSED[/green]" if result.quality_passed else "[yellow]⚠ REVIEW[/yellow]"
 
+            # Stage 3: Security
+            if result.security_result is not None:
+                if result.security_passed:
+                    stage3_status = "[green]✓ PASSED[/green]"
+                else:
+                    finding_count = len(result.security_result.findings)
+                    stage3_status = f"[red]✗ FAILED ({finding_count} findings)[/red]"
+                stage3_details = (
+                    f"{result.security_result.files_scanned} files scanned, "
+                    f"{len(result.security_result.findings)} findings"
+                )
+            else:
+                stage3_status = "[yellow]SKIPPED[/yellow]"
+                stage3_details = "Use --no-security to skip" if not no_security else "Skipped via --no-security"
+
             table.add_row("1. Spec Compliance", stage1_status, "Requirements alignment")
             table.add_row("2. Code Quality", stage2_status, f"{result.total_items} items found")
+            table.add_row("3. Security", stage3_status, stage3_details)
 
             console.print(table)
 
@@ -511,6 +587,32 @@ def review(
                     console.print(f"\n[blue]Info ({len(infos)}):[/blue]")
                     for ri in infos[:5]:
                         console.print(f"  ℹ {ri.file}:{ri.line} - {ri.message}")
+
+            # Show security findings grouped by severity
+            if result.security_result and result.security_result.findings:
+                console.print(f"\n[bold]Security Findings ({len(result.security_result.findings)}):[/bold]")
+
+                severity_order = ["critical", "high", "medium", "low", "info"]
+                severity_styles = {
+                    "critical": "red bold",
+                    "high": "red",
+                    "medium": "yellow",
+                    "low": "dim",
+                    "info": "dim",
+                }
+
+                for sev in severity_order:
+                    sev_findings: list[SecurityFinding] = [
+                        f for f in result.security_result.findings if f.severity == sev
+                    ]
+                    if not sev_findings:
+                        continue
+
+                    style = severity_styles.get(sev, "dim")
+                    console.print(f"\n[{style}]{sev.upper()} ({len(sev_findings)}):[/{style}]")
+                    for sf in sev_findings[:10]:
+                        cwe_str = f" ({sf.cwe})" if sf.cwe else ""
+                        console.print(f"  [{style}]{sf.file}:{sf.line} - {sf.message}{cwe_str}[/{style}]")
 
             # Overall status
             console.print(f"\n[bold]Overall:[/bold] [{status_color}]{status_text}[/{status_color}]")
