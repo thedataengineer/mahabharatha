@@ -11,7 +11,7 @@ from zerg.command_splitter import CommandSplitter
 from zerg.efficiency import CompactFormatter
 from zerg.plugin_config import ContextEngineeringConfig
 from zerg.plugins import ContextPlugin
-from zerg.security_rules import filter_rules_for_files, summarize_rules
+from zerg.security.rules import filter_rules_for_files, summarize_rules
 from zerg.spec_loader import SpecLoader
 
 logger = logging.getLogger(__name__)

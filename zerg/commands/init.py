@@ -10,7 +10,7 @@ from rich.table import Table
 from zerg.devcontainer_features import DynamicDevcontainerGenerator
 from zerg.json_utils import dump as json_dump
 from zerg.logging import get_logger
-from zerg.security_rules import ProjectStack, detect_project_stack, integrate_security_rules
+from zerg.security.rules import ProjectStack, detect_project_stack, integrate_security_rules
 
 console = Console()
 logger = get_logger("init")
