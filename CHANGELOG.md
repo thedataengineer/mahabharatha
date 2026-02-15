@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Consolidated security engine with 15 capability areas in `zerg/security/` package
+- Security integrated as Stage 3 in `/z:review` (Spec → Quality → Security)
+- `--no-security` flag for `/z:review` to skip security scanning
+- CVE dependency scanning with osv.dev API and heuristic fallback
+- `SecurityResult` and `SecurityFinding` structured return types
+
 ## [0.2.3] - 2026-02-14
 
 ### Fixed

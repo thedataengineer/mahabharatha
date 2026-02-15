@@ -1714,9 +1714,9 @@ Creates skeleton test files for uncovered functions.
 
 #### What Is It?
 
-The review command runs a structured code review workflow. It checks that your changes align with the spec, follows coding standards, and is ready for team review. Think of it as a pre-flight checklist before creating a PR.
+The review command runs a structured code review workflow. It checks that your changes align with the spec, follows coding standards, scans for security vulnerabilities, and confirms readiness for team review. Think of it as a pre-flight checklist before creating a PR.
 
-The review happens in two stages: first checking that you built what the spec asked for, then checking code quality concerns like error handling and edge cases.
+The review happens in three stages: first checking that you built what the spec asked for, then checking code quality concerns like error handling and edge cases, and finally running the consolidated security engine against reviewed files. Use `--no-security` to skip Stage 3 if security has already been verified separately.
 
 #### Why Use It?
 
@@ -1728,7 +1728,7 @@ The "receive" mode helps when you get feedback from reviewers. It parses their c
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                         /zerg:review                                │
+│                  /zerg:review [--no-security]                        │
 └─────────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -1757,9 +1757,24 @@ The "receive" mode helps when you get feedback from reviewers. It parses their c
                               │
                               ▼
               ┌───────────────────────────────┐
+              │     STAGE 3: SECURITY         │
+              │                               │
+              │  run_security_scan() engine:  │
+              │  - 15 capability areas        │
+              │  - Secrets detection          │
+              │  - Injection patterns         │
+              │  - Crypto misuse              │
+              │  - CVE dependency scan        │
+              │  - Auth & access control      │
+              │  (skip with --no-security)    │
+              └───────────────────────────────┘
+                              │
+                              ▼
+              ┌───────────────────────────────┐
               │         REPORT                │
               │  Ready for PR: YES/NO         │
               │  Issues found: X              │
+              │  Security findings: Y         │
               └───────────────────────────────┘
 ```
 
@@ -1787,7 +1802,14 @@ STAGE 2: Code Quality
   [✓] Error handling present
   [!] Edge case: What if Google returns no email?
 
-Issues: 2 items need attention before PR
+STAGE 3: Security (15 capabilities)
+  [✓] Secrets detection: clean
+  [✓] Injection patterns: clean
+  [✓] Crypto usage: clean
+  [✓] CVE scan: 0 known vulnerabilities
+  [!] Auth: Session cookie missing SameSite attribute (MEDIUM)
+
+Issues: 3 items need attention before PR
 ```
 
 **Self-review checklist only:**
@@ -1923,6 +1945,8 @@ src/auth/auth.service.py:23
 The security command scans your code for vulnerabilities: hardcoded secrets, injection risks, authentication flaws, and known CVEs in dependencies. It supports compliance frameworks like OWASP Top 10, PCI-DSS, and HIPAA.
 
 Think of it as a security auditor that never sleeps. It checks your code against known vulnerability patterns and reports issues with specific remediation guidance.
+
+**Shared Engine**: `/zerg:security` and `/zerg:review` (Stage 3) share the same consolidated security engine. The common API is `run_security_scan()` from the `zerg/security/` package, which covers 15 capability areas and returns structured `SecurityResult`/`SecurityFinding` types. The `zerg/security/` package is the single source of truth for all security scanning logic.
 
 #### Why Use It?
 

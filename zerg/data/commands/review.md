@@ -1,11 +1,11 @@
 # ZERG Review
 
-Two-stage code review workflow.
+Three-stage code review workflow (Spec, Quality, Security).
 
 ## Usage
 
 ```bash
-/zerg:review [--mode prepare|self|receive|full]
+/zerg:review [--mode prepare|self|receive|full] [--no-security]
 ```
 
 ## Modes
@@ -32,9 +32,18 @@ Process review feedback:
 - Generate response
 
 ### full (default)
-Complete two-stage review:
+Complete three-stage review:
 1. Spec compliance check
 2. Code quality review
+3. Security scan (via consolidated `run_security_scan()` engine)
+
+## Stage 3: Security
+
+Runs the consolidated security engine (`run_security_scan()`) against modified/reviewed files. Checks 15 capability areas including secrets detection, injection patterns, crypto misuse, CVE dependency scanning, authentication flaws, access control issues, SSRF patterns, deserialization risks, path traversal, XSS, error handling, logging gaps, hardcoded credentials, insecure configuration, and sensitive data exposure.
+
+### --no-security flag
+
+Skip the security scan stage. Use with caution — prints a WARNING when invoked. Useful for quick spec/quality-only reviews where security has already been verified separately via `/zerg:security`.
 
 ## Examples
 
@@ -57,8 +66,9 @@ Code Review Results
 Status: PASSED
 Files Reviewed: 5
 
-Stage 1 (Spec): ✓
-Stage 2 (Quality): ✓
+Stage 1 (Spec):     ✓
+Stage 2 (Quality):  ✓
+Stage 3 (Security): ✓  (15 capabilities, 0 findings)
 ```
 
 ## Task Tracking
@@ -83,10 +93,11 @@ On completion, call TaskUpdate:
 When `--help` is passed in `$ARGUMENTS`, display usage and exit:
 
 ```
-/zerg:review — Two-stage code review workflow.
+/zerg:review — Three-stage code review workflow (Spec → Quality → Security).
 
 Flags:
   --mode MODE           Review mode: prepare|self|receive|full (default: full)
+  --no-security         Skip Stage 3 security scan (prints WARNING)
   --help                Show this help message
 ```
 
