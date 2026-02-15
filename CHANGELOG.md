@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-02-15
+
+### Fixed
+
+- **Security**: Replaced regex-based HTML stripping with `html.escape()` in PR body sanitization (CWE-79)
+- **Security**: Changed temp script permissions from `0o755` to `0o700` for owner-only access (CWE-732)
+- **Security**: Sanitize PR title at output boundary for defense-in-depth consistency (CWE-79)
+- **Security**: Eliminate temp file permission race window via `mkstemp`+`fchmod` (CWE-377)
+- **Security**: Added `shlex.quote()` to `GIT_SEQUENCE_EDITOR` temp script paths for shell safety (CWE-78)
+- **PR Engine**: Fixed double-sanitization of PR body content — angle brackets and ampersands now render correctly
+- **CodeQL**: Resolved all 115 open alerts (98 fixes + 17 documented false positives)
+- **Plan command**: Fixed `/z:plan` WORKFLOW BOUNDARY to allow spec file generation
+
 ## [0.3.1] - 2026-02-15
 
 ### Added
