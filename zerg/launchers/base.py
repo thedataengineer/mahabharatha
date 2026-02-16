@@ -216,7 +216,7 @@ class WorkerLauncher(ABC):
         for attempt in range(1, max_attempts + 1):
             logger.info(f"Spawn attempt {attempt}/{max_attempts} for worker {worker_id}")
 
-            result = await spawn_fn(worker_id, feature, worktree_path, branch, env)
+            result: SpawnResult = await spawn_fn(worker_id, feature, worktree_path, branch, env)
 
             if result.success:
                 if attempt > 1:

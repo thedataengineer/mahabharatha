@@ -11,6 +11,7 @@ from zerg.performance.stack_detector import detect_stack
 from zerg.performance.tool_registry import ToolRegistry
 from zerg.performance.types import (
     CategoryScore,
+    PerformanceFactor,
     PerformanceFinding,
     PerformanceReport,
     Severity,
@@ -138,7 +139,7 @@ class PerformanceAuditor:
     def _compute_category_scores(
         self,
         findings: list[PerformanceFinding],
-        static_factors: list,
+        static_factors: list[PerformanceFactor],
     ) -> list[CategoryScore]:
         """Compute per-category scores."""
         # Group factors by category

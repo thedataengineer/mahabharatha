@@ -75,9 +75,10 @@ class EventEmitter:
                 logger.error(f"Failed to write event: {e}")
 
         # Notify in-process subscribers
+        event_data: dict[str, Any] = data or {}
         for callback in self._subscribers:
             try:
-                callback(event_type, event.get("data", {}))
+                callback(event_type, event_data)
             except Exception as e:  # noqa: BLE001 — intentional: event emission is best-effort, subscriber errors must not break emitter
                 logger.warning(f"Subscriber callback error: {e}")
 
@@ -173,7 +174,7 @@ class EventEmitter:
         Returns:
             List of event dictionaries
         """
-        events = []
+        events: list[dict[str, Any]] = []
 
         if not self._event_file.exists():
             return events

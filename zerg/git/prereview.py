@@ -9,7 +9,7 @@ from __future__ import annotations
 import re
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from zerg.git.config import GitConfig
 from zerg.logging import get_logger
@@ -96,7 +96,7 @@ class ContextPreparer:
         self,
         base_branch: str = "main",
         budget_chars: int = 16000,
-    ) -> dict:
+    ) -> dict[str, Any]:
         """Prepare full review context with budget-aware hunk distribution.
 
         Allocates 50% of budget to code hunks (split evenly across files),
@@ -234,7 +234,7 @@ class DomainFilter:
 
         return "\n".join(summaries)
 
-    def filter_for_files(self, file_paths: list[str]) -> dict:
+    def filter_for_files(self, file_paths: list[str]) -> dict[str, Any]:
         """Determine all applicable domains and rules for a set of files.
 
         Args:
@@ -293,8 +293,8 @@ class ReviewReporter:
 
     def generate_report(
         self,
-        context: dict,
-        rules: dict,
+        context: dict[str, Any],
+        rules: dict[str, Any],
         branch: str,
     ) -> str:
         """Generate a structured markdown report for AI review.

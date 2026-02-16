@@ -85,7 +85,7 @@ class TaskParser:
 
         # Build internal structures — data dict conforms to TaskGraph TypedDict
         # after validation above, so the cast is safe.
-        self._graph: TaskGraph = data  # type: ignore[assignment]  # validated above
+        self._graph = data  # type: ignore[assignment]  # validated above
         self._tasks.clear()
         self._dependencies.clear()
         self._dependents.clear()

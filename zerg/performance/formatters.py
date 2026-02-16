@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from typing import Any
 
 from rich.console import Console
 from rich.panel import Panel
@@ -10,6 +11,7 @@ from rich.table import Table
 from rich.text import Text
 
 from zerg.performance.types import (
+    PerformanceFinding,
     PerformanceReport,
     Severity,
 )
@@ -63,7 +65,7 @@ def _severity_style(severity: Severity) -> str:
     return styles.get(severity, "")
 
 
-def _sort_by_severity(findings: list) -> list:
+def _sort_by_severity(findings: list[PerformanceFinding]) -> list[PerformanceFinding]:
     """Sort findings by severity weight, highest first."""
     return sorted(
         findings,
@@ -182,7 +184,7 @@ def format_sarif(report: PerformanceReport) -> str:
         A SARIF JSON string.
     """
     # Collect unique rules keyed by factor_id
-    rules_map: dict[int, dict[str, str]] = {}
+    rules_map: dict[int, dict[str, Any]] = {}
     for finding in report.findings:
         if finding.factor_id not in rules_map:
             rules_map[finding.factor_id] = {
@@ -191,15 +193,15 @@ def format_sarif(report: PerformanceReport) -> str:
             }
 
     # Build results
-    results: list[dict] = []
+    results: list[dict[str, Any]] = []
     for finding in report.findings:
-        entry: dict = {
+        entry: dict[str, Any] = {
             "ruleId": f"PERF-{finding.factor_id}",
             "level": _SARIF_LEVEL_MAP.get(finding.severity, "note"),
             "message": {"text": finding.message},
         }
         if finding.file:
-            location: dict = {
+            location: dict[str, Any] = {
                 "physicalLocation": {
                     "artifactLocation": {"uri": finding.file},
                 }

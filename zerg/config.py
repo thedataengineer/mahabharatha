@@ -37,7 +37,7 @@ import threading
 from pathlib import Path
 from typing import Any, ClassVar
 
-import yaml  # type: ignore[import-untyped]
+import yaml
 from pydantic import BaseModel, Field
 
 from zerg.constants import (
@@ -470,7 +470,7 @@ class ZergConfig(BaseModel):
             if not force_reload and cls._cached_instance is not None:
                 if cls._cache_path == config_path:
                     try:
-                        current_mtime = config_path.stat().st_mtime
+                        current_mtime: float | None = config_path.stat().st_mtime
                         if current_mtime == cls._cache_mtime:
                             logger.debug("Cache hit for ZergConfig")
                             return cls._cached_instance

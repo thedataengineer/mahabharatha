@@ -10,6 +10,7 @@ import json
 import re
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from zerg.exceptions import GitError
 from zerg.git.base import GitRunner
@@ -108,7 +109,7 @@ class OperationLogger:
             f.write(json_dumps(entry) + "\n")
         logger.debug(f"Logged operation: {operation} on {branch}")
 
-    def get_recent(self, count: int = 20) -> list[dict]:
+    def get_recent(self, count: int = 20) -> list[dict[str, Any]]:
         """Read the most recent N operations from the log.
 
         Args:
@@ -120,7 +121,7 @@ class OperationLogger:
         if not self._path.exists():
             return []
 
-        entries: list[dict] = []
+        entries: list[dict[str, Any]] = []
         with self._path.open("r", encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
@@ -304,7 +305,7 @@ class RescueEngine:
         )
         return snapshot
 
-    def list_operations(self, count: int = 20) -> list[dict]:
+    def list_operations(self, count: int = 20) -> list[dict[str, Any]]:
         """Show recent operations from the ops log.
 
         Args:
@@ -429,7 +430,7 @@ class RescueEngine:
             Exit code (0 = success, 1 = failure)
         """
         if action == "list":
-            raw_count = kwargs.get("count", 20)
+            raw_count: Any = kwargs.get("count", 20)
             count = int(raw_count) if raw_count is not None else 20
             ops = self.list_operations(count)
             for op in ops:

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +29,7 @@ class CommandSplitter:
         """Estimate token count for text."""
         return len(text) // CHARS_PER_TOKEN
 
-    def get_splittable_files(self) -> list[dict]:
+    def get_splittable_files(self) -> list[dict[str, Any]]:
         """Return list of command files over MIN_LINES_TO_SPLIT.
 
         Returns list of dicts: {path: Path, lines: int, tokens: int}
@@ -50,7 +51,7 @@ class CommandSplitter:
                 )
         return results
 
-    def analyze_file(self, filepath: Path) -> dict:
+    def analyze_file(self, filepath: Path) -> dict[str, Any]:
         """Analyze a command file's structure.
 
         Returns dict with: total_lines, sections (list of {header, start_line,
@@ -61,7 +62,7 @@ class CommandSplitter:
         total_lines = len(lines)
 
         # Parse ## sections
-        sections: list[dict] = []
+        sections: list[dict[str, Any]] = []
         current_header: str | None = None
         current_start = 0
 

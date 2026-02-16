@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 
 from zerg.doc_engine.detector import ComponentDetector, ComponentType
-from zerg.doc_engine.extractor import ClassInfo, FunctionInfo, SymbolExtractor, SymbolTable
+from zerg.doc_engine.extractor import ClassInfo, FunctionInfo, ImportInfo, SymbolExtractor, SymbolTable
 from zerg.doc_engine.templates import TEMPLATES
 
 logger = logging.getLogger(__name__)
@@ -231,7 +231,7 @@ def _build_functions_table(functions: list[FunctionInfo]) -> str:
     return header + "\n".join(rows)
 
 
-def _build_imports_list(imports: list) -> str:
+def _build_imports_list(imports: list[ImportInfo]) -> str:
     if not imports:
         return "_No imports._"
     lines = []
@@ -244,7 +244,7 @@ def _build_imports_list(imports: list) -> str:
     return "\n".join(lines)
 
 
-def _build_dependency_diagram(title: str, imports: list) -> str:
+def _build_dependency_diagram(title: str, imports: list[ImportInfo]) -> str:
     if not imports:
         return f'    {_mermaid_id(title)}["{title}"]'
     lines = []

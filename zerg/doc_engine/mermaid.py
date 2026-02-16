@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import re
+from typing import Any
 
 
 def _sanitize_id(name: str) -> str:
@@ -191,7 +192,7 @@ class MermaidGenerator:
 
         return _wrap(lines)
 
-    def class_diagram(self, classes: list[dict[str, object]]) -> str:
+    def class_diagram(self, classes: list[dict[str, Any]]) -> str:
         """Generate a ``classDiagram``.
 
         Parameters

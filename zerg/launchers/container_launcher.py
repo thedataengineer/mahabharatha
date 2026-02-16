@@ -327,7 +327,7 @@ class ContainerLauncher(WorkerLauncher):
             returncode, stdout, stderr = await run_fn(cmd)
 
             if returncode == 0:
-                container_id = stdout.strip()
+                container_id: str = stdout.strip()
                 return container_id
             else:
                 logger.error(f"Docker run failed: {stderr}")
@@ -537,8 +537,8 @@ class ContainerLauncher(WorkerLauncher):
                 if handle.started_at:
                     from datetime import timedelta
 
-                    age = datetime.now() - handle.started_at
-                    if age > timedelta(seconds=60):
+                    uptime = datetime.now() - handle.started_at
+                    if uptime > timedelta(seconds=60):
                         alive_check = subprocess.run(
                             ["docker", "exec", container_id, "test", "-f", CONTAINER_HEALTH_FILE],  # noqa: S607
                             capture_output=True,

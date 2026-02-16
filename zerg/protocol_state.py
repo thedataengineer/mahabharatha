@@ -371,6 +371,7 @@ class WorkerProtocol:
                 if self.state.claim_task(
                     task_id,
                     self.worker_id,
+                    current_level=self.state.get_current_level(),
                     dependency_checker=self.dependency_checker,
                 ):
                     # Load full task from task graph if available

@@ -12,7 +12,7 @@ import re
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from zerg.ast_cache import ASTCache
@@ -105,7 +105,7 @@ class ArchitectureConfig:
     exceptions: list[ArchitectureException] = field(default_factory=list)
 
     @classmethod
-    def from_dict(cls, data: dict) -> ArchitectureConfig:
+    def from_dict(cls, data: dict[str, Any]) -> ArchitectureConfig:
         """Create config from dictionary (e.g., from YAML)."""
         if not data:
             return cls(enabled=False)

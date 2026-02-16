@@ -88,4 +88,4 @@ class DependencyChecker:
             Dict mapping dependency task_id to status
         """
         dependencies = self._parser.get_dependencies(task_id)
-        return {dep_id: self._state.get_task_status(dep_id) for dep_id in dependencies}
+        return {dep_id: (self._state.get_task_status(dep_id) or "") for dep_id in dependencies}

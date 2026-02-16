@@ -8,6 +8,7 @@ import os
 import tempfile
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from zerg.constants import STATE_DIR
 
@@ -32,7 +33,7 @@ class TokenTracker:
         self,
         worker_id: str,
         task_id: str,
-        breakdown: dict,
+        breakdown: dict[str, Any],
         mode: str = "estimated",
     ) -> None:
         """Record token usage for a single task.
@@ -78,13 +79,14 @@ class TokenTracker:
                 exc_info=True,
             )
 
-    def read(self, worker_id: str) -> dict | None:
+    def read(self, worker_id: str) -> dict[str, Any] | None:
         """Read a single worker's token data. Returns None if not found."""
         try:
             path = self._worker_path(worker_id)
             if not path.exists():
                 return None
-            return json.loads(path.read_text())
+            result: dict[str, Any] = json.loads(path.read_text())
+            return result
         except (json.JSONDecodeError, OSError):
             logger.warning(
                 "Failed to read token data for worker %s",
@@ -93,9 +95,9 @@ class TokenTracker:
             )
             return None
 
-    def read_all(self) -> dict:
+    def read_all(self) -> dict[str, Any]:
         """Read all worker token files. Returns {worker_id: data}."""
-        result: dict = {}
+        result: dict[str, Any] = {}
         try:
             if not self._state_dir.exists():
                 return result
@@ -110,7 +112,7 @@ class TokenTracker:
             logger.warning("Failed to read all token data", exc_info=True)
         return result
 
-    def _atomic_write(self, worker_id: str, data: dict) -> None:
+    def _atomic_write(self, worker_id: str, data: dict[str, Any]) -> None:
         """Write worker token file atomically via tempfile + os.replace."""
         target = self._worker_path(worker_id)
         fd, tmp_path = tempfile.mkstemp(dir=str(self._state_dir), suffix=".tmp")
@@ -122,5 +124,5 @@ class TokenTracker:
             try:
                 os.unlink(tmp_path)
             except OSError:
-                pass
+                pass  # Best-effort file cleanup
             raise

@@ -96,7 +96,7 @@ class ContextPlugin(abc.ABC):
         """Unique name identifying this context plugin."""
 
     @abc.abstractmethod
-    def build_task_context(self, task: dict, task_graph: dict, feature: str) -> str:
+    def build_task_context(self, task: dict[str, Any], task_graph: dict[str, Any], feature: str) -> str:
         """Build context string for a specific task.
 
         Args:
@@ -108,7 +108,7 @@ class ContextPlugin(abc.ABC):
         """
 
     @abc.abstractmethod
-    def estimate_context_tokens(self, task: dict) -> int:
+    def estimate_context_tokens(self, task: dict[str, Any]) -> int:
         """Estimate token count for task context."""
 
 
@@ -222,7 +222,7 @@ class PluginRegistry:
         """Return all registered context plugins."""
         return list(self._context_plugins.values())
 
-    def build_task_context(self, task: dict, task_graph: dict, feature: str) -> str:
+    def build_task_context(self, task: dict[str, Any], task_graph: dict[str, Any], feature: str) -> str:
         """Build combined context from all registered context plugins.
 
         Calls each plugin's ``build_task_context`` method and concatenates the
@@ -277,16 +277,9 @@ class PluginRegistry:
         plugin ABCs (QualityGatePlugin, LifecycleHookPlugin, LauncherPlugin,
         ContextPlugin).
         """
-        eps = importlib.metadata.entry_points()
-
-        # importlib.metadata.entry_points() returns SelectableGroups on 3.12+
-        # with a .select() method; older Pythons return a dict.  The hasattr
-        # guard handles both, but mypy only sees one branch.
-        discovered: Any = (
-            eps.select(group=group)  # type: ignore[union-attr]  # polymorphic API across Python versions
-            if hasattr(eps, "select")
-            else eps.get(group, [])  # type: ignore[union-attr]
-        )
+        # importlib.metadata.entry_points(group=...) works on Python 3.9+
+        # and returns only entries for the specified group.
+        discovered = importlib.metadata.entry_points(group=group)
 
         for ep in discovered:
             try:

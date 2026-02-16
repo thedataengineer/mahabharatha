@@ -5,30 +5,48 @@ Capture complete requirements for feature: **$ARGUMENTS**
 
 ## ⛔ WORKFLOW BOUNDARY (NON-NEGOTIABLE)
 
-**CRITICAL: This is a PLANNING-ONLY command. You MUST NEVER write code, create files, or implement anything.**
+**CRITICAL: This is a PLANNING-ONLY command. You gather requirements and write spec files. You MUST NEVER write source code or proceed to implementation.**
 
-This command MUST NEVER:
-- Automatically run `/z:design` or any design phase
-- Automatically proceed to implementation
-- Call the Skill tool to invoke another command
-- Write code or make code changes
-- Create, modify, or delete source files
-- Run implementation tools (Write, Edit, Bash for code changes)
+### PROHIBITED (absolute — zero exceptions):
+- Call **EnterPlanMode** or **ExitPlanMode** tools (these have approve→implement semantics that override stop guards)
+- Automatically run `/z:design` or any design/implementation phase
+- Automatically proceed to implementation after approval
+- Call the **Skill** tool to invoke another command (including `/z:design`)
+- Write, Edit, or Bash against ANY file OUTSIDE of `.gsd/` directory
+- Create, modify, or delete source code files (anything in `zerg/`, `tests/`, `src/`, etc.)
+- Continue executing after the PLANNING COMPLETE banner is output
+
+### REQUIRED (mandatory — the command fails if these don't happen):
+- You **MUST** use the **Write** tool to create `.gsd/specs/{feature}/requirements.md`
+- You **MUST** use **Bash** to create `.gsd/specs/{feature}/` directory and sentinel files
+- You **MUST** call **AskUserQuestion** for Phase 5 approval — never assume approval
+- You **MUST** call **AskUserQuestion** for Phase 5.5 next-step prompt — never skip
+- You **MUST** write `.gsd/specs/{feature}/.plan-complete` sentinel after approval
+- You **MUST** output the PLANNING COMPLETE banner as your final action, then STOP
+
+### ALLOWED tools and their scopes:
+- **Read, Grep, Glob**: Any file (for context gathering)
+- **Write**: ONLY files under `.gsd/specs/{feature}/` (requirements.md, sentinels)
+- **Bash**: ONLY `mkdir -p` and `echo` into `.gsd/` paths; `gh issue view`; `git log`
+- **AskUserQuestion**: For elicitation (Phase 2), approval (Phase 5), handoff (Phase 5.5)
+- **TaskCreate, TaskUpdate**: For Claude Task tracking
+- **WebSearch, WebFetch**: For research if needed
 
 After Phase 5.5 completes, the command STOPS. The user must manually run `/z:design`.
 
-**If you find yourself about to write code or create files: STOP IMMEDIATELY. You are in planning mode.**
+**⛔ PLAN MODE PROHIBITION**: Do NOT call EnterPlanMode. This is a requirements-gathering command, NOT an implementation task. EnterPlanMode creates a contract where ExitPlanMode signals "ready to implement" — which conflicts with this command's purpose of writing requirements and stopping.
 
 ## Flags
 
 - `--socratic` or `-s`: Use structured 3-round discovery mode (see details file)
 - `--rounds N`: Number of rounds (default: 3, max: 5)
 - `--skip-validation`: Skip Phase 0 pre-execution validation checks
+- `--issue N` or `#N`: Load a GitHub issue as brainstorm context for requirements seeding
 
 ## Pre-Flight
 
 ```bash
-FEATURE="$ARGUMENTS"
+FEATURE=${ZERG_FEATURE:-"$ARGUMENTS"}
 
 # Validate feature name
 if [ -z "$FEATURE" ]; then
@@ -47,11 +65,19 @@ TASK_LIST=${CLAUDE_CODE_TASK_LIST_ID:-$FEATURE}
 mkdir -p ".gsd/specs/$FEATURE"
 echo "$FEATURE" > .gsd/.current-feature
 echo "$(date -Iseconds)" > ".gsd/specs/$FEATURE/.started"
+
+# Extract issue number from --issue N or #N shorthand
+ISSUE_NUM=""
+if [[ "$ARGUMENTS" =~ --issue[[:space:]]+([0-9]+) ]]; then
+  ISSUE_NUM="${BASH_REMATCH[1]}"
+elif [[ "$ARGUMENTS" =~ \#([0-9]+) ]]; then
+  ISSUE_NUM="${BASH_REMATCH[1]}"
+fi
 ```
 
 ## Phase 0: Pre-Execution Validation
 
-If `--skip-validation` is in $ARGUMENTS, skip this phase entirely and continue to Enter Plan Mode.
+If `--skip-validation` is in $ARGUMENTS, skip this phase entirely and continue to Phase 1.
 
 Before proceeding, validate this plan hasn't been superseded:
 
@@ -93,15 +119,7 @@ Before proceeding, validate this plan hasn't been superseded:
      Use AskUserQuestion to get user decision.
 
    IF validation passes:
-     Continue to Enter Plan Mode.
-
----
-
-## Enter Plan Mode
-
-**Press Shift+Tab twice** to enter plan mode (Opus 4.5 for reasoning).
-
-Plan mode gives you read-only tools to explore the codebase without making changes.
+     Continue to Phase 1.
 
 ---
 
@@ -133,6 +151,13 @@ This ensures the task system tracks the full lifecycle: start → in_progress �
 
 Before asking questions, understand the current state:
 
+0. **Check for issue context** — If `--issue N` or `#N` was provided in arguments:
+   - Run `gh issue view $ISSUE_NUM` to read the issue
+   - Parse title, body, labels, and acceptance criteria
+   - Store as issue context for Phase 2
+   - Output: "Found GitHub issue #N: '{title}'. Loading brainstorm context from issue body..."
+   - If `--issue` not provided, skip this step (backward compatible)
+
 1. **Read PROJECT.md and INFRASTRUCTURE.md** — Understand existing tech stack
 2. **Explore Codebase** — List directory structure, read key files, identify patterns
 3. **Search for Similar Patterns** — How are existing features structured?
@@ -147,7 +172,11 @@ Ask clarifying questions grouped logically. Don't ask everything at once. Cover:
 
 See details file for full question categories.
 
+> **Issue Context Advisory**: When issue context was loaded in Phase 1, acknowledge what the issue already captured (scope, acceptance criteria, priority, proposed solution). Present a summary: "Issue #N already covers: [list]. Asking about gaps only." Then focus elicitation on areas the issue didn't cover or where plan needs deeper specificity. Use judgment about what's already answered vs. what needs more detail.
+
 ### Phase 3: Generate requirements.md
+
+After completing Phases 1-2, proceed directly to writing the requirements document.
 
 Write comprehensive requirements document to `.gsd/specs/{feature}/requirements.md`.
 
@@ -162,9 +191,20 @@ Update `.gsd/INFRASTRUCTURE.md` if needed.
 
 ### Phase 5: User Approval
 
-Present requirements for approval. User replies with:
-- "APPROVED" — proceed to design phase
-- "REJECTED" — describe what needs to change
+Present requirements for approval, then call AskUserQuestion to capture the decision:
+
+Call AskUserQuestion:
+  - question: "Do you approve these requirements?"
+  - header: "Approval"
+  - options:
+    - label: "Approve"
+      description: "Lock requirements and stop. You will run /z:design separately."
+    - label: "Request changes"
+      description: "Describe what needs to change"
+
+User replies with:
+- "APPROVED" / "Approve" — requirements are complete and locked
+- "REJECTED" / "Request changes" — describe what needs to change
 - Specific questions or concerns
 
 ---
@@ -174,8 +214,12 @@ Present requirements for approval. User replies with:
 After the user replies "APPROVED":
 
 1. First, call TaskUpdate to mark the plan task `completed`
-2. Update requirements.md with `Status: APPROVED`
-3. Then use AskUserQuestion to prompt the user for next steps:
+2. Update requirements.md with `Status: APPROVED` (use Write tool — this is a .gsd/ file)
+3. Write the sentinel file:
+   ```bash
+   echo "$(date -Iseconds)" > ".gsd/specs/$FEATURE/.plan-complete"
+   ```
+4. Then use AskUserQuestion to prompt the user for next steps:
 
 Call AskUserQuestion:
   - question: "Requirements approved! How would you like to proceed?"
@@ -235,5 +279,6 @@ Flags:
   -s, --socratic        Use structured 3-round discovery mode
   --rounds N            Number of rounds (default: 3, max: 5)
   --skip-validation     Skip pre-execution validation checks
+  --issue N             Load GitHub issue N as brainstorm context
   --help                Show this help message
 ```

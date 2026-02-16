@@ -10,7 +10,7 @@ import re
 import shlex
 import subprocess
 from datetime import UTC, datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from zerg.exceptions import GitError
 from zerg.git.commit_engine import COMMIT_TYPE_PATTERNS
@@ -199,7 +199,7 @@ class CommitRanker:
         commits: list[CommitInfo],
         symptom: str,
         failing_files: list[str] | None = None,
-    ) -> list[dict]:
+    ) -> list[dict[str, Any]]:
         """Rank commits by likelihood of causing the symptom.
 
         Score formula: file_overlap * 0.4 + size * 0.2 + recency * 0.2 + type * 0.2
@@ -222,7 +222,7 @@ class CommitRanker:
         max_files = max((len(c.files) for c in commits), default=1) or 1
         total_commits = len(commits)
 
-        results: list[dict] = []
+        results: list[dict[str, Any]] = []
         for idx, commit in enumerate(commits):
             reasons: list[str] = []
 
@@ -276,7 +276,7 @@ class SemanticTester:
     Runs test commands and parses output for common test framework patterns.
     """
 
-    def run_test(self, command: str, timeout: int = 120) -> dict:
+    def run_test(self, command: str, timeout: int = 120) -> dict[str, Any]:
         """Run a test command and capture output.
 
         Args:
@@ -315,7 +315,7 @@ class SemanticTester:
                 "passed": False,
             }
 
-    def analyze_output(self, result: dict) -> dict:
+    def analyze_output(self, result: dict[str, Any]) -> dict[str, Any]:
         """Analyze test output to extract structured failure information.
 
         Looks for common test framework patterns (pytest, unittest, jest, etc.).
@@ -391,7 +391,7 @@ class BisectRunner:
         bad: str,
         symptom: str,
         test_cmd: str,
-    ) -> dict | None:
+    ) -> dict[str, Any] | None:
         """Try to find the culprit commit using predictive ranking.
 
         Tests the highest-scored commits first. If a commit with score > 0.9
@@ -447,7 +447,7 @@ class BisectRunner:
         good: str,
         bad: str,
         test_cmd: str,
-    ) -> dict | None:
+    ) -> dict[str, Any] | None:
         """Fall back to standard git bisect.
 
         Args:
@@ -499,7 +499,7 @@ class BisectRunner:
         bad: str,
         symptom: str,
         test_cmd: str,
-    ) -> dict:
+    ) -> dict[str, Any]:
         """Orchestrate bisect: predictive first, then git bisect fallback.
 
         Args:
@@ -553,7 +553,7 @@ class RootCauseAnalyzer:
         runner: GitRunner,
         culprit: CommitInfo,
         symptom: str,
-    ) -> dict:
+    ) -> dict[str, Any]:
         """Analyze a culprit commit to produce a root cause report.
 
         Args:
@@ -706,7 +706,7 @@ class BisectEngine:
             if tag and result.returncode == 0:
                 return tag
         except GitError:
-            pass
+            pass  # Best-effort git cleanup
 
         # Fall back to first commit
         try:
@@ -744,7 +744,7 @@ class BisectEngine:
 
         return None
 
-    def _save_report(self, symptom: str, test_cmd: str, result: dict) -> None:
+    def _save_report(self, symptom: str, test_cmd: str, result: dict[str, Any]) -> None:
         """Save the bisect report to a markdown file.
 
         Args:

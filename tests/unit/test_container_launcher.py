@@ -504,7 +504,8 @@ class TestVerifyWorkerProcess:
         launcher = _launcher()
         mock_run.return_value = MagicMock(returncode=1)
 
-        with patch("time.sleep"), patch("time.time", side_effect=[0.0, 0.0, 1.0, 2.0]):
+        # Extra values needed: logging internally calls time.time() for log records
+        with patch("time.sleep"), patch("time.time", side_effect=[0.0, 0.0, 1.0, 2.0, 2.0]):
             result = launcher._verify_worker_process("cid123", timeout=1.5)
 
         assert result is False
@@ -515,7 +516,8 @@ class TestVerifyWorkerProcess:
         launcher = _launcher()
         mock_run.side_effect = subprocess.SubprocessError("exec failed")
 
-        with patch("time.sleep"), patch("time.time", side_effect=[0.0, 0.0, 1.0, 2.0]):
+        # Extra values needed: logging internally calls time.time() for log records
+        with patch("time.sleep"), patch("time.time", side_effect=[0.0, 0.0, 1.0, 2.0, 2.0]):
             result = launcher._verify_worker_process("cid123", timeout=1.5)
 
         assert result is False
@@ -526,7 +528,8 @@ class TestVerifyWorkerProcess:
         launcher = _launcher()
         mock_run.side_effect = OSError("no such file")
 
-        with patch("time.sleep"), patch("time.time", side_effect=[0.0, 0.0, 1.0, 2.0]):
+        # Extra values needed: logging internally calls time.time() for log records
+        with patch("time.sleep"), patch("time.time", side_effect=[0.0, 0.0, 1.0, 2.0, 2.0]):
             result = launcher._verify_worker_process("cid123", timeout=1.5)
 
         assert result is False

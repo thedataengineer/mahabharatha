@@ -5,12 +5,13 @@ from __future__ import annotations
 import logging
 import os
 from pathlib import Path
+from typing import Any
 
 from zerg.command_splitter import CommandSplitter
 from zerg.efficiency import CompactFormatter
 from zerg.plugin_config import ContextEngineeringConfig
 from zerg.plugins import ContextPlugin
-from zerg.security_rules import filter_rules_for_files, summarize_rules
+from zerg.security.rules import filter_rules_for_files, summarize_rules
 from zerg.spec_loader import SpecLoader
 
 logger = logging.getLogger(__name__)
@@ -55,7 +56,7 @@ class ContextEngineeringPlugin(ContextPlugin):
         """Unique name identifying this context plugin."""
         return "context-engineering"
 
-    def build_task_context(self, task: dict, task_graph: dict, feature: str) -> str:
+    def build_task_context(self, task: dict[str, Any], task_graph: dict[str, Any], feature: str) -> str:
         """Build a token-budgeted context string for a single task.
 
         Combines filtered security rules and feature-spec excerpts relevant to
@@ -83,7 +84,7 @@ class ContextEngineeringPlugin(ContextPlugin):
                 return ""
             raise
 
-    def estimate_context_tokens(self, task: dict) -> int:
+    def estimate_context_tokens(self, task: dict[str, Any]) -> int:
         """Rough token estimate: file_count * 500 + description_chars / 4."""
         files = task.get("files", {})
         file_count = 0
@@ -117,7 +118,7 @@ class ContextEngineeringPlugin(ContextPlugin):
 
     # -- Internal -----------------------------------------------------------
 
-    def _collect_task_files(self, task: dict) -> list[str]:
+    def _collect_task_files(self, task: dict[str, Any]) -> list[str]:
         """Extract the list of files a task will create or modify."""
         files_section = task.get("files", {})
         result: list[str] = []
@@ -127,7 +128,7 @@ class ContextEngineeringPlugin(ContextPlugin):
                 result.extend(entries)
         return result
 
-    def _build_context_inner(self, task: dict, task_graph: dict, feature: str) -> str:
+    def _build_context_inner(self, task: dict[str, Any], task_graph: dict[str, Any], feature: str) -> str:
         """Core context-building logic (may raise)."""
         budget = self._config.task_context_budget_tokens
         file_paths = self._collect_task_files(task)
@@ -215,7 +216,7 @@ class ContextEngineeringPlugin(ContextPlugin):
 
         return assembled
 
-    def _record_token_metrics(self, task: dict, context_components: dict[str, str]) -> None:
+    def _record_token_metrics(self, task: dict[str, Any], context_components: dict[str, str]) -> None:
         """Record per-component token counts for monitoring.
 
         This is purely informational. Failures are silently ignored
@@ -328,7 +329,7 @@ class ContextEngineeringPlugin(ContextPlugin):
             from zerg.rules import RuleInjector
 
             injector = RuleInjector()
-            task: dict = {"files": {"create": file_paths, "modify": []}}
+            task: dict[str, Any] = {"files": {"create": file_paths, "modify": []}}
             section = injector.inject_rules(task, max_tokens=max_tokens)
             if section:
                 return f"## Engineering Rules (task-scoped)\n\n{section}"
@@ -361,7 +362,7 @@ class ContextEngineeringPlugin(ContextPlugin):
 
         return f"## Security Rules (task-scoped)\n\n{summary}"
 
-    def _build_spec_section(self, task: dict, feature: str, max_tokens: int) -> str:
+    def _build_spec_section(self, task: dict[str, Any], feature: str, max_tokens: int) -> str:
         """Load feature specs scoped to this task's keywords."""
         try:
             loader = SpecLoader()
@@ -370,7 +371,7 @@ class ContextEngineeringPlugin(ContextPlugin):
             logger.debug("Spec context loading failed; skipping section", exc_info=True)
             return ""
 
-    def _build_repo_map_section(self, task: dict, max_tokens: int) -> str:
+    def _build_repo_map_section(self, task: dict[str, Any], max_tokens: int) -> str:
         """Inject repo symbol map context relevant to the task.
 
         Args:
@@ -397,7 +398,7 @@ class ContextEngineeringPlugin(ContextPlugin):
             logger.debug("Repo map context failed; skipping section", exc_info=True)
             return ""
 
-    def _build_mcp_section(self, task: dict, max_tokens: int) -> str:
+    def _build_mcp_section(self, task: dict[str, Any], max_tokens: int) -> str:
         """Inject MCP routing hints for the task.
 
         Args:

@@ -10,7 +10,7 @@ from rich.table import Table
 from zerg.devcontainer_features import DynamicDevcontainerGenerator
 from zerg.json_utils import dump as json_dump
 from zerg.logging import get_logger
-from zerg.security_rules import ProjectStack, detect_project_stack, integrate_security_rules
+from zerg.security.rules import ProjectStack, detect_project_stack, integrate_security_rules
 
 console = Console()
 logger = get_logger("init")
@@ -407,7 +407,7 @@ def save_config(config: dict[str, Any]) -> None:
     config_path = Path(".zerg/config.yaml")
 
     # Convert to YAML-like format
-    import yaml  # type: ignore[import-untyped]
+    import yaml
 
     try:
         with open(config_path, "w") as f:
@@ -495,7 +495,7 @@ def build_devcontainer() -> bool:
         if result.returncode == 0:
             devcontainer_cli = "devcontainer"
     except (FileNotFoundError, subprocess.TimeoutExpired):
-        pass
+        pass  # Optional tool not available
 
     # Build using devcontainer CLI if available
     if devcontainer_cli:

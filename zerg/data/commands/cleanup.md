@@ -34,7 +34,7 @@ Options:
 ## Pre-Flight
 
 ```bash
-FEATURE=$(cat .gsd/.current-feature 2>/dev/null)
+FEATURE=${ZERG_FEATURE:-$(cat .gsd/.current-feature 2>/dev/null)}
 TASK_LIST=${CLAUDE_CODE_TASK_LIST_ID:-$FEATURE}
 ```
 
@@ -56,6 +56,14 @@ Before removing state, archive the task list:
 | Log files | `.zerg/logs/worker-*.log` | Unless --keep-logs |
 | Git branches | `zerg/{feature}/*` | Unless --keep-branches |
 | Containers | `zerg-worker-{feature}-*` | Yes |
+
+### Stale Lockfile Cleanup
+
+```bash
+# Remove stale advisory lockfiles (older than 2 hours)
+find .gsd/specs -name ".lock" -mmin +120 -delete 2>/dev/null
+echo "Cleaned stale lockfiles"
+```
 
 ### What's Preserved
 

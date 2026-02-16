@@ -18,7 +18,7 @@ from unittest.mock import patch
 from click.testing import CliRunner
 
 from zerg.cli import cli
-from zerg.security_rules import ProjectStack
+from zerg.security.rules import ProjectStack
 
 if TYPE_CHECKING:
     from pytest import MonkeyPatch

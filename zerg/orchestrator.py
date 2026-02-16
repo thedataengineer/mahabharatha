@@ -52,7 +52,7 @@ from zerg.state import StateManager
 from zerg.state_sync_service import StateSyncService
 from zerg.task_retry_manager import TaskRetryManager
 from zerg.task_sync import TaskSyncBridge
-from zerg.types import WorkerState
+from zerg.types import WorkerAssignments, WorkerState
 from zerg.worker_manager import WorkerManager
 from zerg.worker_registry import WorkerRegistry
 from zerg.worktree import WorktreeManager
@@ -127,7 +127,7 @@ class Orchestrator:
                 feature=feature, level=lc.level, max_size_mb=lc.max_log_size_mb,
             )
         except Exception:  # noqa: BLE001 — intentional: structured logging setup is non-critical
-            pass
+            pass  # Structured logging setup non-critical
 
         self._running = False
         self._paused = False
@@ -173,10 +173,10 @@ class Orchestrator:
 
         self._loop_controller: LoopController | None = None
         if self._capabilities and self._capabilities.loop_enabled:
-            lc = self.config.improvement_loops
+            loop_cfg = self.config.improvement_loops
             self._loop_controller = LoopController(
                 max_iterations=self._capabilities.loop_iterations,
-                convergence_threshold=lc.convergence_threshold, plateau_threshold=lc.plateau_threshold,
+                convergence_threshold=loop_cfg.convergence_threshold, plateau_threshold=loop_cfg.plateau_threshold,
             )
         self._gate_pipeline: GatePipeline | None = None
         if self._capabilities and self._capabilities.gates_enabled:
@@ -368,6 +368,8 @@ class Orchestrator:
         init = (sum(1 for r in gr if r.result == GateResult.PASS) / len(gr)) if gr else score(0)
         if init >= 1.0:
             return
+        if self._loop_controller is None:
+            return
         s = self._loop_controller.run(score, initial_score=init)
         self.state.append_event("loop_completed", {
             "level": level, "status": s.status.value,
@@ -382,7 +384,7 @@ class Orchestrator:
         self._level_coord.set_recoverable_error(error)
         self._paused = True
 
-    def _prepare_start(self, task_graph_path: str | Path, worker_count: int) -> WorkerAssignment:
+    def _prepare_start(self, task_graph_path: str | Path, worker_count: int) -> WorkerAssignments:
         self.parser.parse(task_graph_path)
         tasks = self.parser.get_all_tasks()
         self.levels.initialize(tasks)
@@ -615,7 +617,7 @@ class Orchestrator:
     def verify_with_retry(self, task_id: str, command: str, timeout: int = 60, max_retries: int | None = None) -> bool:
         return self._retry_manager.verify_with_retry(task_id, command, timeout, max_retries)
 
-    def generate_task_contexts(self, task_graph: dict) -> dict:
+    def generate_task_contexts(self, task_graph: dict[str, Any]) -> dict[str, str]:
         contexts: dict[str, str] = {}
         feat = task_graph.get("feature", "")
         for task in task_graph.get("tasks", []):

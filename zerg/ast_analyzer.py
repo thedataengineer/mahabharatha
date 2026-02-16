@@ -216,8 +216,8 @@ class ASTAnalyzer:
 
     def _get_attribute_name(self, node: ast.Attribute) -> str:
         """Get full dotted name from Attribute node."""
-        parts = []
-        current = node
+        parts: list[str] = []
+        current: ast.expr = node
         while isinstance(current, ast.Attribute):
             parts.append(current.attr)
             current = current.value
@@ -355,7 +355,7 @@ class ASTAnalyzer:
                     docstring_style = patterns.docstring_style
 
         # Deduplicate imports
-        seen_imports: set[str] = set()
+        seen_imports: set[tuple[str, tuple[str, ...], bool]] = set()
         unique_imports: list[ImportPattern] = []
         for imp in all_imports:
             key = (imp.module, tuple(imp.names), imp.is_from_import)

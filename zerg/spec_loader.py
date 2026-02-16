@@ -5,7 +5,7 @@ for injection into worker prompts.
 """
 
 from pathlib import Path
-from typing import NamedTuple
+from typing import Any, NamedTuple
 
 from zerg.constants import GSD_DIR
 from zerg.logging import get_logger
@@ -199,7 +199,7 @@ class SpecLoader:
 
     def format_task_context(
         self,
-        task: dict,
+        task: dict[str, Any],
         feature: str,
         max_tokens: int = 1000,
     ) -> str:
@@ -246,7 +246,7 @@ class SpecLoader:
 
         return "\n\n".join(parts) if parts else ""
 
-    def _extract_task_keywords(self, task: dict) -> set[str]:
+    def _extract_task_keywords(self, task: dict[str, Any]) -> set[str]:
         """Extract keywords from task title, description, and file paths.
 
         Args:

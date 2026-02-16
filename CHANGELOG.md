@@ -7,8 +7,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-02-15
+
+### Fixed
+
+- **Security**: Replaced regex-based HTML stripping with `html.escape()` in PR body sanitization (CWE-79)
+- **Security**: Changed temp script permissions from `0o755` to `0o700` for owner-only access (CWE-732)
+- **Security**: Sanitize PR title at output boundary for defense-in-depth consistency (CWE-79)
+- **Security**: Eliminate temp file permission race window via `mkstemp`+`fchmod` (CWE-377)
+- **Security**: Added `shlex.quote()` to `GIT_SEQUENCE_EDITOR` temp script paths for shell safety (CWE-78)
+- **PR Engine**: Fixed double-sanitization of PR body content — angle brackets and ampersands now render correctly
+- **CodeQL**: Resolved all 115 open alerts (98 fixes + 17 documented false positives)
+- **Plan command**: Fixed `/z:plan` WORKFLOW BOUNDARY to allow spec file generation
+
+## [0.3.1] - 2026-02-15
+
 ### Added
 
+- Consolidated security engine with 15 capability areas in `zerg/security/` package
+- Security integrated as Stage 3 in `/z:review` (Spec → Quality → Security)
+- `--no-security` flag for `/z:review` to skip security scanning
+- CVE dependency scanning with osv.dev API and heuristic fallback
+- `SecurityResult` and `SecurityFinding` structured return types
+
+## [0.2.3] - 2026-02-14
+
+### Fixed
+
+- `/z:plan` and `/z:brainstorm` proactively entering Claude Code plan mode — added explicit `EnterPlanMode`/`ExitPlanMode` prohibition to workflow boundary
+- Missing Phase 5.5 post-approval handoff in `/z:plan` — restored `AskUserQuestion` with 'Clear context, then /z:design' option
+
+### Changed
+
+- `/z:plan` now accepts `--issue N` or `#N` flag to load a GitHub issue as brainstorm context, reducing redundant Phase 2 questions
+- `/z:brainstorm` Phase 4 handoff now includes the top issue number in the suggested `/z:plan` command
+
+## [0.2.2] - 2026-02-13
+
+### Fixed
+
+- `/z:plan` jumping to implementation instead of stopping — removed `EnterPlanMode`/`ExitPlanMode` tools whose built-in "plan → implement" semantics overrode text-based stop guards
+- Same skip-to-implement behavior in `/z:brainstorm` — removed plan mode wrapping, commands now use direct exploration tools
+- Stale "Enter Plan Mode" references in `plan.core.md` Phase 0 validation
+
+## [0.2.1] - 2026-02-11
+
+### Added
+
+- `ZERG_FEATURE` environment variable for terminal-scoped feature isolation in multi-epic workflows
+- Advisory lockfile system (`.gsd/specs/{feature}/.lock`) to warn about concurrent sessions on the same feature
+- `AskUserQuestion` structured approval gate in `/z:plan` to prevent auto-continuation into design phase
+- Feature-scoped git ship action — `/z:git --action ship` now scopes PRs to the active feature's branches
 - Comprehensive unit tests for 19 under-covered modules, raising overall coverage from 77% to 83%
 - `.github/FUNDING.yml` for GitHub Sponsors (#191)
 - `.github/release.yml` for auto-categorized release notes (#191)
@@ -17,6 +66,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 26-command cheat sheet table, pipeline visualization, FAQ accordion, and copy-to-clipboard (#204)
 - Optimized web logo (`docs/assets/img/zerg-logo-web.png`, <200KB) and Open Graph social preview image (#204)
 - Simplified GitHub Pages deployment — direct `docs/` upload replaces MkDocs build (#205)
+
+### Fixed
+
+- Level-aware task claiming — workers can no longer claim tasks above the current orchestrator level
+- All 15 command pre-flights now read `ZERG_FEATURE` env var before `.gsd/.current-feature` file
+- TOCTOU race in advisory lockfile acquisition — now uses atomic file creation via `os.open` with `O_CREAT|O_EXCL`
+- Missing ownership check in lockfile release — now validates PID before deletion
+- Unprotected file reads in `detect_feature()` and lockfile functions — now resilient to OS/encoding errors
+- Path traversal vulnerability in feature name handling — now validates against directory escape
+- Unbounded PID/timestamp parsing in lockfile content — now bounds-checked with safe integer limits
 
 ### Changed
 
@@ -392,6 +451,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show human-friendly launcher mode and worker count in rush output
 - Audit skipped tests and convert unconditional skips to conditional skipif decorators
 
-[Unreleased]: https://github.com/rocklambros/zerg/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/rocklambros/zerg/compare/v0.2.3...HEAD
+[0.2.3]: https://github.com/rocklambros/zerg/compare/v0.2.2...v0.2.3
+[0.3.0]: https://github.com/rocklambros/zerg/compare/v0.2.1...v0.3.0
+[0.2.1]: https://github.com/rocklambros/zerg/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/rocklambros/zerg/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/rocklambros/zerg/releases/tag/v0.1.0

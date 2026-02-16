@@ -251,11 +251,12 @@ Automated code improvement and cleanup.
 
 ### /zerg:review
 
-Two-stage code review workflow.
+Three-stage code review workflow (Spec → Quality → Security).
 
 | Flag | Type | Default | Description |
 |------|------|---------|-------------|
 | `--mode` | string | full | Mode: `prepare`, `self`, `receive`, `full` |
+| `--no-security` | bool | false | Skip Stage 3 security scan |
 
 ### /zerg:security
 

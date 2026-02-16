@@ -43,7 +43,8 @@ try:
             JSON-encoded string (always str, never bytes).
         """
         option = _orjson.OPT_INDENT_2 if indent else 0
-        return _orjson.dumps(obj, option=option).decode()
+        result: str = _orjson.dumps(obj, option=option).decode()
+        return result
 
     def load(fp: IO[str] | IO[bytes]) -> Any:
         """Deserialize JSON from a file-like object.
@@ -71,7 +72,7 @@ except ImportError:
 
     HAS_ORJSON = False
 
-    def loads(data: str | bytes) -> Any:  # type: ignore[no-redef]
+    def loads(data: str | bytes) -> Any:
         """Parse a JSON string or bytes object.
 
         Args:
@@ -82,7 +83,7 @@ except ImportError:
         """
         return _json.loads(data)
 
-    def dumps(obj: Any, *, indent: bool = False) -> str:  # type: ignore[no-redef]
+    def dumps(obj: Any, *, indent: bool = False) -> str:
         """Serialize an object to a JSON string.
 
         Args:
@@ -94,7 +95,7 @@ except ImportError:
         """
         return _json.dumps(obj, indent=2 if indent else None)
 
-    def load(fp: IO[str] | IO[bytes]) -> Any:  # type: ignore[no-redef]
+    def load(fp: IO[str] | IO[bytes]) -> Any:
         """Deserialize JSON from a file-like object.
 
         Args:
@@ -105,7 +106,7 @@ except ImportError:
         """
         return _json.load(fp)
 
-    def dump(obj: Any, fp: IO[str], *, indent: bool = False) -> None:  # type: ignore[no-redef]
+    def dump(obj: Any, fp: IO[str], *, indent: bool = False) -> None:
         """Serialize an object as JSON into a file-like object.
 
         Args:

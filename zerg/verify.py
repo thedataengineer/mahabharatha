@@ -295,7 +295,7 @@ class VerificationExecutor:
         Returns:
             Path to stored artifact
         """
-        # Lazy import to avoid circular dependency with verification_gates
+        # CodeQL: cyclic import is deferred to call-time; no runtime cycle at import
         from zerg.verification_gates import ArtifactStore
 
         store = ArtifactStore(base_dir=artifact_dir)
@@ -319,7 +319,7 @@ class VerificationExecutor:
         Returns:
             True if latest result is fresh
         """
-        # Lazy import to avoid circular dependency with verification_gates
+        # CodeQL: cyclic import is deferred to call-time; no runtime cycle at import
         from zerg.verification_gates import ArtifactStore
 
         store = ArtifactStore(base_dir=artifact_dir)
@@ -353,7 +353,7 @@ class VerificationExecutor:
             config = VerificationTiersConfig()
 
         tiered = VerificationTiers(config=config, default_timeout=self.default_timeout)
-        result = tiered.execute(task, cwd=str(cwd) if cwd else None, env=env)
+        result = tiered.execute(dict(task), cwd=str(cwd) if cwd else None, env=env)
 
         # Record tier results as standard verification results for compatibility
         for tier in result.tiers:

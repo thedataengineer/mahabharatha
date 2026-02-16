@@ -200,7 +200,7 @@ class ContextTracker:
         """
         return max(0, total_budget - used_tokens)
 
-    def context_budget_summary(self, tasks: list[dict], total_budget: int) -> dict:
+    def context_budget_summary(self, tasks: list[dict[str, Any]], total_budget: int) -> dict[str, Any]:
         """Generate budget summary for all tasks.
 
         Args:

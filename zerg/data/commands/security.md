@@ -2,6 +2,12 @@
 
 Security review, vulnerability scanning, secure coding rules, and hardening recommendations.
 
+## Shared Engine
+
+`/zerg:security` and `/zerg:review` (Stage 3) share the same consolidated security engine via `run_security_scan()` from the `zerg/security/` package. This package is the single source of truth for all security scanning logic. It covers 15 capability areas: secrets detection, injection patterns, crypto misuse, CVE dependency scanning, authentication flaws, access control issues, SSRF patterns, deserialization risks, path traversal, XSS, error handling, logging gaps, hardcoded credentials, insecure configuration, and sensitive data exposure.
+
+The engine returns structured `SecurityResult` and `SecurityFinding` types for programmatic consumption.
+
 ## Usage
 
 ```bash

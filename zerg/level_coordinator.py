@@ -40,6 +40,7 @@ from zerg.types import GateRunResult
 from zerg.worker_registry import WorkerRegistry
 
 if TYPE_CHECKING:
+    # CodeQL: cyclic import is compile-time only; no runtime cycle
     from zerg.backpressure import BackpressureController
 
 logger = get_logger("level_coordinator")
@@ -531,7 +532,8 @@ class GatePipeline:
             return None
         try:
             with open(artifact_path) as f:
-                return json.load(f)
+                result: dict[str, Any] = json.load(f)
+                return result
         except (json.JSONDecodeError, OSError) as exc:
             logger.warning("Failed to load cached artifact for '%s': %s", gate_name, exc)
             return None
@@ -547,9 +549,9 @@ class GatePipeline:
         """
         import time as _time
 
-        timestamp = cached.get("timestamp", 0)
+        timestamp: float = cached.get("timestamp", 0)
         age = _time.time() - timestamp
-        return age > self._staleness_threshold
+        return bool(age > self._staleness_threshold)
 
     def _restore_result(self, cached: dict[str, Any], gate: QualityGate) -> GateRunResult:
         """Reconstruct a GateRunResult from a cached artifact.

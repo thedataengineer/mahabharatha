@@ -57,7 +57,7 @@ class TieredVerificationResult:
 
 
 # Default tier definitions
-TIER_DEFINITIONS = [
+TIER_DEFINITIONS: list[dict[str, int | str]] = [
     {"tier": 1, "name": "syntax", "config_blocking": "tier1_blocking", "config_command": "tier1_command"},
     {"tier": 2, "name": "correctness", "config_blocking": "tier2_blocking", "config_command": "tier2_command"},
     {"tier": 3, "name": "quality", "config_blocking": "tier3_blocking", "config_command": "tier3_command"},
@@ -82,7 +82,7 @@ class VerificationTiers:
 
     def execute(
         self,
-        task: dict,
+        task: dict[str, Any],
         cwd: str | None = None,
         env: dict[str, str] | None = None,
     ) -> TieredVerificationResult:
@@ -102,9 +102,9 @@ class VerificationTiers:
         tier_commands = self._resolve_tier_commands(task_cmd)
 
         for tier_def in TIER_DEFINITIONS:
-            tier_num = tier_def["tier"]
-            tier_name = tier_def["name"]
-            blocking = getattr(self._config, tier_def["config_blocking"])
+            tier_num = int(tier_def["tier"])
+            tier_name = str(tier_def["name"])
+            blocking = getattr(self._config, str(tier_def["config_blocking"]))
             command = tier_commands.get(tier_num)
 
             if not command:

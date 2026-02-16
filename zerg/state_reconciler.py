@@ -365,7 +365,7 @@ class StateReconciler:
                     self._state.set_task_status(
                         task_id,
                         TaskStatus.FAILED.value,
-                        error_message="worker_crash",
+                        error="worker_crash",
                     )
                     self._levels.mark_task_failed(task_id, error=f"Worker {worker_id} crashed/stopped")
 

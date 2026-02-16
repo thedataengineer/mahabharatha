@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from zerg.logging import get_logger
 from zerg.rules.loader import Rule, RuleLoader, RulePriority
 
@@ -29,7 +31,7 @@ class RuleInjector:
         """
         self._loader = loader or RuleLoader()
 
-    def inject_rules(self, task: dict, max_tokens: int = 800) -> str:
+    def inject_rules(self, task: dict[str, Any], max_tokens: int = 800) -> str:
         """Generate a markdown rules section filtered by a task's file types.
 
         Extracts file paths from the task dict (``files.create`` and
@@ -119,7 +121,7 @@ class RuleInjector:
         return "\n".join(lines)
 
     @staticmethod
-    def _extract_file_paths(task: dict) -> list[str]:
+    def _extract_file_paths(task: dict[str, Any]) -> list[str]:
         """Extract file paths from a task dictionary."""
         files_section = task.get("files", {})
         result: list[str] = []

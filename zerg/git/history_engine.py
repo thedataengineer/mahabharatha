@@ -9,9 +9,10 @@ from __future__ import annotations
 
 import os
 import re
+import shlex
 import tempfile
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from zerg.exceptions import GitError
 from zerg.git.commit_engine import COMMIT_TYPE_PATTERNS
@@ -29,9 +30,6 @@ _BRANCH_NAME_RE = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9._/-]*$")
 
 # Conventional commit prefix pattern
 _CONVENTIONAL_RE = re.compile(r"^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)" r"(\(.+\))?:\s+.+")
-
-# Small commit threshold (lines changed)
-_SMALL_COMMIT_LINES = 5
 
 # Time window for grouping small commits (seconds)
 _SMALL_COMMIT_WINDOW = timedelta(hours=1)
@@ -369,7 +367,7 @@ class HistoryAnalyzer:
 class RewritePlanner:
     """Creates a rewrite plan without executing."""
 
-    def plan_squash(self, groups: list[list[CommitInfo]]) -> list[dict]:
+    def plan_squash(self, groups: list[list[CommitInfo]]) -> list[dict[str, Any]]:
         """Plan squash operations for commit groups.
 
         Args:
@@ -378,7 +376,7 @@ class RewritePlanner:
         Returns:
             List of squash plan dicts with action, commits, message.
         """
-        plans: list[dict] = []
+        plans: list[dict[str, Any]] = []
 
         for group in groups:
             if not group:
@@ -415,7 +413,7 @@ class RewritePlanner:
 
         return ordered
 
-    def plan_rewrite_messages(self, commits: list[CommitInfo]) -> list[dict]:
+    def plan_rewrite_messages(self, commits: list[CommitInfo]) -> list[dict[str, Any]]:
         """Plan message rewrites for non-conventional commits.
 
         Args:
@@ -424,7 +422,7 @@ class RewritePlanner:
         Returns:
             List of rewrite plan dicts with sha, old, new.
         """
-        rewrites: list[dict] = []
+        rewrites: list[dict[str, Any]] = []
 
         for c in commits:
             if _CONVENTIONAL_RE.match(c.message):
@@ -513,7 +511,7 @@ class SafeRewriter:
         logger.info("Created cleaned branch: %s", new_name)
         return new_name
 
-    def execute_squash(self, plan: list[dict], base: str = "main") -> bool:
+    def execute_squash(self, plan: list[dict[str, Any]], base: str = "main") -> bool:
         """Execute squash operations using GIT_SEQUENCE_EDITOR.
 
         Writes a script that modifies the rebase todo list, then runs
@@ -545,13 +543,9 @@ class SafeRewriter:
 
         # Create a script that replaces "pick <sha>" with "squash <sha>"
         try:
-            with tempfile.NamedTemporaryFile(
-                mode="w",
-                suffix=".py",
-                delete=False,
-                prefix="zerg_rebase_",
-            ) as script_file:
-                script_path = script_file.name
+            fd, script_path = tempfile.mkstemp(suffix=".py", prefix="zerg_rebase_")
+            os.fchmod(fd, 0o700)
+            with os.fdopen(fd, "w") as script_file:
                 # Write a Python script that modifies the todo file
                 script_file.write("#!/usr/bin/env python3\n")
                 script_file.write("import sys\n")
@@ -569,11 +563,9 @@ class SafeRewriter:
                 script_file.write("with open(todo_file, 'w') as f:\n")
                 script_file.write("    f.writelines(new_lines)\n")
 
-            os.chmod(script_path, 0o755)
-
             # Set GIT_SEQUENCE_EDITOR and run rebase
             env = os.environ.copy()
-            env["GIT_SEQUENCE_EDITOR"] = f"python3 {script_path}"
+            env["GIT_SEQUENCE_EDITOR"] = f"python3 {shlex.quote(script_path)}"
 
             import subprocess  # noqa: PLC0415
 
@@ -611,7 +603,7 @@ class SafeRewriter:
             try:
                 os.unlink(script_path)
             except (OSError, UnboundLocalError):
-                pass
+                pass  # Best-effort temp file cleanup
 
     def execute_reorder(self, ordered_shas: list[str], base: str = "main") -> bool:
         """Execute commit reordering using GIT_SEQUENCE_EDITOR.
@@ -632,13 +624,9 @@ class SafeRewriter:
         short_shas = [sha[:7] for sha in ordered_shas]
 
         try:
-            with tempfile.NamedTemporaryFile(
-                mode="w",
-                suffix=".py",
-                delete=False,
-                prefix="zerg_reorder_",
-            ) as script_file:
-                script_path = script_file.name
+            fd, script_path = tempfile.mkstemp(suffix=".py", prefix="zerg_reorder_")
+            os.fchmod(fd, 0o700)
+            with os.fdopen(fd, "w") as script_file:
                 script_file.write("#!/usr/bin/env python3\n")
                 script_file.write("import sys\n")
                 script_file.write("todo_file = sys.argv[1]\n")
@@ -661,10 +649,8 @@ class SafeRewriter:
                 script_file.write("with open(todo_file, 'w') as f:\n")
                 script_file.write("    f.writelines(new_lines)\n")
 
-            os.chmod(script_path, 0o755)
-
             env = os.environ.copy()
-            env["GIT_SEQUENCE_EDITOR"] = f"python3 {script_path}"
+            env["GIT_SEQUENCE_EDITOR"] = f"python3 {shlex.quote(script_path)}"
 
             import subprocess  # noqa: PLC0415
 
@@ -700,9 +686,9 @@ class SafeRewriter:
             try:
                 os.unlink(script_path)
             except (OSError, UnboundLocalError):
-                pass
+                pass  # Best-effort temp file cleanup
 
-    def preview(self, plan: list[dict] | dict) -> str:
+    def preview(self, plan: list[dict[str, Any]] | dict[str, Any]) -> str:
         """Return a human-readable preview of what would change.
 
         Args:

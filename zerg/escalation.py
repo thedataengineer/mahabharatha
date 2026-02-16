@@ -35,7 +35,7 @@ class Escalation:
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, data: dict) -> Escalation:
+    def from_dict(cls, data: dict[str, Any]) -> Escalation:
         return cls(
             worker_id=data["worker_id"],
             task_id=data["task_id"],
@@ -89,17 +89,18 @@ class EscalationWriter:
         )
         return esc
 
-    def _read_existing(self) -> list[dict]:
+    def _read_existing(self) -> list[dict[str, Any]]:
         path = self.escalation_path
         if not path.exists():
             return []
         try:
             data = json.loads(path.read_text())
-            return data.get("escalations", [])
+            result: list[dict[str, Any]] = data.get("escalations", [])
+            return result
         except (json.JSONDecodeError, OSError):
             return []
 
-    def _atomic_write(self, escalations: list[dict]) -> None:
+    def _atomic_write(self, escalations: list[dict[str, Any]]) -> None:
         target = self.escalation_path
         try:
             fd, tmp_path = tempfile.mkstemp(dir=str(self._state_dir), suffix=".tmp")

@@ -2,6 +2,9 @@
 
 This module provides intelligent fetching of security rules based on
 detected project languages and frameworks.
+
+Migrated from zerg/security_rules.py — complete copy of all functions,
+classes, and constants.
 """
 
 import json
@@ -349,7 +352,7 @@ def _detect_js_frameworks(project_path: Path, stack: ProjectStack) -> None:
                     elif lang == "database":
                         stack.databases.add(framework)
     except (json.JSONDecodeError, OSError):
-        pass
+        pass  # Config file not found or malformed
 
 
 def _detect_go_frameworks(project_path: Path, stack: ProjectStack) -> None:

@@ -22,10 +22,7 @@ FEATURE="$ARGUMENTS"
 
 # If no explicit feature, detect from state
 if [ -z "$FEATURE" ]; then
-  # Check .gsd/.current-feature
-  if [ -f ".gsd/.current-feature" ]; then
-    FEATURE=$(cat .gsd/.current-feature)
-  fi
+  FEATURE=${ZERG_FEATURE:-$(cat .gsd/.current-feature 2>/dev/null)}
 fi
 
 # Verify .zerg/ directory exists

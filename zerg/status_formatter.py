@@ -124,7 +124,7 @@ def format_health_table(
         task_id = hb.get("task_id") or "-"
         step = hb.get("step") or "unknown"
         progress_pct = hb.get("progress_pct", 0)
-        restarts = _count_restarts(progress_data, worker_id)
+        restarts = _count_restarts(progress_data, int(worker_id))
 
         cells = [
             str(worker_id),
@@ -253,7 +253,7 @@ def format_token_table(worker_tokens: dict[str, Any] | None) -> str:
     grand_total = 0
     grand_tasks = 0
 
-    for wid in sorted(worker_tokens.keys(), key=lambda k: str(k)):
+    for wid in sorted(worker_tokens.keys(), key=str):
         wdata = worker_tokens[wid]
         w_tokens = int(wdata.get("total_tokens", 0))
         w_tasks = int(wdata.get("tasks_completed", 0))

@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 from zerg.token_tracker import TokenTracker
 
@@ -29,8 +30,8 @@ class AggregateResult:
     total_tokens: int = 0
     total_tasks: int = 0
     tokens_per_task: float = 0.0
-    per_worker: dict = field(default_factory=dict)
-    breakdown_totals: dict = field(default_factory=dict)
+    per_worker: dict[str, Any] = field(default_factory=dict)
+    breakdown_totals: dict[str, int] = field(default_factory=dict)
 
 
 @dataclass
@@ -41,7 +42,7 @@ class SavingsResult:
     full_spec_baseline_tokens: int = 0
     tokens_saved: int = 0
     savings_pct: float = 0.0
-    breakdown: dict = field(default_factory=dict)
+    breakdown: dict[str, Any] = field(default_factory=dict)
 
 
 class TokenAggregator:
@@ -63,8 +64,8 @@ class TokenAggregator:
 
             total_tokens = 0
             total_tasks = 0
-            per_worker: dict = {}
-            breakdown_totals: dict = {k: 0 for k in BREAKDOWN_KEYS}
+            per_worker: dict[str, Any] = {}
+            breakdown_totals: dict[str, int] = {k: 0 for k in BREAKDOWN_KEYS}
 
             for wid, wdata in all_data.items():
                 cum = wdata.get("cumulative", {})
@@ -118,7 +119,7 @@ class TokenAggregator:
 
             # Per-component savings (estimate each component at same ratio)
             bd = agg.breakdown_totals
-            component_breakdown: dict = {}
+            component_breakdown: dict[str, Any] = {}
             for key, val in bd.items():
                 est_full = (
                     int(val * _DEFAULT_BASELINE_MULTIPLIER)

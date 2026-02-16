@@ -455,7 +455,7 @@ def _build_map_impl(root: Path, languages: list[str]) -> SymbolGraph:
         ext_to_lang[".tsx"] = "typescript"
 
     # Single traversal via collect_files instead of per-extension rglob calls
-    grouped = collect_files(root, extensions=desired_exts, exclude_dirs=_SKIP_DIRS)
+    grouped = collect_files(root, extensions=desired_exts, exclude_dirs=set(_SKIP_DIRS))
 
     for ext, file_list in grouped.items():
         for filepath in file_list:
@@ -499,7 +499,7 @@ def _collect_files(root: Path, languages: list[str]) -> list[Path]:
         exts.update(_LANG_EXTENSIONS.get(lang, []))
 
     # Single traversal via fs_utils
-    grouped = collect_files(root, extensions=exts, exclude_dirs=_SKIP_DIRS)
+    grouped = collect_files(root, extensions=exts, exclude_dirs=set(_SKIP_DIRS))
 
     # Flatten the grouped dict into a single sorted list
     result: list[Path] = []
@@ -553,7 +553,8 @@ class IncrementalIndex:
             raw = self._index_path.read_text(encoding="utf-8")
             payload = json.loads(raw)
             self._last_updated = payload.get("_meta", {}).get("last_updated")
-            return payload.get("files", {})
+            files: dict[str, dict[str, Any]] = payload.get("files", {})
+            return files
         except (json.JSONDecodeError, OSError, KeyError):
             logger.warning("Corrupt repo index at %s — rebuilding", self._index_path)
             return {}
@@ -580,7 +581,7 @@ class IncrementalIndex:
             try:
                 os.unlink(tmp_path)
             except OSError:
-                pass
+                pass  # Best-effort file cleanup
         self._last_updated = now
 
     # -- public API ----------------------------------------------------------

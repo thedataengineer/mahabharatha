@@ -6,7 +6,7 @@ from pathlib import Path
 import click
 
 from zerg.logging import get_logger
-from zerg.security_rules import (
+from zerg.security.rules import (
     detect_project_stack,
     fetch_rules,
     get_required_rules,

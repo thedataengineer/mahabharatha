@@ -508,7 +508,7 @@ def validate_module_wiring(
             py_file.resolve().relative_to(tests_dir)
             continue  # Inside tests dir, skip
         except ValueError:
-            pass
+            pass  # File not under tests_dir; include as production
         production_files.append(py_file)
 
     # Read production file contents once for import scanning
@@ -682,7 +682,7 @@ class ScaffoldGenerator:
         self,
         name: str,
         description: str = "",
-        flags: list[dict] | None = None,
+        flags: list[dict[str, str]] | None = None,
     ) -> Path:
         """Generate command file from template.
 
@@ -744,7 +744,7 @@ class ScaffoldGenerator:
 
         return output_path
 
-    def _generate_flags_table(self, flags: list[dict]) -> str:
+    def _generate_flags_table(self, flags: list[dict[str, str]]) -> str:
         """Generate markdown table for flags.
 
         Args:
@@ -777,8 +777,6 @@ class ScaffoldGenerator:
             Content with replaced flags section
         """
         # Find the Arguments section and replace the table
-        import re
-
         # Pattern to match the Arguments section table
         pattern = r"(## Arguments\n\n)\|[^\n]+\n\|[^\n]+\n(\|[^\n]+\n)+"
         replacement = f"\\1{flags_table}\n"

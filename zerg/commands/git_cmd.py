@@ -10,6 +10,7 @@ from rich.panel import Panel
 from rich.prompt import Confirm, Prompt
 from rich.table import Table
 
+from zerg.constants import GateResult
 from zerg.exceptions import GitError, MergeConflictError
 from zerg.git_ops import GitOps
 from zerg.logging import get_logger
@@ -227,7 +228,7 @@ def action_sync(git: GitOps, base: str) -> int:
             git._run("pull", "--rebase", check=False)
             console.print("  [green]\u2713[/green] Pulled latest changes")
         except GitError:
-            pass
+            pass  # Best-effort git cleanup
 
         # Rebase onto base if different
         if current != base:
@@ -239,7 +240,7 @@ def action_sync(git: GitOps, base: str) -> int:
                 console.print("  [red]Rebase conflict[/red]")
                 return 1
             except GitError:
-                pass
+                pass  # Best-effort git cleanup
 
         console.print("\n[green]\u2713[/green] Branch is up to date")
         return 0
@@ -486,9 +487,10 @@ def action_ship(git: GitOps, base: str, draft: bool, reviewer: str | None, no_me
     use_zerg_merge = feature is not None and config.rush.gates_at_ship_only
 
     if use_zerg_merge:
+        assert feature is not None  # guaranteed by use_zerg_merge condition
         console.print("[dim]Using ZERG merge coordinator with quality gates...[/dim]")
         try:
-            merger = MergeCoordinator(feature, git, config)
+            merger = MergeCoordinator(feature, config=config)
 
             # Run full merge with gates enabled
             result = merger.full_merge_flow(
@@ -502,7 +504,7 @@ def action_ship(git: GitOps, base: str, draft: bool, reviewer: str | None, no_me
                 console.print(f"[red]ZERG merge failed:[/red] {result.error}")
                 if result.gate_results:
                     for gr in result.gate_results:
-                        if not gr.passed:
+                        if gr.result != GateResult.PASS:
                             console.print(f"  [red]\u2717[/red] Gate '{gr.gate_name}' failed")
                 return 1
 

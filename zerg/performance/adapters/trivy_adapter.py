@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import logging
 import subprocess
+from typing import Any
 
 from zerg.performance.adapters.base import BaseToolAdapter
 from zerg.performance.types import DetectedStack, PerformanceFinding, Severity
@@ -88,7 +89,7 @@ class TrivyAdapter(BaseToolAdapter):
     # Parsers
     # ------------------------------------------------------------------
 
-    def _parse_vulnerabilities(self, entry: dict, target: str) -> list[PerformanceFinding]:
+    def _parse_vulnerabilities(self, entry: dict[str, Any], target: str) -> list[PerformanceFinding]:
         """Extract vulnerability findings from a single result entry."""
         vulns = entry.get("Vulnerabilities")
         if not isinstance(vulns, list):
@@ -104,7 +105,7 @@ class TrivyAdapter(BaseToolAdapter):
             pkg = vuln.get("PkgName", "")
             installed = vuln.get("InstalledVersion", "")
             fixed = vuln.get("FixedVersion", "")
-            title = vuln.get("Title", vuln_id)
+            title = vuln.get("Title", vuln_id) or ""
 
             suggestion = f"Upgrade {pkg} from {installed}" if pkg else ""
             if fixed:
@@ -126,7 +127,7 @@ class TrivyAdapter(BaseToolAdapter):
             )
         return findings
 
-    def _parse_secrets(self, entry: dict, target: str) -> list[PerformanceFinding]:
+    def _parse_secrets(self, entry: dict[str, Any], target: str) -> list[PerformanceFinding]:
         """Extract secret findings from a single result entry."""
         secrets = entry.get("Secrets")
         if not isinstance(secrets, list):
@@ -157,7 +158,7 @@ class TrivyAdapter(BaseToolAdapter):
             )
         return findings
 
-    def _parse_misconfigurations(self, entry: dict, target: str) -> list[PerformanceFinding]:
+    def _parse_misconfigurations(self, entry: dict[str, Any], target: str) -> list[PerformanceFinding]:
         """Extract misconfiguration findings from a single result entry."""
         misconfigs = entry.get("Misconfigurations")
         if not isinstance(misconfigs, list):

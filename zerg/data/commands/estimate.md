@@ -24,7 +24,7 @@ FEATURE=$(echo "$FEATURE" | sed 's/--[a-z-]*\s*[^ ]*//' | xargs)
 
 # If no explicit feature, detect from state
 if [ -z "$FEATURE" ]; then
-  FEATURE=$(cat .gsd/.current-feature 2>/dev/null)
+  FEATURE=${ZERG_FEATURE:-$(cat .gsd/.current-feature 2>/dev/null)}
 fi
 
 if [ -z "$FEATURE" ]; then

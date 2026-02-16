@@ -5,13 +5,23 @@ Launch parallel workers to execute the task graph.
 ## Pre-Flight
 
 ```bash
-FEATURE=$(cat .gsd/.current-feature 2>/dev/null)
+FEATURE=${ZERG_FEATURE:-$(cat .gsd/.current-feature 2>/dev/null)}
 TASK_LIST=${CLAUDE_CODE_TASK_LIST_ID:-$FEATURE}
 SPEC_DIR=".gsd/specs/$FEATURE"
 
 # Validate prerequisites
 [ -z "$FEATURE" ] && { echo "ERROR: No active feature"; exit 1; }
 [ ! -f "$SPEC_DIR/task-graph.json" ] && { echo "ERROR: Task graph not found. Run /zerg:design first"; exit 1; }
+
+# Check advisory lockfile
+LOCK_FILE=".gsd/specs/$FEATURE/.lock"
+if [ -f "$LOCK_FILE" ]; then
+  LOCK_AGE=$(python3 -c "import time; t=float(open('$LOCK_FILE').read().split(':')[1]); print(int(time.time()-t))" 2>/dev/null)
+  if [ -n "$LOCK_AGE" ] && [ "$LOCK_AGE" -lt 7200 ]; then
+    echo "WARNING: Another session may be running this feature (lock age: ${LOCK_AGE}s)"
+    echo "Lock file: $LOCK_FILE"
+  fi
+fi
 
 # Load configuration
 WORKERS=${1:-5}  # Default 5 workers
@@ -358,4 +368,3 @@ Modes:
   container             Execute via Docker containers with git worktrees
   subprocess            Execute via local Python subprocesses
 ```
-

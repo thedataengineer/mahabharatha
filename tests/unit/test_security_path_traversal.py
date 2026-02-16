@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 import pytest
 
-from zerg.security import run_security_scan
+from zerg.security import SecurityResult, run_security_scan
 
 
 class TestFollowlinksExplicit:
@@ -14,7 +14,7 @@ class TestFollowlinksExplicit:
 
     def test_os_walk_called_with_followlinks_false(self, tmp_path):
         """os.walk should be called with followlinks=False."""
-        with patch("zerg.security.os.walk") as mock_walk:
+        with patch("zerg.security.scanner.os.walk") as mock_walk:
             # Make mock return empty to avoid further processing
             mock_walk.return_value = iter([])
             run_security_scan(tmp_path)
@@ -29,8 +29,8 @@ class TestSymlinkBoundaryCheck:
     def test_symlink_violations_key_in_results(self, tmp_path):
         """Results should contain symlink_violations key."""
         results = run_security_scan(tmp_path)
-        assert "symlink_violations" in results
-        assert isinstance(results["symlink_violations"], list)
+        assert isinstance(results, SecurityResult)
+        assert isinstance(results.findings, list)
 
     @pytest.mark.skipif(os.name == "nt", reason="Symlinks require admin on Windows")
     def test_symlink_outside_boundary_detected(self, tmp_path):
@@ -51,9 +51,7 @@ class TestSymlinkBoundaryCheck:
         # The symlink itself won't be followed, but if resolved it would escape
         # The implementation may or may not add this to violations depending on how resolve() works
         # Key assertion: no files from outside_dir should be in results
-        all_scanned_files = [
-            str(f["file"]) if isinstance(f, dict) else str(f) for f in results.get("secrets_found", [])
-        ]
+        all_scanned_files = [f.file for f in results.findings]
         assert str(outside_file) not in str(all_scanned_files)
 
     @pytest.mark.skipif(os.name == "nt", reason="Symlinks require admin on Windows")
@@ -76,7 +74,7 @@ class TestSymlinkBoundaryCheck:
         # The violation should be recorded
         # Note: os.walk with followlinks=False returns the symlink path itself
         # and when resolved, it points outside the boundary
-        assert len(results["symlink_violations"]) >= 1 or str(outside_file) not in str(results["secrets_found"])
+        assert str(outside_file) not in str([f.file for f in results.findings])
 
 
 class TestNormalFilesScanned:
@@ -91,8 +89,9 @@ class TestNormalFilesScanned:
         results = run_security_scan(tmp_path)
 
         # Verify file was scanned and secret was found
-        assert len(results["secrets_found"]) > 0
-        found_files = [str(s["file"]) for s in results["secrets_found"]]
+        secret_findings = [f for f in results.findings if f.category == "secret_detection"]
+        assert len(secret_findings) > 0
+        found_files = [f.file for f in secret_findings]
         assert any(str(test_file) in f for f in found_files)
 
     def test_nested_files_within_boundary_scanned(self, tmp_path):
@@ -106,8 +105,9 @@ class TestNormalFilesScanned:
         results = run_security_scan(tmp_path)
 
         # Verify nested file was scanned and secret was found
-        assert len(results["secrets_found"]) > 0
-        found_files = [str(s["file"]) for s in results["secrets_found"]]
+        secret_findings = [f for f in results.findings if f.category == "secret_detection"]
+        assert len(secret_findings) > 0
+        found_files = [f.file for f in secret_findings]
         assert any("settings.py" in f for f in found_files)
 
 
@@ -137,7 +137,7 @@ class TestPathResolutionErrors:
             results = run_security_scan(tmp_path)
 
         # Function should complete without error
-        assert "passed" in results
+        assert isinstance(results, SecurityResult)
 
     @pytest.mark.skipif(os.name == "nt", reason="Symlinks require admin on Windows")
     def test_no_exception_on_broken_symlink(self, tmp_path):
@@ -153,7 +153,7 @@ class TestPathResolutionErrors:
 
         # Should not raise an exception
         results = run_security_scan(tmp_path)
-        assert "passed" in results
+        assert isinstance(results, SecurityResult)
 
     def test_valueerror_handled_gracefully(self, tmp_path):
         """ValueError during path resolution should be handled gracefully."""
@@ -177,7 +177,7 @@ class TestPathResolutionErrors:
             results = run_security_scan(tmp_path)
 
         # Function should complete without error
-        assert "passed" in results
+        assert isinstance(results, SecurityResult)
 
 
 class TestSkippedDirectories:
@@ -193,7 +193,7 @@ class TestSkippedDirectories:
         results = run_security_scan(tmp_path)
 
         # The .git directory should be skipped entirely
-        found_files = [str(s["file"]) for s in results.get("secrets_found", [])]
+        found_files = [f.file for f in results.findings]
         assert not any(".git" in f for f in found_files)
 
     def test_pycache_directory_skipped(self, tmp_path):
@@ -206,5 +206,5 @@ class TestSkippedDirectories:
         results = run_security_scan(tmp_path)
 
         # The __pycache__ directory should be skipped entirely
-        found_files = [str(s["file"]) for s in results.get("secrets_found", [])]
+        found_files = [f.file for f in results.findings]
         assert not any("__pycache__" in f for f in found_files)

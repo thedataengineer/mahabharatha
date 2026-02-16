@@ -2,11 +2,11 @@
 
 Reduced from 90 to ~25 tests by:
 - Enum: 5 per-value -> 1 all-values assertion
-- ReviewResult: 10 -> 3 (both-pass, one-fail, error_count)
-- CodeAnalyzer: 15 -> 1 parametrized (print, todo, secret, long line, clean)
+- ReviewResult: 10 -> 4 (both-pass, one-fail, error_count, security_passed)
+- CodeAnalyzer: 15 -> 1 parametrized (print, todo, long line, clean) + hardcoded_secret removal check
 - ReviewCommand: 22 -> 5 (init, full, self, format json, format text)
 - CollectFiles: 9 -> 3 (git staged, file path, directory)
-- CLI: 12 -> 3 (help, full mode, keyboard interrupt)
+- CLI: 12 -> 4 (help, full mode, keyboard interrupt, generic exception)
 """
 
 from __future__ import annotations
@@ -103,13 +103,14 @@ class TestReviewItem:
 class TestReviewResult:
     """Tests for ReviewResult dataclass."""
 
-    def test_overall_passed_both_true(self) -> None:
-        """Test overall_passed when both stages pass."""
+    def test_overall_passed_all_three_true(self) -> None:
+        """Test overall_passed when all three stages pass."""
         result = ReviewResult(
             files_reviewed=5,
             items=[],
             spec_passed=True,
             quality_passed=True,
+            security_passed=True,
         )
         assert result.overall_passed is True
 
@@ -120,6 +121,29 @@ class TestReviewResult:
             items=[],
             spec_passed=False,
             quality_passed=True,
+            security_passed=True,
+        )
+        assert result.overall_passed is False
+
+    def test_security_passed_defaults_true(self) -> None:
+        """Test security_passed defaults to True when not specified."""
+        result = ReviewResult(
+            files_reviewed=1,
+            items=[],
+            spec_passed=True,
+            quality_passed=True,
+        )
+        assert result.security_passed is True
+        assert result.overall_passed is True
+
+    def test_security_passed_false_fails_overall(self) -> None:
+        """Test security_passed=False causes overall_passed=False."""
+        result = ReviewResult(
+            files_reviewed=1,
+            items=[],
+            spec_passed=True,
+            quality_passed=True,
+            security_passed=False,
         )
         assert result.overall_passed is False
 
@@ -168,7 +192,6 @@ class TestCodeAnalyzer:
         [
             ("print('debug')", "test.py", "debug_print", "warning"),
             ("# TODO: fix this", "test.py", "todo", "info"),
-            ("password = 'secret123'", "config.py", "hardcoded_secret", "error"),
             ("x = " + "a" * 150, "test.py", "long_line", "info"),
         ],
     )
@@ -188,6 +211,14 @@ class TestCodeAnalyzer:
         analyzer = CodeAnalyzer()
         items = analyzer.analyze("x = 1\ny = x + 1", "test.py")
         assert items == []
+
+    def test_no_hardcoded_secret_pattern(self) -> None:
+        """Verify CodeAnalyzer no longer has hardcoded_secret pattern.
+
+        Secret detection is handled by the security package (Stage 3).
+        """
+        analyzer = CodeAnalyzer()
+        assert "hardcoded_secret" not in analyzer.PATTERNS
 
 
 # =============================================================================
@@ -228,9 +259,11 @@ class TestReviewCommand:
         assert len(result.items) >= 1
 
     def test_format_result_json(self) -> None:
-        """Test format_result with JSON output."""
+        """Test format_result with JSON output including security section."""
         items = [ReviewItem(category="debug", severity="warning", file="test.py", line=1, message="Debug found")]
-        result = ReviewResult(files_reviewed=1, items=items, spec_passed=True, quality_passed=True)
+        result = ReviewResult(
+            files_reviewed=1, items=items, spec_passed=True, quality_passed=True, security_passed=True
+        )
 
         reviewer = ReviewCommand()
         output = reviewer.format_result(result, fmt="json")
@@ -239,6 +272,9 @@ class TestReviewCommand:
         assert parsed["files_reviewed"] == 1
         assert parsed["overall_passed"] is True
         assert len(parsed["items"]) == 1
+        # Security section present with skipped=True (no security_result provided)
+        assert "security" in parsed
+        assert parsed["security"]["security_passed"] is True
 
     def test_format_result_text_passed(self) -> None:
         """Test format_result with text output when passed."""
@@ -320,7 +356,9 @@ class TestReviewCLI:
         """Test review in full mode."""
         mock_collect.return_value = ["test.py"]
         mock_command = MagicMock()
-        mock_command.run.return_value = ReviewResult(files_reviewed=1, items=[], spec_passed=True, quality_passed=True)
+        mock_command.run.return_value = ReviewResult(
+            files_reviewed=1, items=[], spec_passed=True, quality_passed=True, security_passed=True
+        )
         mock_command.checklist.get_items.return_value = [("test", "Test item")]
         mock_command_class.return_value = mock_command
 

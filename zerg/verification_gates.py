@@ -93,7 +93,7 @@ class ArtifactStore:
         artifact_path.write_text(json.dumps(artifact_data, indent=2))
         return artifact_path
 
-    def get_latest(self, gate_name: str, task_id: str) -> dict | None:
+    def get_latest(self, gate_name: str, task_id: str) -> dict[str, Any] | None:
         """Get most recent artifact for a gate/task combo."""
         artifact_dir = self.base_dir / task_id / gate_name
         if not artifact_dir.exists():
@@ -101,7 +101,8 @@ class ArtifactStore:
         artifacts = sorted(artifact_dir.glob("*.json"), reverse=True)
         if not artifacts:
             return None
-        return json.loads(artifacts[0].read_text())
+        result: dict[str, Any] = json.loads(artifacts[0].read_text())
+        return result
 
     def is_fresh(self, gate_name: str, task_id: str, max_age_seconds: int = 300) -> bool:
         """Check if the latest artifact is still fresh."""

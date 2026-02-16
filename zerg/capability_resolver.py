@@ -184,7 +184,7 @@ class CapabilityResolver:
         if cli_depth != "standard":
             # CLI explicitly set a depth flag
             # Normalize think_hard -> think-hard for DepthTier enum
-            return cli_depth.replace("_", "-")
+            return str(cli_depth.replace("_", "-"))
 
         if not task_graph:
             return "standard"
