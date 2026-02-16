@@ -21,10 +21,11 @@ from zerg.constants import (
     TaskStatus,
     WorkerStatus,
 )
+from zerg.llm import ClaudeProvider, LLMProvider, LLMResponse, OllamaProvider
 from zerg.log_writer import TaskArtifactCapture
 from zerg.logging import get_logger
 from zerg.plugins import LifecycleEvent
-from zerg.protocol_types import CLAUDE_CLI_COMMAND, CLAUDE_CLI_DEFAULT_TIMEOUT, ClaudeInvocationResult
+from zerg.protocol_types import CLAUDE_CLI_DEFAULT_TIMEOUT
 from zerg.types import Task
 
 if TYPE_CHECKING:
@@ -98,6 +99,14 @@ class ProtocolHandler:
         self._structured_writer = structured_writer
         self._plugin_registry = plugin_registry
 
+        # Initialize LLM Provider based on config
+        if self.config.llm.provider == "ollama":
+            self.llm_provider: LLMProvider = OllamaProvider(
+                model=self.config.llm.model, hosts=self.config.llm.endpoints
+            )
+        else:
+            self.llm_provider = ClaudeProvider(worktree_path=self.worktree_path, worker_id=self.worker_id)
+
     def execute_task(
         self,
         task: Task,
@@ -158,29 +167,31 @@ class ProtocolHandler:
 
         success = False
         try:
-            # Step 1: Invoke Claude Code to implement the task
-            claude_result = self.invoke_claude_code(task)
+            # Step 1: Invoke LLM to implement the task
+            llm_result = self.invoke_llm(task)
 
-            # Capture Claude output
-            artifact.capture_claude_output(claude_result.stdout, claude_result.stderr)
+            # Capture LLM output
+            artifact.capture_claude_output(llm_result.stdout, llm_result.stderr)
             artifact.write_event(
                 {
-                    "event": "claude_invocation",
-                    "success": claude_result.success,
-                    "exit_code": claude_result.exit_code,
-                    "duration_ms": claude_result.duration_ms,
+                    "event": "llm_invocation",
+                    "provider": self.config.llm.provider,
+                    "success": llm_result.success,
+                    "exit_code": llm_result.exit_code,
+                    "duration_ms": llm_result.duration_ms,
                 }
             )
 
-            if not claude_result.success:
-                logger.error(f"Claude Code invocation failed for {task_id}")
+            if not llm_result.success:
+                logger.error(f"LLM invocation failed for {task_id} using {self.config.llm.provider}")
                 self.state.append_event(
                     "claude_failed",
                     {
                         "task_id": task_id,
                         "worker_id": self.worker_id,
-                        "exit_code": claude_result.exit_code,
-                        "stderr": claude_result.stderr[:500],
+                        "provider": self.config.llm.provider,
+                        "exit_code": llm_result.exit_code,
+                        "stderr": llm_result.stderr[:500],
                     },
                 )
                 if self._structured_writer:
@@ -287,108 +298,56 @@ class ProtocolHandler:
         self,
         task: Task,
         timeout: int | None = None,
-    ) -> ClaudeInvocationResult:
-        """Invoke Claude Code CLI to implement a task.
+    ) -> Any:
+        """Invoke Claude Code CLI (legacy name for backward compatibility)."""
+        return self.invoke_llm(task, timeout)
 
-        Builds a prompt from the task specification and runs Claude Code
-        in non-interactive mode with --print flag.
+    def invoke_llm(
+        self,
+        task: Task,
+        timeout: int | None = None,
+    ) -> Any:
+        """Invoke the configured LLM provider to implement a task.
 
         Args:
             task: Task to implement.
-            timeout: Timeout in seconds (default: CLAUDE_CLI_DEFAULT_TIMEOUT).
+            timeout: Timeout in seconds.
 
         Returns:
-            ClaudeInvocationResult with success status and output.
+            LLMResponse or similar with success status and output.
         """
         task_id = task["id"]
-        timeout = timeout or CLAUDE_CLI_DEFAULT_TIMEOUT
+        timeout = timeout or self.config.llm.timeout or CLAUDE_CLI_DEFAULT_TIMEOUT
 
         # Build the prompt from task specification
         prompt = self._build_task_prompt(task)
 
-        # Build command - use --print for non-interactive execution
-        # --dangerously-skip-permissions allows tool execution in automated mode
-        cmd = [
-            CLAUDE_CLI_COMMAND,
-            "--print",
-            "--dangerously-skip-permissions",
-            prompt,
-        ]
+        logger.info(f"Invoking {self.config.llm.provider} for task {task_id}")
 
-        logger.info(f"Invoking Claude Code for task {task_id}")
-        logger.debug(f"Prompt: {prompt[:200]}...")
+        # Resource-aware queuing: Acquire a slot before invoking LLM
+        resource_id = f"llm_{self.config.llm.provider}"
+        max_slots = self.config.llm.max_concurrency
 
-        start_time = time.time()
+        # Critical Path Prioritization: reserved for future integration with task graph
+        priority = 1
+
+        acquired = self.state.acquire_resource_slot(
+            resource_id, max_slots, self.worker_id, priority=priority, timeout=timeout or 600
+        )
+
+        if not acquired:
+            return LLMResponse(
+                success=False,
+                stdout="",
+                stderr=f"Resource timeout: Failed to acquire {resource_id} slot (max={max_slots})",
+                exit_code=-1,
+                duration_ms=0,
+            )
 
         try:
-            result = subprocess.run(
-                cmd,
-                cwd=str(self.worktree_path),
-                capture_output=True,
-                text=True,
-                timeout=timeout,
-                env={
-                    **os.environ,
-                    "ZERG_TASK_ID": task_id,
-                    "ZERG_WORKER_ID": str(self.worker_id),
-                },
-            )
-
-            duration_ms = int((time.time() - start_time) * 1000)
-            invocation_success = result.returncode == 0
-
-            if invocation_success:
-                logger.info(f"Claude Code completed for {task_id} ({duration_ms}ms)")
-            else:
-                logger.warning(f"Claude Code failed for {task_id} (exit {result.returncode})")
-
-            return ClaudeInvocationResult(
-                success=invocation_success,
-                exit_code=result.returncode,
-                stdout=result.stdout,
-                stderr=result.stderr,
-                duration_ms=duration_ms,
-                task_id=task_id,
-            )
-
-        except subprocess.TimeoutExpired:
-            duration_ms = int((time.time() - start_time) * 1000)
-            logger.error(f"Claude Code timed out for {task_id} after {timeout}s")
-
-            return ClaudeInvocationResult(
-                success=False,
-                exit_code=-1,
-                stdout="",
-                stderr=f"Claude Code invocation timed out after {timeout}s",
-                duration_ms=duration_ms,
-                task_id=task_id,
-            )
-
-        except FileNotFoundError:
-            duration_ms = int((time.time() - start_time) * 1000)
-            logger.error(f"Claude CLI not found: {CLAUDE_CLI_COMMAND}")
-
-            return ClaudeInvocationResult(
-                success=False,
-                exit_code=-1,
-                stdout="",
-                stderr=f"Claude CLI not found: {CLAUDE_CLI_COMMAND}",
-                duration_ms=duration_ms,
-                task_id=task_id,
-            )
-
-        except Exception as e:  # noqa: BLE001 — intentional: subprocess invocation catch-all; returns structured result
-            duration_ms = int((time.time() - start_time) * 1000)
-            logger.error(f"Claude Code invocation error: {e}")
-
-            return ClaudeInvocationResult(
-                success=False,
-                exit_code=-1,
-                stdout="",
-                stderr=str(e),
-                duration_ms=duration_ms,
-                task_id=task_id,
-            )
+            return self.llm_provider.invoke(prompt, task_id=task_id, timeout=timeout)
+        finally:
+            self.state.release_resource_slot(resource_id, self.worker_id)
 
     def _build_task_prompt(self, task: Task) -> str:
         """Build a Claude Code prompt from task specification.

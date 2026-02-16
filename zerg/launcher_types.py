@@ -37,6 +37,7 @@ class LauncherConfig:
     env_vars: dict[str, str] = field(default_factory=dict)
     working_dir: Path | None = None
     log_dir: Path | None = None
+    gpu_enabled: bool = False
 
 
 @dataclass

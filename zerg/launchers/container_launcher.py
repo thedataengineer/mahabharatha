@@ -267,6 +267,10 @@ class ContainerLauncher(WorkerLauncher):
         cmd.extend(["--memory", self.memory_limit])
         cmd.extend(["--cpus", str(self.cpu_limit)])
 
+        # GPU Passthrough for local LLMs (Ollama)
+        if hasattr(self.config, "gpu_enabled") and self.config.gpu_enabled:
+            cmd.extend(["--gpus", "all"])
+
         cmd.extend(
             [
                 "-w",

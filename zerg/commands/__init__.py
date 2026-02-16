@@ -7,6 +7,7 @@ from zerg.commands.debug import debug
 from zerg.commands.design import design
 from zerg.commands.document import document
 from zerg.commands.git_cmd import git_cmd
+from zerg.commands.health import health
 from zerg.commands.init import init
 from zerg.commands.install_commands import install_commands, uninstall_commands
 from zerg.commands.logs import logs
@@ -42,6 +43,7 @@ __all__ = [
     "test_cmd",
     "debug",
     "document",
+    "health",
     "install_commands",
     "uninstall_commands",
     "wiki",

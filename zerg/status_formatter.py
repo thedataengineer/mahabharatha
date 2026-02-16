@@ -20,8 +20,8 @@ DASHBOARD_WIDTH = 79
 _COL_WORKER = 6
 _COL_STATUS = 7
 _COL_TASK = 8
-_COL_STEP = 13
-_COL_PROGRESS = 8
+_COL_STEP = 24
+_COL_PROGRESS = 10
 _COL_RESTARTS = 8
 
 
@@ -36,7 +36,7 @@ def _build_row(cells: list[str], widths: list[int]) -> str:
     """Build a single table row with pipe separators."""
     parts = []
     for cell, width in zip(cells, widths):
-        parts.append(f" {_truncate(cell, width):<{width}} ")
+        parts.append(f" {cell:<{width}} ")
     return "\u2502" + "\u2502".join(parts) + "\u2502"
 
 
@@ -90,10 +90,8 @@ def format_health_table(
     Args:
         heartbeats: List of heartbeat dicts with keys:
             worker_id, timestamp, task_id, step, progress_pct.
-        escalations: Optional list of escalation dicts (unused here,
-            passed through for context; use format_escalations separately).
-        progress_data: Optional list of worker progress dicts with keys:
-            worker_id, tasks_completed, tasks_total, tier_results.
+        escalations: Optional list of escalation dicts.
+        progress_data: Optional list of worker progress dicts.
         stall_timeout: Seconds after which a heartbeat is considered stale.
 
     Returns:
@@ -103,7 +101,14 @@ def format_health_table(
         return "No worker data available"
 
     progress_data = progress_data or []
-    widths = [_COL_WORKER, _COL_STATUS, _COL_TASK, _COL_STEP, _COL_PROGRESS, _COL_RESTARTS]
+    widths = [
+        _COL_WORKER,
+        _COL_STATUS,
+        _COL_TASK,
+        _COL_STEP,
+        _COL_PROGRESS,
+        _COL_RESTARTS,
+    ]
     headers = ["Worker", "Status", "Task", "Step", "Progress", "Restarts"]
 
     lines: list[str] = []
@@ -111,13 +116,13 @@ def format_health_table(
     lines.append(_build_row(headers, widths))
     lines.append(_build_separator(widths, "\u251c", "\u253c", "\u2524"))
 
-    sorted_hbs = sorted(heartbeats, key=lambda h: h.get("worker_id", 0))
+    sorted_hbs = sorted(heartbeats, key=lambda h: int(h.get("worker_id", 0)))
 
     for hb in sorted_hbs:
-        worker_id = hb.get("worker_id", "?")
+        worker_id = int(hb.get("worker_id", 0))
         status = _determine_status(hb, stall_timeout)
         task_id = hb.get("task_id") or "-"
-        step = hb.get("step", "unknown")
+        step = hb.get("step") or "unknown"
         progress_pct = hb.get("progress_pct", 0)
         restarts = _count_restarts(progress_data, worker_id)
 
@@ -125,7 +130,7 @@ def format_health_table(
             str(worker_id),
             status,
             str(task_id),
-            step,
+            _truncate(step, _COL_STEP),
             f"{progress_pct}%",
             str(restarts),
         ]

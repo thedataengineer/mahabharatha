@@ -146,7 +146,21 @@ class WorkerManager:
         wt_info = self.worktrees.create(self.feature, worker_id)
 
         # Build capability env vars if resolved capabilities are available
-        capability_env = self._capabilities.to_env_vars() if self._capabilities else None
+        capability_env = self._capabilities.to_env_vars() if self._capabilities else {}
+
+        # Charter Injection: Inject Core Principles into worker environment
+        try:
+            charter_path = Path(".gsd/TEAM_CHARTER.md")
+            if charter_path.exists():
+                from zerg.governance import CharterEnforcer
+
+                enforcer = CharterEnforcer(charter_path)
+                if enforcer._principles:
+                    principles_str = "\n".join([f"- {p}" for p in enforcer._principles])
+                    capability_env["ZERG_CHARTER_PRINCIPLES"] = principles_str
+                    logger.debug(f"Injected {len(enforcer._principles)} charter principles into worker {worker_id}")
+        except Exception:  # noqa: BLE001 — intentional: charter injection is best-effort
+            logger.debug("Failed to inject charter principles", exc_info=True)
 
         # Use the unified launcher interface (works for both subprocess and container)
         result = self.launcher.spawn(

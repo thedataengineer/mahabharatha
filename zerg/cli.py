@@ -12,6 +12,7 @@ from zerg.commands import (
     design,
     document,
     git_cmd,
+    health,
     init,
     install_commands,
     logs,
@@ -114,6 +115,7 @@ cli.add_command(test_cmd, name="test")
 cli.add_command(debug)
 cli.add_command(document)
 cli.add_command(wiki)
+cli.add_command(health)
 cli.add_command(install_commands)
 cli.add_command(uninstall_commands)
 

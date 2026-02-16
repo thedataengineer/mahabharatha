@@ -127,6 +127,26 @@ class ProjectCharter:
         )
 
 
+@dataclass
+class TeamCharter:
+    """Team-level mission, roles, and governance."""
+
+    mission: str = ""
+    vision: str = ""
+    principles: list[str] = field(default_factory=list)
+    theme_name: str = "standard"
+    governance_rules: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "mission": self.mission,
+            "vision": self.vision,
+            "principles": self.principles,
+            "theme_name": self.theme_name,
+            "governance_rules": self.governance_rules,
+        }
+
+
 def gather_requirements() -> ProjectCharter:
     """Interactively gather project requirements through Rich prompts.
 
@@ -380,3 +400,55 @@ def write_project_md(charter: ProjectCharter, output_dir: Path | None = None) ->
 
     logger.info(f"Created PROJECT.md at {project_md_path}")
     return project_md_path
+
+
+def write_team_charter_md(charter: TeamCharter, output_dir: Path | None = None) -> Path:
+    """Generate TEAM_CHARTER.md from the team charter."""
+    output_dir = output_dir or Path(".gsd")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    path = output_dir / "TEAM_CHARTER.md"
+    from zerg.persona import get_theme
+
+    theme = get_theme(charter.theme_name)
+
+    lines = [
+        "# Team Charter",
+        "",
+        f"## Mission\n{charter.mission or 'To execute with excellence and integrity.'}",
+        "",
+        f"## Vision\n{charter.vision or 'A self-governing intelligence grid.'}",
+        "",
+        "## Core Principles",
+    ]
+
+    for p in charter.principles or ["Transparency", "Speed", "Correctness"]:
+        lines.append(f"- {p}")
+
+    lines.extend(
+        [
+            "",
+            "## Team Structure (Personas)",
+            "",
+        ]
+    )
+
+    for role in theme.roles:
+        lines.append(f"### {role.name}")
+        lines.append(f"- **Description**: {role.description}")
+        lines.append(f"- **Expertise**: {', '.join(role.expertise)}")
+        lines.append("")
+
+    lines.extend(
+        [
+            "## Governance Rules",
+            "",
+        ]
+    )
+
+    for rule in charter.governance_rules or ["Pulse checks every 2 minutes.", "Narrative consistency checks."]:
+        lines.append(f"- {rule}")
+
+    path.write_text("\n".join(lines))
+    logger.info(f"Created TEAM_CHARTER.md at {path}")
+    return path

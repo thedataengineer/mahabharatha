@@ -16,6 +16,7 @@ from zerg.state.level_repo import LevelStateRepo
 from zerg.state.metrics_store import MetricsStore
 from zerg.state.persistence import PersistenceLayer
 from zerg.state.renderer import StateRenderer
+from zerg.state.resource_repo import ResourceRepo
 from zerg.state.retry_repo import RetryRepo
 from zerg.state.task_repo import TaskStateRepo
 from zerg.state.worker_repo import WorkerStateRepo
@@ -53,6 +54,7 @@ class StateManager:
         self._levels = LevelStateRepo(self._persistence)
         self._execution = ExecutionLog(self._persistence)
         self._metrics = MetricsStore(self._persistence)
+        self._resources = ResourceRepo(self._persistence)
         self._renderer = StateRenderer(self._persistence)
 
     # === Properties delegated to PersistenceLayer ===
@@ -486,6 +488,36 @@ class StateManager:
             duration_ms: Execution duration in milliseconds
         """
         self._metrics.record_task_duration(task_id, duration_ms)
+
+    # === Resource methods (delegated to ResourceRepo) ===
+
+    def acquire_resource_slot(
+        self, resource_id: str, max_slots: int, worker_id: int, priority: int = 0, timeout: int = 600
+    ) -> bool:
+        """Acquire a shared resource slot.
+
+        Args:
+            resource_id: Resource identifier
+            max_slots: Maximum concurrency
+            worker_id: Requesting worker ID
+            priority: Priority (higher is better)
+            timeout: Wait timeout in seconds
+
+        Returns:
+            True if acquired
+        """
+        return self._resources.acquire_slot(
+            resource_id, max_slots, worker_id, priority=priority, timeout_seconds=timeout
+        )
+
+    def release_resource_slot(self, resource_id: str, worker_id: int) -> None:
+        """Release a shared resource slot.
+
+        Args:
+            resource_id: Resource identifier
+            worker_id: Requesting worker ID
+        """
+        self._resources.release_slot(resource_id, worker_id)
 
     def store_metrics(self, metrics: FeatureMetrics) -> None:
         """Store computed metrics to state.

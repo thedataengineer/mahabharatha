@@ -33,6 +33,14 @@ def _make_config(**overrides: Any) -> MagicMock:
     cfg.logging = MagicMock()
     cfg.logging.ephemeral_retain_on_success = False
     cfg.logging.ephemeral_retain_on_failure = True
+
+    cfg.llm = MagicMock()
+    cfg.llm.provider = "claude"
+    cfg.llm.model = "claude-3-sonnet-20240229"
+    cfg.llm.endpoints = ["http://localhost:11434"]
+    cfg.llm.timeout = 1800
+    cfg.llm.max_concurrency = 5
+
     for k, v in overrides.items():
         setattr(cfg, k, v)
     return cfg
@@ -222,7 +230,7 @@ class TestBuildTaskPrompt:
 
 
 # ===================================================================
-# invoke_claude_code
+# invoke_llm
 # ===================================================================
 
 
@@ -235,7 +243,7 @@ class TestInvokeClaudeCode:
         handler = _make_handler(tmp_path)
         task = _make_task()
 
-        result = handler.invoke_claude_code(task)
+        result = handler.invoke_llm(task)
 
         assert result.success is True
         assert result.exit_code == 0
@@ -256,7 +264,7 @@ class TestInvokeClaudeCode:
         handler = _make_handler(tmp_path)
         task = _make_task()
 
-        result = handler.invoke_claude_code(task)
+        result = handler.invoke_llm(task)
 
         assert result.success is False
         assert result.exit_code == 1
@@ -268,7 +276,7 @@ class TestInvokeClaudeCode:
         handler = _make_handler(tmp_path)
         task = _make_task()
 
-        result = handler.invoke_claude_code(task, timeout=30)
+        result = handler.invoke_llm(task, timeout=30)
 
         assert result.success is False
         assert result.exit_code == -1
@@ -280,7 +288,7 @@ class TestInvokeClaudeCode:
         handler = _make_handler(tmp_path)
         task = _make_task()
 
-        result = handler.invoke_claude_code(task)
+        result = handler.invoke_llm(task)
 
         assert result.success is False
         assert result.exit_code == -1
@@ -292,7 +300,7 @@ class TestInvokeClaudeCode:
         handler = _make_handler(tmp_path)
         task = _make_task()
 
-        result = handler.invoke_claude_code(task)
+        result = handler.invoke_llm(task)
 
         assert result.success is False
         assert result.exit_code == -1
@@ -304,7 +312,7 @@ class TestInvokeClaudeCode:
         handler = _make_handler(tmp_path)
         task = _make_task()
 
-        handler.invoke_claude_code(task, timeout=60)
+        handler.invoke_llm(task, timeout=60)
 
         _, kwargs = mock_run.call_args
         assert kwargs["timeout"] == 60
@@ -315,7 +323,7 @@ class TestInvokeClaudeCode:
         handler = _make_handler(tmp_path)
         task = _make_task()
 
-        handler.invoke_claude_code(task)
+        handler.invoke_llm(task)
 
         _, kwargs = mock_run.call_args
         assert kwargs["timeout"] == CLAUDE_CLI_DEFAULT_TIMEOUT
@@ -326,7 +334,7 @@ class TestInvokeClaudeCode:
         handler = _make_handler(tmp_path)
         task = _make_task()
 
-        handler.invoke_claude_code(task)
+        handler.invoke_llm(task)
 
         _, kwargs = mock_run.call_args
         env = kwargs["env"]
@@ -532,7 +540,7 @@ class TestExecuteTask:
         handler = _make_handler(tmp_path)
 
         # Wire up collaborators for a fully successful path
-        with patch.object(handler, "invoke_claude_code", return_value=_success_claude_result()):
+        with patch.object(handler, "invoke_llm", return_value=_success_claude_result()):
             with patch.object(handler, "run_verification", return_value=True):
                 with patch.object(handler, "commit_task_changes", return_value=True):
                     task = _make_task()
@@ -547,7 +555,7 @@ class TestExecuteTask:
     def test_claude_failure_returns_false(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         handler = _make_handler(tmp_path)
 
-        with patch.object(handler, "invoke_claude_code", return_value=_failed_claude_result()):
+        with patch.object(handler, "invoke_llm", return_value=_failed_claude_result()):
             task = _make_task()
             result = handler.execute_task(task)
 
@@ -560,7 +568,7 @@ class TestExecuteTask:
     def test_verification_failure_returns_false(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         handler = _make_handler(tmp_path)
 
-        with patch.object(handler, "invoke_claude_code", return_value=_success_claude_result()):
+        with patch.object(handler, "invoke_llm", return_value=_success_claude_result()):
             with patch.object(handler, "run_verification", return_value=False):
                 task = _make_task()
                 result = handler.execute_task(task)
@@ -571,7 +579,7 @@ class TestExecuteTask:
     def test_commit_failure_returns_false(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         handler = _make_handler(tmp_path)
 
-        with patch.object(handler, "invoke_claude_code", return_value=_success_claude_result()):
+        with patch.object(handler, "invoke_llm", return_value=_success_claude_result()):
             with patch.object(handler, "run_verification", return_value=True):
                 with patch.object(handler, "commit_task_changes", return_value=False):
                     task = _make_task()
@@ -583,7 +591,7 @@ class TestExecuteTask:
     def test_exception_during_execution(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         handler = _make_handler(tmp_path)
 
-        with patch.object(handler, "invoke_claude_code", side_effect=RuntimeError("boom")):
+        with patch.object(handler, "invoke_llm", side_effect=RuntimeError("boom")):
             task = _make_task()
             result = handler.execute_task(task)
 
@@ -597,7 +605,7 @@ class TestExecuteTask:
         handler = _make_handler(tmp_path)
         callback = MagicMock()
 
-        with patch.object(handler, "invoke_claude_code", return_value=_success_claude_result()):
+        with patch.object(handler, "invoke_llm", return_value=_success_claude_result()):
             with patch.object(handler, "run_verification", return_value=True):
                 with patch.object(handler, "commit_task_changes", return_value=True):
                     task = _make_task()
@@ -609,7 +617,7 @@ class TestExecuteTask:
     def test_no_verification_skips_verification(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         handler = _make_handler(tmp_path)
 
-        with patch.object(handler, "invoke_claude_code", return_value=_success_claude_result()):
+        with patch.object(handler, "invoke_llm", return_value=_success_claude_result()):
             with patch.object(handler, "commit_task_changes", return_value=True):
                 task = _make_task()
                 del task["verification"]
@@ -622,7 +630,7 @@ class TestExecuteTask:
         writer = MagicMock()
         handler = _make_handler(tmp_path, structured_writer=writer)
 
-        with patch.object(handler, "invoke_claude_code", return_value=_success_claude_result()):
+        with patch.object(handler, "invoke_llm", return_value=_success_claude_result()):
             with patch.object(handler, "run_verification", return_value=True):
                 with patch.object(handler, "commit_task_changes", return_value=True):
                     task = _make_task()
@@ -637,7 +645,7 @@ class TestExecuteTask:
         writer = MagicMock()
         handler = _make_handler(tmp_path, structured_writer=writer)
 
-        with patch.object(handler, "invoke_claude_code", return_value=_success_claude_result()):
+        with patch.object(handler, "invoke_llm", return_value=_success_claude_result()):
             with patch.object(handler, "run_verification", return_value=True):
                 with patch.object(handler, "commit_task_changes", return_value=True):
                     task = _make_task()
@@ -652,7 +660,7 @@ class TestExecuteTask:
         writer = MagicMock()
         handler = _make_handler(tmp_path, structured_writer=writer)
 
-        with patch.object(handler, "invoke_claude_code", return_value=_failed_claude_result()):
+        with patch.object(handler, "invoke_llm", return_value=_failed_claude_result()):
             task = _make_task()
             handler.execute_task(task)
 
@@ -666,7 +674,7 @@ class TestExecuteTask:
         writer = MagicMock()
         handler = _make_handler(tmp_path, structured_writer=writer)
 
-        with patch.object(handler, "invoke_claude_code", return_value=_success_claude_result()):
+        with patch.object(handler, "invoke_llm", return_value=_success_claude_result()):
             with patch.object(handler, "run_verification", return_value=False):
                 task = _make_task()
                 handler.execute_task(task)
@@ -679,7 +687,7 @@ class TestExecuteTask:
         writer = MagicMock()
         handler = _make_handler(tmp_path, structured_writer=writer)
 
-        with patch.object(handler, "invoke_claude_code", side_effect=RuntimeError("boom")):
+        with patch.object(handler, "invoke_llm", side_effect=RuntimeError("boom")):
             task = _make_task()
             handler.execute_task(task)
 
@@ -691,7 +699,7 @@ class TestExecuteTask:
         registry = MagicMock()
         handler = _make_handler(tmp_path, plugin_registry=registry)
 
-        with patch.object(handler, "invoke_claude_code", return_value=_success_claude_result()):
+        with patch.object(handler, "invoke_llm", return_value=_success_claude_result()):
             with patch.object(handler, "run_verification", return_value=True):
                 with patch.object(handler, "commit_task_changes", return_value=True):
                     task = _make_task()
@@ -708,7 +716,7 @@ class TestExecuteTask:
         registry = MagicMock()
         handler = _make_handler(tmp_path, plugin_registry=registry)
 
-        with patch.object(handler, "invoke_claude_code", side_effect=RuntimeError("boom")):
+        with patch.object(handler, "invoke_llm", side_effect=RuntimeError("boom")):
             task = _make_task()
             handler.execute_task(task)
 
@@ -726,7 +734,7 @@ class TestExecuteTask:
         registry.emit_event.side_effect = RuntimeError("plugin crash")
         handler = _make_handler(tmp_path, plugin_registry=registry)
 
-        with patch.object(handler, "invoke_claude_code", return_value=_success_claude_result()):
+        with patch.object(handler, "invoke_llm", return_value=_success_claude_result()):
             with patch.object(handler, "run_verification", return_value=True):
                 with patch.object(handler, "commit_task_changes", return_value=True):
                     task = _make_task()

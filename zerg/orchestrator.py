@@ -26,6 +26,8 @@ from zerg.containers import ContainerManager
 from zerg.context_plugin import ContextEngineeringPlugin
 from zerg.event_emitter import EventEmitter
 from zerg.gates import GateRunner
+from zerg.governance import GovernanceService
+from zerg.knowledge import KnowledgeService
 from zerg.launcher_configurator import LauncherConfigurator
 from zerg.launcher_types import LauncherConfig, LauncherType
 from zerg.launchers import (
@@ -98,6 +100,9 @@ class Orchestrator:
         self.worktrees = WorktreeManager(self.repo_path)
         self.containers = ContainerManager(self.config)
         self.ports = PortAllocator(range_start=self.config.ports.range_start, range_end=self.config.ports.range_end)
+
+        self.knowledge = KnowledgeService(self.repo_path)
+        self.governance = GovernanceService(self.state)
         self.assigner: WorkerAssignment | None = None
         self.merger = MergeCoordinator(feature, self.config, self.repo_path)
         tl_id = os.environ.get("CLAUDE_CODE_TASK_LIST_ID", feature)
@@ -211,7 +216,8 @@ class Orchestrator:
         else:
             lt = self._launcher_config._auto_detect_launcher_type()
         cfg = LauncherConfig(launcher_type=lt, timeout_seconds=self.config.workers.timeout_minutes * 60,
-                             log_dir=Path(self.config.logging.directory))
+                             log_dir=Path(self.config.logging.directory),
+                             gpu_enabled=self.config.resources.gpu_enabled)
         if lt == LauncherType.CONTAINER:
             launcher = ContainerLauncher(
                 config=cfg, image_name=self._launcher_config._get_worker_image_name(),
@@ -277,16 +283,70 @@ class Orchestrator:
         self._state_sync.reassign_stranded_tasks(active)
 
     def _start_level(self, level: int) -> None:
+        # Step 0: Trigger LLM warmup (predictive VRAM loading)
+        if self.config.llm.provider == "ollama":
+            with contextlib.suppress(Exception):
+                from zerg.llm import OllamaProvider
+                provider = OllamaProvider(
+                    model=self.config.llm.model,
+                    hosts=self.config.llm.endpoints
+                )
+                provider.warmup()
+
         self._level_coord.assigner = self.assigner
         self._level_coord.start_level(level)
         self.event_emitter.emit("level_start", {"level": level})
 
     def _on_level_complete_handler(self, level: int) -> bool:
+        # 1. Charter Enforcement Audit
+        if not self._run_charter_audit(level):
+            logger.warning(f"Level {level} failed charter compliance audit. Pausing for enforcement.")
+            return False
+
+        # 2. Original Level Completion Logic
         result = self._level_coord.handle_level_complete(level)
         self._paused = self._paused or self._level_coord.paused
         if result and self._loop_controller is not None:
             self._run_level_loop(level, merge_result=self._level_coord.last_merge_result)
         return result
+
+    def _run_charter_audit(self, level: int) -> bool:
+        """Run the CharterEnforcer against all task completions in this level."""
+        logger.info(f"Enforcement: Auditing Level {level} for charter compliance...")
+
+        # Gather completion summaries from state/logs
+        tasks_in_level = [t for t in self.parser.get_tasks_for_level(level)]
+        summaries = {}
+
+        for t in tasks_in_level:
+            tid = t["id"]
+            # Look for COMPLETION.md or similar in .gsd/specs/{feature}/
+            spec_path = self.repo_path / ".gsd" / "specs" / self.feature / f"{tid}_COMPLETION.md"
+            if spec_path.exists():
+                summaries[tid] = spec_path.read_text()
+            else:
+                # Fallback to narrative in heartbeat if file doesn't exist yet
+                hb = self.governance.monitor.read_all().get(tid) # This is wrong, wid != tid
+                # Correct way: find worker for task
+                wid = self.assigner.get_task_worker(tid) if self.assigner else None
+                if wid is not None:
+                    hb = self.governance.monitor.read(wid)
+                    if hb and hb.task_id == tid:
+                        summaries[tid] = hb.activity_narrative or ""
+
+        violations = self.governance.audit_level(summaries)
+
+        if not violations:
+            logger.info(f"Enforcement: Level {level} is COMPLIANT.")
+            return True
+
+        for tid, reason in violations.items():
+            logger.error(f"Enforcement Violation [Task {tid}]: {reason}")
+            self._handle_task_failure(tid, -1, f"Charter Violation: {reason}")
+            # Reset task in level controller to force retry
+            self.levels.reset_task(tid)
+
+        return False
 
     def _run_level_loop(self, level: int, merge_result: MergeFlowResult | None = None) -> None:
         vl = self._mode_context.mode.verification_level if self._mode_context else "full"
@@ -457,6 +517,14 @@ class Orchestrator:
         self._check_container_health()
         self.task_sync.sync_state()
         self.launcher.sync_state()
+
+        # Governance Pulse Check (Peer Monitoring)
+        stalled = self.governance.run_pulse_check(list(self._workers.keys()))
+        for wid in stalled:
+            logger.warning(f"Governance: Worker {wid} failed pulse check.")
+            # Trigger standard stall handling by forcing status to STALLED
+            if wid in self._workers:
+                self._workers[wid].status = WorkerStatus.STALLED
         with contextlib.suppress(Exception):
             if self.config.escalation.auto_interrupt:
                 from zerg.escalation import EscalationMonitor

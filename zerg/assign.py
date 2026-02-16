@@ -4,6 +4,7 @@ from collections import defaultdict
 from typing import Any
 
 from zerg.logging import get_logger
+from zerg.persona import get_theme
 from zerg.types import Task, WorkerAssignmentEntry, WorkerAssignments
 
 logger = get_logger("assign")
@@ -12,16 +13,24 @@ logger = get_logger("assign")
 class WorkerAssignment:
     """Calculate and manage task assignments to workers."""
 
-    def __init__(self, worker_count: int = 5) -> None:
+    def __init__(self, worker_count: int = 5, theme_name: str = "standard") -> None:
         """Initialize worker assignment.
 
         Args:
             worker_count: Number of workers
+            theme_name: Name of the persona theme to use
         """
         self.worker_count = worker_count
+        self.theme = get_theme(theme_name)
         self._assignments: dict[str, int] = {}  # task_id -> worker_id
         self._worker_tasks: dict[int, list[str]] = defaultdict(list)  # worker_id -> [task_ids]
         self._worker_minutes: dict[int, int] = defaultdict(int)  # worker_id -> total minutes
+
+        # Map each worker to a role from the theme
+        self.worker_roles = {}
+        for i in range(self.worker_count):
+            role_idx = i % len(self.theme.roles)
+            self.worker_roles[i] = self.theme.roles[role_idx]
 
     def assign(
         self,
@@ -69,10 +78,19 @@ class WorkerAssignment:
             for task in sorted_tasks:
                 task_id = task["id"]
                 minutes = task.get("estimate_minutes", 15)
+                # Use tags, title, or description to find the best role
+                task_content = [task.get("title", ""), task.get("description", "")] + task.get("tags", [])
+                keywords = " ".join(filter(None, task_content)).lower().split()
+                target_role = self.theme.find_best_role(keywords)
 
-                # Find worker with least assigned time in this level
+                # Find candidates (workers with this role)
+                candidates = [w for w, role in self.worker_roles.items() if role == target_role]
+                if not candidates:
+                    candidates = list(range(self.worker_count))
+
+                # Find worker in candidates with least assigned time in this level
                 worker_id = min(
-                    range(self.worker_count),
+                    candidates,
                     key=lambda w: level_minutes[w],
                 )
 

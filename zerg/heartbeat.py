@@ -28,6 +28,9 @@ class Heartbeat:
     task_id: str | None
     step: str  # "implementing", "verifying_tier1", etc.
     progress_pct: int  # 0-100
+    # Narrative and Persona
+    activity_narrative: str | None = None  # Human-like summary of current work
+    persona_name: str | None = None  # Name of the persona (e.g., "Arjuna")
     # Step execution progress (for bite-sized planning)
     current_step: int | None = None  # Current step number (1-indexed)
     total_steps: int | None = None  # Total steps in task
@@ -44,6 +47,8 @@ class Heartbeat:
             task_id=data.get("task_id"),
             step=data.get("step", "unknown"),
             progress_pct=data.get("progress_pct", 0),
+            activity_narrative=data.get("activity_narrative"),
+            persona_name=data.get("persona_name"),
             current_step=data.get("current_step"),
             total_steps=data.get("total_steps"),
             step_states=data.get("step_states"),
@@ -112,6 +117,8 @@ class HeartbeatWriter:
         step: str = "idle",
         progress_pct: int = 0,
         *,
+        activity_narrative: str | None = None,
+        persona_name: str | None = None,
         current_step: int | None = None,
         total_steps: int | None = None,
         step_states: list[str] | None = None,
@@ -132,6 +139,8 @@ class HeartbeatWriter:
             task_id=task_id,
             step=step,
             progress_pct=max(0, min(100, progress_pct)),
+            activity_narrative=activity_narrative,
+            persona_name=persona_name,
             current_step=current_step,
             total_steps=total_steps,
             step_states=step_states,

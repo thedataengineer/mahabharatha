@@ -29,6 +29,7 @@ __all__ = [
     "TokenMetricsConfig",
     "PlanningConfig",
     "RushConfig",
+    "LLMConfig",
 ]
 
 import logging
@@ -164,6 +165,7 @@ class ResourcesConfig(BaseModel):
     disk_gb: int = Field(default=10, ge=1, le=500)
     container_memory_limit: str = Field(default="4g")
     container_cpu_limit: float = Field(default=2.0, ge=0.1, le=32.0)
+    gpu_enabled: bool = Field(default=False, description="Enable GPU passthrough for containers")
 
 
 class LoggingConfig(BaseModel):
@@ -398,6 +400,17 @@ class RushConfig(BaseModel):
     )
 
 
+class LLMConfig(BaseModel):
+    """LLM provider configuration."""
+
+    provider: str = Field(default="claude", pattern="^(claude|ollama)$")
+    model: str = Field(default="llama3")
+    host: str = Field(default="http://localhost:11434")
+    endpoints: list[str] = Field(default_factory=lambda: ["http://localhost:11434"])
+    timeout: int = Field(default=1800, ge=1)
+    max_concurrency: int = Field(default=1, ge=1)
+
+
 class ZergConfig(BaseModel):
     """Complete ZERG configuration."""
 
@@ -433,6 +446,7 @@ class ZergConfig(BaseModel):
     token_metrics: TokenMetricsConfig = Field(default_factory=TokenMetricsConfig)
     planning: PlanningConfig = Field(default_factory=PlanningConfig)
     rush: RushConfig = Field(default_factory=RushConfig)
+    llm: LLMConfig = Field(default_factory=LLMConfig)
 
     @classmethod
     def load(cls, config_path: str | Path | None = None, force_reload: bool = False) -> "ZergConfig":

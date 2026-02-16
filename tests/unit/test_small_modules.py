@@ -156,6 +156,10 @@ class TestJsonUtilsStdlib:
 class TestJsonUtilsOrjson:
     """Test json_utils when orjson IS available (the try-branch)."""
 
+    @pytest.fixture(autouse=True)
+    def skip_if_no_orjson(self):
+        pytest.importorskip("orjson")
+
     def _reload_with_orjson(self) -> Any:
         """Force-reload json_utils ensuring orjson is importable."""
         # Remove cached module to force re-import through the try branch
