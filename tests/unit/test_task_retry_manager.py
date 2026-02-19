@@ -4,11 +4,11 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.config import ZergConfig
-from zerg.constants import TaskStatus
-from zerg.levels import LevelController
-from zerg.state import StateManager
-from zerg.task_retry_manager import TaskRetryManager
+from mahabharatha.config import ZergConfig
+from mahabharatha.constants import TaskStatus
+from mahabharatha.levels import LevelController
+from mahabharatha.state import StateManager
+from mahabharatha.task_retry_manager import TaskRetryManager
 
 
 @pytest.fixture
@@ -175,7 +175,7 @@ class TestCheckStaleTasks:
 
     def test_stale_uses_default_timeout(self, mock_config, mock_state, mock_levels, tmp_path):
         """Uses DEFAULT_STALE_TIMEOUT_SECONDS when config field missing."""
-        from zerg.task_retry_manager import DEFAULT_STALE_TIMEOUT_SECONDS
+        from mahabharatha.task_retry_manager import DEFAULT_STALE_TIMEOUT_SECONDS
 
         # Config without task_stale_timeout_seconds
         del mock_config.workers.task_stale_timeout_seconds
@@ -268,7 +268,7 @@ class TestCheckStaleTasks:
 class TestVerifyWithRetry:
     """Tests for verify_with_retry."""
 
-    @patch("zerg.verify.VerificationExecutor")
+    @patch("mahabharatha.verify.VerificationExecutor")
     def test_succeeds_on_first_attempt(self, mock_verifier_cls, retry_manager):
         """Verification passes on first try."""
         success_result = MagicMock()
@@ -283,7 +283,7 @@ class TestVerifyWithRetry:
         assert verifier.verify.call_count == 1
 
     @patch("time.sleep")
-    @patch("zerg.verify.VerificationExecutor")
+    @patch("mahabharatha.verify.VerificationExecutor")
     def test_fails_after_max_retries(self, mock_verifier_cls, mock_sleep, retry_manager):
         """Verification fails after exhausting retries."""
         fail_result = MagicMock()

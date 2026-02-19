@@ -1,4 +1,4 @@
-"""Tests for zerg.diagnostics.hypothesis_engine."""
+"""Tests for mahabharatha.diagnostics.hypothesis_engine."""
 
 from __future__ import annotations
 
@@ -7,14 +7,14 @@ from unittest.mock import patch
 
 import pytest
 
-from zerg.diagnostics.hypothesis_engine import (
+from mahabharatha.diagnostics.hypothesis_engine import (
     BayesianScorer,
     HypothesisChainer,
     HypothesisEngine,
     HypothesisGenerator,
     HypothesisTestRunner,
 )
-from zerg.diagnostics.types import (
+from mahabharatha.diagnostics.types import (
     ErrorCategory,
     ErrorFingerprint,
     Evidence,

@@ -1,4 +1,4 @@
-"""Unit tests for zerg/commands/plan.py.
+"""Unit tests for mahabharatha/commands/plan.py.
 
 Thinned from 65 tests to cover unique code paths:
 - Feature name sanitization (parametrized)
@@ -18,8 +18,8 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.testing import CliRunner
 
-from zerg.cli import cli
-from zerg.commands.plan import (
+from mahabharatha.cli import cli
+from mahabharatha.commands.plan import (
     create_requirements_template,
     format_socratic_requirements,
     format_standard_requirements,
@@ -131,7 +131,7 @@ class TestRunSocraticDiscovery:
 
     def test_three_rounds(self) -> None:
         """Test socratic discovery with three rounds (default)."""
-        with patch("zerg.commands.plan.ask_questions") as mock_ask:
+        with patch("mahabharatha.commands.plan.ask_questions") as mock_ask:
             mock_ask.return_value = {"Q": "A"}
             result = run_socratic_discovery("test-feature", rounds=3)
 
@@ -152,7 +152,7 @@ class TestRunInteractiveDiscovery:
 
     def test_collects_all_answers(self) -> None:
         """Test that interactive discovery collects all required answers."""
-        with patch("zerg.commands.plan.Prompt.ask") as mock_prompt:
+        with patch("mahabharatha.commands.plan.Prompt.ask") as mock_prompt:
             mock_prompt.side_effect = [
                 "Solve user login",
                 "End users",
@@ -287,7 +287,7 @@ class TestPlanCommand:
         """Test that keyboard interrupt is handled gracefully."""
         monkeypatch.chdir(tmp_path)
         (tmp_path / ".gsd" / "specs").mkdir(parents=True)
-        with patch("zerg.commands.plan.run_interactive_discovery", side_effect=KeyboardInterrupt()):
+        with patch("mahabharatha.commands.plan.run_interactive_discovery", side_effect=KeyboardInterrupt()):
             runner = CliRunner()
             result = runner.invoke(cli, ["plan", "test"])
             assert result.exit_code == 130
@@ -297,8 +297,8 @@ class TestPlanCommand:
         monkeypatch.chdir(tmp_path)
         (tmp_path / ".gsd" / "specs").mkdir(parents=True)
         with (
-            patch("zerg.commands.plan.write_requirements", side_effect=OSError("Disk full")),
-            patch("zerg.commands.plan.run_interactive_discovery") as mock_discovery,
+            patch("mahabharatha.commands.plan.write_requirements", side_effect=OSError("Disk full")),
+            patch("mahabharatha.commands.plan.run_interactive_discovery") as mock_discovery,
         ):
             mock_discovery.return_value = {"feature": "test", "problem": "p"}
             runner = CliRunner()

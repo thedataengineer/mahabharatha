@@ -60,51 +60,53 @@ def _plugin_task_graph() -> list[dict]:
         {
             "id": "DF-L1-003",
             "title": "Create plugin ABCs",
-            "description": "Create zerg/plugins.py with plugin ABCs and PluginRegistry.",
+            "description": "Create mahabharatha/plugins.py with plugin ABCs and PluginRegistry.",
             "phase": "foundation",
             "level": 1,
             "dependencies": [],
             "files": {
-                "create": ["zerg/plugins.py"],
+                "create": ["mahabharatha/plugins.py"],
                 "modify": [],
                 "read": [],
             },
             "verification": {
-                "command": "python -c 'from zerg.plugins import PluginRegistry'",
+                "command": "python -c 'from mahabharatha.plugins import PluginRegistry'",
                 "timeout_seconds": 30,
             },
         },
         {
             "id": "DF-L1-004",
             "title": "Create plugin config models",
-            "description": "Create zerg/plugin_config.py with Pydantic config models.",
+            "description": "Create mahabharatha/plugin_config.py with Pydantic config models.",
             "phase": "foundation",
             "level": 1,
             "dependencies": [],
             "files": {
-                "create": ["zerg/plugin_config.py"],
+                "create": ["mahabharatha/plugin_config.py"],
                 "modify": [],
                 "read": [],
             },
             "verification": {
-                "command": "python -c 'from zerg.plugin_config import HookConfig, PluginGateConfig, PluginsConfig'",
+                "command": (
+                    "python -c 'from mahabharatha.plugin_config import HookConfig, PluginGateConfig, PluginsConfig'"
+                ),
                 "timeout_seconds": 30,
             },
         },
         {
             "id": "DF-L1-005",
             "title": "Add PluginHookEvent enum",
-            "description": "Add PluginHookEvent enum to zerg/constants.py with 8 lifecycle event types.",
+            "description": "Add PluginHookEvent enum to mahabharatha/constants.py with 8 lifecycle event types.",
             "phase": "foundation",
             "level": 1,
             "dependencies": [],
             "files": {
                 "create": [],
-                "modify": ["zerg/constants.py"],
-                "read": ["zerg/constants.py"],
+                "modify": ["mahabharatha/constants.py"],
+                "read": ["mahabharatha/constants.py"],
             },
             "verification": {
-                "command": "python -c 'from zerg.constants import PluginHookEvent'",
+                "command": "python -c 'from mahabharatha.constants import PluginHookEvent'",
                 "timeout_seconds": 30,
             },
         },
@@ -153,7 +155,7 @@ def _plugin_task_graph() -> list[dict]:
             "files": {
                 "create": ["tests/unit/test_plugins.py"],
                 "modify": [],
-                "read": ["zerg/plugins.py", "zerg/constants.py"],
+                "read": ["mahabharatha/plugins.py", "mahabharatha/constants.py"],
             },
             "verification": {
                 "command": "pytest tests/unit/test_plugins.py -v",
@@ -170,7 +172,7 @@ def _plugin_task_graph() -> list[dict]:
             "files": {
                 "create": ["tests/unit/test_plugin_config.py"],
                 "modify": [],
-                "read": ["zerg/plugin_config.py"],
+                "read": ["mahabharatha/plugin_config.py"],
             },
             "verification": {
                 "command": "pytest tests/unit/test_plugin_config.py -v",
@@ -180,17 +182,17 @@ def _plugin_task_graph() -> list[dict]:
         {
             "id": "DF-L2-005",
             "title": "Integrate plugins into ZergConfig",
-            "description": "Add plugins field to ZergConfig in zerg/config.py (optional PluginsConfig).",
+            "description": "Add plugins field to ZergConfig in mahabharatha/config.py (optional PluginsConfig).",
             "phase": "core",
             "level": 2,
             "dependencies": ["DF-L1-004"],
             "files": {
                 "create": [],
-                "modify": ["zerg/config.py"],
-                "read": ["zerg/config.py", "zerg/plugin_config.py"],
+                "modify": ["mahabharatha/config.py"],
+                "read": ["mahabharatha/config.py", "mahabharatha/plugin_config.py"],
             },
             "verification": {
-                "command": "python -c 'from zerg.config import ZergConfig; ZergConfig()'",
+                "command": "python -c 'from mahabharatha.config import ZergConfig; ZergConfig()'",
                 "timeout_seconds": 30,
             },
         },
@@ -198,68 +200,68 @@ def _plugin_task_graph() -> list[dict]:
         {
             "id": "DF-L3-001",
             "title": "Add orchestrator plugin hooks",
-            "description": "Integrate PluginRegistry into zerg/orchestrator.py for lifecycle events.",
+            "description": "Integrate PluginRegistry into mahabharatha/orchestrator.py for lifecycle events.",
             "phase": "integration",
             "level": 3,
             "dependencies": ["DF-L2-003"],
             "files": {
                 "create": [],
-                "modify": ["zerg/orchestrator.py"],
-                "read": ["zerg/orchestrator.py", "zerg/plugins.py"],
+                "modify": ["mahabharatha/orchestrator.py"],
+                "read": ["mahabharatha/orchestrator.py", "mahabharatha/plugins.py"],
             },
             "verification": {
-                "command": "python -c 'import zerg.orchestrator'",
+                "command": "python -c 'import mahabharatha.orchestrator'",
                 "timeout_seconds": 30,
             },
         },
         {
             "id": "DF-L3-002",
             "title": "Add worker plugin hooks",
-            "description": "Integrate PluginRegistry into zerg/worker_protocol.py for task events.",
+            "description": "Integrate PluginRegistry into mahabharatha/worker_protocol.py for task events.",
             "phase": "integration",
             "level": 3,
             "dependencies": ["DF-L2-003"],
             "files": {
                 "create": [],
-                "modify": ["zerg/worker_protocol.py"],
-                "read": ["zerg/worker_protocol.py", "zerg/plugins.py"],
+                "modify": ["mahabharatha/worker_protocol.py"],
+                "read": ["mahabharatha/worker_protocol.py", "mahabharatha/plugins.py"],
             },
             "verification": {
-                "command": "python -c 'import zerg.protocol_state'",
+                "command": "python -c 'import mahabharatha.protocol_state'",
                 "timeout_seconds": 30,
             },
         },
         {
             "id": "DF-L3-003",
             "title": "Add gate runner plugin hooks",
-            "description": "Integrate PluginRegistry into zerg/gates.py for gate events.",
+            "description": "Integrate PluginRegistry into mahabharatha/gates.py for gate events.",
             "phase": "integration",
             "level": 3,
             "dependencies": ["DF-L2-003"],
             "files": {
                 "create": [],
-                "modify": ["zerg/gates.py"],
-                "read": ["zerg/gates.py", "zerg/plugins.py"],
+                "modify": ["mahabharatha/gates.py"],
+                "read": ["mahabharatha/gates.py", "mahabharatha/plugins.py"],
             },
             "verification": {
-                "command": "python -c 'import zerg.gates'",
+                "command": "python -c 'import mahabharatha.gates'",
                 "timeout_seconds": 30,
             },
         },
         {
             "id": "DF-L3-004",
             "title": "Add launcher plugin support",
-            "description": "Integrate LauncherPlugin into zerg/launcher.py.",
+            "description": "Integrate LauncherPlugin into mahabharatha/launcher.py.",
             "phase": "integration",
             "level": 3,
             "dependencies": ["DF-L2-003"],
             "files": {
                 "create": [],
-                "modify": ["zerg/launcher.py"],
-                "read": ["zerg/launcher.py", "zerg/plugins.py"],
+                "modify": ["mahabharatha/launcher.py"],
+                "read": ["mahabharatha/launcher.py", "mahabharatha/plugins.py"],
             },
             "verification": {
-                "command": "python -c 'import zerg.launchers'",
+                "command": "python -c 'import mahabharatha.launchers'",
                 "timeout_seconds": 30,
             },
         },
@@ -291,7 +293,7 @@ def _plugin_task_graph() -> list[dict]:
             "files": {
                 "create": ["tests/integration/test_plugin_lifecycle.py"],
                 "modify": [],
-                "read": ["zerg/orchestrator.py", "zerg/worker_protocol.py", "zerg/plugins.py"],
+                "read": ["mahabharatha/orchestrator.py", "mahabharatha/worker_protocol.py", "mahabharatha/plugins.py"],
             },
             "verification": {
                 "command": "pytest tests/integration/test_plugin_lifecycle.py -v",
@@ -335,17 +337,17 @@ def _plugin_task_graph() -> list[dict]:
         {
             "id": "DF-L4-004",
             "title": "Create plugin documentation",
-            "description": "Create zerg/data/commands/plugins.md for plugin documentation.",
+            "description": "Create mahabharatha/data/commands/plugins.md for plugin documentation.",
             "phase": "testing",
             "level": 4,
             "dependencies": ["DF-L3-003", "DF-L3-004"],
             "files": {
-                "create": ["zerg/data/commands/plugins.md"],
+                "create": ["mahabharatha/data/commands/plugins.md"],
                 "modify": [],
-                "read": ["zerg/plugins.py", "zerg/plugin_config.py"],
+                "read": ["mahabharatha/plugins.py", "mahabharatha/plugin_config.py"],
             },
             "verification": {
-                "command": "test -f zerg/data/commands/plugins.md",
+                "command": "test -f mahabharatha/data/commands/plugins.md",
                 "timeout_seconds": 10,
             },
         },
@@ -372,7 +374,7 @@ def _plugin_task_graph() -> list[dict]:
 class TestDogfoodPlugin:
     """Test ZERG's ability to build its own plugin system via orchestration."""
 
-    def test_plugin_system_builds_via_zerg(self, e2e_harness: E2EHarness) -> None:
+    def test_plugin_system_builds_via_mahabharatha(self, e2e_harness: E2EHarness) -> None:
         """Construct the 20-task plugin system graph and run full pipeline in mock mode.
 
         Validates that ZERG can orchestrate the plugin system build:
@@ -411,8 +413,8 @@ class TestDogfoodPlugin:
 
         repo = e2e_harness.repo_path
         # Verify Level 1 foundation files
-        assert (repo / "zerg/plugins.py").exists()
-        assert (repo / "zerg/plugin_config.py").exists()
+        assert (repo / "mahabharatha/plugins.py").exists()
+        assert (repo / "mahabharatha/plugin_config.py").exists()
         # Verify Level 2 test files
         assert (repo / "tests/unit/test_plugins.py").exists()
         assert (repo / "tests/unit/test_plugin_config.py").exists()

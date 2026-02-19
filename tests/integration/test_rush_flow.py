@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from zerg.constants import TaskStatus
-from zerg.levels import LevelController
+from mahabharatha.constants import TaskStatus
+from mahabharatha.levels import LevelController
 
 
 class TestRushFlowDryRun:
@@ -24,7 +24,7 @@ class TestRushFlowDryRun:
 
     def test_dry_run_no_worktrees_created(self, tmp_repo: Path, sample_task_graph) -> None:
         """Test dry run does not create worktrees."""
-        from zerg.worktree import WorktreeManager
+        from mahabharatha.worktree import WorktreeManager
 
         manager = WorktreeManager(tmp_repo)
         initial_worktrees = len(manager.list_worktrees())
@@ -95,7 +95,7 @@ class TestRushFlowMultiLevel:
 
     def test_level_2_blocked_until_level_1_complete(self, sample_task_graph) -> None:
         """Test level 2 cannot start before level 1 completes."""
-        from zerg.exceptions import LevelError
+        from mahabharatha.exceptions import LevelError
 
         controller = LevelController()
         controller.initialize(sample_task_graph["tasks"])

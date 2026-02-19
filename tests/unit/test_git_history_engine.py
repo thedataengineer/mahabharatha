@@ -1,4 +1,4 @@
-"""Tests for zerg.git.history_engine -- commit history intelligence."""
+"""Tests for mahabharatha.git.history_engine -- commit history intelligence."""
 
 from __future__ import annotations
 
@@ -7,9 +7,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.exceptions import GitError
-from zerg.git.config import GitConfig
-from zerg.git.history_engine import (
+from mahabharatha.exceptions import GitError
+from mahabharatha.git.config import GitConfig
+from mahabharatha.git.history_engine import (
     HistoryAnalyzer,
     HistoryEngine,
     RewritePlanner,
@@ -19,7 +19,7 @@ from zerg.git.history_engine import (
     _parse_date,
     _validate_branch_name,
 )
-from zerg.git.types import CommitInfo, CommitType
+from mahabharatha.git.types import CommitInfo, CommitType
 
 
 @pytest.fixture()

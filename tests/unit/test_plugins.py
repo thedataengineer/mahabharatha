@@ -1,4 +1,4 @@
-"""Unit tests for the ZERG plugin system (zerg/plugins.py)."""
+"""Unit tests for the ZERG plugin system (mahabharatha/plugins.py)."""
 
 from __future__ import annotations
 
@@ -9,8 +9,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.constants import GateResult
-from zerg.plugins import (
+from mahabharatha.constants import GateResult
+from mahabharatha.plugins import (
     GateContext,
     LauncherPlugin,
     LifecycleEvent,
@@ -18,7 +18,7 @@ from zerg.plugins import (
     PluginRegistry,
     QualityGatePlugin,
 )
-from zerg.types import GateRunResult
+from mahabharatha.types import GateRunResult
 
 # ---------------------------------------------------------------------------
 # Concrete test doubles
@@ -160,7 +160,7 @@ class TestPluginRegistry:
         retrieved = registry.get_launcher("docker")
         assert retrieved is launcher
 
-    @patch("zerg.plugins.subprocess.run")
+    @patch("mahabharatha.plugins.subprocess.run")
     def test_load_yaml_hooks_registers_shell_commands(self, mock_subprocess_run: MagicMock) -> None:
         """Test providing HookConfig list, emit, verify subprocess called."""
         registry = PluginRegistry()
@@ -172,7 +172,7 @@ class TestPluginRegistry:
 
         mock_subprocess_run.assert_called_once_with(["echo", "hello"], check=False, timeout=300)
 
-    @patch("zerg.plugins.subprocess.run")
+    @patch("mahabharatha.plugins.subprocess.run")
     def test_load_yaml_hooks_multiple_events(self, mock_subprocess_run: MagicMock) -> None:
         """Test multiple YAML hooks for different events."""
         registry = PluginRegistry()
@@ -232,7 +232,7 @@ class TestABCConstraints:
 class TestEntryPointDiscovery:
     """Tests for load_entry_points discovering plugins from installed packages."""
 
-    @patch("zerg.plugins.importlib.metadata.entry_points")
+    @patch("mahabharatha.plugins.importlib.metadata.entry_points")
     def test_load_entry_points_quality_gate(self, mock_entry_points: MagicMock) -> None:
         """Test loading QualityGatePlugin from entry points."""
         mock_ep = MagicMock()
@@ -250,7 +250,7 @@ class TestEntryPointDiscovery:
         result = registry.run_plugin_gate("stub-gate", ctx)
         assert result.result is GateResult.PASS
 
-    @patch("zerg.plugins.importlib.metadata.entry_points")
+    @patch("mahabharatha.plugins.importlib.metadata.entry_points")
     def test_load_entry_points_lifecycle_hook(self, mock_entry_points: MagicMock) -> None:
         """Test loading LifecycleHookPlugin from entry points."""
 
@@ -281,7 +281,7 @@ class TestEntryPointDiscovery:
         assert len(TestHook._calls) == 1
         assert TestHook._calls[0] == event
 
-    @patch("zerg.plugins.importlib.metadata.entry_points")
+    @patch("mahabharatha.plugins.importlib.metadata.entry_points")
     def test_load_entry_points_launcher(self, mock_entry_points: MagicMock) -> None:
         """Test loading LauncherPlugin from entry points."""
         mock_ep = MagicMock()
@@ -297,7 +297,7 @@ class TestEntryPointDiscovery:
         assert launcher is not None
         assert isinstance(launcher, StubLauncherPlugin)
 
-    @patch("zerg.plugins.importlib.metadata.entry_points")
+    @patch("mahabharatha.plugins.importlib.metadata.entry_points")
     def test_load_entry_points_fallback_dict_interface(self, mock_entry_points: MagicMock) -> None:
         """Test entry points using dict interface (Python <3.12)."""
         mock_ep = MagicMock()
@@ -314,7 +314,7 @@ class TestEntryPointDiscovery:
         result = registry.run_plugin_gate("stub-gate", ctx)
         assert result.result is GateResult.PASS
 
-    @patch("zerg.plugins.importlib.metadata.entry_points")
+    @patch("mahabharatha.plugins.importlib.metadata.entry_points")
     def test_load_entry_points_unknown_type_warns(self, mock_entry_points: MagicMock) -> None:
         """Test entry point that doesn't implement plugin ABC logs warning."""
 
@@ -329,14 +329,14 @@ class TestEntryPointDiscovery:
 
         registry = PluginRegistry()
 
-        with patch("zerg.plugins.logger.warning") as mock_warn:
+        with patch("mahabharatha.plugins.logger.warning") as mock_warn:
             registry.load_entry_points()
 
         assert mock_warn.called
         warn_msg = str(mock_warn.call_args[0][0])
         assert "did not produce a recognised plugin type" in warn_msg
 
-    @patch("zerg.plugins.importlib.metadata.entry_points")
+    @patch("mahabharatha.plugins.importlib.metadata.entry_points")
     def test_load_entry_points_load_failure_warns(self, mock_entry_points: MagicMock) -> None:
         """Test entry point that fails to load logs warning and continues."""
         mock_ep = MagicMock()
@@ -347,14 +347,14 @@ class TestEntryPointDiscovery:
 
         registry = PluginRegistry()
 
-        with patch("zerg.plugins.logger.warning") as mock_warn:
+        with patch("mahabharatha.plugins.logger.warning") as mock_warn:
             registry.load_entry_points()
 
         assert mock_warn.called
         warn_msg = str(mock_warn.call_args[0][0])
         assert "Failed to load entry point" in warn_msg
 
-    @patch("zerg.plugins.importlib.metadata.entry_points")
+    @patch("mahabharatha.plugins.importlib.metadata.entry_points")
     def test_load_entry_points_custom_group(self, mock_entry_points: MagicMock) -> None:
         """Test loading from custom entry point group."""
         mock_ep = MagicMock()

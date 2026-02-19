@@ -2,7 +2,7 @@
 
 import pytest
 
-from zerg.exceptions import (
+from mahabharatha.exceptions import (
     ConfigurationError,
     ContainerError,
     GateError,

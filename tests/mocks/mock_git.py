@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 
-from zerg.exceptions import GitError, MergeConflictError
+from mahabharatha.exceptions import GitError, MergeConflictError
 
 
 @dataclass
@@ -361,7 +361,7 @@ class MockGitOps:
         Returns:
             Staging branch name
         """
-        staging = f"zerg/{feature}/staging"
+        staging = f"mahabharatha/{feature}/staging"
         self.create_branch(staging, base)
         return staging
 
@@ -395,7 +395,7 @@ class MockGitOps:
         Returns:
             List of branch names
         """
-        prefix = f"zerg/{feature}/worker-"
+        prefix = f"mahabharatha/{feature}/worker-"
         return [b for b in self._branches if b.startswith(prefix)]
 
     def delete_feature_branches(self, feature: str, force: bool = True) -> int:
@@ -408,7 +408,7 @@ class MockGitOps:
         Returns:
             Number deleted
         """
-        prefix = f"zerg/{feature}/"
+        prefix = f"mahabharatha/{feature}/"
         to_delete = [b for b in self._branches if b.startswith(prefix)]
         for branch in to_delete:
             self.delete_branch(branch, force)

@@ -46,7 +46,7 @@ def hook_test_repo(tmp_path: Path) -> Generator[Path, None, None]:
     )
 
     # Copy and install pre-commit hook
-    hook_src = Path(__file__).parent.parent.parent / ".zerg" / "hooks" / "pre-commit"
+    hook_src = Path(__file__).parent.parent.parent / ".mahabharatha" / "hooks" / "pre-commit"
     hooks_dir = tmp_path / ".git" / "hooks"
     hooks_dir.mkdir(parents=True, exist_ok=True)
     hook_dest = hooks_dir / "pre-commit"
@@ -247,11 +247,11 @@ class TestPrecommitHookZergSpecific:
         """Get combined stdout and stderr for checking."""
         return result.stdout + result.stderr
 
-    def test_zerg_branch_naming_valid(self, hook_test_repo: Path) -> None:
+    def test_mahabharatha_branch_naming_valid(self, hook_test_repo: Path) -> None:
         """Valid ZERG branch names should pass."""
         # Create and checkout a valid ZERG branch
         subprocess.run(
-            ["git", "checkout", "-b", "zerg/feature/worker-1"],
+            ["git", "checkout", "-b", "mahabharatha/feature/worker-1"],
             cwd=hook_test_repo,
             check=True,
         )
@@ -268,11 +268,11 @@ class TestPrecommitHookZergSpecific:
         )
         assert result.returncode == 0, f"Valid ZERG branch should pass: {result.stderr}"
 
-    def test_zerg_branch_naming_invalid_warns(self, hook_test_repo: Path) -> None:
+    def test_mahabharatha_branch_naming_invalid_warns(self, hook_test_repo: Path) -> None:
         """Invalid ZERG branch names should warn."""
         # Create and checkout an invalid ZERG branch
         subprocess.run(
-            ["git", "checkout", "-b", "zerg/feature"],  # Missing worker suffix
+            ["git", "checkout", "-b", "mahabharatha/feature"],  # Missing worker suffix
             cwd=hook_test_repo,
             check=True,
         )
@@ -290,31 +290,31 @@ class TestPrecommitHookZergSpecific:
         output = self.get_output(result)
         # Should pass with warning (ZERG naming is a warning, not a block)
         assert result.returncode == 0, f"Invalid ZERG branch should warn: {result.stderr}"
-        assert "WARNING" in output or "zerg/{feature}/worker-{N}" in output
+        assert "WARNING" in output or "mahabharatha/{feature}/worker-{N}" in output
 
-    def test_print_in_zerg_dir_warns(self, hook_test_repo: Path) -> None:
-        """Print statements in zerg/ directory should warn."""
-        # Create zerg directory
-        zerg_dir = hook_test_repo / "zerg"
-        zerg_dir.mkdir()
+    def test_print_in_mahabharatha_dir_warns(self, hook_test_repo: Path) -> None:
+        """Print statements in mahabharatha/ directory should warn."""
+        # Create mahabharatha directory
+        mahabharatha_dir = hook_test_repo / "mahabharatha"
+        mahabharatha_dir.mkdir()
 
-        zerg_file = zerg_dir / "module.py"
-        zerg_file.write_text('def foo():\n    print("debug")\n')
+        mahabharatha_file = mahabharatha_dir / "module.py"
+        mahabharatha_file.write_text('def foo():\n    print("debug")\n')
 
-        subprocess.run(["git", "add", "zerg/module.py"], cwd=hook_test_repo, check=True)
+        subprocess.run(["git", "add", "mahabharatha/module.py"], cwd=hook_test_repo, check=True)
         result = subprocess.run(
-            ["git", "commit", "-m", "feat: zerg module"],
+            ["git", "commit", "-m", "feat: mahabharatha module"],
             cwd=hook_test_repo,
             capture_output=True,
             text=True,
         )
         output = self.get_output(result)
         # Should pass with warning
-        assert result.returncode == 0, f"Print in zerg/ should warn: {result.stderr}"
+        assert result.returncode == 0, f"Print in mahabharatha/ should warn: {result.stderr}"
         assert "WARNING" in output or "print" in output.lower()
 
-    def test_print_outside_zerg_allowed(self, hook_test_repo: Path) -> None:
-        """Print statements outside zerg/ should be allowed."""
+    def test_print_outside_mahabharatha_allowed(self, hook_test_repo: Path) -> None:
+        """Print statements outside mahabharatha/ should be allowed."""
         other_file = hook_test_repo / "script.py"
         other_file.write_text('print("hello")\n')
 
@@ -325,4 +325,4 @@ class TestPrecommitHookZergSpecific:
             capture_output=True,
             text=True,
         )
-        assert result.returncode == 0, f"Print outside zerg/ should pass: {result.stderr}"
+        assert result.returncode == 0, f"Print outside mahabharatha/ should pass: {result.stderr}"

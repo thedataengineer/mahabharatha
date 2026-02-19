@@ -8,11 +8,11 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.config import ResourcesConfig, ZergConfig
-from zerg.constants import WorkerStatus
-from zerg.launcher_configurator import LauncherConfigurator
-from zerg.launchers import ContainerLauncher
-from zerg.plugins import PluginRegistry
+from mahabharatha.config import ResourcesConfig, ZergConfig
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.launcher_configurator import LauncherConfigurator
+from mahabharatha.launchers import ContainerLauncher
+from mahabharatha.plugins import PluginRegistry
 
 pytestmark = pytest.mark.docker
 
@@ -44,7 +44,7 @@ class TestContainerLauncherStartContainer:
         mock_run.return_value = MagicMock(returncode=0, stdout="containerid\n", stderr="")
         launcher = ContainerLauncher(memory_limit="8g", cpu_limit=3.5)
         launcher._start_container(
-            container_name="zerg-worker-0",
+            container_name="mahabharatha-worker-0",
             worktree_path=Path("/tmp/fake-worktrees/feature/worker-0"),
             env={"ZERG_WORKER_ID": "0"},
         )
@@ -57,7 +57,7 @@ class TestContainerLauncherStartContainer:
 
 class TestOrchestratorPassesLimits:
     def test_create_launcher_container_mode(self) -> None:
-        from zerg.orchestrator import Orchestrator
+        from mahabharatha.orchestrator import Orchestrator
 
         config = ZergConfig()
         config.resources.container_memory_limit = "16g"
@@ -67,7 +67,7 @@ class TestOrchestratorPassesLimits:
         orch.repo_path = Path(".")
         orch._plugin_registry = PluginRegistry()
         orch._launcher_config = LauncherConfigurator(config, orch.repo_path, orch._plugin_registry)
-        with patch("zerg.orchestrator.ContainerLauncher") as mock_cl_cls:
+        with patch("mahabharatha.orchestrator.ContainerLauncher") as mock_cl_cls:
             mock_cl_cls.return_value = MagicMock()
             orch._create_launcher(mode="container")
         call_kwargs = mock_cl_cls.call_args[1]
@@ -77,7 +77,7 @@ class TestOrchestratorPassesLimits:
 
 class TestCleanupOrphanContainers:
     def _make_orchestrator(self):
-        from zerg.orchestrator import Orchestrator
+        from mahabharatha.orchestrator import Orchestrator
 
         orch = Orchestrator.__new__(Orchestrator)
         orch.config = ZergConfig()
@@ -86,7 +86,7 @@ class TestCleanupOrphanContainers:
         orch._launcher_config = LauncherConfigurator(orch.config, Path("."), orch._plugin_registry)
         return orch
 
-    @patch("zerg.launcher_configurator.sp.run")
+    @patch("mahabharatha.launcher_configurator.sp.run")
     def test_cleanup_removes_found_containers(self, mock_run: MagicMock) -> None:
         ps_result = MagicMock(returncode=0, stdout="aaa111\nbbb222")
         rm_result = MagicMock(returncode=0)
@@ -94,7 +94,7 @@ class TestCleanupOrphanContainers:
         self._make_orchestrator()._cleanup_orphan_containers()
         assert mock_run.call_count == 3
 
-    @patch("zerg.launcher_configurator.sp.run")
+    @patch("mahabharatha.launcher_configurator.sp.run")
     def test_cleanup_no_containers_found(self, mock_run: MagicMock) -> None:
         mock_run.return_value = MagicMock(returncode=0, stdout="")
         self._make_orchestrator()._cleanup_orphan_containers()
@@ -103,8 +103,8 @@ class TestCleanupOrphanContainers:
 
 class TestCheckContainerHealth:
     def _make_orchestrator(self):
-        from zerg.orchestrator import Orchestrator
-        from zerg.worker_registry import WorkerRegistry
+        from mahabharatha.orchestrator import Orchestrator
+        from mahabharatha.worker_registry import WorkerRegistry
 
         orch = Orchestrator.__new__(Orchestrator)
         orch.config = ZergConfig()
@@ -116,7 +116,7 @@ class TestCheckContainerHealth:
         return orch
 
     def test_marks_timed_out_worker_as_crashed(self) -> None:
-        from zerg.types import WorkerState
+        from mahabharatha.types import WorkerState
 
         orch = self._make_orchestrator()
         orch.config.workers.timeout_minutes = 30
@@ -128,7 +128,7 @@ class TestCheckContainerHealth:
         assert worker.status == WorkerStatus.CRASHED
 
     def test_does_not_crash_worker_within_timeout(self) -> None:
-        from zerg.types import WorkerState
+        from mahabharatha.types import WorkerState
 
         orch = self._make_orchestrator()
         orch.config.workers.timeout_minutes = 30
@@ -141,42 +141,42 @@ class TestCheckContainerHealth:
 
 
 class TestGetContainerLogs:
-    @patch("zerg.commands.logs.subprocess.run")
+    @patch("mahabharatha.commands.logs.subprocess.run")
     def test_returns_stdout_on_success(self, mock_run: MagicMock) -> None:
         mock_run.return_value = MagicMock(returncode=0, stdout="line1\nline2\n", stderr="")
-        from zerg.commands.logs import _get_container_logs
+        from mahabharatha.commands.logs import _get_container_logs
 
         assert _get_container_logs(3) == "line1\nline2\n"
 
-    @patch("zerg.commands.logs.subprocess.run")
+    @patch("mahabharatha.commands.logs.subprocess.run")
     def test_returns_none_on_failure(self, mock_run: MagicMock) -> None:
         mock_run.return_value = MagicMock(returncode=1, stdout="", stderr="no such container")
-        from zerg.commands.logs import _get_container_logs
+        from mahabharatha.commands.logs import _get_container_logs
 
         assert _get_container_logs(5) is None
 
 
 class TestBuildDockerImage:
-    @patch("zerg.commands.build.subprocess.run")
-    @patch("zerg.commands.build.Path")
+    @patch("mahabharatha.commands.build.subprocess.run")
+    @patch("mahabharatha.commands.build.Path")
     def test_runs_docker_build(self, mock_path_cls: MagicMock, mock_run: MagicMock) -> None:
         mock_dockerfile = MagicMock()
         mock_dockerfile.exists.return_value = True
         mock_dockerfile.__str__ = lambda self: ".devcontainer/Dockerfile"
         mock_path_cls.return_value = mock_dockerfile
         mock_run.side_effect = [MagicMock(returncode=0), MagicMock(returncode=0, stdout="123456789\n")]
-        from zerg.commands.build import _build_docker_image
+        from mahabharatha.commands.build import _build_docker_image
 
         _build_docker_image()
         cmd = mock_run.call_args_list[0][0][0]
         assert "docker" in cmd and "build" in cmd
 
-    @patch("zerg.commands.build.Path")
+    @patch("mahabharatha.commands.build.Path")
     def test_handles_missing_dockerfile(self, mock_path_cls: MagicMock) -> None:
         mock_dockerfile = MagicMock()
         mock_dockerfile.exists.return_value = False
         mock_path_cls.return_value = mock_dockerfile
-        from zerg.commands.build import _build_docker_image
+        from mahabharatha.commands.build import _build_docker_image
 
         with pytest.raises(SystemExit):
             _build_docker_image()

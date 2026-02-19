@@ -4,7 +4,7 @@ import time
 
 import pytest
 
-from zerg.circuit_breaker import CircuitBreaker, CircuitState, WorkerCircuit
+from mahabharatha.circuit_breaker import CircuitBreaker, CircuitState, WorkerCircuit
 
 
 class TestWorkerCircuitAndState:

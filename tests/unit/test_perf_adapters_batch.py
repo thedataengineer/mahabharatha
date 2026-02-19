@@ -12,11 +12,11 @@ from unittest.mock import patch
 
 import pytest
 
-from zerg.performance.adapters.cloc_adapter import ClocAdapter
-from zerg.performance.adapters.deptry_adapter import DeptryAdapter
-from zerg.performance.adapters.jscpd_adapter import JscpdAdapter
-from zerg.performance.adapters.pipdeptree_adapter import PipdeptreeAdapter
-from zerg.performance.types import DetectedStack, Severity
+from mahabharatha.performance.adapters.cloc_adapter import ClocAdapter
+from mahabharatha.performance.adapters.deptry_adapter import DeptryAdapter
+from mahabharatha.performance.adapters.jscpd_adapter import JscpdAdapter
+from mahabharatha.performance.adapters.pipdeptree_adapter import PipdeptreeAdapter
+from mahabharatha.performance.types import DetectedStack, Severity
 
 # ---------------------------------------------------------------------------
 # Shared fixtures
@@ -65,35 +65,35 @@ class TestPipdeptreeAdapter:
         assert adapter.tool_name == "pipdeptree"
         assert 80 in adapter.factors_covered
 
-    @patch("zerg.performance.adapters.pipdeptree_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.pipdeptree_adapter.subprocess.run")
     def test_run_subprocess_failure_returns_empty(self, mock_run, python_stack):
         mock_run.side_effect = subprocess.SubprocessError("boom")
         adapter = PipdeptreeAdapter()
         result = adapter.run([], "/project", python_stack)
         assert result == []
 
-    @patch("zerg.performance.adapters.pipdeptree_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.pipdeptree_adapter.subprocess.run")
     def test_run_invalid_json_returns_empty(self, mock_run, python_stack):
         mock_run.return_value = _make_completed_process(stdout="not-json")
         adapter = PipdeptreeAdapter()
         result = adapter.run([], "/project", python_stack)
         assert result == []
 
-    @patch("zerg.performance.adapters.pipdeptree_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.pipdeptree_adapter.subprocess.run")
     def test_run_non_list_json_returns_empty(self, mock_run, python_stack):
         mock_run.return_value = _make_completed_process(stdout='{"key": "value"}')
         adapter = PipdeptreeAdapter()
         result = adapter.run([], "/project", python_stack)
         assert result == []
 
-    @patch("zerg.performance.adapters.pipdeptree_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.pipdeptree_adapter.subprocess.run")
     def test_run_os_error_returns_empty(self, mock_run, python_stack):
         mock_run.side_effect = OSError("no binary")
         adapter = PipdeptreeAdapter()
         result = adapter.run([], "/project", python_stack)
         assert result == []
 
-    @patch("zerg.performance.adapters.pipdeptree_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.pipdeptree_adapter.subprocess.run")
     def test_run_empty_tree_no_findings(self, mock_run, python_stack):
         mock_run.return_value = _make_completed_process(stdout="[]")
         adapter = PipdeptreeAdapter()
@@ -109,7 +109,7 @@ class TestPipdeptreeAdapter:
         ],
         ids=["high-transitive", "medium-transitive", "below-threshold"],
     )
-    @patch("zerg.performance.adapters.pipdeptree_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.pipdeptree_adapter.subprocess.run")
     def test_transitive_count_thresholds(
         self, mock_run, python_stack, transitive_count, expected_severity, expected_rule
     ):
@@ -139,7 +139,7 @@ class TestPipdeptreeAdapter:
         ],
         ids=["high-depth", "medium-depth", "below-depth-threshold"],
     )
-    @patch("zerg.performance.adapters.pipdeptree_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.pipdeptree_adapter.subprocess.run")
     def test_depth_thresholds(self, mock_run, python_stack, depth, expected_severity, expected_rule):
         """Test dependency chain depth triggers correct severity."""
         # Build a linear chain of the given depth
@@ -161,7 +161,7 @@ class TestPipdeptreeAdapter:
             assert depth_findings[0].severity == expected_severity
             assert depth_findings[0].rule_id == expected_rule
 
-    @patch("zerg.performance.adapters.pipdeptree_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.pipdeptree_adapter.subprocess.run")
     def test_conflict_in_stderr(self, mock_run, python_stack):
         """stderr containing 'conflict' should produce a finding."""
         mock_run.return_value = _make_completed_process(stdout="[]", stderr="Warning: version conflict detected")
@@ -171,7 +171,7 @@ class TestPipdeptreeAdapter:
         assert findings[0].rule_id == "version-conflict"
         assert findings[0].severity == Severity.HIGH
 
-    @patch("zerg.performance.adapters.pipdeptree_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.pipdeptree_adapter.subprocess.run")
     def test_non_dict_packages_ignored(self, mock_run, python_stack):
         """Non-dict entries in the package list should be skipped."""
         packages = ["not-a-dict", 42, None, {"package_name": "valid", "dependencies": []}]
@@ -181,7 +181,7 @@ class TestPipdeptreeAdapter:
         # No crash, should produce no findings (only 0 transitive deps)
         assert isinstance(findings, list)
 
-    @patch("zerg.performance.adapters.pipdeptree_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.pipdeptree_adapter.subprocess.run")
     def test_non_dict_deps_in_measure_deps(self, mock_run, python_stack):
         """Non-dict entries in dependencies list should be skipped."""
         packages = [
@@ -192,7 +192,7 @@ class TestPipdeptreeAdapter:
         findings = adapter.run([], "/project", python_stack)
         assert isinstance(findings, list)
 
-    @patch("zerg.performance.adapters.pipdeptree_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.pipdeptree_adapter.subprocess.run")
     def test_non_list_dependencies_field(self, mock_run, python_stack):
         """If dependencies field is not a list, it should be skipped."""
         packages = [{"package_name": "root", "dependencies": "not-a-list"}]
@@ -222,21 +222,21 @@ class TestJscpdAdapter:
         assert adapter.tool_name == "jscpd"
         assert 84 in adapter.factors_covered
 
-    @patch("zerg.performance.adapters.jscpd_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.jscpd_adapter.subprocess.run")
     def test_run_subprocess_failure(self, mock_run, python_stack):
         mock_run.side_effect = subprocess.SubprocessError("boom")
         adapter = JscpdAdapter()
         result = adapter.run([], "/project", python_stack)
         assert result == []
 
-    @patch("zerg.performance.adapters.jscpd_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.jscpd_adapter.subprocess.run")
     def test_run_os_error(self, mock_run, python_stack):
         mock_run.side_effect = OSError("no binary")
         adapter = JscpdAdapter()
         result = adapter.run([], "/project", python_stack)
         assert result == []
 
-    @patch("zerg.performance.adapters.jscpd_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.jscpd_adapter.subprocess.run")
     def test_run_no_report_file(self, mock_run, python_stack):
         """When jscpd succeeds but produces no report file."""
         mock_run.return_value = _make_completed_process(stdout="")
@@ -244,9 +244,9 @@ class TestJscpdAdapter:
         result = adapter.run([], "/project", python_stack)
         assert result == []
 
-    @patch("zerg.performance.adapters.jscpd_adapter.Path.exists", return_value=True)
-    @patch("zerg.performance.adapters.jscpd_adapter.Path.read_text")
-    @patch("zerg.performance.adapters.jscpd_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.jscpd_adapter.Path.exists", return_value=True)
+    @patch("mahabharatha.performance.adapters.jscpd_adapter.Path.read_text")
+    @patch("mahabharatha.performance.adapters.jscpd_adapter.subprocess.run")
     def test_run_invalid_json_in_report(self, mock_run, mock_read, mock_exists, python_stack):
         mock_run.return_value = _make_completed_process()
         mock_read.return_value = "not-json"
@@ -387,35 +387,35 @@ class TestClocAdapter:
         assert adapter.tool_name == "cloc"
         assert 115 in adapter.factors_covered
 
-    @patch("zerg.performance.adapters.cloc_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.cloc_adapter.subprocess.run")
     def test_run_subprocess_failure(self, mock_run, python_stack):
         mock_run.side_effect = subprocess.SubprocessError("boom")
         adapter = ClocAdapter()
         result = adapter.run([], "/project", python_stack)
         assert result == []
 
-    @patch("zerg.performance.adapters.cloc_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.cloc_adapter.subprocess.run")
     def test_run_os_error(self, mock_run, python_stack):
         mock_run.side_effect = OSError("no cloc")
         adapter = ClocAdapter()
         result = adapter.run([], "/project", python_stack)
         assert result == []
 
-    @patch("zerg.performance.adapters.cloc_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.cloc_adapter.subprocess.run")
     def test_run_invalid_json(self, mock_run, python_stack):
         mock_run.return_value = _make_completed_process(stdout="not json")
         adapter = ClocAdapter()
         result = adapter.run([], "/project", python_stack)
         assert result == []
 
-    @patch("zerg.performance.adapters.cloc_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.cloc_adapter.subprocess.run")
     def test_run_non_dict_output(self, mock_run, python_stack):
         mock_run.return_value = _make_completed_process(stdout="[1,2,3]")
         adapter = ClocAdapter()
         result = adapter.run([], "/project", python_stack)
         assert result == []
 
-    @patch("zerg.performance.adapters.cloc_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.cloc_adapter.subprocess.run")
     def test_analyze_no_sum_section(self, mock_run, python_stack):
         """Missing SUM section produces no findings."""
         data = {"Python": {"code": 100, "comment": 10, "nFiles": 5}}
@@ -424,7 +424,7 @@ class TestClocAdapter:
         result = adapter.run([], "/project", python_stack)
         assert result == []
 
-    @patch("zerg.performance.adapters.cloc_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.cloc_adapter.subprocess.run")
     def test_analyze_non_dict_sum(self, mock_run, python_stack):
         """Non-dict SUM section produces no findings."""
         data = {"SUM": "not-a-dict"}
@@ -450,7 +450,7 @@ class TestClocAdapter:
             "zero-lines",
         ],
     )
-    @patch("zerg.performance.adapters.cloc_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.cloc_adapter.subprocess.run")
     def test_analyze_thresholds(
         self,
         mock_run,
@@ -481,7 +481,7 @@ class TestClocAdapter:
         else:
             assert len(large) == 0
 
-    @patch("zerg.performance.adapters.cloc_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.cloc_adapter.subprocess.run")
     def test_analyze_non_numeric_values(self, mock_run, python_stack):
         """Non-numeric values for code/comment/nFiles should default to 0."""
         data = {"SUM": {"code": "many", "comment": None, "nFiles": "lots"}}
@@ -515,35 +515,35 @@ class TestDeptryAdapter:
         assert 79 in adapter.factors_covered
         assert 120 in adapter.factors_covered
 
-    @patch("zerg.performance.adapters.deptry_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.deptry_adapter.subprocess.run")
     def test_run_subprocess_failure(self, mock_run, python_stack):
         mock_run.side_effect = subprocess.SubprocessError("boom")
         adapter = DeptryAdapter()
         result = adapter.run([], "/project", python_stack)
         assert result == []
 
-    @patch("zerg.performance.adapters.deptry_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.deptry_adapter.subprocess.run")
     def test_run_os_error(self, mock_run, python_stack):
         mock_run.side_effect = OSError("no deptry")
         adapter = DeptryAdapter()
         result = adapter.run([], "/project", python_stack)
         assert result == []
 
-    @patch("zerg.performance.adapters.deptry_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.deptry_adapter.subprocess.run")
     def test_run_invalid_json(self, mock_run, python_stack):
         mock_run.return_value = _make_completed_process(stdout="not-json")
         adapter = DeptryAdapter()
         result = adapter.run([], "/project", python_stack)
         assert result == []
 
-    @patch("zerg.performance.adapters.deptry_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.deptry_adapter.subprocess.run")
     def test_run_non_list_output(self, mock_run, python_stack):
         mock_run.return_value = _make_completed_process(stdout='{"key": "val"}')
         adapter = DeptryAdapter()
         result = adapter.run([], "/project", python_stack)
         assert result == []
 
-    @patch("zerg.performance.adapters.deptry_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.deptry_adapter.subprocess.run")
     def test_run_empty_violations(self, mock_run, python_stack):
         mock_run.return_value = _make_completed_process(stdout="[]")
         adapter = DeptryAdapter()
@@ -561,7 +561,7 @@ class TestDeptryAdapter:
         ],
         ids=["DEP001", "DEP002", "DEP003", "DEP004", "unknown-code"],
     )
-    @patch("zerg.performance.adapters.deptry_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.deptry_adapter.subprocess.run")
     def test_violation_error_codes(self, mock_run, python_stack, error_code, expected_severity, expected_desc):
         violations = [{"error_code": error_code, "module": "requests", "message": "issue detail"}]
         mock_run.return_value = _make_completed_process(stdout=json.dumps(violations))
@@ -574,7 +574,7 @@ class TestDeptryAdapter:
         assert findings[0].tool == "deptry"
         assert findings[0].rule_id == error_code
 
-    @patch("zerg.performance.adapters.deptry_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.deptry_adapter.subprocess.run")
     def test_violation_without_message(self, mock_run, python_stack):
         """Violation with empty message uses shorter format."""
         violations = [{"error_code": "DEP001", "module": "flask", "message": ""}]
@@ -584,7 +584,7 @@ class TestDeptryAdapter:
         assert len(findings) == 1
         assert findings[0].message == "Missing dependency: flask"
 
-    @patch("zerg.performance.adapters.deptry_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.deptry_adapter.subprocess.run")
     def test_non_dict_violation_skipped(self, mock_run, python_stack):
         """Non-dict entries in violations list should be skipped."""
         violations = ["not-a-dict", 42, None]
@@ -608,7 +608,7 @@ class TestDeptryAdapter:
         result = DeptryAdapter._suggestion_for(error_code, module)
         assert expected_snippet in result
 
-    @patch("zerg.performance.adapters.deptry_adapter.subprocess.run")
+    @patch("mahabharatha.performance.adapters.deptry_adapter.subprocess.run")
     def test_multiple_violations(self, mock_run, python_stack):
         """Multiple violations should produce multiple findings."""
         violations = [

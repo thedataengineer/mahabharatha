@@ -1,4 +1,4 @@
-"""Unit tests for zerg.rendering.status_renderer.
+"""Unit tests for mahabharatha.rendering.status_renderer.
 
 Covers standalone helpers, DashboardRenderer methods, and standalone
 render functions. Mocks Rich Console for output capture and StateManager
@@ -16,8 +16,8 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 
-from zerg.constants import TaskStatus, WorkerStatus
-from zerg.rendering.status_renderer import (
+from mahabharatha.constants import TaskStatus, WorkerStatus
+from mahabharatha.rendering.status_renderer import (
     LEVEL_SYMBOLS,
     STEP_INDICATORS,
     WORKER_COLORS,
@@ -42,7 +42,7 @@ from zerg.rendering.status_renderer import (
     show_worker_status,
     show_workers_view,
 )
-from zerg.types import LevelMetrics, WorkerMetrics, WorkerState
+from mahabharatha.types import LevelMetrics, WorkerMetrics, WorkerState
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -453,21 +453,21 @@ class TestDashboardRendererLevels:
 class TestDashboardRendererWorkers:
     """Tests for DashboardRenderer._render_workers."""
 
-    @patch("zerg.rendering.status_renderer.HeartbeatMonitor")
+    @patch("mahabharatha.rendering.status_renderer.HeartbeatMonitor")
     def test_no_workers_state_source(self, mock_hb_cls: MagicMock) -> None:
         sm = _make_state_manager(workers={})
         renderer = DashboardRenderer(sm, "feat", data_source="state")
         panel = renderer._render_workers()
         assert isinstance(panel, Panel)
 
-    @patch("zerg.rendering.status_renderer.HeartbeatMonitor")
+    @patch("mahabharatha.rendering.status_renderer.HeartbeatMonitor")
     def test_no_workers_tasks_source(self, mock_hb_cls: MagicMock) -> None:
         sm = _make_state_manager(workers={})
         renderer = DashboardRenderer(sm, "feat", data_source="tasks")
         panel = renderer._render_workers()
         assert isinstance(panel, Panel)
 
-    @patch("zerg.rendering.status_renderer.HeartbeatMonitor")
+    @patch("mahabharatha.rendering.status_renderer.HeartbeatMonitor")
     def test_worker_with_context_bar(self, mock_hb_cls: MagicMock) -> None:
         mock_hb_cls.return_value.read.return_value = None
         w = _make_worker(context_usage=0.5)
@@ -476,7 +476,7 @@ class TestDashboardRendererWorkers:
         panel = renderer._render_workers()
         assert isinstance(panel, Panel)
 
-    @patch("zerg.rendering.status_renderer.HeartbeatMonitor")
+    @patch("mahabharatha.rendering.status_renderer.HeartbeatMonitor")
     def test_worker_high_context_warning(self, mock_hb_cls: MagicMock) -> None:
         mock_hb_cls.return_value.read.return_value = None
         w = _make_worker(context_usage=0.90)
@@ -485,7 +485,7 @@ class TestDashboardRendererWorkers:
         panel = renderer._render_workers()
         assert isinstance(panel, Panel)
 
-    @patch("zerg.rendering.status_renderer.HeartbeatMonitor")
+    @patch("mahabharatha.rendering.status_renderer.HeartbeatMonitor")
     def test_worker_medium_context(self, mock_hb_cls: MagicMock) -> None:
         mock_hb_cls.return_value.read.return_value = None
         w = _make_worker(context_usage=0.75)
@@ -494,7 +494,7 @@ class TestDashboardRendererWorkers:
         panel = renderer._render_workers()
         assert isinstance(panel, Panel)
 
-    @patch("zerg.rendering.status_renderer.HeartbeatMonitor")
+    @patch("mahabharatha.rendering.status_renderer.HeartbeatMonitor")
     def test_worker_with_step_progress(self, mock_hb_cls: MagicMock) -> None:
         heartbeat = MagicMock()
         heartbeat.task_id = "TASK-001"
@@ -507,7 +507,7 @@ class TestDashboardRendererWorkers:
         panel = renderer._render_workers()
         assert isinstance(panel, Panel)
 
-    @patch("zerg.rendering.status_renderer.HeartbeatMonitor")
+    @patch("mahabharatha.rendering.status_renderer.HeartbeatMonitor")
     def test_worker_no_current_task(self, mock_hb_cls: MagicMock) -> None:
         mock_hb_cls.return_value.read.return_value = None
         w = _make_worker(current_task=None, status=WorkerStatus.IDLE)
@@ -661,7 +661,7 @@ class TestDashboardRendererEvents:
 class TestDashboardRendererRender:
     """Tests for DashboardRenderer.render (full dashboard)."""
 
-    @patch("zerg.rendering.status_renderer.HeartbeatMonitor")
+    @patch("mahabharatha.rendering.status_renderer.HeartbeatMonitor")
     def test_render_returns_group(self, mock_hb_cls: MagicMock) -> None:
         mock_hb_cls.return_value.read.return_value = None
         sm = _make_state_manager()
@@ -855,7 +855,7 @@ class TestShowRecentEvents:
 class TestShowTasksView:
     """Tests for show_tasks_view."""
 
-    @patch("zerg.rendering.status_renderer.HeartbeatMonitor")
+    @patch("mahabharatha.rendering.status_renderer.HeartbeatMonitor")
     def test_no_tasks(self, mock_hb_cls: MagicMock) -> None:
         c = _make_console()
         sm = _make_state_manager(tasks={})
@@ -863,7 +863,7 @@ class TestShowTasksView:
         output = _get_output(c)
         assert "No tasks found" in output
 
-    @patch("zerg.rendering.status_renderer.HeartbeatMonitor")
+    @patch("mahabharatha.rendering.status_renderer.HeartbeatMonitor")
     def test_tasks_with_various_statuses(self, mock_hb_cls: MagicMock) -> None:
         mock_hb_cls.return_value.read.return_value = None
         tasks = {
@@ -878,7 +878,7 @@ class TestShowTasksView:
         output = _get_output(c)
         assert "Task Details" in output
 
-    @patch("zerg.rendering.status_renderer.HeartbeatMonitor")
+    @patch("mahabharatha.rendering.status_renderer.HeartbeatMonitor")
     def test_tasks_level_filter(self, mock_hb_cls: MagicMock) -> None:
         mock_hb_cls.return_value.read.return_value = None
         tasks = {
@@ -891,7 +891,7 @@ class TestShowTasksView:
         output = _get_output(c)
         assert "Task Details" in output
 
-    @patch("zerg.rendering.status_renderer.HeartbeatMonitor")
+    @patch("mahabharatha.rendering.status_renderer.HeartbeatMonitor")
     def test_task_with_step_progress(self, mock_hb_cls: MagicMock) -> None:
         heartbeat = MagicMock()
         heartbeat.task_id = "T1"
@@ -911,7 +911,7 @@ class TestShowTasksView:
 class TestShowWorkersView:
     """Tests for show_workers_view."""
 
-    @patch("zerg.rendering.status_renderer.HeartbeatMonitor")
+    @patch("mahabharatha.rendering.status_renderer.HeartbeatMonitor")
     def test_no_workers(self, mock_hb_cls: MagicMock) -> None:
         c = _make_console()
         sm = _make_state_manager(workers={})
@@ -919,20 +919,20 @@ class TestShowWorkersView:
         output = _get_output(c)
         assert "No workers active" in output
 
-    @patch("zerg.rendering.status_renderer.HeartbeatMonitor")
+    @patch("mahabharatha.rendering.status_renderer.HeartbeatMonitor")
     def test_worker_with_details(self, mock_hb_cls: MagicMock) -> None:
         mock_hb_cls.return_value.read.return_value = None
         w = _make_worker(context_usage=0.6)
         sm = _make_state_manager(
             workers={1: w},
-            workers_data={"1": {"container": "zerg-worker-1"}},
+            workers_data={"1": {"container": "mahabharatha-worker-1"}},
         )
         c = _make_console()
         show_workers_view(sm, _console=c)
         output = _get_output(c)
         assert "Worker Details" in output
 
-    @patch("zerg.rendering.status_renderer.HeartbeatMonitor")
+    @patch("mahabharatha.rendering.status_renderer.HeartbeatMonitor")
     def test_worker_with_heartbeat_step_progress(self, mock_hb_cls: MagicMock) -> None:
         heartbeat = MagicMock()
         heartbeat.task_id = "TASK-001"
@@ -942,7 +942,7 @@ class TestShowWorkersView:
         w = _make_worker(current_task="TASK-001")
         sm = _make_state_manager(
             workers={1: w},
-            workers_data={"1": {"container": "zerg-worker-1"}},
+            workers_data={"1": {"container": "mahabharatha-worker-1"}},
         )
         c = _make_console()
         show_workers_view(sm, _console=c)
@@ -960,7 +960,7 @@ class TestShowCommitsView:
         output = _get_output(c)
         assert "No workers active" in output
 
-    @patch("zerg.rendering.status_renderer.subprocess.run")
+    @patch("mahabharatha.rendering.status_renderer.subprocess.run")
     def test_with_commits(self, mock_run: MagicMock) -> None:
         mock_run.return_value = MagicMock(
             returncode=0,
@@ -970,13 +970,13 @@ class TestShowCommitsView:
         c = _make_console()
         sm = _make_state_manager(
             workers={1: w},
-            workers_data={"1": {"branch": "zerg/feat/worker-1"}},
+            workers_data={"1": {"branch": "mahabharatha/feat/worker-1"}},
         )
         show_commits_view(sm, "feat", _console=c)
         output = _get_output(c)
         assert "Worker Commits" in output
 
-    @patch("zerg.rendering.status_renderer.subprocess.run")
+    @patch("mahabharatha.rendering.status_renderer.subprocess.run")
     def test_branch_not_found(self, mock_run: MagicMock) -> None:
         mock_run.return_value = MagicMock(returncode=128, stdout="")
         w = _make_worker()
@@ -986,7 +986,7 @@ class TestShowCommitsView:
         output = _get_output(c)
         assert "Worker Commits" in output
 
-    @patch("zerg.rendering.status_renderer.subprocess.run")
+    @patch("mahabharatha.rendering.status_renderer.subprocess.run")
     def test_git_error(self, mock_run: MagicMock) -> None:
         mock_run.side_effect = Exception("git error")
         w = _make_worker()
@@ -1000,7 +1000,7 @@ class TestShowCommitsView:
 class TestShowWorkerMetrics:
     """Tests for show_worker_metrics."""
 
-    @patch("zerg.rendering.status_renderer.MetricsCollector")
+    @patch("mahabharatha.rendering.status_renderer.MetricsCollector")
     def test_with_worker_metrics(self, mock_mc_cls: MagicMock) -> None:
         wm = WorkerMetrics(
             worker_id=1,
@@ -1020,7 +1020,7 @@ class TestShowWorkerMetrics:
         output = _get_output(c)
         assert "Worker Metrics" in output
 
-    @patch("zerg.rendering.status_renderer.MetricsCollector")
+    @patch("mahabharatha.rendering.status_renderer.MetricsCollector")
     def test_worker_with_failures(self, mock_mc_cls: MagicMock) -> None:
         wm = WorkerMetrics(
             worker_id=1,
@@ -1039,7 +1039,7 @@ class TestShowWorkerMetrics:
         assert "Worker Metrics" in output
         assert "failed" in output
 
-    @patch("zerg.rendering.status_renderer.MetricsCollector")
+    @patch("mahabharatha.rendering.status_renderer.MetricsCollector")
     def test_no_worker_metrics(self, mock_mc_cls: MagicMock) -> None:
         feature_metrics = MagicMock()
         feature_metrics.worker_metrics = []
@@ -1052,7 +1052,7 @@ class TestShowWorkerMetrics:
         # Should not print header when no metrics
         assert "Worker Metrics" not in output
 
-    @patch("zerg.rendering.status_renderer.MetricsCollector")
+    @patch("mahabharatha.rendering.status_renderer.MetricsCollector")
     def test_metrics_exception(self, mock_mc_cls: MagicMock) -> None:
         mock_mc_cls.return_value.compute_feature_metrics.side_effect = RuntimeError("bad")
 
@@ -1067,7 +1067,7 @@ class TestShowWorkerMetrics:
 class TestShowLevelMetrics:
     """Tests for show_level_metrics."""
 
-    @patch("zerg.rendering.status_renderer.MetricsCollector")
+    @patch("mahabharatha.rendering.status_renderer.MetricsCollector")
     def test_with_level_metrics(self, mock_mc_cls: MagicMock) -> None:
         lm = LevelMetrics(
             level=1,
@@ -1088,7 +1088,7 @@ class TestShowLevelMetrics:
         output = _get_output(c)
         assert "Level Metrics" in output
 
-    @patch("zerg.rendering.status_renderer.MetricsCollector")
+    @patch("mahabharatha.rendering.status_renderer.MetricsCollector")
     def test_level_with_failures(self, mock_mc_cls: MagicMock) -> None:
         lm = LevelMetrics(
             level=1,
@@ -1110,7 +1110,7 @@ class TestShowLevelMetrics:
         assert "Level Metrics" in output
         assert "failed" in output
 
-    @patch("zerg.rendering.status_renderer.MetricsCollector")
+    @patch("mahabharatha.rendering.status_renderer.MetricsCollector")
     def test_no_level_metrics(self, mock_mc_cls: MagicMock) -> None:
         feature_metrics = MagicMock()
         feature_metrics.level_metrics = []
@@ -1122,7 +1122,7 @@ class TestShowLevelMetrics:
         output = _get_output(c)
         assert "Level Metrics" not in output
 
-    @patch("zerg.rendering.status_renderer.MetricsCollector")
+    @patch("mahabharatha.rendering.status_renderer.MetricsCollector")
     def test_metrics_exception(self, mock_mc_cls: MagicMock) -> None:
         mock_mc_cls.return_value.compute_feature_metrics.side_effect = RuntimeError("bad")
 
@@ -1136,7 +1136,7 @@ class TestShowLevelMetrics:
 class TestShowStatus:
     """Tests for show_status (composite function)."""
 
-    @patch("zerg.rendering.status_renderer.MetricsCollector")
+    @patch("mahabharatha.rendering.status_renderer.MetricsCollector")
     def test_basic_status(self, mock_mc_cls: MagicMock) -> None:
         feature_metrics = MagicMock()
         feature_metrics.worker_metrics = []
@@ -1151,7 +1151,7 @@ class TestShowStatus:
         assert "my-feat" in output
         assert "Progress" in output
 
-    @patch("zerg.rendering.status_renderer.MetricsCollector")
+    @patch("mahabharatha.rendering.status_renderer.MetricsCollector")
     def test_status_with_error(self, mock_mc_cls: MagicMock) -> None:
         feature_metrics = MagicMock()
         feature_metrics.worker_metrics = []
@@ -1164,7 +1164,7 @@ class TestShowStatus:
         output = _get_output(c)
         assert "Something went wrong" in output
 
-    @patch("zerg.rendering.status_renderer.MetricsCollector")
+    @patch("mahabharatha.rendering.status_renderer.MetricsCollector")
     def test_status_no_tasks_uses_fallback(self, mock_mc_cls: MagicMock) -> None:
         feature_metrics = MagicMock()
         feature_metrics.worker_metrics = []
@@ -1196,7 +1196,7 @@ class TestBuildStatusOutput:
 class TestShowJsonStatus:
     """Tests for show_json_status."""
 
-    @patch("zerg.rendering.status_renderer.get_metrics_dict")
+    @patch("mahabharatha.rendering.status_renderer.get_metrics_dict")
     def test_json_output(self, mock_get_metrics: MagicMock) -> None:
         mock_get_metrics.return_value = None
         c = _make_console()
@@ -1228,7 +1228,7 @@ class TestShowLiveStatus:
             if call_count >= 1:
                 raise KeyboardInterrupt
 
-        with patch("zerg.event_emitter.EventEmitter") as mock_emitter_cls:
+        with patch("mahabharatha.event_emitter.EventEmitter") as mock_emitter_cls:
             mock_emitter = MagicMock()
             mock_emitter_cls.return_value = mock_emitter
 
@@ -1298,9 +1298,9 @@ class TestShowDashboard:
             if call_count >= 1:
                 raise KeyboardInterrupt
 
-        from zerg.rendering.status_renderer import show_dashboard
+        from mahabharatha.rendering.status_renderer import show_dashboard
 
-        with patch("zerg.rendering.status_renderer.HeartbeatMonitor"):
+        with patch("mahabharatha.rendering.status_renderer.HeartbeatMonitor"):
             show_dashboard(
                 sm,
                 "feat",
@@ -1313,9 +1313,9 @@ class TestShowDashboard:
 class TestGetMetricsDict:
     """Tests for get_metrics_dict."""
 
-    @patch("zerg.rendering.status_renderer.MetricsCollector")
+    @patch("mahabharatha.rendering.status_renderer.MetricsCollector")
     def test_returns_dict(self, mock_mc_cls: MagicMock) -> None:
-        from zerg.rendering.status_renderer import get_metrics_dict
+        from mahabharatha.rendering.status_renderer import get_metrics_dict
 
         feature_metrics = MagicMock()
         feature_metrics.to_dict.return_value = {"tasks_total": 10}
@@ -1325,9 +1325,9 @@ class TestGetMetricsDict:
         result = get_metrics_dict(sm)
         assert result == {"tasks_total": 10}
 
-    @patch("zerg.rendering.status_renderer.MetricsCollector")
+    @patch("mahabharatha.rendering.status_renderer.MetricsCollector")
     def test_returns_none_on_error(self, mock_mc_cls: MagicMock) -> None:
-        from zerg.rendering.status_renderer import get_metrics_dict
+        from mahabharatha.rendering.status_renderer import get_metrics_dict
 
         mock_mc_cls.return_value.compute_feature_metrics.side_effect = RuntimeError("fail")
 

@@ -18,28 +18,28 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.testing import CliRunner
 
-from zerg.commands.merge_cmd import (
+from mahabharatha.commands.merge_cmd import (
     create_merge_plan,
     detect_feature,
     merge_cmd,
     run_quality_gates,
     show_merge_plan,
 )
-from zerg.config import QualityGate, ZergConfig
-from zerg.constants import GateResult
-from zerg.merge import MergeFlowResult
+from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.constants import GateResult
+from mahabharatha.merge import MergeFlowResult
 
 
 @pytest.fixture
-def zerg_state_dir(tmp_path: Path) -> Path:
-    """Create .zerg/state directory structure."""
-    state_dir = tmp_path / ".zerg" / "state"
+def mahabharatha_state_dir(tmp_path: Path) -> Path:
+    """Create .mahabharatha/state directory structure."""
+    state_dir = tmp_path / ".mahabharatha" / "state"
     state_dir.mkdir(parents=True, exist_ok=True)
     return state_dir
 
 
 @pytest.fixture
-def feature_state_file(zerg_state_dir: Path) -> Path:
+def feature_state_file(mahabharatha_state_dir: Path) -> Path:
     """Create a feature state file with workers."""
     state = {
         "feature": "test-feature",
@@ -52,21 +52,21 @@ def feature_state_file(zerg_state_dir: Path) -> Path:
                 "worker_id": 0,
                 "status": "running",
                 "port": 49152,
-                "branch": "zerg/test-feature/worker-0",
+                "branch": "mahabharatha/test-feature/worker-0",
                 "started_at": datetime.now().isoformat(),
             },
             "1": {
                 "worker_id": 1,
                 "status": "running",
                 "port": 49153,
-                "branch": "zerg/test-feature/worker-1",
+                "branch": "mahabharatha/test-feature/worker-1",
                 "started_at": datetime.now().isoformat(),
             },
         },
         "levels": {"1": {"status": "complete", "merge_status": "pending"}},
         "execution_log": [],
     }
-    state_file = zerg_state_dir / "test-feature.json"
+    state_file = mahabharatha_state_dir / "test-feature.json"
     state_file.write_text(json.dumps(state, indent=2))
     return state_file
 
@@ -85,11 +85,11 @@ def mock_state_manager() -> MagicMock:
     worker0 = MagicMock()
     worker0.worker_id = 0
     worker0.status = MockStatus("running")
-    worker0.branch = "zerg/test-feature/worker-0"
+    worker0.branch = "mahabharatha/test-feature/worker-0"
     worker1 = MagicMock()
     worker1.worker_id = 1
     worker1.status = MockStatus("running")
-    worker1.branch = "zerg/test-feature/worker-1"
+    worker1.branch = "mahabharatha/test-feature/worker-1"
     mock.get_all_workers.return_value = {0: worker0, 1: worker1}
     return mock
 
@@ -98,7 +98,7 @@ class TestDetectFeature:
     """Tests for detect_feature function."""
 
     def test_no_state_dir(self, tmp_path: Path, monkeypatch) -> None:
-        """Test returns None when .zerg/state does not exist."""
+        """Test returns None when .mahabharatha/state does not exist."""
         monkeypatch.chdir(tmp_path)
         assert detect_feature() is None
 
@@ -140,7 +140,7 @@ class TestShowMergePlan:
             "feature": "test-feature",
             "level": 1,
             "target": "main",
-            "staging_branch": "zerg/test-feature/staging",
+            "staging_branch": "mahabharatha/test-feature/staging",
             "branches": [{"branch": "worker-0", "worker_id": 0, "status": "running"}],
             "gates": ["lint", "test"],
             "skip_gates": False,
@@ -155,7 +155,7 @@ class TestRunQualityGates:
         """Test when all gates pass."""
         config = ZergConfig()
         config.quality_gates = [QualityGate(name="lint", command="ruff check .", required=True)]
-        with patch("zerg.commands.merge_cmd.GateRunner") as mock_runner_cls:
+        with patch("mahabharatha.commands.merge_cmd.GateRunner") as mock_runner_cls:
             mock_runner = MagicMock()
             pass_result = MagicMock()
             pass_result.result = GateResult.PASS
@@ -170,7 +170,7 @@ class TestRunQualityGates:
             QualityGate(name="lint", command="ruff check .", required=True),
             QualityGate(name="test", command="pytest", required=True),
         ]
-        with patch("zerg.commands.merge_cmd.GateRunner") as mock_runner_cls:
+        with patch("mahabharatha.commands.merge_cmd.GateRunner") as mock_runner_cls:
             mock_runner = MagicMock()
             pass_r = MagicMock()
             pass_r.result = GateResult.PASS
@@ -184,7 +184,7 @@ class TestRunQualityGates:
         """Test with no gates configured."""
         config = ZergConfig()
         config.quality_gates = []
-        with patch("zerg.commands.merge_cmd.GateRunner"):
+        with patch("mahabharatha.commands.merge_cmd.GateRunner"):
             assert run_quality_gates(config, "test", 1) == GateResult.PASS
 
 
@@ -202,7 +202,7 @@ class TestMergeCmd:
     def test_dry_run(self, tmp_path: Path, feature_state_file: Path, monkeypatch) -> None:
         """Test dry run shows plan without changes."""
         monkeypatch.chdir(tmp_path)
-        with patch("zerg.commands.merge_cmd.MergeCoordinator"):
+        with patch("mahabharatha.commands.merge_cmd.MergeCoordinator"):
             runner = CliRunner()
             result = runner.invoke(merge_cmd, ["--feature", "test-feature", "--dry-run"])
             assert result.exit_code == 0
@@ -212,8 +212,8 @@ class TestMergeCmd:
         """Test exits when quality gates fail."""
         monkeypatch.chdir(tmp_path)
         with (
-            patch("zerg.commands.merge_cmd.MergeCoordinator"),
-            patch("zerg.commands.merge_cmd.run_quality_gates") as mock_gates,
+            patch("mahabharatha.commands.merge_cmd.MergeCoordinator"),
+            patch("mahabharatha.commands.merge_cmd.run_quality_gates") as mock_gates,
         ):
             mock_gates.return_value = GateResult.FAIL
             runner = CliRunner()
@@ -225,9 +225,9 @@ class TestMergeCmd:
         """Test completes successfully."""
         monkeypatch.chdir(tmp_path)
         with (
-            patch("zerg.commands.merge_cmd.MergeCoordinator"),
-            patch("zerg.commands.merge_cmd.run_quality_gates") as mock_gates,
-            patch("zerg.commands.merge_cmd.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.merge_cmd.MergeCoordinator"),
+            patch("mahabharatha.commands.merge_cmd.run_quality_gates") as mock_gates,
+            patch("mahabharatha.commands.merge_cmd.Orchestrator") as mock_orch_cls,
         ):
             mock_gates.return_value = GateResult.PASS
             mock_orch = MagicMock()
@@ -248,9 +248,9 @@ class TestMergeCmd:
         """Test handles merge failure with conflicts."""
         monkeypatch.chdir(tmp_path)
         with (
-            patch("zerg.commands.merge_cmd.MergeCoordinator"),
-            patch("zerg.commands.merge_cmd.run_quality_gates") as mock_gates,
-            patch("zerg.commands.merge_cmd.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.merge_cmd.MergeCoordinator"),
+            patch("mahabharatha.commands.merge_cmd.run_quality_gates") as mock_gates,
+            patch("mahabharatha.commands.merge_cmd.Orchestrator") as mock_orch_cls,
         ):
             mock_gates.return_value = GateResult.PASS
             mock_orch = MagicMock()
@@ -270,8 +270,8 @@ class TestMergeCmd:
         """Test handles user abort."""
         monkeypatch.chdir(tmp_path)
         with (
-            patch("zerg.commands.merge_cmd.MergeCoordinator"),
-            patch("zerg.commands.merge_cmd.run_quality_gates") as mock_gates,
+            patch("mahabharatha.commands.merge_cmd.MergeCoordinator"),
+            patch("mahabharatha.commands.merge_cmd.run_quality_gates") as mock_gates,
         ):
             mock_gates.return_value = GateResult.PASS
             runner = CliRunner()
@@ -281,7 +281,7 @@ class TestMergeCmd:
     def test_general_exception(self, tmp_path: Path, feature_state_file: Path, monkeypatch) -> None:
         """Test handles general exceptions."""
         monkeypatch.chdir(tmp_path)
-        with patch("zerg.commands.merge_cmd.StateManager") as mock_state_cls:
+        with patch("mahabharatha.commands.merge_cmd.StateManager") as mock_state_cls:
             mock_state = MagicMock()
             mock_state.exists.side_effect = RuntimeError("Unexpected error")
             mock_state_cls.return_value = mock_state

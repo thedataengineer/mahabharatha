@@ -9,7 +9,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.testing import CliRunner
 
-from zerg.commands.debug import (
+from mahabharatha.commands.debug import (
     DebugCommand,
     DebugConfig,
     DebugPhase,
@@ -22,10 +22,10 @@ from zerg.commands.debug import (
     _load_stacktrace_file,
     debug,
 )
-from zerg.diagnostics.log_analyzer import LogPattern
-from zerg.diagnostics.recovery import RecoveryPlan, RecoveryStep
-from zerg.diagnostics.state_introspector import ZergHealthReport
-from zerg.diagnostics.system_diagnostics import SystemHealthReport
+from mahabharatha.diagnostics.log_analyzer import LogPattern
+from mahabharatha.diagnostics.recovery import RecoveryPlan, RecoveryStep
+from mahabharatha.diagnostics.state_introspector import ZergHealthReport
+from mahabharatha.diagnostics.system_diagnostics import SystemHealthReport
 
 
 class TestDebugPhaseEnum:
@@ -130,9 +130,9 @@ class TestDebugCLI:
     def test_debug_help(self) -> None:
         assert CliRunner().invoke(debug, ["--help"]).exit_code == 0
 
-    @patch("zerg.commands.debug.console")
+    @patch("mahabharatha.commands.debug.console")
     def test_debug_keyboard_interrupt(self, mock_console: MagicMock) -> None:
-        with patch("zerg.commands.debug.DebugCommand", side_effect=KeyboardInterrupt):
+        with patch("mahabharatha.commands.debug.DebugCommand", side_effect=KeyboardInterrupt):
             assert CliRunner().invoke(debug, ["--error", "Error"]).exit_code == 130
 
 
@@ -143,7 +143,7 @@ class TestDiagnosticResultExtended:
             hypotheses=[],
             root_cause="C",
             recommendation="F",
-            zerg_health=ZergHealthReport(feature="test", state_exists=True, total_tasks=5),
+            mahabharatha_health=ZergHealthReport(feature="test", state_exists=True, total_tasks=5),
             system_health=SystemHealthReport(git_clean=False, git_branch="main"),
             recovery_plan=RecoveryPlan(
                 problem="P", root_cause="C", steps=[RecoveryStep(description="S", command="cmd")]
@@ -154,7 +154,7 @@ class TestDiagnosticResultExtended:
             ],
         )
         d = result.to_dict()
-        assert d["zerg_health"]["feature"] == "test"
+        assert d["mahabharatha_health"]["feature"] == "test"
         assert d["system_health"]["git_clean"] is False
         assert len(d["recovery_plan"]["steps"]) == 1
 
@@ -162,14 +162,14 @@ class TestDiagnosticResultExtended:
 class TestDebugCommandDeep:
     def test_run_with_feature(self) -> None:
         debugger = DebugCommand()
-        with patch.object(debugger, "_run_zerg_diagnostics", side_effect=lambda r, f, w: r):
+        with patch.object(debugger, "_run_mahabharatha_diagnostics", side_effect=lambda r, f, w: r):
             with patch.object(debugger, "_plan_recovery", side_effect=lambda r: r):
                 debugger.run(error="test error", feature="my-feat")
 
     def test_plan_recovery_with_design_escalation(self) -> None:
         debugger = DebugCommand()
         diag = DiagnosticResult(symptom="test", hypotheses=[], root_cause="unknown", recommendation="fix")
-        with patch("zerg.diagnostics.recovery.RecoveryPlanner") as mock_cls:
+        with patch("mahabharatha.diagnostics.recovery.RecoveryPlanner") as mock_cls:
             mock_cls.return_value.plan.return_value = RecoveryPlan(
                 problem="test",
                 root_cause="cause",

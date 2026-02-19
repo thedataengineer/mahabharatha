@@ -57,7 +57,7 @@ PATTERNS = {
 }
 
 # ZERG branch naming pattern
-ZERG_BRANCH_PATTERN = re.compile(r"^zerg/[a-z0-9-]+/worker-[0-9]+$")
+ZERG_BRANCH_PATTERN = re.compile(r"^mahabharatha/[a-z0-9-]+/worker-[0-9]+$")
 
 
 # =============================================================================
@@ -267,10 +267,10 @@ class TestZergBranch(TestHooksBase):
     def test_valid_branch_names(self) -> None:
         """Valid ZERG branch names should pass."""
         valid_branches = [
-            "zerg/auth-feature/worker-1",
-            "zerg/user-auth/worker-5",
-            "zerg/api-v2/worker-10",
-            "zerg/fix-123/worker-0",
+            "mahabharatha/auth-feature/worker-1",
+            "mahabharatha/user-auth/worker-5",
+            "mahabharatha/api-v2/worker-10",
+            "mahabharatha/fix-123/worker-0",
         ]
         for branch in valid_branches:
             assert self.check_branch_name(branch), f"Should accept: {branch}"
@@ -281,10 +281,10 @@ class TestZergBranch(TestHooksBase):
             "main",
             "master",
             "feature/auth",
-            "zerg/auth",  # Missing worker suffix
-            "zerg/Auth/worker-1",  # Uppercase
-            "zerg/auth_feature/worker-1",  # Underscore
-            "zerg/auth/Worker-1",  # Uppercase Worker
+            "mahabharatha/auth",  # Missing worker suffix
+            "mahabharatha/Auth/worker-1",  # Uppercase
+            "mahabharatha/auth_feature/worker-1",  # Underscore
+            "mahabharatha/auth/Worker-1",  # Uppercase Worker
         ]
         for branch in invalid_branches:
             assert not self.check_branch_name(branch), f"Should reject: {branch}"

@@ -1,10 +1,10 @@
-"""Unit tests for zerg.token_tracker module."""
+"""Unit tests for mahabharatha.token_tracker module."""
 
 from __future__ import annotations
 
 import json
 
-from zerg.token_tracker import TokenTracker
+from mahabharatha.token_tracker import TokenTracker
 
 
 class TestRecordTask:

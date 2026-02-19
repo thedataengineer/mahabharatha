@@ -2,7 +2,7 @@
 
 import pytest
 
-from zerg.constants import (
+from mahabharatha.constants import (
     DEFAULT_CONTEXT_THRESHOLD,
     DEFAULT_PORT_RANGE_END,
     DEFAULT_PORT_RANGE_START,
@@ -172,15 +172,15 @@ class TestDirectoryConstants:
 
     def test_state_dir(self) -> None:
         """Test state directory path."""
-        assert STATE_DIR == ".zerg/state"
+        assert STATE_DIR == ".mahabharatha/state"
 
     def test_logs_dir(self) -> None:
         """Test logs directory path."""
-        assert LOGS_DIR == ".zerg/logs"
+        assert LOGS_DIR == ".mahabharatha/logs"
 
     def test_worktrees_dir(self) -> None:
         """Test worktrees directory path."""
-        assert WORKTREES_DIR == ".zerg-worktrees"
+        assert WORKTREES_DIR == ".mahabharatha-worktrees"
 
     def test_specs_dir(self) -> None:
         """Test specs directory path."""

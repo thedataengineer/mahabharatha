@@ -6,16 +6,16 @@ import subprocess
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from zerg.config import QualityGate, ZergConfig
-from zerg.constants import GateResult, PluginHookEvent
-from zerg.gates import GateRunner
-from zerg.plugins import (
+from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.constants import GateResult, PluginHookEvent
+from mahabharatha.gates import GateRunner
+from mahabharatha.plugins import (
     GateContext,
     LifecycleEvent,
     PluginRegistry,
     QualityGatePlugin,
 )
-from zerg.types import GateRunResult
+from mahabharatha.types import GateRunResult
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -113,7 +113,7 @@ class TestPluginLifecycle:
         assert result.result == GateResult.PASS
         assert result.gate_name == "passing-gate"
 
-    @patch("zerg.plugins.subprocess.run")
+    @patch("mahabharatha.plugins.subprocess.run")
     def test_yaml_hook_executes_command(self, mock_run: MagicMock) -> None:
         """YAML-defined hooks invoke subprocess.run on emit."""
         registry = PluginRegistry()
@@ -147,7 +147,7 @@ class TestPluginLifecycle:
         registry.emit_event(LifecycleEvent(event_type="after", data={}))
         follow_up_mock.assert_called_once()
 
-    @patch("zerg.plugins.subprocess.run")
+    @patch("mahabharatha.plugins.subprocess.run")
     def test_plugin_timeout_enforced(self, mock_run: MagicMock) -> None:
         """A YAML hook that times out does not crash the registry."""
         mock_run.side_effect = subprocess.TimeoutExpired(cmd="sleep 999", timeout=300)

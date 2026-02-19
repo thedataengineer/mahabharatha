@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pytest
 
-from zerg.config import ZergConfig
+from mahabharatha.config import ZergConfig
 
 
 @pytest.fixture(autouse=True)
@@ -28,10 +28,10 @@ def reset_cache() -> None:
 
 @pytest.fixture
 def config_dir(tmp_path: Path) -> Path:
-    """Create a temporary .zerg directory with config file."""
-    zerg_dir = tmp_path / ".zerg"
-    zerg_dir.mkdir()
-    return zerg_dir
+    """Create a temporary .mahabharatha directory with config file."""
+    mahabharatha_dir = tmp_path / ".mahabharatha"
+    mahabharatha_dir.mkdir()
+    return mahabharatha_dir
 
 
 @pytest.fixture
@@ -369,7 +369,7 @@ class TestEdgeCases:
         """Test that missing config file creates default config."""
         monkeypatch.chdir(tmp_path)
 
-        # No .zerg directory or config file
+        # No .mahabharatha directory or config file
         config = ZergConfig.load()
 
         assert config is not None
@@ -437,12 +437,12 @@ class TestCacheWithDifferentPaths:
     def test_switching_paths_reloads(self, tmp_path: Path) -> None:
         """Test that switching config paths causes reload."""
         # Create two config files
-        dir1 = tmp_path / "project1" / ".zerg"
+        dir1 = tmp_path / "project1" / ".mahabharatha"
         dir1.mkdir(parents=True)
         config1 = dir1 / "config.yaml"
         config1.write_text("workers:\n  max_concurrent: 3\n")
 
-        dir2 = tmp_path / "project2" / ".zerg"
+        dir2 = tmp_path / "project2" / ".mahabharatha"
         dir2.mkdir(parents=True)
         config2 = dir2 / "config.yaml"
         config2.write_text("workers:\n  max_concurrent: 7\n")

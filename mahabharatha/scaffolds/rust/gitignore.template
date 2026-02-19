@@ -1,0 +1,19 @@
+# Build artifacts
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+
+# Mahabharatha
+.mahabharatha/logs/
+.mahabharatha/state/
+.mahabharatha/worktrees/

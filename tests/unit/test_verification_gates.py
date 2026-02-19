@@ -5,14 +5,14 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from zerg.verification_gates import (
+from mahabharatha.verification_gates import (
     ArtifactStore,
     GatePipeline,
     GateResult,
     GateStatus,
     PipelineResult,
 )
-from zerg.verify import VerificationExecutionResult, VerificationExecutor
+from mahabharatha.verify import VerificationExecutionResult, VerificationExecutor
 
 # ---------------------------------------------------------------------------
 # Helpers

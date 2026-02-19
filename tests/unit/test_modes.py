@@ -5,8 +5,8 @@ from __future__ import annotations
 import pytest
 from click.testing import CliRunner
 
-from zerg.cli import cli
-from zerg.modes import BehavioralMode, ModeContext, ModeDetector
+from mahabharatha.cli import cli
+from mahabharatha.modes import BehavioralMode, ModeContext, ModeDetector
 
 # ── BehavioralMode Enum ─────────────────────────────────────────────
 

@@ -5,8 +5,8 @@ import threading
 import time
 from pathlib import Path
 
-from zerg.config import TokenMetricsConfig
-from zerg.token_counter import TokenCounter, TokenResult
+from mahabharatha.config import TokenMetricsConfig
+from mahabharatha.token_counter import TokenCounter, TokenResult
 
 
 class TestTokenCounterCache:
@@ -15,7 +15,7 @@ class TestTokenCounterCache:
     def test_cache_hit_returns_cache_source(self, tmp_path: Path, monkeypatch) -> None:
         """Test that second call returns result with source='cache'."""
         # Patch STATE_DIR to use temp path
-        monkeypatch.setattr("zerg.token_counter.STATE_DIR", str(tmp_path))
+        monkeypatch.setattr("mahabharatha.token_counter.STATE_DIR", str(tmp_path))
 
         config = TokenMetricsConfig(
             cache_enabled=True,
@@ -36,7 +36,7 @@ class TestTokenCounterCache:
 
     def test_lru_eviction_at_10000(self, tmp_path: Path, monkeypatch) -> None:
         """Test that cache evicts oldest entries when exceeding 10000."""
-        monkeypatch.setattr("zerg.token_counter.STATE_DIR", str(tmp_path))
+        monkeypatch.setattr("mahabharatha.token_counter.STATE_DIR", str(tmp_path))
 
         config = TokenMetricsConfig(
             cache_enabled=True,
@@ -55,7 +55,7 @@ class TestTokenCounterCache:
 
     def test_file_persistence(self, tmp_path: Path, monkeypatch) -> None:
         """Test that cache persists to file and loads on new instance."""
-        monkeypatch.setattr("zerg.token_counter.STATE_DIR", str(tmp_path))
+        monkeypatch.setattr("mahabharatha.token_counter.STATE_DIR", str(tmp_path))
 
         config = TokenMetricsConfig(
             cache_enabled=True,
@@ -87,7 +87,7 @@ class TestTokenCounterCache:
 
     def test_thread_safety(self, tmp_path: Path, monkeypatch) -> None:
         """Test that concurrent count() calls don't cause race conditions."""
-        monkeypatch.setattr("zerg.token_counter.STATE_DIR", str(tmp_path))
+        monkeypatch.setattr("mahabharatha.token_counter.STATE_DIR", str(tmp_path))
 
         config = TokenMetricsConfig(
             cache_enabled=True,
@@ -137,7 +137,7 @@ class TestTokenCounterCache:
 
     def test_cache_disabled(self, tmp_path: Path, monkeypatch) -> None:
         """Test that cache can be disabled via config."""
-        monkeypatch.setattr("zerg.token_counter.STATE_DIR", str(tmp_path))
+        monkeypatch.setattr("mahabharatha.token_counter.STATE_DIR", str(tmp_path))
 
         config = TokenMetricsConfig(
             cache_enabled=False,
@@ -155,7 +155,7 @@ class TestTokenCounterCache:
 
     def test_cache_ttl_expiration(self, tmp_path: Path, monkeypatch) -> None:
         """Test that cache entries expire after TTL."""
-        monkeypatch.setattr("zerg.token_counter.STATE_DIR", str(tmp_path))
+        monkeypatch.setattr("mahabharatha.token_counter.STATE_DIR", str(tmp_path))
 
         # Use minimum allowed TTL
         config = TokenMetricsConfig(
@@ -188,7 +188,7 @@ class TestTokenCounterCache:
 
     def test_lru_order_maintained(self, tmp_path: Path, monkeypatch) -> None:
         """Test that LRU order is maintained correctly."""
-        monkeypatch.setattr("zerg.token_counter.STATE_DIR", str(tmp_path))
+        monkeypatch.setattr("mahabharatha.token_counter.STATE_DIR", str(tmp_path))
 
         # Temporarily reduce max cache size for easier testing
         original_max = TokenCounter.MAX_CACHE_ENTRIES
@@ -232,7 +232,7 @@ class TestTokenCounterCache:
 
     def test_o1_lookup_performance(self, tmp_path: Path, monkeypatch) -> None:
         """Test that cache lookup is O(1) - constant time regardless of size."""
-        monkeypatch.setattr("zerg.token_counter.STATE_DIR", str(tmp_path))
+        monkeypatch.setattr("mahabharatha.token_counter.STATE_DIR", str(tmp_path))
 
         config = TokenMetricsConfig(
             cache_enabled=True,

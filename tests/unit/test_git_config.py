@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 import pytest
 from pydantic import ValidationError
 
-from zerg.git.config import (
+from mahabharatha.git.config import (
     GitCommitConfig,
     GitConfig,
     GitPRConfig,
@@ -65,7 +65,7 @@ class TestDetectContext:
         runner._run.return_value = MagicMock(stdout="")
         assert detect_context(runner) == "solo"
 
-        lines = "\n".join(f"  zerg/feat/worker-{i}" for i in range(5))
+        lines = "\n".join(f"  mahabharatha/feat/worker-{i}" for i in range(5))
         runner._run.return_value = MagicMock(stdout=lines)
         assert detect_context(runner) == "swarm"
 

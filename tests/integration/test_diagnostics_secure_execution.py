@@ -4,11 +4,11 @@ Tests verify that HypothesisTestRunner, StepExecutor, and RecoveryPlanner
 use CommandExecutor for secure command execution.
 """
 
-from zerg.command_executor import CommandExecutor
-from zerg.diagnostics.hypothesis_engine import HypothesisTestRunner
-from zerg.diagnostics.recovery import RecoveryPlanner, RecoveryStep
-from zerg.diagnostics.types import ErrorCategory, ScoredHypothesis
-from zerg.step_executor import StepExecutor
+from mahabharatha.command_executor import CommandExecutor
+from mahabharatha.diagnostics.hypothesis_engine import HypothesisTestRunner
+from mahabharatha.diagnostics.recovery import RecoveryPlanner, RecoveryStep
+from mahabharatha.diagnostics.types import ErrorCategory, ScoredHypothesis
+from mahabharatha.step_executor import StepExecutor
 
 
 class TestModulesUseCommandExecutor:

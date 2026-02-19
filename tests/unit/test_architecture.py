@@ -7,7 +7,7 @@ from textwrap import dedent
 
 import pytest
 
-from zerg.architecture import (
+from mahabharatha.architecture import (
     ArchitectureChecker,
     ArchitectureConfig,
     ArchitectureException,
@@ -18,7 +18,7 @@ from zerg.architecture import (
     format_violations,
     load_architecture_config,
 )
-from zerg.ast_cache import ASTCache
+from mahabharatha.ast_cache import ASTCache
 
 
 class TestArchitectureConfig:
@@ -56,15 +56,15 @@ class TestArchitectureConfig:
             "enabled": True,
             "exceptions": [
                 {"file": "__init__.py", "reason": "Package init"},
-                {"import": "zerg.plugins", "in_file": "zerg/gates.py", "reason": "Plugin integration"},
+                {"import": "mahabharatha.plugins", "in_file": "mahabharatha/gates.py", "reason": "Plugin integration"},
             ],
         }
         config = ArchitectureConfig.from_dict(data)
 
         assert len(config.exceptions) == 2
         assert config.exceptions[0].file == "__init__.py"
-        assert config.exceptions[1].import_module == "zerg.plugins"
-        assert config.exceptions[1].in_file == "zerg/gates.py"
+        assert config.exceptions[1].import_module == "mahabharatha.plugins"
+        assert config.exceptions[1].in_file == "mahabharatha/gates.py"
 
 
 class TestArchitectureChecker:

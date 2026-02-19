@@ -20,9 +20,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from zerg.constants import WorkerStatus
-from zerg.launcher_types import LauncherConfig, WorkerHandle
-from zerg.launchers.container_launcher import ContainerLauncher
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.launcher_types import LauncherConfig, WorkerHandle
+from mahabharatha.launchers.container_launcher import ContainerLauncher
 
 pytestmark = pytest.mark.docker
 
@@ -43,13 +43,13 @@ def _fake_worktree(tmp_path: Path) -> Path:
     """Create a fake worktree path with expected parent structure.
 
     ContainerLauncher derives the main repo as worktree.parent.parent.parent,
-    so we need: repo/.zerg-worktrees/feature/worker-0
+    so we need: repo/.mahabharatha-worktrees/feature/worker-0
     """
     repo = tmp_path / "repo"
-    wt = repo / ".zerg-worktrees" / "feature" / "worker-0"
+    wt = repo / ".mahabharatha-worktrees" / "feature" / "worker-0"
     wt.mkdir(parents=True)
-    # Create .zerg/state in the repo
-    (repo / ".zerg" / "state").mkdir(parents=True)
+    # Create .mahabharatha/state in the repo
+    (repo / ".mahabharatha" / "state").mkdir(parents=True)
     return wt
 
 
@@ -66,13 +66,13 @@ class TestBuildContainerCmd:
         launcher = _launcher()
         env: dict[str, str] = {"ZERG_WORKER_ID": "0"}
 
-        cmd = launcher._build_container_cmd("zerg-worker-0", wt, env)
+        cmd = launcher._build_container_cmd("mahabharatha-worker-0", wt, env)
 
         assert cmd[0] == "docker"
         assert cmd[1] == "run"
         assert "-d" in cmd
         assert "--name" in cmd
-        assert cmd[cmd.index("--name") + 1] == "zerg-worker-0"
+        assert cmd[cmd.index("--name") + 1] == "mahabharatha-worker-0"
 
     def test_resource_limits_in_command(self, tmp_path: Path) -> None:
         wt = _fake_worktree(tmp_path)
@@ -136,7 +136,7 @@ class TestBuildContainerCmd:
         launcher = _launcher()
         env: dict[str, str] = {}
 
-        with patch("zerg.launchers.container_launcher.Path.home", return_value=tmp_path):
+        with patch("mahabharatha.launchers.container_launcher.Path.home", return_value=tmp_path):
             # Create .claude dir
             claude_dir = tmp_path / ".claude"
             claude_dir.mkdir()
@@ -151,7 +151,7 @@ class TestBuildContainerCmd:
         launcher = _launcher()
         env: dict[str, str] = {}
 
-        with patch("zerg.launchers.container_launcher.Path.home", return_value=tmp_path):
+        with patch("mahabharatha.launchers.container_launcher.Path.home", return_value=tmp_path):
             # Create .claude.json file
             (tmp_path / ".claude.json").write_text("{}")
             cmd = launcher._build_container_cmd("w0", wt, env)

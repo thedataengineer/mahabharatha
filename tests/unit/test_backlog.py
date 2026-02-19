@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from zerg.backlog import (
+from mahabharatha.backlog import (
     compute_critical_path,
     estimate_sessions,
     generate_backlog_markdown,

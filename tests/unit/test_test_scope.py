@@ -1,8 +1,8 @@
-"""Unit tests for zerg.test_scope module."""
+"""Unit tests for mahabharatha.test_scope module."""
 
 from pathlib import Path
 
-from zerg.test_scope import (
+from mahabharatha.test_scope import (
     _extract_imports_from_file,
     _module_path_to_dotted,
     build_pytest_path_filter,
@@ -104,7 +104,7 @@ class TestGetModifiedModules:
                 {
                     "id": "TASK-001",
                     "files": {
-                        "create": ["zerg/new_module.py", "config.json"],
+                        "create": ["mahabharatha/new_module.py", "config.json"],
                         "modify": [],
                         "read": [],
                     },
@@ -112,7 +112,7 @@ class TestGetModifiedModules:
             ]
         }
         result = get_modified_modules(task_graph)
-        assert result == ["zerg/new_module.py"]
+        assert result == ["mahabharatha/new_module.py"]
 
     def test_extracts_modified_modules(self) -> None:
         """Extracts Python modules from files.modify."""
@@ -122,14 +122,14 @@ class TestGetModifiedModules:
                     "id": "TASK-001",
                     "files": {
                         "create": [],
-                        "modify": ["zerg/existing.py"],
+                        "modify": ["mahabharatha/existing.py"],
                         "read": [],
                     },
                 }
             ]
         }
         result = get_modified_modules(task_graph)
-        assert result == ["zerg/existing.py"]
+        assert result == ["mahabharatha/existing.py"]
 
     def test_excludes_test_files(self) -> None:
         """Test files are excluded from module list."""
@@ -138,7 +138,7 @@ class TestGetModifiedModules:
                 {
                     "id": "TASK-001",
                     "files": {
-                        "create": ["zerg/module.py", "tests/test_module.py"],
+                        "create": ["mahabharatha/module.py", "tests/test_module.py"],
                         "modify": ["test/conftest.py"],
                         "read": [],
                     },
@@ -146,7 +146,7 @@ class TestGetModifiedModules:
             ]
         }
         result = get_modified_modules(task_graph)
-        assert result == ["zerg/module.py"]
+        assert result == ["mahabharatha/module.py"]
 
 
 class TestModulePathToDotted:
@@ -154,15 +154,15 @@ class TestModulePathToDotted:
 
     def test_simple_path(self) -> None:
         """Converts simple path to dotted name."""
-        assert _module_path_to_dotted("zerg/test_scope.py") == "zerg.test_scope"
+        assert _module_path_to_dotted("mahabharatha/test_scope.py") == "mahabharatha.test_scope"
 
     def test_nested_path(self) -> None:
         """Converts nested path to dotted name."""
-        assert _module_path_to_dotted("zerg/commands/status.py") == "zerg.commands.status"
+        assert _module_path_to_dotted("mahabharatha/commands/status.py") == "mahabharatha.commands.status"
 
     def test_no_extension(self) -> None:
         """Handles path without .py extension."""
-        assert _module_path_to_dotted("zerg/module") == "zerg.module"
+        assert _module_path_to_dotted("mahabharatha/module") == "mahabharatha.module"
 
 
 class TestExtractImportsFromFile:
@@ -181,12 +181,12 @@ class TestExtractImportsFromFile:
     def test_from_import_statement(self, tmp_path: Path) -> None:
         """Extracts from...import statements."""
         test_file = tmp_path / "test.py"
-        test_file.write_text("from pathlib import Path\nfrom zerg.parser import TaskParser\n")
+        test_file.write_text("from pathlib import Path\nfrom mahabharatha.parser import TaskParser\n")
 
         imports = _extract_imports_from_file(test_file)
 
         assert "pathlib" in imports
-        assert "zerg.parser" in imports
+        assert "mahabharatha.parser" in imports
 
     def test_handles_syntax_error(self, tmp_path: Path) -> None:
         """Returns empty set for files with syntax errors."""
@@ -217,7 +217,7 @@ class TestFindAffectedTests:
     def test_no_tests_dir(self, tmp_path: Path) -> None:
         """Non-existent tests directory returns empty list."""
         nonexistent = tmp_path / "nonexistent_tests"
-        result = find_affected_tests(["zerg/module.py"], nonexistent)
+        result = find_affected_tests(["mahabharatha/module.py"], nonexistent)
         assert result == []
 
     def test_finds_importing_tests(self, tmp_path: Path) -> None:
@@ -226,11 +226,11 @@ class TestFindAffectedTests:
         tests_dir = tmp_path / "tests"
         tests_dir.mkdir()
 
-        # Create a test file that imports zerg.test_scope
+        # Create a test file that imports mahabharatha.test_scope
         test_file = tests_dir / "test_example.py"
-        test_file.write_text("from zerg.test_scope import get_scoped_test_paths\n")
+        test_file.write_text("from mahabharatha.test_scope import get_scoped_test_paths\n")
 
-        result = find_affected_tests(["zerg/test_scope.py"], tests_dir)
+        result = find_affected_tests(["mahabharatha/test_scope.py"], tests_dir)
 
         assert len(result) == 1
         assert "test_example.py" in result[0]
@@ -244,7 +244,7 @@ class TestFindAffectedTests:
         test_file = tests_dir / "test_other.py"
         test_file.write_text("import json\n")
 
-        result = find_affected_tests(["zerg/test_scope.py"], tests_dir)
+        result = find_affected_tests(["mahabharatha/test_scope.py"], tests_dir)
 
         assert result == []
 
@@ -254,9 +254,9 @@ class TestFindAffectedTests:
         tests_dir.mkdir()
 
         private_file = tests_dir / "_helper.py"
-        private_file.write_text("from zerg.test_scope import get_scoped_test_paths\n")
+        private_file.write_text("from mahabharatha.test_scope import get_scoped_test_paths\n")
 
-        result = find_affected_tests(["zerg/test_scope.py"], tests_dir)
+        result = find_affected_tests(["mahabharatha/test_scope.py"], tests_dir)
 
         assert result == []
 
@@ -275,14 +275,14 @@ class TestBuildPytestPathFilter:
         tests_dir = tmp_path / "tests"
         tests_dir.mkdir()
         existing_test = tests_dir / "test_existing.py"
-        existing_test.write_text("from zerg.module import something\n")
+        existing_test.write_text("from mahabharatha.module import something\n")
 
         task_graph = {
             "tasks": [
                 {
                     "id": "TASK-001",
                     "files": {
-                        "create": ["zerg/module.py", "tests/test_new.py"],
+                        "create": ["mahabharatha/module.py", "tests/test_new.py"],
                         "modify": [],
                         "read": [],
                     },

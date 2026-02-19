@@ -20,8 +20,8 @@ import pytest
 from click.testing import CliRunner
 from rich.panel import Panel
 
-from zerg.cli import cli
-from zerg.commands.status import (
+from mahabharatha.cli import cli
+from mahabharatha.commands.status import (
     DashboardRenderer,
     build_status_output,
     compact_progress_bar,
@@ -36,9 +36,9 @@ from zerg.commands.status import (
     show_watch_status,
     show_worker_status,
 )
-from zerg.constants import WorkerStatus
-from zerg.state import StateManager
-from zerg.types import WorkerState
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.state import StateManager
+from mahabharatha.types import WorkerState
 
 if TYPE_CHECKING:
     from pytest import MonkeyPatch
@@ -124,7 +124,7 @@ class TestDetectFeature:
     """Tests for feature auto-detection from state files."""
 
     def test_detect_no_state_directory(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
-        """Test returns None when .zerg/state directory does not exist."""
+        """Test returns None when .mahabharatha/state directory does not exist."""
         monkeypatch.chdir(tmp_path)
         result = detect_feature()
         assert result is None
@@ -132,7 +132,7 @@ class TestDetectFeature:
     def test_detect_single_state_file(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
         """Test detects feature from single state file."""
         monkeypatch.chdir(tmp_path)
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         create_test_state_file(state_dir, feature="user-auth")
 
         result = detect_feature()
@@ -160,7 +160,7 @@ class TestStatusCommand:
     def test_status_no_feature_no_state(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
         """Test status shows error when no feature found."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         runner = CliRunner()
         result = runner.invoke(cli, ["status"])
@@ -171,7 +171,7 @@ class TestStatusCommand:
     def test_status_basic_display(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
         """Test basic status display."""
         monkeypatch.chdir(tmp_path)
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         create_test_state_file(state_dir, feature="test-feature")
 
         runner = CliRunner()
@@ -182,10 +182,10 @@ class TestStatusCommand:
     def test_status_keyboard_interrupt(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
         """Test status handles KeyboardInterrupt gracefully."""
         monkeypatch.chdir(tmp_path)
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         create_test_state_file(state_dir, feature="test-feature")
 
-        with patch("zerg.commands.status.StateManager") as mock_sm:
+        with patch("mahabharatha.commands.status.StateManager") as mock_sm:
             mock_sm.return_value.exists.return_value = True
             mock_sm.return_value.load.side_effect = KeyboardInterrupt()
 
@@ -197,10 +197,10 @@ class TestStatusCommand:
     def test_status_exception_handling(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
         """Test status handles exceptions gracefully."""
         monkeypatch.chdir(tmp_path)
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         create_test_state_file(state_dir, feature="test-feature")
 
-        with patch("zerg.commands.status.StateManager") as mock_sm:
+        with patch("mahabharatha.commands.status.StateManager") as mock_sm:
             mock_sm.return_value.exists.return_value = True
             mock_sm.return_value._state = None
             mock_sm.return_value.load.side_effect = Exception("Test error")
@@ -232,7 +232,7 @@ class TestShowStatus:
             },
         )
 
-        with patch("zerg.commands.status.console") as mock_console:
+        with patch("mahabharatha.commands.status.console") as mock_console:
             show_status(mock_state, "test-feature", level_filter=None)
             assert mock_console.print.called
 
@@ -243,7 +243,7 @@ class TestShowStatus:
             error="Critical failure in TASK-001",
         )
 
-        with patch("zerg.commands.status.console") as mock_console:
+        with patch("mahabharatha.commands.status.console") as mock_console:
             show_status(mock_state, "test-feature", level_filter=None)
             calls = [str(call) for call in mock_console.print.call_args_list]
             error_displayed = any("error" in call.lower() for call in calls)
@@ -268,7 +268,7 @@ class TestShowLevelStatus:
             },
         )
 
-        with patch("zerg.commands.status.console") as mock_console:
+        with patch("mahabharatha.commands.status.console") as mock_console:
             show_level_status(mock_state, level_filter=None)
             assert mock_console.print.called
 
@@ -281,7 +281,7 @@ class TestShowLevelStatus:
             },
         )
 
-        with patch("zerg.commands.status.console") as mock_console:
+        with patch("mahabharatha.commands.status.console") as mock_console:
             show_level_status(mock_state, level_filter=2)
             assert mock_console.print.called
 
@@ -311,13 +311,13 @@ class TestShowWorkerStatus:
             port=port,
             current_task=current_task,
             context_usage=0.5,
-            branch="zerg/test/worker-0",
+            branch="mahabharatha/test/worker-0",
             started_at=datetime.now(),
         )
 
         mock_state = create_mock_state_manager(workers={0: worker})
 
-        with patch("zerg.commands.status.console") as mock_console:
+        with patch("mahabharatha.commands.status.console") as mock_console:
             show_worker_status(mock_state)
             assert mock_console.print.called
 
@@ -325,7 +325,7 @@ class TestShowWorkerStatus:
         """Test worker status with no workers."""
         mock_state = create_mock_state_manager(workers={})
 
-        with patch("zerg.commands.status.console") as mock_console:
+        with patch("mahabharatha.commands.status.console") as mock_console:
             show_worker_status(mock_state)
             assert mock_console.print.called
 
@@ -354,7 +354,7 @@ class TestShowRecentEvents:
         events = [{"timestamp": "2025-01-26T10:30:00", "event": event_type, "data": data}]
         mock_state = create_mock_state_manager(events=events)
 
-        with patch("zerg.commands.status.console") as mock_console:
+        with patch("mahabharatha.commands.status.console") as mock_console:
             show_recent_events(mock_state, limit=5)
             assert mock_console.print.called
 
@@ -362,7 +362,7 @@ class TestShowRecentEvents:
         """Test with no events."""
         mock_state = create_mock_state_manager(events=[])
 
-        with patch("zerg.commands.status.console"):
+        with patch("mahabharatha.commands.status.console"):
             show_recent_events(mock_state, limit=5)
 
 
@@ -391,9 +391,9 @@ class TestShowWatchStatus:
                 raise KeyboardInterrupt()
 
         with (
-            patch("zerg.commands.status.console"),
+            patch("mahabharatha.commands.status.console"),
             patch("time.sleep", side_effect=fake_sleep),
-            patch("zerg.commands.status.Live") as mock_live,
+            patch("mahabharatha.commands.status.Live") as mock_live,
         ):
             mock_live_instance = MagicMock()
             mock_live.return_value.__enter__ = MagicMock(return_value=mock_live_instance)
@@ -443,7 +443,7 @@ class TestShowJsonStatus:
             tasks={"TASK-001": {"status": "complete"}},
         )
 
-        with patch("zerg.commands.status.console") as mock_console:
+        with patch("mahabharatha.commands.status.console") as mock_console:
             show_json_status(mock_state, level_filter=None)
             assert mock_console.print.called
             call_args = mock_console.print.call_args[0][0]
@@ -551,8 +551,8 @@ class TestShowDashboard:
         """Test dashboard exits cleanly on keyboard interrupt."""
         mock_state = create_mock_state_manager()
 
-        with patch("zerg.commands.status.Live") as mock_live:
-            with patch("zerg.commands.status.time.sleep", side_effect=KeyboardInterrupt):
+        with patch("mahabharatha.commands.status.Live") as mock_live:
+            with patch("mahabharatha.commands.status.time.sleep", side_effect=KeyboardInterrupt):
                 show_dashboard(mock_state, "test-feature", interval=1)
 
             mock_live.assert_called_once()
@@ -569,10 +569,10 @@ class TestDashboardCLI:
     def test_dashboard_short_flag(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
         """Test -d short flag triggers show_dashboard."""
         monkeypatch.chdir(tmp_path)
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         create_test_state_file(state_dir, feature="test-feature")
 
-        with patch("zerg.commands.status.show_dashboard") as mock_show:
+        with patch("mahabharatha.commands.status.show_dashboard") as mock_show:
             runner = CliRunner()
             runner.invoke(cli, ["status", "-d", "--feature", "test-feature"])
             mock_show.assert_called_once()

@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from zerg.exceptions import TaskDependencyError, ValidationError
-from zerg.parser import TaskParser
+from mahabharatha.exceptions import TaskDependencyError, ValidationError
+from mahabharatha.parser import TaskParser
 
 
 class TestTaskParser:

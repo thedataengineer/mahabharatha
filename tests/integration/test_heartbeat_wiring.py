@@ -4,7 +4,7 @@ import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from zerg.heartbeat import HeartbeatMonitor, HeartbeatWriter
+from mahabharatha.heartbeat import HeartbeatMonitor, HeartbeatWriter
 
 
 class TestHeartbeatLauncherWiring:
@@ -21,7 +21,7 @@ class TestHeartbeatLauncherWiring:
             "step": "implementing",
             "progress_pct": 50,
         }
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
         (state_dir / "heartbeat-1.json").write_text(json.dumps(hb_data))
 
@@ -39,7 +39,7 @@ class TestHeartbeatLauncherWiring:
             "step": "implementing",
             "progress_pct": 50,
         }
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
         (state_dir / "heartbeat-1.json").write_text(json.dumps(hb_data))
 

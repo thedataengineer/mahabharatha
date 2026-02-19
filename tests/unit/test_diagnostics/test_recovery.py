@@ -4,15 +4,15 @@ from __future__ import annotations
 
 import pytest
 
-from zerg.commands.debug import DiagnosticResult
-from zerg.diagnostics.recovery import (
+from mahabharatha.commands.debug import DiagnosticResult
+from mahabharatha.diagnostics.recovery import (
     DESIGN_ESCALATION_TASK_THRESHOLD,
     RECOVERY_TEMPLATES,
     RecoveryPlan,
     RecoveryPlanner,
     RecoveryStep,
 )
-from zerg.diagnostics.state_introspector import ZergHealthReport
+from mahabharatha.diagnostics.state_introspector import ZergHealthReport
 
 
 class TestRecoveryStep:
@@ -34,14 +34,14 @@ class TestRecoveryPlan:
         plan = RecoveryPlan(
             problem="Workers crashed",
             root_cause="OOM",
-            steps=[RecoveryStep(description="Restart", command="zerg rush")],
-            verification_command="zerg status",
+            steps=[RecoveryStep(description="Restart", command="mahabharatha rush")],
+            verification_command="mahabharatha status",
             prevention="Increase memory",
         )
         d = plan.to_dict()
         assert d["problem"] == "Workers crashed"
         assert len(d["steps"]) == 1
-        assert d["verification_command"] == "zerg status"
+        assert d["verification_command"] == "mahabharatha status"
 
 
 class TestRecoveryPlanner:

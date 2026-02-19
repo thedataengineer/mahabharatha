@@ -12,9 +12,9 @@ from unittest.mock import Mock
 
 import pytest
 
-from zerg.config import RushConfig, ZergConfig
-from zerg.constants import LevelMergeStatus, WorkerStatus
-from zerg.types import WorkerState
+from mahabharatha.config import RushConfig, ZergConfig
+from mahabharatha.constants import LevelMergeStatus, WorkerStatus
+from mahabharatha.types import WorkerState
 
 
 class TestDeferMergeToShip:
@@ -41,12 +41,12 @@ class TestDeferMergeToShip:
             0: WorkerState(
                 worker_id=0,
                 status=WorkerStatus.RUNNING,
-                branch="zerg/test-feature/worker-0",
+                branch="mahabharatha/test-feature/worker-0",
             ),
             1: WorkerState(
                 worker_id=1,
                 status=WorkerStatus.RUNNING,
-                branch="zerg/test-feature/worker-1",
+                branch="mahabharatha/test-feature/worker-1",
             ),
         }
 
@@ -54,9 +54,9 @@ class TestDeferMergeToShip:
         self, config_with_deferred_merge: ZergConfig, mock_workers: dict, tmp_path: Path
     ) -> None:
         """When defer_merge_to_ship=True, level complete should not merge to main."""
-        from zerg.level_coordinator import LevelCoordinator
-        from zerg.levels import LevelController
-        from zerg.state import StateManager
+        from mahabharatha.level_coordinator import LevelCoordinator
+        from mahabharatha.levels import LevelController
+        from mahabharatha.state import StateManager
 
         # Set up mocks
         state = Mock(spec=StateManager)
@@ -105,9 +105,9 @@ class TestDeferMergeToShip:
         self, config_without_deferred_merge: ZergConfig, mock_workers: dict, tmp_path: Path
     ) -> None:
         """When defer_merge_to_ship=False, level complete should merge immediately."""
-        from zerg.level_coordinator import LevelCoordinator
-        from zerg.levels import LevelController
-        from zerg.state import StateManager
+        from mahabharatha.level_coordinator import LevelCoordinator
+        from mahabharatha.levels import LevelController
+        from mahabharatha.state import StateManager
 
         # Set up mocks
         state = Mock(spec=StateManager)
@@ -120,12 +120,12 @@ class TestDeferMergeToShip:
         levels.is_level_complete.return_value = True
 
         merger = Mock()
-        from zerg.merge import MergeFlowResult
+        from mahabharatha.merge import MergeFlowResult
 
         merge_result = MergeFlowResult(
             success=True,
             level=1,
-            source_branches=["zerg/test-feature/worker-0", "zerg/test-feature/worker-1"],
+            source_branches=["mahabharatha/test-feature/worker-0", "mahabharatha/test-feature/worker-1"],
             target_branch="main",
             merge_commit="abc123",
         )
@@ -182,7 +182,7 @@ class TestGatesAtShipOnly:
             0: WorkerState(
                 worker_id=0,
                 status=WorkerStatus.RUNNING,
-                branch="zerg/test-feature/worker-0",
+                branch="mahabharatha/test-feature/worker-0",
             ),
         }
 
@@ -190,10 +190,10 @@ class TestGatesAtShipOnly:
         self, config_gates_at_ship: ZergConfig, mock_workers: dict
     ) -> None:
         """When gates_at_ship_only=True, merge should pass skip_gates=True."""
-        from zerg.level_coordinator import LevelCoordinator
-        from zerg.levels import LevelController
-        from zerg.merge import MergeFlowResult
-        from zerg.state import StateManager
+        from mahabharatha.level_coordinator import LevelCoordinator
+        from mahabharatha.levels import LevelController
+        from mahabharatha.merge import MergeFlowResult
+        from mahabharatha.state import StateManager
 
         state = Mock(spec=StateManager)
         state.get_level_status.return_value = "active"
@@ -208,7 +208,7 @@ class TestGatesAtShipOnly:
         merge_result = MergeFlowResult(
             success=True,
             level=1,
-            source_branches=["zerg/test-feature/worker-0"],
+            source_branches=["mahabharatha/test-feature/worker-0"],
             target_branch="main",
             merge_commit="abc123",
         )
@@ -246,10 +246,10 @@ class TestGatesAtShipOnly:
         self, config_gates_every_level: ZergConfig, mock_workers: dict
     ) -> None:
         """When gates_at_ship_only=False, merge should not skip gates."""
-        from zerg.level_coordinator import LevelCoordinator
-        from zerg.levels import LevelController
-        from zerg.merge import MergeFlowResult
-        from zerg.state import StateManager
+        from mahabharatha.level_coordinator import LevelCoordinator
+        from mahabharatha.levels import LevelController
+        from mahabharatha.merge import MergeFlowResult
+        from mahabharatha.state import StateManager
 
         state = Mock(spec=StateManager)
         state.get_level_status.return_value = "active"
@@ -264,7 +264,7 @@ class TestGatesAtShipOnly:
         merge_result = MergeFlowResult(
             success=True,
             level=1,
-            source_branches=["zerg/test-feature/worker-0"],
+            source_branches=["mahabharatha/test-feature/worker-0"],
             target_branch="main",
             merge_commit="abc123",
         )
@@ -307,10 +307,10 @@ class TestShipIntegration:
         # This is a higher-level integration test
         # We verify that the git ship command handles ZERG branches correctly
 
-        from zerg.commands.git_cmd import _detect_zerg_feature
+        from mahabharatha.commands.git_cmd import _detect_mahabharatha_feature
 
         # Test ZERG branch detection
-        assert _detect_zerg_feature("zerg/my-feature/staging") == "my-feature"
-        assert _detect_zerg_feature("zerg/auth-system/worker-0") == "auth-system"
-        assert _detect_zerg_feature("main") is None
-        assert _detect_zerg_feature("feature/something") is None
+        assert _detect_mahabharatha_feature("mahabharatha/my-feature/staging") == "my-feature"
+        assert _detect_mahabharatha_feature("mahabharatha/auth-system/worker-0") == "auth-system"
+        assert _detect_mahabharatha_feature("main") is None
+        assert _detect_mahabharatha_feature("feature/something") is None

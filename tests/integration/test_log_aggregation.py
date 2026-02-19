@@ -4,9 +4,9 @@ import json
 import threading
 from pathlib import Path
 
-from zerg.config import LoggingConfig
-from zerg.log_aggregator import LogAggregator
-from zerg.log_writer import StructuredLogWriter, TaskArtifactCapture
+from mahabharatha.config import LoggingConfig
+from mahabharatha.log_aggregator import LogAggregator
+from mahabharatha.log_writer import StructuredLogWriter, TaskArtifactCapture
 
 
 class TestConcurrentWorkerLogging:

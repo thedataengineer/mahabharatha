@@ -12,15 +12,15 @@ from pathlib import Path
 from typing import Any
 from unittest.mock import MagicMock, patch
 
-from zerg.constants import (
+from mahabharatha.constants import (
     LogEvent,
     PluginHookEvent,
     TaskStatus,
     WorkerStatus,
 )
-from zerg.protocol_handler import ProtocolHandler
-from zerg.protocol_types import CLAUDE_CLI_COMMAND, CLAUDE_CLI_DEFAULT_TIMEOUT, ClaudeInvocationResult
-from zerg.verify import VerificationExecutionResult
+from mahabharatha.protocol_handler import ProtocolHandler
+from mahabharatha.protocol_types import CLAUDE_CLI_COMMAND, CLAUDE_CLI_DEFAULT_TIMEOUT, ClaudeInvocationResult
+from mahabharatha.verify import VerificationExecutionResult
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -57,7 +57,7 @@ def _make_handler(
     return ProtocolHandler(
         worker_id=1,
         feature="test-feature",
-        branch="zerg/test-feature/w1",
+        branch="mahabharatha/test-feature/w1",
         worktree_path=tmp_path,
         state=MagicMock(),
         git=MagicMock(),
@@ -237,7 +237,7 @@ class TestBuildTaskPrompt:
 class TestInvokeClaudeCode:
     """Tests for Claude CLI invocation."""
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_successful_invocation(self, mock_run: MagicMock, tmp_path: Path) -> None:
         mock_run.return_value = MagicMock(returncode=0, stdout="output", stderr="")
         handler = _make_handler(tmp_path)
@@ -258,7 +258,7 @@ class TestInvokeClaudeCode:
         assert "--print" in cmd
         assert "--dangerously-skip-permissions" in cmd
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_failed_invocation(self, mock_run: MagicMock, tmp_path: Path) -> None:
         mock_run.return_value = MagicMock(returncode=1, stdout="", stderr="error msg")
         handler = _make_handler(tmp_path)
@@ -270,7 +270,7 @@ class TestInvokeClaudeCode:
         assert result.exit_code == 1
         assert result.stderr == "error msg"
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_timeout_returns_failure(self, mock_run: MagicMock, tmp_path: Path) -> None:
         mock_run.side_effect = subprocess.TimeoutExpired(cmd="claude", timeout=30)
         handler = _make_handler(tmp_path)
@@ -282,7 +282,7 @@ class TestInvokeClaudeCode:
         assert result.exit_code == -1
         assert "timed out" in result.stderr
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_file_not_found_returns_failure(self, mock_run: MagicMock, tmp_path: Path) -> None:
         mock_run.side_effect = FileNotFoundError("claude not found")
         handler = _make_handler(tmp_path)
@@ -294,7 +294,7 @@ class TestInvokeClaudeCode:
         assert result.exit_code == -1
         assert "not found" in result.stderr
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_generic_exception_returns_failure(self, mock_run: MagicMock, tmp_path: Path) -> None:
         mock_run.side_effect = OSError("Unexpected OS error")
         handler = _make_handler(tmp_path)
@@ -306,7 +306,7 @@ class TestInvokeClaudeCode:
         assert result.exit_code == -1
         assert "Unexpected OS error" in result.stderr
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_custom_timeout_used(self, mock_run: MagicMock, tmp_path: Path) -> None:
         mock_run.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
         handler = _make_handler(tmp_path)
@@ -317,7 +317,7 @@ class TestInvokeClaudeCode:
         _, kwargs = mock_run.call_args
         assert kwargs["timeout"] == 60
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_default_timeout_used(self, mock_run: MagicMock, tmp_path: Path) -> None:
         mock_run.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
         handler = _make_handler(tmp_path)
@@ -328,8 +328,8 @@ class TestInvokeClaudeCode:
         _, kwargs = mock_run.call_args
         assert kwargs["timeout"] == CLAUDE_CLI_DEFAULT_TIMEOUT
 
-    @patch("zerg.protocol_handler.subprocess.run")
-    def test_env_vars_include_zerg_ids(self, mock_run: MagicMock, tmp_path: Path) -> None:
+    @patch("mahabharatha.protocol_handler.subprocess.run")
+    def test_env_vars_include_mahabharatha_ids(self, mock_run: MagicMock, tmp_path: Path) -> None:
         mock_run.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
         handler = _make_handler(tmp_path)
         task = _make_task()
@@ -492,7 +492,7 @@ class TestCommitTaskChanges:
         event_name = handler.state.append_event.call_args[0][0]
         assert event_name == "commit_failed"
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_commit_captures_diff_artifact(self, mock_run: MagicMock, tmp_path: Path) -> None:
         handler = _make_handler(tmp_path)
         handler.git.has_changes.return_value = True
@@ -524,7 +524,7 @@ class TestCommitTaskChanges:
         assert calls[0][0][0] == "task_committed"
         data = calls[0][0][1]
         assert data["commit_sha"] == "def456"
-        assert data["branch"] == "zerg/test-feature/w1"
+        assert data["branch"] == "mahabharatha/test-feature/w1"
 
 
 # ===================================================================
@@ -535,7 +535,7 @@ class TestCommitTaskChanges:
 class TestExecuteTask:
     """Tests for the full execute_task pipeline."""
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_successful_pipeline(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         handler = _make_handler(tmp_path)
 
@@ -551,7 +551,7 @@ class TestExecuteTask:
         handler.context_tracker.track_task_execution.assert_called_once_with("TASK-001")
         handler.state.record_task_duration.assert_called_once()
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_claude_failure_returns_false(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         handler = _make_handler(tmp_path)
 
@@ -564,7 +564,7 @@ class TestExecuteTask:
         event_name = handler.state.append_event.call_args[0][0]
         assert event_name == "claude_failed"
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_verification_failure_returns_false(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         handler = _make_handler(tmp_path)
 
@@ -575,7 +575,7 @@ class TestExecuteTask:
 
         assert result is False
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_commit_failure_returns_false(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         handler = _make_handler(tmp_path)
 
@@ -587,7 +587,7 @@ class TestExecuteTask:
 
         assert result is False
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_exception_during_execution(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         handler = _make_handler(tmp_path)
 
@@ -600,7 +600,7 @@ class TestExecuteTask:
         event_name = handler.state.append_event.call_args[0][0]
         assert event_name == "task_exception"
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_update_worker_state_callback(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         handler = _make_handler(tmp_path)
         callback = MagicMock()
@@ -613,7 +613,7 @@ class TestExecuteTask:
 
         callback.assert_called_once_with(WorkerStatus.RUNNING, current_task="TASK-001")
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_no_verification_skips_verification(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         handler = _make_handler(tmp_path)
 
@@ -625,7 +625,7 @@ class TestExecuteTask:
 
         assert result is True
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_structured_writer_task_started(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         writer = MagicMock()
         handler = _make_handler(tmp_path, structured_writer=writer)
@@ -640,7 +640,7 @@ class TestExecuteTask:
         first_call = writer.emit.call_args_list[0]
         assert first_call[1]["event"] == LogEvent.TASK_STARTED
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_structured_writer_task_completed(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         writer = MagicMock()
         handler = _make_handler(tmp_path, structured_writer=writer)
@@ -655,7 +655,7 @@ class TestExecuteTask:
         last_call = writer.emit.call_args_list[-1]
         assert last_call[1]["event"] == LogEvent.TASK_COMPLETED
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_structured_writer_claude_failure(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         writer = MagicMock()
         handler = _make_handler(tmp_path, structured_writer=writer)
@@ -669,7 +669,7 @@ class TestExecuteTask:
         assert LogEvent.TASK_STARTED in emit_events
         assert LogEvent.TASK_FAILED in emit_events
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_structured_writer_verification_failure(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         writer = MagicMock()
         handler = _make_handler(tmp_path, structured_writer=writer)
@@ -682,7 +682,7 @@ class TestExecuteTask:
         emit_events = [c[1]["event"] for c in writer.emit.call_args_list]
         assert LogEvent.VERIFICATION_FAILED in emit_events
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_structured_writer_exception(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         writer = MagicMock()
         handler = _make_handler(tmp_path, structured_writer=writer)
@@ -694,7 +694,7 @@ class TestExecuteTask:
         emit_events = [c[1]["event"] for c in writer.emit.call_args_list]
         assert LogEvent.TASK_FAILED in emit_events
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_plugin_task_started_event(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         registry = MagicMock()
         handler = _make_handler(tmp_path, plugin_registry=registry)
@@ -711,7 +711,7 @@ class TestExecuteTask:
         assert PluginHookEvent.TASK_STARTED.value in event_types
         assert PluginHookEvent.TASK_COMPLETED.value in event_types
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_plugin_task_completed_failure_event(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         registry = MagicMock()
         handler = _make_handler(tmp_path, plugin_registry=registry)
@@ -727,7 +727,7 @@ class TestExecuteTask:
         assert completed_events[0].data["success"] is False
         assert "boom" in completed_events[0].data["error"]
 
-    @patch("zerg.protocol_handler.subprocess.run")
+    @patch("mahabharatha.protocol_handler.subprocess.run")
     def test_plugin_exception_suppressed(self, _mock_run: MagicMock, tmp_path: Path) -> None:
         """Plugin errors should not crash the execution pipeline."""
         registry = MagicMock()
@@ -757,7 +757,7 @@ class TestProtocolHandlerInit:
 
         assert handler.worker_id == 1
         assert handler.feature == "test-feature"
-        assert handler.branch == "zerg/test-feature/w1"
+        assert handler.branch == "mahabharatha/test-feature/w1"
         assert handler.worktree_path == tmp_path
         assert handler._spec_context == "some context"
 

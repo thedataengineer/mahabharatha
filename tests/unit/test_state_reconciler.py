@@ -10,7 +10,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from zerg.state_reconciler import (
+from mahabharatha.state_reconciler import (
     ReconciliationFix,
     ReconciliationResult,
     StateReconciler,

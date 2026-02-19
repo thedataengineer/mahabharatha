@@ -9,9 +9,9 @@ from pathlib import Path
 
 import pytest
 
-from zerg.constants import WorkerStatus
-from zerg.containers import ContainerManager
-from zerg.launchers import ContainerLauncher
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.containers import ContainerManager
+from mahabharatha.launchers import ContainerLauncher
 
 pytestmark = pytest.mark.docker
 
@@ -31,7 +31,7 @@ class TestDockerImageOperations:
 
     def test_image_exists_false_for_missing(self) -> None:
         """image_exists() returns False for a nonexistent image."""
-        launcher = ContainerLauncher(image_name="zerg-nonexistent:never")
+        launcher = ContainerLauncher(image_name="mahabharatha-nonexistent:never")
         assert launcher.image_exists() is False
 
 
@@ -72,7 +72,7 @@ class TestContainerLifecycle:
 
     def test_stop_worker_removes(self, docker_container: tuple[str, str]) -> None:
         """stop_worker() removes the container from docker ps -a."""
-        from zerg.containers import ContainerInfo, ContainerManager
+        from mahabharatha.containers import ContainerInfo, ContainerManager
 
         cid, name = docker_container
 
@@ -134,9 +134,9 @@ class TestContainerVolumeMounts:
     def test_volume_mount_visible(self, docker_image: str, tmp_path: Path) -> None:
         """A host directory mounted into a container is readable inside."""
         marker = tmp_path / "marker.txt"
-        marker.write_text("zerg-volume-ok")
+        marker.write_text("mahabharatha-volume-ok")
 
-        name = "zerg-test-vol"
+        name = "mahabharatha-test-vol"
         result = subprocess.run(
             [
                 "docker",
@@ -145,7 +145,7 @@ class TestContainerVolumeMounts:
                 "--name",
                 name,
                 "--label",
-                "zerg-test=true",
+                "mahabharatha-test=true",
                 "-v",
                 f"{tmp_path.absolute()}:/workspace",
                 docker_image,
@@ -157,7 +157,7 @@ class TestContainerVolumeMounts:
             timeout=30,
         )
         assert result.returncode == 0
-        assert result.stdout.strip() == "zerg-volume-ok"
+        assert result.stdout.strip() == "mahabharatha-volume-ok"
 
 
 # ---------------------------------------------------------------------------
@@ -215,7 +215,7 @@ class TestContainerLauncherSpawn:
             else:
                 # Try by name pattern
                 subprocess.run(
-                    ["docker", "rm", "-f", "zerg-worker-99"],
+                    ["docker", "rm", "-f", "mahabharatha-worker-99"],
                     capture_output=True,
                     timeout=15,
                 )

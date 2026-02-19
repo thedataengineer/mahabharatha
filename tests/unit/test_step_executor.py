@@ -3,8 +3,8 @@
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from zerg.heartbeat import HeartbeatWriter
-from zerg.step_executor import (
+from mahabharatha.heartbeat import HeartbeatWriter
+from mahabharatha.step_executor import (
     Step,
     StepAction,
     StepExecutor,

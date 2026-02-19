@@ -2,7 +2,7 @@
 
 import pytest
 
-from zerg.backpressure import BackpressureController, LevelPressure
+from mahabharatha.backpressure import BackpressureController, LevelPressure
 
 
 class TestLevelPressure:

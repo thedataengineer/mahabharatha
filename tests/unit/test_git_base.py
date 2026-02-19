@@ -6,8 +6,8 @@ from unittest.mock import patch
 
 import pytest
 
-from zerg.exceptions import GitError
-from zerg.git.base import GitRunner
+from mahabharatha.exceptions import GitError
+from mahabharatha.git.base import GitRunner
 
 
 class TestGitRunnerInit:
@@ -48,7 +48,7 @@ class TestGitRunnerRun:
 
     def test_run_timeout(self, tmp_repo: Path) -> None:
         runner = GitRunner(tmp_repo)
-        with patch("zerg.git.base.subprocess.run") as mock_run:
+        with patch("mahabharatha.git.base.subprocess.run") as mock_run:
             mock_run.side_effect = subprocess.TimeoutExpired(cmd="git", timeout=1)
             with pytest.raises(GitError) as exc_info:
                 runner._run("status", timeout=1)

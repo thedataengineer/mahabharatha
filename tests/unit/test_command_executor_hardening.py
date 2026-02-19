@@ -6,7 +6,7 @@ default allowlist and that the trust_commands deprecation warning is logged.
 
 from unittest.mock import patch
 
-from zerg.command_executor import CommandExecutor
+from mahabharatha.command_executor import CommandExecutor
 
 
 class TestDangerousPrefixesRemoved:
@@ -39,7 +39,7 @@ class TestTrustCommandsDeprecation:
 
     def test_trust_commands_deprecation_warning(self):
         """trust_commands=True should log a deprecation warning."""
-        with patch("zerg.command_executor.logger") as mock_logger:
+        with patch("mahabharatha.command_executor.logger") as mock_logger:
             CommandExecutor(trust_commands=True)
             mock_logger.warning.assert_called_once()
             call_args = mock_logger.warning.call_args[0][0]
@@ -48,7 +48,7 @@ class TestTrustCommandsDeprecation:
 
     def test_no_warning_when_trust_commands_false(self):
         """trust_commands=False should not log any warning."""
-        with patch("zerg.command_executor.logger") as mock_logger:
+        with patch("mahabharatha.command_executor.logger") as mock_logger:
             CommandExecutor(trust_commands=False)
             # logger.warning should not be called for trust_commands deprecation
             for call in mock_logger.warning.call_args_list:

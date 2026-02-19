@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 from click.testing import CliRunner
 
-from zerg.cli import cli
+from mahabharatha.cli import cli
 
 pytestmark = pytest.mark.docker
 

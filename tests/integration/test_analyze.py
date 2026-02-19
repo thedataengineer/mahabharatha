@@ -7,8 +7,8 @@ from unittest.mock import patch
 
 from click.testing import CliRunner
 
-from zerg.cli import cli
-from zerg.commands.analyze import AnalysisResult, CheckType
+from mahabharatha.cli import cli
+from mahabharatha.commands.analyze import AnalysisResult, CheckType
 
 
 class TestAnalyzeCommand:
@@ -180,7 +180,7 @@ class TestAnalyzeFunctional:
         # Mock performance checker to avoid jscpd timeout (180s)
         mock_result = AnalysisResult(check_type=CheckType.PERFORMANCE, passed=True, issues=[], score=80.0)
         with patch(
-            "zerg.commands.analyze.PerformanceChecker.check",
+            "mahabharatha.commands.analyze.PerformanceChecker.check",
             return_value=mock_result,
         ):
             runner = CliRunner()

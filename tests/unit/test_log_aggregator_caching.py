@@ -7,7 +7,7 @@ import threading
 import time
 from pathlib import Path
 
-from zerg.log_aggregator import LogAggregator
+from mahabharatha.log_aggregator import LogAggregator
 
 
 class TestLogAggregatorCaching:

@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from zerg.validation import ValidationError, load_and_validate_task_graph
+from mahabharatha.validation import ValidationError, load_and_validate_task_graph
 
 
 def _write_task_graph(tmp_dir, graph_data):

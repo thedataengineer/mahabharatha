@@ -2,8 +2,8 @@
 
 from unittest.mock import MagicMock, patch
 
-from zerg.config import VerificationTiersConfig
-from zerg.verification_tiers import (
+from mahabharatha.config import VerificationTiersConfig
+from mahabharatha.verification_tiers import (
     TieredVerificationResult,
     TierResult,
     VerificationTiers,
@@ -116,7 +116,7 @@ class TestVerificationTiers:
             "verification": {"command": "echo ok", "timeout_seconds": 10},
         }
 
-        with patch("zerg.verification_tiers.CommandExecutor") as mock_cls:
+        with patch("mahabharatha.verification_tiers.CommandExecutor") as mock_cls:
             mock_executor = MagicMock()
             mock_result = MagicMock()
             mock_result.success = True
@@ -153,7 +153,7 @@ class TestVerificationTiers:
             mock_result.stderr = "lint error" if call_count == 1 else ""
             return mock_result
 
-        with patch("zerg.verification_tiers.CommandExecutor") as mock_cls:
+        with patch("mahabharatha.verification_tiers.CommandExecutor") as mock_cls:
             mock_executor = MagicMock()
             mock_executor.execute.side_effect = side_effect
             mock_cls.return_value = mock_executor

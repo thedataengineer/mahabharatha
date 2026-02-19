@@ -9,8 +9,8 @@ from pathlib import Path
 
 import pytest
 
-from zerg.exceptions import ValidationError
-from zerg.validation import (
+from mahabharatha.exceptions import ValidationError
+from mahabharatha.validation import (
     TASK_ID_PATTERN,
     TASK_ID_RELAXED_PATTERN,
     _validate_levels,

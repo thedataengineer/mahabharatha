@@ -7,17 +7,17 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.config import QualityGate, ZergConfig
-from zerg.constants import GateResult, LevelMergeStatus
-from zerg.gates import GateRunner
-from zerg.level_coordinator import GatePipeline, LevelCoordinator
-from zerg.levels import LevelController
-from zerg.merge import MergeCoordinator, MergeFlowResult
-from zerg.parser import TaskParser
-from zerg.plugins import PluginRegistry
-from zerg.state import StateManager
-from zerg.task_sync import TaskSyncBridge
-from zerg.types import GateRunResult, WorkerState
+from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.constants import GateResult, LevelMergeStatus
+from mahabharatha.gates import GateRunner
+from mahabharatha.level_coordinator import GatePipeline, LevelCoordinator
+from mahabharatha.levels import LevelController
+from mahabharatha.merge import MergeCoordinator, MergeFlowResult
+from mahabharatha.parser import TaskParser
+from mahabharatha.plugins import PluginRegistry
+from mahabharatha.state import StateManager
+from mahabharatha.task_sync import TaskSyncBridge
+from mahabharatha.types import GateRunResult, WorkerState
 
 
 @pytest.fixture
@@ -67,7 +67,7 @@ def coordinator(mock_deps):
     return LevelCoordinator(**mock_deps)
 
 
-def _add_worker(mock_deps, worker_id=0, branch="zerg/test/worker-0"):
+def _add_worker(mock_deps, worker_id=0, branch="mahabharatha/test/worker-0"):
     """Helper to add a worker with a branch to mock_deps."""
     ws = MagicMock()
     ws.branch = branch
@@ -141,7 +141,7 @@ class TestStartLevel:
         # Level still started successfully
         mock_deps["state"].set_current_level.assert_called_once_with(1)
 
-    @patch("zerg.level_coordinator.load_design_manifest")
+    @patch("mahabharatha.level_coordinator.load_design_manifest")
     def test_logs_design_manifest_found(self, mock_load_manifest, mock_deps):
         """start_level logs when design manifest is found."""
         mock_load_manifest.return_value = [{"id": "TASK-001"}, {"id": "TASK-002"}]
@@ -307,7 +307,7 @@ class TestHandleLevelComplete:
 
         coord = LevelCoordinator(**mock_deps)
 
-        with patch("zerg.level_coordinator.MetricsCollector") as mock_mc:
+        with patch("mahabharatha.level_coordinator.MetricsCollector") as mock_mc:
             mock_mc.side_effect = RuntimeError("metrics broken")
             result = coord.handle_level_complete(1)
 
@@ -411,7 +411,7 @@ class TestMergeLevel:
         merge_result = MergeFlowResult(
             success=True,
             level=1,
-            source_branches=["zerg/test/worker-0"],
+            source_branches=["mahabharatha/test/worker-0"],
             target_branch="main",
         )
         mock_deps["merger"].full_merge_flow.return_value = merge_result
@@ -420,7 +420,7 @@ class TestMergeLevel:
 
         mock_deps["merger"].full_merge_flow.assert_called_once_with(
             level=1,
-            worker_branches=["zerg/test/worker-0"],
+            worker_branches=["mahabharatha/test/worker-0"],
             target_branch="main",
             skip_gates=False,
         )
@@ -472,7 +472,7 @@ class TestMergeLevel:
 
         mock_deps["merger"].full_merge_flow.assert_called_once_with(
             level=1,
-            worker_branches=["zerg/test/worker-0"],
+            worker_branches=["mahabharatha/test/worker-0"],
             target_branch="main",
             skip_gates=True,
         )
@@ -511,7 +511,7 @@ class TestRebaseAllWorkers:
         mock_deps["workers"][0] = ws_no_branch
 
         ws_with_branch = MagicMock()
-        ws_with_branch.branch = "zerg/test/worker-1"
+        ws_with_branch.branch = "mahabharatha/test/worker-1"
         mock_deps["workers"][1] = ws_with_branch
 
         coord = LevelCoordinator(**mock_deps)
@@ -581,9 +581,9 @@ class TestGatePipeline:
         )
 
     def test_init_default_artifacts_dir(self, gate_runner):
-        """GatePipeline defaults to .zerg/artifacts when no dir provided."""
+        """GatePipeline defaults to .mahabharatha/artifacts when no dir provided."""
         pipeline = GatePipeline(gate_runner=gate_runner)
-        assert pipeline._artifacts_dir == Path(".zerg/artifacts")
+        assert pipeline._artifacts_dir == Path(".mahabharatha/artifacts")
         assert pipeline._staleness_threshold == 300
 
     def test_init_custom_values(self, gate_runner, tmp_path):

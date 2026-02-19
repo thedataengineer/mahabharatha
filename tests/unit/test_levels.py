@@ -1,11 +1,11 @@
-"""Tests for zerg.levels module."""
+"""Tests for mahabharatha.levels module."""
 
 import pytest
 
-from zerg.constants import TaskStatus
-from zerg.exceptions import LevelError
-from zerg.levels import LevelController
-from zerg.types import Task
+from mahabharatha.constants import TaskStatus
+from mahabharatha.exceptions import LevelError
+from mahabharatha.levels import LevelController
+from mahabharatha.types import Task
 
 
 class TestLevelController:

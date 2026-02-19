@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from zerg.diagnostics.state_introspector import ZergHealthReport, ZergStateIntrospector
+from mahabharatha.diagnostics.state_introspector import ZergHealthReport, ZergStateIntrospector
 
 
 class TestZergHealthReport:

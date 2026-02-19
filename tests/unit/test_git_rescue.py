@@ -1,4 +1,4 @@
-"""Tests for zerg.git.rescue -- triple-layer undo/recovery system."""
+"""Tests for mahabharatha.git.rescue -- triple-layer undo/recovery system."""
 
 from __future__ import annotations
 
@@ -9,10 +9,10 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.exceptions import GitError
-from zerg.git.base import GitRunner
-from zerg.git.config import GitConfig, GitRescueConfig
-from zerg.git.rescue import (
+from mahabharatha.exceptions import GitError
+from mahabharatha.git.base import GitRunner
+from mahabharatha.git.config import GitConfig, GitRescueConfig
+from mahabharatha.git.rescue import (
     OperationLogger,
     RescueEngine,
     SnapshotManager,
@@ -51,7 +51,7 @@ class TestValidation:
 
 class TestOperationLogger:
     def test_log_and_read(self, tmp_path: Path) -> None:
-        logger = OperationLogger(tmp_path / ".zerg" / "git-ops.log", project_root=tmp_path)
+        logger = OperationLogger(tmp_path / ".mahabharatha" / "git-ops.log", project_root=tmp_path)
         logger.log_operation("merge", "main", "abc123", "Merged feature")
         logger.log_operation("snapshot", "dev", "def456", "Pre-deploy")
         entries = logger.get_recent(10)
@@ -80,7 +80,7 @@ class TestSnapshotManager:
     def test_create_and_list(self, tmp_repo: Path) -> None:
         mgr = SnapshotManager(GitRunner(tmp_repo), GitRescueConfig(max_snapshots=5))
         snap = mgr.create_snapshot("merge", "Before merge")
-        assert snap.tag.startswith("zerg-snapshot-") and len(snap.commit) == 40
+        assert snap.tag.startswith("mahabharatha-snapshot-") and len(snap.commit) == 40
         assert len(mgr.list_snapshots()) == 1
 
     def test_restore_snapshot(self, tmp_repo: Path) -> None:
@@ -94,7 +94,7 @@ class TestSnapshotManager:
 
     def test_restore_invalid_tag(self, tmp_repo: Path) -> None:
         mgr = SnapshotManager(GitRunner(tmp_repo), GitRescueConfig())
-        with pytest.raises(ValueError, match="Not a zerg snapshot"):
+        with pytest.raises(ValueError, match="Not a mahabharatha snapshot"):
             mgr.restore_snapshot("some-other-tag")
 
     def test_prune(self, tmp_repo: Path) -> None:
@@ -160,7 +160,7 @@ class TestRescueEngine:
 
     def test_auto_snapshot(self, tmp_repo: Path) -> None:
         snap = self._make_engine(tmp_repo).auto_snapshot("merge")
-        assert snap is not None and snap.tag.startswith("zerg-snapshot-")
+        assert snap is not None and snap.tag.startswith("mahabharatha-snapshot-")
 
     def test_auto_snapshot_disabled(self, tmp_repo: Path) -> None:
         """Cover line 293: auto_snapshot returns None when disabled."""
@@ -211,7 +211,7 @@ class TestRescueEngine:
     def test_restore_invalid_tag(self, tmp_repo: Path) -> None:
         """Cover lines 368-370: restore returns False on ValueError (invalid tag)."""
         engine = self._make_engine(tmp_repo)
-        result = engine.restore("not-a-zerg-tag")
+        result = engine.restore("not-a-mahabharatha-tag")
         assert result is False
 
     def test_restore_giterror(self, tmp_repo: Path) -> None:

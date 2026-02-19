@@ -9,16 +9,16 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.constants import WorkerStatus
-from zerg.launcher_types import LauncherConfig, SpawnResult
-from zerg.launchers import ContainerLauncher
-from zerg.orchestrator import Orchestrator
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.launcher_types import LauncherConfig, SpawnResult
+from mahabharatha.launchers import ContainerLauncher
+from mahabharatha.orchestrator import Orchestrator
 
 
 @pytest.fixture
 def mock_container_launcher():
     """Mock container launcher for E2E tests."""
-    with patch("zerg.orchestrator.ContainerLauncher") as launcher_mock:
+    with patch("mahabharatha.orchestrator.ContainerLauncher") as launcher_mock:
         launcher = MagicMock()
 
         # Mock spawn to return success
@@ -46,8 +46,8 @@ def container_e2e_setup(tmp_path: Path, monkeypatch):
     monkeypatch.chdir(tmp_path)
 
     # Create project structure
-    zerg_dir = tmp_path / ".zerg"
-    zerg_dir.mkdir()
+    mahabharatha_dir = tmp_path / ".mahabharatha"
+    mahabharatha_dir.mkdir()
 
     # Create devcontainer
     devcontainer_dir = tmp_path / ".devcontainer"
@@ -60,7 +60,7 @@ def container_e2e_setup(tmp_path: Path, monkeypatch):
         "levels": {"1": ["TASK-001"]},
         "tasks": {"TASK-001": {"id": "TASK-001", "title": "Container task", "level": 1, "files": ["app.py"]}},
     }
-    (zerg_dir / "task-graph.json").write_text(json.dumps(task_graph))
+    (mahabharatha_dir / "task-graph.json").write_text(json.dumps(task_graph))
 
     return tmp_path
 
@@ -69,16 +69,16 @@ def container_e2e_setup(tmp_path: Path, monkeypatch):
 def mock_orchestrator_deps():
     """Mock all orchestrator dependencies."""
     with (
-        patch("zerg.orchestrator.StateManager") as state_mock,
-        patch("zerg.orchestrator.LevelController") as levels_mock,
-        patch("zerg.orchestrator.TaskParser") as parser_mock,
-        patch("zerg.orchestrator.GateRunner"),
-        patch("zerg.orchestrator.WorktreeManager") as worktree_mock,
-        patch("zerg.orchestrator.ContainerManager"),
-        patch("zerg.orchestrator.PortAllocator") as ports_mock,
-        patch("zerg.orchestrator.MergeCoordinator"),
-        patch("zerg.orchestrator.SubprocessLauncher") as subprocess_launcher_mock,
-        patch("zerg.orchestrator.ContainerLauncher") as container_launcher_mock,
+        patch("mahabharatha.orchestrator.StateManager") as state_mock,
+        patch("mahabharatha.orchestrator.LevelController") as levels_mock,
+        patch("mahabharatha.orchestrator.TaskParser") as parser_mock,
+        patch("mahabharatha.orchestrator.GateRunner"),
+        patch("mahabharatha.orchestrator.WorktreeManager") as worktree_mock,
+        patch("mahabharatha.orchestrator.ContainerManager"),
+        patch("mahabharatha.orchestrator.PortAllocator") as ports_mock,
+        patch("mahabharatha.orchestrator.MergeCoordinator"),
+        patch("mahabharatha.orchestrator.SubprocessLauncher") as subprocess_launcher_mock,
+        patch("mahabharatha.orchestrator.ContainerLauncher") as container_launcher_mock,
     ):
         state = MagicMock()
         state.load.return_value = {}
@@ -95,7 +95,7 @@ def mock_orchestrator_deps():
         worktree = MagicMock()
         worktree_info = MagicMock()
         worktree_info.path = Path("/tmp/worktree")
-        worktree_info.branch = "zerg/container-test/worker-0"
+        worktree_info.branch = "mahabharatha/container-test/worker-0"
         worktree.create.return_value = worktree_info
         worktree_mock.return_value = worktree
 
@@ -165,7 +165,7 @@ class TestContainerNetworking:
     def test_container_prefix_defined(self) -> None:
         """Test container prefix is defined."""
         assert hasattr(ContainerLauncher, "CONTAINER_PREFIX")
-        assert ContainerLauncher.CONTAINER_PREFIX == "zerg-worker"
+        assert ContainerLauncher.CONTAINER_PREFIX == "mahabharatha-worker"
 
 
 class TestContainerVolumes:

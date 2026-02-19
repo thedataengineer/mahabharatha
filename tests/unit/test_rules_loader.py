@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from zerg.rules.loader import Rule, RuleLoader, RulePriority, RuleSet
+from mahabharatha.rules.loader import Rule, RuleLoader, RulePriority, RuleSet
 
 
 class TestRulePriority:

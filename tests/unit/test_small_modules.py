@@ -1,13 +1,13 @@
 """Tests for small modules: render_utils, json_utils, retry_backoff, trivy_adapter.
 
 Covers:
-- zerg/render_utils.py (re-export shim)
-- zerg/json_utils.py (JSON encoding/decoding with optional orjson)
-- zerg/retry_backoff.py (exponential backoff calculator)
-- zerg/performance/adapters/trivy_adapter.py (Trivy output parser)
+- mahabharatha/render_utils.py (re-export shim)
+- mahabharatha/json_utils.py (JSON encoding/decoding with optional orjson)
+- mahabharatha/retry_backoff.py (exponential backoff calculator)
+- mahabharatha/performance/adapters/trivy_adapter.py (Trivy output parser)
 
-Test pattern: uses both `import zerg.render_utils` (for reload/__all__ access)
-and `from zerg.render_utils import X` (for identity checks against originals).
+Test pattern: uses both `import mahabharatha.render_utils` (for reload/__all__ access)
+and `from mahabharatha.render_utils import X` (for identity checks against originals).
 """
 
 from __future__ import annotations
@@ -20,13 +20,13 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.performance.adapters.trivy_adapter import (
+from mahabharatha.performance.adapters.trivy_adapter import (
     _MISCONFIG_SEVERITY,
     _VULN_SEVERITY,
     TrivyAdapter,
 )
-from zerg.performance.types import DetectedStack, Severity
-from zerg.retry_backoff import RetryBackoffCalculator
+from mahabharatha.performance.types import DetectedStack, Severity
+from mahabharatha.retry_backoff import RetryBackoffCalculator
 
 # ────────────────────────────────────────────────────────────────
 # render_utils  (backward-compatibility shim)
@@ -37,35 +37,35 @@ class TestRenderUtilsReExports:
     """Verify render_utils re-exports all expected symbols from rendering.shared."""
 
     def test_format_elapsed_compact_reexported(self) -> None:
-        from zerg.render_utils import format_elapsed_compact
-        from zerg.rendering.shared import (
+        from mahabharatha.render_utils import format_elapsed_compact
+        from mahabharatha.rendering.shared import (
             format_elapsed_compact as original,
         )
 
         assert format_elapsed_compact is original
 
     def test_render_gantt_chart_reexported(self) -> None:
-        from zerg.render_utils import render_gantt_chart
-        from zerg.rendering.shared import render_gantt_chart as original
+        from mahabharatha.render_utils import render_gantt_chart
+        from mahabharatha.rendering.shared import render_gantt_chart as original
 
         assert render_gantt_chart is original
 
     def test_render_progress_bar_reexported(self) -> None:
-        from zerg.render_utils import render_progress_bar
-        from zerg.rendering.shared import render_progress_bar as original
+        from mahabharatha.render_utils import render_progress_bar
+        from mahabharatha.rendering.shared import render_progress_bar as original
 
         assert render_progress_bar is original
 
     def test_render_progress_bar_str_reexported(self) -> None:
-        from zerg.render_utils import render_progress_bar_str
-        from zerg.rendering.shared import (
+        from mahabharatha.render_utils import render_progress_bar_str
+        from mahabharatha.rendering.shared import (
             render_progress_bar_str as original,
         )
 
         assert render_progress_bar_str is original
 
     def test_all_exports_match(self) -> None:
-        import zerg.render_utils as mod
+        import mahabharatha.render_utils as mod
 
         assert set(mod.__all__) == {
             "format_elapsed_compact",
@@ -89,8 +89,8 @@ class TestJsonUtilsStdlib:
         sys.modules["orjson"] = None  # type: ignore[assignment]
         try:
             # Remove cached module to force re-import
-            sys.modules.pop("zerg.json_utils", None)
-            import zerg.json_utils as mod
+            sys.modules.pop("mahabharatha.json_utils", None)
+            import mahabharatha.json_utils as mod
 
             return mod
         finally:
@@ -99,7 +99,7 @@ class TestJsonUtilsStdlib:
             else:
                 sys.modules.pop("orjson", None)
             # Restore original module
-            sys.modules.pop("zerg.json_utils", None)
+            sys.modules.pop("mahabharatha.json_utils", None)
 
     def test_has_orjson_false(self) -> None:
         mod = self._reload_without_orjson()
@@ -176,8 +176,8 @@ class TestJsonUtilsOrjson:
     def _reload_with_orjson(self) -> Any:
         """Force-reload json_utils ensuring orjson is importable."""
         # Remove cached module to force re-import through the try branch
-        sys.modules.pop("zerg.json_utils", None)
-        import zerg.json_utils as mod
+        sys.modules.pop("mahabharatha.json_utils", None)
+        import mahabharatha.json_utils as mod
 
         return mod
 

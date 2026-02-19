@@ -12,8 +12,8 @@ import pytest
 from click.testing import CliRunner
 from rich.text import Text
 
-from zerg.cli import cli
-from zerg.commands.logs import (
+from mahabharatha.cli import cli
+from mahabharatha.commands.logs import (
     detect_feature,
     extract_level,
     format_log_entry,
@@ -28,7 +28,7 @@ class TestDetectFeature:
     """Tests for feature auto-detection from state files."""
 
     def test_detect_feature_no_state_dir(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-        """Test detection when .zerg/state directory does not exist."""
+        """Test detection when .mahabharatha/state directory does not exist."""
         monkeypatch.chdir(tmp_path)
         result = detect_feature()
         assert result is None
@@ -36,7 +36,7 @@ class TestDetectFeature:
     def test_detect_feature_single_state_file(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test detection with a single state file."""
         monkeypatch.chdir(tmp_path)
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
         (state_dir / "my-feature.json").write_text("{}")
 
@@ -158,7 +158,7 @@ class TestShowLogs:
         ]
         log_file.write_text("\n".join(log_lines))
 
-        with patch("zerg.commands.logs.console") as mock_console:
+        with patch("mahabharatha.commands.logs.console") as mock_console:
             show_logs([log_file], tail=100, level_priority=1, json_output=False)
             assert mock_console.print.call_count >= 2
 
@@ -171,7 +171,7 @@ class TestShowLogs:
         ]
         log_file.write_text("\n".join(log_lines))
 
-        with patch("zerg.commands.logs.console") as mock_console:
+        with patch("mahabharatha.commands.logs.console") as mock_console:
             show_logs([log_file], tail=100, level_priority=3, json_output=False)
             assert mock_console.print.call_count == 1
 
@@ -184,7 +184,7 @@ class TestShowLogs:
         ]
         log_file.write_text("\n".join(log_lines))
 
-        with patch("zerg.commands.logs.console") as mock_console:
+        with patch("mahabharatha.commands.logs.console") as mock_console:
             show_logs([log_file], tail=5, level_priority=0, json_output=False)
             assert mock_console.print.call_count == 5
 
@@ -194,7 +194,7 @@ class TestShowLogs:
         log_file.write_text("test")
 
         with patch("builtins.open", side_effect=PermissionError("Access denied")):
-            with patch("zerg.commands.logs.logger") as mock_logger:
+            with patch("mahabharatha.commands.logs.logger") as mock_logger:
                 show_logs([log_file], tail=100, level_priority=0, json_output=False)
                 mock_logger.warning.assert_called()
 
@@ -216,7 +216,7 @@ class TestStreamLogs:
                 raise KeyboardInterrupt()
 
         with patch("time.sleep", side_effect=mock_sleep):
-            with patch("zerg.commands.logs.console") as mock_console:
+            with patch("mahabharatha.commands.logs.console") as mock_console:
                 with contextlib.suppress(KeyboardInterrupt):
                     stream_logs([log_file], level_priority=0, json_output=False)
                 calls = [str(c) for c in mock_console.print.call_args_list]
@@ -242,7 +242,7 @@ class TestStreamLogs:
                 raise KeyboardInterrupt()
 
         with patch("time.sleep", side_effect=mock_sleep):
-            with patch("zerg.commands.logs.console") as mock_console:
+            with patch("mahabharatha.commands.logs.console") as mock_console:
                 with contextlib.suppress(KeyboardInterrupt):
                     stream_logs([log_file], level_priority=0, json_output=False)
                 calls = [str(c) for c in mock_console.print.call_args_list]
@@ -263,7 +263,7 @@ class TestLogsCLI:
     def test_logs_no_feature_no_state_dir(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test logs without feature and no state directory shows error."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         runner = CliRunner()
         result = runner.invoke(cli, ["logs"])
@@ -272,7 +272,7 @@ class TestLogsCLI:
     def test_logs_with_feature_option(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test logs with explicit --feature option."""
         monkeypatch.chdir(tmp_path)
-        logs_dir = tmp_path / ".zerg" / "logs"
+        logs_dir = tmp_path / ".mahabharatha" / "logs"
         logs_dir.mkdir(parents=True)
         (logs_dir / "worker-0.log").write_text(
             json.dumps({"timestamp": "2025-01-26 10:00:00", "level": "info", "message": "Test log entry"})
@@ -285,14 +285,14 @@ class TestLogsCLI:
     def test_logs_keyboard_interrupt(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test logs handles KeyboardInterrupt gracefully."""
         monkeypatch.chdir(tmp_path)
-        logs_dir = tmp_path / ".zerg" / "logs"
+        logs_dir = tmp_path / ".mahabharatha" / "logs"
         logs_dir.mkdir(parents=True)
         (logs_dir / "worker-0.log").write_text("")
 
         def raise_interrupt(*args: Any, **kwargs: Any) -> None:
             raise KeyboardInterrupt()
 
-        with patch("zerg.commands.logs.show_logs", side_effect=raise_interrupt):
+        with patch("mahabharatha.commands.logs.show_logs", side_effect=raise_interrupt):
             runner = CliRunner()
             result = runner.invoke(cli, ["logs", "--feature", "test"])
             assert "Stopped" in result.output or result.exit_code == 0
@@ -300,14 +300,14 @@ class TestLogsCLI:
     def test_logs_generic_exception(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test logs handles generic exceptions."""
         monkeypatch.chdir(tmp_path)
-        logs_dir = tmp_path / ".zerg" / "logs"
+        logs_dir = tmp_path / ".mahabharatha" / "logs"
         logs_dir.mkdir(parents=True)
         (logs_dir / "worker-0.log").write_text("")
 
         def raise_error(*args: Any, **kwargs: Any) -> None:
             raise RuntimeError("Unexpected error")
 
-        with patch("zerg.commands.logs.show_logs", side_effect=raise_error):
+        with patch("mahabharatha.commands.logs.show_logs", side_effect=raise_error):
             runner = CliRunner()
             result = runner.invoke(cli, ["logs", "--feature", "test"])
             assert result.exit_code != 0

@@ -4,7 +4,7 @@ Covers: spawn, monitor, terminate, get_output, wait_for_ready, wait_all,
 spawn_async, wait_async, terminate_async, heartbeat_monitor property,
 error handling, edge cases.
 
-Target: >= 80% line coverage for zerg/launchers/subprocess_launcher.py.
+Target: >= 80% line coverage for mahabharatha/launchers/subprocess_launcher.py.
 """
 
 from __future__ import annotations
@@ -15,9 +15,9 @@ from unittest.mock import AsyncMock, MagicMock, PropertyMock, patch
 
 import pytest
 
-from zerg.constants import WorkerStatus
-from zerg.launcher_types import LauncherConfig, WorkerHandle
-from zerg.launchers.subprocess_launcher import SubprocessLauncher
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.launcher_types import LauncherConfig, WorkerHandle
+from mahabharatha.launchers.subprocess_launcher import SubprocessLauncher
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -114,7 +114,7 @@ class TestHeartbeatMonitorProperty:
 class TestSpawn:
     """Tests for synchronous spawn."""
 
-    @patch("zerg.launchers.subprocess_launcher.subprocess.Popen")
+    @patch("mahabharatha.launchers.subprocess_launcher.subprocess.Popen")
     def test_spawn_success(self, mock_popen: MagicMock, launcher: SubprocessLauncher, worktree: Path) -> None:
         mock_proc = _make_mock_process(pid=9999)
         mock_popen.return_value = mock_proc
@@ -130,8 +130,8 @@ class TestSpawn:
         assert 1 in launcher._processes
         assert 1 in launcher._output_buffers
 
-    @patch("zerg.launchers.subprocess_launcher.subprocess.Popen")
-    def test_spawn_sets_zerg_env_vars(
+    @patch("mahabharatha.launchers.subprocess_launcher.subprocess.Popen")
+    def test_spawn_sets_mahabharatha_env_vars(
         self, mock_popen: MagicMock, launcher: SubprocessLauncher, worktree: Path
     ) -> None:
         mock_popen.return_value = _make_mock_process()
@@ -144,7 +144,7 @@ class TestSpawn:
         assert env["ZERG_FEATURE"] == "my-feature"
         assert env["ZERG_BRANCH"] == "br-7"
 
-    @patch("zerg.launchers.subprocess_launcher.subprocess.Popen")
+    @patch("mahabharatha.launchers.subprocess_launcher.subprocess.Popen")
     def test_spawn_with_task_list_id(self, mock_popen: MagicMock, launcher: SubprocessLauncher, worktree: Path) -> None:
         """Line 98-99: CLAUDE_CODE_TASK_LIST_ID forwarding."""
         mock_popen.return_value = _make_mock_process()
@@ -155,7 +155,7 @@ class TestSpawn:
         env = mock_popen.call_args[1]["env"]
         assert env["CLAUDE_CODE_TASK_LIST_ID"] == "test-list-123"
 
-    @patch("zerg.launchers.subprocess_launcher.subprocess.Popen")
+    @patch("mahabharatha.launchers.subprocess_launcher.subprocess.Popen")
     def test_spawn_with_config_env_vars(self, mock_popen: MagicMock, worktree: Path) -> None:
         """Lines 105-107: validate and apply config env_vars."""
         config = LauncherConfig(env_vars={"ZERG_DEBUG": "1"})
@@ -167,7 +167,7 @@ class TestSpawn:
         env = mock_popen.call_args[1]["env"]
         assert env["ZERG_DEBUG"] == "1"
 
-    @patch("zerg.launchers.subprocess_launcher.subprocess.Popen")
+    @patch("mahabharatha.launchers.subprocess_launcher.subprocess.Popen")
     def test_spawn_with_extra_env(self, mock_popen: MagicMock, launcher: SubprocessLauncher, worktree: Path) -> None:
         """Lines 109-111: validate and apply caller-supplied env."""
         mock_popen.return_value = _make_mock_process()
@@ -177,7 +177,7 @@ class TestSpawn:
         env = mock_popen.call_args[1]["env"]
         assert env["ZERG_LOG_LEVEL"] == "DEBUG"
 
-    @patch("zerg.launchers.subprocess_launcher.subprocess.Popen")
+    @patch("mahabharatha.launchers.subprocess_launcher.subprocess.Popen")
     def test_spawn_with_log_dir(
         self, mock_popen: MagicMock, launcher_with_log_dir: SubprocessLauncher, worktree: Path
     ) -> None:
@@ -190,7 +190,7 @@ class TestSpawn:
         # The log directory should have been created
         assert launcher_with_log_dir.config.log_dir.exists()
 
-    @patch("zerg.launchers.subprocess_launcher.subprocess.Popen")
+    @patch("mahabharatha.launchers.subprocess_launcher.subprocess.Popen")
     def test_spawn_invalid_worker_id_with_log_dir(
         self, mock_popen: MagicMock, launcher_with_log_dir: SubprocessLauncher, worktree: Path
     ) -> None:
@@ -200,7 +200,7 @@ class TestSpawn:
         assert result.success is False
         assert "Invalid worker_id" in (result.error or "")
 
-    @patch("zerg.launchers.subprocess_launcher.subprocess.Popen")
+    @patch("mahabharatha.launchers.subprocess_launcher.subprocess.Popen")
     def test_spawn_popen_failure(self, mock_popen: MagicMock, launcher: SubprocessLauncher, worktree: Path) -> None:
         """Lines 169-171: OSError during Popen."""
         mock_popen.side_effect = OSError("No such file")
@@ -210,7 +210,7 @@ class TestSpawn:
         assert result.success is False
         assert "No such file" in (result.error or "")
 
-    @patch("zerg.launchers.subprocess_launcher.subprocess.Popen")
+    @patch("mahabharatha.launchers.subprocess_launcher.subprocess.Popen")
     def test_spawn_uses_working_dir(self, mock_popen: MagicMock, worktree: Path) -> None:
         """Line 129: uses config.working_dir when set."""
         custom_dir = worktree / "custom"
@@ -476,7 +476,7 @@ class TestWaitForReady:
         result = launcher.wait_for_ready(1, timeout=1.0)
         assert result is False
 
-    @patch("zerg.launchers.subprocess_launcher.time.sleep")
+    @patch("mahabharatha.launchers.subprocess_launcher.time.sleep")
     def test_wait_for_ready_timeout(self, mock_sleep: MagicMock, launcher: SubprocessLauncher) -> None:
         """Lines 305-306: returns False on timeout."""
         # monitor always returns INITIALIZING (process never becomes ready)
@@ -499,7 +499,7 @@ class TestWaitForReady:
 class TestWaitAll:
     """Tests for wait_all."""
 
-    @patch("zerg.launchers.subprocess_launcher.time.sleep")
+    @patch("mahabharatha.launchers.subprocess_launcher.time.sleep")
     def test_wait_all_workers_done(self, mock_sleep: MagicMock, launcher: SubprocessLauncher) -> None:
         """Lines 318-336: returns final statuses when all workers exit."""
         proc = _make_mock_process(poll_return=0)
@@ -511,7 +511,7 @@ class TestWaitAll:
 
         assert statuses[1] == WorkerStatus.STOPPED
 
-    @patch("zerg.launchers.subprocess_launcher.time.sleep")
+    @patch("mahabharatha.launchers.subprocess_launcher.time.sleep")
     def test_wait_all_timeout(self, mock_sleep: MagicMock, launcher: SubprocessLauncher) -> None:
         """Lines 331-332: exits loop on timeout."""
         proc = _make_mock_process(poll_return=None)

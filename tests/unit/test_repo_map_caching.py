@@ -14,7 +14,7 @@ from unittest.mock import patch
 
 import pytest
 
-from zerg.repo_map import build_map, invalidate_cache
+from mahabharatha.repo_map import build_map, invalidate_cache
 
 
 class TestRepoMapCaching:
@@ -75,7 +75,7 @@ class SampleClass:
         that a new SymbolGraph is built after expiration.
         """
         # Build initial graph
-        with patch("zerg.repo_map.time.time") as mock_time:
+        with patch("mahabharatha.repo_map.time.time") as mock_time:
             # First call at t=0
             mock_time.return_value = 1000.0
             g1 = build_map(temp_repo)

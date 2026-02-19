@@ -14,7 +14,7 @@ from pathlib import Path
 
 import yaml
 
-from zerg.config import ZergConfig
+from mahabharatha.config import ZergConfig
 
 
 @dataclass
@@ -69,11 +69,11 @@ class E2EHarness:
         repo_path.mkdir(parents=True, exist_ok=True)
 
         # Create ZERG infrastructure directories
-        (repo_path / ".zerg").mkdir(parents=True, exist_ok=True)
-        (repo_path / ".zerg" / "state").mkdir(parents=True, exist_ok=True)
-        (repo_path / ".zerg" / "logs").mkdir(parents=True, exist_ok=True)
-        (repo_path / ".zerg" / "logs" / "workers").mkdir(parents=True, exist_ok=True)
-        (repo_path / ".zerg" / "logs" / "tasks").mkdir(parents=True, exist_ok=True)
+        (repo_path / ".mahabharatha").mkdir(parents=True, exist_ok=True)
+        (repo_path / ".mahabharatha" / "state").mkdir(parents=True, exist_ok=True)
+        (repo_path / ".mahabharatha" / "logs").mkdir(parents=True, exist_ok=True)
+        (repo_path / ".mahabharatha" / "logs" / "workers").mkdir(parents=True, exist_ok=True)
+        (repo_path / ".mahabharatha" / "logs" / "tasks").mkdir(parents=True, exist_ok=True)
 
         # Create GSD spec directories
         (repo_path / ".gsd").mkdir(parents=True, exist_ok=True)
@@ -81,7 +81,7 @@ class E2EHarness:
 
         # Write default config
         config = ZergConfig()
-        config_path = repo_path / ".zerg" / "config.yaml"
+        config_path = repo_path / ".mahabharatha" / "config.yaml"
         config_data = config.to_dict()
         config_path.write_text(yaml.dump(config_data, default_flow_style=False, sort_keys=False))
 
@@ -149,7 +149,7 @@ class E2EHarness:
 
         # Build full v2.0 task graph
         task_graph = {
-            "schema": "zerg-task-graph",
+            "schema": "mahabharatha-task-graph",
             "feature": self.feature,
             "version": "2.0",
             "generated": datetime.now(UTC).isoformat(),
@@ -179,7 +179,7 @@ class E2EHarness:
 
         config = ZergConfig.from_dict(overrides) if overrides else ZergConfig()
 
-        config_path = self.repo_path / ".zerg" / "config.yaml"
+        config_path = self.repo_path / ".mahabharatha" / "config.yaml"
         config_data = config.to_dict()
         config_path.write_text(yaml.dump(config_data, default_flow_style=False, sort_keys=False))
         return config_path
@@ -374,7 +374,7 @@ def _git_env() -> dict[str, str]:
 
     env = os.environ.copy()
     env["GIT_AUTHOR_NAME"] = "ZERG Test"
-    env["GIT_AUTHOR_EMAIL"] = "test@zerg.dev"
+    env["GIT_AUTHOR_EMAIL"] = "test@mahabharatha.dev"
     env["GIT_COMMITTER_NAME"] = "ZERG Test"
-    env["GIT_COMMITTER_EMAIL"] = "test@zerg.dev"
+    env["GIT_COMMITTER_EMAIL"] = "test@mahabharatha.dev"
     return env

@@ -13,9 +13,9 @@ import json
 from pathlib import Path
 from unittest.mock import Mock
 
-from zerg.constants import TaskStatus
-from zerg.dependency_checker import DependencyChecker
-from zerg.state import StateManager
+from mahabharatha.constants import TaskStatus
+from mahabharatha.dependency_checker import DependencyChecker
+from mahabharatha.state import StateManager
 
 
 class TestLevelEnforcement:
@@ -197,7 +197,7 @@ class TestWorkerProtocolIntegration:
 
     def test_worker_protocol_creates_dependency_checker(self, tmp_path: Path, monkeypatch) -> None:
         """WorkerProtocol should create DependencyChecker when task parser exists."""
-        from zerg.protocol_state import WorkerProtocol
+        from mahabharatha.protocol_state import WorkerProtocol
 
         # Create a minimal task graph
         task_graph = {
@@ -254,7 +254,7 @@ def _setup_protocol_for_level_tests(
     Returns:
         Configured WorkerProtocol instance with loaded state.
     """
-    from zerg.protocol_state import WorkerProtocol
+    from mahabharatha.protocol_state import WorkerProtocol
 
     # Build levels dict from tasks
     levels_dict: dict[str, dict] = {}

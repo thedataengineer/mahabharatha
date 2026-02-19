@@ -1,8 +1,8 @@
-# ZERG Architecture
+# Mahabharatha Architecture
 
 **Zero-Effort Rapid Growth** - Parallel Claude Code Execution System
 
-ZERG is a distributed software development system that coordinates multiple Claude Code instances to build features in parallel. It combines spec-driven development (GSD methodology), level-based task execution, and git worktrees for isolated execution.
+Mahabharatha is a distributed software development system that coordinates multiple Claude Code instances to build features in parallel. It combines spec-driven development (GSD methodology), level-based task execution, and git worktrees for isolated execution.
 
 ---
 
@@ -13,7 +13,7 @@ ZERG is a distributed software development system that coordinates multiple Clau
 - [Execution Flow](#execution-flow)
 - [Module Reference](#module-reference)
 - [Cross-Cutting Capabilities](#cross-cutting-capabilities)
-- [Zergling Execution Model](#zergling-execution-model)
+- [Zergling Execution Model](#warrior-execution-model)
 - [Resilience](#resilience)
 - [State Management](#state-management)
 - [Claude Code Task Integration](#claude-code-task-integration)
@@ -35,7 +35,7 @@ Zerglings do not share conversation context. They share:
 - `design.md` — how to build it
 - `task-graph.json` — atomic work units
 
-This makes zerglings **stateless**. Any zergling can pick up any task. Crash recovery is trivial.
+This makes warriors **stateless**. Any warrior can pick up any task. Crash recovery is trivial.
 
 ### Exclusive File Ownership
 
@@ -64,15 +64,15 @@ Tasks are organized into dependency levels:
 | 4 | Testing | Unit and integration tests |
 | 5 | Quality | Docs, cleanup |
 
-All zerglings complete Level N before any proceed to N+1. The orchestrator merges all branches, runs quality gates, then signals zerglings to continue.
+All warriors complete Level N before any proceed to N+1. The orchestrator merges all branches, runs quality gates, then signals warriors to continue.
 
 ### Git Worktrees for Isolation
 
-Each zergling operates in its own git worktree with its own branch:
+Each warrior operates in its own git worktree with its own branch:
 
 ```
-.zerg-worktrees/{feature}/worker-0/  ->  branch: zerg/{feature}/worker-0
-.zerg-worktrees/{feature}/worker-1/  ->  branch: zerg/{feature}/worker-1
+.mahabharatha-worktrees/{feature}/worker-0/  ->  branch: mahabharatha/{feature}/worker-0
+.mahabharatha-worktrees/{feature}/worker-1/  ->  branch: mahabharatha/{feature}/worker-1
 ```
 
 Zerglings commit independently. No filesystem conflicts.
@@ -83,9 +83,9 @@ Zerglings commit independently. No filesystem conflicts.
 
 ### What Are System Layers?
 
-Think of ZERG like a factory assembly line. Raw materials (your requirements) enter at one end, and finished software comes out the other. But unlike a physical factory, you can't just dump everything in at once—each stage transforms the work before passing it to the next.
+Think of Mahabharatha like a factory assembly line. Raw materials (your requirements) enter at one end, and finished software comes out the other. But unlike a physical factory, you can't just dump everything in at once—each stage transforms the work before passing it to the next.
 
-ZERG organizes this transformation into four distinct layers, each with a specific job. Understanding these layers helps you know what's happening at any point in the build process and where to look when something goes wrong.
+Mahabharatha organizes this transformation into four distinct layers, each with a specific job. Understanding these layers helps you know what's happening at any point in the build process and where to look when something goes wrong.
 
 ### Why Do Layers Exist?
 
@@ -130,11 +130,11 @@ Each layer also serves as a checkpoint. If requirements are unclear, you find ou
 
 ### How the Layers Connect
 
-**Layer 1 (Planning)** captures what you want to build. The `/zerg:plan` command guides you through discovery and produces `requirements.md`—a document that workers will read to understand their mission.
+**Layer 1 (Planning)** captures what you want to build. The `/mahabharatha:plan` command guides you through discovery and produces `requirements.md`—a document that workers will read to understand their mission.
 
-**Layer 2 (Design)** breaks requirements into buildable pieces. The `/zerg:design` command analyzes your requirements and produces both an architecture document (`design.md`) and a task graph (`task-graph.json`) that lists every atomic piece of work.
+**Layer 2 (Design)** breaks requirements into buildable pieces. The `/mahabharatha:design` command analyzes your requirements and produces both an architecture document (`design.md`) and a task graph (`task-graph.json`) that lists every atomic piece of work.
 
-**Layer 3 (Orchestration)** manages the actual building. It spawns workers (zerglings), assigns them tasks, monitors progress, and coordinates the merge dance at level boundaries. This is where the parallel magic happens.
+**Layer 3 (Orchestration)** manages the actual building. It spawns workers (warriors), assigns them tasks, monitors progress, and coordinates the merge dance at level boundaries. This is where the parallel magic happens.
 
 **Layer 4 (Quality Gates)** ensures nothing broken reaches your main branch. After each level completes, gates run linting, type checking, and tests. Only code that passes all gates gets merged—protecting your codebase from half-finished work.
 
@@ -142,15 +142,15 @@ Each layer also serves as a checkpoint. If requirements are unclear, you find ou
 
 ### What Is the Plugin System?
 
-ZERG's plugin system lets you extend the build process without modifying ZERG's core code. Think of it like adding apps to your phone—the phone works fine out of the box, but plugins let you customize it for your specific needs.
+Mahabharatha's plugin system lets you extend the build process without modifying Mahabharatha's core code. Think of it like adding apps to your phone—the phone works fine out of the box, but plugins let you customize it for your specific needs.
 
 Plugins come in three flavors: quality gates (add new validation checks), lifecycle hooks (react to events like "task completed"), and launchers (change how workers run). Each type has a clear contract defining what it can do and what information it receives.
 
 ### Why Does the Plugin System Exist?
 
-Every team has unique requirements. Maybe you need to run security scans, post Slack notifications, or deploy workers to Kubernetes instead of local Docker. Rather than bloating ZERG with every possible feature, the plugin system lets you add exactly what you need.
+Every team has unique requirements. Maybe you need to run security scans, post Slack notifications, or deploy workers to Kubernetes instead of local Docker. Rather than bloating Mahabharatha with every possible feature, the plugin system lets you add exactly what you need.
 
-This separation also makes ZERG more maintainable. Core orchestration logic stays simple while specialized behaviors live in plugins that can be developed, tested, and updated independently.
+This separation also makes Mahabharatha more maintainable. Core orchestration logic stays simple while specialized behaviors live in plugins that can be developed, tested, and updated independently.
 
 ### Plugin Architecture
 
@@ -185,25 +185,25 @@ The `PluginRegistry` is the central catalog—it knows every plugin that's loade
 - `gates.py` — delegates to plugin gates registered in the registry
 - `launcher.py` — resolves launcher plugins by name via `get_plugin_launcher()`
 
-**Discovery**: Plugins are loaded via `importlib.metadata` entry points (group: `zerg.plugins`) or YAML-configured shell command hooks in `.zerg/config.yaml`.
+**Discovery**: Plugins are loaded via `importlib.metadata` entry points (group: `mahabharatha.plugins`) or YAML-configured shell command hooks in `.mahabharatha/config.yaml`.
 
-Configuration models: `PluginsConfig` -> `HookConfig`, `PluginGateConfig`, `LauncherPluginConfig` (see `zerg/plugin_config.py`).
+Configuration models: `PluginsConfig` -> `HookConfig`, `PluginGateConfig`, `LauncherPluginConfig` (see `mahabharatha/plugin_config.py`).
 
 ---
 
 ## Execution Flow
 
-Understanding how ZERG executes a feature build is like understanding how a relay race works. Each phase hands off to the next, and workers run their legs in parallel within each level. Let's trace the entire journey from "I have an idea" to "the feature is merged."
+Understanding how Mahabharatha executes a feature build is like understanding how a relay race works. Each phase hands off to the next, and workers run their legs in parallel within each level. Let's trace the entire journey from "I have an idea" to "the feature is merged."
 
-### Planning Phase (`/zerg:plan`)
+### Planning Phase (`/mahabharatha:plan`)
 
 #### What Is Planning?
 
-Planning is the conversation phase where ZERG helps you articulate what you want to build. Rather than accepting vague requirements and guessing wrong, ZERG asks probing questions until both you and the system have a shared understanding.
+Planning is the conversation phase where Mahabharatha helps you articulate what you want to build. Rather than accepting vague requirements and guessing wrong, Mahabharatha asks probing questions until both you and the system have a shared understanding.
 
 #### Why Does Planning Exist?
 
-The most expensive bugs are requirements bugs—building the wrong thing entirely. By investing time upfront in clarifying what you want, ZERG avoids the frustration of workers building features you didn't actually need. The output is a `requirements.md` file that workers will read as their mission brief.
+The most expensive bugs are requirements bugs—building the wrong thing entirely. By investing time upfront in clarifying what you want, Mahabharatha avoids the frustration of workers building features you didn't actually need. The output is a `requirements.md` file that workers will read as their mission brief.
 
 #### Planning Flow
 
@@ -214,11 +214,11 @@ User Requirements -> [Socratic Discovery] -> requirements.md
                                     .gsd/specs/{feature}/requirements.md
 ```
 
-### Design Phase (`/zerg:design`)
+### Design Phase (`/mahabharatha:design`)
 
 #### What Is Design?
 
-Design is where ZERG transforms "what to build" into "how to build it." The design phase analyzes your requirements, proposes an architecture, and breaks the work into atomic tasks that can be executed in parallel without stepping on each other.
+Design is where Mahabharatha transforms "what to build" into "how to build it." The design phase analyzes your requirements, proposes an architecture, and breaks the work into atomic tasks that can be executed in parallel without stepping on each other.
 
 #### Why Does Design Exist?
 
@@ -234,31 +234,31 @@ requirements.md -> [Architecture Analysis] -> task-graph.json + design.md
             Level 1 Tasks              Level 2 Tasks              Level N Tasks
 ```
 
-### Rush Phase (`/zerg:rush`)
+### Kurukshetra Phase (`/mahabharatha:Kurukshetra`)
 
-#### What Is Rush?
+#### What Is Kurukshetra?
 
-Rush is the execution phase—when workers actually write code. The orchestrator spawns multiple Claude Code instances (zerglings), each in its own isolated workspace, and coordinates their work through level-based execution.
+Kurukshetra is the execution phase—when workers actually write code. The orchestrator spawns multiple Claude Code instances (warriors), each in its own isolated workspace, and coordinates their work through level-based execution.
 
-#### Why Does Rush Exist This Way?
+#### Why Does Kurukshetra Exist This Way?
 
-Traditional development is sequential: one developer finishes, then another starts. ZERG flips this by running workers in parallel wherever possible. But parallelism needs coordination. Rush implements that coordination: spawning workers, assigning tasks, monitoring progress, merging results, and running quality gates.
+Traditional development is sequential: one developer finishes, then another starts. Mahabharatha flips this by running workers in parallel wherever possible. But parallelism needs coordination. Kurukshetra implements that coordination: spawning workers, assigning tasks, monitoring progress, merging results, and running quality gates.
 
 The level-based approach ensures dependencies are respected. All Level 1 tasks (foundations like types and schemas) complete and merge before any Level 2 tasks (business logic that uses those types) can start.
 
-#### Rush Flow
+#### Kurukshetra Flow
 
 ```
 [Orchestrator Start]
         |
         v
-[Load task-graph.json] -> [Assign tasks to zerglings]
+[Load task-graph.json] -> [Assign tasks to warriors]
         |
         v
 [Create git worktrees]
         |
         v
-[Spawn N zergling processes]
+[Spawn N warrior processes]
         |
         v
 +---------------------------------------------------------------------+
@@ -266,10 +266,10 @@ The level-based approach ensures dependencies are respected. All Level 1 tasks (
 |    1. Zerglings execute tasks in PARALLEL                           |
 |    2. Poll until all level tasks complete                           |
 |    3. MERGE PROTOCOL:                                               |
-|       - Merge all zergling branches -> staging                      |
+|       - Merge all warrior branches -> staging                      |
 |       - Run quality gates                                           |
 |       - Promote staging -> main                                     |
-|    4. Rebase zergling branches                                      |
+|    4. Rebase warrior branches                                      |
 |    5. Advance to next level                                         |
 +---------------------------------------------------------------------+
         |
@@ -279,11 +279,11 @@ The level-based approach ensures dependencies are respected. All Level 1 tasks (
 
 ### How the Phases Connect
 
-The phases form a pipeline: planning feeds design, design feeds rush. But it's not just data flow—it's also quality gates between each transition. You must approve the requirements before design starts. You must approve the task graph before rush starts. This prevents expensive mistakes from propagating through the pipeline.
+The phases form a pipeline: planning feeds design, design feeds Kurukshetra. But it's not just data flow—it's also quality gates between each transition. You must approve the requirements before design starts. You must approve the task graph before Kurukshetra starts. This prevents expensive mistakes from propagating through the pipeline.
 
 ### Zergling Protocol
 
-Each zergling:
+Each warrior:
 
 1. Loads `requirements.md`, `design.md`, `task-graph.json`
 2. Reads `worker-assignments.json` for its tasks
@@ -303,9 +303,9 @@ Each zergling:
 
 ## Module Reference
 
-ZERG is composed of 80+ Python modules organized into functional groups.
+Mahabharatha is composed of 80+ Python modules organized into functional groups.
 
-### Core Modules (`zerg/`)
+### Core Modules (`mahabharatha/`)
 
 | Module | Purpose |
 |--------|---------|
@@ -322,7 +322,7 @@ ZERG is composed of 80+ Python modules organized into functional groups.
 
 | Module | Purpose |
 |--------|---------|
-| `assign.py` | Task-to-zergling assignment with load balancing |
+| `assign.py` | Task-to-warrior assignment with load balancing |
 | `parser.py` | Parse and validate task graphs |
 | `verify.py` | Execute task verification commands |
 | `task_sync.py` | ClaudeTask model, TaskSyncBridge (JSON state to Claude Tasks) |
@@ -365,7 +365,7 @@ ZERG is composed of 80+ Python modules organized into functional groups.
 | Module | Purpose |
 |--------|---------|
 | `git_ops.py` | Low-level git operations |
-| `worktree.py` | Git worktree management for zergling isolation |
+| `worktree.py` | Git worktree management for warrior isolation |
 | `merge.py` | Branch merging after each level |
 
 ### Quality & Security
@@ -423,7 +423,7 @@ ZERG is composed of 80+ Python modules organized into functional groups.
 |--------|---------|
 | `context_tracker.py` | Heuristic token counting, checkpoint decisions |
 | `spec_loader.py` | Load and truncate GSD specs (requirements.md, design.md) |
-| `dryrun.py` | Dry-run simulation for `/zerg:rush --dry-run` |
+| `dryrun.py` | Dry-run simulation for `/mahabharatha:Kurukshetra --dry-run` |
 | `worker_main.py` | Worker process entry point |
 | `ports.py` | Port allocation for worker processes (range 49152-65535) |
 | `exceptions.py` | Exception hierarchy (ZergError -> Task/Worker/Git/Gate errors) |
@@ -452,7 +452,7 @@ ZERG is composed of 80+ Python modules organized into functional groups.
 | `test_scope.py` | Determine test scope for changes |
 | `formatter_detector.py` | Detect code formatters in project |
 
-### Diagnostics (`zerg/diagnostics/`)
+### Diagnostics (`mahabharatha/diagnostics/`)
 
 | Module | Purpose |
 |--------|---------|
@@ -468,7 +468,7 @@ ZERG is composed of 80+ Python modules organized into functional groups.
 | `system_diagnostics.py` | System-level checks (disk, ports, worktrees) |
 | `types.py` | Diagnostic type definitions |
 
-### Performance Analysis (`zerg/performance/`)
+### Performance Analysis (`mahabharatha/performance/`)
 
 | Module | Purpose |
 |--------|---------|
@@ -479,7 +479,7 @@ ZERG is composed of 80+ Python modules organized into functional groups.
 | `formatters.py` | Format analysis output (markdown, SARIF, JSON) |
 | `types.py` | Performance analysis type definitions |
 
-#### Tool Adapters (`zerg/performance/adapters/`)
+#### Tool Adapters (`mahabharatha/performance/adapters/`)
 
 | Adapter | Tool | Analysis Type |
 |---------|------|---------------|
@@ -499,42 +499,42 @@ ZERG is composed of 80+ Python modules organized into functional groups.
 
 | Module | Purpose |
 |--------|---------|
-| `cli.py` | CLI entry point (`zerg` command), install/uninstall subcommands |
-| `__main__.py` | Package entry point for `python -m zerg` |
+| `cli.py` | CLI entry point (`mahabharatha` command), install/uninstall subcommands |
+| `__main__.py` | Package entry point for `python -m mahabharatha` |
 
-### CLI Commands (`zerg/commands/`)
+### CLI Commands (`mahabharatha/commands/`)
 
-Commands are implemented as Python modules in `zerg/commands/` and/or as markdown spec files in `zerg/data/commands/`. Some commands (marked "spec only") have no Python implementation and are interpreted directly by Claude Code.
+Commands are implemented as Python modules in `mahabharatha/commands/` and/or as markdown spec files in `mahabharatha/data/commands/`. Some commands (marked "spec only") have no Python implementation and are interpreted directly by Claude Code.
 
 | Command | Module | Purpose |
 |---------|--------|---------|
-| `/zerg:init` | `init.py` | Project initialization (Inception/Discovery modes) |
-| `/zerg:brainstorm` | (spec only) | Feature discovery and GitHub issue creation |
-| `/zerg:plan` | `plan.py` | Capture requirements (Socratic discovery) |
-| `/zerg:design` | `design.py` | Generate architecture and task graph |
-| `/zerg:rush` | `rush.py` | Launch parallel zerglings |
-| `/zerg:status` | `status.py` | Progress monitoring dashboard |
-| `/zerg:stop` | `stop.py` | Stop zerglings (graceful/force) |
-| `/zerg:retry` | `retry.py` | Retry failed tasks |
-| `/zerg:logs` | `logs.py` | View and aggregate zergling logs |
-| `/zerg:merge` | `merge_cmd.py` | Manual merge control |
-| `/zerg:cleanup` | `cleanup.py` | Remove artifacts |
-| `/zerg:debug` | `debug.py` | Deep diagnostic investigation |
-| `/zerg:build` | `build.py` | Build orchestration with error recovery |
-| `/zerg:test` | `test_cmd.py` | Test execution with coverage |
-| `/zerg:analyze` | `analyze.py` | Static analysis and metrics |
-| `/zerg:review` | `review.py` | Code review (spec compliance + quality) |
-| `/zerg:security` | `security_rules_cmd.py` | Vulnerability scanning |
-| `/zerg:refactor` | `refactor.py` | Automated code improvement |
-| `/zerg:git` | `git_cmd.py` | Intelligent git operations |
-| `/zerg:plugins` | (spec only) | Plugin system management |
-| `/zerg:document` | `document.py` | Documentation generation for components |
-| `/zerg:estimate` | (spec only) | Effort estimation with PERT intervals |
-| `/zerg:explain` | (spec only) | Educational code explanations |
-| `/zerg:index` | (spec only) | Project documentation wiki generation |
-| `/zerg:select-tool` | (spec only) | Intelligent tool routing |
-| `/zerg:worker` | `worker_protocol.py` | Zergling execution protocol |
-| `/zerg:wiki` | `wiki.py` | Generate wiki documentation pages |
+| `/mahabharatha:init` | `init.py` | Project initialization (Inception/Discovery modes) |
+| `/mahabharatha:brainstorm` | (spec only) | Feature discovery and GitHub issue creation |
+| `/mahabharatha:plan` | `plan.py` | Capture requirements (Socratic discovery) |
+| `/mahabharatha:design` | `design.py` | Generate architecture and task graph |
+| `/mahabharatha:Kurukshetra` | `Kurukshetra.py` | Launch parallel warriors |
+| `/mahabharatha:status` | `status.py` | Progress monitoring dashboard |
+| `/mahabharatha:stop` | `stop.py` | Stop warriors (graceful/force) |
+| `/mahabharatha:retry` | `retry.py` | Retry failed tasks |
+| `/mahabharatha:logs` | `logs.py` | View and aggregate warrior logs |
+| `/mahabharatha:merge` | `merge_cmd.py` | Manual merge control |
+| `/mahabharatha:cleanup` | `cleanup.py` | Remove artifacts |
+| `/mahabharatha:debug` | `debug.py` | Deep diagnostic investigation |
+| `/mahabharatha:build` | `build.py` | Build orchestration with error recovery |
+| `/mahabharatha:test` | `test_cmd.py` | Test execution with coverage |
+| `/mahabharatha:analyze` | `analyze.py` | Static analysis and metrics |
+| `/mahabharatha:review` | `review.py` | Code review (spec compliance + quality) |
+| `/mahabharatha:security` | `security_rules_cmd.py` | Vulnerability scanning |
+| `/mahabharatha:refactor` | `refactor.py` | Automated code improvement |
+| `/mahabharatha:git` | `git_cmd.py` | Intelligent git operations |
+| `/mahabharatha:plugins` | (spec only) | Plugin system management |
+| `/mahabharatha:document` | `document.py` | Documentation generation for components |
+| `/mahabharatha:estimate` | (spec only) | Effort estimation with PERT intervals |
+| `/mahabharatha:explain` | (spec only) | Educational code explanations |
+| `/mahabharatha:index` | (spec only) | Project documentation wiki generation |
+| `/mahabharatha:select-tool` | (spec only) | Intelligent tool routing |
+| `/mahabharatha:worker` | `worker_protocol.py` | Zergling execution protocol |
+| `/mahabharatha:wiki` | `wiki.py` | Generate wiki documentation pages |
 | `install_commands.py` | | Install/uninstall slash commands |
 | `loop_mixin.py` | | Shared improvement loop mixin for commands |
 
@@ -544,29 +544,29 @@ Commands are implemented as Python modules in `zerg/commands/` and/or as markdow
 
 ### What Is a Zergling?
 
-A zergling is a single Claude Code worker instance—an AI that reads the spec files and writes code to complete its assigned tasks. The name comes from the idea of overwhelming a feature with many small, focused workers rather than one monolithic process.
+A warrior is a single Claude Code worker instance—an AI that reads the spec files and writes code to complete its assigned tasks. The name comes from the idea of overwhelming a feature with many small, focused workers rather than one monolithic process.
 
-Each zergling operates independently. It doesn't share memory with other zerglings, doesn't have access to their conversation history, and works in its own isolated directory. This independence is a feature, not a limitation—it makes the system robust against crashes and easy to scale.
+Each warrior operates independently. It doesn't share memory with other warriors, doesn't have access to their conversation history, and works in its own isolated directory. This independence is a feature, not a limitation—it makes the system robust against crashes and easy to scale.
 
 ### Why Independent Execution?
 
-If zerglings shared state, a crash in one could corrupt data for all others. Shared conversation history would mean workers waiting for context windows to sync. Shared file systems would mean merge conflicts constantly.
+If warriors shared state, a crash in one could corrupt data for all others. Shared conversation history would mean workers waiting for context windows to sync. Shared file systems would mean merge conflicts constantly.
 
-By keeping zerglings fully isolated, ZERG achieves: crash recovery (just restart the failed worker), horizontal scaling (add more workers without coordination overhead), and deterministic behavior (same inputs always produce same outputs).
+By keeping warriors fully isolated, Mahabharatha achieves: crash recovery (just restart the failed worker), horizontal scaling (add more workers without coordination overhead), and deterministic behavior (same inputs always produce same outputs).
 
 ### Isolation Strategy
 
 ```
 +---------------------------------------------------------------------+
-|                    ZERGLING ISOLATION LAYERS                         |
+|                    MahabharathaLING ISOLATION LAYERS                         |
 +---------------------------------------------------------------------+
-| 1. Git Worktree: .zerg-worktrees/{feature}-worker-{id}/             |
+| 1. Git Worktree: .mahabharatha-worktrees/{feature}-worker-{id}/             |
 |    - Independent file system                                        |
 |    - Separate git history                                           |
-|    - Own branch: zerg/{feature}/worker-{id}                         |
+|    - Own branch: mahabharatha/{feature}/worker-{id}                         |
 +---------------------------------------------------------------------+
 | 2. Process Isolation                                                |
-|    - Separate process per zergling                                  |
+|    - Separate process per warrior                                  |
 |    - Independent memory space                                       |
 |    - Communication via state files                                  |
 +---------------------------------------------------------------------+
@@ -589,13 +589,13 @@ By keeping zerglings fully isolated, ZERG achieves: crash recovery (just restart
 
 #### What Is a Launcher?
 
-A launcher is the mechanism that starts and manages worker processes. ZERG supports multiple execution environments: local processes (subprocess), Docker containers, or plugin-provided environments like Kubernetes. The launcher abstraction hides these differences so the orchestrator doesn't need to know how workers run—just that they do.
+A launcher is the mechanism that starts and manages worker processes. Mahabharatha supports multiple execution environments: local processes (subprocess), Docker containers, or plugin-provided environments like Kubernetes. The launcher abstraction hides these differences so the orchestrator doesn't need to know how workers run—just that they do.
 
 #### Why Abstract the Launcher?
 
 Different environments have different requirements. During development, you might run workers as local processes for fast iteration. In CI, you might run them in containers for reproducibility. In production, you might use Kubernetes for scaling.
 
-Rather than hard-coding one approach, ZERG lets you swap launchers. Your orchestration logic stays the same; only the "how workers run" changes.
+Rather than hard-coding one approach, Mahabharatha lets you swap launchers. Your orchestration logic stays the same; only the "how workers run" changes.
 
 #### Launcher Architecture
 
@@ -626,7 +626,7 @@ Each launcher implements the same interface: `spawn()`, `monitor()`, `terminate(
 
 | Mode | Launcher Class | How Workers Run |
 |------|---------------|-----------------|
-| `subprocess` | `SubprocessLauncher` | Local processes running `zerg.worker_main` |
+| `subprocess` | `SubprocessLauncher` | Local processes running `mahabharatha.worker_main` |
 | `container` | `ContainerLauncher` | Docker containers with mounted worktrees |
 | `task` | Plugin-provided | Claude Code Task sub-agents (slash command context) |
 
@@ -643,7 +643,7 @@ Plugin launchers are resolved via `get_plugin_launcher(name, registry)` which de
 - Monitor token usage via `ContextTracker`
 - Checkpoint at 70% context threshold (configurable)
 - Zergling exits gracefully (code 2)
-- Orchestrator restarts zergling from checkpoint
+- Orchestrator restarts warrior from checkpoint
 
 ---
 
@@ -651,19 +651,19 @@ Plugin launchers are resolved via `get_plugin_launcher(name, registry)` which de
 
 ### What Are Cross-Cutting Capabilities?
 
-Cross-cutting capabilities are behaviors that affect the entire system, not just one module. Think of them as dials and switches that tune how ZERG operates. Want workers to think more deeply? Turn up the analysis depth. Need faster iteration? Enable speed mode. Want test-driven development? Flip the TDD switch.
+Cross-cutting capabilities are behaviors that affect the entire system, not just one module. Think of them as dials and switches that tune how Mahabharatha operates. Want workers to think more deeply? Turn up the analysis depth. Need faster iteration? Enable speed mode. Want test-driven development? Flip the TDD switch.
 
-These capabilities "cut across" all phases and all workers—hence the name. A capability like "compact output" affects planning, design, and rush equally.
+These capabilities "cut across" all phases and all workers—hence the name. A capability like "compact output" affects planning, design, and Kurukshetra equally.
 
 ### Why Do Cross-Cutting Capabilities Exist?
 
-Different situations call for different approaches. A quick prototype needs speed, not exhaustive analysis. A critical production feature needs deep thinking and full verification. Rather than building separate tools for each scenario, ZERG provides one tool with tunable behavior.
+Different situations call for different approaches. A quick prototype needs speed, not exhaustive analysis. A critical production feature needs deep thinking and full verification. Rather than building separate tools for each scenario, Mahabharatha provides one tool with tunable behavior.
 
 This also enables progressive enhancement. Start with defaults, then turn up verification as you approach release. The same command works for both; only the capability settings change.
 
 ### Capability Architecture
 
-ZERG includes 8 cross-cutting capabilities that influence worker behavior across all phases:
+Mahabharatha includes 8 cross-cutting capabilities that influence worker behavior across all phases:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -674,7 +674,7 @@ ZERG includes 8 cross-cutting capabilities that influence worker behavior across
 │              │          ▲                       │                    │
 │  Config ─────┤          │                       ▼                    │
 │              │    Task Graph              Worker Env Vars            │
-│  Task ───────┴─── Analysis                (ZERG_DEPTH, etc.)         │
+│  Task ───────┴─── Analysis                (Mahabharatha_DEPTH, etc.)         │
 │                                                 │                    │
 │                                                 ▼                    │
 │                                        ContextEngineeringPlugin      │
@@ -731,7 +731,7 @@ An improvement loop is an automated "make it better" cycle. After a worker compl
 
 #### Why Do Improvement Loops Exist?
 
-First drafts are rarely perfect. A human developer naturally iterates: write code, run tests, fix issues, repeat. Improvement loops automate this cycle. Instead of hoping the first attempt is good enough, ZERG keeps refining until quality gates pass.
+First drafts are rarely perfect. A human developer naturally iterates: write code, run tests, fix issues, repeat. Improvement loops automate this cycle. Instead of hoping the first attempt is good enough, Mahabharatha keeps refining until quality gates pass.
 
 Loops also detect dead ends. If the quality score stops improving (plateau) or gets worse (regression), the loop stops rather than wasting time on fruitless iteration.
 
@@ -769,9 +769,9 @@ Resilience is the system's ability to handle failures gracefully. In a distribut
 
 Without resilience, a single failure can cascade. One worker fails, retries endlessly, consumes all the API quota, and causes all other workers to fail too. Soon you have ten workers all failing, retrying, and making things worse.
 
-ZERG's resilience mechanisms—circuit breakers, backpressure, and intelligent retry—prevent these cascades. Failures get contained, the system adapts, and progress continues even when some components struggle.
+Mahabharatha's resilience mechanisms—circuit breakers, backpressure, and intelligent retry—prevent these cascades. Failures get contained, the system adapts, and progress continues even when some components struggle.
 
-ZERG includes comprehensive resilience mechanisms for fault tolerance:
+Mahabharatha includes comprehensive resilience mechanisms for fault tolerance:
 
 ### Circuit Breaker Pattern
 
@@ -796,7 +796,7 @@ Closed ──► Failures exceed threshold ──► Open
 
 In the **Closed** state, requests flow normally. After enough failures hit the threshold, the breaker **Opens**—all requests fail fast without even trying. After a cooldown period, it goes **Half-Open** and allows one test request. If that succeeds, back to Closed. If it fails, back to Open.
 
-**Configuration** (`.zerg/config.yaml`):
+**Configuration** (`.mahabharatha/config.yaml`):
 ```yaml
 error_recovery:
   circuit_breaker:
@@ -886,7 +886,7 @@ State also enables crash recovery. If the entire system restarts, reading the st
 
 ### State File Structure
 
-Location: `.zerg/state/{feature}.json`
+Location: `.mahabharatha/state/{feature}.json`
 
 ```json
 {
@@ -909,7 +909,7 @@ Location: `.zerg/state/{feature}.json`
       "status": "running",
       "current_task": "TASK-003",
       "tasks_completed": 2,
-      "branch": "zerg/user-auth/worker-0"
+      "branch": "mahabharatha/user-auth/worker-0"
     }
   },
 
@@ -964,62 +964,62 @@ The `state_sync_service.py` module keeps distributed state consistent across wor
 
 ### What Is the Task System?
 
-The Claude Code Task system is a built-in feature of Claude Code that tracks work items across sessions. ZERG leverages this as its coordination backbone—every ZERG task maps to a Claude Code Task, enabling status tracking, dependency management, and cross-session persistence.
+The Claude Code Task system is a built-in feature of Claude Code that tracks work items across sessions. Mahabharatha leverages this as its coordination backbone—every Mahabharatha task maps to a Claude Code Task, enabling status tracking, dependency management, and cross-session persistence.
 
 ### Why Use Claude Code Tasks?
 
-ZERG workers are separate Claude Code instances. They don't share conversation history. How do they know what work exists and what's been completed? The Task system provides that shared view. When Worker 0 marks a task complete, Worker 1 can query the Task system and see that update.
+Mahabharatha workers are separate Claude Code instances. They don't share conversation history. How do they know what work exists and what's been completed? The Task system provides that shared view. When Worker 0 marks a task complete, Worker 1 can query the Task system and see that update.
 
-Using the built-in Task system also means ZERG benefits from Claude Code's native features: task persistence across sessions, dependency tracking, and integration with the `/task` command that users already know.
+Using the built-in Task system also means Mahabharatha benefits from Claude Code's native features: task persistence across sessions, dependency tracking, and integration with the `/task` command that users already know.
 
-The Claude Code Task system is the **authoritative backbone** for all ZERG task coordination.
+The Claude Code Task system is the **authoritative backbone** for all Mahabharatha task coordination.
 
 ### How Tasks Flow
 
 ```
-/zerg:design -> TaskCreate for each task (subject: "[L{level}] {title}")
+/mahabharatha:design -> TaskCreate for each task (subject: "[L{level}] {title}")
                      |
                      v
-/zerg:rush   -> TaskUpdate (in_progress) when worker claims task
+/mahabharatha:Kurukshetra   -> TaskUpdate (in_progress) when worker claims task
                      |
                      v
 Worker       -> TaskUpdate (completed) on success
                 TaskUpdate (failed) on failure
                      |
                      v
-/zerg:status -> TaskList to read current state
+/mahabharatha:status -> TaskList to read current state
 ```
 
 ### How Task Integration Works
 
-When `/zerg:design` runs, it creates Claude Code Tasks for every task in the task graph. The subject line uses a bracketed prefix (like `[L2]`) so tasks are easily filterable. When `/zerg:rush` launches workers, each worker claims tasks by calling `TaskUpdate` to set status to `in_progress`.
+When `/mahabharatha:design` runs, it creates Claude Code Tasks for every task in the task graph. The subject line uses a bracketed prefix (like `[L2]`) so tasks are easily filterable. When `/mahabharatha:Kurukshetra` launches workers, each worker claims tasks by calling `TaskUpdate` to set status to `in_progress`.
 
-This creates a feedback loop: the orchestrator creates tasks, workers update them, and `/zerg:status` reads them to report progress. Everyone reads from and writes to the same Task system, ensuring a consistent view of the world.
+This creates a feedback loop: the orchestrator creates tasks, workers update them, and `/mahabharatha:status` reads them to report progress. Everyone reads from and writes to the same Task system, ensuring a consistent view of the world.
 
 ### Subject Convention
 
-All ZERG tasks use bracketed prefixes for discoverability:
+All Mahabharatha tasks use bracketed prefixes for discoverability:
 
 | Prefix | Used By | Example |
 |--------|---------|---------|
-| `[Plan]` | `/zerg:plan` | `[Plan] Capture requirements: user-auth` |
-| `[Design]` | `/zerg:design` | `[Design] Architecture for user-auth` |
-| `[L1]`..`[L5]` | `/zerg:rush` | `[L2] Implement auth service` |
-| `[Init]` | `/zerg:init` | `[Init] Initialize project` |
-| `[Debug]` | `/zerg:debug` | `[Debug] Diagnose WORKER_FAILURE` |
-| `[Build]` | `/zerg:build` | `[Build] Build project` |
-| `[Test]` | `/zerg:test` | `[Test] Run test suite` |
-| `[Review]` | `/zerg:review` | `[Review] Code review` |
-| `[Security]` | `/zerg:security` | `[Security] Vulnerability scan` |
-| `[Cleanup]` | `/zerg:cleanup` | `[Cleanup] Remove artifacts` |
+| `[Plan]` | `/mahabharatha:plan` | `[Plan] Capture requirements: user-auth` |
+| `[Design]` | `/mahabharatha:design` | `[Design] Architecture for user-auth` |
+| `[L1]`..`[L5]` | `/mahabharatha:Kurukshetra` | `[L2] Implement auth service` |
+| `[Init]` | `/mahabharatha:init` | `[Init] Initialize project` |
+| `[Debug]` | `/mahabharatha:debug` | `[Debug] Diagnose WORKER_FAILURE` |
+| `[Build]` | `/mahabharatha:build` | `[Build] Build project` |
+| `[Test]` | `/mahabharatha:test` | `[Test] Run test suite` |
+| `[Review]` | `/mahabharatha:review` | `[Review] Code review` |
+| `[Security]` | `/mahabharatha:security` | `[Security] Vulnerability scan` |
+| `[Cleanup]` | `/mahabharatha:cleanup` | `[Cleanup] Remove artifacts` |
 
 ### Task Dependencies
 
-Dependencies from `task-graph.json` are wired into the Claude Code Task system using `blocks` and `blockedBy` fields via `TaskUpdate`. This enables `/zerg:status` to show dependency state without reading the task graph.
+Dependencies from `task-graph.json` are wired into the Claude Code Task system using `blocks` and `blockedBy` fields via `TaskUpdate`. This enables `/mahabharatha:status` to show dependency state without reading the task graph.
 
 ### State JSON as Fallback
 
-State JSON files (`.zerg/state/{feature}.json`) supplement the Task system. They provide:
+State JSON files (`.mahabharatha/state/{feature}.json`) supplement the Task system. They provide:
 - Worker-level state not tracked by Tasks (context usage, branch names)
 - Fast local reads without Task API calls
 - Backup coordination if the Task system is temporarily unavailable
@@ -1034,7 +1034,7 @@ If Task system and state JSON disagree, the **Task system wins**.
 
 Context engineering is the practice of giving workers exactly the information they need—no more, no less. AI models have limited context windows (the amount of text they can "see" at once). Stuffing in irrelevant information wastes this precious space and can confuse the model.
 
-ZERG's context engineering system automatically selects relevant spec excerpts, security rules, and command instructions for each task. A task creating Python files gets Python security rules; a task modifying JavaScript gets JavaScript rules. This targeted approach saves 30-50% of context tokens per worker.
+Mahabharatha's context engineering system automatically selects relevant spec excerpts, security rules, and command instructions for each task. A task creating Python files gets Python security rules; a task modifying JavaScript gets JavaScript rules. This targeted approach saves 30-50% of context tokens per worker.
 
 ### Why Does Context Engineering Matter?
 
@@ -1042,12 +1042,12 @@ Context is expensive. Larger context means slower responses and higher API costs
 
 By engineering context carefully, workers get focused instructions and complete tasks faster with fewer errors. It's like the difference between giving someone a 500-page manual versus a 10-page guide for exactly what they need to do.
 
-ZERG includes a context engineering plugin that reduces per-worker token usage by 30-50%. See [Context Engineering](docs/context-engineering.md) for configuration details.
+Mahabharatha includes a context engineering plugin that reduces per-worker token usage by 30-50%. See [Context Engineering](docs/context-engineering.md) for configuration details.
 
 ### Context Architecture
 
 ```
-/zerg:design phase:
+/mahabharatha:design phase:
   requirements.md + design.md
       |
       v
@@ -1062,7 +1062,7 @@ ZERG includes a context engineering plugin that reduces per-worker token usage b
       v
   task-graph.json (each task has a "context" field)
 
-/zerg:rush phase:
+/mahabharatha:Kurukshetra phase:
   Worker receives task assignment
       |
       v
@@ -1082,7 +1082,7 @@ ZERG includes a context engineering plugin that reduces per-worker token usage b
 
 During design, the system analyzes each task: what files will it touch? What does its description mention? It then extracts only the relevant sections from spec files and only the applicable security rules. This pre-computed context gets stored in the task graph.
 
-During rush, workers load this pre-computed context instead of reading entire spec files. They also load split command files (`.core.md` instead of the full file) further reducing token usage. The result: workers start with focused, relevant context rather than drowning in irrelevant information.
+During Kurukshetra, workers load this pre-computed context instead of reading entire spec files. They also load split command files (`.core.md` instead of the full file) further reducing token usage. The result: workers start with focused, relevant context rather than drowning in irrelevant information.
 
 ### Three Subsystems
 
@@ -1102,7 +1102,7 @@ If context engineering fails for any reason and `fallback_to_full: true` (defaul
 
 ### What Is the Diagnostics Engine?
 
-The diagnostics engine is ZERG's troubleshooting brain. When something goes wrong—a task fails, a worker crashes, a merge conflicts—the diagnostics engine investigates. It parses error messages, correlates logs across workers, generates hypotheses about root causes, and proposes recovery plans.
+The diagnostics engine is Mahabharatha's troubleshooting brain. When something goes wrong—a task fails, a worker crashes, a merge conflicts—the diagnostics engine investigates. It parses error messages, correlates logs across workers, generates hypotheses about root causes, and proposes recovery plans.
 
 ### Why Build a Diagnostics Engine?
 
@@ -1110,7 +1110,7 @@ Debugging distributed systems is hard. Errors in worker logs might be symptoms, 
 
 The diagnostics engine automates what an expert developer would do: gather evidence, form hypotheses, test them against observations, and rank likely causes by probability. It turns "something broke" into "here's what broke, here's why, and here's how to fix it."
 
-The `zerg/diagnostics/` package powers `/zerg:debug` with intelligent failure investigation:
+The `mahabharatha/diagnostics/` package powers `/mahabharatha:debug` with intelligent failure investigation:
 
 ### Diagnostic Flow
 
@@ -1194,7 +1194,7 @@ The knowledge base includes patterns for:
 
 ### What Are Quality Gates?
 
-Quality gates are automated checkpoints that verify work meets standards before proceeding. Think of them as bouncers at a club—only code that passes inspection gets in. ZERG uses two types: per-task verification (checking individual tasks) and per-level gates (checking the merged result of all tasks in a level).
+Quality gates are automated checkpoints that verify work meets standards before proceeding. Think of them as bouncers at a club—only code that passes inspection gets in. Mahabharatha uses two types: per-task verification (checking individual tasks) and per-level gates (checking the merged result of all tasks in a level).
 
 ### Why Do Quality Gates Exist?
 
@@ -1222,7 +1222,7 @@ The verification command should be fast (under a minute) and focused on the task
 
 After all tasks in a level complete and merge, level-wide quality gates run. These are more comprehensive: linting, type checking, and tests.
 
-Configuration in `.zerg/config.yaml`:
+Configuration in `.mahabharatha/config.yaml`:
 
 ```yaml
 quality_gates:
@@ -1252,7 +1252,7 @@ quality_gates:
 
 ## Pre-commit Hooks
 
-ZERG includes comprehensive pre-commit hooks at `.zerg/hooks/pre-commit`.
+Mahabharatha includes comprehensive pre-commit hooks at `.mahabharatha/hooks/pre-commit`.
 
 ### Security Checks (Block Commit)
 
@@ -1277,12 +1277,12 @@ ZERG includes comprehensive pre-commit hooks at `.zerg/hooks/pre-commit`.
 | Merge Markers | Unresolved conflict markers |
 | Large Files | Files over 5MB |
 
-### ZERG-Specific Checks (Warn Only)
+### Mahabharatha-Specific Checks (Warn Only)
 
 | Check | Validation |
 |-------|------------|
-| Branch Naming | `zerg/{feature}/worker-{N}` format |
-| Print Statements | print calls in `zerg/` directory |
+| Branch Naming | `mahabharatha/{feature}/worker-{N}` format |
+| Print Statements | print calls in `mahabharatha/` directory |
 | Hardcoded URLs | `localhost:PORT` outside tests |
 
 ### Exempt Paths
@@ -1297,7 +1297,7 @@ ZERG includes comprehensive pre-commit hooks at `.zerg/hooks/pre-commit`.
 
 ### What Is the Security Model?
 
-The security model defines how ZERG protects against accidental and malicious harm. Workers execute code, run commands, and modify files—all potentially dangerous operations. The security model establishes guardrails: what workers can access, what commands they can run, and what patterns are blocked.
+The security model defines how Mahabharatha protects against accidental and malicious harm. Workers execute code, run commands, and modify files—all potentially dangerous operations. The security model establishes guardrails: what workers can access, what commands they can run, and what patterns are blocked.
 
 ### Why Is Security Critical?
 
@@ -1309,7 +1309,7 @@ Even unintentional mistakes need containment. A worker shouldn't accidentally re
 
 Workers receive a controlled set of environment variables. This prevents credential leaks and environment manipulation attacks.
 
-**Allowed**: `ZERG_WORKER_ID`, `ZERG_FEATURE`, `ZERG_WORKTREE`, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `CI`, `DEBUG`, `LOG_LEVEL`
+**Allowed**: `Mahabharatha_WORKER_ID`, `Mahabharatha_FEATURE`, `Mahabharatha_WORKTREE`, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `CI`, `DEBUG`, `LOG_LEVEL`
 
 **Blocked**: `LD_PRELOAD`, `DYLD_INSERT_LIBRARIES`, `PYTHONPATH`, `HOME`, `USER`, `SHELL`
 
@@ -1351,7 +1351,7 @@ Since task IDs appear in branch names, file paths, and log messages, a malicious
 
 The logging architecture captures what happens during execution: which tasks ran, what they outputted, how long they took, and whether they succeeded. This information enables debugging, monitoring, and post-mortem analysis.
 
-ZERG uses structured logging (JSON Lines format) because it's both human-readable and machine-parseable. You can read the logs directly or write scripts to analyze them.
+Mahabharatha uses structured logging (JSON Lines format) because it's both human-readable and machine-parseable. You can read the logs directly or write scripts to analyze them.
 
 ### Why Structured Logging?
 
@@ -1359,11 +1359,11 @@ Plain text logs are hard to analyze. When five workers run in parallel, their lo
 
 Structured logs solve this. Each entry is a JSON object with fields like `worker_id` and `task_id`. Filtering becomes trivial: "show me all entries where worker_id=2 AND task_id=TASK-005." The diagnostics engine relies on this structure to correlate events across workers.
 
-ZERG uses structured JSONL logging with two complementary outputs:
+Mahabharatha uses structured JSONL logging with two complementary outputs:
 
 ### Per-Worker Logs
 
-**Location**: `.zerg/logs/workers/worker-{id}.jsonl`
+**Location**: `.mahabharatha/logs/workers/worker-{id}.jsonl`
 
 Each worker writes to its own log file, avoiding contention. The log captures:
 - Thread-safe writes via `StructuredLogWriter`
@@ -1372,7 +1372,7 @@ Each worker writes to its own log file, avoiding contention. The log captures:
 
 ### Per-Task Artifacts
 
-**Location**: `.zerg/logs/tasks/{task-id}/`
+**Location**: `.mahabharatha/logs/tasks/{task-id}/`
 
 Each task gets a directory with detailed artifacts:
 - `execution.jsonl` — structured execution events
@@ -1396,7 +1396,7 @@ This lazy aggregation means you don't pay storage costs for a combined log file�
 
 ## Diagnostics Engine
 
-The `zerg/diagnostics/` package provides deep investigation capabilities for `/zerg:debug`:
+The `mahabharatha/diagnostics/` package provides deep investigation capabilities for `/mahabharatha:debug`:
 
 ### Components
 
@@ -1436,15 +1436,15 @@ Error -> Parse (multi-language) -> Fingerprint -> Classify
 
 Performance analysis measures code quality beyond "does it work?" It answers questions like: How complex is this code? Are there security vulnerabilities? Is there dead code nobody uses? How tangled are the dependencies?
 
-ZERG's analysis system runs multiple specialized tools and aggregates their results into a unified report. This gives you a dashboard view of code health without manually running a dozen different tools.
+Mahabharatha's analysis system runs multiple specialized tools and aggregates their results into a unified report. This gives you a dashboard view of code health without manually running a dozen different tools.
 
 ### Why Pluggable Adapters?
 
-No single tool does everything. Radon measures Python complexity, but not JavaScript. Trivy finds vulnerabilities, but not code duplication. By using a plugin architecture, ZERG can leverage the best tool for each analysis type.
+No single tool does everything. Radon measures Python complexity, but not JavaScript. Trivy finds vulnerabilities, but not code duplication. By using a plugin architecture, Mahabharatha can leverage the best tool for each analysis type.
 
 The adapter pattern also handles tool differences. Each tool has its own output format, installation method, and command-line interface. Adapters normalize these differences: every adapter returns a standard result format that the aggregator understands.
 
-The `zerg/performance/` package powers `/zerg:analyze` with pluggable tool adapters:
+The `mahabharatha/performance/` package powers `/mahabharatha:analyze` with pluggable tool adapters:
 
 ### Analysis Architecture
 
@@ -1490,7 +1490,7 @@ Output formats: Markdown tables, SARIF, JSON.
 
 ### Configuration File
 
-Location: `.zerg/config.yaml`
+Location: `.mahabharatha/config.yaml`
 
 ```yaml
 version: "1.0"
@@ -1537,8 +1537,8 @@ mcp_servers:
 
 ```
 project/
-+-- .zerg/
-|   +-- config.yaml          # ZERG configuration
++-- .mahabharatha/
+|   +-- config.yaml          # Mahabharatha configuration
 |   +-- hooks/
 |   |   +-- pre-commit       # Pre-commit hook script
 |   +-- state/               # Runtime state
@@ -1549,7 +1549,7 @@ project/
 |       +-- tasks/           # Per-task artifacts
 |           +-- {task-id}/
 |
-+-- .zerg-worktrees/         # Git worktrees (gitignored)
++-- .mahabharatha-worktrees/         # Git worktrees (gitignored)
 |   +-- {feature}-worker-N/
 |
 +-- .gsd/
@@ -1571,7 +1571,7 @@ project/
 |       +-- harness.py       # E2E test harness
 |       +-- mock_worker.py   # Simulated worker
 |
-+-- zerg/                    # Source code (90+ modules)
++-- mahabharatha/                    # Source code (90+ modules)
     +-- commands/            # 24 CLI command implementations
     +-- data/commands/       # 55+ slash command spec files
     +-- diagnostics/         # Debug investigation engine (12 modules)
@@ -1592,7 +1592,7 @@ project/
 | Task verification fails | Retry 3x (with backoff), then mark blocked |
 | Zergling crashes | Orchestrator detects, respawns from checkpoint |
 | Merge conflict | Pause for human intervention |
-| All zerglings blocked | Pause ZERG, alert human |
+| All warriors blocked | Pause Mahabharatha, alert human |
 | Context limit (70%) | Commit WIP, exit for restart |
 | Cascading failures | Circuit breaker opens, backpressure applied |
 
@@ -1602,7 +1602,7 @@ project/
 
 ### What Is the Test Infrastructure?
 
-The test infrastructure is how ZERG tests itself. ZERG is a complex distributed system with many moving parts—orchestrator, workers, git operations, state management. The test infrastructure ensures these components work correctly individually and together.
+The test infrastructure is how Mahabharatha tests itself. Mahabharatha is a complex distributed system with many moving parts—orchestrator, workers, git operations, state management. The test infrastructure ensures these components work correctly individually and together.
 
 ### Why Three Tiers?
 
@@ -1610,7 +1610,7 @@ Different test types catch different bugs. Unit tests are fast and focused—the
 
 This pyramid structure (many unit tests, fewer integration, even fewer E2E) balances coverage with speed. You don't want a 30-minute test suite when a 3-minute one catches 90% of bugs.
 
-ZERG uses a three-tier testing strategy:
+Mahabharatha uses a three-tier testing strategy:
 
 | Category | Files | Scope |
 |----------|-------|-------|
@@ -1621,7 +1621,7 @@ ZERG uses a three-tier testing strategy:
 ### E2E Harness
 
 The E2E harness (`tests/e2e/harness.py`) creates realistic test environments:
-- `E2EHarness` creates real git repos with complete `.zerg/` directory structure
+- `E2EHarness` creates real git repos with complete `.mahabharatha/` directory structure
 - Supports two modes: `mock` (simulated workers via `MockWorker`) and `real` (actual Claude CLI)
 - Returns `E2EResult` with tasks_completed, tasks_failed, levels_completed, merge_commits, duration
 
@@ -1650,14 +1650,14 @@ Diminishing returns beyond the widest level's parallelizable tasks.
 
 ## Summary
 
-ZERG enables rapid parallel development through:
+Mahabharatha enables rapid parallel development through:
 
 1. **Spec-driven execution** — Zerglings read specifications, not conversation history
 2. **Exclusive file ownership** — No merge conflicts possible within levels
 3. **Level-based dependencies** — Proper sequencing guaranteed
 4. **Context engineering** — 30-50% token reduction per worker via command splitting, security rule filtering, and task-scoped context
 5. **Cross-cutting capabilities** — 8 capabilities (depth tiers, modes, MCP routing, loops, TDD, etc.) controlling worker behavior
-6. **Resilient zerglings** — Circuit breakers, backpressure, retry with backoff, heartbeat monitoring
+6. **Resilient warriors** — Circuit breakers, backpressure, retry with backoff, heartbeat monitoring
 7. **Quality gates** — Automated verification at every stage with improvement loops
 8. **Deep diagnostics** — Bayesian hypothesis testing, cross-worker log correlation, recovery planning
 9. **Plugin extensibility** — Custom gates, hooks, launchers, and context plugins

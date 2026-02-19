@@ -1,16 +1,16 @@
-"""Tests for zerg.gates module."""
+"""Tests for mahabharatha.gates module."""
 
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.command_executor import CommandValidationError
-from zerg.config import QualityGate, ZergConfig
-from zerg.constants import GateResult
-from zerg.exceptions import GateFailureError, GateTimeoutError
-from zerg.gates import GateRunner
-from zerg.types import GateRunResult
+from mahabharatha.command_executor import CommandValidationError
+from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.constants import GateResult
+from mahabharatha.exceptions import GateFailureError, GateTimeoutError
+from mahabharatha.gates import GateRunner
+from mahabharatha.types import GateRunResult
 
 
 class TestGateRunner:

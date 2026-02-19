@@ -9,22 +9,22 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.performance.adapters.dive_adapter import DiveAdapter
-from zerg.performance.adapters.hadolint_adapter import HadolintAdapter
-from zerg.performance.adapters.lizard_adapter import LizardAdapter
-from zerg.performance.adapters.radon_adapter import RadonAdapter
-from zerg.performance.adapters.semgrep_adapter import SemgrepAdapter
-from zerg.performance.adapters.trivy_adapter import TrivyAdapter
-from zerg.performance.adapters.vulture_adapter import VultureAdapter
-from zerg.performance.types import DetectedStack, Severity
+from mahabharatha.performance.adapters.dive_adapter import DiveAdapter
+from mahabharatha.performance.adapters.hadolint_adapter import HadolintAdapter
+from mahabharatha.performance.adapters.lizard_adapter import LizardAdapter
+from mahabharatha.performance.adapters.radon_adapter import RadonAdapter
+from mahabharatha.performance.adapters.semgrep_adapter import SemgrepAdapter
+from mahabharatha.performance.adapters.trivy_adapter import TrivyAdapter
+from mahabharatha.performance.adapters.vulture_adapter import VultureAdapter
+from mahabharatha.performance.types import DetectedStack, Severity
 
 # Patch targets for subprocess.run in each adapter module
-_SEMGREP_RUN = "zerg.performance.adapters.semgrep_adapter.subprocess.run"
-_RADON_RUN = "zerg.performance.adapters.radon_adapter.subprocess.run"
-_LIZARD_RUN = "zerg.performance.adapters.lizard_adapter.subprocess.run"
-_VULTURE_RUN = "zerg.performance.adapters.vulture_adapter.subprocess.run"
-_HADOLINT_RUN = "zerg.performance.adapters.hadolint_adapter.subprocess.run"
-_TRIVY_RUN = "zerg.performance.adapters.trivy_adapter.subprocess.run"
+_SEMGREP_RUN = "mahabharatha.performance.adapters.semgrep_adapter.subprocess.run"
+_RADON_RUN = "mahabharatha.performance.adapters.radon_adapter.subprocess.run"
+_LIZARD_RUN = "mahabharatha.performance.adapters.lizard_adapter.subprocess.run"
+_VULTURE_RUN = "mahabharatha.performance.adapters.vulture_adapter.subprocess.run"
+_HADOLINT_RUN = "mahabharatha.performance.adapters.hadolint_adapter.subprocess.run"
+_TRIVY_RUN = "mahabharatha.performance.adapters.trivy_adapter.subprocess.run"
 
 
 @pytest.fixture()

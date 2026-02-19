@@ -2,7 +2,7 @@
 
 from unittest.mock import MagicMock, patch
 
-from zerg.commands.analyze import (
+from mahabharatha.commands.analyze import (
     AnalysisResult,
     AnalyzeCommand,
     AnalyzeConfig,
@@ -45,27 +45,27 @@ class TestDeadCodeChecker:
 
 class TestWiringChecker:
     def test_wiring_passed(self):
-        with patch("zerg.validate_commands.validate_module_wiring", return_value=(True, [])):
+        with patch("mahabharatha.validate_commands.validate_module_wiring", return_value=(True, [])):
             result = WiringChecker(strict=False).check([])
         assert result.passed is True and result.check_type == CheckType.WIRING
 
     def test_wiring_failed(self):
-        with patch("zerg.validate_commands.validate_module_wiring", return_value=(False, ["orphaned: foo.py"])):
+        with patch("mahabharatha.validate_commands.validate_module_wiring", return_value=(False, ["orphaned: foo.py"])):
             result = WiringChecker(strict=True).check([])
         assert result.passed is False and len(result.issues) == 1
 
 
 class TestConventionsChecker:
     def test_snake_case_valid(self):
-        result = ConventionsChecker().check(["zerg/foo_bar.py", "zerg/baz.py"])
+        result = ConventionsChecker().check(["mahabharatha/foo_bar.py", "mahabharatha/baz.py"])
         assert len([i for i in result.issues if "Naming violation" in i]) == 0
 
     def test_snake_case_invalid(self):
-        result = ConventionsChecker().check(["zerg/FooBar.py"])
+        result = ConventionsChecker().check(["mahabharatha/FooBar.py"])
         assert len([i for i in result.issues if "Naming violation" in i]) == 1
 
     def test_file_organization_test_outside_tests_dir(self):
-        result = ConventionsChecker(require_task_prefixes=False).check(["zerg/test_something.py"])
+        result = ConventionsChecker(require_task_prefixes=False).check(["mahabharatha/test_something.py"])
         assert len([i for i in result.issues if "File organization" in i]) == 1
 
 
@@ -84,12 +84,14 @@ class TestImportChainChecker:
 
 class TestContextEngineeringChecker:
     def test_passed(self):
-        with patch("zerg.validate_commands.validate_all", return_value=(True, [])):
+        with patch("mahabharatha.validate_commands.validate_all", return_value=(True, [])):
             result = ContextEngineeringChecker(auto_split=False).check([])
         assert result.passed is True and result.check_type == CheckType.CONTEXT_ENGINEERING
 
     def test_failed(self):
-        with patch("zerg.validate_commands.validate_all", return_value=(False, ["missing task refs", "bad split"])):
+        with patch(
+            "mahabharatha.validate_commands.validate_all", return_value=(False, ["missing task refs", "bad split"])
+        ):
             result = ContextEngineeringChecker(auto_split=False).check([])
         assert result.passed is False and len(result.issues) == 2
 

@@ -1,6 +1,6 @@
 """Unit tests for ZERG dry-run simulator.
 
-Tests cover all validation, analysis, and rendering paths in zerg/dryrun.py.
+Tests cover all validation, analysis, and rendering paths in mahabharatha/dryrun.py.
 """
 
 from __future__ import annotations
@@ -11,16 +11,16 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.config import QualityGate, ZergConfig
-from zerg.constants import GateResult
-from zerg.dryrun import (
+from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.constants import GateResult
+from mahabharatha.dryrun import (
     DryRunReport,
     DryRunSimulator,
     GateCheckResult,
 )
-from zerg.preflight import CheckResult, PreflightReport
-from zerg.risk_scoring import RiskReport
-from zerg.types import GateRunResult
+from mahabharatha.preflight import CheckResult, PreflightReport
+from mahabharatha.risk_scoring import RiskReport
+from mahabharatha.types import GateRunResult
 
 # =============================================================================
 # Fixtures
@@ -346,7 +346,7 @@ class TestTimeline:
             feature="single-level",
             config=default_config,
         )
-        from zerg.assign import WorkerAssignment
+        from mahabharatha.assign import WorkerAssignment
 
         assigner = WorkerAssignment(2)
         assigner.assign(task_data["tasks"], "single-level")
@@ -364,7 +364,7 @@ class TestTimeline:
             feature="multi",
             config=default_config,
         )
-        from zerg.assign import WorkerAssignment
+        from mahabharatha.assign import WorkerAssignment
 
         assigner = WorkerAssignment(2)
         assigner.assign(valid_task_graph["tasks"], "multi")
@@ -407,7 +407,7 @@ class TestTimeline:
             feature="eff",
             config=default_config,
         )
-        from zerg.assign import WorkerAssignment
+        from mahabharatha.assign import WorkerAssignment
 
         assigner = WorkerAssignment(2)
         assigner.assign(task_data["tasks"], "eff")
@@ -471,7 +471,7 @@ class TestQualityGates:
         assert results[1].name == "typecheck"
         assert results[1].required is False
 
-    @patch("zerg.dryrun.GateRunner")
+    @patch("mahabharatha.dryrun.GateRunner")
     def test_gates_run(self, mock_runner_cls: MagicMock, config_with_gates: ZergConfig) -> None:
         """run_gates=True calls GateRunner."""
         mock_runner = MagicMock()

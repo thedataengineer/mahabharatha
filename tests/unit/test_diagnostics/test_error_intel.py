@@ -1,17 +1,17 @@
-"""Tests for zerg.diagnostics.error_intel module."""
+"""Tests for mahabharatha.diagnostics.error_intel module."""
 
 from __future__ import annotations
 
 import pytest
 
-from zerg.diagnostics.error_intel import (
+from mahabharatha.diagnostics.error_intel import (
     ErrorChainAnalyzer,
     ErrorFingerprinter,
     ErrorIntelEngine,
     LanguageDetector,
     MultiLangErrorParser,
 )
-from zerg.diagnostics.types import (
+from mahabharatha.diagnostics.types import (
     ErrorCategory,
     ErrorFingerprint,
     ErrorSeverity,

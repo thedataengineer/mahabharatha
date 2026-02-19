@@ -99,7 +99,7 @@ class TestFullPipeline:
         e2e_harness: E2EHarness,
         sample_e2e_task_graph: list[dict],
     ) -> None:
-        """Verify that .zerg/state JSON shows all tasks complete after run.
+        """Verify that .mahabharatha/state JSON shows all tasks complete after run.
 
         Note: MockWorker does not write state JSON files (it only simulates
         file operations from task manifests). This test verifies that the

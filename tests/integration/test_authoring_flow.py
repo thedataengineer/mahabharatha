@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from zerg.validate_commands import (
+from mahabharatha.validate_commands import (
     DEFAULT_COMMANDS_DIR,
     DocGenerator,
     ScaffoldGenerator,
@@ -36,7 +36,7 @@ class TestAuthoringFlow:
         commands_dir.mkdir()
 
         # Copy template from real project
-        template_src = Path("zerg/data/commands/_template.md")
+        template_src = Path("mahabharatha/data/commands/_template.md")
         if template_src.exists():
             shutil.copy(template_src, commands_dir / "_template.md")
         else:
@@ -54,7 +54,7 @@ class TestAuthoringFlow:
                 "On completion, call TaskUpdate:\n"
                 '  - status: "completed"\n\n'
                 "## Help\n\n"
-                "```\n/zerg:{command-name} -- help text\n```\n"
+                "```\n/mahabharatha:{command-name} -- help text\n```\n"
             )
 
         docs_dir = tmp_path / "docs"
@@ -197,12 +197,12 @@ class TestCreateCommandFile:
 
     def test_create_command_exists(self) -> None:
         """create-command.md exists."""
-        path = Path("zerg/data/commands/create-command.md")
+        path = Path("mahabharatha/data/commands/create-command.md")
         assert path.exists(), "create-command.md not found in expected location"
 
     def test_create_command_has_sections(self) -> None:
         """create-command.md has required sections."""
-        path = Path("zerg/data/commands/create-command.md")
+        path = Path("mahabharatha/data/commands/create-command.md")
         content = path.read_text()
 
         # Check for Pre-Flight section (case-insensitive variants)
@@ -216,7 +216,7 @@ class TestCreateCommandFile:
 
     def test_create_command_has_task_references(self) -> None:
         """create-command.md contains Task ecosystem markers."""
-        path = Path("zerg/data/commands/create-command.md")
+        path = Path("mahabharatha/data/commands/create-command.md")
         content = path.read_text()
 
         # Should have TaskCreate reference

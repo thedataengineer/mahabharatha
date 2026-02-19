@@ -8,10 +8,10 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.constants import WorkerStatus
-from zerg.env_validator import validate_env_vars
-from zerg.launcher_types import LauncherConfig, LauncherType, WorkerHandle
-from zerg.launchers import ContainerLauncher
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.env_validator import validate_env_vars
+from mahabharatha.launcher_types import LauncherConfig, LauncherType, WorkerHandle
+from mahabharatha.launchers import ContainerLauncher
 
 pytestmark = pytest.mark.docker
 
@@ -63,7 +63,7 @@ class TestEnvVarValidation:
         assert "ANOTHER_BAD" not in validated
         assert "ZERG_WORKER_ID" in validated
 
-    def test_zerg_prefixed_vars_allowed(self) -> None:
+    def test_mahabharatha_prefixed_vars_allowed(self) -> None:
         """Test ZERG_ prefixed vars are always allowed."""
         env = {
             "ZERG_CUSTOM_VAR": "value",
@@ -148,7 +148,7 @@ class TestContainerLauncherInit:
         """Test default initialization."""
         launcher = ContainerLauncher()
 
-        assert launcher.image_name == "zerg-worker"
+        assert launcher.image_name == "mahabharatha-worker"
         assert launcher.network == "bridge"
 
     def test_init_custom(self) -> None:
@@ -180,7 +180,7 @@ class TestContainerSpawn:
             worker_id=0,
             feature="test-feature",
             worktree_path=tmp_path,
-            branch="zerg/test/worker-0",
+            branch="mahabharatha/test/worker-0",
         )
 
         assert result.success is True

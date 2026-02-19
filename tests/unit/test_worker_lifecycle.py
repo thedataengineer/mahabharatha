@@ -10,10 +10,10 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.constants import ExitCode, WorkerStatus
-from zerg.launcher_types import SpawnResult, WorkerHandle
-from zerg.launchers import SubprocessLauncher
-from zerg.protocol_state import WorkerProtocol
+from mahabharatha.constants import ExitCode, WorkerStatus
+from mahabharatha.launcher_types import SpawnResult, WorkerHandle
+from mahabharatha.launchers import SubprocessLauncher
+from mahabharatha.protocol_state import WorkerProtocol
 
 
 class TestWorkerSpawn:
@@ -206,12 +206,12 @@ class TestWorkerProtocolStateWrites:
         monkeypatch.setenv("ZERG_FEATURE", "test-feature")
         monkeypatch.setenv("ZERG_WORKTREE", str(tmp_path))
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         with (
-            patch("zerg.protocol_state.StateManager", return_value=mock_state_manager),
-            patch("zerg.protocol_state.GitOps", return_value=mock_git_ops),
-            patch("zerg.protocol_state.VerificationExecutor"),
+            patch("mahabharatha.protocol_state.StateManager", return_value=mock_state_manager),
+            patch("mahabharatha.protocol_state.GitOps", return_value=mock_git_ops),
+            patch("mahabharatha.protocol_state.VerificationExecutor"),
         ):
             p = WorkerProtocol(worker_id=0, feature="test-feature")
             p._started_at = datetime.now()

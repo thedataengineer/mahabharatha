@@ -17,15 +17,15 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.testing import CliRunner
 
-from zerg.cli import cli
-from zerg.commands.stop import (
+from mahabharatha.cli import cli
+from mahabharatha.commands.stop import (
     detect_feature,
     show_workers_to_stop,
     stop_workers_force,
     stop_workers_graceful,
 )
-from zerg.constants import WorkerStatus
-from zerg.types import WorkerState
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.types import WorkerState
 
 
 @pytest.fixture
@@ -37,7 +37,7 @@ def sample_workers() -> dict[int, WorkerState]:
             status=WorkerStatus.RUNNING,
             current_task="TASK-001",
             port=49152,
-            branch="zerg/test/worker-0",
+            branch="mahabharatha/test/worker-0",
             started_at=datetime.now(),
         ),
         1: WorkerState(
@@ -45,7 +45,7 @@ def sample_workers() -> dict[int, WorkerState]:
             status=WorkerStatus.IDLE,
             current_task=None,
             port=49153,
-            branch="zerg/test/worker-1",
+            branch="mahabharatha/test/worker-1",
             started_at=datetime.now(),
         ),
     }
@@ -77,7 +77,7 @@ class TestDetectFeature:
     def test_single_state_file(self, tmp_path: Path, monkeypatch) -> None:
         """Test detects feature from single state file."""
         monkeypatch.chdir(tmp_path)
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
         (state_dir / "my-feature.json").write_text("{}")
         assert detect_feature() == "my-feature"
@@ -97,8 +97,8 @@ class TestShowWorkersToStop:
 class TestStopWorkersGraceful:
     """Tests for stop_workers_graceful() function."""
 
-    @patch("zerg.commands.stop.ContainerManager")
-    @patch("zerg.commands.stop.time")
+    @patch("mahabharatha.commands.stop.ContainerManager")
+    @patch("mahabharatha.commands.stop.time")
     def test_graceful_sends_signals_to_running(
         self, mock_time, mock_container_cls, sample_workers, mock_state_manager, mock_config
     ) -> None:
@@ -114,9 +114,9 @@ class TestStopWorkersGraceful:
         assert mock_container.stop_worker.call_count >= 1
         assert mock_ws.status == WorkerStatus.STOPPING
 
-    @patch("zerg.commands.stop.ContainerManager")
-    @patch("zerg.commands.stop.time")
-    @patch("zerg.commands.stop.stop_workers_force")
+    @patch("mahabharatha.commands.stop.ContainerManager")
+    @patch("mahabharatha.commands.stop.time")
+    @patch("mahabharatha.commands.stop.stop_workers_force")
     def test_graceful_forces_remaining_on_timeout(
         self, mock_force, mock_time, mock_container_cls, sample_workers, mock_state_manager, mock_config
     ) -> None:
@@ -133,8 +133,8 @@ class TestStopWorkersGraceful:
         stop_workers_graceful(sample_workers, mock_state_manager, mock_config, timeout=30)
         mock_force.assert_called_once()
 
-    @patch("zerg.commands.stop.ContainerManager")
-    @patch("zerg.commands.stop.time")
+    @patch("mahabharatha.commands.stop.ContainerManager")
+    @patch("mahabharatha.commands.stop.time")
     def test_graceful_handles_signal_failure(
         self, mock_time, mock_container_cls, sample_workers, mock_state_manager, mock_config
     ) -> None:
@@ -151,7 +151,7 @@ class TestStopWorkersGraceful:
 class TestStopWorkersForce:
     """Tests for stop_workers_force() function."""
 
-    @patch("zerg.commands.stop.ContainerManager")
+    @patch("mahabharatha.commands.stop.ContainerManager")
     def test_force_kills_all_and_updates_status(
         self, mock_container_cls, sample_workers, mock_state_manager, mock_config
     ) -> None:
@@ -164,7 +164,7 @@ class TestStopWorkersForce:
         assert mock_ws.status == WorkerStatus.STOPPED
         mock_state_manager.set_paused.assert_called_once_with(True)
 
-    @patch("zerg.commands.stop.ContainerManager")
+    @patch("mahabharatha.commands.stop.ContainerManager")
     def test_force_handles_kill_failure(
         self, mock_container_cls, sample_workers, mock_state_manager, mock_config
     ) -> None:
@@ -189,17 +189,17 @@ class TestStopCommand:
     def test_stop_no_feature_fails(self, tmp_path: Path, monkeypatch) -> None:
         """Test fails when no feature specified and none detected."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
         runner = CliRunner()
         result = runner.invoke(cli, ["stop"])
         assert result.exit_code != 0
 
-    @patch("zerg.commands.stop.StateManager")
-    @patch("zerg.commands.stop.ZergConfig")
+    @patch("mahabharatha.commands.stop.StateManager")
+    @patch("mahabharatha.commands.stop.ZergConfig")
     def test_stop_no_workers(self, mock_config_cls, mock_state_cls, tmp_path: Path, monkeypatch) -> None:
         """Test returns early when no workers running."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg" / "state").mkdir(parents=True)
+        (tmp_path / ".mahabharatha" / "state").mkdir(parents=True)
         mock_state = MagicMock()
         mock_state.exists.return_value = True
         mock_state.get_all_workers.return_value = {}
@@ -209,16 +209,16 @@ class TestStopCommand:
         result = runner.invoke(cli, ["stop", "--feature", "test"])
         assert "No workers running" in result.output
 
-    @patch("zerg.commands.stop.StateManager")
-    @patch("zerg.commands.stop.ZergConfig")
-    @patch("zerg.commands.stop.stop_workers_force")
-    @patch("zerg.commands.stop.show_workers_to_stop")
+    @patch("mahabharatha.commands.stop.StateManager")
+    @patch("mahabharatha.commands.stop.ZergConfig")
+    @patch("mahabharatha.commands.stop.stop_workers_force")
+    @patch("mahabharatha.commands.stop.show_workers_to_stop")
     def test_stop_force_skips_confirmation(
         self, mock_show, mock_force, mock_config_cls, mock_state_cls, sample_workers, tmp_path: Path, monkeypatch
     ) -> None:
         """Test --force skips confirmation prompt."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg" / "state").mkdir(parents=True)
+        (tmp_path / ".mahabharatha" / "state").mkdir(parents=True)
         mock_state = MagicMock()
         mock_state.exists.return_value = True
         mock_state.get_all_workers.return_value = sample_workers
@@ -229,16 +229,16 @@ class TestStopCommand:
         mock_force.assert_called_once()
         assert "Stop complete" in result.output
 
-    @patch("zerg.commands.stop.StateManager")
-    @patch("zerg.commands.stop.ZergConfig")
-    @patch("zerg.commands.stop.stop_workers_graceful")
-    @patch("zerg.commands.stop.show_workers_to_stop")
+    @patch("mahabharatha.commands.stop.StateManager")
+    @patch("mahabharatha.commands.stop.ZergConfig")
+    @patch("mahabharatha.commands.stop.stop_workers_graceful")
+    @patch("mahabharatha.commands.stop.show_workers_to_stop")
     def test_stop_confirmation_declined_aborts(
         self, mock_show, mock_graceful, mock_config_cls, mock_state_cls, sample_workers, tmp_path: Path, monkeypatch
     ) -> None:
         """Test declining confirmation aborts stop."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg" / "state").mkdir(parents=True)
+        (tmp_path / ".mahabharatha" / "state").mkdir(parents=True)
         mock_state = MagicMock()
         mock_state.exists.return_value = True
         mock_state.get_all_workers.return_value = sample_workers

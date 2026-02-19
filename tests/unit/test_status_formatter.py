@@ -1,10 +1,10 @@
-"""Unit tests for zerg.status_formatter."""
+"""Unit tests for mahabharatha.status_formatter."""
 
 from __future__ import annotations
 
 from datetime import UTC, datetime
 
-from zerg.status_formatter import (
+from mahabharatha.status_formatter import (
     format_escalations,
     format_health_table,
     format_repo_map_stats,
@@ -380,7 +380,7 @@ class TestFormatSavingsWithDataclass:
     """Tests for format_savings with SavingsResult dataclass."""
 
     def test_dataclass_input(self) -> None:
-        from zerg.token_aggregator import SavingsResult
+        from mahabharatha.token_aggregator import SavingsResult
 
         sr = SavingsResult(
             context_injected_tokens=3000,

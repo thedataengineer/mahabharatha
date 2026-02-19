@@ -8,8 +8,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from zerg.repo_map import IncrementalIndex
-from zerg.status_formatter import format_repo_map_stats
+from mahabharatha.repo_map import IncrementalIndex
+from mahabharatha.status_formatter import format_repo_map_stats
 
 
 def _write_python_file(filepath: Path, content: str) -> None:

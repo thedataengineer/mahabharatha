@@ -1,6 +1,6 @@
 """Unit tests for ZERG devcontainer features module."""
 
-from zerg.devcontainer_features import (
+from mahabharatha.devcontainer_features import (
     CUSTOM_INSTALL_COMMANDS,
     DEFAULT_BASE_IMAGE,
     DEVCONTAINER_FEATURES,

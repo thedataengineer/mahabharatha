@@ -9,9 +9,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from zerg.config import QualityGate, ZergConfig
-from zerg.repo_map import invalidate_cache as invalidate_repo_map_cache
-from zerg.types import Task, TaskGraph
+from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.repo_map import invalidate_cache as invalidate_repo_map_cache
+from mahabharatha.types import Task, TaskGraph
 
 
 @pytest.fixture(autouse=True)
@@ -193,7 +193,7 @@ def mock_container_manager() -> MagicMock:
 
 
 @pytest.fixture
-def zerg_dirs(tmp_path: Path) -> Path:
+def mahabharatha_dirs(tmp_path: Path) -> Path:
     """Create ZERG directory structure.
 
     Args:
@@ -203,10 +203,10 @@ def zerg_dirs(tmp_path: Path) -> Path:
         Path to the temporary directory with ZERG structure
     """
     dirs = [
-        ".zerg",
-        ".zerg/state",
-        ".zerg/logs",
-        ".zerg/worktrees",
+        ".mahabharatha",
+        ".mahabharatha/state",
+        ".mahabharatha/logs",
+        ".mahabharatha/worktrees",
         ".gsd",
         ".gsd/specs",
         ".gsd/tasks",
@@ -219,11 +219,11 @@ def zerg_dirs(tmp_path: Path) -> Path:
 
 
 @pytest.fixture
-def feature_state(zerg_dirs: Path) -> Path:
+def feature_state(mahabharatha_dirs: Path) -> Path:
     """Create a feature state file.
 
     Args:
-        zerg_dirs: ZERG directory structure
+        mahabharatha_dirs: ZERG directory structure
 
     Returns:
         Path to the state file
@@ -241,7 +241,7 @@ def feature_state(zerg_dirs: Path) -> Path:
         "events": [],
     }
 
-    state_file = zerg_dirs / ".zerg/state/test-feature.json"
+    state_file = mahabharatha_dirs / ".mahabharatha/state/test-feature.json"
     with open(state_file, "w") as f:
         json.dump(state, f)
 

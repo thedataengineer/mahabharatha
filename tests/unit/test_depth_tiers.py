@@ -5,8 +5,8 @@ from __future__ import annotations
 import pytest
 from click.testing import CliRunner
 
-from zerg.cli import cli
-from zerg.depth_tiers import DepthContext, DepthRouter, DepthTier
+from mahabharatha.cli import cli
+from mahabharatha.depth_tiers import DepthContext, DepthRouter, DepthTier
 
 
 class TestDepthTierEnum:

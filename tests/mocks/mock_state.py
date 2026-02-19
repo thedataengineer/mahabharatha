@@ -12,11 +12,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from zerg.constants import LevelMergeStatus, TaskStatus, WorkerStatus
-from zerg.types import ExecutionEvent, WorkerState
+from mahabharatha.constants import LevelMergeStatus, TaskStatus, WorkerStatus
+from mahabharatha.types import ExecutionEvent, WorkerState
 
 if TYPE_CHECKING:
-    from zerg.types import FeatureMetrics
+    from mahabharatha.types import FeatureMetrics
 
 
 @dataclass
@@ -66,7 +66,7 @@ class MockStateManager:
             state_dir: Directory for state files (ignored in mock)
         """
         self.feature = feature
-        self.state_dir = Path(state_dir or ".zerg/state")
+        self.state_dir = Path(state_dir or ".mahabharatha/state")
         self._state_file = self.state_dir / f"{feature}.json"
 
         # Internal state storage
@@ -163,12 +163,12 @@ class MockStateManager:
             time.sleep(self._load_delay)
 
         if self._fail_on_load:
-            from zerg.exceptions import StateError
+            from mahabharatha.exceptions import StateError
 
             raise StateError("Simulated load failure")
 
         if self._corrupt_on_load:
-            from zerg.exceptions import StateError
+            from mahabharatha.exceptions import StateError
 
             raise StateError("Failed to parse state file: Simulated corruption")
 
@@ -753,7 +753,7 @@ class MockStateManager:
         if not metrics_data:
             return None
 
-        from zerg.types import FeatureMetrics
+        from mahabharatha.types import FeatureMetrics
 
         return FeatureMetrics.from_dict(metrics_data)
 

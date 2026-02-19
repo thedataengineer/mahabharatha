@@ -18,9 +18,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from zerg.constants import WorkerStatus
-from zerg.launcher_types import SpawnResult
-from zerg.launchers import ContainerLauncher, SubprocessLauncher, WorkerLauncher
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.launcher_types import SpawnResult
+from mahabharatha.launchers import ContainerLauncher, SubprocessLauncher, WorkerLauncher
 
 # =============================================================================
 # Helper: Concrete WorkerLauncher for testing base-class dedup patterns
@@ -167,7 +167,7 @@ class TestContainerLauncherImpl:
         sig = inspect.signature(fn)
         assert param in sig.parameters
 
-    @patch("zerg.launchers.container_launcher.Path.home")
+    @patch("mahabharatha.launchers.container_launcher.Path.home")
     @patch("os.getuid", return_value=1000)
     @patch("os.getgid", return_value=1000)
     def test_sync_start_container_delegates(
@@ -191,7 +191,7 @@ class TestContainerLauncherImpl:
         launcher = ContainerLauncher(image_name="test-image")
         with patch.object(launcher, "_terminate_impl", new_callable=AsyncMock) as mock_impl:
             mock_impl.return_value = True
-            from zerg.launcher_types import WorkerHandle
+            from mahabharatha.launcher_types import WorkerHandle
 
             launcher._container_ids[1] = "abc123"
             launcher._workers[1] = WorkerHandle(worker_id=1, status=WorkerStatus.RUNNING)
@@ -219,13 +219,13 @@ class TestNoDuplicateMethodPairs:
     )
     def test_orchestrator_method_presence(self, attr: str, should_exist: bool) -> None:
         """Orchestrator must have correct methods after dedup refactoring."""
-        from zerg.orchestrator import Orchestrator
+        from mahabharatha.orchestrator import Orchestrator
 
         assert hasattr(Orchestrator, attr) == should_exist
 
     def test_worker_protocol_sync_wrappers_are_thin(self) -> None:
         """Sync wrappers in WorkerProtocol must be thin (< 15 lines each)."""
-        from zerg.protocol_state import WorkerProtocol
+        from mahabharatha.protocol_state import WorkerProtocol
 
         for method_name in ("wait_for_ready", "claim_next_task"):
             source = inspect.getsource(getattr(WorkerProtocol, method_name))
@@ -234,7 +234,7 @@ class TestNoDuplicateMethodPairs:
 
     def test_level_coordinator_has_no_async_methods(self) -> None:
         """LevelCoordinator must have zero async methods."""
-        from zerg.level_coordinator import LevelCoordinator
+        from mahabharatha.level_coordinator import LevelCoordinator
 
         for name, method in inspect.getmembers(LevelCoordinator, predicate=inspect.isfunction):
             assert not asyncio.iscoroutinefunction(method), f"LevelCoordinator.{name} is async but should not be"
@@ -255,14 +255,14 @@ class TestUnifiedMainLoop:
     )
     def test_poll_workers_contains_feature(self, keyword: str) -> None:
         """_poll_workers must include all required features."""
-        from zerg.orchestrator import Orchestrator
+        from mahabharatha.orchestrator import Orchestrator
 
         source = inspect.getsource(Orchestrator._poll_workers)
         assert keyword in source or keyword.lower() in source.lower()
 
     def test_main_loop_injectable_sleep(self) -> None:
         """_main_loop must accept sleep_fn and default to time.sleep."""
-        from zerg.orchestrator import Orchestrator
+        from mahabharatha.orchestrator import Orchestrator
 
         sig = inspect.signature(Orchestrator._main_loop)
         assert "sleep_fn" in sig.parameters
@@ -271,7 +271,7 @@ class TestUnifiedMainLoop:
 
     def test_main_loop_as_async_uses_to_thread(self) -> None:
         """_main_loop_as_async must use asyncio.to_thread."""
-        from zerg.orchestrator import Orchestrator
+        from mahabharatha.orchestrator import Orchestrator
 
         source = inspect.getsource(Orchestrator._main_loop_as_async)
         assert "asyncio.to_thread" in source

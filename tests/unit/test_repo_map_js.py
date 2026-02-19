@@ -3,7 +3,7 @@
 import textwrap
 from pathlib import Path
 
-from zerg.repo_map_js import extract_js_file, extract_js_symbols
+from mahabharatha.repo_map_js import extract_js_file, extract_js_symbols
 
 
 class TestExtractJSSymbols:

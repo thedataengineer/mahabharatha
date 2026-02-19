@@ -2,8 +2,8 @@
 
 from unittest.mock import MagicMock, patch
 
-from zerg.config import VerificationTiersConfig
-from zerg.verify import VerificationExecutor
+from mahabharatha.config import VerificationTiersConfig
+from mahabharatha.verify import VerificationExecutor
 
 
 class TestVerificationTiersWiring:
@@ -16,7 +16,7 @@ class TestVerificationTiersWiring:
             "verification": {"command": "echo ok", "timeout_seconds": 10},
         }
 
-        with patch("zerg.verification_tiers.CommandExecutor") as mock_cls:
+        with patch("mahabharatha.verification_tiers.CommandExecutor") as mock_cls:
             mock_exec = MagicMock()
             mock_result = MagicMock()
             mock_result.success = True
@@ -41,7 +41,7 @@ class TestVerificationTiersWiring:
         executor = VerificationExecutor(default_timeout=10)
         task = {"id": "TASK-002"}
 
-        with patch("zerg.verification_tiers.CommandExecutor") as mock_cls:
+        with patch("mahabharatha.verification_tiers.CommandExecutor") as mock_cls:
             mock_exec = MagicMock()
             mock_result = MagicMock()
             mock_result.success = True
@@ -63,7 +63,7 @@ class TestVerificationTiersWiring:
             "verification": {"command": "pytest", "timeout_seconds": 10},
         }
 
-        with patch("zerg.verification_tiers.CommandExecutor") as mock_cls:
+        with patch("mahabharatha.verification_tiers.CommandExecutor") as mock_cls:
             mock_exec = MagicMock()
             mock_result = MagicMock()
             mock_result.success = True
@@ -100,7 +100,7 @@ class TestVerificationTiersWiring:
             result.stderr = "error"
             return result
 
-        with patch("zerg.verification_tiers.CommandExecutor") as mock_cls:
+        with patch("mahabharatha.verification_tiers.CommandExecutor") as mock_cls:
             mock_exec = MagicMock()
             mock_exec.execute.side_effect = mock_execute
             mock_cls.return_value = mock_exec

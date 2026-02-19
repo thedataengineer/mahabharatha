@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from zerg.security import (
+from mahabharatha.security import (
     SECRET_PATTERNS,
     SENSITIVE_FILES,
     check_file_size,
@@ -126,9 +126,9 @@ class TestInstallHooks:
     def test_install_success(self, tmp_path: Path) -> None:
         git_hooks = tmp_path / ".git" / "hooks"
         git_hooks.mkdir(parents=True)
-        zerg_hooks = tmp_path / ".zerg" / "hooks"
-        zerg_hooks.mkdir(parents=True)
-        (zerg_hooks / "pre-commit").write_text("#!/bin/bash\necho 'pre-commit'")
+        mahabharatha_hooks = tmp_path / ".mahabharatha" / "hooks"
+        mahabharatha_hooks.mkdir(parents=True)
+        (mahabharatha_hooks / "pre-commit").write_text("#!/bin/bash\necho 'pre-commit'")
         assert install_hooks(tmp_path) is True
         assert os.access(git_hooks / "pre-commit", os.X_OK)
 

@@ -5,8 +5,8 @@ from unittest.mock import patch
 
 import pytest
 
-from zerg.context_plugin import ContextEngineeringPlugin
-from zerg.plugin_config import ContextEngineeringConfig
+from mahabharatha.context_plugin import ContextEngineeringPlugin
+from mahabharatha.plugin_config import ContextEngineeringConfig
 
 
 class TestContextPluginName:
@@ -60,8 +60,8 @@ class TestBuildTaskContext:
         }
 
         with (
-            patch("zerg.context_plugin.DEFAULT_RULES_DIR", rules_dir),
-            patch("zerg.context_plugin.SpecLoader") as mock_loader_cls,
+            patch("mahabharatha.context_plugin.DEFAULT_RULES_DIR", rules_dir),
+            patch("mahabharatha.context_plugin.SpecLoader") as mock_loader_cls,
         ):
             mock_loader_cls.return_value.format_task_context.return_value = "## Spec: user API endpoint"
             result = plugin.build_task_context(task, {}, "user-auth")
@@ -85,7 +85,7 @@ class TestBuildTaskContext:
             "files": {},
         }
 
-        with patch("zerg.context_plugin.SpecLoader") as mock_loader_cls:
+        with patch("mahabharatha.context_plugin.SpecLoader") as mock_loader_cls:
             mock_loader_cls.return_value.format_task_context.return_value = ""
             result = plugin.build_task_context(task, {}, "feature-x")
 
@@ -122,8 +122,8 @@ class TestBuildTaskContext:
         }
 
         with (
-            patch("zerg.context_plugin.DEFAULT_RULES_DIR", rules_dir),
-            patch("zerg.context_plugin.SpecLoader") as mock_loader_cls,
+            patch("mahabharatha.context_plugin.DEFAULT_RULES_DIR", rules_dir),
+            patch("mahabharatha.context_plugin.SpecLoader") as mock_loader_cls,
         ):
             mock_loader_cls.return_value.format_task_context.return_value = ""
             result = plugin.build_task_context(task, {}, "feat")
@@ -159,8 +159,8 @@ class TestBuildTaskContext:
         }
 
         with (
-            patch("zerg.context_plugin.DEFAULT_RULES_DIR", rules_dir),
-            patch("zerg.context_plugin.SpecLoader") as mock_loader_cls,
+            patch("mahabharatha.context_plugin.DEFAULT_RULES_DIR", rules_dir),
+            patch("mahabharatha.context_plugin.SpecLoader") as mock_loader_cls,
         ):
             mock_loader_cls.return_value.format_task_context.return_value = ""
             result = plugin.build_task_context(task, {}, "feat")

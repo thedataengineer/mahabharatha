@@ -2,8 +2,8 @@
 
 Tests verify the detect_feature() priority chain:
 1. ZERG_FEATURE env var (terminal-session-scoped, multi-epic safe)
-2. .gsd/.current-feature file (explicit user intent from /zerg:plan)
-3. .zerg/state/*.json (most recently modified state file)
+2. .gsd/.current-feature file (explicit user intent from /mahabharatha:plan)
+3. .mahabharatha/state/*.json (most recently modified state file)
 
 These tests ensure multiple terminals can run different features
 concurrently without interfering with each other.
@@ -11,7 +11,7 @@ concurrently without interfering with each other.
 
 from pathlib import Path
 
-from zerg.commands._utils import detect_feature
+from mahabharatha.commands._utils import detect_feature
 
 
 class TestEnvVarPriority:

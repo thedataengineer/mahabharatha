@@ -1,4 +1,4 @@
-"""Unit tests for zerg/rendering/shared.py."""
+"""Unit tests for mahabharatha/rendering/shared.py."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 
 from rich.text import Text
 
-from zerg.rendering.shared import (
+from mahabharatha.rendering.shared import (
     format_elapsed_compact,
     render_gantt_chart,
     render_progress_bar,

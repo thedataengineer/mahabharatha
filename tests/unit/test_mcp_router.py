@@ -7,14 +7,14 @@ from datetime import datetime
 import pytest
 from click.testing import CliRunner
 
-from zerg.cli import cli
-from zerg.mcp_router import (
+from mahabharatha.cli import cli
+from mahabharatha.mcp_router import (
     TASK_CAPABILITY_MAP,
     MCPRouter,
     MCPServer,
     RoutingDecision,
 )
-from zerg.mcp_telemetry import RoutingEvent, RoutingTelemetry
+from mahabharatha.mcp_telemetry import RoutingEvent, RoutingTelemetry
 
 
 class TestMCPServerEnum:

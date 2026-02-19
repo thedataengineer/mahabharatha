@@ -6,7 +6,7 @@ from typing import Any
 
 import pytest
 
-from zerg.whatif import WhatIfEngine, WhatIfReport
+from mahabharatha.whatif import WhatIfEngine, WhatIfReport
 
 
 @pytest.fixture

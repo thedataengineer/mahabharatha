@@ -3,9 +3,9 @@
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from zerg.git.base import GitRunner
-from zerg.git.config import GitConfig
-from zerg.git.prereview import (
+from mahabharatha.git.base import GitRunner
+from mahabharatha.git.config import GitConfig
+from mahabharatha.git.prereview import (
     ContextPreparer,
     DomainFilter,
     PreReviewEngine,

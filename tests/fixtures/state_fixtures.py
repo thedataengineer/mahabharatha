@@ -14,11 +14,11 @@ Fixture Dependency Graph:
          |
          +-- task_graph_factory (parameterized creation)
 
-    sample_zerg_state
+    sample_mahabharatha_state
          |
          +-- depends on: sample_task_graph
          |
-         +-- zerg_state_factory (custom creation)
+         +-- mahabharatha_state_factory (custom creation)
 
     worker_state_fixtures
          |
@@ -50,7 +50,7 @@ from typing import Any
 import pytest
 import yaml
 
-from zerg.config import (
+from mahabharatha.config import (
     LoggingConfig,
     PortsConfig,
     ProjectConfig,
@@ -60,13 +60,13 @@ from zerg.config import (
     WorkersConfig,
     ZergConfig,
 )
-from zerg.constants import (
+from mahabharatha.constants import (
     Level,
     LevelMergeStatus,
     MergeStatus,
     WorkerStatus,
 )
-from zerg.types import (
+from mahabharatha.types import (
     GateRunResult,
     LevelSpec,
     LevelStatus,
@@ -426,7 +426,7 @@ def task_graph_factory() -> Callable[..., TaskGraph]:
 
 
 @pytest.fixture
-def sample_zerg_state(sample_task_graph: TaskGraph) -> OrchestratorState:
+def sample_mahabharatha_state(sample_task_graph: TaskGraph) -> OrchestratorState:
     """Create a pre-configured OrchestratorState.
 
     This state represents an orchestration that has just started,
@@ -443,8 +443,8 @@ def sample_zerg_state(sample_task_graph: TaskGraph) -> OrchestratorState:
             worker_id=0,
             status=WorkerStatus.READY,
             port=49152,
-            worktree_path="/tmp/zerg-worktrees/test-feature/worker-0",
-            branch="zerg/test-feature/worker-0",
+            worktree_path="/tmp/mahabharatha-worktrees/test-feature/worker-0",
+            branch="mahabharatha/test-feature/worker-0",
             started_at=datetime.now(),
             tasks_completed=0,
             context_usage=0.0,
@@ -453,8 +453,8 @@ def sample_zerg_state(sample_task_graph: TaskGraph) -> OrchestratorState:
             worker_id=1,
             status=WorkerStatus.READY,
             port=49153,
-            worktree_path="/tmp/zerg-worktrees/test-feature/worker-1",
-            branch="zerg/test-feature/worker-1",
+            worktree_path="/tmp/mahabharatha-worktrees/test-feature/worker-1",
+            branch="mahabharatha/test-feature/worker-1",
             started_at=datetime.now(),
             tasks_completed=0,
             context_usage=0.0,
@@ -463,8 +463,8 @@ def sample_zerg_state(sample_task_graph: TaskGraph) -> OrchestratorState:
             worker_id=2,
             status=WorkerStatus.READY,
             port=49154,
-            worktree_path="/tmp/zerg-worktrees/test-feature/worker-2",
-            branch="zerg/test-feature/worker-2",
+            worktree_path="/tmp/mahabharatha-worktrees/test-feature/worker-2",
+            branch="mahabharatha/test-feature/worker-2",
             started_at=datetime.now(),
             tasks_completed=0,
             context_usage=0.0,
@@ -511,19 +511,19 @@ def sample_zerg_state(sample_task_graph: TaskGraph) -> OrchestratorState:
 
 
 @pytest.fixture
-def zerg_state_in_progress(sample_zerg_state: OrchestratorState) -> OrchestratorState:
+def mahabharatha_state_in_progress(sample_mahabharatha_state: OrchestratorState) -> OrchestratorState:
     """Create an OrchestratorState with tasks in progress.
 
     Modifies the sample state to show Level 1 partially complete with
     some workers actively executing tasks.
 
     Args:
-        sample_zerg_state: Base state fixture
+        sample_mahabharatha_state: Base state fixture
 
     Returns:
         OrchestratorState with in-progress execution
     """
-    state = sample_zerg_state
+    state = sample_mahabharatha_state
 
     # Update workers to show active work
     state.workers[0].status = WorkerStatus.RUNNING
@@ -568,19 +568,19 @@ def zerg_state_in_progress(sample_zerg_state: OrchestratorState) -> Orchestrator
 
 
 @pytest.fixture
-def zerg_state_level_complete(sample_zerg_state: OrchestratorState) -> OrchestratorState:
+def mahabharatha_state_level_complete(sample_mahabharatha_state: OrchestratorState) -> OrchestratorState:
     """Create an OrchestratorState with Level 1 complete.
 
     Shows the state after Level 1 has finished and merged,
     ready to begin Level 2.
 
     Args:
-        sample_zerg_state: Base state fixture
+        sample_mahabharatha_state: Base state fixture
 
     Returns:
         OrchestratorState after Level 1 completion
     """
-    state = sample_zerg_state
+    state = sample_mahabharatha_state
 
     # All workers idle after Level 1
     for worker in state.workers.values():
@@ -603,7 +603,7 @@ def zerg_state_level_complete(sample_zerg_state: OrchestratorState) -> Orchestra
 
 
 @pytest.fixture
-def zerg_state_factory() -> Callable[..., OrchestratorState]:
+def mahabharatha_state_factory() -> Callable[..., OrchestratorState]:
     """Factory fixture for creating custom OrchestratorState instances.
 
     Returns:
@@ -637,8 +637,8 @@ def zerg_state_factory() -> Callable[..., OrchestratorState]:
                 worker_id=i,
                 status=WorkerStatus.READY,
                 port=49152 + i,
-                worktree_path=f"/tmp/zerg-worktrees/{feature}/worker-{i}",
-                branch=f"zerg/{feature}/worker-{i}",
+                worktree_path=f"/tmp/mahabharatha-worktrees/{feature}/worker-{i}",
+                branch=f"mahabharatha/{feature}/worker-{i}",
                 started_at=datetime.now(),
             )
 
@@ -686,8 +686,8 @@ def idle_worker() -> WorkerState:
         current_task=None,
         port=49152,
         container_id=None,
-        worktree_path="/tmp/zerg-worktrees/test/worker-0",
-        branch="zerg/test/worker-0",
+        worktree_path="/tmp/mahabharatha-worktrees/test/worker-0",
+        branch="mahabharatha/test/worker-0",
         health_check_at=datetime.now(),
         started_at=datetime.now() - timedelta(minutes=10),
         tasks_completed=2,
@@ -708,8 +708,8 @@ def running_worker() -> WorkerState:
         current_task="L1-001",
         port=49153,
         container_id="container-abc123",
-        worktree_path="/tmp/zerg-worktrees/test/worker-1",
-        branch="zerg/test/worker-1",
+        worktree_path="/tmp/mahabharatha-worktrees/test/worker-1",
+        branch="mahabharatha/test/worker-1",
         health_check_at=datetime.now(),
         started_at=datetime.now() - timedelta(minutes=5),
         tasks_completed=0,
@@ -730,8 +730,8 @@ def completed_worker() -> WorkerState:
         current_task=None,
         port=49154,
         container_id=None,
-        worktree_path="/tmp/zerg-worktrees/test/worker-2",
-        branch="zerg/test/worker-2",
+        worktree_path="/tmp/mahabharatha-worktrees/test/worker-2",
+        branch="mahabharatha/test/worker-2",
         health_check_at=datetime.now() - timedelta(minutes=2),
         started_at=datetime.now() - timedelta(minutes=30),
         tasks_completed=5,
@@ -752,8 +752,8 @@ def failed_worker() -> WorkerState:
         current_task="L2-001",
         port=49155,
         container_id="container-xyz789",
-        worktree_path="/tmp/zerg-worktrees/test/worker-3",
-        branch="zerg/test/worker-3",
+        worktree_path="/tmp/mahabharatha-worktrees/test/worker-3",
+        branch="mahabharatha/test/worker-3",
         health_check_at=datetime.now() - timedelta(minutes=5),
         started_at=datetime.now() - timedelta(minutes=15),
         tasks_completed=1,
@@ -774,8 +774,8 @@ def checkpointing_worker() -> WorkerState:
         current_task="L1-002",
         port=49156,
         container_id="container-chk001",
-        worktree_path="/tmp/zerg-worktrees/test/worker-4",
-        branch="zerg/test/worker-4",
+        worktree_path="/tmp/mahabharatha-worktrees/test/worker-4",
+        branch="mahabharatha/test/worker-4",
         health_check_at=datetime.now(),
         started_at=datetime.now() - timedelta(minutes=20),
         tasks_completed=3,
@@ -843,8 +843,8 @@ def worker_state_factory() -> Callable[..., WorkerState]:
             current_task=current_task,
             port=port or (49152 + worker_id),
             container_id=container_id,
-            worktree_path=f"/tmp/zerg-worktrees/test/worker-{worker_id}",
-            branch=f"zerg/test/worker-{worker_id}",
+            worktree_path=f"/tmp/mahabharatha-worktrees/test/worker-{worker_id}",
+            branch=f"mahabharatha/test/worker-{worker_id}",
             health_check_at=datetime.now(),
             started_at=datetime.now(),
             tasks_completed=tasks_completed,
@@ -966,7 +966,7 @@ def level_merge_conflict() -> tuple[LevelStatus, dict[str, Any]]:
     conflict_details = {
         "merge_status": LevelMergeStatus.CONFLICT.value,
         "conflicting_files": ["src/core/state.py", "src/core/config.py"],
-        "worker_branches": ["zerg/test/worker-0", "zerg/test/worker-1"],
+        "worker_branches": ["mahabharatha/test/worker-0", "mahabharatha/test/worker-1"],
         "error": "CONFLICT (content): Merge conflict in src/core/state.py",
     }
 
@@ -1096,7 +1096,7 @@ def production_config() -> ZergConfig:
         ),
         logging=LoggingConfig(
             level="debug",
-            directory="/var/log/zerg",
+            directory="/var/log/mahabharatha",
             retain_days=30,
         ),
         security=SecurityConfig(
@@ -1119,7 +1119,7 @@ def config_yaml_file(tmp_path: Path, standard_config: ZergConfig) -> Path:
     Returns:
         Path to the created config.yaml file
     """
-    config_path = tmp_path / ".zerg" / "config.yaml"
+    config_path = tmp_path / ".mahabharatha" / "config.yaml"
     config_path.parent.mkdir(parents=True, exist_ok=True)
 
     config_dict = standard_config.to_dict()
@@ -1223,7 +1223,7 @@ def sample_merge_result() -> MergeResult:
         MergeResult indicating successful merge
     """
     return MergeResult(
-        source_branch="zerg/test-feature/worker-0",
+        source_branch="mahabharatha/test-feature/worker-0",
         target_branch="main",
         status=MergeStatus.MERGED,
         commit_sha="abc123def456789012345678901234567890abcd",
@@ -1241,7 +1241,7 @@ def conflict_merge_result() -> MergeResult:
         MergeResult indicating merge conflict
     """
     return MergeResult(
-        source_branch="zerg/test-feature/worker-1",
+        source_branch="mahabharatha/test-feature/worker-1",
         target_branch="main",
         status=MergeStatus.CONFLICT,
         commit_sha=None,
@@ -1283,7 +1283,7 @@ def sample_gate_run_result() -> GateRunResult:
     Returns:
         GateRunResult for a passing quality gate
     """
-    from zerg.constants import GateResult
+    from mahabharatha.constants import GateResult
 
     return GateRunResult(
         gate_name="test",
@@ -1310,10 +1310,10 @@ __all__ = [
     "sample_task_graph_file",
     "task_graph_factory",
     # State fixtures
-    "sample_zerg_state",
-    "zerg_state_in_progress",
-    "zerg_state_level_complete",
-    "zerg_state_factory",
+    "sample_mahabharatha_state",
+    "mahabharatha_state_in_progress",
+    "mahabharatha_state_level_complete",
+    "mahabharatha_state_factory",
     # Worker fixtures
     "idle_worker",
     "running_worker",

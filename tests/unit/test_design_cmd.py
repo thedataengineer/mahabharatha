@@ -1,4 +1,4 @@
-"""Unit tests for zerg/commands/design.py.
+"""Unit tests for mahabharatha/commands/design.py.
 
 Thinned from 53 tests to cover unique code paths:
 - get_current_feature (exists + missing)
@@ -18,8 +18,8 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.testing import CliRunner
 
-from zerg.cli import cli
-from zerg.commands.design import (
+from mahabharatha.cli import cli
+from mahabharatha.commands.design import (
     create_design_template,
     create_task_graph_template,
     get_current_feature,
@@ -32,7 +32,7 @@ class TestGetCurrentFeature:
 
     def test_returns_feature_when_file_exists(self) -> None:
         """Test returning feature name when .current-feature file exists."""
-        with patch("zerg.commands.design.Path") as mock_path:
+        with patch("mahabharatha.commands.design.Path") as mock_path:
             mock_path_instance = MagicMock()
             mock_path_instance.exists.return_value = True
             mock_path_instance.read_text.return_value = "my-feature\n"
@@ -42,7 +42,7 @@ class TestGetCurrentFeature:
 
     def test_returns_none_when_file_missing(self) -> None:
         """Test returning None when .current-feature file does not exist."""
-        with patch("zerg.commands.design.Path") as mock_path:
+        with patch("mahabharatha.commands.design.Path") as mock_path:
             mock_path_instance = MagicMock()
             mock_path_instance.exists.return_value = False
             mock_path.return_value = mock_path_instance
@@ -90,7 +90,7 @@ class TestValidateTaskGraph:
         """Test that valid task graph passes validation."""
         graph_path = tmp_path / "task-graph.json"
         create_task_graph_template(graph_path, "test")
-        with patch("zerg.commands.design.console"):
+        with patch("mahabharatha.commands.design.console"):
             validate_task_graph(graph_path)
 
     @pytest.mark.parametrize(
@@ -105,7 +105,7 @@ class TestValidateTaskGraph:
         """Test that invalid task graphs fail validation."""
         graph_path = tmp_path / "task-graph.json"
         graph_path.write_text(content)
-        with patch("zerg.commands.design.console"):
+        with patch("mahabharatha.commands.design.console"):
             with pytest.raises(SystemExit) as exc_info:
                 validate_task_graph(graph_path)
             assert exc_info.value.code == 1
@@ -132,7 +132,7 @@ class TestValidateTaskGraph:
             ]
         }
         graph_path.write_text(json.dumps(data))
-        with patch("zerg.commands.design.console"):
+        with patch("mahabharatha.commands.design.console"):
             with pytest.raises(SystemExit) as exc_info:
                 validate_task_graph(graph_path)
             assert exc_info.value.code == 1
@@ -188,7 +188,7 @@ class TestDesignCommand:
     def test_design_keyboard_interrupt(self, tmp_path: Path, monkeypatch) -> None:
         """Test design handles KeyboardInterrupt gracefully."""
         monkeypatch.chdir(tmp_path)
-        with patch("zerg.commands.design.get_current_feature", side_effect=KeyboardInterrupt()):
+        with patch("mahabharatha.commands.design.get_current_feature", side_effect=KeyboardInterrupt()):
             runner = CliRunner()
             result = runner.invoke(cli, ["design"])
             assert result.exit_code == 130
@@ -200,7 +200,7 @@ class TestDesignCommand:
         spec_dir.mkdir(parents=True)
         (spec_dir / "requirements.md").write_text("# Req\n- **Status**: APPROVED")
         (tmp_path / ".gsd" / ".current-feature").write_text("test")
-        with patch("zerg.commands.design.create_design_template", side_effect=OSError("Disk full")):
+        with patch("mahabharatha.commands.design.create_design_template", side_effect=OSError("Disk full")):
             runner = CliRunner()
             result = runner.invoke(cli, ["design"])
             assert result.exit_code == 1

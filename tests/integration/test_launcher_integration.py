@@ -9,9 +9,9 @@ from pathlib import Path
 
 import pytest
 
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.launcher_types import WorkerHandle
 from tests.mocks.mock_launcher import MockContainerLauncher
-from zerg.constants import WorkerStatus
-from zerg.launcher_types import WorkerHandle
 
 
 class TestSpawnToTerminateLifecycle:
@@ -28,7 +28,7 @@ class TestSpawnToTerminateLifecycle:
             worker_id=0,
             feature="test-feature",
             worktree_path=worktree,
-            branch="zerg/test/worker-0",
+            branch="mahabharatha/test/worker-0",
         )
 
         assert result.success is True
@@ -65,7 +65,7 @@ class TestMultipleWorkerManagement:
                 worker_id=worker_id,
                 feature="multi-worker",
                 worktree_path=worktree,
-                branch=f"zerg/test/worker-{worker_id}",
+                branch=f"mahabharatha/test/worker-{worker_id}",
             )
 
             assert result.success is True, f"Worker {worker_id} failed to spawn"
@@ -100,7 +100,7 @@ class TestMultipleWorkerManagement:
                 worker_id=worker_id,
                 feature="mixed-outcomes",
                 worktree_path=worktree,
-                branch=f"zerg/test/worker-{worker_id}",
+                branch=f"mahabharatha/test/worker-{worker_id}",
             )
             results[worker_id] = result.success
 
@@ -132,7 +132,7 @@ class TestWorkerStatusTransitions:
             worker_id=0,
             feature="status-test",
             worktree_path=worktree,
-            branch="zerg/test/worker-0",
+            branch="mahabharatha/test/worker-0",
         )
 
         status = launcher.monitor(0)
@@ -153,7 +153,7 @@ class TestWorkerStatusTransitions:
             worker_id=0,
             feature="crash-test",
             worktree_path=worktree,
-            branch="zerg/test/worker-0",
+            branch="mahabharatha/test/worker-0",
         )
 
         launcher.configure(container_crash_workers={0})
@@ -176,7 +176,7 @@ class TestWorkerStatusTransitions:
                 worker_id=worker_id,
                 feature="summary-test",
                 worktree_path=worktree,
-                branch=f"zerg/test/worker-{worker_id}",
+                branch=f"mahabharatha/test/worker-{worker_id}",
             )
 
         launcher.configure(container_crash_workers={1})
@@ -204,7 +204,7 @@ class TestCleanupOnOrchestratorStop:
                 worker_id=worker_id,
                 feature="cleanup-test",
                 worktree_path=worktree,
-                branch=f"zerg/test/worker-{worker_id}",
+                branch=f"mahabharatha/test/worker-{worker_id}",
             )
 
         assert len(launcher.get_all_workers()) == 5
@@ -226,7 +226,7 @@ class TestCleanupOnOrchestratorStop:
                 worker_id=worker_id,
                 feature="mixed-cleanup",
                 worktree_path=worktree,
-                branch=f"zerg/test/worker-{worker_id}",
+                branch=f"mahabharatha/test/worker-{worker_id}",
             )
 
         launcher.configure(container_crash_workers={2})
@@ -253,7 +253,7 @@ class TestResourceTrackingAccuracy:
                 worker_id=worker_id,
                 feature="handle-track",
                 worktree_path=worktree,
-                branch=f"zerg/test/worker-{worker_id}",
+                branch=f"mahabharatha/test/worker-{worker_id}",
             )
 
         all_workers = launcher.get_all_workers()
@@ -278,7 +278,7 @@ class TestResourceTrackingAccuracy:
                 worker_id=worker_id,
                 feature="spawn-track",
                 worktree_path=worktree,
-                branch=f"zerg/test/worker-{worker_id}",
+                branch=f"mahabharatha/test/worker-{worker_id}",
             )
 
         all_attempts = launcher.get_spawn_attempts()
@@ -319,7 +319,7 @@ class TestFailureScenarios:
             worker_id=0,
             feature="fail-test",
             worktree_path=worktree,
-            branch="zerg/test/worker-0",
+            branch="mahabharatha/test/worker-0",
         )
 
         assert result.success is False
@@ -356,7 +356,7 @@ class TestEdgeCases:
             worker_id=0,
             feature="duplicate-test",
             worktree_path=worktree1,
-            branch="zerg/test/worker-0",
+            branch="mahabharatha/test/worker-0",
         )
 
         worktree2 = tmp_path / "worktree2"
@@ -365,7 +365,7 @@ class TestEdgeCases:
             worker_id=0,
             feature="duplicate-test",
             worktree_path=worktree2,
-            branch="zerg/test/worker-0-v2",
+            branch="mahabharatha/test/worker-0-v2",
         )
 
         assert result1.success is True
@@ -388,7 +388,7 @@ class TestEdgeCases:
             worker_id=0,
             feature="copy-test",
             worktree_path=worktree,
-            branch="zerg/test/worker-0",
+            branch="mahabharatha/test/worker-0",
         )
 
         workers1 = launcher.get_all_workers()

@@ -1,4 +1,4 @@
-"""Tests for zerg.git.pr_engine -- AI-powered PR creation."""
+"""Tests for mahabharatha.git.pr_engine -- AI-powered PR creation."""
 
 from __future__ import annotations
 
@@ -7,8 +7,8 @@ import subprocess
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from zerg.git.config import GitConfig, GitPRConfig
-from zerg.git.pr_engine import (
+from mahabharatha.git.config import GitConfig, GitPRConfig
+from mahabharatha.git.pr_engine import (
     ContextAssembler,
     PRContext,
     PRCreator,
@@ -17,7 +17,7 @@ from zerg.git.pr_engine import (
     _parse_commit_type,
     _sanitize_pr_content,
 )
-from zerg.git.types import CommitInfo, CommitType
+from mahabharatha.git.types import CommitInfo, CommitType
 
 
 def _make_runner(repo_path=None, log_output="", branch="feat/test") -> MagicMock:
@@ -70,7 +70,7 @@ class TestContextAssembler:
         ctx = ContextAssembler().assemble(runner, GitPRConfig(context_depth="diffs"), "main")
         assert len(ctx.commits) == 1 and ctx.issues == []
 
-    @patch("zerg.git.pr_engine.subprocess.run", side_effect=FileNotFoundError)
+    @patch("mahabharatha.git.pr_engine.subprocess.run", side_effect=FileNotFoundError)
     def test_gh_not_available(self, mock_run):
         log_out = "abc|||feat: test|||Dev|||2026-01-15\n\nsrc/x.py\n"
         ctx = ContextAssembler().assemble(_make_runner(log_output=log_out), GitPRConfig(context_depth="issues"), "main")
@@ -94,13 +94,13 @@ class TestPRGenerator:
 
 
 class TestPRCreator:
-    @patch("zerg.git.pr_engine.subprocess.run")
+    @patch("mahabharatha.git.pr_engine.subprocess.run")
     def test_create_success(self, mock_run):
         mock_run.return_value = MagicMock(stdout="https://github.com/owner/repo/pull/42\n", returncode=0)
         result = PRCreator().create(_make_runner(), {"title": "feat: test", "body": "b", "labels": [], "reviewers": []})
         assert result["url"] == "https://github.com/owner/repo/pull/42" and result["number"] == 42
 
-    @patch("zerg.git.pr_engine.subprocess.run", side_effect=FileNotFoundError)
+    @patch("mahabharatha.git.pr_engine.subprocess.run", side_effect=FileNotFoundError)
     def test_gh_not_available_saves_draft(self, mock_run, tmp_path):
         runner = _make_runner(repo_path=tmp_path, branch="feat/my-feature")
         result = PRCreator().create(runner, {"title": "feat: off", "body": "body", "labels": [], "reviewers": []})
@@ -108,7 +108,7 @@ class TestPRCreator:
 
 
 class TestPREngine:
-    @patch("zerg.git.pr_engine.subprocess.run")
+    @patch("mahabharatha.git.pr_engine.subprocess.run")
     def test_full_run(self, mock_subprocess):
         log_out = "abc123|||feat: add feature|||Dev|||2026-01-15\n\nsrc/feature.py\n"
 

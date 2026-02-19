@@ -2,8 +2,8 @@
 
 from unittest.mock import patch
 
-from zerg.charter import ProjectCharter
-from zerg.tech_selector import (
+from mahabharatha.charter import ProjectCharter
+from mahabharatha.tech_selector import (
     FRAMEWORK_RECOMMENDATIONS,
     SUPPORTED_LANGUAGES,
     TechStack,
@@ -242,7 +242,7 @@ class TestRecommendStack:
 class TestSelectTechnology:
     """Tests for select_technology function."""
 
-    @patch("zerg.tech_selector.Prompt.ask")
+    @patch("mahabharatha.tech_selector.Prompt.ask")
     def test_returns_tech_stack(self, mock_prompt: patch) -> None:
         """Test that select_technology returns a TechStack."""
         mock_prompt.side_effect = ["python", "fastapi"]
@@ -258,7 +258,7 @@ class TestSelectTechnology:
         assert isinstance(stack, TechStack)
         assert stack.language == "python"
 
-    @patch("zerg.tech_selector.Prompt.ask")
+    @patch("mahabharatha.tech_selector.Prompt.ask")
     def test_uses_recommended_defaults(self, mock_prompt: patch) -> None:
         """Test that recommended values are used as defaults."""
         # Accept defaults by returning empty strings (Prompt.ask will use default)
@@ -277,7 +277,7 @@ class TestSelectTechnology:
         assert stack.test_framework == "pytest"
         assert stack.linter == "ruff"
 
-    @patch("zerg.tech_selector.Prompt.ask")
+    @patch("mahabharatha.tech_selector.Prompt.ask")
     def test_handles_none_framework(self, mock_prompt: patch) -> None:
         """Test that 'none' framework is handled correctly."""
         mock_prompt.side_effect = ["python", "none"]
@@ -292,7 +292,7 @@ class TestSelectTechnology:
 
         assert stack.primary_framework == ""
 
-    @patch("zerg.tech_selector.Prompt.ask")
+    @patch("mahabharatha.tech_selector.Prompt.ask")
     def test_updates_charter_with_selections(self, mock_prompt: patch) -> None:
         """Test that charter is updated with final selections."""
         mock_prompt.side_effect = ["go", "gin"]
@@ -309,7 +309,7 @@ class TestSelectTechnology:
         assert charter.primary_language == "go"
         assert "gin" in charter.frameworks
 
-    @patch("zerg.tech_selector.Prompt.ask")
+    @patch("mahabharatha.tech_selector.Prompt.ask")
     def test_falls_back_to_python_for_unknown_language(self, mock_prompt: patch) -> None:
         """Test that unknown language falls back to Python."""
         mock_prompt.side_effect = ["unknown-lang", "none"]

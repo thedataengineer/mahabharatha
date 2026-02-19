@@ -12,7 +12,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-from zerg.state import StateManager
+from mahabharatha.state import StateManager
 
 
 class TestSetLevelStatusTransitions:

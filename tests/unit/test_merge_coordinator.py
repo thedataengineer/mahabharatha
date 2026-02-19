@@ -1,4 +1,4 @@
-"""Unit tests for MergeCoordinator in zerg/merge.py.
+"""Unit tests for MergeCoordinator in mahabharatha/merge.py.
 
 Tests cover:
 - MergeCoordinator.__init__() construction
@@ -22,11 +22,11 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.config import QualityGate, ZergConfig
-from zerg.constants import GateResult, MergeStatus
-from zerg.exceptions import MergeConflictError
-from zerg.merge import MergeCoordinator, MergeFlowResult
-from zerg.types import GateRunResult
+from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.constants import GateResult, MergeStatus
+from mahabharatha.exceptions import MergeConflictError
+from mahabharatha.merge import MergeCoordinator, MergeFlowResult
+from mahabharatha.types import GateRunResult
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -48,13 +48,13 @@ def mock_config() -> ZergConfig:
 def mock_git():
     """Mock GitOps instance with sensible defaults."""
     git = MagicMock()
-    git.create_staging_branch.return_value = "zerg/my-feat/staging-1"
-    git.current_branch.return_value = "zerg/my-feat/staging-1"
+    git.create_staging_branch.return_value = "mahabharatha/my-feat/staging-1"
+    git.current_branch.return_value = "mahabharatha/my-feat/staging-1"
     git.merge.return_value = "abc123def456"
     git.branch_exists.return_value = True
     git.list_worker_branches.return_value = [
-        "zerg/my-feat/worker-0",
-        "zerg/my-feat/worker-1",
+        "mahabharatha/my-feat/worker-0",
+        "mahabharatha/my-feat/worker-1",
     ]
     git.delete_feature_branches.return_value = 2
     return git
@@ -73,9 +73,9 @@ def mock_gates():
 def coordinator(mock_config, mock_git, mock_gates):
     """MergeCoordinator wired with mocked collaborators."""
     with (
-        patch("zerg.merge.GitOps", return_value=mock_git),
-        patch("zerg.merge.GateRunner", return_value=mock_gates),
-        patch("zerg.merge.ZergConfig.load", return_value=mock_config),
+        patch("mahabharatha.merge.GitOps", return_value=mock_git),
+        patch("mahabharatha.merge.GateRunner", return_value=mock_gates),
+        patch("mahabharatha.merge.ZergConfig.load", return_value=mock_config),
     ):
         mc = MergeCoordinator(feature="my-feat", config=mock_config, repo_path="/tmp/repo")
     # Replace internal objects with our mocks (GitOps/GateRunner already set via patch)
@@ -164,7 +164,7 @@ class TestMergeCoordinatorInit:
 
     def test_init_with_explicit_config(self, mock_config):
         """Accepts explicit config without calling ZergConfig.load()."""
-        with patch("zerg.merge.GitOps") as mock_git_cls, patch("zerg.merge.GateRunner"):
+        with patch("mahabharatha.merge.GitOps") as mock_git_cls, patch("mahabharatha.merge.GateRunner"):
             mc = MergeCoordinator(feature="feat", config=mock_config, repo_path="/tmp")
         assert mc.feature == "feat"
         assert mc.config is mock_config
@@ -174,9 +174,9 @@ class TestMergeCoordinatorInit:
     def test_init_loads_default_config_when_none(self):
         """Calls ZergConfig.load() when config is None."""
         with (
-            patch("zerg.merge.GitOps"),
-            patch("zerg.merge.GateRunner"),
-            patch("zerg.merge.ZergConfig.load") as mock_load,
+            patch("mahabharatha.merge.GitOps"),
+            patch("mahabharatha.merge.GateRunner"),
+            patch("mahabharatha.merge.ZergConfig.load") as mock_load,
         ):
             mock_load.return_value = ZergConfig()
             mc = MergeCoordinator(feature="feat")
@@ -186,7 +186,7 @@ class TestMergeCoordinatorInit:
     def test_init_stores_gate_pipeline(self, mock_config):
         """gate_pipeline parameter is stored for cached gate execution."""
         pipeline = MagicMock()
-        with patch("zerg.merge.GitOps"), patch("zerg.merge.GateRunner"):
+        with patch("mahabharatha.merge.GitOps"), patch("mahabharatha.merge.GateRunner"):
             mc = MergeCoordinator(feature="f", config=mock_config, gate_pipeline=pipeline)
         assert mc._gate_pipeline is pipeline
 
@@ -203,7 +203,7 @@ class TestPrepareMerge:
         """Delegates to git.create_staging_branch and returns the name."""
         result = coordinator.prepare_merge(level=1, target_branch="main")
         mock_git.create_staging_branch.assert_called_once_with("my-feat", "main")
-        assert result == "zerg/my-feat/staging-1"
+        assert result == "mahabharatha/my-feat/staging-1"
 
 
 # ===========================================================================
@@ -271,7 +271,7 @@ class TestExecuteMerge:
     def test_single_branch_success(self, coordinator, mock_git):
         """Merges a single branch and returns MergeResult."""
         results = coordinator.execute_merge(
-            source_branches=["zerg/my-feat/worker-0"],
+            source_branches=["mahabharatha/my-feat/worker-0"],
             staging_branch="staging",
         )
         mock_git.checkout.assert_called_once_with("staging")
@@ -573,7 +573,7 @@ class TestUtilityMethods:
         """Delegates to git.list_worker_branches."""
         branches = coordinator.get_mergeable_branches()
         mock_git.list_worker_branches.assert_called_once_with("my-feat")
-        assert branches == ["zerg/my-feat/worker-0", "zerg/my-feat/worker-1"]
+        assert branches == ["mahabharatha/my-feat/worker-0", "mahabharatha/my-feat/worker-1"]
 
     def test_cleanup_feature_branches(self, coordinator, mock_git):
         """Delegates to git.delete_feature_branches."""

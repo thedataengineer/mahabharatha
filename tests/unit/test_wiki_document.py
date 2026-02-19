@@ -1,4 +1,4 @@
-"""Tests for zerg/commands/wiki.py and zerg/commands/document.py.
+"""Tests for mahabharatha/commands/wiki.py and mahabharatha/commands/document.py.
 
 Covers all functions, branches, and edge cases with mocked doc_engine dependencies.
 """
@@ -69,23 +69,23 @@ class TestWikiCommand:
 
     def test_wiki_default_incremental_mode(self, runner, tmp_path, mocks):
         """Default invocation uses incremental mode."""
-        from zerg.commands.wiki import wiki
+        from mahabharatha.commands.wiki import wiki
 
-        zerg_dir = tmp_path / "zerg"
-        zerg_dir.mkdir()
-        (zerg_dir / "foo.py").write_text("# foo module")
+        mahabharatha_dir = tmp_path / "mahabharatha"
+        mahabharatha_dir.mkdir()
+        (mahabharatha_dir / "foo.py").write_text("# foo module")
 
         output_dir = tmp_path / "wiki_out"
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
-            patch("zerg.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
-            patch("zerg.commands.wiki.collect_files", return_value={".py": [zerg_dir / "foo.py"]}),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
+            patch("mahabharatha.commands.wiki.collect_files", return_value={".py": [mahabharatha_dir / "foo.py"]}),
             patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.write_text"),
         ):
@@ -100,19 +100,19 @@ class TestWikiCommand:
 
     def test_wiki_full_mode(self, runner, tmp_path, mocks):
         """--full flag activates full regeneration mode."""
-        from zerg.commands.wiki import wiki
+        from mahabharatha.commands.wiki import wiki
 
         output_dir = tmp_path / "wiki_out"
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
-            patch("zerg.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
-            patch("zerg.commands.wiki.collect_files", return_value={}),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
+            patch("mahabharatha.commands.wiki.collect_files", return_value={}),
             patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.write_text"),
         ):
@@ -127,19 +127,19 @@ class TestWikiCommand:
 
     def test_wiki_dry_run_no_files_written(self, runner, tmp_path, mocks):
         """--dry-run flag prints message and skips file writes."""
-        from zerg.commands.wiki import wiki
+        from mahabharatha.commands.wiki import wiki
 
         output_dir = tmp_path / "wiki_out"
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
-            patch("zerg.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
-            patch("zerg.commands.wiki.collect_files", return_value={}),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
+            patch("mahabharatha.commands.wiki.collect_files", return_value={}),
             patch("pathlib.Path.mkdir") as mock_mkdir,
             patch("pathlib.Path.write_text") as mock_write,
         ):
@@ -156,24 +156,24 @@ class TestWikiCommand:
 
     def test_wiki_generates_pages(self, runner, tmp_path, mocks):
         """Wiki generates pages from discovered Python files."""
-        from zerg.commands.wiki import wiki
+        from mahabharatha.commands.wiki import wiki
 
-        zerg_dir = tmp_path / "zerg"
-        zerg_dir.mkdir()
-        py_file = zerg_dir / "launcher.py"
+        mahabharatha_dir = tmp_path / "mahabharatha"
+        mahabharatha_dir.mkdir()
+        py_file = mahabharatha_dir / "launcher.py"
         py_file.write_text("# launcher")
 
         output_dir = tmp_path / "wiki_out"
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
-            patch("zerg.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
-            patch("zerg.commands.wiki.collect_files", return_value={".py": [py_file]}),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
+            patch("mahabharatha.commands.wiki.collect_files", return_value={".py": [py_file]}),
             patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.write_text"),
         ):
@@ -188,26 +188,26 @@ class TestWikiCommand:
 
     def test_wiki_skips_dunder_files(self, runner, tmp_path, mocks):
         """Files starting with __ are excluded from page generation."""
-        from zerg.commands.wiki import wiki
+        from mahabharatha.commands.wiki import wiki
 
-        zerg_dir = tmp_path / "zerg"
-        zerg_dir.mkdir()
-        init_file = zerg_dir / "__init__.py"
+        mahabharatha_dir = tmp_path / "mahabharatha"
+        mahabharatha_dir.mkdir()
+        init_file = mahabharatha_dir / "__init__.py"
         init_file.write_text("")
-        normal_file = zerg_dir / "core.py"
+        normal_file = mahabharatha_dir / "core.py"
         normal_file.write_text("# core")
 
         output_dir = tmp_path / "wiki_out"
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
-            patch("zerg.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
-            patch("zerg.commands.wiki.collect_files", return_value={".py": [init_file, normal_file]}),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
+            patch("mahabharatha.commands.wiki.collect_files", return_value={".py": [init_file, normal_file]}),
             patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.write_text"),
         ):
@@ -222,13 +222,13 @@ class TestWikiCommand:
 
     def test_wiki_render_failure_continues(self, runner, tmp_path, mocks):
         """If rendering a page fails, the wiki continues with remaining files."""
-        from zerg.commands.wiki import wiki
+        from mahabharatha.commands.wiki import wiki
 
-        zerg_dir = tmp_path / "zerg"
-        zerg_dir.mkdir()
-        file_a = zerg_dir / "good.py"
+        mahabharatha_dir = tmp_path / "mahabharatha"
+        mahabharatha_dir.mkdir()
+        file_a = mahabharatha_dir / "good.py"
         file_a.write_text("# good")
-        file_b = zerg_dir / "bad.py"
+        file_b = mahabharatha_dir / "bad.py"
         file_b.write_text("# bad")
 
         output_dir = tmp_path / "wiki_out"
@@ -240,14 +240,14 @@ class TestWikiCommand:
         ]
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
-            patch("zerg.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
-            patch("zerg.commands.wiki.collect_files", return_value={".py": [file_b, file_a]}),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
+            patch("mahabharatha.commands.wiki.collect_files", return_value={".py": [file_b, file_a]}),
             patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.write_text"),
         ):
@@ -262,11 +262,11 @@ class TestWikiCommand:
 
     def test_wiki_glossary_written_when_present(self, runner, tmp_path, mocks):
         """Glossary page is written when crossref returns entries."""
-        from zerg.commands.wiki import wiki
+        from mahabharatha.commands.wiki import wiki
 
-        zerg_dir = tmp_path / "zerg"
-        zerg_dir.mkdir()
-        py_file = zerg_dir / "mod.py"
+        mahabharatha_dir = tmp_path / "mahabharatha"
+        mahabharatha_dir.mkdir()
+        py_file = mahabharatha_dir / "mod.py"
         py_file.write_text("# mod")
 
         output_dir = tmp_path / "wiki_out"
@@ -277,14 +277,14 @@ class TestWikiCommand:
         crossref_inst.generate_glossary_page.return_value = "# Glossary\nTerms here"
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
-            patch("zerg.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
-            patch("zerg.commands.wiki.collect_files", return_value={".py": [py_file]}),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
+            patch("mahabharatha.commands.wiki.collect_files", return_value={".py": [py_file]}),
             patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.write_text"),
         ):
@@ -299,21 +299,21 @@ class TestWikiCommand:
 
     def test_wiki_glossary_not_written_in_dry_run(self, runner, tmp_path, mocks):
         """Glossary is not written to disk during dry run even if entries exist."""
-        from zerg.commands.wiki import wiki
+        from mahabharatha.commands.wiki import wiki
 
         crossref_inst = mocks["CrossRefBuilder"].return_value
         crossref_inst.build_glossary.return_value = [MagicMock()]
         crossref_inst.generate_glossary_page.return_value = "# Glossary"
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
-            patch("zerg.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
-            patch("zerg.commands.wiki.collect_files", return_value={}),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
+            patch("mahabharatha.commands.wiki.collect_files", return_value={}),
             patch("pathlib.Path.mkdir") as mock_mkdir,
             patch("pathlib.Path.write_text") as mock_write,
         ):
@@ -329,7 +329,7 @@ class TestWikiCommand:
 
     def test_wiki_push_success(self, runner, tmp_path, mocks):
         """--push flag triggers WikiPublisher with correct wiki URL."""
-        from zerg.commands.wiki import wiki
+        from mahabharatha.commands.wiki import wiki
 
         output_dir = tmp_path / "wiki_out"
 
@@ -343,16 +343,16 @@ class TestWikiCommand:
         )
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
-            patch("zerg.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
-            patch("zerg.doc_engine.publisher.WikiPublisher", mock_publisher),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
+            patch("mahabharatha.doc_engine.publisher.WikiPublisher", mock_publisher),
             patch("subprocess.run", return_value=mock_subprocess_result),
-            patch("zerg.commands.wiki.collect_files", return_value={}),
+            patch("mahabharatha.commands.wiki.collect_files", return_value={}),
             patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.write_text"),
         ):
@@ -370,7 +370,7 @@ class TestWikiCommand:
 
     def test_wiki_push_url_without_git_suffix(self, runner, tmp_path, mocks):
         """Push appends .wiki.git when remote URL has no .git suffix."""
-        from zerg.commands.wiki import wiki
+        from mahabharatha.commands.wiki import wiki
 
         output_dir = tmp_path / "wiki_out"
 
@@ -384,16 +384,16 @@ class TestWikiCommand:
         )
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
-            patch("zerg.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
-            patch("zerg.doc_engine.publisher.WikiPublisher", mock_publisher),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
+            patch("mahabharatha.doc_engine.publisher.WikiPublisher", mock_publisher),
             patch("subprocess.run", return_value=mock_subprocess_result),
-            patch("zerg.commands.wiki.collect_files", return_value={}),
+            patch("mahabharatha.commands.wiki.collect_files", return_value={}),
             patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.write_text"),
         ):
@@ -409,22 +409,22 @@ class TestWikiCommand:
 
     def test_wiki_push_git_remote_failure(self, runner, tmp_path, mocks):
         """Push exits with error when git remote detection fails."""
-        from zerg.commands.wiki import wiki
+        from mahabharatha.commands.wiki import wiki
 
         output_dir = tmp_path / "wiki_out"
 
         mock_subprocess_result = MagicMock(returncode=1, stdout="")
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
-            patch("zerg.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
             patch("subprocess.run", return_value=mock_subprocess_result),
-            patch("zerg.commands.wiki.collect_files", return_value={}),
+            patch("mahabharatha.commands.wiki.collect_files", return_value={}),
             patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.write_text"),
         ):
@@ -438,7 +438,7 @@ class TestWikiCommand:
 
     def test_wiki_push_publish_failure(self, runner, tmp_path, mocks):
         """Push exits with error when publisher reports failure."""
-        from zerg.commands.wiki import wiki
+        from mahabharatha.commands.wiki import wiki
 
         output_dir = tmp_path / "wiki_out"
 
@@ -452,16 +452,16 @@ class TestWikiCommand:
         )
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
-            patch("zerg.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
-            patch("zerg.doc_engine.publisher.WikiPublisher", mock_publisher),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
+            patch("mahabharatha.doc_engine.publisher.WikiPublisher", mock_publisher),
             patch("subprocess.run", return_value=mock_subprocess_result),
-            patch("zerg.commands.wiki.collect_files", return_value={}),
+            patch("mahabharatha.commands.wiki.collect_files", return_value={}),
             patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.write_text"),
         ):
@@ -475,18 +475,18 @@ class TestWikiCommand:
 
     def test_wiki_unexpected_exception_exits_1(self, runner, mocks):
         """Unexpected exception is caught and prints error."""
-        from zerg.commands.wiki import wiki
+        from mahabharatha.commands.wiki import wiki
 
         mocks["DependencyMapper"].return_value.build.side_effect = RuntimeError("boom")
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
-            patch("zerg.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
             patch("pathlib.Path.mkdir"),
         ):
             result = runner.invoke(wiki, [])
@@ -496,7 +496,7 @@ class TestWikiCommand:
 
     def test_wiki_sidebar_written(self, runner, tmp_path, mocks):
         """Sidebar file is generated and written when not dry run."""
-        from zerg.commands.wiki import wiki
+        from mahabharatha.commands.wiki import wiki
 
         output_dir = tmp_path / "wiki_out"
 
@@ -504,14 +504,14 @@ class TestWikiCommand:
         sidebar_inst.generate.return_value = "## ZERG Wiki\n\n**Reference**"
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
-            patch("zerg.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
-            patch("zerg.commands.wiki.collect_files", return_value={}),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
+            patch("mahabharatha.commands.wiki.collect_files", return_value={}),
             patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.write_text"),
         ):
@@ -525,25 +525,25 @@ class TestWikiCommand:
         sidebar_inst.generate.assert_called_once()
 
     def test_wiki_default_output_path(self, runner, mocks):
-        """Default output path is .zerg/wiki when --output is not specified."""
-        from zerg.commands.wiki import wiki
+        """Default output path is .mahabharatha/wiki when --output is not specified."""
+        from mahabharatha.commands.wiki import wiki
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
-            patch("zerg.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
-            patch("zerg.commands.wiki.collect_files", return_value={}),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.sidebar.SidebarGenerator", mocks["SidebarGenerator"]),
+            patch("mahabharatha.commands.wiki.collect_files", return_value={}),
             patch("pathlib.Path.mkdir"),
             patch("pathlib.Path.write_text"),
         ):
             result = runner.invoke(wiki, [], catch_exceptions=False)
 
         assert result.exit_code == 0
-        assert ".zerg/wiki" in result.output
+        assert ".mahabharatha/wiki" in result.output
 
 
 # ======================================================================
@@ -564,7 +564,7 @@ class TestDocumentCommand:
 
     def test_document_file_not_found(self, runner):
         """Command exits with error when target file does not exist."""
-        from zerg.commands.document import document
+        from mahabharatha.commands.document import document
 
         result = runner.invoke(document, ["/nonexistent/path.py"])
         assert result.exit_code != 0
@@ -572,12 +572,12 @@ class TestDocumentCommand:
 
     def test_document_auto_detect_type(self, runner, tmp_path, mocks):
         """Auto-detection is used when --type is auto (default)."""
-        from zerg.commands.document import document
+        from mahabharatha.commands.document import document
 
         target = tmp_path / "module.py"
         target.write_text("# module code\ndef hello(): pass")
 
-        from zerg.doc_engine.detector import ComponentType
+        from mahabharatha.doc_engine.detector import ComponentType
 
         detector_inst = mocks["ComponentDetector"].return_value
         detector_inst.detect.return_value = ComponentType.MODULE
@@ -586,12 +586,12 @@ class TestDocumentCommand:
         renderer_inst.render.return_value = "# Module Docs"
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
         ):
             result = runner.invoke(
                 document,
@@ -605,7 +605,7 @@ class TestDocumentCommand:
 
     def test_document_explicit_type_override(self, runner, tmp_path, mocks):
         """--type flag overrides auto-detection."""
-        from zerg.commands.document import document
+        from mahabharatha.commands.document import document
 
         target = tmp_path / "config.py"
         target.write_text("# config")
@@ -614,13 +614,13 @@ class TestDocumentCommand:
         renderer_inst.render.return_value = "# Config Docs"
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.detector.ComponentType") as MockComponentType,
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.detector.ComponentType") as MockComponentType,
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
         ):
             MockComponentType.return_value = MagicMock(value="config")
             result = runner.invoke(
@@ -634,14 +634,14 @@ class TestDocumentCommand:
 
     def test_document_output_to_file(self, runner, tmp_path, mocks):
         """--output flag writes documentation to a file."""
-        from zerg.commands.document import document
+        from mahabharatha.commands.document import document
 
         target = tmp_path / "mymod.py"
         target.write_text("# my module")
 
         output_file = tmp_path / "docs" / "mymod.md"
 
-        from zerg.doc_engine.detector import ComponentType
+        from mahabharatha.doc_engine.detector import ComponentType
 
         detector_inst = mocks["ComponentDetector"].return_value
         detector_inst.detect.return_value = ComponentType.MODULE
@@ -650,12 +650,12 @@ class TestDocumentCommand:
         renderer_inst.render.return_value = "# Generated Docs"
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
         ):
             result = runner.invoke(
                 document,
@@ -669,12 +669,12 @@ class TestDocumentCommand:
 
     def test_document_output_to_stdout(self, runner, tmp_path, mocks):
         """Without --output, documentation is printed to console."""
-        from zerg.commands.document import document
+        from mahabharatha.commands.document import document
 
         target = tmp_path / "mymod.py"
         target.write_text("# my module")
 
-        from zerg.doc_engine.detector import ComponentType
+        from mahabharatha.doc_engine.detector import ComponentType
 
         detector_inst = mocks["ComponentDetector"].return_value
         detector_inst.detect.return_value = ComponentType.MODULE
@@ -683,12 +683,12 @@ class TestDocumentCommand:
         renderer_inst.render.return_value = "# Rendered Documentation"
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
         ):
             result = runner.invoke(
                 document,
@@ -701,12 +701,12 @@ class TestDocumentCommand:
 
     def test_document_shows_extraction_stats(self, runner, tmp_path, mocks):
         """Output includes class and function counts from extraction."""
-        from zerg.commands.document import document
+        from mahabharatha.commands.document import document
 
         target = tmp_path / "mymod.py"
         target.write_text("class Foo: pass")
 
-        from zerg.doc_engine.detector import ComponentType
+        from mahabharatha.doc_engine.detector import ComponentType
 
         detector_inst = mocks["ComponentDetector"].return_value
         detector_inst.detect.return_value = ComponentType.MODULE
@@ -721,12 +721,12 @@ class TestDocumentCommand:
         renderer_inst.render.return_value = "# Docs"
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
         ):
             result = runner.invoke(
                 document,
@@ -740,12 +740,12 @@ class TestDocumentCommand:
 
     def test_document_unexpected_exception(self, runner, tmp_path, mocks):
         """Unexpected exception is caught and exits with error."""
-        from zerg.commands.document import document
+        from mahabharatha.commands.document import document
 
         target = tmp_path / "mymod.py"
         target.write_text("# module")
 
-        from zerg.doc_engine.detector import ComponentType
+        from mahabharatha.doc_engine.detector import ComponentType
 
         detector_inst = mocks["ComponentDetector"].return_value
         detector_inst.detect.return_value = ComponentType.MODULE
@@ -754,12 +754,12 @@ class TestDocumentCommand:
         extractor_inst.extract.side_effect = RuntimeError("extraction failed")
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
         ):
             result = runner.invoke(document, [str(target)])
 
@@ -768,12 +768,12 @@ class TestDocumentCommand:
 
     def test_document_depth_option(self, runner, tmp_path, mocks):
         """--depth option is accepted without error."""
-        from zerg.commands.document import document
+        from mahabharatha.commands.document import document
 
         target = tmp_path / "mymod.py"
         target.write_text("# module")
 
-        from zerg.doc_engine.detector import ComponentType
+        from mahabharatha.doc_engine.detector import ComponentType
 
         detector_inst = mocks["ComponentDetector"].return_value
         detector_inst.detect.return_value = ComponentType.MODULE
@@ -782,12 +782,12 @@ class TestDocumentCommand:
         renderer_inst.render.return_value = "# Deep Docs"
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
         ):
             result = runner.invoke(
                 document,
@@ -799,12 +799,12 @@ class TestDocumentCommand:
 
     def test_document_update_flag(self, runner, tmp_path, mocks):
         """--update flag is accepted without error."""
-        from zerg.commands.document import document
+        from mahabharatha.commands.document import document
 
         target = tmp_path / "mymod.py"
         target.write_text("# module")
 
-        from zerg.doc_engine.detector import ComponentType
+        from mahabharatha.doc_engine.detector import ComponentType
 
         detector_inst = mocks["ComponentDetector"].return_value
         detector_inst.detect.return_value = ComponentType.MODULE
@@ -813,12 +813,12 @@ class TestDocumentCommand:
         renderer_inst.render.return_value = "# Updated Docs"
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
         ):
             result = runner.invoke(
                 document,
@@ -830,7 +830,7 @@ class TestDocumentCommand:
 
     def test_document_all_component_types(self, runner, tmp_path, mocks):
         """All valid --type choices are accepted."""
-        from zerg.commands.document import document
+        from mahabharatha.commands.document import document
 
         target = tmp_path / "mymod.py"
         target.write_text("# module")
@@ -840,13 +840,13 @@ class TestDocumentCommand:
 
         for ctype in ["module", "command", "config", "api", "types"]:
             with (
-                patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-                patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-                patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-                patch("zerg.doc_engine.detector.ComponentType") as MockCT,
-                patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-                patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-                patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+                patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+                patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+                patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+                patch("mahabharatha.doc_engine.detector.ComponentType") as MockCT,
+                patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+                patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+                patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
             ):
                 MockCT.return_value = MagicMock(value=ctype)
                 result = runner.invoke(
@@ -859,14 +859,14 @@ class TestDocumentCommand:
 
     def test_document_output_creates_parent_dirs(self, runner, tmp_path, mocks):
         """Output path creates parent directories automatically."""
-        from zerg.commands.document import document
+        from mahabharatha.commands.document import document
 
         target = tmp_path / "mymod.py"
         target.write_text("# module")
 
         output_file = tmp_path / "deep" / "nested" / "docs" / "out.md"
 
-        from zerg.doc_engine.detector import ComponentType
+        from mahabharatha.doc_engine.detector import ComponentType
 
         detector_inst = mocks["ComponentDetector"].return_value
         detector_inst.detect.return_value = ComponentType.MODULE
@@ -875,12 +875,12 @@ class TestDocumentCommand:
         renderer_inst.render.return_value = "# Deep Output"
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
         ):
             result = runner.invoke(
                 document,
@@ -894,14 +894,14 @@ class TestDocumentCommand:
 
     def test_document_mapper_builds_on_parent_dir(self, runner, tmp_path, mocks):
         """DependencyMapper.build is called with the target's parent directory."""
-        from zerg.commands.document import document
+        from mahabharatha.commands.document import document
 
         subdir = tmp_path / "src"
         subdir.mkdir()
         target = subdir / "mymod.py"
         target.write_text("# module")
 
-        from zerg.doc_engine.detector import ComponentType
+        from mahabharatha.doc_engine.detector import ComponentType
 
         detector_inst = mocks["ComponentDetector"].return_value
         detector_inst.detect.return_value = ComponentType.MODULE
@@ -912,12 +912,12 @@ class TestDocumentCommand:
         mapper_inst = mocks["DependencyMapper"].return_value
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
         ):
             result = runner.invoke(
                 document,

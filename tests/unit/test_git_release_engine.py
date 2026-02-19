@@ -1,4 +1,4 @@
-"""Tests for zerg.git.release_engine -- automated release workflow."""
+"""Tests for mahabharatha.git.release_engine -- automated release workflow."""
 
 from __future__ import annotations
 
@@ -8,15 +8,15 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.git.config import GitConfig, GitReleaseConfig
-from zerg.git.release_engine import (
+from mahabharatha.git.config import GitConfig, GitReleaseConfig
+from mahabharatha.git.release_engine import (
     ChangelogGenerator,
     ReleaseCreator,
     ReleaseEngine,
     SemverCalculator,
     VersionFileUpdater,
 )
-from zerg.git.types import CommitInfo
+from mahabharatha.git.types import CommitInfo
 
 
 def _commit(

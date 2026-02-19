@@ -8,8 +8,8 @@ from pathlib import Path
 
 import pytest
 
+from mahabharatha.constants import WorkerStatus
 from tests.mocks.mock_launcher import MockContainerLauncher
-from zerg.constants import WorkerStatus
 
 pytestmark = pytest.mark.docker
 
@@ -27,7 +27,7 @@ class TestContainerStartupFlow:
             worker_id=0,
             feature="test-feature",
             worktree_path=Path("/workspace/worktree-0"),
-            branch="zerg/test-feature/worker-0",
+            branch="mahabharatha/test-feature/worker-0",
             env={"ZERG_FEATURE": "test-feature"},
         )
 
@@ -52,7 +52,7 @@ class TestContainerStartupFlow:
             worker_id=0,
             feature="test-feature",
             worktree_path=Path("/workspace/worktree-0"),
-            branch="zerg/test-feature/worker-0",
+            branch="mahabharatha/test-feature/worker-0",
         )
 
         # Verify failure
@@ -73,7 +73,7 @@ class TestContainerStartupFlow:
             worker_id=0,
             feature="test-feature",
             worktree_path=Path("/workspace/worktree-0"),
-            branch="zerg/test-feature/worker-0",
+            branch="mahabharatha/test-feature/worker-0",
         )
 
         # Verify failure
@@ -101,7 +101,7 @@ class TestMultipleWorkerStartup:
                 worker_id=i,
                 feature="test-feature",
                 worktree_path=Path(f"/workspace/worktree-{i}"),
-                branch=f"zerg/test-feature/worker-{i}",
+                branch=f"mahabharatha/test-feature/worker-{i}",
             )
             results.append(result)
 
@@ -125,7 +125,7 @@ class TestMultipleWorkerStartup:
                 worker_id=i,
                 feature="test-feature",
                 worktree_path=Path(f"/workspace/worktree-{i}"),
-                branch=f"zerg/test-feature/worker-{i}",
+                branch=f"mahabharatha/test-feature/worker-{i}",
             )
             results.append(result)
 
@@ -152,7 +152,7 @@ class TestWorkerMonitoring:
             worker_id=0,
             feature="test-feature",
             worktree_path=Path("/workspace/worktree-0"),
-            branch="zerg/test-feature/worker-0",
+            branch="mahabharatha/test-feature/worker-0",
         )
 
         status = launcher.monitor(0)
@@ -168,7 +168,7 @@ class TestWorkerMonitoring:
             worker_id=0,
             feature="test-feature",
             worktree_path=Path("/workspace/worktree-0"),
-            branch="zerg/test-feature/worker-0",
+            branch="mahabharatha/test-feature/worker-0",
         )
 
         # First call detects crash
@@ -195,7 +195,7 @@ class TestWorkerTermination:
             worker_id=0,
             feature="test-feature",
             worktree_path=Path("/workspace/worktree-0"),
-            branch="zerg/test-feature/worker-0",
+            branch="mahabharatha/test-feature/worker-0",
         )
 
         result = launcher.terminate(0)
@@ -215,7 +215,7 @@ class TestWorkerTermination:
                 worker_id=i,
                 feature="test-feature",
                 worktree_path=Path(f"/workspace/worktree-{i}"),
-                branch=f"zerg/test-feature/worker-{i}",
+                branch=f"mahabharatha/test-feature/worker-{i}",
             )
 
         results = launcher.terminate_all()
@@ -237,7 +237,7 @@ class TestStartupAttemptTracking:
                 worker_id=i,
                 feature="test-feature",
                 worktree_path=Path(f"/workspace/worktree-{i}"),
-                branch=f"zerg/test-feature/worker-{i}",
+                branch=f"mahabharatha/test-feature/worker-{i}",
             )
 
         successful = launcher.get_successful_spawns()
@@ -253,7 +253,7 @@ class TestStartupAttemptTracking:
                 worker_id=i,
                 feature="test-feature",
                 worktree_path=Path(f"/workspace/worktree-{i}"),
-                branch=f"zerg/test-feature/worker-{i}",
+                branch=f"mahabharatha/test-feature/worker-{i}",
             )
 
         failed = launcher.get_failed_spawns()
@@ -268,7 +268,7 @@ class TestStartupAttemptTracking:
             worker_id=0,
             feature="test-feature",
             worktree_path=Path("/workspace/worktree-0"),
-            branch="zerg/test-feature/worker-0",
+            branch="mahabharatha/test-feature/worker-0",
         )
 
         exec_failed = launcher.get_exec_failed_spawns()
@@ -284,7 +284,7 @@ class TestStartupAttemptTracking:
             worker_id=0,
             feature="test-feature",
             worktree_path=Path("/workspace/worktree-0"),
-            branch="zerg/test-feature/worker-0",
+            branch="mahabharatha/test-feature/worker-0",
         )
 
         process_failed = launcher.get_process_failed_spawns()
@@ -304,7 +304,7 @@ class TestCleanupOnFailure:
             worker_id=0,
             feature="test-feature",
             worktree_path=Path("/workspace/worktree-0"),
-            branch="zerg/test-feature/worker-0",
+            branch="mahabharatha/test-feature/worker-0",
         )
 
         assert not result.success
@@ -321,7 +321,7 @@ class TestCleanupOnFailure:
             worker_id=0,
             feature="test-feature",
             worktree_path=Path("/workspace/worktree-0"),
-            branch="zerg/test-feature/worker-0",
+            branch="mahabharatha/test-feature/worker-0",
         )
 
         assert not result.success
@@ -342,7 +342,7 @@ class TestWorkerOutput:
             worker_id=0,
             feature="test-feature",
             worktree_path=Path("/workspace/worktree-0"),
-            branch="zerg/test-feature/worker-0",
+            branch="mahabharatha/test-feature/worker-0",
         )
 
         output = launcher.get_output(0)

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from zerg.capability_resolver import CapabilityResolver, ResolvedCapabilities
-from zerg.config import ZergConfig
+from mahabharatha.capability_resolver import CapabilityResolver, ResolvedCapabilities
+from mahabharatha.config import ZergConfig
 
 # ---------------------------------------------------------------------------
 # ResolvedCapabilities dataclass tests

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from zerg.diagnostics.log_analyzer import LogAnalyzer, LogPattern
+from mahabharatha.diagnostics.log_analyzer import LogAnalyzer, LogPattern
 
 
 class TestLogPattern:

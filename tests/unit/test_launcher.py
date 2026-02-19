@@ -11,10 +11,10 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.constants import WorkerStatus
-from zerg.env_validator import validate_env_vars
-from zerg.launcher_types import LauncherConfig, LauncherType, SpawnResult, WorkerHandle
-from zerg.launchers import ContainerLauncher, SubprocessLauncher, get_plugin_launcher
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.env_validator import validate_env_vars
+from mahabharatha.launcher_types import LauncherConfig, LauncherType, SpawnResult, WorkerHandle
+from mahabharatha.launchers import ContainerLauncher, SubprocessLauncher, get_plugin_launcher
 
 # =============================================================================
 # validate_env_vars
@@ -173,7 +173,7 @@ class TestSubprocessLauncherHeartbeatMonitor:
     """Tests for SubprocessLauncher.heartbeat_monitor singleton (FR-4)."""
 
     def test_heartbeat_monitor_singleton_and_type(self) -> None:
-        from zerg.heartbeat import HeartbeatMonitor
+        from mahabharatha.heartbeat import HeartbeatMonitor
 
         launcher = SubprocessLauncher()
         assert launcher._heartbeat_monitor is None
@@ -285,7 +285,7 @@ class TestContainerLauncherInit:
 
     def test_init_defaults_and_custom(self) -> None:
         default = ContainerLauncher()
-        assert default.image_name == "zerg-worker"
+        assert default.image_name == "mahabharatha-worker"
         assert default.network == "bridge"
         custom = ContainerLauncher(image_name="custom", network="custom-net")
         assert custom.image_name == "custom"
@@ -435,7 +435,7 @@ class TestGetPluginLauncher:
         assert get_plugin_launcher("test", None) is None
 
     def test_success_and_exception(self) -> None:
-        from zerg.plugins import LauncherPlugin, PluginRegistry
+        from mahabharatha.plugins import LauncherPlugin, PluginRegistry
 
         class GoodPlugin(LauncherPlugin):
             @property
@@ -469,7 +469,7 @@ class TestSpawnWithRetry:
     """Tests for spawn_with_retry with exponential backoff."""
 
     @patch.object(SubprocessLauncher, "spawn")
-    @patch("zerg.launchers.base.time.sleep")
+    @patch("mahabharatha.launchers.base.time.sleep")
     def test_success_first_attempt(self, mock_sleep, mock_spawn, tmp_path):
         mock_spawn.return_value = SpawnResult(
             success=True,
@@ -482,7 +482,7 @@ class TestSpawnWithRetry:
         mock_sleep.assert_not_called()
 
     @patch.object(SubprocessLauncher, "spawn")
-    @patch("zerg.launchers.base.time.sleep")
+    @patch("mahabharatha.launchers.base.time.sleep")
     def test_all_attempts_fail(self, mock_sleep, mock_spawn, tmp_path):
         mock_spawn.return_value = SpawnResult(success=False, worker_id=0, error="persistent")
         launcher = SubprocessLauncher()
@@ -492,7 +492,7 @@ class TestSpawnWithRetry:
 
     @pytest.mark.asyncio
     @patch.object(SubprocessLauncher, "spawn_async")
-    @patch("zerg.launchers.base.asyncio.sleep")
+    @patch("mahabharatha.launchers.base.asyncio.sleep")
     async def test_async_retry_success(self, mock_sleep, mock_spawn_async, tmp_path):
         mock_spawn_async.return_value = SpawnResult(
             success=True,

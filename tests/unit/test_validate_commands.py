@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from zerg.validate_commands import (
+from mahabharatha.validate_commands import (
     BACKBONE_COMMANDS,
     BACKBONE_MARKERS,
     BACKBONE_MIN_REFS,
@@ -27,7 +27,7 @@ from zerg.validate_commands import (
     validate_task_references,
 )
 
-REAL_COMMANDS_DIR = Path(__file__).resolve().parents[2] / "zerg" / "data" / "commands"
+REAL_COMMANDS_DIR = Path(__file__).resolve().parents[2] / "mahabharatha" / "data" / "commands"
 
 
 class TestGetBaseCommandFiles:
@@ -164,10 +164,10 @@ class TestValidateStateJsonWithoutTasks:
     """Tests for validate_state_json_without_tasks cross-reference check."""
 
     def test_state_ref_without_tasks_flagged(self, tmp_path: Path) -> None:
-        """A file referencing .zerg/state without TaskList or TaskGet must be flagged."""
+        """A file referencing .mahabharatha/state without TaskList or TaskGet must be flagged."""
         content = (
             "# Bad Command\n\n"
-            "Read the state from `.zerg/state/rush-state.json`.\n"
+            "Read the state from `.mahabharatha/state/rush-state.json`.\n"
             "Use TaskCreate to track.\nUse TaskUpdate to update progress.\n"
         )
         (tmp_path / "badstate.md").write_text(content)
@@ -181,8 +181,8 @@ class TestValidateStateJsonWithoutTasks:
         ids=["tasklist", "taskget"],
     )
     def test_state_ref_with_task_query_passes(self, tmp_path: Path, task_ref: str) -> None:
-        """A file referencing .zerg/state that also references TaskList/TaskGet should pass."""
-        content = f"# Cmd\n\nRead `.zerg/state/rush-state.json`.\nUse {task_ref} for auth data.\n"
+        """A file referencing .mahabharatha/state that also references TaskList/TaskGet should pass."""
+        content = f"# Cmd\n\nRead `.mahabharatha/state/rush-state.json`.\nUse {task_ref} for auth data.\n"
         (tmp_path / "good.md").write_text(content)
         passed, errors = validate_state_json_without_tasks(tmp_path)
         assert passed

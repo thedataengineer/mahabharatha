@@ -5,8 +5,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.exceptions import GitError, MergeConflictError
-from zerg.git_ops import BranchInfo, GitOps
+from mahabharatha.exceptions import GitError, MergeConflictError
+from mahabharatha.git_ops import BranchInfo, GitOps
 
 
 class TestGitOpsInit:
@@ -109,21 +109,21 @@ class TestGitOpsStagingBranch:
     def test_create_staging_branch(self, tmp_repo: Path) -> None:
         ops = GitOps(tmp_repo)
         staging = ops.create_staging_branch("test-feature", base=ops.current_branch())
-        assert staging == "zerg/test-feature/staging" and ops.branch_exists(staging)
+        assert staging == "mahabharatha/test-feature/staging" and ops.branch_exists(staging)
 
 
 class TestGitOpsListBranches:
     def test_list_branches_with_pattern(self, tmp_repo: Path) -> None:
         ops = GitOps(tmp_repo)
-        ops.create_branch("zerg/feat/worker-0")
-        ops.create_branch("zerg/feat/worker-1")
-        branches = ops.list_branches("zerg/feat/worker-*")
+        ops.create_branch("mahabharatha/feat/worker-0")
+        ops.create_branch("mahabharatha/feat/worker-1")
+        branches = ops.list_branches("mahabharatha/feat/worker-*")
         assert len(branches) == 2 and all(isinstance(b, BranchInfo) for b in branches)
 
     def test_list_worker_branches(self, tmp_repo: Path) -> None:
         ops = GitOps(tmp_repo)
-        ops.create_branch("zerg/myfeature/worker-0")
-        ops.create_branch("zerg/myfeature/worker-1")
+        ops.create_branch("mahabharatha/myfeature/worker-0")
+        ops.create_branch("mahabharatha/myfeature/worker-1")
         workers = ops.list_worker_branches("myfeature")
         assert len(workers) == 2
 

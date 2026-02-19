@@ -15,7 +15,7 @@ pytestmark = pytest.mark.docker
 
 # Compute project root dynamically from this file's location
 PROJECT_ROOT = str(Path(__file__).resolve().parent.parent.parent)
-TEST_IMAGE = "zerg-worker-test"
+TEST_IMAGE = "mahabharatha-worker-test"
 DOCKERFILE_PATH = ".devcontainer/Dockerfile"
 
 
@@ -83,7 +83,7 @@ class TestImageBuilds:
 class TestContainerSpawnsWithResourceLimits:
     """Verify containers can be started with memory and CPU limits."""
 
-    CONTAINER_NAME = "zerg-worker-resource-test"
+    CONTAINER_NAME = "mahabharatha-worker-resource-test"
 
     def test_container_spawns_with_resource_limits(self):
         try:
@@ -156,9 +156,9 @@ class TestContainerSpawnsWithResourceLimits:
 
 @skip_no_docker
 class TestOrphanCleanup:
-    """Verify orphaned zerg containers can be detected and removed."""
+    """Verify orphaned mahabharatha containers can be detected and removed."""
 
-    CONTAINER_NAME = "zerg-worker-test-orphan"
+    CONTAINER_NAME = "mahabharatha-worker-test-orphan"
 
     def test_orphan_cleanup(self):
         try:
@@ -239,7 +239,7 @@ class TestOrphanCleanup:
 class TestContainerLogsAccessible:
     """Verify container logs can be retrieved after execution."""
 
-    CONTAINER_NAME = "zerg-worker-logs-test"
+    CONTAINER_NAME = "mahabharatha-worker-logs-test"
 
     def test_container_logs_accessible(self):
         try:
@@ -252,7 +252,7 @@ class TestContainerLogsAccessible:
                     self.CONTAINER_NAME,
                     "ubuntu:latest",
                     "echo",
-                    "hello zerg",
+                    "hello mahabharatha",
                 ],
                 timeout=30,
             )
@@ -264,7 +264,9 @@ class TestContainerLogsAccessible:
                 timeout=10,
             )
             assert logs_result.returncode == 0, f"Failed to fetch logs.\nstderr: {logs_result.stderr}"
-            assert "hello zerg" in logs_result.stdout, f"Expected 'hello zerg' in logs. Got: {logs_result.stdout}"
+            assert "hello mahabharatha" in logs_result.stdout, (
+                f"Expected 'hello mahabharatha' in logs. Got: {logs_result.stdout}"
+            )
         finally:
             _remove_container(self.CONTAINER_NAME)
 
@@ -273,7 +275,7 @@ class TestContainerLogsAccessible:
 class TestHealthcheckMarker:
     """Verify the healthcheck marker file mechanism works inside containers."""
 
-    CONTAINER_NAME = "zerg-worker-health-test"
+    CONTAINER_NAME = "mahabharatha-worker-health-test"
 
     def test_healthcheck_marker(self):
         try:
@@ -300,7 +302,7 @@ class TestHealthcheckMarker:
                     "exec",
                     self.CONTAINER_NAME,
                     "touch",
-                    "/tmp/.zerg-alive",
+                    "/tmp/.mahabharatha-alive",
                 ],
                 timeout=10,
             )
@@ -314,10 +316,12 @@ class TestHealthcheckMarker:
                     self.CONTAINER_NAME,
                     "test",
                     "-f",
-                    "/tmp/.zerg-alive",
+                    "/tmp/.mahabharatha-alive",
                 ],
                 timeout=10,
             )
-            assert exec_test.returncode == 0, "Healthcheck marker file /tmp/.zerg-alive does not exist in container"
+            assert exec_test.returncode == 0, (
+                "Healthcheck marker file /tmp/.mahabharatha-alive does not exist in container"
+            )
         finally:
             _remove_container(self.CONTAINER_NAME)

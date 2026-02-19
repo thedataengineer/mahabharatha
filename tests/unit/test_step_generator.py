@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from zerg.step_generator import (
+from mahabharatha.step_generator import (
     DetailLevel,
     Step,
     StepAction,
@@ -61,7 +61,7 @@ class TestStep:
         step = Step(
             step=3,
             action=StepAction.IMPLEMENT,
-            file="zerg/foo.py",
+            file="mahabharatha/foo.py",
             code_snippet="class Foo: pass",
             run="pytest tests/",
             verify=VerifyMode.EXIT_CODE_NONZERO,
@@ -69,7 +69,7 @@ class TestStep:
         result = step.to_dict()
         assert result["step"] == 3
         assert result["action"] == "implement"
-        assert result["file"] == "zerg/foo.py"
+        assert result["file"] == "mahabharatha/foo.py"
         assert result["verify"] == "exit_code_nonzero"
 
 
@@ -124,7 +124,7 @@ class TestStepGeneratorGeneration:
     def test_medium_returns_six_tdd_steps(self, tmp_path):
         """Medium detail returns 6 TDD steps in correct order without snippets."""
         gen = StepGenerator(project_root=tmp_path)
-        task = TaskDefinition(id="TEST-001", title="Test", files={"create": ["zerg/foo.py"]})
+        task = TaskDefinition(id="TEST-001", title="Test", files={"create": ["mahabharatha/foo.py"]})
         steps = gen.generate_steps(task, DetailLevel.MEDIUM)
 
         assert len(steps) == 6
@@ -150,7 +150,7 @@ class TestStepGeneratorGeneration:
             id="TEST-001",
             title="Test Feature",
             description="Implement test feature",
-            files={"create": ["zerg/foo.py"]},
+            files={"create": ["mahabharatha/foo.py"]},
         )
         steps = gen.generate_steps(task, DetailLevel.HIGH)
         assert len(steps) == 6
@@ -167,7 +167,7 @@ class TestStepGeneratorFormatterIntegration:
         pyproject.write_text("[tool.ruff]\nline-length = 88")
 
         gen = StepGenerator(project_root=tmp_path)
-        task = TaskDefinition(id="TEST-001", title="Test", files={"create": ["zerg/foo.py"]})
+        task = TaskDefinition(id="TEST-001", title="Test", files={"create": ["mahabharatha/foo.py"]})
         steps = gen.generate_steps(task, DetailLevel.MEDIUM)
         assert "ruff format" in steps[4].run
 
@@ -178,10 +178,10 @@ class TestStepGeneratorFileInference:
     def test_infers_test_and_impl_files(self, tmp_path):
         """Infers test file from impl and sets impl on implement step."""
         gen = StepGenerator(project_root=tmp_path)
-        task = TaskDefinition(id="TEST-001", title="Test", files={"create": ["zerg/my_module.py"]})
+        task = TaskDefinition(id="TEST-001", title="Test", files={"create": ["mahabharatha/my_module.py"]})
         steps = gen.generate_steps(task, DetailLevel.MEDIUM)
         assert "test_my_module" in steps[0].file
-        assert steps[2].file == "zerg/my_module.py"
+        assert steps[2].file == "mahabharatha/my_module.py"
 
 
 class TestStepGeneratorVerification:
@@ -193,7 +193,7 @@ class TestStepGeneratorVerification:
         task = TaskDefinition(
             id="TEST-001",
             title="Test",
-            files={"create": ["zerg/foo.py"]},
+            files={"create": ["mahabharatha/foo.py"]},
             verification={"command": "python -m pytest tests/ -v"},
         )
         steps = gen.generate_steps(task, DetailLevel.MEDIUM)
@@ -216,7 +216,7 @@ class TestConvenienceFunction:
     def test_returns_list_of_dicts(self, tmp_path, monkeypatch):
         """Convenience function returns list of dictionaries."""
         monkeypatch.chdir(tmp_path)
-        task = {"id": "TEST-001", "title": "Test", "files": {"create": ["zerg/foo.py"]}}
+        task = {"id": "TEST-001", "title": "Test", "files": {"create": ["mahabharatha/foo.py"]}}
         result = generate_steps_for_task(task, "medium")
         assert isinstance(result, list)
         assert all(isinstance(s, dict) for s in result)
@@ -232,7 +232,7 @@ class TestASTAnalyzerIntegration:
         mock_analyzer.extract_patterns.side_effect = Exception("Parse error")
 
         gen = StepGenerator(project_root=tmp_path, ast_analyzer=mock_analyzer)
-        task = TaskDefinition(id="TEST-001", title="Test", files={"create": ["zerg/foo.py"]})
+        task = TaskDefinition(id="TEST-001", title="Test", files={"create": ["mahabharatha/foo.py"]})
         steps = gen.generate_steps(task, DetailLevel.HIGH)
         assert len(steps) == 6
         assert steps[0].code_snippet is not None

@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Consolidated security engine with 15 capability areas in `zerg/security/` package
+- Consolidated security engine with 15 capability areas in `mahabharatha/security/` package
 - Security integrated as Stage 3 in `/z:review` (Spec → Quality → Security)
 - `--no-security` flag for `/z:review` to skip security scanning
 - CVE dependency scanning with osv.dev API and heuristic fallback
@@ -54,7 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `ZERG_FEATURE` environment variable for terminal-scoped feature isolation in multi-epic workflows
+- `Mahabharatha_FEATURE` environment variable for terminal-scoped feature isolation in multi-epic workflows
 - Advisory lockfile system (`.gsd/specs/{feature}/.lock`) to warn about concurrent sessions on the same feature
 - `AskUserQuestion` structured approval gate in `/z:plan` to prevent auto-continuation into design phase
 - Feature-scoped git ship action — `/z:git --action ship` now scopes PRs to the active feature's branches
@@ -64,13 +64,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `lychee` link checker CI job for documentation (#191)
 - Custom single-page landing site (`docs/index.html`) with dark/light mode toggle, glassmorphism design, and scroll animations (#204)
 - 26-command cheat sheet table, pipeline visualization, FAQ accordion, and copy-to-clipboard (#204)
-- Optimized web logo (`docs/assets/img/zerg-logo-web.png`, <200KB) and Open Graph social preview image (#204)
+- Optimized web logo (`docs/assets/img/mahabharatha-logo-web.png`, <200KB) and Open Graph social preview image (#204)
 - Simplified GitHub Pages deployment — direct `docs/` upload replaces MkDocs build (#205)
 
 ### Fixed
 
 - Level-aware task claiming — workers can no longer claim tasks above the current orchestrator level
-- All 15 command pre-flights now read `ZERG_FEATURE` env var before `.gsd/.current-feature` file
+- All 15 command pre-flights now read `Mahabharatha_FEATURE` env var before `.gsd/.current-feature` file
 - TOCTOU race in advisory lockfile acquisition — now uses atomic file creation via `os.open` with `O_CREAT|O_EXCL`
 - Missing ownership check in lockfile release — now validates PID before deletion
 - Unprotected file reads in `detect_feature()` and lockfile functions — now resilient to OS/encoding errors
@@ -108,13 +108,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs` optional dependency group for mkdocs and mkdocs-material (#190)
 - Python 3.13 classifier in pyproject.toml (#189)
 - Coverage badge and GitHub Discussions link in README (#189, #190)
-- `--tone` flag for `/zerg:document` with `educational` (default), `reference`, and `tutorial` tones for documentation style control
-- 3 tone definition files at `zerg/data/tones/` (`educational.md`, `reference.md`, `tutorial.md`) for documentation style guidance
-- `--admin` flag for `/zerg:git --action ship`: use admin merge directly, bypassing branch protection rules (repo owner/admin)
-- `zerg/state/` package: decompose 1010-line StateManager into 9 focused modules with facade pattern
-- `zerg/fs_utils.py`: single-pass file traversal utility replacing scattered rglob calls
-- `zerg/json_utils.py`: orjson/stdlib abstraction with optional `orjson` dependency for performance
-- `zerg/rendering/` package: extracted render logic from dryrun.py and status.py into dedicated renderers
+- `--tone` flag for `/mahabharatha:document` with `educational` (default), `reference`, and `tutorial` tones for documentation style control
+- 3 tone definition files at `mahabharatha/data/tones/` (`educational.md`, `reference.md`, `tutorial.md`) for documentation style guidance
+- `--admin` flag for `/mahabharatha:git --action ship`: use admin merge directly, bypassing branch protection rules (repo owner/admin)
+- `mahabharatha/state/` package: decompose 1010-line StateManager into 9 focused modules with facade pattern
+- `mahabharatha/fs_utils.py`: single-pass file traversal utility replacing scattered rglob calls
+- `mahabharatha/json_utils.py`: orjson/stdlib abstraction with optional `orjson` dependency for performance
+- `mahabharatha/rendering/` package: extracted render logic from dryrun.py and status.py into dedicated renderers
 - 8 TypedDicts (`BacklogItemDict`, `DiagnosticResultDict`, `GraphNodeDict`, `StateDict`, `WorkerMetricsDict`, `TaskSyncDict`, `PRDataDict`, `HeartbeatDict`) replacing `dict[str, Any]`
 - `types-pyyaml` dev dependency for yaml type stubs
 - `warn_unused_ignores` and `show_error_codes` in mypy config
@@ -131,16 +131,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- PyPI distribution renamed from `zerg` to `zerg-ai` — `import zerg` and `zerg` CLI unchanged (#180)
-- All `pip install zerg[...]` references updated to `zerg-ai[...]` across docs, README, and source (#180)
+- PyPI distribution renamed from `mahabharatha` to `mahabharatha-ai` — `import mahabharatha` and `mahabharatha` CLI unchanged (#180)
+- All `pip install mahabharatha[...]` references updated to `mahabharatha-ai[...]` across docs, README, and source (#180)
 - CHANGELOG frozen: `[Unreleased]` → `[0.2.0] - 2026-02-07` (#182)
-- README Quick Start and Installation sections now show `pip install zerg-ai` (#180)
+- README Quick Start and Installation sections now show `pip install mahabharatha-ai` (#180)
 - docs: comprehensive documentation audit — sync all commands and flags across wiki, command references, and tutorials
 - `/z:plan` anti-implementation guards hardened at 4 locations with PLANNING COMPLETE terminal banner
 - Plan requirements template includes Section 11 "Documentation Impact Analysis"
 - `/z:design` mandates CHANGELOG and documentation update tasks in every task graph
 - Enable BLE001 ruff rule (bare-except detection) in pyproject.toml
-- Migrated 14 production files from `import json` to `zerg.json_utils`
+- Migrated 14 production files from `import json` to `mahabharatha.json_utils`
 - `--skip-validation` flag for `/z:plan` and `/z:design` to bypass Phase 0 pre-execution validation checks
 - Smoke CI job in `ci.yml` gating test shards for fast-fail feedback (~10s)
 - `@pytest.mark.smoke` markers on 28 critical-path unit tests covering config, types, exceptions, graph validation, state, CLI, launcher, parser, and constants
@@ -192,7 +192,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Task mode is now the default for `/zerg:rush` — container mode requires explicit `--mode container`
+- Task mode is now the default for `/mahabharatha:Kurukshetra` — container mode requires explicit `--mode container`
 - Simplified auto-detection logic: removed devcontainer/Docker image checks from `launcher_configurator.py`
 - Updated help text to show `--mode MODE  Execution mode: task|container|subprocess (default: task)`
 
@@ -203,11 +203,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ⛔ WORKFLOW BOUNDARY sections preventing auto-progression to next workflow phase
 - AskUserQuestion handoff to brainstorm.md Phase 4 for explicit user control
 - Architecture compliance quality gates with layer boundary, import restriction, and naming convention enforcement (#28)
-- `zerg/architecture.py` module with `ArchitectureChecker` and `ArchitectureConfig` for architecture validation
+- `mahabharatha/architecture.py` module with `ArchitectureChecker` and `ArchitectureConfig` for architecture validation
 - `ArchitectureGate` quality gate plugin for ship-time architecture validation (#28)
-- Architecture config section in `.zerg/config.yaml` with import rules, naming conventions, layer definitions, and exceptions
-- Automated wiring verification task injection into `/zerg:design` task graphs (#98)
-- `zerg/test_scope.py` module for scoped pytest path detection from task graphs (#98)
+- Architecture config section in `.mahabharatha/config.yaml` with import rules, naming conventions, layer definitions, and exceptions
+- Automated wiring verification task injection into `/mahabharatha:design` task graphs (#98)
+- `mahabharatha/test_scope.py` module for scoped pytest path detection from task graphs (#98)
 - Phase 3.5 in `design.core.md` mandating wiring verification task in Level 5 (#98)
 - `DependencyChecker` class for verifying task dependencies before claiming (#OCF)
 - `EventEmitter` class for JSONL-based live event streaming with subscribe/unsubscribe (#OCF)
@@ -217,8 +217,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `LevelMergeStatus` enum for tracking per-level merge state (PENDING, IN_PROGRESS, COMPLETE, FAILED) (#OCF)
 - Integration tests for claim enforcement (`test_claim_enforcement.py`) and deferred merge (`test_deferred_merge.py`) (#OCF)
 - Unit tests for `DependencyChecker` and `EventEmitter` (#OCF)
-- `--skip-tests` flag for `/zerg:rush`: skip test gates until final level for faster iteration (lint-only mode)
-- Integration tests for rush performance optimizations (`tests/integration/test_rush_performance.py`)
+- `--skip-tests` flag for `/mahabharatha:Kurukshetra`: skip test gates until final level for faster iteration (lint-only mode)
+- Integration tests for Kurukshetra performance optimizations (`tests/integration/test_Kurukshetra_performance.py`)
 - `@pytest.mark.slow` markers on resilience tests (`test_resilience_config.py`, `test_state_reconciler.py`, `test_resilience_e2e.py`)
 - State machine validation in `StateManager.set_task_status()` with warning on invalid transitions (#110)
 - `get_tasks_by_status_and_level()` method for combined status and level filtering (#111)
@@ -250,7 +250,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `DependencyChecker` now uses `TaskStatus.COMPLETE.value` instead of hardcoded "COMPLETE" string (#OCF)
 - `WorkerProtocol` now initializes and passes `DependencyChecker` to claim_task for runtime dependency enforcement (#OCF)
 - Lint issues resolved by PR #117 (#104)
-- Task prefixes added to all ZERG command files for Claude Task integration (#105)
+- Task prefixes added to all Mahabharatha command files for Claude Task integration (#105)
 - Removed confirmed dead code after improved `CrossFileChecker` analysis (#107)
 
 ### Changed
@@ -263,8 +263,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- `/zerg:status` missing documented flags `--tasks`, `--workers`, `--commits` (#103)
-- Flaky CI tests: hardcoded path in `test_container_e2e_live.py`, missing schema assertion in `test_full_rush_cycle.py` (#113)
+- `/mahabharatha:status` missing documented flags `--tasks`, `--workers`, `--commits` (#103)
+- Flaky CI tests: hardcoded path in `test_container_e2e_live.py`, missing schema assertion in `test_full_Kurukshetra_cycle.py` (#113)
 - `pip-audit` failure on local package by using `--skip-editable` flag (#113)
 
 ### Added
@@ -272,7 +272,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Container mode resilience: spawn retry with exponential backoff, task timeout watchdog, state reconciliation (#102)
 - Worker crash recovery with automatic task reassignment (#102)
 - Auto-respawn of failed workers to maintain target worker count (#102)
-- Structured resilience logging to `.zerg/monitor.log` with ISO8601 timestamps (#102)
+- Structured resilience logging to `.mahabharatha/monitor.log` with ISO8601 timestamps (#102)
 - `StateReconciler` class for periodic and level-transition state reconciliation (#102)
 - `ResilienceEvent` enum constants for structured event logging (#102)
 - `ResilienceConfig` and extended `WorkersConfig` with spawn retry, task timeout, and heartbeat settings (#102)
@@ -285,18 +285,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `--check import-chain` detects circular imports and deep import chains via DFS
 - `--check conventions` validates snake_case naming, bracketed Task prefixes, file organization
 - `--check context-engineering` wraps all 7 `validate_commands.py` checks
-- AST cache module (`zerg/ast_cache.py`) shared between cross-file and import-chain checkers
-- Graph property validation (`zerg/graph_validation.py`) for task dependency/consumer/reachability checks
+- AST cache module (`mahabharatha/ast_cache.py`) shared between cross-file and import-chain checkers
+- Graph property validation (`mahabharatha/graph_validation.py`) for task dependency/consumer/reachability checks
 - Graph validation integrated into `load_and_validate_task_graph()` as 4th validation step
-- `CLAUDE_CODE_TASK_LIST_ID` printed in `/zerg:rush` and `/zerg:design` for worker coordination visibility
+- `CLAUDE_CODE_TASK_LIST_ID` printed in `/mahabharatha:Kurukshetra` and `/mahabharatha:design` for worker coordination visibility
 - Mandatory L5 final analysis task validation in `design.py`
-- Analyze config section in `.zerg/config.yaml` with per-checker settings
+- Analyze config section in `.mahabharatha/config.yaml` with per-checker settings
 - Unit and integration tests for all new checkers and graph validation
-- CHANGELOG enforcement: `/zerg:design` always includes a CHANGELOG.md update task in the quality level
-- CHANGELOG enforcement: `/zerg:git --action ship` validates CHANGELOG.md changes before pushing, warns if missing
-- Post-approval handoff prompt in `/zerg:plan` — AskUserQuestion with 3 next-step options after requirements approval (#94)
-- Documentation section (Section 10) added to requirements.md template referencing `/zerg:document` (#94)
-- Missing `/zerg:git` flags added to `docs/commands.md`: `--no-docker`, `--include-stashes`, `--limit`, `--priority` (#94)
+- CHANGELOG enforcement: `/mahabharatha:design` always includes a CHANGELOG.md update task in the quality level
+- CHANGELOG enforcement: `/mahabharatha:git --action ship` validates CHANGELOG.md changes before pushing, warns if missing
+- Post-approval handoff prompt in `/mahabharatha:plan` — AskUserQuestion with 3 next-step options after requirements approval (#94)
+- Documentation section (Section 10) added to requirements.md template referencing `/mahabharatha:document` (#94)
+- Missing `/mahabharatha:git` flags added to `docs/commands.md`: `--no-docker`, `--include-stashes`, `--limit`, `--priority` (#94)
 - Worker intelligence subsystem: heartbeat health monitoring with auto-restart for stalled workers (#67, #27, #30)
 - Three-tier verification (syntax/correctness/quality) with configurable blocking and escalation for ambiguous failures (#67)
 - Escalation protocol: workers report ambiguous failures to orchestrator with terminal alerts (#67)
@@ -305,27 +305,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New config sections: `heartbeat`, `escalation`, `verification_tiers`, `repo_map` in ZergConfig (#67)
 - Documentation updates for worker intelligence: `docs/commands.md`, `docs/configuration.md`, `README.md`, wiki pages (#67)
 - `STALLED` worker status and `ESCALATION` exit code (4) for worker state machine (#67)
-- Worker health dashboard in `/zerg:status` with per-worker HEALTH table showing status, task, step, progress, restarts (#27)
+- Worker health dashboard in `/mahabharatha:status` with per-worker HEALTH table showing status, task, step, progress, restarts (#27)
 - Incremental repo map indexing with MD5-based staleness detection and selective re-parse (#30)
 - Token usage metrics subsystem: TokenCounter (API + heuristic), TokenTracker (per-worker), TokenAggregator (cumulative) (#24)
-- REPOSITORY MAP and TOKEN USAGE sections in `/zerg:status` dashboard
-- Optional `anthropic` dependency for exact token counting (`pip install zerg-ai[metrics]`)
+- REPOSITORY MAP and TOKEN USAGE sections in `/mahabharatha:status` dashboard
+- Optional `anthropic` dependency for exact token counting (`pip install mahabharatha-ai[metrics]`)
 - `TokenMetricsConfig` with configurable api_counting (off by default), caching, and heuristic fallback
 - StatusFormatter module for ASCII table formatting across all dashboard sections
 - Automated PyPI release workflow with trusted publishing (OIDC), TestPyPI pre-release support, and SLSA provenance attestation (#23)
-- `cleanup` action for `/zerg:git`: prune merged branches, stale remote refs, orphaned worktrees, Docker containers/images
-- `issue` action for `/zerg:git`: create AI-optimized GitHub issues from codebase scan or user description with strict 8-section template
-- `/zerg:git` now has 14 actions (was 12)
+- `cleanup` action for `/mahabharatha:git`: prune merged branches, stale remote refs, orphaned worktrees, Docker containers/images
+- `issue` action for `/mahabharatha:git`: create AI-optimized GitHub issues from codebase scan or user description with strict 8-section template
+- `/mahabharatha:git` now has 14 actions (was 12)
 - `pip-audit` added to dev dependencies and CI workflow for supply chain security (#88)
 - Routing telemetry wired into `MCPRouter` with configurable `telemetry_enabled` flag (#79)
 - `GatePipeline` wired into orchestrator merge quality gates with artifact storage and staleness caching (#78)
 - `ModeContext` wired into orchestrator for mode-aware gate strictness (#78)
-- `CompactFormatter` wired into context plugin for token-efficient output when `ZERG_COMPACT_MODE` is set (#78)
+- `CompactFormatter` wired into context plugin for token-efficient output when `Mahabharatha_COMPACT_MODE` is set (#78)
 
 ### Changed
 
-- Wiki files renamed from `Command-*.md` to `zerg-*.md` for consistency with `/zerg:` command prefix
-- Wiki sidebar displays `/zerg:init` format instead of bare `init` names
+- Wiki files renamed from `Command-*.md` to `mahabharatha-*.md` for consistency with `/mahabharatha:` command prefix
+- Wiki sidebar displays `/mahabharatha:init` format instead of bare `init` names
 - Global CLI Flags documentation updated: `--no-compact` (ON by default), `--no-loop` (ON by default), `--iterations N`
 - `sidebar.py` references updated to match new wiki file naming
 - All deprecated `--uc`/`--compact` flag references removed from documentation
@@ -354,7 +354,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Context plugin capability sections: depth, mode, TDD, and efficiency guidance injected into worker prompts
 - `WorkerContext` capability fields for cross-cutting capability awareness
 - Unit and integration tests for capability resolver and wiring
-- Integration wiring enforcement across the ZERG pipeline (#78, #79, #80, #81):
+- Integration wiring enforcement across the Mahabharatha pipeline (#78, #79, #80, #81):
   - **Module wiring validator** (`validate_module_wiring()` in `validate_commands.py`): Detects orphaned Python modules with zero production imports; allowlists `__init__.py`, `__main__.py`, entry points; `--strict-wiring` CLI flag
   - **CI pytest workflow** (`.github/workflows/pytest.yml`): Runs unit tests, integration tests, and `validate_commands` on every PR
   - **Consumer matrix** in `design.md`/`design.core.md`: Tasks declare `consumers` and `integration_test` fields at design time
@@ -363,18 +363,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Anti-drift rules** #6 and #7 in `CLAUDE.md`: Every new module needs a production caller and an integration test
 - 58 new tests (10 unit + 13 integration) for wiring enforcement
 - Cross-cutting capabilities framework with 8 new subsystems (#76):
-  - **Engineering Rules Framework** (`zerg/rules/`): YAML-based rule engine with loader, validator, and injector; ships with 25 rules across safety, quality, and efficiency rulesets
-  - **Analysis Depth Tiers** (`zerg/depth_tiers.py`): 5-tier depth system (QUICK → ULTRATHINK) with `--quick`, `--think`, `--think-hard`, `--ultrathink` CLI flags; auto-detection from task descriptions
-  - **Token Efficiency Mode** (`zerg/efficiency.py`): GREEN/YELLOW/RED zone detection with `--uc`/`--compact` CLI flag; symbol system and abbreviation engine for 30-50% token reduction
-  - **Iterative Improvement Loops** (`zerg/loops.py`): LoopController with convergence detection, plateau threshold, regression rollback; `--loop`, `--iterations`, `--convergence` CLI options
-  - **Verification Gates** (`zerg/verification_gates.py`): Gate pipeline with artifact storage, staleness detection, fresh-cache reuse, and stop-on-required-failure semantics
-  - **Behavioral Mode Auto-Trigger** (`zerg/modes.py`): 5 modes (PRECISION, SPEED, EXPLORATION, REFACTOR, DEBUG) with `--mode` CLI flag; priority-based detection from keywords, efficiency zones, and depth tiers
-  - **MCP Auto-Routing** (`zerg/mcp_router.py`, `zerg/mcp_telemetry.py`): Capability-based server matching with cost optimization, `--mcp`/`--no-mcp` CLI flags, routing telemetry
-  - **TDD Enforcement** (`zerg/tdd.py`): Red-green-refactor protocol with `--tdd` CLI flag; anti-pattern detection (mock_heavy, testing_impl, no_assertions, large_tests)
+  - **Engineering Rules Framework** (`mahabharatha/rules/`): YAML-based rule engine with loader, validator, and injector; ships with 25 rules across safety, quality, and efficiency rulesets
+  - **Analysis Depth Tiers** (`mahabharatha/depth_tiers.py`): 5-tier depth system (QUICK → ULTRATHINK) with `--quick`, `--think`, `--think-hard`, `--ultrathink` CLI flags; auto-detection from task descriptions
+  - **Token Efficiency Mode** (`mahabharatha/efficiency.py`): GREEN/YELLOW/RED zone detection with `--uc`/`--compact` CLI flag; symbol system and abbreviation engine for 30-50% token reduction
+  - **Iterative Improvement Loops** (`mahabharatha/loops.py`): LoopController with convergence detection, plateau threshold, regression rollback; `--loop`, `--iterations`, `--convergence` CLI options
+  - **Verification Gates** (`mahabharatha/verification_gates.py`): Gate pipeline with artifact storage, staleness detection, fresh-cache reuse, and stop-on-required-failure semantics
+  - **Behavioral Mode Auto-Trigger** (`mahabharatha/modes.py`): 5 modes (PRECISION, SPEED, EXPLORATION, REFACTOR, DEBUG) with `--mode` CLI flag; priority-based detection from keywords, efficiency zones, and depth tiers
+  - **MCP Auto-Routing** (`mahabharatha/mcp_router.py`, `mahabharatha/mcp_telemetry.py`): Capability-based server matching with cost optimization, `--mcp`/`--no-mcp` CLI flags, routing telemetry
+  - **TDD Enforcement** (`mahabharatha/tdd.py`): Red-green-refactor protocol with `--tdd` CLI flag; anti-pattern detection (mock_heavy, testing_impl, no_assertions, large_tests)
 - 8 new config sections in `ZergConfig`: `rules`, `efficiency`, `improvement_loops`, `verification`, `behavioral_modes`, `mcp_routing`, `tdd`, `error_recovery`
 - Context engineering plugin now injects MCP routing hints and engineering rules into task-scoped context (budget: 15% rules, 15% security, 35% spec, 15% MCP)
 - ~490 new tests across 8 test files for cross-cutting capabilities
-- `zerg/git/` package with 7 engine modules: commit, rescue, PR, release, history, pre-review, bisect
+- `mahabharatha/git/` package with 7 engine modules: commit, rescue, PR, release, history, pre-review, bisect
 - `GitRunner` base class extracted from `GitOps` for low-level git command execution
 - `GitConfig` Pydantic model with per-project config sections (commit, pr, release, rescue, review)
 - Smart commit engine with auto/confirm/suggest modes and conventional commit detection
@@ -387,8 +387,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 5 new CLI actions: `pr`, `release`, `review`, `rescue`, `bisect` (total: 11 actions)
 - `git.core.md` and `git.details.md` command file split for context engineering
 - 402 new tests across 12 test files for the git package
-- `ship` action for `/zerg:git`: full delivery pipeline (commit → push → PR → merge → cleanup) with `--no-merge` flag
-- `--socratic` flag for `/zerg:brainstorm`: single-question interactive mode with 6 domain question trees, dynamic follow-ups, and saturation detection (#69)
+- `ship` action for `/mahabharatha:git`: full delivery pipeline (commit → push → PR → merge → cleanup) with `--no-merge` flag
+- `--socratic` flag for `/mahabharatha:brainstorm`: single-question interactive mode with 6 domain question trees, dynamic follow-ups, and saturation detection (#69)
 - Trade-off Exploration phase (Phase 2.5): present architectural alternatives with pros/cons via AskUserQuestion (#70)
 - Design Validation phase (Phase 2.6): 4-checkpoint validation loop (Scope, Entities, Workflows, NFRs) with revision support (#71)
 - YAGNI Gate phase (Phase 2.7): multi-select feature filter to defer non-essential scope before issue generation (#72)
@@ -399,16 +399,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `--uc`/`--compact` deprecated (compact is now default behavior)
 - `--loop` deprecated (loops are now default behavior)
 - Context plugin budget rebalanced: rules 10%, security 10%, spec 25%, MCP 10%, depth 10%, mode 10%, TDD 10%, efficiency 5%, buffer 10%
-- `zerg/git_ops.py` converted to backward-compatible shim re-exporting from `zerg/git/ops.py`
-- `zerg/commands/git_cmd.py` expanded from 6 to 11 actions with engine delegation
-- Context engineering guardrails: automated drift detection and command validation (`python -m zerg.validate_commands`)
+- `mahabharatha/git_ops.py` converted to backward-compatible shim re-exporting from `mahabharatha/git/ops.py`
+- `mahabharatha/commands/git_cmd.py` expanded from 6 to 11 actions with engine delegation
+- Context engineering guardrails: automated drift detection and command validation (`python -m mahabharatha.validate_commands`)
 - Command template (`_template.md`) for new commands to inherit CE patterns by default
 - CI workflow and pre-commit hook for command file validation
-- `/zerg:brainstorm` command for open-ended feature discovery with competitive research, Socratic ideation, and automated GitHub issue creation
+- `/mahabharatha:brainstorm` command for open-ended feature discovery with competitive research, Socratic ideation, and automated GitHub issue creation
 - 8 new feature issues for open-source release roadmap
 - GitHub Actions workflow to enforce CHANGELOG.md updates on PRs (skippable with `skip-changelog` label)
 - Claude Code instruction in CLAUDE.md to proactively update changelog when creating PRs
-- Updated README, `docs/commands.md`, wiki `Command-git.md`, and `Command-Reference.md` to document all 11 `/zerg:git` actions
+- Updated README, `docs/commands.md`, wiki `Command-git.md`, and `Command-Reference.md` to document all 11 `/mahabharatha:git` actions
 
 ### Deprecated
 
@@ -417,18 +417,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- `zerg status` now distinguishes between planned, in-design, and designed-but-not-executing features instead of a single generic message
-- `zerg status` now shows "planned but not yet executed" instead of cryptic error for features with specs but no state
-- `zerg cleanup` now clears `.gsd/.current-feature` when it points to a cleaned feature
-- `zerg cleanup` now removes orphaned `.gsd/specs/{feature}/` directories
-- `zerg rush` now clears `.gsd/.current-feature` on successful completion to prevent stale pointers
+- `mahabharatha status` now distinguishes between planned, in-design, and designed-but-not-executing features instead of a single generic message
+- `mahabharatha status` now shows "planned but not yet executed" instead of cryptic error for features with specs but no state
+- `mahabharatha cleanup` now clears `.gsd/.current-feature` when it points to a cleaned feature
+- `mahabharatha cleanup` now removes orphaned `.gsd/specs/{feature}/` directories
+- `mahabharatha Kurukshetra` now clears `.gsd/.current-feature` on successful completion to prevent stale pointers
 
 ## [0.1.0] - 2026-01-31
 
 ### Added
 
 - Parallel Claude Code execution system with orchestrator, workers, and task graphs
-- 26 slash commands (`/zerg:brainstorm`, `/zerg:init`, `/zerg:plan`, `/zerg:design`, `/zerg:rush`, `/zerg:status`, `/zerg:merge`, `/zerg:stop`, `/zerg:retry`, `/zerg:cleanup`, `/zerg:worker`, `/zerg:debug`, `/zerg:build`, `/zerg:test`, `/zerg:review`, `/zerg:analyze`, `/zerg:refactor`, `/zerg:security`, `/zerg:git`, `/zerg:logs`, `/zerg:document`, `/zerg:estimate`, `/zerg:explain`, `/zerg:index`, `/zerg:select-tool`, `/zerg:plugins`)
+- 26 slash commands (`/mahabharatha:brainstorm`, `/mahabharatha:init`, `/mahabharatha:plan`, `/mahabharatha:design`, `/mahabharatha:Kurukshetra`, `/mahabharatha:status`, `/mahabharatha:merge`, `/mahabharatha:stop`, `/mahabharatha:retry`, `/mahabharatha:cleanup`, `/mahabharatha:worker`, `/mahabharatha:debug`, `/mahabharatha:build`, `/mahabharatha:test`, `/mahabharatha:review`, `/mahabharatha:analyze`, `/mahabharatha:refactor`, `/mahabharatha:security`, `/mahabharatha:git`, `/mahabharatha:logs`, `/mahabharatha:document`, `/mahabharatha:estimate`, `/mahabharatha:explain`, `/mahabharatha:index`, `/mahabharatha:select-tool`, `/mahabharatha:plugins`)
 - Shortcut aliases (`/z:*`) for all commands
 - Dual execution modes: subprocess and Docker container
 - Git worktree-based branch isolation for parallel workers
@@ -448,12 +448,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Reject unknown launcher modes instead of silent fallback to subprocess
-- Show human-friendly launcher mode and worker count in rush output
+- Show human-friendly launcher mode and worker count in Kurukshetra output
 - Audit skipped tests and convert unconditional skips to conditional skipif decorators
 
-[Unreleased]: https://github.com/rocklambros/zerg/compare/v0.2.3...HEAD
-[0.2.3]: https://github.com/rocklambros/zerg/compare/v0.2.2...v0.2.3
-[0.3.0]: https://github.com/rocklambros/zerg/compare/v0.2.1...v0.3.0
-[0.2.1]: https://github.com/rocklambros/zerg/compare/v0.2.0...v0.2.1
-[0.2.0]: https://github.com/rocklambros/zerg/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/rocklambros/zerg/releases/tag/v0.1.0
+[Unreleased]: https://github.com/rocklambros/mahabharatha/compare/v0.2.3...HEAD
+[0.2.3]: https://github.com/rocklambros/mahabharatha/compare/v0.2.2...v0.2.3
+[0.3.0]: https://github.com/rocklambros/mahabharatha/compare/v0.2.1...v0.3.0
+[0.2.1]: https://github.com/rocklambros/mahabharatha/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/rocklambros/mahabharatha/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/rocklambros/mahabharatha/releases/tag/v0.1.0

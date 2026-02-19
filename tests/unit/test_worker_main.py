@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.worker_main import main, parse_args, setup_environment, validate_setup
+from mahabharatha.worker_main import main, parse_args, setup_environment, validate_setup
 
 
 class TestParseArgs:
@@ -26,7 +26,7 @@ class TestParseArgs:
             (["--worker-id", "5"], "worker_id", 5),
             (["--feature", "user-auth"], "feature", "user-auth"),
             (["--worktree", "/tmp/test"], "worktree", Path("/tmp/test")),
-            (["--branch", "zerg/test/worker-1"], "branch", "zerg/test/worker-1"),
+            (["--branch", "mahabharatha/test/worker-1"], "branch", "mahabharatha/test/worker-1"),
             (["--dry-run"], "dry_run", True),
             (["-v"], "verbose", True),
             (["--verbose"], "verbose", True),
@@ -45,7 +45,7 @@ class TestParseArgs:
             "ZERG_WORKER_ID": "3",
             "ZERG_FEATURE": "test-feature",
             "ZERG_WORKTREE": "/env/worktree",
-            "ZERG_BRANCH": "zerg/test/worker-3",
+            "ZERG_BRANCH": "mahabharatha/test/worker-3",
         }
         with patch("sys.argv", ["worker_main"]), patch.dict(os.environ, env_patch, clear=False):
             args = parse_args()
@@ -67,7 +67,7 @@ class TestSetupEnvironment:
         """Test environment setup with auto-generated branch."""
         args = argparse.Namespace(worker_id=2, feature="user-auth", worktree=tmp_path, branch="")
         env = setup_environment(args)
-        assert "zerg/user-auth/worker-2" in env["ZERG_BRANCH"]
+        assert "mahabharatha/user-auth/worker-2" in env["ZERG_BRANCH"]
 
 
 class TestValidateSetup:
@@ -149,7 +149,7 @@ class TestMainFunction:
                     str(config_path),
                 ],
             ),
-            patch.dict("sys.modules", {"zerg.protocol_state": MagicMock(WorkerProtocol=mock_protocol_class)}),
+            patch.dict("sys.modules", {"mahabharatha.protocol_state": MagicMock(WorkerProtocol=mock_protocol_class)}),
         ):
             result = main()
         assert result == 0
@@ -177,7 +177,7 @@ class TestMainFunction:
                     "3",
                 ],
             ),
-            patch.dict("sys.modules", {"zerg.protocol_state": MagicMock(WorkerProtocol=mock_protocol_class)}),
+            patch.dict("sys.modules", {"mahabharatha.protocol_state": MagicMock(WorkerProtocol=mock_protocol_class)}),
         ):
             result = main()
         assert result == 130
@@ -206,7 +206,7 @@ class TestMainFunction:
                     "2",
                 ],
             ),
-            patch.dict("sys.modules", {"zerg.protocol_state": MagicMock(WorkerProtocol=mock_protocol_class)}),
+            patch.dict("sys.modules", {"mahabharatha.protocol_state": MagicMock(WorkerProtocol=mock_protocol_class)}),
         ):
             result = main()
         assert result == 1

@@ -7,13 +7,13 @@ from io import StringIO
 
 from rich.console import Console
 
-from zerg.performance.formatters import (
+from mahabharatha.performance.formatters import (
     format_json,
     format_markdown,
     format_rich,
     format_sarif,
 )
-from zerg.performance.types import (
+from mahabharatha.performance.types import (
     CategoryScore,
     DetectedStack,
     PerformanceFinding,

@@ -10,7 +10,7 @@ Tests for task graph schema validation including:
 import json
 from pathlib import Path
 
-from zerg.validation import (
+from mahabharatha.validation import (
     validate_dependencies,
     validate_file_ownership,
     validate_task_graph,
@@ -452,12 +452,12 @@ class TestSchemaLoading:
 
     def test_schema_file_exists(self) -> None:
         """Schema file should exist at expected location."""
-        schema_path = Path("zerg/schemas/task_graph.json")
+        schema_path = Path("mahabharatha/schemas/task_graph.json")
         assert schema_path.exists(), f"Schema file not found at {schema_path}"
 
     def test_schema_file_valid_json(self) -> None:
         """Schema file should be valid JSON."""
-        schema_path = Path("zerg/schemas/task_graph.json")
+        schema_path = Path("mahabharatha/schemas/task_graph.json")
         with open(schema_path) as f:
             schema = json.load(f)
 
@@ -466,7 +466,7 @@ class TestSchemaLoading:
 
     def test_schema_has_level_minimum(self) -> None:
         """Schema should define level minimum as 1."""
-        schema_path = Path("zerg/schemas/task_graph.json")
+        schema_path = Path("mahabharatha/schemas/task_graph.json")
         with open(schema_path) as f:
             schema = json.load(f)
 

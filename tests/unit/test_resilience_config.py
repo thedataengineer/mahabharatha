@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from zerg.config import ResilienceConfig, WorkersConfig, ZergConfig
+from mahabharatha.config import ResilienceConfig, WorkersConfig, ZergConfig
 
 # Mark all tests in this module as slow (PR #115 added 550+ lines)
 pytestmark = pytest.mark.slow
@@ -26,7 +26,7 @@ class TestResilienceConfig:
         config2 = ResilienceConfig(enabled=False)
         assert config2.enabled is False
 
-    def test_resilience_config_in_zerg_config(self) -> None:
+    def test_resilience_config_in_mahabharatha_config(self) -> None:
         """Test that ZergConfig has resilience attribute."""
         config = ZergConfig()
         assert isinstance(config.resilience, ResilienceConfig)
@@ -143,7 +143,7 @@ class TestResilienceConfigYAMLAndSerialization:
         assert data["spawn_backoff_strategy"] == "linear"
         assert data["auto_respawn"] is False
 
-    def test_zerg_config_resilience_roundtrip(self, tmp_path: Path) -> None:
+    def test_mahabharatha_config_resilience_roundtrip(self, tmp_path: Path) -> None:
         """Test ZergConfig with resilience settings survives save/load roundtrip."""
         original = ZergConfig()
         original.resilience.enabled = True

@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.launchers import ContainerLauncher
+from mahabharatha.launchers import ContainerLauncher
 
 pytestmark = pytest.mark.docker
 

@@ -4,7 +4,7 @@ import textwrap
 from pathlib import Path
 from unittest.mock import patch
 
-from zerg.repo_map import SymbolGraph, build_map
+from mahabharatha.repo_map import SymbolGraph, build_map
 
 
 class TestRepoMapBuildAndQuery:
@@ -100,13 +100,13 @@ class TestRepoMapContextPluginWiring:
             "files": {"create": ["mod.py"], "modify": []},
         }
 
-        with patch("zerg.context_plugin.os.environ", {"ZERG_COMPACT_MODE": ""}):
-            from zerg.context_plugin import ContextEngineeringPlugin
-            from zerg.plugin_config import ContextEngineeringConfig
+        with patch("mahabharatha.context_plugin.os.environ", {"ZERG_COMPACT_MODE": ""}):
+            from mahabharatha.context_plugin import ContextEngineeringPlugin
+            from mahabharatha.plugin_config import ContextEngineeringConfig
 
             plugin = ContextEngineeringPlugin(ContextEngineeringConfig())
             # Use build_repo_map_section directly
-            with patch("zerg.context_plugin.Path.cwd", return_value=tmp_path):
+            with patch("mahabharatha.context_plugin.Path.cwd", return_value=tmp_path):
                 section = plugin._build_repo_map_section(task, max_tokens=500)
             # May or may not find symbols depending on cwd, but should not error
             assert isinstance(section, str)

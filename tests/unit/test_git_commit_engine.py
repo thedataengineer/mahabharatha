@@ -1,19 +1,19 @@
-"""Tests for zerg.git.commit_engine -- smart commit engine."""
+"""Tests for mahabharatha.git.commit_engine -- smart commit engine."""
 
 from __future__ import annotations
 
 import subprocess
 from unittest.mock import MagicMock
 
-from zerg.git.commit_engine import (
+from mahabharatha.git.commit_engine import (
     CommitEngine,
     CommitMessageGenerator,
     DiffAnalyzer,
     PreCommitValidator,
     StagingSuggester,
 )
-from zerg.git.config import GitCommitConfig, GitConfig
-from zerg.git.types import CommitType, DiffAnalysis
+from mahabharatha.git.config import GitCommitConfig, GitConfig
+from mahabharatha.git.types import CommitType, DiffAnalysis
 
 
 def _make_runner(numstat: str = "", diff_names: str = "") -> MagicMock:

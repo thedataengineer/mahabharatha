@@ -10,9 +10,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.capability_resolver import ResolvedCapabilities
-from zerg.context_plugin import ContextEngineeringPlugin
-from zerg.plugin_config import ContextEngineeringConfig
+from mahabharatha.capability_resolver import ResolvedCapabilities
+from mahabharatha.context_plugin import ContextEngineeringPlugin
+from mahabharatha.plugin_config import ContextEngineeringConfig
 
 # ---------------------------------------------------------------------------
 # Orchestrator -> WorkerManager wiring
@@ -26,18 +26,18 @@ class TestOrchestratorCapabilityWiring:
     def mock_orchestrator_deps(self):
         """Mock all Orchestrator dependencies so __init__ completes."""
         with (
-            patch("zerg.orchestrator.StateManager") as state_mock,
-            patch("zerg.orchestrator.LevelController") as levels_mock,
-            patch("zerg.orchestrator.TaskParser") as parser_mock,
-            patch("zerg.orchestrator.GateRunner") as gates_mock,
-            patch("zerg.orchestrator.WorktreeManager") as worktree_mock,
-            patch("zerg.orchestrator.ContainerManager") as container_mock,
-            patch("zerg.orchestrator.PortAllocator") as ports_mock,
-            patch("zerg.orchestrator.MergeCoordinator") as merge_mock,
-            patch("zerg.orchestrator.TaskSyncBridge") as task_sync_mock,
-            patch("zerg.orchestrator.SubprocessLauncher") as subprocess_launcher_mock,
-            patch("zerg.orchestrator.ContainerLauncher") as container_launcher_mock,
-            patch("zerg.orchestrator.setup_structured_logging") as log_mock,
+            patch("mahabharatha.orchestrator.StateManager") as state_mock,
+            patch("mahabharatha.orchestrator.LevelController") as levels_mock,
+            patch("mahabharatha.orchestrator.TaskParser") as parser_mock,
+            patch("mahabharatha.orchestrator.GateRunner") as gates_mock,
+            patch("mahabharatha.orchestrator.WorktreeManager") as worktree_mock,
+            patch("mahabharatha.orchestrator.ContainerManager") as container_mock,
+            patch("mahabharatha.orchestrator.PortAllocator") as ports_mock,
+            patch("mahabharatha.orchestrator.MergeCoordinator") as merge_mock,
+            patch("mahabharatha.orchestrator.TaskSyncBridge") as task_sync_mock,
+            patch("mahabharatha.orchestrator.SubprocessLauncher") as subprocess_launcher_mock,
+            patch("mahabharatha.orchestrator.ContainerLauncher") as container_launcher_mock,
+            patch("mahabharatha.orchestrator.setup_structured_logging") as log_mock,
         ):
             state = MagicMock()
             state.load.return_value = {}
@@ -74,7 +74,7 @@ class TestOrchestratorCapabilityWiring:
 
     def test_orchestrator_passes_capabilities_to_worker_manager(self, mock_orchestrator_deps):
         """Orchestrator(capabilities=...) flows through to _worker_manager._capabilities."""
-        from zerg.orchestrator import Orchestrator
+        from mahabharatha.orchestrator import Orchestrator
 
         caps = ResolvedCapabilities(tdd=True, depth_tier="think")
         orch = Orchestrator(
@@ -97,7 +97,7 @@ class TestWorkerManagerSpawnEnv:
 
     def test_worker_manager_spawn_passes_env(self):
         """spawn_worker() calls launcher.spawn with env= containing ZERG_* vars."""
-        from zerg.worker_manager import WorkerManager
+        from mahabharatha.worker_manager import WorkerManager
 
         caps = ResolvedCapabilities(tdd=True, compact=True, depth_tier="think")
 

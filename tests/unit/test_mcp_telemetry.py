@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from zerg.mcp_router import MCPRouter
-from zerg.mcp_telemetry import RoutingEvent, RoutingTelemetry
+from mahabharatha.mcp_router import MCPRouter
+from mahabharatha.mcp_telemetry import RoutingEvent, RoutingTelemetry
 
 # ---------------------------------------------------------------------------
 # RoutingEvent tests

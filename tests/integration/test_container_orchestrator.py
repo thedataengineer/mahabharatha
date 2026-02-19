@@ -5,9 +5,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.config import ZergConfig
-from zerg.launchers import SubprocessLauncher
-from zerg.orchestrator import Orchestrator
+from mahabharatha.config import ZergConfig
+from mahabharatha.launchers import SubprocessLauncher
+from mahabharatha.orchestrator import Orchestrator
 
 pytestmark = pytest.mark.docker
 
@@ -15,15 +15,15 @@ pytestmark = pytest.mark.docker
 class TestOrchestratorModeSelection:
     """Test suite for orchestrator launcher mode auto-detection."""
 
-    @patch("zerg.orchestrator.TaskParser")
-    @patch("zerg.orchestrator.StateManager")
-    @patch("zerg.orchestrator.WorktreeManager")
-    @patch("zerg.orchestrator.ContainerManager")
-    @patch("zerg.orchestrator.PortAllocator")
-    @patch("zerg.orchestrator.GateRunner")
-    @patch("zerg.orchestrator.LevelController")
-    @patch("zerg.orchestrator.MergeCoordinator")
-    @patch("zerg.orchestrator.TaskSyncBridge")
+    @patch("mahabharatha.orchestrator.TaskParser")
+    @patch("mahabharatha.orchestrator.StateManager")
+    @patch("mahabharatha.orchestrator.WorktreeManager")
+    @patch("mahabharatha.orchestrator.ContainerManager")
+    @patch("mahabharatha.orchestrator.PortAllocator")
+    @patch("mahabharatha.orchestrator.GateRunner")
+    @patch("mahabharatha.orchestrator.LevelController")
+    @patch("mahabharatha.orchestrator.MergeCoordinator")
+    @patch("mahabharatha.orchestrator.TaskSyncBridge")
     def test_auto_detect_without_devcontainer(
         self,
         mock_sync: MagicMock,
@@ -44,7 +44,7 @@ class TestOrchestratorModeSelection:
         """
         # Create minimal repo structure WITHOUT .devcontainer
         (tmp_path / ".git").mkdir()
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         config = ZergConfig()
         orch = Orchestrator(
@@ -57,15 +57,15 @@ class TestOrchestratorModeSelection:
         # Should use SubprocessLauncher when devcontainer is missing
         assert isinstance(orch.launcher, SubprocessLauncher), f"Expected SubprocessLauncher, got {type(orch.launcher)}"
 
-    @patch("zerg.orchestrator.TaskParser")
-    @patch("zerg.orchestrator.StateManager")
-    @patch("zerg.orchestrator.WorktreeManager")
-    @patch("zerg.orchestrator.ContainerManager")
-    @patch("zerg.orchestrator.PortAllocator")
-    @patch("zerg.orchestrator.GateRunner")
-    @patch("zerg.orchestrator.LevelController")
-    @patch("zerg.orchestrator.MergeCoordinator")
-    @patch("zerg.orchestrator.TaskSyncBridge")
+    @patch("mahabharatha.orchestrator.TaskParser")
+    @patch("mahabharatha.orchestrator.StateManager")
+    @patch("mahabharatha.orchestrator.WorktreeManager")
+    @patch("mahabharatha.orchestrator.ContainerManager")
+    @patch("mahabharatha.orchestrator.PortAllocator")
+    @patch("mahabharatha.orchestrator.GateRunner")
+    @patch("mahabharatha.orchestrator.LevelController")
+    @patch("mahabharatha.orchestrator.MergeCoordinator")
+    @patch("mahabharatha.orchestrator.TaskSyncBridge")
     def test_subprocess_mode_explicit(
         self,
         mock_sync: MagicMock,
@@ -86,7 +86,7 @@ class TestOrchestratorModeSelection:
         """
         # Create structure with devcontainer
         (tmp_path / ".git").mkdir()
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
         devcontainer_dir = tmp_path / ".devcontainer"
         devcontainer_dir.mkdir()
         (devcontainer_dir / "devcontainer.json").write_text('{"name": "test"}')

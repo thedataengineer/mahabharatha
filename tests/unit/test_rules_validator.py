@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from zerg.rules.loader import Rule, RulePriority, RuleSet
-from zerg.rules.validator import RuleValidator, ValidationResult
+from mahabharatha.rules.loader import Rule, RulePriority, RuleSet
+from mahabharatha.rules.validator import RuleValidator, ValidationResult
 
 
 class TestValidationResult:

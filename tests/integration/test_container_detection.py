@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from zerg.security.rules import detect_project_stack
+from mahabharatha.security.rules import detect_project_stack
 
 pytestmark = pytest.mark.docker
 

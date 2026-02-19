@@ -7,8 +7,8 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.testing import CliRunner
 
-from zerg.command_executor import CommandValidationError
-from zerg.commands.build import (
+from mahabharatha.command_executor import CommandValidationError
+from mahabharatha.commands.build import (
     BuildCommand,
     BuildConfig,
     BuildDetector,
@@ -100,7 +100,7 @@ class TestBuildRunner:
     def test_get_command(self, system: BuildSystem, mode: str, expected_cmd: str) -> None:
         assert BuildRunner().get_command(system, mode) == expected_cmd
 
-    @patch("zerg.commands.build.CommandExecutor")
+    @patch("mahabharatha.commands.build.CommandExecutor")
     def test_run_successful_build(self, mock_executor_class: MagicMock) -> None:
         mock_executor = MagicMock()
         mock_result = MagicMock(success=True)
@@ -108,7 +108,7 @@ class TestBuildRunner:
         mock_executor_class.return_value = mock_executor
         assert BuildRunner().run(BuildSystem.PYTHON, BuildConfig(mode="dev"), ".").success is True
 
-    @patch("zerg.commands.build.CommandExecutor")
+    @patch("mahabharatha.commands.build.CommandExecutor")
     def test_run_command_validation_error(self, mock_executor_class: MagicMock) -> None:
         mock_executor = MagicMock()
         mock_executor.execute.side_effect = CommandValidationError("Invalid command")
@@ -136,8 +136,8 @@ class TestBuildCommand:
 
 
 class TestWatchLoop:
-    @patch("zerg.commands.build.time.sleep")
-    @patch("zerg.commands.build.console")
+    @patch("mahabharatha.commands.build.time.sleep")
+    @patch("mahabharatha.commands.build.console")
     def test_watch_loop_detects_changes(self, mock_console: MagicMock, mock_sleep: MagicMock, tmp_path: Path) -> None:
         test_file = tmp_path / "test.py"
         test_file.write_text("initial")
@@ -161,8 +161,8 @@ class TestBuildCLI:
     def test_build_help(self) -> None:
         assert CliRunner().invoke(build, ["--help"]).exit_code == 0
 
-    @patch("zerg.commands.build.BuildCommand")
-    @patch("zerg.commands.build.console")
+    @patch("mahabharatha.commands.build.BuildCommand")
+    @patch("mahabharatha.commands.build.console")
     def test_build_keyboard_interrupt(self, mock_console: MagicMock, mock_builder_class: MagicMock) -> None:
         mock_builder_class.side_effect = KeyboardInterrupt
         assert CliRunner().invoke(build, []).exit_code == 130

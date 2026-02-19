@@ -8,8 +8,8 @@ from unittest.mock import MagicMock, patch
 
 from click.testing import CliRunner
 
-from zerg.cli import cli
-from zerg.commands.init import (
+from mahabharatha.cli import cli
+from mahabharatha.commands.init import (
     build_devcontainer,
     create_config,
     create_devcontainer,
@@ -22,7 +22,7 @@ from zerg.commands.init import (
     save_config,
     show_summary,
 )
-from zerg.security.rules import ProjectStack
+from mahabharatha.security.rules import ProjectStack
 
 if TYPE_CHECKING:
     from pytest import MonkeyPatch
@@ -74,7 +74,7 @@ class TestDetectProjectType:
     def test_detect_returns_none_when_no_languages(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
         """Test that detect_project_type returns None when no languages detected."""
         monkeypatch.chdir(tmp_path)
-        with patch("zerg.commands.init.detect_project_stack") as mock_detect:
+        with patch("mahabharatha.commands.init.detect_project_stack") as mock_detect:
             mock_detect.return_value = ProjectStack(languages=set())
             result = detect_project_type()
             assert result is None
@@ -83,7 +83,7 @@ class TestDetectProjectType:
         """Test that detect_project_type returns stack when languages are detected."""
         monkeypatch.chdir(tmp_path)
         (tmp_path / "test.py").write_text("print(1)")
-        with patch("zerg.commands.init.detect_project_stack") as mock_detect:
+        with patch("mahabharatha.commands.init.detect_project_stack") as mock_detect:
             mock_stack = ProjectStack(languages={"python"})
             mock_detect.return_value = mock_stack
             result = detect_project_type()
@@ -116,10 +116,10 @@ class TestCreateDirectoryStructure:
     def test_creates_all_directories(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
         """Test that all required directories are created."""
         monkeypatch.chdir(tmp_path)
-        with patch("zerg.commands.init.console"):
+        with patch("mahabharatha.commands.init.console"):
             create_directory_structure()
 
-        expected_dirs = [".zerg", ".zerg/state", ".zerg/logs", ".gsd", ".gsd/specs"]
+        expected_dirs = [".mahabharatha", ".mahabharatha/state", ".mahabharatha/logs", ".gsd", ".gsd/specs"]
         for dir_path in expected_dirs:
             assert (tmp_path / dir_path).exists(), f"Missing: {dir_path}"
 
@@ -176,16 +176,16 @@ class TestSaveConfig:
     def test_saves_yaml_when_available(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
         """Test that config is saved as YAML when yaml module is available."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
         config = {"version": "1.0", "workers": {"default_count": 5}}
-        with patch("zerg.commands.init.console"):
+        with patch("mahabharatha.commands.init.console"):
             save_config(config)
-        assert (tmp_path / ".zerg" / "config.yaml").exists()
+        assert (tmp_path / ".mahabharatha" / "config.yaml").exists()
 
     def test_saves_json_when_yaml_import_fails(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
         """Test that config falls back to JSON when YAML import fails."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
         config = {"version": "1.0", "workers": {"default_count": 5}}
 
         def mock_dump_raises(*args, **kwargs):
@@ -194,12 +194,12 @@ class TestSaveConfig:
         import yaml
 
         with (
-            patch("zerg.commands.init.console"),
+            patch("mahabharatha.commands.init.console"),
             patch.object(yaml, "dump", mock_dump_raises),
         ):
             save_config(config)
 
-        json_path = tmp_path / ".zerg" / "config.json"
+        json_path = tmp_path / ".mahabharatha" / "config.json"
         assert json_path.exists()
 
 
@@ -211,8 +211,8 @@ class TestCreateDevcontainer:
         monkeypatch.chdir(tmp_path)
         stack = ProjectStack(languages={"python"})
         with (
-            patch("zerg.commands.init.console"),
-            patch("zerg.commands.init.DynamicDevcontainerGenerator") as mock_gen,
+            patch("mahabharatha.commands.init.console"),
+            patch("mahabharatha.commands.init.DynamicDevcontainerGenerator") as mock_gen,
         ):
             mock_instance = mock_gen.return_value
             mock_instance.write_devcontainer.return_value = Path(".devcontainer/devcontainer.json")
@@ -241,7 +241,7 @@ class TestBuildDevcontainer:
     def test_returns_false_when_no_devcontainer_dir(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
         """Test returns False when .devcontainer doesn't exist."""
         monkeypatch.chdir(tmp_path)
-        with patch("zerg.commands.init.console"):
+        with patch("mahabharatha.commands.init.console"):
             result = build_devcontainer()
         assert result is False
 
@@ -250,7 +250,7 @@ class TestBuildDevcontainer:
         monkeypatch.chdir(tmp_path)
         (tmp_path / ".devcontainer").mkdir()
         with (
-            patch("zerg.commands.init.console"),
+            patch("mahabharatha.commands.init.console"),
             patch("subprocess.run", side_effect=FileNotFoundError),
         ):
             result = build_devcontainer()
@@ -270,7 +270,7 @@ class TestBuildDevcontainer:
             return result
 
         with (
-            patch("zerg.commands.init.console"),
+            patch("mahabharatha.commands.init.console"),
             patch("subprocess.run", side_effect=mock_run),
         ):
             result = build_devcontainer()
@@ -293,7 +293,7 @@ class TestBuildDevcontainer:
             return result
 
         with (
-            patch("zerg.commands.init.console"),
+            patch("mahabharatha.commands.init.console"),
             patch("subprocess.run", side_effect=mock_run),
         ):
             result = build_devcontainer()
@@ -305,7 +305,7 @@ class TestShowSummary:
 
     def test_shows_unknown_language(self) -> None:
         """Test shows 'unknown' when no languages detected."""
-        with patch("zerg.commands.init.console") as mock_console:
+        with patch("mahabharatha.commands.init.console") as mock_console:
             show_summary(workers=5, security="standard", stack=None)
             assert mock_console.print.called
 
@@ -326,14 +326,14 @@ class TestInitCommand:
         (tmp_path / ".git").mkdir()
         runner = CliRunner()
         runner.invoke(cli, ["init"])
-        assert (tmp_path / ".zerg").exists()
+        assert (tmp_path / ".mahabharatha").exists()
         assert (tmp_path / ".gsd").exists()
 
     def test_init_reinitializes_with_force(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
         """Test init reinitializes with --force."""
         monkeypatch.chdir(tmp_path)
         (tmp_path / ".git").mkdir()
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
         runner = CliRunner()
         result = runner.invoke(cli, ["init", "--force"])
         assert result.exit_code == 0
@@ -343,7 +343,7 @@ class TestInitCommand:
         monkeypatch.chdir(tmp_path)
         (tmp_path / ".git").mkdir()
         with patch(
-            "zerg.commands.init.create_directory_structure",
+            "mahabharatha.commands.init.create_directory_structure",
             side_effect=Exception("Test error"),
         ):
             runner = CliRunner()
@@ -353,7 +353,7 @@ class TestInitCommand:
     def test_init_triggers_inception_mode(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
         """Test init triggers inception mode for empty directory."""
         monkeypatch.chdir(tmp_path)
-        with patch("zerg.inception.run_inception_mode", return_value=True) as mock_inception:
+        with patch("mahabharatha.inception.run_inception_mode", return_value=True) as mock_inception:
             runner = CliRunner()
             runner.invoke(cli, ["init"])
             mock_inception.assert_called_once()
@@ -362,7 +362,7 @@ class TestInitCommand:
         """Test init with successful security rules integration."""
         monkeypatch.chdir(tmp_path)
         (tmp_path / ".git").mkdir()
-        with patch("zerg.commands.init.integrate_security_rules") as mock_integrate:
+        with patch("mahabharatha.commands.init.integrate_security_rules") as mock_integrate:
             mock_integrate.return_value = {"rules_fetched": 5}
             runner = CliRunner()
             result = runner.invoke(cli, ["init", "--with-security-rules"])
@@ -373,7 +373,7 @@ class TestInitCommand:
         monkeypatch.chdir(tmp_path)
         (tmp_path / ".git").mkdir()
         with patch(
-            "zerg.commands.init.integrate_security_rules",
+            "mahabharatha.commands.init.integrate_security_rules",
             side_effect=RuntimeError("Network error"),
         ):
             runner = CliRunner()

@@ -13,5 +13,5 @@ def _bypass_rush_preflight():
     MagicMock objects, causing PreflightChecker to fail on port binding.
     Since preflight is tested separately in test_preflight.py, bypass it here.
     """
-    with patch("zerg.commands.rush._run_preflight", return_value=True):
+    with patch("mahabharatha.commands.rush._run_preflight", return_value=True):
         yield

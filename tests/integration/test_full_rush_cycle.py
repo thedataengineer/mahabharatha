@@ -11,10 +11,10 @@ import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from zerg.config import ZergConfig
-from zerg.constants import WorkerStatus
-from zerg.launchers import SubprocessLauncher
-from zerg.validation import (
+from mahabharatha.config import ZergConfig
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.launchers import SubprocessLauncher
+from mahabharatha.validation import (
     validate_dependencies,
     validate_file_ownership,
     validate_task_graph,
@@ -48,7 +48,7 @@ class TestSchemaValidationFixes:
 
     def test_schema_file_has_level_minimum_one(self) -> None:
         """Schema file should define level minimum as 1."""
-        schema_path = Path("zerg/schemas/task_graph.json")
+        schema_path = Path("mahabharatha/schemas/task_graph.json")
         assert schema_path.exists(), "Schema file must exist"
 
         with open(schema_path) as f:
@@ -61,8 +61,8 @@ class TestSchemaValidationFixes:
 
     def test_old_schema_archived(self) -> None:
         """Old schema should be archived, not in active schemas."""
-        old_schema_path = Path(".zerg/schemas/task-graph.schema.json")
-        archived_schema_path = Path(".zerg/schemas/archived/task-graph.schema.json")
+        old_schema_path = Path(".mahabharatha/schemas/task-graph.schema.json")
+        archived_schema_path = Path(".mahabharatha/schemas/archived/task-graph.schema.json")
 
         # Primary assertion: old schema must not be in active location
         assert not old_schema_path.exists(), "Old schema should be archived"
@@ -256,12 +256,12 @@ class TestFileOwnershipValidation:
 class TestConfigIntegration:
     """Verify configuration integration."""
 
-    def test_zerg_config_loads_successfully(self) -> None:
+    def test_mahabharatha_config_loads_successfully(self) -> None:
         """ZergConfig should load without error."""
         config = ZergConfig()
         assert config is not None
 
-    def test_zerg_config_has_workers_setting(self) -> None:
+    def test_mahabharatha_config_has_workers_setting(self) -> None:
         """ZergConfig should have workers configuration."""
         config = ZergConfig()
         assert hasattr(config, "workers")

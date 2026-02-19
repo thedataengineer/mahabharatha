@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 
-from zerg.escalation import Escalation, EscalationMonitor, EscalationWriter
+from mahabharatha.escalation import Escalation, EscalationMonitor, EscalationWriter
 
 
 class TestEscalation:

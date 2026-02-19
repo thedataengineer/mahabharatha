@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from unittest.mock import Mock
 
-from zerg.dependency_checker import DependencyChecker
+from mahabharatha.dependency_checker import DependencyChecker
 
 
 class TestDependencyChecker:

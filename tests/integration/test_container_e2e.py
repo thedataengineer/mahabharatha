@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 from click.testing import CliRunner
 
-from zerg.cli import cli
+from mahabharatha.cli import cli
 
 pytestmark = pytest.mark.docker
 
@@ -22,7 +22,7 @@ class TestEndToEndFlow:
         This test verifies the complete workflow:
         1. Create a multi-language project
         2. Initialize git repository
-        3. Run zerg init --detect
+        3. Run mahabharatha init --detect
         4. Verify devcontainer.json created
         5. Create minimal task graph
         6. Run rush --mode auto --dry-run

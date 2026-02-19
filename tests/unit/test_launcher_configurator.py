@@ -5,13 +5,13 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.config import ZergConfig
-from zerg.constants import WorkerStatus
-from zerg.launcher_configurator import LauncherConfigurator
-from zerg.launcher_types import LauncherType
-from zerg.launchers import ContainerLauncher, SubprocessLauncher
-from zerg.plugins import PluginRegistry
-from zerg.types import WorkerState
+from mahabharatha.config import ZergConfig
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.launcher_configurator import LauncherConfigurator
+from mahabharatha.launcher_types import LauncherType
+from mahabharatha.launchers import ContainerLauncher, SubprocessLauncher
+from mahabharatha.plugins import PluginRegistry
+from mahabharatha.types import WorkerState
 
 
 @pytest.fixture
@@ -20,7 +20,7 @@ def mock_config():
     config.workers = MagicMock()
     config.workers.timeout_minutes = 30
     config.logging = MagicMock()
-    config.logging.directory = ".zerg/logs"
+    config.logging.directory = ".mahabharatha/logs"
     config.resources = MagicMock()
     config.resources.container_memory_limit = "2g"
     config.resources.container_cpu_limit = "2.0"
@@ -57,7 +57,7 @@ class TestCreateLauncher:
         launcher = configurator.create_launcher(mode="subprocess")
         assert isinstance(launcher, SubprocessLauncher)
 
-    @patch("zerg.launcher_configurator.ContainerLauncher")
+    @patch("mahabharatha.launcher_configurator.ContainerLauncher")
     def test_create_launcher_container_raises_on_docker_failure(self, mock_container_cls, configurator):
         """Container mode raises RuntimeError when Docker network fails."""
         mock_instance = MagicMock()
@@ -67,7 +67,7 @@ class TestCreateLauncher:
         with pytest.raises(RuntimeError, match="Container mode explicitly requested"):
             configurator.create_launcher(mode="container")
 
-    @patch("zerg.launcher_configurator.ContainerLauncher")
+    @patch("mahabharatha.launcher_configurator.ContainerLauncher")
     def test_create_launcher_container_success(self, mock_container_cls, configurator):
         """Container mode returns ContainerLauncher when Docker works."""
         mock_instance = MagicMock(spec=ContainerLauncher)
@@ -112,8 +112,8 @@ class TestGetWorkerImageName:
     """Tests for _get_worker_image_name."""
 
     def test_default_image_name(self, configurator):
-        """Default image name is 'zerg-worker'."""
-        assert configurator._get_worker_image_name() == "zerg-worker"
+        """Default image name is 'mahabharatha-worker'."""
+        assert configurator._get_worker_image_name() == "mahabharatha-worker"
 
     def test_custom_image_from_config(self, tmp_path, mock_plugin_registry):
         """Config with container_image attribute returns custom name."""
@@ -122,7 +122,7 @@ class TestGetWorkerImageName:
         config.workers = MagicMock()
         config.workers.timeout_minutes = 30
         config.logging = MagicMock()
-        config.logging.directory = ".zerg/logs"
+        config.logging.directory = ".mahabharatha/logs"
 
         cfg = LauncherConfigurator(config, tmp_path, mock_plugin_registry)
         assert cfg._get_worker_image_name() == "my-custom-image:v2"

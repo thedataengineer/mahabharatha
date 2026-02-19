@@ -4,9 +4,9 @@ from datetime import datetime
 
 import pytest
 
-from zerg.constants import GateResult
-from zerg.merge import MergeFlowResult
-from zerg.types import GateRunResult
+from mahabharatha.constants import GateResult
+from mahabharatha.merge import MergeFlowResult
+from mahabharatha.types import GateRunResult
 
 
 class TestMergeFlowResultInitialization:

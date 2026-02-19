@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from zerg.worker_metrics import (
+from mahabharatha.worker_metrics import (
     LevelMetrics,
     TaskExecutionMetrics,
     WorkerMetrics,

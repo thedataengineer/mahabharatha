@@ -3,7 +3,7 @@
 import textwrap
 from pathlib import Path
 
-from zerg.repo_map import (
+from mahabharatha.repo_map import (
     Symbol,
     SymbolGraph,
     _extract_python_symbols,
@@ -22,11 +22,11 @@ class TestSymbol:
             signature="def foo(x: int) -> bool",
             docstring="Check something.",
             line=10,
-            module="zerg.utils",
+            module="mahabharatha.utils",
         )
         assert sym.name == "foo"
         assert sym.kind == "function"
-        assert sym.module == "zerg.utils"
+        assert sym.module == "mahabharatha.utils"
 
 
 class TestSymbolGraph:
@@ -40,21 +40,21 @@ class TestSymbolGraph:
     def test_query_with_file_match(self) -> None:
         graph = SymbolGraph(
             modules={
-                "zerg.config": [
-                    Symbol("ZergConfig", "class", "class ZergConfig(BaseModel)", "Config", 1, "zerg.config"),
+                "mahabharatha.config": [
+                    Symbol("ZergConfig", "class", "class ZergConfig(BaseModel)", "Config", 1, "mahabharatha.config"),
                 ],
             },
         )
-        result = graph.query(["zerg/config.py"], [])
+        result = graph.query(["mahabharatha/config.py"], [])
         assert "ZergConfig" in result
         assert "class ZergConfig" in result
 
     def test_query_with_keyword_match(self) -> None:
         graph = SymbolGraph(
             modules={
-                "zerg.heartbeat": [
-                    Symbol("HeartbeatWriter", "class", "class HeartbeatWriter", "Writer", 1, "zerg.heartbeat"),
-                    Symbol("unrelated", "function", "def unrelated()", None, 2, "zerg.heartbeat"),
+                "mahabharatha.heartbeat": [
+                    Symbol("HeartbeatWriter", "class", "class HeartbeatWriter", "Writer", 1, "mahabharatha.heartbeat"),
+                    Symbol("unrelated", "function", "def unrelated()", None, 2, "mahabharatha.heartbeat"),
                 ],
             },
         )
@@ -69,9 +69,9 @@ class TestSymbolGraph:
         assert len(result) < 50 * 4 + 200  # some overhead
 
     def test_module_matches_file(self) -> None:
-        assert SymbolGraph._module_matches_file("zerg.config", "zerg/config.py")
-        assert SymbolGraph._module_matches_file("zerg.config", "src/zerg/config.py")
-        assert not SymbolGraph._module_matches_file("zerg.config", "other/module.py")
+        assert SymbolGraph._module_matches_file("mahabharatha.config", "mahabharatha/config.py")
+        assert SymbolGraph._module_matches_file("mahabharatha.config", "src/mahabharatha/config.py")
+        assert not SymbolGraph._module_matches_file("mahabharatha.config", "other/module.py")
 
 
 class TestExtractPythonSymbols:
@@ -151,8 +151,8 @@ class TestPathToModule:
     """Tests for _path_to_module."""
 
     def test_simple(self, tmp_path: Path) -> None:
-        result = _path_to_module(tmp_path / "zerg" / "config.py", tmp_path)
-        assert result == "zerg.config"
+        result = _path_to_module(tmp_path / "mahabharatha" / "config.py", tmp_path)
+        assert result == "mahabharatha.config"
 
 
 class TestBuildMap:

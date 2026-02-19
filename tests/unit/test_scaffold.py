@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from zerg.charter import ProjectCharter
-from zerg.inception import (
+from mahabharatha.charter import ProjectCharter
+from mahabharatha.inception import (
     _build_template_context,
     _evaluate_condition,
     _render_template,
@@ -11,7 +11,7 @@ from zerg.inception import (
     _to_snake_case,
     scaffold_project,
 )
-from zerg.tech_selector import TechStack
+from mahabharatha.tech_selector import TechStack
 
 
 class TestNameConversions:

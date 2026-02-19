@@ -2,8 +2,8 @@
 
 import json
 
-from zerg.claude_tasks_reader import ClaudeTasksReader
-from zerg.constants import TaskStatus
+from mahabharatha.claude_tasks_reader import ClaudeTasksReader
+from mahabharatha.constants import TaskStatus
 
 
 def _write_task(task_dir, task_id, subject, status="pending", description="", blocked_by=None):
@@ -23,7 +23,7 @@ def _write_task(task_dir, task_id, subject, status="pending", description="", bl
 
 
 class TestFindFeatureTaskList:
-    def test_discovers_zerg_tasks(self, tmp_path):
+    def test_discovers_mahabharatha_tasks(self, tmp_path):
         task_list = tmp_path / "uuid-abc"
         task_list.mkdir()
         _write_task(task_list, 1, "[L1] Create types", description="Feature: my-feature")
@@ -76,7 +76,7 @@ class TestFindFeatureTaskList:
         result = reader.find_feature_task_list("my-feature")
         assert result == matching
 
-    def test_fallback_to_any_zerg_tasks(self, tmp_path):
+    def test_fallback_to_any_mahabharatha_tasks(self, tmp_path):
         """Falls back to any ZERG task list when no feature match."""
         task_list = tmp_path / "uuid-abc"
         task_list.mkdir()

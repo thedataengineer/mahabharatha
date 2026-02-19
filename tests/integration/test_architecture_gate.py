@@ -7,9 +7,9 @@ from textwrap import dedent
 
 import pytest
 
-from zerg.architecture_gate import ArchitectureGate, check_files
-from zerg.constants import GateResult
-from zerg.plugins import GateContext
+from mahabharatha.architecture_gate import ArchitectureGate, check_files
+from mahabharatha.constants import GateResult
+from mahabharatha.plugins import GateContext
 
 
 class TestArchitectureGate:
@@ -23,9 +23,9 @@ class TestArchitectureGate:
     @pytest.fixture
     def temp_project(self, tmp_path: Path) -> Path:
         """Create temporary project with config."""
-        # Create .zerg directory
-        zerg_dir = tmp_path / ".zerg"
-        zerg_dir.mkdir()
+        # Create .mahabharatha directory
+        mahabharatha_dir = tmp_path / ".mahabharatha"
+        mahabharatha_dir.mkdir()
 
         # Create src directory
         src_dir = tmp_path / "src"
@@ -40,7 +40,7 @@ class TestArchitectureGate:
     def test_gate_skip_when_disabled(self, gate: ArchitectureGate, temp_project: Path) -> None:
         """Gate skips when architecture checking is disabled."""
         # Create config with disabled architecture
-        config_path = temp_project / ".zerg" / "config.yaml"
+        config_path = temp_project / ".mahabharatha" / "config.yaml"
         config_path.write_text("architecture:\n  enabled: false\n")
 
         ctx = GateContext(
@@ -58,7 +58,7 @@ class TestArchitectureGate:
     def test_gate_skip_when_no_config(self, gate: ArchitectureGate, temp_project: Path) -> None:
         """Gate skips when no architecture config exists."""
         # Create empty config
-        config_path = temp_project / ".zerg" / "config.yaml"
+        config_path = temp_project / ".mahabharatha" / "config.yaml"
         config_path.write_text("other:\n  key: value\n")
 
         ctx = GateContext(
@@ -75,7 +75,7 @@ class TestArchitectureGate:
     def test_gate_passes_clean_project(self, gate: ArchitectureGate, temp_project: Path) -> None:
         """Gate passes on project with no violations."""
         # Create config
-        config_path = temp_project / ".zerg" / "config.yaml"
+        config_path = temp_project / ".mahabharatha" / "config.yaml"
         config_path.write_text(
             dedent(
                 """\
@@ -107,7 +107,7 @@ class TestArchitectureGate:
     def test_gate_fails_on_violation(self, gate: ArchitectureGate, temp_project: Path) -> None:
         """Gate fails when violations are found."""
         # Create config
-        config_path = temp_project / ".zerg" / "config.yaml"
+        config_path = temp_project / ".mahabharatha" / "config.yaml"
         config_path.write_text(
             dedent(
                 """\
@@ -141,7 +141,7 @@ class TestArchitectureGate:
     def test_gate_passes_with_warnings(self, gate: ArchitectureGate, temp_project: Path) -> None:
         """Gate passes when only warnings (not errors) are found."""
         # Create config with naming conventions (warnings)
-        config_path = temp_project / ".zerg" / "config.yaml"
+        config_path = temp_project / ".mahabharatha" / "config.yaml"
         config_path.write_text(
             dedent(
                 """\
@@ -172,7 +172,7 @@ class TestArchitectureGate:
 
     def test_gate_reports_duration(self, gate: ArchitectureGate, temp_project: Path) -> None:
         """Gate reports execution duration."""
-        config_path = temp_project / ".zerg" / "config.yaml"
+        config_path = temp_project / ".mahabharatha" / "config.yaml"
         config_path.write_text("architecture:\n  enabled: true\n")
 
         ctx = GateContext(
@@ -188,7 +188,7 @@ class TestArchitectureGate:
 
     def test_gate_clear_error_messages(self, gate: ArchitectureGate, temp_project: Path) -> None:
         """Gate produces clear, actionable error messages."""
-        config_path = temp_project / ".zerg" / "config.yaml"
+        config_path = temp_project / ".mahabharatha" / "config.yaml"
         config_path.write_text(
             dedent(
                 """\
@@ -227,10 +227,10 @@ class TestCheckFiles:
     def test_check_specific_files(self, tmp_path: Path) -> None:
         """Check specific files for violations."""
         # Create project structure
-        zerg_dir = tmp_path / ".zerg"
-        zerg_dir.mkdir()
+        mahabharatha_dir = tmp_path / ".mahabharatha"
+        mahabharatha_dir.mkdir()
 
-        config_path = zerg_dir / "config.yaml"
+        config_path = mahabharatha_dir / "config.yaml"
         config_path.write_text(
             dedent(
                 """\
@@ -260,10 +260,10 @@ class TestCheckFiles:
 
     def test_check_files_disabled(self, tmp_path: Path) -> None:
         """Returns empty when architecture checking is disabled."""
-        zerg_dir = tmp_path / ".zerg"
-        zerg_dir.mkdir()
+        mahabharatha_dir = tmp_path / ".mahabharatha"
+        mahabharatha_dir.mkdir()
 
-        config_path = zerg_dir / "config.yaml"
+        config_path = mahabharatha_dir / "config.yaml"
         config_path.write_text("architecture:\n  enabled: false\n")
 
         file_path = tmp_path / "module.py"
@@ -280,13 +280,13 @@ class TestLayerIntegration:
     def layered_project(self, tmp_path: Path) -> Path:
         """Create project with layer structure."""
         # Create directories
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
         (tmp_path / "src" / "core").mkdir(parents=True)
         (tmp_path / "src" / "services").mkdir(parents=True)
         (tmp_path / "src" / "api").mkdir(parents=True)
 
         # Create config with layers
-        config_path = tmp_path / ".zerg" / "config.yaml"
+        config_path = tmp_path / ".mahabharatha" / "config.yaml"
         config_path.write_text(
             dedent(
                 """\
@@ -333,10 +333,10 @@ class TestExceptionIntegration:
     def test_file_exception_works(self, tmp_path: Path) -> None:
         """File exceptions exempt files from checking."""
         # Setup
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
         (tmp_path / "src").mkdir()
 
-        config_path = tmp_path / ".zerg" / "config.yaml"
+        config_path = tmp_path / ".mahabharatha" / "config.yaml"
         config_path.write_text(
             dedent(
                 """\

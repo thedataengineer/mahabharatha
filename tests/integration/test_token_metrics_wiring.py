@@ -8,11 +8,11 @@ from __future__ import annotations
 
 import pytest
 
-from zerg.config import TokenMetricsConfig
-from zerg.status_formatter import format_token_table
-from zerg.token_aggregator import TokenAggregator
-from zerg.token_counter import TokenCounter
-from zerg.token_tracker import TokenTracker
+from mahabharatha.config import TokenMetricsConfig
+from mahabharatha.status_formatter import format_token_table
+from mahabharatha.token_aggregator import TokenAggregator
+from mahabharatha.token_counter import TokenCounter
+from mahabharatha.token_tracker import TokenTracker
 
 
 class TestTokenMetricsPipeline:

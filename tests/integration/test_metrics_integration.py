@@ -6,11 +6,11 @@ from pathlib import Path
 
 from click.testing import CliRunner
 
-from zerg.cli import cli
-from zerg.constants import TaskStatus, WorkerStatus
-from zerg.metrics import MetricsCollector
-from zerg.state import StateManager
-from zerg.types import FeatureMetrics
+from mahabharatha.cli import cli
+from mahabharatha.constants import TaskStatus, WorkerStatus
+from mahabharatha.metrics import MetricsCollector
+from mahabharatha.state import StateManager
+from mahabharatha.types import FeatureMetrics
 
 
 class TestMetricsPersistence:
@@ -19,7 +19,7 @@ class TestMetricsPersistence:
     def test_metrics_persist_to_state(self, tmp_path: Path) -> None:
         """Metrics are saved to and loaded from state file."""
         # Create state manager with temp directory
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
 
         state = StateManager("test-persist", state_dir=state_dir)
@@ -49,7 +49,7 @@ class TestMetricsPersistence:
 
     def test_metrics_overwrite_on_recompute(self, tmp_path: Path) -> None:
         """Recomputing metrics overwrites previous values."""
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
 
         state = StateManager("test-overwrite", state_dir=state_dir)
@@ -78,7 +78,7 @@ class TestMetricsWithStateManager:
 
     def test_record_task_claimed(self, tmp_path: Path) -> None:
         """record_task_claimed sets claimed_at timestamp."""
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
 
         state = StateManager("test-claimed", state_dir=state_dir)
@@ -94,7 +94,7 @@ class TestMetricsWithStateManager:
 
     def test_record_task_duration(self, tmp_path: Path) -> None:
         """record_task_duration sets duration_ms field."""
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
 
         state = StateManager("test-duration", state_dir=state_dir)
@@ -117,7 +117,7 @@ class TestStatusCommandMetrics:
     def test_json_status_includes_metrics(self, tmp_path: Path, monkeypatch) -> None:
         """Status --json output includes metrics section."""
         # Set up state
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
 
         state = StateManager("test-json-metrics", state_dir=state_dir)
@@ -132,12 +132,12 @@ class TestStatusCommandMetrics:
 
         # Patch StateManager in the status command module so the CLI reads
         # from the same tmp_path state directory the test populated above.
-        # NOTE: ``import zerg.commands.status`` resolves to the Click command
+        # NOTE: ``import mahabharatha.commands.status`` resolves to the Click command
         # object (due to re-export in __init__.py), so we grab the real module
         # from sys.modules.
         import sys
 
-        status_mod = sys.modules["zerg.commands.status"]
+        status_mod = sys.modules["mahabharatha.commands.status"]
 
         _OrigStateManager = StateManager
 
@@ -161,7 +161,7 @@ class TestStatusCommandMetrics:
 
     def test_status_displays_without_crash(self, tmp_path: Path) -> None:
         """Status command doesn't crash when displaying metrics."""
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
 
         state = StateManager("test-no-crash", state_dir=state_dir)
@@ -181,7 +181,7 @@ class TestMetricsAccuracy:
 
     def test_level_percentiles_accurate(self, tmp_path: Path) -> None:
         """Level p50/p95 calculations are accurate."""
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
 
         state = StateManager("test-percentiles", state_dir=state_dir)
@@ -216,7 +216,7 @@ class TestMetricsAccuracy:
 
     def test_worker_uptime_calculation(self, tmp_path: Path) -> None:
         """Worker uptime is calculated correctly."""
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
 
         state = StateManager("test-uptime", state_dir=state_dir)
@@ -247,7 +247,7 @@ class TestMetricsAccuracy:
 
     def test_worker_initialization_time_accurate(self, tmp_path: Path) -> None:
         """Worker initialization time calculation is accurate."""
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
 
         state = StateManager("test-init-time", state_dir=state_dir)
@@ -282,7 +282,7 @@ class TestMetricsCleanup:
 
     def test_metrics_cleanup_on_delete(self, tmp_path: Path) -> None:
         """State delete removes metrics file."""
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
 
         state = StateManager("test-cleanup", state_dir=state_dir)
@@ -301,7 +301,7 @@ class TestMetricsCleanup:
 
     def test_metrics_none_when_not_stored(self, tmp_path: Path) -> None:
         """get_metrics returns None when no metrics stored."""
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
 
         state = StateManager("test-no-metrics", state_dir=state_dir)
@@ -317,7 +317,7 @@ class TestMetricsEdgeCases:
 
     def test_metrics_with_no_tasks(self, tmp_path: Path) -> None:
         """Metrics computation handles empty task list."""
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
 
         state = StateManager("test-empty", state_dir=state_dir)
@@ -332,7 +332,7 @@ class TestMetricsEdgeCases:
 
     def test_metrics_with_no_workers(self, tmp_path: Path) -> None:
         """Metrics computation handles empty worker list."""
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
 
         state = StateManager("test-no-workers", state_dir=state_dir)
@@ -346,7 +346,7 @@ class TestMetricsEdgeCases:
 
     def test_level_metrics_with_no_tasks_in_level(self, tmp_path: Path) -> None:
         """Level metrics handles level with no tasks."""
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
 
         state = StateManager("test-empty-level", state_dir=state_dir)
@@ -363,7 +363,7 @@ class TestMetricsEdgeCases:
 
     def test_task_metrics_with_missing_timestamps(self, tmp_path: Path) -> None:
         """Task metrics handles missing timestamps gracefully."""
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
 
         state = StateManager("test-missing-ts", state_dir=state_dir)
@@ -382,7 +382,7 @@ class TestMetricsEdgeCases:
 
     def test_worker_metrics_with_failed_tasks(self, tmp_path: Path) -> None:
         """Worker metrics correctly counts failed tasks."""
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
 
         state = StateManager("test-failed", state_dir=state_dir)

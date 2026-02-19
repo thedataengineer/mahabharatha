@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from zerg.escalation import EscalationMonitor, EscalationWriter
-from zerg.progress_reporter import ProgressReporter
+from mahabharatha.escalation import EscalationMonitor, EscalationWriter
+from mahabharatha.progress_reporter import ProgressReporter
 
 
 class TestEscalationWriterMonitorWiring:

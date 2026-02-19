@@ -10,10 +10,10 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.launcher_types import WorkerHandle
+from mahabharatha.launchers import ContainerLauncher
 from tests.mocks.mock_launcher import MockContainerLauncher
-from zerg.constants import WorkerStatus
-from zerg.launcher_types import WorkerHandle
-from zerg.launchers import ContainerLauncher
 
 # =============================================================================
 # Network Configuration
@@ -33,7 +33,7 @@ class TestNetworkConfiguration:
     def test_network_used_in_docker_run(self, mock_run: MagicMock, tmp_path: Path) -> None:
         mock_run.return_value = MagicMock(returncode=0, stdout="cid\n", stderr="")
         launcher = ContainerLauncher(network="custom-net")
-        launcher._start_container("zerg-worker-0", tmp_path, {"ZERG_WORKER_ID": "0"})
+        launcher._start_container("mahabharatha-worker-0", tmp_path, {"ZERG_WORKER_ID": "0"})
         call_args = mock_run.call_args[0][0]
         idx = call_args.index("--network")
         assert call_args[idx + 1] == "custom-net"
@@ -213,7 +213,7 @@ class TestDockerErrors:
         [
             "Cannot allocate memory",
             "no space left on device",
-            "pull access denied for zerg-worker",
+            "pull access denied for mahabharatha-worker",
         ],
     )
     @patch("subprocess.run")
@@ -246,7 +246,7 @@ class TestStartContainerErrors:
     @pytest.mark.parametrize(
         "stderr_msg",
         [
-            'Conflict. The container name "/zerg-worker-0" is already in use',
+            'Conflict. The container name "/mahabharatha-worker-0" is already in use',
             "source path does not exist",
             "network custom-network not found",
         ],
@@ -255,7 +255,7 @@ class TestStartContainerErrors:
     def test_start_container_errors(self, mock_run, tmp_path, stderr_msg) -> None:
         mock_run.return_value = MagicMock(returncode=125, stdout="", stderr=stderr_msg)
         launcher = ContainerLauncher()
-        assert launcher._start_container("zerg-worker-0", tmp_path, {}) is None
+        assert launcher._start_container("mahabharatha-worker-0", tmp_path, {}) is None
 
 
 class TestMonitorErrors:

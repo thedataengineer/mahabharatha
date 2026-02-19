@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.preflight import CheckResult, PreflightChecker, PreflightReport
+from mahabharatha.preflight import CheckResult, PreflightChecker, PreflightReport
 
 
 class TestPreflightReport:
@@ -134,35 +134,35 @@ class TestCheckPorts:
 class TestCheckDocker:
     """Tests for Docker checks."""
 
-    @patch("zerg.preflight.subprocess.run")
+    @patch("mahabharatha.preflight.subprocess.run")
     def test_docker_available(self, mock_run: MagicMock) -> None:
         mock_run.return_value = MagicMock(returncode=0)
         checker = PreflightChecker()
         result = checker.check_docker_available()
         assert result.passed
 
-    @patch("zerg.preflight.subprocess.run")
+    @patch("mahabharatha.preflight.subprocess.run")
     def test_docker_not_available(self, mock_run: MagicMock) -> None:
         mock_run.return_value = MagicMock(returncode=1)
         checker = PreflightChecker()
         result = checker.check_docker_available()
         assert not result.passed
 
-    @patch("zerg.preflight.subprocess.run", side_effect=FileNotFoundError)
+    @patch("mahabharatha.preflight.subprocess.run", side_effect=FileNotFoundError)
     def test_docker_not_installed(self, mock_run: MagicMock) -> None:
         checker = PreflightChecker()
         result = checker.check_docker_available()
         assert not result.passed
         assert "not found" in result.message
 
-    @patch("zerg.preflight.subprocess.run")
+    @patch("mahabharatha.preflight.subprocess.run")
     def test_docker_image_found(self, mock_run: MagicMock) -> None:
         mock_run.return_value = MagicMock(returncode=0)
         checker = PreflightChecker(docker_image="test:latest")
         result = checker.check_docker_image()
         assert result.passed
 
-    @patch("zerg.preflight.subprocess.run")
+    @patch("mahabharatha.preflight.subprocess.run")
     def test_docker_image_missing(self, mock_run: MagicMock) -> None:
         mock_run.return_value = MagicMock(returncode=1)
         checker = PreflightChecker(docker_image="missing:latest")
@@ -173,7 +173,7 @@ class TestCheckDocker:
 class TestCheckWorktree:
     """Tests for git worktree check."""
 
-    @patch("zerg.preflight.subprocess.run")
+    @patch("mahabharatha.preflight.subprocess.run")
     def test_worktree_supported(self, mock_run: MagicMock) -> None:
         mock_run.return_value = MagicMock(returncode=0)
         checker = PreflightChecker(repo_path=".")
@@ -190,7 +190,7 @@ class TestCheckWorktree:
 class TestRunAll:
     """Tests for run_all orchestration."""
 
-    @patch("zerg.preflight.subprocess.run")
+    @patch("mahabharatha.preflight.subprocess.run")
     def test_run_all_container_mode(self, mock_run: MagicMock) -> None:
         mock_run.return_value = MagicMock(returncode=0)
         checker = PreflightChecker(mode="container", worker_count=1)

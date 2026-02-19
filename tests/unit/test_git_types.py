@@ -2,7 +2,7 @@
 
 import pytest
 
-from zerg.git.types import (
+from mahabharatha.git.types import (
     CommitInfo,
     CommitType,
     DiffAnalysis,

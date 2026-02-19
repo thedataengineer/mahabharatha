@@ -18,9 +18,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from mahabharatha.constants import TaskStatus, WorkerStatus
+from mahabharatha.orchestrator import Orchestrator
 from tests.mocks import MockContainerLauncher, MockMergeCoordinator, MockStateManager
-from zerg.constants import TaskStatus, WorkerStatus
-from zerg.orchestrator import Orchestrator
 
 
 class OrchestratorTestFixture:
@@ -49,9 +49,9 @@ class OrchestratorTestFixture:
 
     def _setup_directories(self) -> None:
         """Create required directory structure."""
-        (self.tmp_path / ".zerg").mkdir(parents=True, exist_ok=True)
-        (self.tmp_path / ".zerg" / "state").mkdir(parents=True, exist_ok=True)
-        (self.tmp_path / ".zerg" / "logs").mkdir(parents=True, exist_ok=True)
+        (self.tmp_path / ".mahabharatha").mkdir(parents=True, exist_ok=True)
+        (self.tmp_path / ".mahabharatha" / "state").mkdir(parents=True, exist_ok=True)
+        (self.tmp_path / ".mahabharatha" / "logs").mkdir(parents=True, exist_ok=True)
         (self.tmp_path / ".gsd" / "specs" / self.feature).mkdir(parents=True, exist_ok=True)
 
     def create_task_graph(self, tasks: list[dict[str, Any]] | None = None) -> Path:
@@ -127,16 +127,16 @@ class TestOrchestratorWorkerCrashRecovery:
     def test_worker_crash_marks_task_for_retry(self, test_fixture: OrchestratorTestFixture) -> None:
         """Worker crash should mark current task for retry."""
         with (
-            patch("zerg.orchestrator.StateManager") as state_cls,
-            patch("zerg.orchestrator.LevelController") as levels_cls,
-            patch("zerg.orchestrator.TaskParser") as parser_cls,
-            patch("zerg.orchestrator.WorktreeManager") as worktree_cls,
-            patch("zerg.orchestrator.PortAllocator") as ports_cls,
-            patch("zerg.orchestrator.MergeCoordinator") as merge_cls,
-            patch("zerg.orchestrator.SubprocessLauncher") as launcher_cls,
-            patch("zerg.orchestrator.GateRunner"),
-            patch("zerg.orchestrator.ContainerManager"),
-            patch("zerg.orchestrator.TaskSyncBridge"),
+            patch("mahabharatha.orchestrator.StateManager") as state_cls,
+            patch("mahabharatha.orchestrator.LevelController") as levels_cls,
+            patch("mahabharatha.orchestrator.TaskParser") as parser_cls,
+            patch("mahabharatha.orchestrator.WorktreeManager") as worktree_cls,
+            patch("mahabharatha.orchestrator.PortAllocator") as ports_cls,
+            patch("mahabharatha.orchestrator.MergeCoordinator") as merge_cls,
+            patch("mahabharatha.orchestrator.SubprocessLauncher") as launcher_cls,
+            patch("mahabharatha.orchestrator.GateRunner"),
+            patch("mahabharatha.orchestrator.ContainerManager"),
+            patch("mahabharatha.orchestrator.TaskSyncBridge"),
         ):
             # Configure mocks
             state_mock = MagicMock()
@@ -214,16 +214,16 @@ class TestOrchestratorWorkerCrashRecovery:
     def test_worker_crash_respawns_worker(self, test_fixture: OrchestratorTestFixture) -> None:
         """Worker crash should trigger respawn if tasks remain."""
         with (
-            patch("zerg.orchestrator.StateManager") as state_cls,
-            patch("zerg.orchestrator.LevelController") as levels_cls,
-            patch("zerg.orchestrator.TaskParser") as parser_cls,
-            patch("zerg.orchestrator.WorktreeManager") as worktree_cls,
-            patch("zerg.orchestrator.PortAllocator") as ports_cls,
-            patch("zerg.orchestrator.MergeCoordinator") as merge_cls,
-            patch("zerg.orchestrator.SubprocessLauncher") as launcher_cls,
-            patch("zerg.orchestrator.GateRunner"),
-            patch("zerg.orchestrator.ContainerManager"),
-            patch("zerg.orchestrator.TaskSyncBridge"),
+            patch("mahabharatha.orchestrator.StateManager") as state_cls,
+            patch("mahabharatha.orchestrator.LevelController") as levels_cls,
+            patch("mahabharatha.orchestrator.TaskParser") as parser_cls,
+            patch("mahabharatha.orchestrator.WorktreeManager") as worktree_cls,
+            patch("mahabharatha.orchestrator.PortAllocator") as ports_cls,
+            patch("mahabharatha.orchestrator.MergeCoordinator") as merge_cls,
+            patch("mahabharatha.orchestrator.SubprocessLauncher") as launcher_cls,
+            patch("mahabharatha.orchestrator.GateRunner"),
+            patch("mahabharatha.orchestrator.ContainerManager"),
+            patch("mahabharatha.orchestrator.TaskSyncBridge"),
         ):
             # Configure mocks
             state_mock = MagicMock()
@@ -290,16 +290,16 @@ class TestOrchestratorResumeAfterFix:
     def test_resume_clears_paused_state(self, test_fixture: OrchestratorTestFixture) -> None:
         """Resume should clear paused state."""
         with (
-            patch("zerg.orchestrator.StateManager") as state_cls,
-            patch("zerg.orchestrator.LevelController"),
-            patch("zerg.orchestrator.TaskParser"),
-            patch("zerg.orchestrator.WorktreeManager"),
-            patch("zerg.orchestrator.PortAllocator"),
-            patch("zerg.orchestrator.MergeCoordinator"),
-            patch("zerg.orchestrator.SubprocessLauncher"),
-            patch("zerg.orchestrator.GateRunner"),
-            patch("zerg.orchestrator.ContainerManager"),
-            patch("zerg.orchestrator.TaskSyncBridge"),
+            patch("mahabharatha.orchestrator.StateManager") as state_cls,
+            patch("mahabharatha.orchestrator.LevelController"),
+            patch("mahabharatha.orchestrator.TaskParser"),
+            patch("mahabharatha.orchestrator.WorktreeManager"),
+            patch("mahabharatha.orchestrator.PortAllocator"),
+            patch("mahabharatha.orchestrator.MergeCoordinator"),
+            patch("mahabharatha.orchestrator.SubprocessLauncher"),
+            patch("mahabharatha.orchestrator.GateRunner"),
+            patch("mahabharatha.orchestrator.ContainerManager"),
+            patch("mahabharatha.orchestrator.TaskSyncBridge"),
         ):
             state_mock = MagicMock()
             state_mock.load.return_value = {}
@@ -317,16 +317,16 @@ class TestOrchestratorResumeAfterFix:
     def test_resume_does_nothing_if_not_paused(self, test_fixture: OrchestratorTestFixture) -> None:
         """Resume should do nothing if not paused."""
         with (
-            patch("zerg.orchestrator.StateManager") as state_cls,
-            patch("zerg.orchestrator.LevelController"),
-            patch("zerg.orchestrator.TaskParser"),
-            patch("zerg.orchestrator.WorktreeManager"),
-            patch("zerg.orchestrator.PortAllocator"),
-            patch("zerg.orchestrator.MergeCoordinator"),
-            patch("zerg.orchestrator.SubprocessLauncher"),
-            patch("zerg.orchestrator.GateRunner"),
-            patch("zerg.orchestrator.ContainerManager"),
-            patch("zerg.orchestrator.TaskSyncBridge"),
+            patch("mahabharatha.orchestrator.StateManager") as state_cls,
+            patch("mahabharatha.orchestrator.LevelController"),
+            patch("mahabharatha.orchestrator.TaskParser"),
+            patch("mahabharatha.orchestrator.WorktreeManager"),
+            patch("mahabharatha.orchestrator.PortAllocator"),
+            patch("mahabharatha.orchestrator.MergeCoordinator"),
+            patch("mahabharatha.orchestrator.SubprocessLauncher"),
+            patch("mahabharatha.orchestrator.GateRunner"),
+            patch("mahabharatha.orchestrator.ContainerManager"),
+            patch("mahabharatha.orchestrator.TaskSyncBridge"),
         ):
             state_mock = MagicMock()
             state_mock.load.return_value = {}
@@ -343,16 +343,16 @@ class TestOrchestratorResumeAfterFix:
     def test_retry_failed_task_after_pause(self, test_fixture: OrchestratorTestFixture) -> None:
         """Can retry failed tasks after resuming from pause."""
         with (
-            patch("zerg.orchestrator.StateManager") as state_cls,
-            patch("zerg.orchestrator.LevelController"),
-            patch("zerg.orchestrator.TaskParser"),
-            patch("zerg.orchestrator.WorktreeManager"),
-            patch("zerg.orchestrator.PortAllocator"),
-            patch("zerg.orchestrator.MergeCoordinator"),
-            patch("zerg.orchestrator.SubprocessLauncher"),
-            patch("zerg.orchestrator.GateRunner"),
-            patch("zerg.orchestrator.ContainerManager"),
-            patch("zerg.orchestrator.TaskSyncBridge"),
+            patch("mahabharatha.orchestrator.StateManager") as state_cls,
+            patch("mahabharatha.orchestrator.LevelController"),
+            patch("mahabharatha.orchestrator.TaskParser"),
+            patch("mahabharatha.orchestrator.WorktreeManager"),
+            patch("mahabharatha.orchestrator.PortAllocator"),
+            patch("mahabharatha.orchestrator.MergeCoordinator"),
+            patch("mahabharatha.orchestrator.SubprocessLauncher"),
+            patch("mahabharatha.orchestrator.GateRunner"),
+            patch("mahabharatha.orchestrator.ContainerManager"),
+            patch("mahabharatha.orchestrator.TaskSyncBridge"),
         ):
             state_mock = MagicMock()
             state_mock.load.return_value = {}
@@ -382,17 +382,17 @@ class TestMetricsCollectionThroughFailures:
     def test_metrics_available_in_status_during_failure(self, test_fixture: OrchestratorTestFixture) -> None:
         """Metrics should be available in status even during failures."""
         with (
-            patch("zerg.orchestrator.StateManager") as state_cls,
-            patch("zerg.orchestrator.LevelController") as levels_cls,
-            patch("zerg.orchestrator.TaskParser"),
-            patch("zerg.orchestrator.WorktreeManager"),
-            patch("zerg.orchestrator.PortAllocator"),
-            patch("zerg.orchestrator.MergeCoordinator"),
-            patch("zerg.orchestrator.SubprocessLauncher"),
-            patch("zerg.orchestrator.GateRunner"),
-            patch("zerg.orchestrator.ContainerManager"),
-            patch("zerg.orchestrator.TaskSyncBridge"),
-            patch("zerg.orchestrator.MetricsCollector") as metrics_cls,
+            patch("mahabharatha.orchestrator.StateManager") as state_cls,
+            patch("mahabharatha.orchestrator.LevelController") as levels_cls,
+            patch("mahabharatha.orchestrator.TaskParser"),
+            patch("mahabharatha.orchestrator.WorktreeManager"),
+            patch("mahabharatha.orchestrator.PortAllocator"),
+            patch("mahabharatha.orchestrator.MergeCoordinator"),
+            patch("mahabharatha.orchestrator.SubprocessLauncher"),
+            patch("mahabharatha.orchestrator.GateRunner"),
+            patch("mahabharatha.orchestrator.ContainerManager"),
+            patch("mahabharatha.orchestrator.TaskSyncBridge"),
+            patch("mahabharatha.orchestrator.MetricsCollector") as metrics_cls,
         ):
             state_mock = MagicMock()
             state_mock.load.return_value = {}
@@ -440,16 +440,16 @@ class TestMetricsCollectionThroughFailures:
     def test_metrics_track_failed_tasks(self, test_fixture: OrchestratorTestFixture) -> None:
         """Metrics should track failed tasks correctly."""
         with (
-            patch("zerg.orchestrator.StateManager") as state_cls,
-            patch("zerg.orchestrator.LevelController") as levels_cls,
-            patch("zerg.orchestrator.TaskParser"),
-            patch("zerg.orchestrator.WorktreeManager"),
-            patch("zerg.orchestrator.PortAllocator"),
-            patch("zerg.orchestrator.MergeCoordinator"),
-            patch("zerg.orchestrator.SubprocessLauncher"),
-            patch("zerg.orchestrator.GateRunner"),
-            patch("zerg.orchestrator.ContainerManager"),
-            patch("zerg.orchestrator.TaskSyncBridge"),
+            patch("mahabharatha.orchestrator.StateManager") as state_cls,
+            patch("mahabharatha.orchestrator.LevelController") as levels_cls,
+            patch("mahabharatha.orchestrator.TaskParser"),
+            patch("mahabharatha.orchestrator.WorktreeManager"),
+            patch("mahabharatha.orchestrator.PortAllocator"),
+            patch("mahabharatha.orchestrator.MergeCoordinator"),
+            patch("mahabharatha.orchestrator.SubprocessLauncher"),
+            patch("mahabharatha.orchestrator.GateRunner"),
+            patch("mahabharatha.orchestrator.ContainerManager"),
+            patch("mahabharatha.orchestrator.TaskSyncBridge"),
         ):
             state_mock = MagicMock()
             state_mock.load.return_value = {}
@@ -489,16 +489,16 @@ class TestOrchestratorIntegrationWithMocks:
         merger.configure(fail_at_attempt=1, always_succeed=True)
 
         with (
-            patch("zerg.orchestrator.StateManager") as state_cls,
-            patch("zerg.orchestrator.LevelController") as levels_cls,
-            patch("zerg.orchestrator.TaskParser"),
-            patch("zerg.orchestrator.WorktreeManager") as worktree_cls,
-            patch("zerg.orchestrator.PortAllocator") as ports_cls,
-            patch("zerg.orchestrator.MergeCoordinator") as merge_cls,
-            patch("zerg.orchestrator.SubprocessLauncher"),
-            patch("zerg.orchestrator.GateRunner"),
-            patch("zerg.orchestrator.ContainerManager"),
-            patch("zerg.orchestrator.TaskSyncBridge"),
+            patch("mahabharatha.orchestrator.StateManager") as state_cls,
+            patch("mahabharatha.orchestrator.LevelController") as levels_cls,
+            patch("mahabharatha.orchestrator.TaskParser"),
+            patch("mahabharatha.orchestrator.WorktreeManager") as worktree_cls,
+            patch("mahabharatha.orchestrator.PortAllocator") as ports_cls,
+            patch("mahabharatha.orchestrator.MergeCoordinator") as merge_cls,
+            patch("mahabharatha.orchestrator.SubprocessLauncher"),
+            patch("mahabharatha.orchestrator.GateRunner"),
+            patch("mahabharatha.orchestrator.ContainerManager"),
+            patch("mahabharatha.orchestrator.TaskSyncBridge"),
         ):
             state_mock = MockStateManager(test_fixture.feature)
             state_cls.return_value = state_mock
@@ -557,16 +557,16 @@ class TestRecoverableErrorState:
     def test_set_recoverable_error_pauses(self, test_fixture: OrchestratorTestFixture) -> None:
         """Setting recoverable error should pause orchestrator."""
         with (
-            patch("zerg.orchestrator.StateManager") as state_cls,
-            patch("zerg.orchestrator.LevelController"),
-            patch("zerg.orchestrator.TaskParser"),
-            patch("zerg.orchestrator.WorktreeManager"),
-            patch("zerg.orchestrator.PortAllocator"),
-            patch("zerg.orchestrator.MergeCoordinator"),
-            patch("zerg.orchestrator.SubprocessLauncher"),
-            patch("zerg.orchestrator.GateRunner"),
-            patch("zerg.orchestrator.ContainerManager"),
-            patch("zerg.orchestrator.TaskSyncBridge"),
+            patch("mahabharatha.orchestrator.StateManager") as state_cls,
+            patch("mahabharatha.orchestrator.LevelController"),
+            patch("mahabharatha.orchestrator.TaskParser"),
+            patch("mahabharatha.orchestrator.WorktreeManager"),
+            patch("mahabharatha.orchestrator.PortAllocator"),
+            patch("mahabharatha.orchestrator.MergeCoordinator"),
+            patch("mahabharatha.orchestrator.SubprocessLauncher"),
+            patch("mahabharatha.orchestrator.GateRunner"),
+            patch("mahabharatha.orchestrator.ContainerManager"),
+            patch("mahabharatha.orchestrator.TaskSyncBridge"),
         ):
             state_mock = MagicMock()
             state_mock.load.return_value = {}

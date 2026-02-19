@@ -2,7 +2,7 @@
 
 import pytest
 
-from zerg.graph_validation import validate_graph_properties
+from mahabharatha.graph_validation import validate_graph_properties
 
 
 def _make_graph(tasks):

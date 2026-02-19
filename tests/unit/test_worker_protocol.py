@@ -10,9 +10,9 @@ from datetime import datetime
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from zerg.constants import DEFAULT_CONTEXT_THRESHOLD, ExitCode, TaskStatus
-from zerg.protocol_state import WorkerProtocol, run_worker
-from zerg.protocol_types import (
+from mahabharatha.constants import DEFAULT_CONTEXT_THRESHOLD, ExitCode, TaskStatus
+from mahabharatha.protocol_state import WorkerProtocol, run_worker
+from mahabharatha.protocol_types import (
     CLAUDE_CLI_COMMAND,
     CLAUDE_CLI_DEFAULT_TIMEOUT,
     ClaudeInvocationResult,
@@ -101,10 +101,10 @@ def _make_protocol(
             mock_git.current_commit.return_value = "abc123"
 
     if mock_verifier_cls:
-        mock_verifier = mock_verifier_cls.return_value
+        pass
 
     if mock_state_cls:
-        mock_state = mock_state_cls.return_value
+        pass
 
     # Ensure worker_id is an int
     wid = int(overrides.get("worker_id", 1))
@@ -125,7 +125,7 @@ class TestWorkerContext:
             worker_id=1,
             feature="test-feature",
             worktree_path=Path("/tmp/worktree"),
-            branch="zerg/test-feature/worker-1",
+            branch="mahabharatha/test-feature/worker-1",
         )
         assert ctx.worker_id == 1
         assert ctx.context_threshold == DEFAULT_CONTEXT_THRESHOLD
@@ -143,12 +143,12 @@ class TestWorkerContext:
 class TestWorkerProtocolInit:
     """Tests for WorkerProtocol initialization."""
 
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_init_with_explicit_args(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test initialization with explicit arguments."""
         protocol = _make_protocol(mock_config_cls, mock_spec_loader_cls, *mocks, worker_id=3, feature="my-feature")
@@ -160,17 +160,17 @@ class TestWorkerProtocolInit:
         {
             "ZERG_WORKER_ID": "5",
             "ZERG_FEATURE": "env-feature",
-            "ZERG_BRANCH": "zerg/env-feature/worker-5",
+            "ZERG_BRANCH": "mahabharatha/env-feature/worker-5",
             "ZERG_WORKTREE": "/tmp/test-worktree",
         },
         clear=False,
     )
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_init_from_environment(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test initialization from environment variables."""
         # Set up mocks for WorkerProtocol() call below
@@ -188,12 +188,12 @@ class TestWorkerProtocolInit:
         assert protocol.feature == "env-feature"
 
     @patch.dict(os.environ, {}, clear=True)
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_init_defaults_when_no_env(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test initialization defaults when no environment vars set."""
         # Set up mocks for WorkerProtocol() call below
@@ -216,13 +216,13 @@ class TestWorkerProtocolInit:
         task_graph_path.write_text("invalid json {")
 
         with (
-            patch("zerg.protocol_state.TaskParser") as mock_parser_cls,
-            patch("zerg.protocol_state.StateManager"),
-            patch("zerg.protocol_state.VerificationExecutor"),
-            patch("zerg.protocol_state.GitOps"),
-            patch("zerg.protocol_state.ContextTracker"),
-            patch("zerg.protocol_state.SpecLoader") as mock_spec_loader_cls,
-            patch("zerg.protocol_state.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.protocol_state.TaskParser") as mock_parser_cls,
+            patch("mahabharatha.protocol_state.StateManager"),
+            patch("mahabharatha.protocol_state.VerificationExecutor"),
+            patch("mahabharatha.protocol_state.GitOps"),
+            patch("mahabharatha.protocol_state.ContextTracker"),
+            patch("mahabharatha.protocol_state.SpecLoader") as mock_spec_loader_cls,
+            patch("mahabharatha.protocol_state.ZergConfig") as mock_config_cls,
         ):
             mock_parser = MagicMock()
             mock_parser.parse.side_effect = Exception("Parse error")
@@ -235,12 +235,12 @@ class TestWorkerProtocolInit:
 class TestWorkerProtocolSignalReady:
     """Tests for signal_ready method."""
 
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_signal_ready(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test signaling ready status."""
         mock_state = MagicMock()
@@ -254,12 +254,12 @@ class TestWorkerProtocolSignalReady:
 class TestWorkerProtocolClaimTask:
     """Tests for claim_next_task method."""
 
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_claim_next_task_success(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test successfully claiming a task."""
         mock_state = MagicMock()
@@ -272,12 +272,12 @@ class TestWorkerProtocolClaimTask:
         assert task is not None
         assert task["id"] == "TASK-001"
 
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_claim_next_task_no_pending(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test claiming when no pending tasks."""
         mock_state = MagicMock()
@@ -292,12 +292,12 @@ class TestWorkerProtocolClaimTask:
 class TestWorkerProtocolBuildTaskPrompt:
     """Tests for _build_task_prompt method."""
 
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_build_task_prompt_basic(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test building basic task prompt."""
         protocol = _make_protocol(mock_config_cls, mock_spec_loader_cls, *mocks)
@@ -306,12 +306,12 @@ class TestWorkerProtocolBuildTaskPrompt:
         assert "# Task: Test Task" in prompt
         assert "Do NOT commit" in prompt
 
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_build_task_prompt_with_files_and_verification(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test building prompt with file specs and verification."""
         protocol = _make_protocol(mock_config_cls, mock_spec_loader_cls, *mocks)
@@ -332,13 +332,13 @@ class TestWorkerProtocolBuildTaskPrompt:
 class TestWorkerProtocolInvokeClaudeCode:
     """Tests for invoke_llm method."""
 
-    @patch("zerg.llm.claude.subprocess.run")
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.llm.claude.subprocess.run")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_invoke_llm_success(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test successful Claude Code invocation."""
         mock_subprocess_run = mocks[4]
@@ -351,13 +351,13 @@ class TestWorkerProtocolInvokeClaudeCode:
         assert result.success is True
         assert result.exit_code == 0
 
-    @patch("zerg.llm.claude.subprocess.run")
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.llm.claude.subprocess.run")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_invoke_llm_errors(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test Claude Code invocation error handling for timeout, not found, and generic errors."""
         mock_subprocess_run = mocks[4]
@@ -383,12 +383,12 @@ class TestWorkerProtocolInvokeClaudeCode:
 class TestWorkerProtocolRunVerification:
     """Tests for run_verification method."""
 
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_run_verification_success(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test successful verification."""
         mock_verifier = MagicMock()
@@ -403,12 +403,12 @@ class TestWorkerProtocolRunVerification:
         result = protocol._handler.run_verification(task)
         assert result is True
 
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_run_verification_no_spec_auto_passes(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test verification auto-passes when no spec."""
         protocol = _make_protocol(mock_config_cls, mock_spec_loader_cls, *mocks)
@@ -420,12 +420,12 @@ class TestWorkerProtocolRunVerification:
 class TestWorkerProtocolCommitTaskChanges:
     """Tests for commit_task_changes method."""
 
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_commit_task_changes_success(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test successful commit."""
         mock_git = MagicMock()
@@ -438,12 +438,12 @@ class TestWorkerProtocolCommitTaskChanges:
         result = protocol._handler.commit_task_changes(task)
         assert result is True
 
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_commit_task_changes_no_changes(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test commit when no changes."""
         mock_git = MagicMock()
@@ -459,12 +459,12 @@ class TestWorkerProtocolCommitTaskChanges:
 class TestWorkerProtocolExecuteTask:
     """Tests for execute_task method."""
 
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_execute_task_success(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test successful task execution."""
         protocol = _make_protocol(mock_config_cls, mock_spec_loader_cls, *mocks)
@@ -480,12 +480,12 @@ class TestWorkerProtocolExecuteTask:
         result = protocol._handler.execute_task(task)
         assert result is True
 
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_execute_task_claude_failure(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test task execution when Claude Code fails."""
         protocol = _make_protocol(mock_config_cls, mock_spec_loader_cls, *mocks)
@@ -503,12 +503,12 @@ class TestWorkerProtocolExecuteTask:
 class TestWorkerProtocolReporting:
     """Tests for report_complete and report_failed methods."""
 
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_report_complete(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test reporting task completion."""
         mock_state = MagicMock()
@@ -522,12 +522,12 @@ class TestWorkerProtocolReporting:
         assert protocol.current_task is None
         mock_state.set_task_status.assert_called_with("TASK-001", TaskStatus.COMPLETE, worker_id=1)
 
-    @patch("zerg.protocol_state.StateManager")
-    @patch("zerg.protocol_state.VerificationExecutor")
-    @patch("zerg.protocol_state.GitOps")
-    @patch("zerg.protocol_state.ContextTracker")
-    @patch("zerg.protocol_state.SpecLoader")
-    @patch("zerg.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.StateManager")
+    @patch("mahabharatha.protocol_state.VerificationExecutor")
+    @patch("mahabharatha.protocol_state.GitOps")
+    @patch("mahabharatha.protocol_state.ContextTracker")
+    @patch("mahabharatha.protocol_state.SpecLoader")
+    @patch("mahabharatha.protocol_state.ZergConfig")
     def test_report_failed(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test reporting task failure."""
         mock_state = MagicMock()
@@ -546,8 +546,8 @@ class TestWorkerProtocolReporting:
 class TestRunWorker:
     """Tests for run_worker function."""
 
-    @patch("zerg.protocol_state.sys.exit")
-    @patch("zerg.protocol_state.WorkerProtocol")
+    @patch("mahabharatha.protocol_state.sys.exit")
+    @patch("mahabharatha.protocol_state.WorkerProtocol")
     def test_run_worker_success(self, mock_protocol_cls, mock_exit) -> None:
         """Test run_worker entry point."""
         mock_protocol = MagicMock()
@@ -555,8 +555,8 @@ class TestRunWorker:
         run_worker()
         mock_protocol.start.assert_called_once()
 
-    @patch("zerg.protocol_state.sys.exit")
-    @patch("zerg.protocol_state.WorkerProtocol")
+    @patch("mahabharatha.protocol_state.sys.exit")
+    @patch("mahabharatha.protocol_state.WorkerProtocol")
     def test_run_worker_exception(self, mock_protocol_cls, mock_exit) -> None:
         """Test run_worker handles exceptions."""
         mock_protocol_cls.side_effect = Exception("Init failed")

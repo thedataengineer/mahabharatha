@@ -20,8 +20,8 @@ from typing import Any
 
 import pytest
 
-from zerg.heartbeat import HeartbeatMonitor, HeartbeatWriter
-from zerg.step_generator import (
+from mahabharatha.heartbeat import HeartbeatMonitor, HeartbeatWriter
+from mahabharatha.step_generator import (
     DetailLevel,
     Step,
     StepAction,
@@ -106,7 +106,7 @@ def sample_task_with_steps() -> dict[str, Any]:
         "level": 1,
         "dependencies": [],
         "files": {
-            "create": ["zerg/formatter_detector.py"],
+            "create": ["mahabharatha/formatter_detector.py"],
             "modify": [],
             "read": [],
         },
@@ -207,7 +207,7 @@ def task_graph_with_steps(tmp_path: Path) -> dict[str, Any]:
 @pytest.fixture
 def heartbeat_state_dir(tmp_path: Path) -> Path:
     """Create a temporary state directory for heartbeat files."""
-    state_dir = tmp_path / ".zerg" / "state"
+    state_dir = tmp_path / ".mahabharatha" / "state"
     state_dir.mkdir(parents=True, exist_ok=True)
     return state_dir
 

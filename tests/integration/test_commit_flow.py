@@ -6,8 +6,8 @@ flow using mocked git operations.
 
 import pytest
 
+from mahabharatha.exceptions import GitError
 from tests.mocks.mock_git import MockGitOps
-from zerg.exceptions import GitError
 
 
 class TestCommitAndTaskCompletion:
@@ -174,7 +174,7 @@ class TestCommitEventTracking:
         event = {
             "task_id": "TASK-001",
             "worker_id": 0,
-            "branch": "zerg/test/worker-0",
+            "branch": "mahabharatha/test/worker-0",
             "commit_sha": commit_sha,
         }
 
@@ -244,14 +244,14 @@ class TestBranchOperations:
         git = MockGitOps()
 
         # Create and switch to worker branch
-        git.create_branch("zerg/test/worker-0", "main")
-        git.checkout("zerg/test/worker-0")
+        git.create_branch("mahabharatha/test/worker-0", "main")
+        git.checkout("mahabharatha/test/worker-0")
 
         git.simulate_changes()
         commit_sha = git.commit("ZERG [0]: Task 1", add_all=True)
 
         # Should be on worker branch
-        assert git.current_branch() == "zerg/test/worker-0"
+        assert git.current_branch() == "mahabharatha/test/worker-0"
         assert git.current_commit() == commit_sha
 
     def test_multiple_workers_different_branches(self):
@@ -260,7 +260,7 @@ class TestBranchOperations:
 
         workers = []
         for i in range(3):
-            branch = f"zerg/test/worker-{i}"
+            branch = f"mahabharatha/test/worker-{i}"
             git.create_branch(branch, "main")
             git.checkout(branch)
             git.simulate_changes()
@@ -277,7 +277,7 @@ class TestBranchOperations:
         # Each worker should have committed on their branch
         assert len(workers) == 3
         for w in workers:
-            assert w["branch"].startswith("zerg/test/worker-")
+            assert w["branch"].startswith("mahabharatha/test/worker-")
 
 
 class TestGitStateAfterCommit:

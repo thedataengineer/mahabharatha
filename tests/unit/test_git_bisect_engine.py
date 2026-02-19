@@ -1,4 +1,4 @@
-"""Tests for zerg.git.bisect_engine module."""
+"""Tests for mahabharatha.git.bisect_engine module."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.git.bisect_engine import (
+from mahabharatha.git.bisect_engine import (
     BisectEngine,
     BisectRunner,
     CommitRanker,
@@ -18,8 +18,8 @@ from zerg.git.bisect_engine import (
     _extract_file_hints_from_symptom,
     _sanitize_text,
 )
-from zerg.git.config import GitConfig
-from zerg.git.types import CommitInfo, CommitType
+from mahabharatha.git.config import GitConfig
+from mahabharatha.git.types import CommitInfo, CommitType
 
 
 def _make_commit(
@@ -89,7 +89,7 @@ class TestCommitRanker:
 
 
 class TestSemanticTester:
-    @patch("zerg.git.bisect_engine.subprocess.run")
+    @patch("mahabharatha.git.bisect_engine.subprocess.run")
     def test_run_test_pass_and_fail(self, mock_run: MagicMock) -> None:
         tester = SemanticTester()
         mock_run.return_value = subprocess.CompletedProcess(args=["pytest"], returncode=0, stdout="passed", stderr="")

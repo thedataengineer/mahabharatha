@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 
-from zerg.progress_reporter import ProgressReporter, TierProgress, WorkerProgress
+from mahabharatha.progress_reporter import ProgressReporter, TierProgress, WorkerProgress
 
 
 class TestTierProgress:

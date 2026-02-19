@@ -5,8 +5,8 @@ Tests BF-009: Worker protocol HEAD verification after commit.
 
 import pytest
 
+from mahabharatha.exceptions import GitError
 from tests.mocks.mock_git import MockGitOps
-from zerg.exceptions import GitError
 
 
 class TestHeadVerification:

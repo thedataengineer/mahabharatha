@@ -4,7 +4,7 @@ import json
 import logging
 from pathlib import Path
 
-from zerg.logging import (
+from mahabharatha.logging import (
     ConsoleFormatter,
     JsonFormatter,
     LoggerAdapter,
@@ -159,7 +159,7 @@ class TestGetLogger:
         """Test get_logger returns a logger instance."""
         logger = get_logger("test")
         assert isinstance(logger, logging.Logger)
-        assert "zerg.test" in logger.name
+        assert "mahabharatha.test" in logger.name
 
     def test_get_logger_with_worker_id(self) -> None:
         """Test get_logger with worker ID."""
@@ -209,7 +209,7 @@ class TestSetupLogging:
         logger.info("Test message")
 
         # Check log file created
-        log_file = tmp_path / "zerg.log"
+        log_file = tmp_path / "mahabharatha.log"
         assert log_file.exists()
 
     def test_setup_log_levels(self) -> None:

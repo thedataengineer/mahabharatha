@@ -1,8 +1,8 @@
-"""Tests for zerg.performance.catalog module."""
+"""Tests for mahabharatha.performance.catalog module."""
 
 from __future__ import annotations
 
-from zerg.performance.catalog import FactorCatalog
+from mahabharatha.performance.catalog import FactorCatalog
 
 
 class TestFactorCatalogLoad:

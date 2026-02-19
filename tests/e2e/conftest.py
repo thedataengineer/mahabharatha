@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 import pytest
 
 if TYPE_CHECKING:
-    from zerg.containers import ContainerManager
+    from mahabharatha.containers import ContainerManager
 
 from tests.e2e.harness import E2EHarness, E2EResult  # noqa: F401
 from tests.e2e.mock_worker import MockWorker
@@ -131,7 +131,7 @@ def sample_e2e_task_graph() -> dict:
 def e2e_repo(tmp_path: Path) -> Path:
     """Create a minimal git repository with ZERG directory structure.
 
-    Initializes a git repo at tmp_path/e2e_repo with .zerg/ and .gsd/
+    Initializes a git repo at tmp_path/e2e_repo with .mahabharatha/ and .gsd/
     directories and an initial commit.
 
     Returns:
@@ -140,14 +140,14 @@ def e2e_repo(tmp_path: Path) -> Path:
     repo_path = tmp_path / "e2e_repo"
     repo_path.mkdir()
 
-    (repo_path / ".zerg").mkdir()
+    (repo_path / ".mahabharatha").mkdir()
     (repo_path / ".gsd").mkdir()
 
     git_env = os.environ.copy()
     git_env["GIT_AUTHOR_NAME"] = "ZERG Test"
-    git_env["GIT_AUTHOR_EMAIL"] = "test@zerg.dev"
+    git_env["GIT_AUTHOR_EMAIL"] = "test@mahabharatha.dev"
     git_env["GIT_COMMITTER_NAME"] = "ZERG Test"
-    git_env["GIT_COMMITTER_EMAIL"] = "test@zerg.dev"
+    git_env["GIT_COMMITTER_EMAIL"] = "test@mahabharatha.dev"
 
     subprocess.run(
         ["git", "init"],
@@ -206,7 +206,7 @@ def docker_image() -> str:  # type: ignore[misc]
 
     Yields the image tag. Removes the image on teardown.
     """
-    tag = "zerg-test:session"
+    tag = "mahabharatha-test:session"
     subprocess.run(
         [
             "docker",
@@ -237,7 +237,7 @@ def docker_container(docker_image: str) -> tuple[str, str]:  # type: ignore[misc
 
     Returns (container_id, container_name). Removes container on teardown.
     """
-    name = f"zerg-test-{uuid.uuid4().hex[:8]}"
+    name = f"mahabharatha-test-{uuid.uuid4().hex[:8]}"
     result = subprocess.run(
         [
             "docker",
@@ -246,7 +246,7 @@ def docker_container(docker_image: str) -> tuple[str, str]:  # type: ignore[misc
             "--name",
             name,
             "--label",
-            "zerg-test=true",
+            "mahabharatha-test=true",
             docker_image,
             "tail",
             "-f",
@@ -275,7 +275,7 @@ def container_manager_real(
     Patches _check_docker to no-op and injects the test container
     as worker_id=0 in _containers.
     """
-    from zerg.containers import ContainerInfo, ContainerManager
+    from mahabharatha.containers import ContainerInfo, ContainerManager
 
     container_id, container_name = docker_container
 
@@ -300,7 +300,7 @@ def container_manager_real(
 def tmp_worktree(tmp_path: Path) -> Path:
     """Create a temporary git repo with a stub worker_entry.sh.
 
-    The entry script writes /tmp/.zerg-alive and execs sleep 300.
+    The entry script writes /tmp/.mahabharatha-alive and execs sleep 300.
     Returns the repo path.
     """
     repo = tmp_path / "worktree"
@@ -309,19 +309,19 @@ def tmp_worktree(tmp_path: Path) -> Path:
     # Initialise a git repo
     git_env = os.environ.copy()
     git_env["GIT_AUTHOR_NAME"] = "ZERG Test"
-    git_env["GIT_AUTHOR_EMAIL"] = "test@zerg.dev"
+    git_env["GIT_AUTHOR_EMAIL"] = "test@mahabharatha.dev"
     git_env["GIT_COMMITTER_NAME"] = "ZERG Test"
-    git_env["GIT_COMMITTER_EMAIL"] = "test@zerg.dev"
+    git_env["GIT_COMMITTER_EMAIL"] = "test@mahabharatha.dev"
 
     subprocess.run(["git", "init"], cwd=repo, capture_output=True, check=True)
 
-    # Create .zerg directory and worker_entry.sh
-    zerg_dir = repo / ".zerg"
-    zerg_dir.mkdir()
-    entry = zerg_dir / "worker_entry.sh"
+    # Create .mahabharatha directory and worker_entry.sh
+    mahabharatha_dir = repo / ".mahabharatha"
+    mahabharatha_dir.mkdir()
+    entry = mahabharatha_dir / "worker_entry.sh"
     entry.write_text(
         "#!/usr/bin/env bash\n"
-        "touch /tmp/.zerg-alive\n"
+        "touch /tmp/.mahabharatha-alive\n"
         "# Create a script named worker_main so pgrep -f finds it\n"
         "printf '#!/bin/sh\\nsleep 300\\n' > /tmp/worker_main\n"
         "chmod +x /tmp/worker_main\n"
@@ -343,10 +343,10 @@ def tmp_worktree(tmp_path: Path) -> Path:
 
 @pytest.fixture(scope="session", autouse=True)
 def docker_cleanup_safety_net() -> None:  # type: ignore[misc]
-    """Safety net: remove all containers labelled zerg-test=true on teardown."""
+    """Safety net: remove all containers labelled mahabharatha-test=true on teardown."""
     yield None
     result = subprocess.run(
-        ["docker", "ps", "-a", "-q", "--filter", "label=zerg-test=true"],
+        ["docker", "ps", "-a", "-q", "--filter", "label=mahabharatha-test=true"],
         capture_output=True,
         text=True,
         timeout=15,

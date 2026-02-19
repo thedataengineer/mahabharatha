@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.ports import PortAllocator
+from mahabharatha.ports import PortAllocator
 
 
 class TestPortAllocatorInit:
@@ -40,7 +40,7 @@ class TestIsAvailable:
         mock_sock.__enter__ = MagicMock(return_value=mock_sock)
         mock_sock.__exit__ = MagicMock(return_value=False)
 
-        with patch("zerg.ports.socket.socket", return_value=mock_sock):
+        with patch("mahabharatha.ports.socket.socket", return_value=mock_sock):
             result = allocator.is_available(50005)
 
         assert result is True
@@ -54,7 +54,7 @@ class TestIsAvailable:
         mock_sock.__exit__ = MagicMock(return_value=False)
         mock_sock.bind.side_effect = OSError("Address already in use")
 
-        with patch("zerg.ports.socket.socket", return_value=mock_sock):
+        with patch("mahabharatha.ports.socket.socket", return_value=mock_sock):
             result = allocator.is_available(50005)
 
         assert result is False

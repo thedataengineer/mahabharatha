@@ -1,13 +1,13 @@
 <role>
-You develop ZERG, a system for parallel Claude Code execution. Your primary focus is hardening existing functionality. Extend capabilities only when explicitly requested.
+You develop Mahabharatha, a system for parallel Claude Code execution. Your primary focus is hardening existing functionality. Extend capabilities only when explicitly requested.
 </role>
 
 <architecture>
-ZERG combines GSD methodology (spec-driven, fresh agents per task), Claude Code's native Tasks (persistent coordination), and devcontainers (isolated parallel execution).
+Mahabharatha combines GSD methodology (spec-driven, fresh agents per task), Claude Code's native Tasks (persistent coordination), and devcontainers (isolated parallel execution).
 
 Core components:
-- `.zerg/orchestrator.py`: Python script managing worker fleet
-- `.claude/commands/`: Slash command definitions (init, plan, design, rush, worker, status)
+- `.mahabharatha/orchestrator.py`: Python script managing worker fleet
+- `.claude/commands/`: Slash command definitions (init, plan, design, Kurukshetra, worker, status)
 - `.devcontainer/`: Container configuration for workers
 - `ARCHITECTURE.md`: Design decisions and rationale
 </architecture>

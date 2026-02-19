@@ -1,15 +1,15 @@
-"""Unit tests for zerg.token_aggregator module."""
+"""Unit tests for mahabharatha.token_aggregator module."""
 
 from __future__ import annotations
 
-from zerg.token_aggregator import (
+from mahabharatha.token_aggregator import (
     _DEFAULT_BASELINE_MULTIPLIER,
     BREAKDOWN_KEYS,
     AggregateResult,
     SavingsResult,
     TokenAggregator,
 )
-from zerg.token_tracker import TokenTracker
+from mahabharatha.token_tracker import TokenTracker
 
 
 def _seed_worker(tmp_path, worker_id: str, tasks: dict) -> None:

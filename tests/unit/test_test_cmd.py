@@ -23,8 +23,8 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.testing import CliRunner
 
-from zerg.cli import cli
-from zerg.commands.test_cmd import (
+from mahabharatha.cli import cli
+from mahabharatha.commands.test_cmd import (
     FrameworkDetector,
     TestCommand,
     TestConfig,
@@ -285,7 +285,7 @@ class TestWatchLoop:
         tester = TestCommand()
 
         with patch("time.sleep", side_effect=KeyboardInterrupt):
-            with patch("zerg.commands.test_cmd.console.print") as mock_print:
+            with patch("mahabharatha.commands.test_cmd.console.print") as mock_print:
                 _watch_loop(tester, TestFramework.PYTEST, ".")
 
                 calls = [str(c) for c in mock_print.call_args_list]
@@ -316,7 +316,7 @@ class TestTestCmdCli:
 
         runner = CliRunner()
 
-        with patch("zerg.commands.test_cmd.TestCommand.run") as mock_run:
+        with patch("mahabharatha.commands.test_cmd.TestCommand.run") as mock_run:
             mock_run.return_value = TestResult(total=5, passed=5, failed=0, skipped=0)
             result = runner.invoke(cli, ["test"], catch_exceptions=False)
             assert result.exit_code == 0
@@ -327,7 +327,7 @@ class TestTestCmdCli:
 
         runner = CliRunner()
 
-        with patch("zerg.commands.test_cmd.TestCommand") as mock_class:
+        with patch("mahabharatha.commands.test_cmd.TestCommand") as mock_class:
             mock_class.side_effect = KeyboardInterrupt()
             result = runner.invoke(cli, ["test"], catch_exceptions=False)
             assert result.exit_code == 130

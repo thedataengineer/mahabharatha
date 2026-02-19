@@ -4,7 +4,7 @@ import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from zerg.heartbeat import Heartbeat, HeartbeatMonitor, HeartbeatWriter
+from mahabharatha.heartbeat import Heartbeat, HeartbeatMonitor, HeartbeatWriter
 
 
 class TestHeartbeat:
@@ -213,7 +213,7 @@ class TestHeartbeatMonitor:
 
     def test_from_config(self, tmp_path: Path) -> None:
         """Test HeartbeatMonitor.from_config factory method."""
-        from zerg.config import HeartbeatConfig
+        from mahabharatha.config import HeartbeatConfig
 
         config = HeartbeatConfig(stall_timeout_seconds=90)
         monitor = HeartbeatMonitor.from_config(config, state_dir=tmp_path)

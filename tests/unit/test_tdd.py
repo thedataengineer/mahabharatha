@@ -5,9 +5,9 @@ from datetime import datetime
 import pytest
 from click.testing import CliRunner
 
-from zerg.cli import cli
-from zerg.config import TDDConfig, ZergConfig
-from zerg.tdd import (
+from mahabharatha.cli import cli
+from mahabharatha.config import TDDConfig, ZergConfig
+from mahabharatha.tdd import (
     TDDAntiPattern,
     TDDCycleResult,
     TDDPhase,
@@ -248,7 +248,7 @@ class TestTDDConfig:
         assert config.enforce_red_green is True
         assert "mock_heavy" in config.anti_patterns
 
-    def test_zerg_config_tdd_roundtrip(self) -> None:
+    def test_mahabharatha_config_tdd_roundtrip(self) -> None:
         config = ZergConfig()
         config.tdd.enabled = True
         d = config.to_dict()

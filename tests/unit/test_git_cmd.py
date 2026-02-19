@@ -22,8 +22,8 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.testing import CliRunner
 
-from zerg.cli import cli
-from zerg.commands.git_cmd import (
+from mahabharatha.cli import cli
+from mahabharatha.commands.git_cmd import (
     COMMIT_TYPE_PATTERNS,
     action_branch,
     action_commit,
@@ -35,8 +35,8 @@ from zerg.commands.git_cmd import (
     detect_commit_type,
     generate_commit_message,
 )
-from zerg.exceptions import GitError, MergeConflictError
-from zerg.git_ops import BranchInfo
+from mahabharatha.exceptions import GitError, MergeConflictError
+from mahabharatha.git_ops import BranchInfo
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -127,7 +127,7 @@ class TestActionCommit:
         mock_git._run.side_effect = [status_mock, staged_mock, unstaged_mock, diff_mock]
         mock_git.commit.return_value = "abc123def456"
 
-        with patch("zerg.commands.git_cmd.Prompt.ask", return_value="chore: update"):
+        with patch("mahabharatha.commands.git_cmd.Prompt.ask", return_value="chore: update"):
             result = action_commit(mock_git, push=True)
 
         assert result == 0
@@ -159,7 +159,7 @@ class TestActionBranch:
         mock_git = MagicMock()
         mock_git.branch_exists.return_value = False
 
-        with patch("zerg.commands.git_cmd.Confirm.ask", return_value=False):
+        with patch("mahabharatha.commands.git_cmd.Confirm.ask", return_value=False):
             result = action_branch(mock_git, name="new-branch", base="main")
 
         assert result == 0
@@ -284,8 +284,8 @@ class TestActionFinish:
         mock_git.commit.return_value = "merged123"
 
         with (
-            patch("zerg.commands.git_cmd.Prompt.ask") as mock_prompt,
-            patch("zerg.commands.git_cmd.Confirm.ask") as mock_confirm,
+            patch("mahabharatha.commands.git_cmd.Prompt.ask") as mock_prompt,
+            patch("mahabharatha.commands.git_cmd.Confirm.ask") as mock_confirm,
         ):
             mock_prompt.side_effect = ["merge", "feat: merge feature"]
             mock_confirm.side_effect = [True, True]
@@ -308,8 +308,8 @@ class TestActionFinish:
         mock_git._run.return_value = log_result
 
         with (
-            patch("zerg.commands.git_cmd.Prompt.ask", return_value="pr"),
-            patch("zerg.commands.git_cmd.Confirm.ask", return_value=True),
+            patch("mahabharatha.commands.git_cmd.Prompt.ask", return_value="pr"),
+            patch("mahabharatha.commands.git_cmd.Confirm.ask", return_value=True),
         ):
             result = action_finish(mock_git, base="main", push=False)
 
@@ -325,8 +325,8 @@ class TestActionFinish:
 class TestActionShip:
     """Tests for ship action."""
 
-    @patch("zerg.commands.git_cmd.action_pr", return_value=0)
-    @patch("zerg.commands.git_cmd.action_commit", return_value=0)
+    @patch("mahabharatha.commands.git_cmd.action_pr", return_value=0)
+    @patch("mahabharatha.commands.git_cmd.action_commit", return_value=0)
     def test_ship_happy_path(self, mock_commit: MagicMock, mock_pr: MagicMock) -> None:
         """Test ship happy path: commit, push, PR, merge, checkout, cleanup."""
         mock_git = MagicMock()
@@ -348,7 +348,7 @@ class TestActionShip:
         mock_commit.assert_called_once_with(mock_git, push=True, mode="auto")
         mock_pr.assert_called_once_with(mock_git, "main", False, None)
 
-    @patch("zerg.commands.git_cmd.action_commit", return_value=1)
+    @patch("mahabharatha.commands.git_cmd.action_commit", return_value=1)
     def test_ship_commit_fails(self, mock_commit: MagicMock) -> None:
         """Test ship aborts when commit fails."""
         mock_git = MagicMock()
@@ -358,8 +358,8 @@ class TestActionShip:
         result = action_ship(mock_git, base="main", draft=False, reviewer=None, no_merge=False)
         assert result == 1
 
-    @patch("zerg.commands.git_cmd.action_pr", return_value=0)
-    @patch("zerg.commands.git_cmd.action_commit", return_value=0)
+    @patch("mahabharatha.commands.git_cmd.action_pr", return_value=0)
+    @patch("mahabharatha.commands.git_cmd.action_commit", return_value=0)
     def test_ship_no_merge_flag(self, mock_commit: MagicMock, mock_pr: MagicMock) -> None:
         """Test ship stops after PR creation with --no-merge flag."""
         mock_git = MagicMock()
@@ -395,7 +395,7 @@ class TestGitCmd:
         """Test git command with keyboard interrupt."""
         runner = CliRunner()
 
-        with patch("zerg.commands.git_cmd.GitOps") as mock_git_cls:
+        with patch("mahabharatha.commands.git_cmd.GitOps") as mock_git_cls:
             mock_git_cls.side_effect = KeyboardInterrupt()
 
             result = runner.invoke(cli, ["git", "--action", "commit"])
@@ -406,7 +406,7 @@ class TestGitCmd:
         """Test git command with GitError."""
         runner = CliRunner()
 
-        with patch("zerg.commands.git_cmd.GitOps") as mock_git_cls:
+        with patch("mahabharatha.commands.git_cmd.GitOps") as mock_git_cls:
             mock_git_cls.side_effect = GitError("Git failed")
 
             result = runner.invoke(cli, ["git", "--action", "commit"])

@@ -1,4 +1,4 @@
-"""Tests for the --tone flag on zerg/commands/document.py.
+"""Tests for the --tone flag on mahabharatha/commands/document.py.
 
 Covers: default tone, explicit tones, invalid tone, and tone file existence.
 """
@@ -51,12 +51,12 @@ class TestDocumentTone:
 
     def _invoke(self, runner, mocks, tmp_path, extra_args=None):
         """Helper to invoke the document command with mocked doc_engine."""
-        from zerg.commands.document import document
+        from mahabharatha.commands.document import document
 
         target = tmp_path / "module.py"
         target.write_text("# module code\ndef hello(): pass")
 
-        from zerg.doc_engine.detector import ComponentType
+        from mahabharatha.doc_engine.detector import ComponentType
 
         detector_inst = mocks["ComponentDetector"].return_value
         detector_inst.detect.return_value = ComponentType.MODULE
@@ -66,12 +66,12 @@ class TestDocumentTone:
             args.extend(extra_args)
 
         with (
-            patch("zerg.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
-            patch("zerg.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
-            patch("zerg.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
-            patch("zerg.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
-            patch("zerg.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
-            patch("zerg.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
+            patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),
+            patch("mahabharatha.doc_engine.dependencies.DependencyMapper", mocks["DependencyMapper"]),
+            patch("mahabharatha.doc_engine.detector.ComponentDetector", mocks["ComponentDetector"]),
+            patch("mahabharatha.doc_engine.extractor.SymbolExtractor", mocks["SymbolExtractor"]),
+            patch("mahabharatha.doc_engine.mermaid.MermaidGenerator", mocks["MermaidGenerator"]),
+            patch("mahabharatha.doc_engine.renderer.DocRenderer", mocks["DocRenderer"]),
         ):
             result = runner.invoke(document, args, catch_exceptions=False)
 
@@ -104,7 +104,7 @@ class TestDocumentTone:
 
     def test_invalid_tone_rejected(self, runner, tmp_path):
         """Invalid --tone value is rejected by Click."""
-        from zerg.commands.document import document
+        from mahabharatha.commands.document import document
 
         target = tmp_path / "module.py"
         target.write_text("# module")
@@ -115,7 +115,7 @@ class TestDocumentTone:
 
     def test_tone_definition_files_exist(self):
         """All tone definition files exist at expected paths."""
-        tones_dir = Path("zerg/data/tones")
+        tones_dir = Path("mahabharatha/data/tones")
         for tone in ["educational", "reference", "tutorial"]:
             tone_file = tones_dir / f"{tone}.md"
             assert tone_file.exists(), f"Missing tone file: {tone_file}"

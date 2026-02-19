@@ -12,12 +12,12 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from zerg.constants import LevelMergeStatus, TaskStatus, WorkerStatus
-from zerg.exceptions import StateError
-from zerg.levels import LevelController
-from zerg.state import StateManager
-from zerg.state_sync_service import StateSyncService
-from zerg.types import WorkerState
+from mahabharatha.constants import LevelMergeStatus, TaskStatus, WorkerStatus
+from mahabharatha.exceptions import StateError
+from mahabharatha.levels import LevelController
+from mahabharatha.state import StateManager
+from mahabharatha.state_sync_service import StateSyncService
+from mahabharatha.types import WorkerState
 
 
 class TestStateManagerInit:
@@ -26,7 +26,7 @@ class TestStateManagerInit:
     @pytest.mark.smoke
     def test_init_with_default_state_dir(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test initialization with default state directory."""
-        monkeypatch.setattr("zerg.state.persistence.STATE_DIR", str(tmp_path / "default_state"))
+        monkeypatch.setattr("mahabharatha.state.persistence.STATE_DIR", str(tmp_path / "default_state"))
         manager = StateManager("test-feature")
         assert manager.feature == "test-feature"
         assert manager._persistence._state_file == tmp_path / "default_state" / "test-feature.json"
@@ -342,7 +342,7 @@ class TestStateMdGeneration:
             WorkerState(
                 worker_id=0,
                 status=WorkerStatus.RUNNING,
-                branch="zerg/test/worker-0",
+                branch="mahabharatha/test/worker-0",
                 tasks_completed=5,
             )
         )

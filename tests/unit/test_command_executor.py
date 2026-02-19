@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from zerg.command_executor import (
+from mahabharatha.command_executor import (
     ALLOWED_COMMAND_PREFIXES,
     CommandCategory,
     CommandExecutor,

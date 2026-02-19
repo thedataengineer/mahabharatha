@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 
-from zerg.log_aggregator import LogAggregator
+from mahabharatha.log_aggregator import LogAggregator
 
 
 def _write_jsonl(path: Path, entries: list[dict]) -> None:

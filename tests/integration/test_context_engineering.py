@@ -12,10 +12,10 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.context_plugin import ContextEngineeringPlugin
-from zerg.plugin_config import ContextEngineeringConfig
-from zerg.plugins import ContextPlugin, PluginRegistry
-from zerg.security.rules import filter_rules_for_files, summarize_rules
+from mahabharatha.context_plugin import ContextEngineeringPlugin
+from mahabharatha.plugin_config import ContextEngineeringConfig
+from mahabharatha.plugins import ContextPlugin, PluginRegistry
+from mahabharatha.security.rules import filter_rules_for_files, summarize_rules
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -99,7 +99,7 @@ class TestRegistryBuildTaskContext:
         plugin = ContextEngineeringPlugin(ContextEngineeringConfig(security_rule_filtering=False))
         registry.register_context_plugin(plugin)
 
-        task = _make_task(create=["zerg/foo.py"])
+        task = _make_task(create=["mahabharatha/foo.py"])
         task_graph = _make_task_graph([task])
 
         result = registry.build_task_context(task, task_graph, "test-feature")
@@ -123,7 +123,7 @@ class TestGenerateTaskContexts:
 
     def _make_orchestrator_mock(self, registry: PluginRegistry) -> MagicMock:
         """Build a mock Orchestrator with a real _plugin_registry."""
-        from zerg.orchestrator import Orchestrator
+        from mahabharatha.orchestrator import Orchestrator
 
         mock_orch = MagicMock(spec=Orchestrator)
         mock_orch._plugin_registry = registry
@@ -221,8 +221,8 @@ class TestSplitFilesExist:
     """All 9 expected .core.md split command files exist."""
 
     def test_split_files_exist(self) -> None:
-        """All expected .core.md files are present in zerg/data/commands/."""
-        commands_dir = Path(__file__).resolve().parents[2] / "zerg" / "data" / "commands"
+        """All expected .core.md files are present in mahabharatha/data/commands/."""
+        commands_dir = Path(__file__).resolve().parents[2] / "mahabharatha" / "data" / "commands"
 
         missing = []
         for filename in EXPECTED_CORE_MD_FILES:
@@ -260,7 +260,7 @@ class TestSecurityFilteringEndToEnd:
     @pytest.mark.parametrize(
         "file_paths,expected_lang",
         [
-            (["zerg/context_plugin.py", "zerg/plugins.py"], "python"),
+            (["mahabharatha/context_plugin.py", "mahabharatha/plugins.py"], "python"),
             (["src/app.js"], "javascript"),
         ],
     )

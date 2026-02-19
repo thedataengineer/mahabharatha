@@ -5,7 +5,7 @@ from unittest.mock import patch  # noqa: F401
 
 import pytest
 
-from zerg.spec_loader import CHARS_PER_TOKEN, SpecContent, SpecLoader
+from mahabharatha.spec_loader import CHARS_PER_TOKEN, SpecContent, SpecLoader
 
 
 class TestSpecLoader:

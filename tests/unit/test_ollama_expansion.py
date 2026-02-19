@@ -3,14 +3,14 @@ import unittest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from zerg.llm.claude import ClaudeProvider
-from zerg.llm.ollama import OllamaProvider
-from zerg.state.resource_repo import ResourceRepo
+from mahabharatha.llm.claude import ClaudeProvider
+from mahabharatha.llm.ollama import OllamaProvider
+from mahabharatha.state.resource_repo import ResourceRepo
 
 
 class TestOllamaExpansion(unittest.TestCase):
     def setUp(self):
-        self.tmp_dir = Path("/tmp/zerg_test_state")
+        self.tmp_dir = Path("/tmp/mahabharatha_test_state")
         self.tmp_dir.mkdir(exist_ok=True, parents=True)
         self.state_file = self.tmp_dir / "state.json"
         if self.state_file.exists():

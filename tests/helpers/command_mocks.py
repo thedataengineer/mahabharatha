@@ -33,14 +33,14 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from zerg.constants import (
+from mahabharatha.constants import (
     GateResult,
     Level,
     LevelMergeStatus,
     WorkerStatus,
 )
-from zerg.merge import MergeFlowResult
-from zerg.types import (
+from mahabharatha.merge import MergeFlowResult
+from mahabharatha.types import (
     GateRunResult,
     LevelStatus,
     WorkerState,
@@ -809,7 +809,7 @@ class MockGitOps:
             raise RuntimeError(f"Simulated merge failure for {branch}")
 
         if self._has_conflicts:
-            from zerg.exceptions import MergeConflictError
+            from mahabharatha.exceptions import MergeConflictError
 
             raise MergeConflictError(
                 f"Merge conflict: {branch}",
@@ -832,7 +832,7 @@ class MockGitOps:
             onto: Branch to rebase onto
         """
         if self._has_conflicts:
-            from zerg.exceptions import MergeConflictError
+            from mahabharatha.exceptions import MergeConflictError
 
             raise MergeConflictError(
                 f"Rebase conflict onto {onto}",
@@ -855,7 +855,7 @@ class MockGitOps:
         Returns:
             Staging branch name
         """
-        staging = f"zerg/{feature}/staging"
+        staging = f"mahabharatha/{feature}/staging"
         self.create_branch(staging, base)
         return staging
 
@@ -889,7 +889,7 @@ class MockGitOps:
         Returns:
             List of branch names
         """
-        prefix = f"zerg/{feature}/worker-"
+        prefix = f"mahabharatha/{feature}/worker-"
         return [b for b in self._branches if b.startswith(prefix)]
 
     def delete_feature_branches(self, feature: str, force: bool = True) -> int:
@@ -902,7 +902,7 @@ class MockGitOps:
         Returns:
             Number deleted
         """
-        prefix = f"zerg/{feature}/"
+        prefix = f"mahabharatha/{feature}/"
         to_delete = [b for b in self._branches if b.startswith(prefix)]
         for branch in to_delete:
             self.delete_branch(branch, force)
@@ -1522,9 +1522,9 @@ def temporary_git_state(
     automatically reset when the context exits.
 
     Example:
-        branches = ["main", "zerg/test/worker-0"]
+        branches = ["main", "mahabharatha/test/worker-0"]
         with temporary_git_state(branches, "main") as git:
-            git.checkout("zerg/test/worker-0")
+            git.checkout("mahabharatha/test/worker-0")
             ...
 
     Args:
@@ -1637,7 +1637,7 @@ def create_worker_states(
             worker_id=i,
             status=status,
             port=49152 + i,
-            branch=f"zerg/{feature}/worker-{i}",
+            branch=f"mahabharatha/{feature}/worker-{i}",
             started_at=datetime.now(),
         )
     return workers
@@ -1719,7 +1719,7 @@ def create_mock_merge_result(
     return MergeFlowResult(
         success=success,
         level=level,
-        source_branches=["zerg/test/worker-0", "zerg/test/worker-1"],
+        source_branches=["mahabharatha/test/worker-0", "mahabharatha/test/worker-1"],
         target_branch="main",
         merge_commit=commit if success else None,
         error=error,

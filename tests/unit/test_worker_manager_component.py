@@ -4,17 +4,17 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from zerg.config import ZergConfig
-from zerg.constants import WorkerStatus
-from zerg.launchers import WorkerLauncher
-from zerg.levels import LevelController
-from zerg.parser import TaskParser
-from zerg.plugins import PluginRegistry
-from zerg.ports import PortAllocator
-from zerg.state import StateManager
-from zerg.types import WorkerState
-from zerg.worker_manager import WorkerManager
-from zerg.worktree import WorktreeManager
+from mahabharatha.config import ZergConfig
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.launchers import WorkerLauncher
+from mahabharatha.levels import LevelController
+from mahabharatha.parser import TaskParser
+from mahabharatha.plugins import PluginRegistry
+from mahabharatha.ports import PortAllocator
+from mahabharatha.state import StateManager
+from mahabharatha.types import WorkerState
+from mahabharatha.worker_manager import WorkerManager
+from mahabharatha.worktree import WorktreeManager
 
 
 @pytest.fixture
@@ -24,7 +24,7 @@ def mock_config():
     config.workers.timeout_minutes = 30
     config.workers.retry_attempts = 3
     config.logging = MagicMock()
-    config.logging.directory = ".zerg/logs"
+    config.logging.directory = ".mahabharatha/logs"
     return config
 
 
@@ -54,7 +54,7 @@ def mock_deps(mock_config, tmp_path):
     worktrees = MagicMock(spec=WorktreeManager)
     wt_info = MagicMock()
     wt_info.path = tmp_path / "worktree"
-    wt_info.branch = "zerg/test/worker-0"
+    wt_info.branch = "mahabharatha/test/worker-0"
     worktrees.create.return_value = wt_info
     worktrees.get_worktree_path.return_value = tmp_path / "worktree"
 

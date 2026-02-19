@@ -1,4 +1,4 @@
-"""Unit tests for zerg.doc_engine modules (thinned).
+"""Unit tests for mahabharatha.doc_engine modules (thinned).
 
 Covers: ComponentDetector, SymbolExtractor, DependencyMapper,
 MermaidGenerator, DocRenderer, CrossRefBuilder, SidebarGenerator.
@@ -12,13 +12,13 @@ from pathlib import Path
 
 import pytest
 
-from zerg.doc_engine.crossref import CrossRefBuilder, GlossaryEntry
-from zerg.doc_engine.dependencies import DependencyMapper, ModuleNode
-from zerg.doc_engine.detector import ComponentDetector, ComponentType
-from zerg.doc_engine.extractor import SymbolExtractor, SymbolTable
-from zerg.doc_engine.mermaid import MermaidGenerator
-from zerg.doc_engine.renderer import DocRenderer
-from zerg.doc_engine.sidebar import SidebarConfig, SidebarGenerator, SidebarSection
+from mahabharatha.doc_engine.crossref import CrossRefBuilder, GlossaryEntry
+from mahabharatha.doc_engine.dependencies import DependencyMapper, ModuleNode
+from mahabharatha.doc_engine.detector import ComponentDetector, ComponentType
+from mahabharatha.doc_engine.extractor import SymbolExtractor, SymbolTable
+from mahabharatha.doc_engine.mermaid import MermaidGenerator
+from mahabharatha.doc_engine.renderer import DocRenderer
+from mahabharatha.doc_engine.sidebar import SidebarConfig, SidebarGenerator, SidebarSection
 
 # ======================================================================
 # Fixtures

@@ -19,7 +19,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.testing import CliRunner
 
-from zerg.commands.review import (
+from mahabharatha.commands.review import (
     CodeAnalyzer,
     ReviewCommand,
     ReviewConfig,
@@ -344,9 +344,9 @@ class TestReviewCLI:
         assert "mode" in result.output
         assert "files" in result.output
 
-    @patch("zerg.commands.review._collect_files")
-    @patch("zerg.commands.review.ReviewCommand")
-    @patch("zerg.commands.review.console")
+    @patch("mahabharatha.commands.review._collect_files")
+    @patch("mahabharatha.commands.review.ReviewCommand")
+    @patch("mahabharatha.commands.review.console")
     def test_review_full_mode(
         self,
         mock_console: MagicMock,
@@ -367,11 +367,11 @@ class TestReviewCLI:
 
         assert result.exit_code == 0
 
-    @patch("zerg.commands.review.console")
+    @patch("mahabharatha.commands.review.console")
     def test_review_keyboard_interrupt(self, mock_console: MagicMock) -> None:
         """Test review handles KeyboardInterrupt."""
         with patch(
-            "zerg.commands.review._collect_files",
+            "mahabharatha.commands.review._collect_files",
             side_effect=KeyboardInterrupt,
         ):
             runner = CliRunner()
@@ -379,11 +379,11 @@ class TestReviewCLI:
 
             assert result.exit_code == 130
 
-    @patch("zerg.commands.review.console")
+    @patch("mahabharatha.commands.review.console")
     def test_review_generic_exception(self, mock_console: MagicMock) -> None:
         """Test review handles generic exception."""
         with patch(
-            "zerg.commands.review._collect_files",
+            "mahabharatha.commands.review._collect_files",
             side_effect=RuntimeError("Unexpected error"),
         ):
             runner = CliRunner()

@@ -11,7 +11,7 @@
 
 **Do not file public GitHub issues for security vulnerabilities.**
 
-Report vulnerabilities privately through [GitHub Security Advisories](https://github.com/rocklambros/zerg/security/advisories/new).
+Report vulnerabilities privately through [GitHub Security Advisories](https://github.com/rocklambros/mahabharatha/security/advisories/new).
 
 ### What to Include
 
@@ -51,13 +51,13 @@ We credit responsible disclosure in our CHANGELOG. If you'd like to be credited,
 
 ## Security Architecture
 
-ZERG integrates security rules from [OWASP Top 10 2025](https://owasp.org/Top10/) and language-specific rulesets (Python, JavaScript, Docker). Rules are auto-fetched during project initialization and filtered per file type to minimize token overhead. See [docs/context-engineering.md](docs/context-engineering.md) for details.
+Mahabharatha integrates security rules from [OWASP Top 10 2025](https://owasp.org/Top10/) and language-specific rulesets (Python, JavaScript, Docker). Rules are auto-fetched during project initialization and filtered per file type to minimize token overhead. See [docs/context-engineering.md](docs/context-engineering.md) for details.
 
 ## Key Security Controls
 
 ### Subprocess Execution
 
-ZERG spawns subprocess commands with the following protections:
+Mahabharatha spawns subprocess commands with the following protections:
 
 - **Argument validation**: Worker tasks pass arguments through the Task system, preventing shell metacharacter injection
 - **No shell=True by default**: Commands execute directly without shell interpretation
@@ -78,7 +78,7 @@ See [.claude/rules/security/containers/docker/CLAUDE.md](.claude/rules/security/
 
 ### Host Filesystem Access
 
-ZERG mounts host directories into containers with these restrictions:
+Mahabharatha mounts host directories into containers with these restrictions:
 
 - **Explicit mount paths**: Only directories specified in task configuration are mounted
 - **No root mounts**: Never mount `/`, `/etc`, `/sys`, or `/proc` directories
@@ -154,7 +154,7 @@ if not requested.is_relative_to(safe_dir):
 
 ## Compliance
 
-ZERG security practices align with:
+Mahabharatha security practices align with:
 
 - **OWASP Top 10 2025**: Core web security vulnerabilities addressed
 - **CIS Docker Benchmark**: Container hardening guidelines followed
@@ -217,7 +217,7 @@ Before each release, validate:
 python -m pytest tests/security/ -v
 
 # Check for common vulnerabilities
-bandit -r zerg/ -f json
+bandit -r mahabharatha/ -f json
 
 # Lint Dockerfiles
 hadolint Dockerfile
@@ -229,7 +229,7 @@ npm audit
 
 ## Dependencies and Supply Chain
 
-ZERG depends on:
+Mahabharatha depends on:
 
 - **Python libraries**: Validated against `pip-audit` for known vulnerabilities
 - **Base Docker images**: Alpine and distroless images used for minimal attack surface
@@ -239,4 +239,4 @@ All dependencies are pinned to exact versions in lockfiles. Updates validated th
 
 ## Questions or Concerns?
 
-For security clarification (non-disclosure), file a discussion in [GitHub Discussions](https://github.com/rocklambros/zerg/discussions).
+For security clarification (non-disclosure), file a discussion in [GitHub Discussions](https://github.com/rocklambros/mahabharatha/discussions).

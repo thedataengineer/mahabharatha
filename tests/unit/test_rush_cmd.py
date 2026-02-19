@@ -22,8 +22,8 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.testing import CliRunner
 
-from zerg.cli import cli
-from zerg.commands.rush import find_task_graph, show_dry_run, show_summary
+from mahabharatha.cli import cli
+from mahabharatha.commands.rush import find_task_graph, show_dry_run, show_summary
 
 if TYPE_CHECKING:
     from pytest import MonkeyPatch
@@ -251,7 +251,7 @@ class TestRushCommand:
     def test_no_task_graph_error(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
         """Test rush fails when no task graph found."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
         runner = CliRunner()
         result = runner.invoke(cli, ["rush"])
         assert result.exit_code == 1
@@ -261,7 +261,7 @@ class TestRushCommand:
         """Test rush --dry-run."""
         monkeypatch.chdir(tmp_path)
         runner = CliRunner()
-        with patch("zerg.commands.rush.ZergConfig") as mock_config_cls:
+        with patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls:
             mock_config_cls.load.return_value = MagicMock()
             result = runner.invoke(cli, ["rush", "--task-graph", str(task_graph_file_setup), "--dry-run"])
         assert "Validation" in result.output
@@ -270,7 +270,7 @@ class TestRushCommand:
         """Test rush --workers option."""
         monkeypatch.chdir(tmp_path)
         runner = CliRunner()
-        with patch("zerg.commands.rush.ZergConfig") as mock_config_cls:
+        with patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls:
             mock_config_cls.load.return_value = MagicMock()
             result = runner.invoke(
                 cli, ["rush", "--task-graph", str(task_graph_file_setup), "--dry-run", "--workers", "10"]
@@ -290,7 +290,7 @@ class TestRushExecution:
         """Test rush aborts when user declines."""
         monkeypatch.chdir(tmp_path)
         runner = CliRunner()
-        with patch("zerg.commands.rush.ZergConfig") as mock_config_cls:
+        with patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls:
             mock_config_cls.load.return_value = MagicMock()
             result = runner.invoke(cli, ["rush", "--task-graph", str(task_graph_file_setup)], input="n\n")
         assert "Aborted" in result.output
@@ -302,8 +302,8 @@ class TestRushExecution:
         monkeypatch.chdir(tmp_path)
         runner = CliRunner()
         with (
-            patch("zerg.commands.rush.ZergConfig") as mock_config_cls,
-            patch("zerg.commands.rush.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.rush.Orchestrator") as mock_orch_cls,
         ):
             mock_config_cls.load.return_value = MagicMock()
             mock_orch_cls.return_value = mock_orchestrator
@@ -317,8 +317,8 @@ class TestRushExecution:
         monkeypatch.chdir(tmp_path)
         runner = CliRunner()
         with (
-            patch("zerg.commands.rush.ZergConfig") as mock_config_cls,
-            patch("zerg.commands.rush.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.rush.Orchestrator") as mock_orch_cls,
         ):
             mock_config_cls.load.return_value = MagicMock()
             mock_orch_cls.return_value = mock_orchestrator
@@ -332,8 +332,8 @@ class TestRushExecution:
         monkeypatch.chdir(tmp_path)
         runner = CliRunner()
         with (
-            patch("zerg.commands.rush.ZergConfig") as mock_config_cls,
-            patch("zerg.commands.rush.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.rush.Orchestrator") as mock_orch_cls,
         ):
             mock_config_cls.load.return_value = MagicMock()
             mock_orch_cls.return_value = mock_orchestrator
@@ -351,8 +351,8 @@ class TestRushExecution:
         monkeypatch.chdir(tmp_path)
         runner = CliRunner()
         with (
-            patch("zerg.commands.rush.ZergConfig") as mock_config_cls,
-            patch("zerg.commands.rush.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.rush.Orchestrator") as mock_orch_cls,
         ):
             mock_config_cls.load.return_value = MagicMock()
             mock_orch_cls.return_value = mock_orchestrator_incomplete
@@ -375,8 +375,8 @@ class TestRushErrorHandling:
         mock_orch.start.side_effect = KeyboardInterrupt()
         runner = CliRunner()
         with (
-            patch("zerg.commands.rush.ZergConfig") as mock_config_cls,
-            patch("zerg.commands.rush.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.rush.Orchestrator") as mock_orch_cls,
         ):
             mock_config_cls.load.return_value = MagicMock()
             mock_orch_cls.return_value = mock_orch
@@ -390,8 +390,8 @@ class TestRushErrorHandling:
         mock_orch.start.side_effect = RuntimeError("Something went wrong")
         runner = CliRunner()
         with (
-            patch("zerg.commands.rush.ZergConfig") as mock_config_cls,
-            patch("zerg.commands.rush.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.rush.Orchestrator") as mock_orch_cls,
         ):
             mock_config_cls.load.return_value = MagicMock()
             mock_orch_cls.return_value = mock_orch
@@ -406,7 +406,7 @@ class TestRushErrorHandling:
         tasks_dir.mkdir(parents=True)
         (tasks_dir / "task-graph.json").write_text('{"invalid": "graph"}')
         runner = CliRunner()
-        with patch("zerg.commands.rush.ZergConfig") as mock_config_cls:
+        with patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls:
             mock_config_cls.load.return_value = MagicMock()
             result = runner.invoke(cli, ["rush", "--dry-run"])
         assert result.exit_code == 1
@@ -429,8 +429,8 @@ class TestRushDryRunEnhanced:
         mock_sim.return_value.run.return_value = mock_report
         runner = CliRunner()
         with (
-            patch("zerg.commands.rush.ZergConfig") as mock_config_cls,
-            patch("zerg.dryrun.DryRunSimulator", mock_sim) as _,
+            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.dryrun.DryRunSimulator", mock_sim) as _,
         ):
             mock_config_cls.load.return_value = MagicMock()
             result = runner.invoke(cli, ["rush", "--task-graph", str(task_graph_file_setup), "--dry-run"])
@@ -446,8 +446,8 @@ class TestRushDryRunEnhanced:
         mock_sim.return_value.run.return_value = mock_report
         runner = CliRunner()
         with (
-            patch("zerg.commands.rush.ZergConfig") as mock_config_cls,
-            patch("zerg.dryrun.DryRunSimulator", mock_sim) as _,
+            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.dryrun.DryRunSimulator", mock_sim) as _,
         ):
             mock_config_cls.load.return_value = MagicMock()
             result = runner.invoke(
@@ -465,8 +465,8 @@ class TestRushDryRunEnhanced:
         mock_sim.return_value.run.return_value = mock_report
         runner = CliRunner()
         with (
-            patch("zerg.commands.rush.ZergConfig") as mock_config_cls,
-            patch("zerg.dryrun.DryRunSimulator", mock_sim) as _,
+            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.dryrun.DryRunSimulator", mock_sim) as _,
         ):
             mock_config_cls.load.return_value = MagicMock()
             result = runner.invoke(cli, ["rush", "--task-graph", str(task_graph_file_setup), "--dry-run"])
@@ -493,9 +493,9 @@ class TestRushBacklog:
         )
         runner = CliRunner()
         with (
-            patch("zerg.commands.rush.ZergConfig") as mock_config_cls,
-            patch("zerg.commands.rush.Orchestrator") as mock_orch_cls,
-            patch("zerg.commands.rush.update_backlog_task_status") as mock_update,
+            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.rush.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.rush.update_backlog_task_status") as mock_update,
         ):
             mock_config_cls.load.return_value = MagicMock()
             mock_orch_cls.return_value = mock_orchestrator
@@ -511,8 +511,8 @@ class TestRushBacklog:
         monkeypatch.chdir(tmp_path)
         runner = CliRunner()
         with (
-            patch("zerg.commands.rush.ZergConfig") as mock_config_cls,
-            patch("zerg.commands.rush.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.rush.Orchestrator") as mock_orch_cls,
         ):
             mock_config_cls.load.return_value = MagicMock()
             mock_orch_cls.return_value = mock_orchestrator

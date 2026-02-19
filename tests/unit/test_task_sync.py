@@ -6,9 +6,9 @@ from pathlib import Path
 
 import pytest
 
-from zerg.constants import TaskStatus
-from zerg.state import StateManager
-from zerg.task_sync import ClaudeTask, TaskSyncBridge, load_design_manifest
+from mahabharatha.constants import TaskStatus
+from mahabharatha.state import StateManager
+from mahabharatha.task_sync import ClaudeTask, TaskSyncBridge, load_design_manifest
 
 
 class TestClaudeTask:

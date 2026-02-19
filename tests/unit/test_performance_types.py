@@ -1,10 +1,10 @@
-"""Tests for zerg.performance.types module."""
+"""Tests for mahabharatha.performance.types module."""
 
 from __future__ import annotations
 
 import pytest
 
-from zerg.performance.types import (
+from mahabharatha.performance.types import (
     CategoryScore,
     DetectedStack,
     PerformanceFinding,

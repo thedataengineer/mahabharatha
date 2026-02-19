@@ -1,4 +1,4 @@
-"""Unit tests for zerg/commands/analyze.py - thinned per TSR2-L3-002."""
+"""Unit tests for mahabharatha/commands/analyze.py - thinned per TSR2-L3-002."""
 
 from __future__ import annotations
 
@@ -9,9 +9,9 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.testing import CliRunner
 
-from zerg.cli import cli
-from zerg.command_executor import CommandValidationError
-from zerg.commands.analyze import (
+from mahabharatha.cli import cli
+from mahabharatha.command_executor import CommandValidationError
+from mahabharatha.commands.analyze import (
     AnalysisResult,
     AnalyzeCommand,
     AnalyzeConfig,
@@ -356,7 +356,7 @@ class TestAnalyzeCLI:
         """Test analyze returns exit code 1 on failure."""
         monkeypatch.chdir(tmp_path)
         (tmp_path / "test.py").write_text("# test")
-        with patch("zerg.commands.analyze.AnalyzeCommand") as mock_cmd_class:
+        with patch("mahabharatha.commands.analyze.AnalyzeCommand") as mock_cmd_class:
             mock_cmd = MagicMock()
             mock_cmd.run.return_value = [AnalysisResult(CheckType.SECURITY, False, ["Issue"], 50.0)]
             mock_cmd.overall_passed.return_value = False
@@ -369,7 +369,7 @@ class TestAnalyzeCLI:
         """Test analyze handles KeyboardInterrupt gracefully."""
         monkeypatch.chdir(tmp_path)
         (tmp_path / "test.py").write_text("# test")
-        with patch("zerg.commands.analyze.AnalyzeCommand", side_effect=KeyboardInterrupt()):
+        with patch("mahabharatha.commands.analyze.AnalyzeCommand", side_effect=KeyboardInterrupt()):
             runner = CliRunner()
             result = runner.invoke(cli, ["analyze"])
             assert result.exit_code == 130
@@ -378,7 +378,7 @@ class TestAnalyzeCLI:
         """Test analyze handles general exceptions."""
         monkeypatch.chdir(tmp_path)
         (tmp_path / "test.py").write_text("# test")
-        with patch("zerg.commands.analyze.AnalyzeCommand", side_effect=RuntimeError("Unexpected error")):
+        with patch("mahabharatha.commands.analyze.AnalyzeCommand", side_effect=RuntimeError("Unexpected error")):
             runner = CliRunner()
             result = runner.invoke(cli, ["analyze"])
             assert result.exit_code == 1

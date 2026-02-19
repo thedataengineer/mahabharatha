@@ -4,9 +4,9 @@ import threading
 
 import pytest
 
-from zerg.constants import WorkerStatus
-from zerg.types import WorkerState
-from zerg.worker_registry import WorkerRegistry
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.types import WorkerState
+from mahabharatha.worker_registry import WorkerRegistry
 
 
 def _make_worker(

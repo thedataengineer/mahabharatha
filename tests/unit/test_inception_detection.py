@@ -3,9 +3,9 @@
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from zerg.charter import ProjectCharter
-from zerg.commands.init import is_empty_project
-from zerg.inception import (
+from mahabharatha.charter import ProjectCharter
+from mahabharatha.commands.init import is_empty_project
+from mahabharatha.inception import (
     _build_template_context,
     _evaluate_condition,
     _init_git_repo,
@@ -18,7 +18,7 @@ from zerg.inception import (
     run_inception_mode,
     scaffold_project,
 )
-from zerg.tech_selector import TechStack
+from mahabharatha.tech_selector import TechStack
 
 # ---------------------------------------------------------------------------
 # Existing tests for is_empty_project (preserved)
@@ -426,12 +426,12 @@ class TestNameConversion:
 class TestRunInceptionMode:
     """Tests for the full inception orchestration workflow."""
 
-    @patch("zerg.inception._show_inception_summary")
-    @patch("zerg.inception._init_git_repo")
-    @patch("zerg.inception.write_project_md")
-    @patch("zerg.inception.scaffold_project")
-    @patch("zerg.inception.select_technology")
-    @patch("zerg.inception.gather_requirements")
+    @patch("mahabharatha.inception._show_inception_summary")
+    @patch("mahabharatha.inception._init_git_repo")
+    @patch("mahabharatha.inception.write_project_md")
+    @patch("mahabharatha.inception.scaffold_project")
+    @patch("mahabharatha.inception.select_technology")
+    @patch("mahabharatha.inception.gather_requirements")
     def test_successful_run(
         self,
         mock_gather,
@@ -459,9 +459,9 @@ class TestRunInceptionMode:
         mock_init_git.assert_called_once()
         mock_summary.assert_called_once_with(charter, stack, {"main.py": Path("main.py")})
 
-    @patch("zerg.inception.scaffold_project")
-    @patch("zerg.inception.select_technology")
-    @patch("zerg.inception.gather_requirements")
+    @patch("mahabharatha.inception.scaffold_project")
+    @patch("mahabharatha.inception.select_technology")
+    @patch("mahabharatha.inception.gather_requirements")
     def test_empty_scaffold_shows_warning(
         self,
         mock_gather,
@@ -474,21 +474,21 @@ class TestRunInceptionMode:
         mock_scaffold.return_value = {}
 
         with (
-            patch("zerg.inception.write_project_md", return_value=Path("PROJECT.md")),
-            patch("zerg.inception._init_git_repo"),
-            patch("zerg.inception._show_inception_summary"),
+            patch("mahabharatha.inception.write_project_md", return_value=Path("PROJECT.md")),
+            patch("mahabharatha.inception._init_git_repo"),
+            patch("mahabharatha.inception._show_inception_summary"),
         ):
             result = run_inception_mode()
 
         assert result is True
 
-    @patch("zerg.inception.gather_requirements", side_effect=KeyboardInterrupt)
+    @patch("mahabharatha.inception.gather_requirements", side_effect=KeyboardInterrupt)
     def test_keyboard_interrupt_returns_false(self, mock_gather) -> None:
         """KeyboardInterrupt during inception returns False (lines 417-418)."""
         result = run_inception_mode()
         assert result is False
 
-    @patch("zerg.inception.gather_requirements", side_effect=RuntimeError("boom"))
+    @patch("mahabharatha.inception.gather_requirements", side_effect=RuntimeError("boom"))
     def test_exception_returns_false(self, mock_gather) -> None:
         """Unhandled exception during inception returns False (lines 420-423)."""
         result = run_inception_mode()
@@ -510,7 +510,7 @@ class TestInitGitRepo:
         # Should not raise or call subprocess
         _init_git_repo()
 
-    @patch("zerg.inception.subprocess.run")
+    @patch("mahabharatha.inception.subprocess.run")
     def test_git_init_success(self, mock_run, tmp_path: Path, monkeypatch) -> None:
         """Successful git init and initial commit (lines 432-451)."""
         monkeypatch.chdir(tmp_path)
@@ -519,7 +519,7 @@ class TestInitGitRepo:
         # Should call git init, git add, git commit
         assert mock_run.call_count == 3
 
-    @patch("zerg.inception.subprocess.run")
+    @patch("mahabharatha.inception.subprocess.run")
     def test_git_init_called_process_error(self, mock_run, tmp_path: Path, monkeypatch) -> None:
         """CalledProcessError is caught gracefully (lines 452-454)."""
         import subprocess as sp
@@ -529,7 +529,7 @@ class TestInitGitRepo:
         # Should not raise
         _init_git_repo()
 
-    @patch("zerg.inception.subprocess.run", side_effect=FileNotFoundError)
+    @patch("mahabharatha.inception.subprocess.run", side_effect=FileNotFoundError)
     def test_git_not_found(self, mock_run, tmp_path: Path, monkeypatch) -> None:
         """FileNotFoundError when git is missing is caught (lines 455-456)."""
         monkeypatch.chdir(tmp_path)

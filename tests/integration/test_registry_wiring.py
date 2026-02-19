@@ -17,10 +17,10 @@ import threading
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from zerg.constants import WorkerStatus
-from zerg.orchestrator import Orchestrator
-from zerg.types import WorkerState
-from zerg.worker_registry import WorkerRegistry
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.orchestrator import Orchestrator
+from mahabharatha.types import WorkerState
+from mahabharatha.worker_registry import WorkerRegistry
 
 # =============================================================================
 # Helpers
@@ -40,17 +40,17 @@ class _OrchestratorDepsPatcher:
 
     def __enter__(self) -> dict[str, MagicMock]:
         self._patches = [
-            patch("zerg.orchestrator.StateManager"),
-            patch("zerg.orchestrator.LevelController"),
-            patch("zerg.orchestrator.TaskParser"),
-            patch("zerg.orchestrator.WorktreeManager"),
-            patch("zerg.orchestrator.PortAllocator"),
-            patch("zerg.orchestrator.MergeCoordinator"),
-            patch("zerg.orchestrator.SubprocessLauncher"),
-            patch("zerg.orchestrator.GateRunner"),
-            patch("zerg.orchestrator.ContainerManager"),
-            patch("zerg.orchestrator.TaskSyncBridge"),
-            patch("zerg.orchestrator.MetricsCollector"),
+            patch("mahabharatha.orchestrator.StateManager"),
+            patch("mahabharatha.orchestrator.LevelController"),
+            patch("mahabharatha.orchestrator.TaskParser"),
+            patch("mahabharatha.orchestrator.WorktreeManager"),
+            patch("mahabharatha.orchestrator.PortAllocator"),
+            patch("mahabharatha.orchestrator.MergeCoordinator"),
+            patch("mahabharatha.orchestrator.SubprocessLauncher"),
+            patch("mahabharatha.orchestrator.GateRunner"),
+            patch("mahabharatha.orchestrator.ContainerManager"),
+            patch("mahabharatha.orchestrator.TaskSyncBridge"),
+            patch("mahabharatha.orchestrator.MetricsCollector"),
         ]
         mocks = [p.start() for p in self._patches]
 
@@ -97,7 +97,7 @@ class _OrchestratorDepsPatcher:
         worktree_mock = mocks[3].return_value
         wt_info = MagicMock()
         wt_info.path = Path("/tmp/test-worktree")
-        wt_info.branch = "zerg/test/worker-0"
+        wt_info.branch = "mahabharatha/test/worker-0"
         worktree_mock.create.return_value = wt_info
 
         return {
@@ -175,7 +175,7 @@ class TestWorkerManagerRegisterPropagates:
                 worker_id=0,
                 status=WorkerStatus.RUNNING,
                 port=49152,
-                branch="zerg/test/worker-0",
+                branch="mahabharatha/test/worker-0",
             )
             orch.registry.register(0, worker)
 
@@ -193,7 +193,7 @@ class TestWorkerManagerRegisterPropagates:
                 worker_id=1,
                 status=WorkerStatus.INITIALIZING,
                 port=49153,
-                branch="zerg/test/worker-1",
+                branch="mahabharatha/test/worker-1",
             )
             orch.registry.register(1, worker)
 
@@ -210,7 +210,7 @@ class TestWorkerManagerRegisterPropagates:
                 worker_id=0,
                 status=WorkerStatus.RUNNING,
                 port=49152,
-                branch="zerg/test/worker-0",
+                branch="mahabharatha/test/worker-0",
             )
             orch.registry.register(0, worker)
             assert 0 in orch._worker_manager._workers
@@ -230,7 +230,7 @@ class TestWorkerManagerRegisterPropagates:
                 worker_id=0,
                 status=WorkerStatus.INITIALIZING,
                 port=49152,
-                branch="zerg/test/worker-0",
+                branch="mahabharatha/test/worker-0",
             )
             orch.registry.register(0, worker)
 
@@ -263,7 +263,7 @@ class TestConcurrentAccessThreadSafety:
                         worker_id=i,
                         status=WorkerStatus.RUNNING,
                         port=49152 + i,
-                        branch=f"zerg/test/worker-{i}",
+                        branch=f"mahabharatha/test/worker-{i}",
                     )
                     registry.register(i, worker)
                 except Exception as e:  # noqa: BLE001 — intentional: concurrency test; thread safety validation
@@ -307,7 +307,7 @@ class TestConcurrentAccessThreadSafety:
                     worker_id=i,
                     status=WorkerStatus.RUNNING,
                     port=49152 + i,
-                    branch=f"zerg/test/worker-{i}",
+                    branch=f"mahabharatha/test/worker-{i}",
                 ),
             )
 
@@ -327,7 +327,7 @@ class TestConcurrentAccessThreadSafety:
                             worker_id=i,
                             status=WorkerStatus.INITIALIZING,
                             port=49200 + i,
-                            branch=f"zerg/test/new-{i}",
+                            branch=f"mahabharatha/test/new-{i}",
                         ),
                     )
                 except Exception as e:  # noqa: BLE001 — intentional: concurrency test; thread safety validation
@@ -361,7 +361,7 @@ class TestConcurrentAccessThreadSafety:
                 worker_id=0,
                 status=WorkerStatus.INITIALIZING,
                 port=49152,
-                branch="zerg/test/worker-0",
+                branch="mahabharatha/test/worker-0",
             ),
         )
 
@@ -414,7 +414,7 @@ class TestFullOrchestratorInitWithRegistry:
 
     def test_orchestrator_init_with_custom_config(self) -> None:
         """Orchestrator init with custom config still uses WorkerRegistry."""
-        from zerg.config import ZergConfig
+        from mahabharatha.config import ZergConfig
 
         with _patch_orchestrator_deps():
             config = ZergConfig()
@@ -441,7 +441,7 @@ class TestFullOrchestratorInitWithRegistry:
                 status=WorkerStatus.RUNNING,
                 current_task="TASK-001",
                 port=49152,
-                branch="zerg/test/worker-0",
+                branch="mahabharatha/test/worker-0",
             )
             orch.registry.register(0, worker)
 
@@ -465,7 +465,7 @@ class TestFullOrchestratorInitWithRegistry:
                         worker_id=i,
                         status=WorkerStatus.RUNNING,
                         port=49152 + i,
-                        branch=f"zerg/test/worker-{i}",
+                        branch=f"mahabharatha/test/worker-{i}",
                     ),
                 )
 

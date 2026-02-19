@@ -6,8 +6,8 @@ Tests covering task status retrieval, transitions, timestamps, duration, and fil
 from datetime import datetime
 from pathlib import Path
 
-from zerg.constants import TaskStatus
-from zerg.state import StateManager
+from mahabharatha.constants import TaskStatus
+from mahabharatha.state import StateManager
 
 
 class TestGetTaskStatusEdgeCases:

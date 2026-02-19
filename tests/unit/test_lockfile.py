@@ -1,4 +1,4 @@
-"""Tests for advisory lockfile functions in zerg.commands._utils."""
+"""Tests for advisory lockfile functions in mahabharatha.commands._utils."""
 
 import os
 import time
@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 import pytest
 
-from zerg.commands._utils import acquire_feature_lock, check_feature_lock, release_feature_lock
+from mahabharatha.commands._utils import acquire_feature_lock, check_feature_lock, release_feature_lock
 
 
 class TestAcquireFeatureLock:
@@ -115,7 +115,7 @@ class TestAcquireFeatureLock:
 
         # At the boundary (time.time() - ts == 7200), the condition > 7200 is False
         # so the lock should be considered active
-        with patch("zerg.commands._utils.time") as mock_time:
+        with patch("mahabharatha.commands._utils.time") as mock_time:
             mock_time.time.return_value = current_time
             result = acquire_feature_lock(feature, gsd_dir=gsd_dir)
 
@@ -131,7 +131,7 @@ class TestAcquireFeatureLock:
         lock_dir = tmp_path / "specs" / feature
         lock_dir.mkdir(parents=True)
 
-        with patch("zerg.commands._utils.os.open", side_effect=FileExistsError):
+        with patch("mahabharatha.commands._utils.os.open", side_effect=FileExistsError):
             result = acquire_feature_lock(feature, gsd_dir=gsd_dir)
 
         assert result is False
@@ -294,7 +294,7 @@ class TestCheckFeatureLock:
         lock_timestamp = current_time - 300  # 5 minutes ago
         lock_path.write_text(f"42:{lock_timestamp}")
 
-        with patch("zerg.commands._utils.time") as mock_time:
+        with patch("mahabharatha.commands._utils.time") as mock_time:
             mock_time.time.return_value = current_time
             result = check_feature_lock(feature, gsd_dir=gsd_dir)
 

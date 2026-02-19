@@ -13,9 +13,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from zerg.constants import GateResult, MergeStatus
-from zerg.merge import MergeFlowResult
-from zerg.types import GateRunResult, MergeResult
+from mahabharatha.constants import GateResult, MergeStatus
+from mahabharatha.merge import MergeFlowResult
+from mahabharatha.types import GateRunResult, MergeResult
 
 
 @dataclass
@@ -438,7 +438,7 @@ class MockMergeCoordinator:
             Staging branch name
         """
         self._current_level = level
-        return f"zerg/{self.feature}/staging"
+        return f"mahabharatha/{self.feature}/staging"
 
     def run_pre_merge_gates(
         self,
@@ -523,7 +523,7 @@ class MockMergeCoordinator:
         Raises:
             MergeConflictError simulation via return value with CONFLICT status
         """
-        from zerg.exceptions import MergeConflictError
+        from mahabharatha.exceptions import MergeConflictError
 
         results = []
 

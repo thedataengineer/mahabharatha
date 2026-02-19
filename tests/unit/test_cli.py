@@ -3,7 +3,7 @@
 import pytest
 from click.testing import CliRunner
 
-from zerg.cli import cli
+from mahabharatha.cli import cli
 
 
 class TestCliGroup:
@@ -26,7 +26,7 @@ class TestCliGroup:
         result = runner.invoke(cli, ["--version"])
 
         assert result.exit_code == 0
-        assert "zerg" in result.output.lower()
+        assert "mahabharatha" in result.output.lower()
 
     def test_cli_verbose_flag_removed(self) -> None:
         """Test that removed --verbose flag is rejected."""

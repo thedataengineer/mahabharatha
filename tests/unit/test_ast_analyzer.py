@@ -11,7 +11,7 @@ from textwrap import dedent
 
 import pytest
 
-from zerg.ast_analyzer import (
+from mahabharatha.ast_analyzer import (
     ASTAnalyzer,
     ClassPattern,
     CodePatterns,
@@ -19,7 +19,7 @@ from zerg.ast_analyzer import (
     ImportPattern,
     analyze_directory,
 )
-from zerg.ast_cache import ASTCache
+from mahabharatha.ast_cache import ASTCache
 
 
 class TestImportPattern:

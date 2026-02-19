@@ -1,4 +1,4 @@
-"""Unit tests for zerg/launchers/base.py — WorkerLauncher ABC.
+"""Unit tests for mahabharatha/launchers/base.py — WorkerLauncher ABC.
 
 Covers: init defaults, get_handle, get_all_workers, terminate_all,
 get_status_summary, sync_state, terminate_async, wait_all_async,
@@ -11,9 +11,9 @@ import asyncio
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from zerg.constants import WorkerStatus
-from zerg.launcher_types import LauncherConfig, SpawnResult, WorkerHandle
-from zerg.launchers.base import WorkerLauncher
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.launcher_types import LauncherConfig, SpawnResult, WorkerHandle
+from mahabharatha.launchers.base import WorkerLauncher
 
 # ---------------------------------------------------------------------------
 # Concrete stub for testing the ABC
@@ -486,7 +486,7 @@ class TestSpawnWithRetryImpl:
 class TestSpawnWithRetrySync:
     """Tests for spawn_with_retry — sync wrapper using asyncio.run."""
 
-    @patch("zerg.launchers.base.time.sleep")
+    @patch("mahabharatha.launchers.base.time.sleep")
     def test_spawn_with_retry_succeeds_first_try(self, mock_sleep: MagicMock, tmp_path: Path) -> None:
         launcher = StubLauncher()
         result = launcher.spawn_with_retry(
@@ -500,7 +500,7 @@ class TestSpawnWithRetrySync:
         assert result.worker_id == 1
         mock_sleep.assert_not_called()
 
-    @patch("zerg.launchers.base.time.sleep")
+    @patch("mahabharatha.launchers.base.time.sleep")
     def test_spawn_with_retry_retries_on_failure(self, mock_sleep: MagicMock, tmp_path: Path) -> None:
         launcher = StubLauncher()
         # First call fails, second succeeds
@@ -522,7 +522,7 @@ class TestSpawnWithRetrySync:
         assert len(launcher.spawn_calls) == 2
         assert mock_sleep.call_count == 1
 
-    @patch("zerg.launchers.base.time.sleep")
+    @patch("mahabharatha.launchers.base.time.sleep")
     def test_spawn_with_retry_all_fail(self, mock_sleep: MagicMock, tmp_path: Path) -> None:
         launcher = StubLauncher()
         launcher.spawn_result_sequence = [

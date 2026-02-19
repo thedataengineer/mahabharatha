@@ -16,12 +16,12 @@ from unittest.mock import patch
 
 import pytest
 
-from zerg.commands.review import (
+from mahabharatha.commands.review import (
     CodeAnalyzer,
     ReviewCommand,
     ReviewResult,
 )
-from zerg.security import SecurityFinding, SecurityResult
+from mahabharatha.security import SecurityFinding, SecurityResult
 
 # =============================================================================
 # Test 1: Full pipeline shows 3 stages
@@ -239,7 +239,7 @@ class TestSecretsProduceFindings:
         secret_file = tmp_path / "config.py"
         secret_file.write_text('AWS_KEY = "AKIAIOSFODNN7EXAMPLE"\n')
 
-        from zerg.security import run_security_scan
+        from mahabharatha.security import run_security_scan
 
         result = run_security_scan(path=str(tmp_path), categories=["secret_detection"], git_history_depth=0)
         secret_findings = [f for f in result.findings if f.category == "secret_detection"]
@@ -250,7 +250,7 @@ class TestSecretsProduceFindings:
         secret_file = tmp_path / "settings.py"
         secret_file.write_text('password = "supersecretpassword123"\n')
 
-        from zerg.security import run_security_scan
+        from mahabharatha.security import run_security_scan
 
         result = run_security_scan(path=str(tmp_path), categories=["secret_detection"], git_history_depth=0)
         secret_findings = [f for f in result.findings if f.category == "secret_detection"]
@@ -262,7 +262,7 @@ class TestSecretsProduceFindings:
         # Use a pattern that triggers critical severity (AWS key)
         secret_file.write_text('key = "AKIAIOSFODNN7EXAMPLE"\n')
 
-        from zerg.security import run_security_scan
+        from mahabharatha.security import run_security_scan
 
         result = run_security_scan(path=str(tmp_path), categories=["secret_detection"], git_history_depth=0)
         critical_or_high = [
@@ -276,7 +276,7 @@ class TestSecretsProduceFindings:
         clean_file = tmp_path / "clean.py"
         clean_file.write_text("def add(a, b):\n    return a + b\n")
 
-        from zerg.security import run_security_scan
+        from mahabharatha.security import run_security_scan
 
         result = run_security_scan(path=str(tmp_path), categories=["secret_detection"], git_history_depth=0)
         secret_findings = [f for f in result.findings if f.category == "secret_detection"]

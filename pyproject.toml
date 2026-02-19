@@ -3,16 +3,16 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "zerg-ai"
-version = "0.3.2"
-description = "Parallel Claude Code execution system"
+name = "mahabharatha-ai"
+version = "0.4.0"
+description = "Mahabharatha: The Great War of Code Orchestration"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.12"
 authors = [
     {name = "rocklambros", email = "rocklambros@users.noreply.github.com"}
 ]
-keywords = ["claude", "parallel", "orchestration", "devcontainer", "workflow"]
+keywords = ["mahabharatha", "warrior", "orchestration", "devcontainer", "workflow"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -28,6 +28,7 @@ dependencies = [
     "pydantic>=2.0",
     "pyyaml>=6.0",
     "rich>=13.0",
+    "falkordb>=0.1.0",
 ]
 
 [project.optional-dependencies]
@@ -47,17 +48,17 @@ dev = [
 metrics = ["anthropic>=0.40.0"]
 performance = ["orjson>=3.9.0"]
 docs = ["mkdocs>=1.6", "mkdocs-material>=9.5"]
-all = ["zerg-ai[dev]", "zerg-ai[metrics]", "zerg-ai[performance]", "zerg-ai[docs]"]
+all = ["mahabharatha-ai[dev]", "mahabharatha-ai[metrics]", "mahabharatha-ai[performance]", "mahabharatha-ai[docs]"]
 
 [project.scripts]
-zerg = "zerg.cli:cli"
+mahabharatha = "mahabharatha.cli:cli"
 
 [project.urls]
-Homepage = "https://github.com/rocklambros/zerg"
-Documentation = "https://github.com/rocklambros/zerg/wiki"
-Repository = "https://github.com/rocklambros/zerg"
-Issues = "https://github.com/rocklambros/zerg/issues"
-Changelog = "https://github.com/rocklambros/zerg/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/rocklambros/mahabharatha"
+Documentation = "https://github.com/rocklambros/mahabharatha/wiki"
+Repository = "https://github.com/rocklambros/mahabharatha"
+Issues = "https://github.com/rocklambros/mahabharatha/issues"
+Changelog = "https://github.com/rocklambros/mahabharatha/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 where = ["."]

@@ -1,14 +1,14 @@
-"""Pressure tests for /zerg:create-command command."""
+"""Pressure tests for /mahabharatha:create-command command."""
 
 from pathlib import Path
 
 import pytest
 
-COMMAND_FILE = Path("zerg/data/commands/create-command.md")
+COMMAND_FILE = Path("mahabharatha/data/commands/create-command.md")
 
 
 class TestCreateCommand:
-    """Verify /zerg:create-command command behavior."""
+    """Verify /mahabharatha:create-command command behavior."""
 
     def test_command_file_exists(self):
         """Command file must exist."""
@@ -16,7 +16,7 @@ class TestCreateCommand:
 
     def test_passes_validation(self):
         """Command must pass validate_commands checks."""
-        from zerg.validate_commands import DEFAULT_COMMANDS_DIR, validate_task_references
+        from mahabharatha.validate_commands import DEFAULT_COMMANDS_DIR, validate_task_references
 
         passed, errors = validate_task_references(DEFAULT_COMMANDS_DIR)
         # Filter to just this command

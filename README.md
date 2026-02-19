@@ -1,18 +1,18 @@
-# ZERG
+# Mahabharatha
 
 <p align="center">
-  <img src="logo/zerg_logo.png" alt="ZERG Logo" width="450">
+  <img src="logo/mahabharatha_logo.png" alt="Mahabharatha Logo" width="450">
 </p>
 
 <p align="center">
-  <a href="https://pypi.org/project/zerg-ai/"><img src="https://img.shields.io/pypi/v/zerg-ai" alt="PyPI version"></a>
-  <a href="https://pypi.org/project/zerg-ai/"><img src="https://img.shields.io/pypi/pyversions/zerg-ai" alt="Python"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/rocklambros/zerg" alt="License"></a>
-  <a href="https://github.com/rocklambros/zerg/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/rocklambros/zerg/ci.yml?branch=main&label=CI" alt="CI"></a>
+  <a href="https://pypi.org/project/mahabharatha-ai/"><img src="https://img.shields.io/pypi/v/mahabharatha-ai" alt="PyPI version"></a>
+  <a href="https://pypi.org/project/mahabharatha-ai/"><img src="https://img.shields.io/pypi/pyversions/mahabharatha-ai" alt="Python"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/rocklambros/mahabharatha" alt="License"></a>
+  <a href="https://github.com/rocklambros/mahabharatha/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/rocklambros/mahabharatha/ci.yml?branch=main&label=CI" alt="CI"></a>
   <a href="#"><img src="https://img.shields.io/badge/coverage-50%25-yellow" alt="Coverage"></a>
 </p>
 
-**Zero-Effort Rapid Growth** — A parallel Claude Code execution system that coordinates multiple Claude Code instances to build software features simultaneously. ZERG auto-detects your tech stack, fetches security rules, generates dev containers, breaks features into atomic tasks with exclusive file ownership, and launches a swarm of zerglings to execute them in parallel.
+**Zero-Effort Rapid Growth** — A parallel Claude Code execution system that coordinates multiple Claude Code instances to build software features simultaneously. Mahabharatha auto-detects your tech stack, fetches security rules, generates dev containers, breaks features into atomic tasks with exclusive file ownership, and launches an Akshauhini of warriors to execute them in parallel.
 
 ---
 
@@ -28,36 +28,36 @@ Every time I started a new project with Claude Code, I found myself doing the sa
 
 I got tired of the repetition. So I built a system that handles all of it:
 
-**ZERG auto-detects your stack** and fetches stack-specific security rules (OWASP Top 10 2025, Python, JavaScript, Docker) from [TikiTribe/claude-secure-coding-rules](https://github.com/TikiTribe/claude-secure-coding-rules) — no manual CLAUDE.md maintenance.
+**Mahabharatha auto-detects your stack** and fetches stack-specific security rules (OWASP Top 10 2025, Python, JavaScript, Docker) from [TikiTribe/claude-secure-coding-rules](https://github.com/TikiTribe/claude-secure-coding-rules) — no manual CLAUDE.md maintenance.
 
-**ZERG generates dev containers** with your detected languages, MCP server configs, and authentication baked in — workers spin up in isolated Docker environments with a single flag.
+**Mahabharatha generates dev containers** with your detected languages, MCP server configs, and authentication baked in — workers spin up in isolated Docker environments with a single flag.
 
-**ZERG breaks features into parallel tasks** with exclusive file ownership, so 5-10 Claude Code instances work simultaneously without merge conflicts. A feature that takes one agent 2 hours takes a swarm 20 minutes.
+**Mahabharatha breaks features into parallel tasks** with exclusive file ownership, so 5-10 Claude Code instances work simultaneously without merge conflicts. A feature that takes one agent 2 hours takes an Akshauhini 20 minutes.
 
-**ZERG solves context rot** through spec-driven execution. Workers read specification files, not conversation history. Every zergling is stateless — crash one, restart it, and it picks up exactly where it left off.
+**Mahabharatha solves context rot** through spec-driven execution. Workers read specification files, not conversation history. Every warrior is stateless — crash one, restart it, and it picks up exactly where it left off.
 
-**ZERG engineers context** per worker. Large command files are split into core (~30%) and reference (~70%) segments. Security rules are filtered by file extension. Each task gets a scoped context budget instead of loading entire spec files. Workers use fewer tokens and stay focused.
+**Mahabharatha engineers context** per worker. Large command files are split into core (~30%) and reference (~70%) segments. Security rules are filtered by file extension. Each task gets a scoped context budget instead of loading entire spec files. Workers use fewer tokens and stay focused.
 
-The goal was simple: stop repeating myself and start shipping faster. ZERG is the result of wanting one command to set up security, containers, scaffolding, and parallel execution — then getting out of the way.
+The goal was simple: stop repeating myself and start shipping faster. Mahabharatha is the result of wanting one command to set up security, containers, scaffolding, and parallel execution — then getting out of the way.
 
 ---
 
 ## Quick Start (5 minutes)
 
 ```bash
-# Install ZERG
-pip install zerg-ai
+# Install Mahabharatha
+pip install mahabharatha-ai
 
 # Or install from source (contributors)
-git clone https://github.com/rocklambros/zerg.git && cd zerg
+git clone https://github.com/rocklambros/mahabharatha.git && cd mahabharatha
 pip install -e ".[dev]"
-zerg install  # Install slash commands into your project
+mahabharatha install  # Install slash commands into your project
 
 # Inside Claude Code:
-/zerg:init                    # Initialize project
-/zerg:plan my-feature         # Capture requirements
-/zerg:design                  # Generate architecture
-/zerg:rush --workers=5        # Launch the swarm
+/mahabharatha:init                    # Initialize project
+/mahabharatha:plan my-feature         # Capture requirements
+/mahabharatha:design                  # Generate architecture
+/mahabharatha:Kurukshetra --workers=5        # Launch the Akshauhini
 ```
 
 ---
@@ -68,7 +68,7 @@ zerg install  # Install slash commands into your project
 
 | Requirement | Check Command | Purpose |
 |-------------|---------------|---------|
-| Python 3.12+ | `python --version` | ZERG runtime |
+| Python 3.12+ | `python --version` | Mahabharatha runtime |
 | Git 2.x+ | `git --version` | Worktrees, branching |
 | Claude Code CLI | `claude --version` | Worker instances |
 | Docker 20.x+ | `docker info` | Container mode (optional) |
@@ -76,14 +76,14 @@ zerg install  # Install slash commands into your project
 ### Step 1: Install
 
 ```bash
-pip install zerg-ai
+pip install mahabharatha-ai
 ```
 
 ### Step 1b: Install from Source (Contributors)
 
 ```bash
-git clone https://github.com/rocklambros/zerg.git
-cd zerg
+git clone https://github.com/rocklambros/mahabharatha.git
+cd mahabharatha
 pip install -e ".[dev]"
 ```
 
@@ -96,29 +96,29 @@ pre-commit install
 ### Step 3: Verify Installation
 
 ```bash
-zerg --help
+mahabharatha --help
 ```
 
 ### Step 4: Install Slash Commands
 
-ZERG ships with 26 slash commands. Install them into your project:
+Mahabharatha ships with 26 slash commands. Install them into your project:
 
 ```bash
 cd your-project
-zerg install          # Install to .claude/commands/
+mahabharatha install          # Install to .claude/commands/
 ```
 
-Once installed, use `/zerg:*` commands inside any Claude Code session. Every command also has a `/z:` shortcut (e.g., `/z:plan`, `/z:rush`).
+Once installed, use `/mahabharatha:*` commands inside any Claude Code session. Every command also has a `/z:` shortcut (e.g., `/z:plan`, `/z:Kurukshetra`).
 
 ---
 
-## Tutorial: Your First ZERG Project
+## Tutorial: Your First Mahabharatha Project
 
-This tutorial walks through building a "Minerals Store" — a Starcraft 2 themed ecommerce API — using all ZERG phases. You'll learn why each phase exists and see what the conversations with ZERG actually look like.
+This tutorial walks through building a "Minerals Store" — a Starcraft 2 themed ecommerce API — using all Mahabharatha phases. You'll learn why each phase exists and see what the conversations with Mahabharatha actually look like.
 
 ### Initialization: Setting Up Your Project
 
-Before ZERG can coordinate parallel workers, it needs to understand your project and create the infrastructure for safe parallel execution. The initialization phase handles detection, configuration, and scaffolding automatically.
+Before Mahabharatha can coordinate parallel workers, it needs to understand your project and create the infrastructure for safe parallel execution. The initialization phase handles detection, configuration, and scaffolding automatically.
 
 Create a new directory and enter it:
 
@@ -129,24 +129,24 @@ mkdir minerals-store && cd minerals-store
 Inside Claude Code, run the init command:
 
 ```
-/zerg:init
+/mahabharatha:init
 ```
 
-ZERG begins by analyzing your project:
+Mahabharatha begins by analyzing your project:
 
 ```
-ZERG: Scanning project structure...
+Mahabharatha: Scanning project structure...
       Detected: Empty project (no source files)
       Starting Inception wizard for new project setup.
 
-ZERG: What type of project are you building?
+Mahabharatha: What type of project are you building?
 YOU:  A Python REST API using FastAPI.
 
-ZERG: What testing framework should I configure?
+Mahabharatha: What testing framework should I configure?
 YOU:  pytest with coverage reporting.
 
-ZERG: Creating infrastructure...
-      ✓ .zerg/config.yaml — worker settings, quality gates
+Mahabharatha: Creating infrastructure...
+      ✓ .mahabharatha/config.yaml — worker settings, quality gates
       ✓ .devcontainer/ — container mode configuration
       ✓ .gsd/ — specs and task graphs directory
       ✓ Security rules fetched (OWASP Top 10, Python rules)
@@ -161,118 +161,118 @@ Sometimes you know exactly what you want to build. But often, especially for new
 If your requirements are unclear, start with Socratic discovery:
 
 ```
-/zerg:brainstorm --socratic
+/mahabharatha:brainstorm --socratic
 ```
 
-ZERG asks probing questions across three rounds:
+Mahabharatha asks probing questions across three rounds:
 
 ```
-ZERG: Let's discover what you want to build. I'll ask questions to help
+Mahabharatha: Let's discover what you want to build. I'll ask questions to help
       clarify your vision.
 
       ROUND 1 — Problem Space
 
-ZERG: What problem does the minerals store solve for users?
+Mahabharatha: What problem does the minerals store solve for users?
 YOU:  Users need to browse and purchase mineral products through a REST API.
 
-ZERG: Who are the primary users? How will they interact with the system?
+Mahabharatha: Who are the primary users? How will they interact with the system?
 YOU:  Game developers integrating mineral purchases into their Starcraft-themed games.
 
-ZERG: What happens if this problem isn't solved? What workarounds exist?
+Mahabharatha: What happens if this problem isn't solved? What workarounds exist?
 YOU:  Developers would build custom solutions, wasting time on commodity functionality.
 
       ROUND 2 — Solution Shape
 
-ZERG: What would an ideal solution look like from a user's perspective?
+Mahabharatha: What would an ideal solution look like from a user's perspective?
 YOU:  Simple REST endpoints for catalog browsing, cart management, and checkout.
 
-ZERG: What are the absolute must-haves versus nice-to-haves?
+Mahabharatha: What are the absolute must-haves versus nice-to-haves?
 YOU:  Must-have: products, cart, orders. Nice-to-have: recommendations, reviews.
 
-ZERG: What should this explicitly NOT do?
+Mahabharatha: What should this explicitly NOT do?
 YOU:  No payment processing — that's handled by a separate payment service.
 
       ROUND 3 — Constraints
 
-ZERG: What technical constraints exist?
+Mahabharatha: What technical constraints exist?
 YOU:  Must use PostgreSQL for persistence. Stateless for horizontal scaling.
 
-ZERG: What's the expected scale and performance requirement?
+Mahabharatha: What's the expected scale and performance requirement?
 YOU:  100 requests/second initially, with room to scale to 1000.
 
-ZERG: Synthesizing insights...
+Mahabharatha: Synthesizing insights...
       ✓ Output: .gsd/specs/brainstorm-session.md
 ```
 
-Brainstorming matters because unclear requirements lead to rework. By asking structured questions, ZERG helps you think through edge cases and constraints before any code is written. The output becomes input for the planning phase.
+Brainstorming matters because unclear requirements lead to rework. By asking structured questions, Mahabharatha helps you think through edge cases and constraints before any code is written. The output becomes input for the planning phase.
 
 ### Planning: Capturing What You Want to Build
 
-Before ZERG can help build your feature, it needs to understand what you're trying to create in concrete terms. The planning phase transforms brainstorming insights (or your existing mental model) into a structured requirements document.
+Before Mahabharatha can help build your feature, it needs to understand what you're trying to create in concrete terms. The planning phase transforms brainstorming insights (or your existing mental model) into a structured requirements document.
 
 Start the planning conversation:
 
 ```
-/zerg:plan minerals-store
+/mahabharatha:plan minerals-store
 ```
 
-ZERG begins capturing requirements:
+Mahabharatha begins capturing requirements:
 
 ```
-ZERG: Let's capture the requirements for 'minerals-store'.
+Mahabharatha: Let's capture the requirements for 'minerals-store'.
 
-ZERG: What problem does the minerals store solve for users?
+Mahabharatha: What problem does the minerals store solve for users?
 YOU:  Users need to browse and purchase mineral products through a REST API.
 
-ZERG: Describe your ideal solution in 2-3 sentences.
+Mahabharatha: Describe your ideal solution in 2-3 sentences.
 YOU:  A FastAPI service with endpoints for products, cart, and orders.
       Products have names, descriptions, prices, and stock counts.
       Carts persist across sessions and convert to orders at checkout.
 
-ZERG: What are the non-negotiable requirements?
+Mahabharatha: What are the non-negotiable requirements?
 YOU:  1. Product catalog with CRUD operations
       2. Shopping cart that persists items
       3. Order placement with stock validation
       4. All endpoints return JSON with proper error codes
 
-ZERG: What should this feature explicitly NOT include?
+Mahabharatha: What should this feature explicitly NOT include?
 YOU:  No payment processing, no user authentication (handled elsewhere),
       no email notifications.
 
-ZERG: Generating requirements document...
+Mahabharatha: Generating requirements document...
       ✓ .gsd/specs/minerals-store/requirements.md (Status: DRAFT)
 
       Review and change status to APPROVED when ready for design.
 ```
 
-Planning matters because ZERG workers are stateless — they don't remember previous conversations. The requirements document becomes the shared source of truth that every worker reads. Without clear requirements, workers would interpret the feature differently, leading to inconsistent implementations.
+Planning matters because Mahabharatha workers are stateless — they don't remember previous conversations. The requirements document becomes the shared source of truth that every worker reads. Without clear requirements, workers would interpret the feature differently, leading to inconsistent implementations.
 
 ### Design: Creating the Architecture
 
-With approved requirements, ZERG can design the technical architecture. This phase analyzes your codebase, creates component designs, and — critically — breaks work into atomic tasks with exclusive file ownership.
+With approved requirements, Mahabharatha can design the technical architecture. This phase analyzes your codebase, creates component designs, and — critically — breaks work into atomic tasks with exclusive file ownership.
 
 First, mark your requirements as approved by editing `.gsd/specs/minerals-store/requirements.md` and changing `Status: DRAFT` to `Status: APPROVED`.
 
 Then generate the design:
 
 ```
-/zerg:design
+/mahabharatha:design
 ```
 
-ZERG analyzes and generates architecture:
+Mahabharatha analyzes and generates architecture:
 
 ```
-ZERG: Reading approved requirements...
+Mahabharatha: Reading approved requirements...
       Feature: minerals-store
       Non-negotiables: 4 requirements identified
       Non-goals: 3 exclusions noted
 
-ZERG: Analyzing existing codebase...
+Mahabharatha: Analyzing existing codebase...
       Project type: Python (FastAPI)
       Patterns detected: Repository pattern, Pydantic models
       Test location: tests/
 
-ZERG: Generating architecture...
+Mahabharatha: Generating architecture...
 
       Components:
       ├── models/ — Pydantic schemas, SQLAlchemy models
@@ -280,7 +280,7 @@ ZERG: Generating architecture...
       ├── services/ — Business logic layer
       └── repositories/ — Data access layer
 
-ZERG: Creating task graph...
+Mahabharatha: Creating task graph...
       Level 1: Foundation (4 tasks, parallelizable)
         ├── TASK-001: Create Product model and schema
         ├── TASK-002: Create Cart model and schema
@@ -301,29 +301,29 @@ ZERG: Creating task graph...
 
 Design matters because parallel execution requires careful planning. Each task declares exclusive file ownership — which files it creates, modifies, and reads. This prevents merge conflicts when multiple workers run simultaneously. Without this upfront design, workers would step on each other's changes.
 
-### Rush: Launching the Swarm
+### Kurukshetra: Launching the Swarm
 
 With the task graph ready, you can launch parallel workers. Each worker claims a task, executes it in an isolated git worktree, and reports results. The orchestrator manages task distribution and level progression.
 
-Launch the swarm:
+Launch the Akshauhini:
 
 ```
-/zerg:rush --workers=4
+/mahabharatha:Kurukshetra --workers=4
 ```
 
 Real output as workers execute:
 
 ```
-ZERG: Starting rush execution...
+Mahabharatha: Starting Kurukshetra execution...
       Feature: minerals-store
       Task graph: 12 tasks across 4 levels
       Workers requested: 4
 
       Creating git worktrees...
-      ✓ .zerg/worktrees/worker-1
-      ✓ .zerg/worktrees/worker-2
-      ✓ .zerg/worktrees/worker-3
-      ✓ .zerg/worktrees/worker-4
+      ✓ .mahabharatha/worktrees/worker-1
+      ✓ .mahabharatha/worktrees/worker-2
+      ✓ .mahabharatha/worktrees/worker-3
+      ✓ .mahabharatha/worktrees/worker-4
 
       === LEVEL 1 (4 tasks) ===
 
@@ -348,7 +348,7 @@ ZERG: Starting rush execution...
       ...
 ```
 
-Rush matters because parallel execution is ZERG's core value proposition. A feature that takes one agent 2 hours takes a swarm 20 minutes. But parallelism requires infrastructure — worktrees for isolation, task claiming for coordination, quality gates for verification, and automated merging for integration.
+Kurukshetra matters because parallel execution is Mahabharatha's core value proposition. A feature that takes one agent 2 hours takes an Akshauhini 20 minutes. But parallelism requires infrastructure — worktrees for isolation, task claiming for coordination, quality gates for verification, and automated merging for integration.
 
 **Execution modes** let you choose the isolation level:
 
@@ -365,14 +365,14 @@ While workers execute, you can monitor progress in real-time. The status command
 Watch execution progress:
 
 ```
-/zerg:status --watch
+/mahabharatha:status --watch
 ```
 
 Real-time output:
 
 ```
 ╔══════════════════════════════════════════════════════════════╗
-║  ZERG Status: minerals-store                                 ║
+║  Mahabharatha Status: minerals-store                                 ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  Progress: Level 2 of 4  |  Tasks: 7/12 complete             ║
 ╠══════════════════════════════════════════════════════════════╣
@@ -392,31 +392,31 @@ Real-time output:
 For detailed worker activity, use the logs command:
 
 ```
-/zerg:logs --follow              # Stream all workers
-/zerg:logs --worker 2            # Specific worker
-/zerg:logs --aggregate           # All workers sorted by time
+/mahabharatha:logs --follow              # Stream all workers
+/mahabharatha:logs --worker 2            # Specific worker
+/mahabharatha:logs --aggregate           # All workers sorted by time
 ```
 
 ### Quality: Verifying the Implementation
 
-After all levels complete, ZERG provides commands to verify the implementation meets requirements and quality standards.
+After all levels complete, Mahabharatha provides commands to verify the implementation meets requirements and quality standards.
 
 Review code against the spec:
 
 ```
-/zerg:review --mode full
+/mahabharatha:review --mode full
 ```
 
 Run tests with coverage:
 
 ```
-/zerg:test --coverage
+/mahabharatha:test --coverage
 ```
 
 Scan for security vulnerabilities:
 
 ```
-/zerg:security --preset owasp
+/mahabharatha:security --preset owasp
 ```
 
 Quality matters because parallel execution can introduce subtle bugs — especially at integration points between tasks. Automated review, testing, and security scanning catch issues before they reach production.
@@ -426,13 +426,13 @@ Quality matters because parallel execution can introduce subtle bugs — especia
 With quality verified, merge your feature branch to main:
 
 ```
-/zerg:git --action ship
+/mahabharatha:git --action ship
 ```
 
 Output:
 
 ```
-ZERG: Preparing to ship minerals-store...
+Mahabharatha: Preparing to ship minerals-store...
 
       Pre-ship checks:
       ✓ All tasks complete (12/12)
@@ -450,10 +450,10 @@ Other git operations available:
 
 | Action | Command | Purpose |
 |--------|---------|---------|
-| Commit | `/zerg:git commit` | Commit current changes with generated message |
-| Create PR | `/zerg:git --action pr` | Open pull request for review |
-| Ship | `/zerg:git --action ship` | Merge to main after verification (`--admin` to bypass branch protection) |
-| Full workflow | `/zerg:git --action finish` | PR → review → merge in one command |
+| Commit | `/mahabharatha:git commit` | Commit current changes with generated message |
+| Create PR | `/mahabharatha:git --action pr` | Open pull request for review |
+| Ship | `/mahabharatha:git --action ship` | Merge to main after verification (`--admin` to bypass branch protection) |
+| Full workflow | `/mahabharatha:git --action finish` | PR → review → merge in one command |
 
 ---
 
@@ -463,60 +463,60 @@ Other git operations available:
 
 | Command | Purpose |
 |---------|---------|
-| `/zerg:init` | Initialize ZERG infrastructure |
-| `/zerg:brainstorm` | Feature discovery with interactive questioning |
-| `/zerg:plan <feature>` | Capture requirements |
-| `/zerg:design` | Generate architecture and task graph |
-| `/zerg:rush` | Launch parallel zerglings |
+| `/mahabharatha:init` | Initialize Mahabharatha infrastructure |
+| `/mahabharatha:brainstorm` | Feature discovery with interactive questioning |
+| `/mahabharatha:plan <feature>` | Capture requirements |
+| `/mahabharatha:design` | Generate architecture and task graph |
+| `/mahabharatha:Kurukshetra` | Launch parallel warriors |
 
 ### Monitoring & Control
 
 | Command | Purpose |
 |---------|---------|
-| `/zerg:status` | Real-time progress dashboard |
-| `/zerg:logs` | Stream, filter, aggregate worker logs |
-| `/zerg:stop` | Stop workers gracefully or forcefully |
-| `/zerg:retry` | Retry failed or blocked tasks |
-| `/zerg:merge` | Manually trigger level merge |
-| `/zerg:cleanup` | Remove ZERG artifacts |
+| `/mahabharatha:status` | Real-time progress dashboard |
+| `/mahabharatha:logs` | Stream, filter, aggregate worker logs |
+| `/mahabharatha:stop` | Stop workers gracefully or forcefully |
+| `/mahabharatha:retry` | Retry failed or blocked tasks |
+| `/mahabharatha:merge` | Manually trigger level merge |
+| `/mahabharatha:cleanup` | Remove Mahabharatha artifacts |
 
 ### Quality & Analysis
 
 | Command | Purpose |
 |---------|---------|
-| `/zerg:build` | Build orchestration with error recovery |
-| `/zerg:test` | Execute tests with coverage |
-| `/zerg:analyze` | Static analysis, complexity metrics |
-| `/zerg:review` | Two-stage code review |
-| `/zerg:security` | Vulnerability scanning |
-| `/zerg:refactor` | Automated code improvement |
+| `/mahabharatha:build` | Build orchestration with error recovery |
+| `/mahabharatha:test` | Execute tests with coverage |
+| `/mahabharatha:analyze` | Static analysis, complexity metrics |
+| `/mahabharatha:review` | Two-stage code review |
+| `/mahabharatha:security` | Vulnerability scanning |
+| `/mahabharatha:refactor` | Automated code improvement |
 
 ### Utilities
 
 | Command | Purpose |
 |---------|---------|
-| `/zerg:git` | Git operations (commit, PR, ship, bisect, etc.) |
-| `/zerg:debug` | Deep diagnostic investigation |
-| `/zerg:worker` | Internal zergling execution protocol |
-| `/zerg:plugins` | Plugin system management |
+| `/mahabharatha:git` | Git operations (commit, PR, ship, bisect, etc.) |
+| `/mahabharatha:debug` | Deep diagnostic investigation |
+| `/mahabharatha:worker` | Internal warrior execution protocol |
+| `/mahabharatha:plugins` | Plugin system management |
 
 ### Documentation & AI
 
 | Command | Purpose |
 |---------|---------|
-| `/zerg:document` | Generate component documentation (`--tone educational\|reference\|tutorial`) |
-| `/zerg:index` | Generate project documentation wiki |
-| `/zerg:estimate` | Effort estimation with PERT intervals |
-| `/zerg:explain` | Educational code explanations |
-| `/zerg:select-tool` | Intelligent MCP tool routing |
+| `/mahabharatha:document` | Generate component documentation (`--tone educational\|reference\|tutorial`) |
+| `/mahabharatha:index` | Generate project documentation wiki |
+| `/mahabharatha:estimate` | Effort estimation with PERT intervals |
+| `/mahabharatha:explain` | Educational code explanations |
+| `/mahabharatha:select-tool` | Intelligent MCP tool routing |
 
-[Full Command Reference](https://github.com/rocklambros/zerg/wiki/Command-Reference)
+[Full Command Reference](https://github.com/rocklambros/mahabharatha/wiki/Command-Reference)
 
 ---
 
 ## Configuration
 
-ZERG is configured via `.zerg/config.yaml`:
+Mahabharatha is configured via `.mahabharatha/config.yaml`:
 
 ```yaml
 version: "1.0"
@@ -541,7 +541,7 @@ plugins:
     command_splitting: true
 ```
 
-[Full Configuration Guide](https://github.com/rocklambros/zerg/wiki/Configuration)
+[Full Configuration Guide](https://github.com/rocklambros/mahabharatha/wiki/Configuration)
 
 ---
 
@@ -549,18 +549,18 @@ plugins:
 
 | Resource | Description |
 |----------|-------------|
-| [Wiki: Home](https://github.com/rocklambros/zerg/wiki/Home) | Overview and quick navigation |
-| [Wiki: Command Reference](https://github.com/rocklambros/zerg/wiki/Command-Reference) | All 26 commands with flags and examples |
-| [Wiki: Tutorial](https://github.com/rocklambros/zerg/wiki/Tutorial) | Complete minerals-store walkthrough |
-| [Wiki: Configuration](https://github.com/rocklambros/zerg/wiki/Configuration) | Config files and tuning options |
-| [Wiki: Architecture](https://github.com/rocklambros/zerg/wiki/Architecture) | System design and module reference |
-| [Wiki: Plugins](https://github.com/rocklambros/zerg/wiki/Plugins) | Quality gates, hooks, custom launchers |
-| [Wiki: Context Engineering](https://github.com/rocklambros/zerg/wiki/Context-Engineering) | Token optimization techniques |
-| [Wiki: Troubleshooting](https://github.com/rocklambros/zerg/wiki/Troubleshooting) | Common issues and solutions |
+| [Wiki: Home](https://github.com/rocklambros/mahabharatha/wiki/Home) | Overview and quick navigation |
+| [Wiki: Command Reference](https://github.com/rocklambros/mahabharatha/wiki/Command-Reference) | All 26 commands with flags and examples |
+| [Wiki: Tutorial](https://github.com/rocklambros/mahabharatha/wiki/Tutorial) | Complete minerals-store walkthrough |
+| [Wiki: Configuration](https://github.com/rocklambros/mahabharatha/wiki/Configuration) | Config files and tuning options |
+| [Wiki: Architecture](https://github.com/rocklambros/mahabharatha/wiki/Architecture) | System design and module reference |
+| [Wiki: Plugins](https://github.com/rocklambros/mahabharatha/wiki/Plugins) | Quality gates, hooks, custom launchers |
+| [Wiki: Context Engineering](https://github.com/rocklambros/mahabharatha/wiki/Context-Engineering) | Token optimization techniques |
+| [Wiki: Troubleshooting](https://github.com/rocklambros/mahabharatha/wiki/Troubleshooting) | Common issues and solutions |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Detailed system architecture |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Development setup and PR process |
 | [SECURITY.md](SECURITY.md) | Vulnerability reporting |
-| [Discussions](https://github.com/rocklambros/zerg/discussions) | Questions, ideas, and community chat |
+| [Discussions](https://github.com/rocklambros/mahabharatha/discussions) | Questions, ideas, and community chat |
 
 ---
 
@@ -578,35 +578,35 @@ plugins:
 
 ## Multi-Epic Workflows
 
-By default, ZERG tracks the active feature in `.gsd/.current-feature`. This works well for single-feature development, but causes cross-epic interference when two terminals work on different features simultaneously.
+By default, Mahabharatha tracks the active feature in `.gsd/.current-feature`. This works well for single-feature development, but causes cross-epic interference when two terminals work on different features simultaneously.
 
 ### Per-Terminal Feature Isolation
 
-Export `ZERG_FEATURE` in each terminal to scope all commands to that feature:
+Export `Mahabharatha_FEATURE` in each terminal to scope all commands to that feature:
 
 ```bash
 # Terminal 1
-export ZERG_FEATURE=epic-auth
+export Mahabharatha_FEATURE=epic-auth
 /z:plan epic-auth
 /z:design
-/z:rush --workers=5
+/z:Kurukshetra --workers=5
 
 # Terminal 2
-export ZERG_FEATURE=epic-payments
+export Mahabharatha_FEATURE=epic-payments
 /z:plan epic-payments
 /z:design
-/z:rush --workers=5
+/z:Kurukshetra --workers=5
 ```
 
-The `ZERG_FEATURE` env var takes priority over the `.gsd/.current-feature` file. Each terminal's commands operate exclusively on its own feature with no cross-contamination.
+The `Mahabharatha_FEATURE` env var takes priority over the `.gsd/.current-feature` file. Each terminal's commands operate exclusively on its own feature with no cross-contamination.
 
 ### Advisory Lockfile
 
-When `/z:rush` starts, it creates `.gsd/specs/{feature}/.lock`. If another terminal tries to rush the same feature, it receives a warning about the concurrent session. This prevents accidental double-execution of the same feature.
+When `/z:Kurukshetra` starts, it creates `.gsd/specs/{feature}/.lock`. If another terminal tries to Kurukshetra the same feature, it receives a warning about the concurrent session. This prevents accidental double-execution of the same feature.
 
 ### Backward Compatibility
 
-Single-epic users do not need to change anything. The `ZERG_FEATURE` env var is only required for parallel multi-epic workflows. Without it, ZERG falls back to `.gsd/.current-feature` as before.
+Single-epic users do not need to change anything. The `Mahabharatha_FEATURE` env var is only required for parallel multi-epic workflows. Without it, Mahabharatha falls back to `.gsd/.current-feature` as before.
 
 ---
 
@@ -615,12 +615,12 @@ Single-epic users do not need to change anything. The `ZERG_FEATURE` env var is 
 | Problem | Solution |
 |---------|----------|
 | Zerglings not starting | Check Docker (`docker info`), API key, port availability |
-| "No active feature" | Run `/zerg:plan <feature>` first |
-| "Task graph not found" | Run `/zerg:design` first |
-| Task stuck | `/zerg:debug` to diagnose, `/zerg:retry` to retry |
-| Need to restart | `/zerg:rush --resume` continues from checkpoint |
+| "No active feature" | Run `/mahabharatha:plan <feature>` first |
+| "Task graph not found" | Run `/mahabharatha:design` first |
+| Task stuck | `/mahabharatha:debug` to diagnose, `/mahabharatha:retry` to retry |
+| Need to restart | `/mahabharatha:Kurukshetra --resume` continues from checkpoint |
 
-[Full Troubleshooting Guide](https://github.com/rocklambros/zerg/wiki/Troubleshooting)
+[Full Troubleshooting Guide](https://github.com/rocklambros/mahabharatha/wiki/Troubleshooting)
 
 ---
 

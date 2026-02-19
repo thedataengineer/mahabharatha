@@ -18,10 +18,10 @@ from typing import Any
 
 import pytest
 
-from zerg.constants import LevelMergeStatus, TaskStatus, WorkerStatus
-from zerg.exceptions import StateError
-from zerg.state import StateManager
-from zerg.types import WorkerState
+from mahabharatha.constants import LevelMergeStatus, TaskStatus, WorkerStatus
+from mahabharatha.exceptions import StateError
+from mahabharatha.state import StateManager
+from mahabharatha.types import WorkerState
 
 
 class TestStateSaveLoadRoundtrip:
@@ -444,7 +444,7 @@ class TestCrossProcessStateVisibility:
             worker_id=0,
             status=WorkerStatus.RUNNING,
             current_task="TASK-001",
-            branch="zerg/test/worker-0",
+            branch="mahabharatha/test/worker-0",
             worktree_path="/tmp/wt",
             started_at=datetime.now(),
             tasks_completed=2,

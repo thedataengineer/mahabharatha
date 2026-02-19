@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from zerg.exceptions import TaskTimeoutError, TaskVerificationFailedError
-from zerg.verify import VerificationExecutionResult, VerificationExecutor
+from mahabharatha.exceptions import TaskTimeoutError, TaskVerificationFailedError
+from mahabharatha.verify import VerificationExecutionResult, VerificationExecutor
 
 
 class TestVerificationExecutionResult:

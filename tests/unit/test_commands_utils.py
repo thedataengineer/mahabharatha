@@ -1,4 +1,4 @@
-"""Tests for zerg.commands._utils — shared command utilities."""
+"""Tests for mahabharatha.commands._utils — shared command utilities."""
 
 import json
 import time
@@ -13,12 +13,12 @@ class TestDetectFeature:
     def test_current_feature_takes_priority_over_state_json(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        """When both .gsd/.current-feature and .zerg/state/*.json exist,
+        """When both .gsd/.current-feature and .mahabharatha/state/*.json exist,
         .current-feature wins because it reflects explicit user intent."""
         monkeypatch.chdir(tmp_path)
 
         # Create stale state file
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
         (state_dir / "stale-feature.json").write_text(json.dumps({"state": "STOPPING"}))
 
@@ -27,7 +27,7 @@ class TestDetectFeature:
         gsd_dir.mkdir(parents=True)
         (gsd_dir / ".current-feature").write_text("active-feature")
 
-        from zerg.commands._utils import detect_feature
+        from mahabharatha.commands._utils import detect_feature
 
         result = detect_feature()
         assert result == "active-feature"
@@ -38,11 +38,11 @@ class TestDetectFeature:
         """When .gsd/.current-feature doesn't exist, use state JSON."""
         monkeypatch.chdir(tmp_path)
 
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
         (state_dir / "my-feature.json").write_text(json.dumps({"state": "RUNNING"}))
 
-        from zerg.commands._utils import detect_feature
+        from mahabharatha.commands._utils import detect_feature
 
         result = detect_feature()
         assert result == "my-feature"
@@ -51,7 +51,7 @@ class TestDetectFeature:
         """When neither source exists, return None."""
         monkeypatch.chdir(tmp_path)
 
-        from zerg.commands._utils import detect_feature
+        from mahabharatha.commands._utils import detect_feature
 
         result = detect_feature()
         assert result is None
@@ -64,11 +64,11 @@ class TestDetectFeature:
         gsd_dir.mkdir(parents=True)
         (gsd_dir / ".current-feature").write_text("   \n")
 
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
         (state_dir / "fallback-feature.json").write_text(json.dumps({}))
 
-        from zerg.commands._utils import detect_feature
+        from mahabharatha.commands._utils import detect_feature
 
         result = detect_feature()
         assert result == "fallback-feature"
@@ -77,7 +77,7 @@ class TestDetectFeature:
         """When multiple state files exist, return the most recently modified."""
         monkeypatch.chdir(tmp_path)
 
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
 
         old_file = state_dir / "old-feature.json"
@@ -89,12 +89,12 @@ class TestDetectFeature:
         new_file = state_dir / "new-feature.json"
         new_file.write_text(json.dumps({}))
 
-        from zerg.commands._utils import detect_feature
+        from mahabharatha.commands._utils import detect_feature
 
         result = detect_feature()
         assert result == "new-feature"
 
-    def test_detect_feature_zerg_feature_env_var_priority(
+    def test_detect_feature_mahabharatha_feature_env_var_priority(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         """ZERG_FEATURE env var takes priority over .current-feature file."""
@@ -106,7 +106,7 @@ class TestDetectFeature:
         gsd_dir.mkdir(parents=True)
         (gsd_dir / ".current-feature").write_text("file-feature")
 
-        from zerg.commands._utils import detect_feature
+        from mahabharatha.commands._utils import detect_feature
 
         result = detect_feature()
         assert result == "env-feature"
@@ -120,7 +120,7 @@ class TestDetectFeature:
         gsd_dir.mkdir(parents=True)
         (gsd_dir / ".current-feature").write_text("file-feature")
 
-        from zerg.commands._utils import detect_feature
+        from mahabharatha.commands._utils import detect_feature
 
         result = detect_feature()
         assert result == "file-feature"
@@ -130,7 +130,7 @@ class TestDetectFeature:
         monkeypatch.chdir(tmp_path)
         monkeypatch.setenv("ZERG_FEATURE", "  feature-name  ")
 
-        from zerg.commands._utils import detect_feature
+        from mahabharatha.commands._utils import detect_feature
 
         result = detect_feature()
         assert result == "feature-name"
@@ -146,7 +146,7 @@ class TestDetectFeature:
         gsd_dir.mkdir(parents=True)
         (gsd_dir / ".current-feature").write_text("file-feature")
 
-        from zerg.commands._utils import detect_feature
+        from mahabharatha.commands._utils import detect_feature
 
         result = detect_feature()
         assert result == "file-feature"
@@ -161,7 +161,7 @@ class TestDetectFeature:
         (gsd_dir / ".current-feature").write_text("should-not-be-read")
 
         # Create state JSON fallback
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
         (state_dir / "fallback-feature.json").write_text(json.dumps({}))
 
@@ -175,7 +175,7 @@ class TestDetectFeature:
 
         monkeypatch.setattr(Path, "read_text", patched_read_text)
 
-        from zerg.commands._utils import detect_feature
+        from mahabharatha.commands._utils import detect_feature
 
         result = detect_feature()
         assert result == "fallback-feature"
@@ -190,7 +190,7 @@ class TestDetectFeature:
         (gsd_dir / ".current-feature").write_text("should-not-be-read")
 
         # Create state JSON fallback
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
         (state_dir / "fallback-feature.json").write_text(json.dumps({}))
 
@@ -204,7 +204,7 @@ class TestDetectFeature:
 
         monkeypatch.setattr(Path, "read_text", patched_read_text)
 
-        from zerg.commands._utils import detect_feature
+        from mahabharatha.commands._utils import detect_feature
 
         result = detect_feature()
         assert result == "fallback-feature"
@@ -217,7 +217,7 @@ class TestDetectFeature:
         gsd_dir.mkdir(parents=True)
         (gsd_dir / ".current-feature").write_text("from-status")
 
-        from zerg.commands.status import detect_feature
+        from mahabharatha.commands.status import detect_feature
 
         result = detect_feature()
         assert result == "from-status"

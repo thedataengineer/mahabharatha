@@ -3,7 +3,7 @@
 from pathlib import Path
 from unittest.mock import patch
 
-from zerg.charter import ProjectCharter, gather_requirements, write_project_md
+from mahabharatha.charter import ProjectCharter, gather_requirements, write_project_md
 
 
 class TestProjectCharter:
@@ -110,8 +110,8 @@ class TestProjectCharter:
 class TestGatherRequirements:
     """Tests for gather_requirements function."""
 
-    @patch("zerg.charter.Prompt.ask")
-    @patch("zerg.charter.Confirm.ask")
+    @patch("mahabharatha.charter.Prompt.ask")
+    @patch("mahabharatha.charter.Confirm.ask")
     def test_gather_requirements_returns_charter(self, mock_confirm: patch, mock_prompt: patch) -> None:
         """Test that gather_requirements returns a ProjectCharter."""
         # Mock all prompts
@@ -137,8 +137,8 @@ class TestGatherRequirements:
         assert charter.name == "test-project"
         assert charter.description == "A test project"
 
-    @patch("zerg.charter.Prompt.ask")
-    @patch("zerg.charter.Confirm.ask")
+    @patch("mahabharatha.charter.Prompt.ask")
+    @patch("mahabharatha.charter.Confirm.ask")
     def test_gather_requirements_handles_none_storage(self, mock_confirm: patch, mock_prompt: patch) -> None:
         """Test that 'none' storage is handled correctly."""
         mock_prompt.side_effect = [

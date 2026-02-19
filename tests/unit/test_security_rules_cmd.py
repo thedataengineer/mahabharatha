@@ -17,8 +17,8 @@ from unittest.mock import patch
 
 from click.testing import CliRunner
 
-from zerg.cli import cli
-from zerg.security.rules import ProjectStack
+from mahabharatha.cli import cli
+from mahabharatha.security.rules import ProjectStack
 
 if TYPE_CHECKING:
     from pytest import MonkeyPatch
@@ -85,7 +85,7 @@ class TestDetectCommand:
     def test_detect_json_with_all_stack_fields(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
         """Test detect JSON includes all stack fields."""
         monkeypatch.chdir(tmp_path)
-        with patch("zerg.commands.security_rules_cmd.detect_project_stack") as mock_detect:
+        with patch("mahabharatha.commands.security_rules_cmd.detect_project_stack") as mock_detect:
             mock_detect.return_value = ProjectStack(
                 languages={"python"},
                 frameworks={"fastapi"},
@@ -133,7 +133,7 @@ class TestFetchCommand:
         """Test fetch runs and reports progress."""
         monkeypatch.chdir(tmp_path)
         (tmp_path / "app.py").write_text("print('hello')")
-        with patch("zerg.commands.security_rules_cmd.fetch_rules") as mock_fetch:
+        with patch("mahabharatha.commands.security_rules_cmd.fetch_rules") as mock_fetch:
             mock_fetch.return_value = {"rules/python.md": tmp_path / "python.md"}
             runner = CliRunner()
             result = runner.invoke(cli, ["security-rules", "fetch"])
@@ -144,7 +144,7 @@ class TestFetchCommand:
         """Test fetch --no-cache option."""
         monkeypatch.chdir(tmp_path)
         (tmp_path / "app.py").write_text("print('hello')")
-        with patch("zerg.commands.security_rules_cmd.fetch_rules") as mock_fetch:
+        with patch("mahabharatha.commands.security_rules_cmd.fetch_rules") as mock_fetch:
             mock_fetch.return_value = {}
             runner = CliRunner()
             result = runner.invoke(cli, ["security-rules", "fetch", "--no-cache"])
@@ -156,7 +156,7 @@ class TestFetchCommand:
         monkeypatch.chdir(tmp_path)
         (tmp_path / "app.py").write_text("print('hello')")
         output_dir = tmp_path / "custom-rules"
-        with patch("zerg.commands.security_rules_cmd.fetch_rules") as mock_fetch:
+        with patch("mahabharatha.commands.security_rules_cmd.fetch_rules") as mock_fetch:
             mock_fetch.return_value = {}
             runner = CliRunner()
             result = runner.invoke(cli, ["security-rules", "fetch", "--output", str(output_dir)])
@@ -181,7 +181,7 @@ class TestIntegrateCommand:
         """Test integrate runs full integration."""
         monkeypatch.chdir(tmp_path)
         (tmp_path / "app.py").write_text("print('hello')")
-        with patch("zerg.commands.security_rules_cmd.integrate_security_rules") as mock_integrate:
+        with patch("mahabharatha.commands.security_rules_cmd.integrate_security_rules") as mock_integrate:
             mock_integrate.return_value = self._mock_integrate_result(tmp_path)
             runner = CliRunner()
             result = runner.invoke(cli, ["security-rules", "integrate"])
@@ -193,7 +193,7 @@ class TestIntegrateCommand:
         """Test integrate --no-update-claude-md option."""
         monkeypatch.chdir(tmp_path)
         (tmp_path / "app.py").write_text("print('hello')")
-        with patch("zerg.commands.security_rules_cmd.integrate_security_rules") as mock_integrate:
+        with patch("mahabharatha.commands.security_rules_cmd.integrate_security_rules") as mock_integrate:
             mock_integrate.return_value = self._mock_integrate_result(tmp_path)
             runner = CliRunner()
             result = runner.invoke(cli, ["security-rules", "integrate", "--no-update-claude-md"])
@@ -206,7 +206,7 @@ class TestIntegrateCommand:
         monkeypatch.chdir(tmp_path)
         (tmp_path / "app.py").write_text("print('hello')")
         output_dir = tmp_path / "custom-rules"
-        with patch("zerg.commands.security_rules_cmd.integrate_security_rules") as mock_integrate:
+        with patch("mahabharatha.commands.security_rules_cmd.integrate_security_rules") as mock_integrate:
             mock_integrate.return_value = {
                 "stack": {"languages": ["python"]},
                 "rules_fetched": 2,

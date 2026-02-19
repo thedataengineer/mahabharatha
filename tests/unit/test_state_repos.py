@@ -13,13 +13,13 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from zerg.constants import TaskStatus, WorkerStatus
-from zerg.state.metrics_store import MetricsStore
-from zerg.state.persistence import PersistenceLayer
-from zerg.state.retry_repo import RetryRepo
-from zerg.state.task_repo import TaskStateRepo
-from zerg.state.worker_repo import WorkerStateRepo
-from zerg.types import FeatureMetrics, WorkerState
+from mahabharatha.constants import TaskStatus, WorkerStatus
+from mahabharatha.state.metrics_store import MetricsStore
+from mahabharatha.state.persistence import PersistenceLayer
+from mahabharatha.state.retry_repo import RetryRepo
+from mahabharatha.state.task_repo import TaskStateRepo
+from mahabharatha.state.worker_repo import WorkerStateRepo
+from mahabharatha.types import FeatureMetrics, WorkerState
 
 # ---------------------------------------------------------------------------
 # Shared fixture: in-memory PersistenceLayer backed by tmp_path

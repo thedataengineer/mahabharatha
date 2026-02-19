@@ -8,7 +8,7 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 
-from zerg.event_emitter import EventEmitter
+from mahabharatha.event_emitter import EventEmitter
 
 
 class TestEventEmitter:

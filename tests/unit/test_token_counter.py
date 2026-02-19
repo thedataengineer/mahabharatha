@@ -1,12 +1,12 @@
-"""Unit tests for zerg.token_counter module."""
+"""Unit tests for mahabharatha.token_counter module."""
 
 from __future__ import annotations
 
 import time
 from unittest.mock import MagicMock, patch
 
-from zerg.config import TokenMetricsConfig
-from zerg.token_counter import TokenCounter, TokenResult
+from mahabharatha.config import TokenMetricsConfig
+from mahabharatha.token_counter import TokenCounter, TokenResult
 
 
 def _make_counter(tmp_path, **overrides):

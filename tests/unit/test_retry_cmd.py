@@ -19,7 +19,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.testing import CliRunner
 
-from zerg.commands.retry import (
+from mahabharatha.commands.retry import (
     detect_feature,
     get_failed_tasks,
     retry,
@@ -27,8 +27,8 @@ from zerg.commands.retry import (
     retry_task,
     show_retry_plan,
 )
-from zerg.constants import TaskStatus
-from zerg.state import StateManager
+from mahabharatha.constants import TaskStatus
+from mahabharatha.state import StateManager
 
 
 class TestDetectFeature:
@@ -42,7 +42,7 @@ class TestDetectFeature:
     def test_single_state_file(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test returns feature name from single state file."""
         monkeypatch.chdir(tmp_path)
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
         (state_dir / "my-feature.json").write_text("{}")
         assert detect_feature() == "my-feature"
@@ -156,7 +156,7 @@ class TestRetryAllFailedTasks:
 
     def test_without_reset(self) -> None:
         """Test uses orchestrator without reset."""
-        with patch("zerg.commands.retry.Orchestrator") as mock_orch_cls:
+        with patch("mahabharatha.commands.retry.Orchestrator") as mock_orch_cls:
             mock_orch = MagicMock()
             mock_orch.retry_all_failed.return_value = ["T1", "T2"]
             mock_orch_cls.return_value = mock_orch
@@ -166,7 +166,7 @@ class TestRetryAllFailedTasks:
 
     def test_exception_handling(self) -> None:
         """Test handles exceptions gracefully."""
-        with patch("zerg.commands.retry.Orchestrator") as mock_orch_cls:
+        with patch("mahabharatha.commands.retry.Orchestrator") as mock_orch_cls:
             mock_orch_cls.side_effect = Exception("Connection failed")
             count, retried = retry_all_failed_tasks("test-feature", reset=False)
             assert count == 0
@@ -210,7 +210,7 @@ class TestRetryCommand:
     def test_single_task_confirmed(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test retry command for single task with confirmation."""
         monkeypatch.chdir(tmp_path)
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
         (state_dir / "test-feature.json").write_text(self._make_state_data())
         runner = CliRunner()
@@ -220,7 +220,7 @@ class TestRetryCommand:
     def test_aborted(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test retry command when user aborts."""
         monkeypatch.chdir(tmp_path)
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
         (state_dir / "test-feature.json").write_text(self._make_state_data())
         runner = CliRunner()
@@ -230,7 +230,7 @@ class TestRetryCommand:
     def test_all_failed_tasks(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test retry command with --all-failed flag."""
         monkeypatch.chdir(tmp_path)
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
         tasks = {"T1": {"status": "failed"}, "T2": {"status": "failed"}, "T3": {"status": "complete"}}
         (state_dir / "test-feature.json").write_text(self._make_state_data(tasks=tasks))
@@ -242,11 +242,11 @@ class TestRetryCommand:
     def test_task_queue_failure(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         """Test retry command when task fails to queue."""
         monkeypatch.chdir(tmp_path)
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
         (state_dir / "test-feature.json").write_text(self._make_state_data())
         runner = CliRunner()
-        with patch("zerg.commands.retry.retry_task") as mock_retry:
+        with patch("mahabharatha.commands.retry.retry_task") as mock_retry:
             mock_retry.return_value = False
             result = runner.invoke(retry, ["T1", "--feature", "test-feature"], input="y\n")
         assert "failed to queue" in result.output

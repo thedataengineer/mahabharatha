@@ -15,26 +15,26 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.config import ZergConfig
-from zerg.constants import LevelMergeStatus, TaskStatus, WorkerStatus
-from zerg.orchestrator import Orchestrator
+from mahabharatha.config import ZergConfig
+from mahabharatha.constants import LevelMergeStatus, TaskStatus, WorkerStatus
+from mahabharatha.orchestrator import Orchestrator
 
 
 @pytest.fixture
 def mock_orchestrator_deps():
     """Mock all orchestrator dependencies comprehensively."""
     with (
-        patch("zerg.orchestrator.StateManager") as state_mock,
-        patch("zerg.orchestrator.LevelController") as levels_mock,
-        patch("zerg.orchestrator.TaskParser") as parser_mock,
-        patch("zerg.orchestrator.GateRunner") as gates_mock,
-        patch("zerg.orchestrator.WorktreeManager") as worktree_mock,
-        patch("zerg.orchestrator.ContainerManager") as container_mock,
-        patch("zerg.orchestrator.PortAllocator") as ports_mock,
-        patch("zerg.orchestrator.MergeCoordinator") as merge_mock,
-        patch("zerg.orchestrator.TaskSyncBridge") as task_sync_mock,
-        patch("zerg.orchestrator.SubprocessLauncher") as subprocess_launcher_mock,
-        patch("zerg.orchestrator.ContainerLauncher") as container_launcher_mock,
+        patch("mahabharatha.orchestrator.StateManager") as state_mock,
+        patch("mahabharatha.orchestrator.LevelController") as levels_mock,
+        patch("mahabharatha.orchestrator.TaskParser") as parser_mock,
+        patch("mahabharatha.orchestrator.GateRunner") as gates_mock,
+        patch("mahabharatha.orchestrator.WorktreeManager") as worktree_mock,
+        patch("mahabharatha.orchestrator.ContainerManager") as container_mock,
+        patch("mahabharatha.orchestrator.PortAllocator") as ports_mock,
+        patch("mahabharatha.orchestrator.MergeCoordinator") as merge_mock,
+        patch("mahabharatha.orchestrator.TaskSyncBridge") as task_sync_mock,
+        patch("mahabharatha.orchestrator.SubprocessLauncher") as subprocess_launcher_mock,
+        patch("mahabharatha.orchestrator.ContainerLauncher") as container_launcher_mock,
     ):
         state = MagicMock()
         state.load.return_value = {}
@@ -81,7 +81,7 @@ def mock_orchestrator_deps():
         worktree = MagicMock()
         worktree_info = MagicMock()
         worktree_info.path = Path("/tmp/worktree")
-        worktree_info.branch = "zerg/test/worker-0"
+        worktree_info.branch = "mahabharatha/test/worker-0"
         worktree.create.return_value = worktree_info
         worktree.get_worktree_path.return_value = Path("/tmp/worktree")
         worktree_mock.return_value = worktree
@@ -150,7 +150,7 @@ class TestLauncherCreation:
     def test_create_launcher_subprocess_mode(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test explicit subprocess mode."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         orch = Orchestrator("test-feature", launcher_mode="subprocess")
 
@@ -161,7 +161,7 @@ class TestLauncherCreation:
     ) -> None:
         """Test unknown mode raises ValueError instead of silent fallback."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         config = ZergConfig()
         with pytest.raises(ValueError, match="Unsupported launcher mode"):
@@ -170,7 +170,7 @@ class TestLauncherCreation:
     def test_auto_detect_with_devcontainer_and_image(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test auto-detect returns subprocess launcher (container requires explicit flag)."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
         (tmp_path / ".devcontainer").mkdir()
         (tmp_path / ".devcontainer" / "devcontainer.json").write_text("{}")
 
@@ -185,7 +185,7 @@ class TestGetWorkerImageName:
     def test_get_worker_image_name_from_config_attr(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test image name from config with container_image attribute."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         config = MagicMock(spec=ZergConfig)
         config.container_image = "custom-image:latest"
@@ -197,6 +197,8 @@ class TestGetWorkerImageName:
         config.workers.retry_attempts = 3
         config.logging = MagicMock()
         config.logging.directory = "/tmp/logs"
+        config.resources = MagicMock()
+        config.resources.container_image = None
         config.get_launcher_type.return_value = MagicMock()
         er_config = MagicMock()
         er_config.circuit_breaker.failure_threshold = 3
@@ -215,12 +217,12 @@ class TestGetWorkerImageName:
     def test_get_worker_image_name_default(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test default image name from feature."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         orch = Orchestrator("my-feature")
         image_name = orch._get_worker_image_name()
 
-        assert image_name == "zerg-worker"
+        assert image_name == "mahabharatha-worker"
 
 
 class TestStartMethod:
@@ -229,7 +231,7 @@ class TestStartMethod:
     def test_start_initializes_correctly(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test start initializes all components."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
         (tmp_path / ".gsd" / "specs" / "test-feature").mkdir(parents=True)
         task_graph_path = tmp_path / "task-graph.json"
         task_graph_path.write_text('{"tasks": []}')
@@ -249,7 +251,7 @@ class TestStartMethod:
     def test_start_dry_run(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test start with dry_run prints plan without spawning."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
         (tmp_path / ".gsd" / "specs" / "test-feature").mkdir(parents=True)
         task_graph_path = tmp_path / "task-graph.json"
         task_graph_path.write_text('{"tasks": []}')
@@ -271,7 +273,7 @@ class TestStopMethod:
     def test_stop_generates_state_md_failure(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test stop handles STATE.md generation failure gracefully."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         mock_orchestrator_deps["state"].generate_state_md.side_effect = Exception("Failed to generate")
 
@@ -285,7 +287,7 @@ class TestStopMethod:
     def test_stop_terminates_all_workers(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test stop terminates all workers."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         orch = Orchestrator("test-feature")
         orch._spawn_worker(0)
@@ -303,7 +305,7 @@ class TestMainLoop:
     def test_main_loop_level_complete_advances(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test main loop advances when level completes."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         mock_orchestrator_deps["levels"].is_level_resolved.side_effect = [True, False, False]
         mock_orchestrator_deps["levels"].can_advance.side_effect = [True, False]
@@ -339,7 +341,7 @@ class TestMainLoop:
     def test_main_loop_all_complete(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test main loop stops when all tasks complete."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         mock_orchestrator_deps["levels"].is_level_resolved.return_value = True
         mock_orchestrator_deps["levels"].can_advance.return_value = False
@@ -368,7 +370,7 @@ class TestMainLoop:
     def test_main_loop_keyboard_interrupt(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test main loop handles keyboard interrupt."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         orch = Orchestrator("test-feature")
         orch._running = True
@@ -388,7 +390,7 @@ class TestStartLevel:
     def test_start_level_creates_claude_tasks(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test _start_level creates Claude Tasks for level."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         mock_orchestrator_deps["levels"].start_level.return_value = ["TASK-001", "TASK-002"]
         mock_orchestrator_deps["parser"].get_task.side_effect = [
@@ -406,7 +408,7 @@ class TestStartLevel:
     ) -> None:
         """Test _start_level skips Claude Tasks if all tasks None."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         mock_orchestrator_deps["levels"].start_level.return_value = ["TASK-001"]
         mock_orchestrator_deps["parser"].get_task.return_value = None
@@ -423,7 +425,7 @@ class TestLevelCompleteHandler:
     def test_level_complete_invokes_callbacks(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test level completion invokes registered callbacks."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         callback = MagicMock()
 
@@ -440,7 +442,7 @@ class TestMergeLevelWithBranches:
     def test_merge_level_with_branches_calls_merger(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test merge_level calls merger when there are branches."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         orch = Orchestrator("test-feature")
         orch._spawn_worker(0)
@@ -456,7 +458,7 @@ class TestRebaseAllWorkers:
     def test_rebase_all_workers_skips_no_branch(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test rebasing skips workers without branches."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         orch = Orchestrator("test-feature")
         orch._spawn_worker(0)
@@ -469,7 +471,7 @@ class TestRebaseAllWorkers:
     def test_rebase_all_workers_handles_exception(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test rebasing handles exceptions gracefully."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         orch = Orchestrator("test-feature")
         orch._spawn_worker(0)
@@ -483,7 +485,7 @@ class TestPauseForIntervention:
     def test_pause_for_intervention_sets_state(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test pausing for intervention sets correct state."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         orch = Orchestrator("test-feature")
         orch._pause_for_intervention("Test reason")
@@ -503,7 +505,7 @@ class TestSpawnWorkers:
     ) -> None:
         """Test spawning continues despite individual failures."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         spawn_success = MagicMock()
         spawn_success.success = True
@@ -529,7 +531,7 @@ class TestSpawnWorkers:
     def test_spawn_workers_returns_count(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test _spawn_workers returns number of successfully spawned workers."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         orch = Orchestrator("test-feature")
         result = orch._spawn_workers(3)
@@ -543,7 +545,7 @@ class TestStartSpawnValidation:
     def test_start_raises_when_all_spawns_fail(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test start raises RuntimeError when all workers fail to spawn."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
         (tmp_path / ".gsd" / "specs" / "test-feature").mkdir(parents=True)
         task_graph_path = tmp_path / "task-graph.json"
         task_graph_path.write_text('{"tasks": []}')
@@ -559,7 +561,7 @@ class TestStartSpawnValidation:
     def test_start_continues_with_partial_spawns(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test start continues when some workers spawn successfully."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
         (tmp_path / ".gsd" / "specs" / "test-feature").mkdir(parents=True)
         task_graph_path = tmp_path / "task-graph.json"
         task_graph_path.write_text('{"tasks": []}')
@@ -581,7 +583,7 @@ class TestTerminateWorker:
     def test_terminate_worker_worktree_delete_fails(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test terminate handles worktree deletion failure."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         mock_orchestrator_deps["worktree"].delete.side_effect = Exception("Delete failed")
 
@@ -595,7 +597,7 @@ class TestTerminateWorker:
     def test_terminate_nonexistent_worker(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test terminate returns early for nonexistent worker."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         orch = Orchestrator("test-feature")
 
@@ -610,7 +612,7 @@ class TestPollWorkers:
     def test_poll_workers_stopped_status(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test polling handles stopped worker status."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         mock_orchestrator_deps["subprocess_launcher"].monitor.return_value = WorkerStatus.STOPPED
 
@@ -629,7 +631,7 @@ class TestPollWorkers:
         to avoid incrementing retry count for infrastructure failures.
         """
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         mock_orchestrator_deps["subprocess_launcher"].monitor.return_value = WorkerStatus.CRASHED
 
@@ -650,7 +652,7 @@ class TestHandleWorkerExit:
     def test_handle_worker_exit_no_worker(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test exit handling with nonexistent worker."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         orch = Orchestrator("test-feature")
 
@@ -661,7 +663,7 @@ class TestHandleWorkerExit:
     ) -> None:
         """Test exit handling invokes task completion callbacks."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         mock_orchestrator_deps["parser"].get_task.return_value = {
             "id": "TASK-001",
@@ -686,7 +688,7 @@ class TestPrintPlan:
     def test_print_plan_outputs_correctly(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch, capsys) -> None:
         """Test print plan outputs execution plan."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         mock_orchestrator_deps["parser"].total_tasks = 3
         mock_orchestrator_deps["parser"].levels = [1, 2]
@@ -716,9 +718,9 @@ class TestVerifyWithRetry:
     def test_verify_with_retry_all_fail(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test verify_with_retry returns False when all retries fail."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
-        with patch("zerg.verify.VerificationExecutor") as verify_mock:
+        with patch("mahabharatha.verify.VerificationExecutor") as verify_mock:
             fail_result = MagicMock()
             fail_result.success = False
 
@@ -737,9 +739,9 @@ class TestVerifyWithRetry:
     def test_verify_with_retry_success_on_first_try(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test verify_with_retry returns True on first try success."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
-        with patch("zerg.verify.VerificationExecutor") as verify_mock:
+        with patch("mahabharatha.verify.VerificationExecutor") as verify_mock:
             success_result = MagicMock()
             success_result.success = True
 
@@ -761,7 +763,7 @@ class TestMergeLevel:
     def test_merge_level_no_branches(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test merge_level with no worker branches."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         orch = Orchestrator("test-feature")
 
@@ -777,7 +779,7 @@ class TestContainerWorkerSpawn:
     def test_spawn_worker_with_container_id(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test spawning worker records container ID."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         spawn_result = MagicMock()
         spawn_result.success = True
@@ -808,7 +810,7 @@ class TestTaskFailureHandling:
     def test_handle_task_failure_emits_retry_event(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test task failure emits retry event."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         mock_orchestrator_deps["state"].get_task_retry_count.return_value = 0
         mock_orchestrator_deps["state"].increment_task_retry.return_value = 1
@@ -834,7 +836,7 @@ class TestTaskFailureHandling:
     ) -> None:
         """Test permanent task failure emits event."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         mock_orchestrator_deps["state"].get_task_retry_count.return_value = 3
 
@@ -860,7 +862,7 @@ class TestRetryTaskMethods:
     def test_retry_task_with_taskstatus_failed(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test retry_task works with TaskStatus.FAILED enum value."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         mock_orchestrator_deps["state"].get_task_status.return_value = TaskStatus.FAILED.value
 
@@ -874,7 +876,7 @@ class TestRetryTaskMethods:
     def test_retry_task_not_failed(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test retry_task returns False for non-failed task."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         mock_orchestrator_deps["state"].get_task_status.return_value = "running"
 
@@ -887,7 +889,7 @@ class TestRetryTaskMethods:
     def test_retry_all_failed(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test retry_all_failed retries all failed tasks."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         mock_orchestrator_deps["state"].get_failed_tasks.return_value = [
             {"task_id": "TASK-001"},
@@ -910,7 +912,7 @@ class TestResume:
     def test_resume_when_paused(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test resume from paused state."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         orch = Orchestrator("test-feature")
         orch._paused = True
@@ -924,7 +926,7 @@ class TestResume:
     def test_resume_when_not_paused(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test resume when not paused does nothing."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         orch = Orchestrator("test-feature")
         orch._paused = False
@@ -940,7 +942,7 @@ class TestStatus:
     def test_status_returns_correct_structure(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test status returns correct structure with worker info."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         orch = Orchestrator("test-feature")
         orch._running = True
@@ -967,7 +969,7 @@ class TestCallbackRegistration:
     def test_callback_registration(self, mock_orchestrator_deps, tmp_path: Path, monkeypatch) -> None:
         """Test on_level_complete and on_task_complete register callbacks."""
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         level_cb = MagicMock()
         task_cb = MagicMock()

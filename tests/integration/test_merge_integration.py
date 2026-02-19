@@ -10,11 +10,11 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.constants import GateResult, MergeStatus
+from mahabharatha.exceptions import MergeConflictError
+from mahabharatha.merge import MergeCoordinator, MergeFlowResult
 from tests.mocks.mock_merge import MockMergeCoordinator
-from zerg.config import QualityGate, ZergConfig
-from zerg.constants import GateResult, MergeStatus
-from zerg.exceptions import MergeConflictError
-from zerg.merge import MergeCoordinator, MergeFlowResult
 
 
 @pytest.fixture
@@ -38,9 +38,9 @@ def mock_merger() -> MockMergeCoordinator:
 def worker_branches() -> list[str]:
     """Standard worker branches for testing."""
     return [
-        "zerg/test-feature/worker-0",
-        "zerg/test-feature/worker-1",
-        "zerg/test-feature/worker-2",
+        "mahabharatha/test-feature/worker-0",
+        "mahabharatha/test-feature/worker-1",
+        "mahabharatha/test-feature/worker-2",
     ]
 
 
@@ -156,17 +156,17 @@ class TestMergeConflictHandling:
     def test_conflict_in_execute_merge(self, mock_merger: MockMergeCoordinator) -> None:
         """Test conflict raised during execute_merge."""
         mock_merger.configure(
-            execute_merge_conflict_branches=["zerg/test/worker-1"],
+            execute_merge_conflict_branches=["mahabharatha/test/worker-1"],
             conflicting_files=["conflicting_file.py"],
         )
 
         with pytest.raises(MergeConflictError) as exc_info:
             mock_merger.execute_merge(
-                source_branches=["zerg/test/worker-0", "zerg/test/worker-1"],
+                source_branches=["mahabharatha/test/worker-0", "mahabharatha/test/worker-1"],
                 staging_branch="staging",
             )
 
-        assert "zerg/test/worker-1" in str(exc_info.value)
+        assert "mahabharatha/test/worker-1" in str(exc_info.value)
         assert exc_info.value.conflicting_files == ["conflicting_file.py"]
 
 
@@ -177,7 +177,7 @@ class TestStagingBranchLifecycle:
         """Test staging branch name is generated correctly."""
         staging = mock_merger.prepare_merge(level=1, target_branch="main")
 
-        assert staging == "zerg/test-feature/staging"
+        assert staging == "mahabharatha/test-feature/staging"
 
     def test_abort_cleans_up_staging(self, mock_merger: MockMergeCoordinator) -> None:
         """Test abort cleans up staging branch."""
@@ -328,13 +328,13 @@ class TestRealMergeCoordinatorIntegration:
     @pytest.fixture
     def mock_git_ops(self):
         """Mock GitOps for real coordinator testing."""
-        with patch("zerg.merge.GitOps") as git_mock:
+        with patch("mahabharatha.merge.GitOps") as git_mock:
             git = MagicMock()
-            git.create_staging_branch.return_value = "zerg/feature/staging"
+            git.create_staging_branch.return_value = "mahabharatha/feature/staging"
             git.branch_exists.return_value = True
             git.list_worker_branches.return_value = [
-                "zerg/feature/worker-0",
-                "zerg/feature/worker-1",
+                "mahabharatha/feature/worker-0",
+                "mahabharatha/feature/worker-1",
             ]
             git.merge.return_value = "abc123def456"
             git.checkout.return_value = None
@@ -346,7 +346,7 @@ class TestRealMergeCoordinatorIntegration:
     @pytest.fixture
     def mock_gate_runner(self):
         """Mock GateRunner for real coordinator testing."""
-        with patch("zerg.merge.GateRunner") as gates_mock:
+        with patch("mahabharatha.merge.GateRunner") as gates_mock:
             gates = MagicMock()
             gates.run_all_gates.return_value = (True, [])
             gates.get_summary.return_value = {"passed": 2, "failed": 0}

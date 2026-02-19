@@ -3,7 +3,7 @@
 import pytest
 from click.testing import CliRunner
 
-from zerg.cli import cli
+from mahabharatha.cli import cli
 
 pytestmark = pytest.mark.docker
 
@@ -14,7 +14,7 @@ class TestRushCommand:
     def test_rush_help_shows_mode_option(self) -> None:
         """Rush command help shows --mode option with all choices.
 
-        Verifies that running 'zerg rush --help' displays:
+        Verifies that running 'mahabharatha rush --help' displays:
         - The --mode or -m flag
         - All three mode choices: subprocess, container, auto
         """

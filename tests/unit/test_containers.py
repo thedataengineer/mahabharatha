@@ -6,16 +6,16 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.config import ZergConfig
-from zerg.constants import WorkerStatus
-from zerg.containers import ContainerInfo, ContainerManager
-from zerg.exceptions import ContainerError
+from mahabharatha.config import ZergConfig
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.containers import ContainerInfo, ContainerManager
+from mahabharatha.exceptions import ContainerError
 
 pytestmark = pytest.mark.docker
 
 
 @pytest.fixture(autouse=True)
-def mock_zerg_config():
+def mock_mahabharatha_config():
     """Mock ZergConfig.load() for all container tests."""
     mock_config = MagicMock(spec=ZergConfig)
     mock_config.workers = MagicMock()
@@ -31,11 +31,11 @@ class TestContainerInfo:
         """Test creating container info with full and minimal fields."""
         info = ContainerInfo(
             container_id="abc123",
-            name="zerg-worker-0",
+            name="mahabharatha-worker-0",
             status="running",
             worker_id=0,
             port=49152,
-            image="zerg-worker:latest",
+            image="mahabharatha-worker:latest",
         )
         assert info.container_id == "abc123"
         assert info.port == 49152
@@ -123,7 +123,7 @@ class TestWorkerLifecycle:
             mock_docker.return_value = MagicMock(returncode=0, stdout="abc123def456", stderr="")
             mock_compose.return_value = MagicMock(returncode=0)
             manager = ContainerManager()
-            info = manager.start_worker(0, "test-feature", 49152, "/tmp/worktree", "zerg/test/worker-0")
+            info = manager.start_worker(0, "test-feature", 49152, "/tmp/worktree", "mahabharatha/test/worker-0")
             assert info.worker_id == 0
             assert info.status == "running"
 
@@ -153,7 +153,7 @@ class TestWorkerLifecycle:
         ):
             mock_docker.return_value = MagicMock(returncode=0, stdout="", stderr="")
             manager = ContainerManager()
-            manager._containers[0] = ContainerInfo("abc123", "zerg-worker-0", "running", 0)
+            manager._containers[0] = ContainerInfo("abc123", "mahabharatha-worker-0", "running", 0)
             manager.stop_worker(0)
             assert 0 not in manager._containers
             # Non-existent: should not raise
@@ -167,7 +167,7 @@ class TestWorkerLifecycle:
         ):
             mock_docker.return_value = MagicMock(returncode=0, stdout="orphan1\norphan2\n", stderr="")
             manager = ContainerManager()
-            manager._containers = {0: ContainerInfo("a", "zerg-worker-0", "running", 0)}
+            manager._containers = {0: ContainerInfo("a", "mahabharatha-worker-0", "running", 0)}
             count = manager.stop_all()
             assert count == 3
             assert len(manager._containers) == 0
@@ -192,7 +192,7 @@ class TestGetStatus:
         ):
             mock_docker.return_value = MagicMock(returncode=0, stdout=docker_status, stderr="")
             manager = ContainerManager()
-            manager._containers[0] = ContainerInfo("abc123", "zerg-worker-0", "running", 0)
+            manager._containers[0] = ContainerInfo("abc123", "mahabharatha-worker-0", "running", 0)
             assert manager.get_status(0) == expected
 
     def test_get_status_not_tracked(self) -> None:
@@ -213,7 +213,7 @@ class TestGetLogs:
         ):
             mock_docker.return_value = MagicMock(returncode=0, stdout="Log line 1\n", stderr="")
             manager = ContainerManager()
-            manager._containers[0] = ContainerInfo("abc123", "zerg-worker-0", "running", 0)
+            manager._containers[0] = ContainerInfo("abc123", "mahabharatha-worker-0", "running", 0)
             assert "Log line 1" in manager.get_logs(0)
             assert manager.get_logs(99) == ""
 
@@ -229,7 +229,7 @@ class TestHealthCheck:
         ):
             mock_docker.return_value = MagicMock(returncode=0, stdout="running\n", stderr="")
             manager = ContainerManager()
-            manager._containers[0] = ContainerInfo("abc123", "zerg-worker-0", "running", 0)
+            manager._containers[0] = ContainerInfo("abc123", "mahabharatha-worker-0", "running", 0)
             assert manager.health_check(0) is True
             assert manager.health_check(99) is False
 
@@ -245,7 +245,7 @@ class TestExecInWorker:
         ):
             mock_docker.return_value = MagicMock(returncode=0, stdout="output", stderr="")
             manager = ContainerManager()
-            manager._containers[0] = ContainerInfo("abc123", "zerg-worker-0", "running", 0)
+            manager._containers[0] = ContainerInfo("abc123", "mahabharatha-worker-0", "running", 0)
             exit_code, stdout, _ = manager.exec_in_worker(0, "pytest tests/")
             assert exit_code == 0
             assert stdout == "output"
@@ -254,7 +254,7 @@ class TestExecInWorker:
         """Test executing blocked command and non-existent worker."""
         with patch.object(ContainerManager, "_check_docker"):
             manager = ContainerManager()
-            manager._containers[0] = ContainerInfo("abc123", "zerg-worker-0", "running", 0)
+            manager._containers[0] = ContainerInfo("abc123", "mahabharatha-worker-0", "running", 0)
             exit_code, _, stderr = manager.exec_in_worker(0, "rm -rf /; echo pwned", validate=True)
             assert exit_code == -1
             assert "validation failed" in stderr.lower()
@@ -300,7 +300,7 @@ class TestCleanupAndContainerList:
             mock_docker.return_value = MagicMock(returncode=0)
             manager = ContainerManager()
             manager.cleanup_volumes("test-feature")
-            assert "zerg-tasks-test-feature" in mock_docker.call_args[0]
+            assert "mahabharatha-tasks-test-feature" in mock_docker.call_args[0]
 
     def test_get_all_containers_returns_copy(self) -> None:
         """Test getting containers returns a copy."""

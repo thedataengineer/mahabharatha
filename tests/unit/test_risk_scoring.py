@@ -6,7 +6,7 @@ from typing import Any
 
 import pytest
 
-from zerg.risk_scoring import RiskReport, RiskScorer, TaskRisk
+from mahabharatha.risk_scoring import RiskReport, RiskScorer, TaskRisk
 
 
 @pytest.fixture

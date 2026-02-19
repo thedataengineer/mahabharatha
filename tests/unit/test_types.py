@@ -1,11 +1,11 @@
-"""Tests for zerg.types module."""
+"""Tests for mahabharatha.types module."""
 
 from datetime import datetime
 
 import pytest
 
-from zerg.constants import GateResult, Level, MergeStatus, WorkerStatus
-from zerg.types import (
+from mahabharatha.constants import GateResult, Level, MergeStatus, WorkerStatus
+from mahabharatha.types import (
     GateRunResult,
     LevelStatus,
     MergeResult,

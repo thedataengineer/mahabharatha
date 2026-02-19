@@ -2,7 +2,7 @@
 
 import json
 
-from zerg.formatter_detector import FormatterConfig, FormatterDetector, detect_formatter
+from mahabharatha.formatter_detector import FormatterConfig, FormatterDetector, detect_formatter
 
 
 class TestFormatterConfig:

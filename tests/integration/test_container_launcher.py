@@ -6,16 +6,16 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.constants import WorkerStatus
-from zerg.devcontainer_features import (
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.devcontainer_features import (
     DEVCONTAINER_FEATURES,
     DynamicDevcontainerGenerator,
     get_features_for_languages,
     get_post_create_commands,
     should_use_single_image,
 )
-from zerg.launcher_types import LauncherConfig, LauncherType
-from zerg.launchers import ContainerLauncher
+from mahabharatha.launcher_types import LauncherConfig, LauncherType
+from mahabharatha.launchers import ContainerLauncher
 
 pytestmark = pytest.mark.docker
 
@@ -160,7 +160,7 @@ class TestDynamicDevcontainerGenerator:
 
     def test_generate_worker_entry_script(self, tmp_path: Path) -> None:
         """Test worker entry script generation."""
-        output_dir = tmp_path / ".zerg"
+        output_dir = tmp_path / ".mahabharatha"
         generator = DynamicDevcontainerGenerator()
 
         script_path = generator.generate_worker_entry_script(output_dir)
@@ -187,7 +187,7 @@ class TestContainerLauncher:
         """Test container launcher initialization."""
         launcher = ContainerLauncher()
 
-        assert launcher.image_name == "zerg-worker"
+        assert launcher.image_name == "mahabharatha-worker"
         assert launcher.network == "bridge"
         assert launcher._workers == {}
         assert launcher._container_ids == {}
@@ -216,7 +216,7 @@ class TestContainerLauncher:
             worker_id=0,
             feature="test-feature",
             worktree_path=tmp_path,
-            branch="zerg/test/worker-0",
+            branch="mahabharatha/test/worker-0",
         )
 
         assert result.success is True
@@ -237,7 +237,7 @@ class TestContainerLauncher:
             worker_id=0,
             feature="test-feature",
             worktree_path=tmp_path,
-            branch="zerg/test/worker-0",
+            branch="mahabharatha/test/worker-0",
         )
 
         assert result.success is False
@@ -247,7 +247,7 @@ class TestContainerLauncher:
     def test_monitor_running(self, mock_run: MagicMock, tmp_path: Path) -> None:
         """Test monitoring running container."""
         # Setup container - use real WorkerHandle to avoid MagicMock comparison issues
-        from zerg.launcher_types import WorkerHandle
+        from mahabharatha.launcher_types import WorkerHandle
 
         launcher = ContainerLauncher()
         launcher._workers[0] = WorkerHandle(worker_id=0, container_id="abc123")
@@ -266,7 +266,7 @@ class TestContainerLauncher:
     def test_monitor_exited(self, mock_run: MagicMock, tmp_path: Path) -> None:
         """Test monitoring exited container."""
         # Setup container
-        from zerg.launcher_types import WorkerHandle
+        from mahabharatha.launcher_types import WorkerHandle
 
         launcher = ContainerLauncher()
         launcher._workers[0] = WorkerHandle(worker_id=0, container_id="abc123")
@@ -284,7 +284,7 @@ class TestContainerLauncher:
     @patch("subprocess.run")
     def test_terminate(self, mock_run: MagicMock) -> None:
         """Test container termination."""
-        from zerg.launcher_types import WorkerHandle
+        from mahabharatha.launcher_types import WorkerHandle
 
         launcher = ContainerLauncher()
         launcher._workers[0] = WorkerHandle(worker_id=0, container_id="abc123")
@@ -371,10 +371,10 @@ class TestAutoDetectLauncherMode:
         """Test that auto-detect always selects subprocess mode."""
         from unittest.mock import MagicMock
 
-        from zerg.config import ZergConfig
-        from zerg.launcher_configurator import LauncherConfigurator
-        from zerg.launcher_types import LauncherType
-        from zerg.plugins import PluginRegistry
+        from mahabharatha.config import ZergConfig
+        from mahabharatha.launcher_configurator import LauncherConfigurator
+        from mahabharatha.launcher_types import LauncherType
+        from mahabharatha.plugins import PluginRegistry
 
         # Even with devcontainer present, auto-detect returns SUBPROCESS
         devcontainer_dir = tmp_path / ".devcontainer"
@@ -385,7 +385,7 @@ class TestAutoDetectLauncherMode:
         config.workers = MagicMock()
         config.workers.timeout_minutes = 30
         config.logging = MagicMock()
-        config.logging.directory = ".zerg/logs"
+        config.logging.directory = ".mahabharatha/logs"
         del config.container_image
 
         registry = MagicMock(spec=PluginRegistry)
@@ -406,7 +406,7 @@ class TestInitMultiLanguage:
         (tmp_path / "requirements.txt").write_text("fastapi\npydantic\n")
         (tmp_path / "pyproject.toml").write_text("[project]\nname = 'test'\n")
 
-        from zerg.security.rules import detect_project_stack
+        from mahabharatha.security.rules import detect_project_stack
 
         stack = detect_project_stack(tmp_path)
 
@@ -422,7 +422,7 @@ class TestInitMultiLanguage:
         # Create JavaScript indicators
         (tmp_path / "package.json").write_text('{"name": "test", "dependencies": {"react": "^18.0.0"}}')
 
-        from zerg.security.rules import detect_project_stack
+        from mahabharatha.security.rules import detect_project_stack
 
         stack = detect_project_stack(tmp_path)
 

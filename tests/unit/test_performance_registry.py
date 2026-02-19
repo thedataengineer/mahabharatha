@@ -1,4 +1,4 @@
-"""Tests for zerg.performance.tool_registry module."""
+"""Tests for mahabharatha.performance.tool_registry module."""
 
 from __future__ import annotations
 
@@ -6,8 +6,8 @@ from unittest.mock import MagicMock, patch
 
 from rich.console import Console
 
-from zerg.performance.tool_registry import ToolRegistry
-from zerg.performance.types import ToolStatus
+from mahabharatha.performance.tool_registry import ToolRegistry
+from mahabharatha.performance.types import ToolStatus
 
 
 class TestToolRegistryInit:
@@ -54,8 +54,8 @@ class TestGetAvailable:
             return None
 
         with (
-            patch("zerg.performance.tool_registry.shutil.which", side_effect=mock_which),
-            patch("zerg.performance.tool_registry.subprocess.run") as mock_run,
+            patch("mahabharatha.performance.tool_registry.shutil.which", side_effect=mock_which),
+            patch("mahabharatha.performance.tool_registry.subprocess.run") as mock_run,
         ):
             mock_run.return_value = MagicMock(stdout="1.0.0\n", stderr="")
             available = registry.get_available()

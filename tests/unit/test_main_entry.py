@@ -1,7 +1,7 @@
 """Unit tests for ZERG __main__.py entry point.
 
-Test pattern: uses both `import zerg.__main__` (for reload/attribute access)
-and `from zerg.__main__ import cli` (for direct symbol testing).
+Test pattern: uses both `import mahabharatha.__main__` (for reload/attribute access)
+and `from mahabharatha.__main__ import cli` (for direct symbol testing).
 """
 
 import runpy
@@ -16,12 +16,12 @@ class TestMainEntryPoint:
 
     def test_import_main_module(self) -> None:
         """Test that __main__ module can be imported."""
-        import zerg.__main__  # noqa: F401
+        import mahabharatha.__main__  # noqa: F401
 
     def test_main_imports_cli(self) -> None:
-        """Test that __main__ imports cli from zerg.cli."""
-        from zerg.__main__ import cli
-        from zerg.cli import cli as expected_cli
+        """Test that __main__ imports cli from mahabharatha.cli."""
+        from mahabharatha.__main__ import cli
+        from mahabharatha.cli import cli as expected_cli
 
         assert cli is expected_cli
 
@@ -29,7 +29,7 @@ class TestMainEntryPoint:
         """Test that __main__ block calls cli() when run directly via exec."""
         mock_cli = MagicMock()
 
-        # Create a mock module for zerg.cli
+        # Create a mock module for mahabharatha.cli
         mock_cli_module = MagicMock()
         mock_cli_module.cli = mock_cli
 
@@ -40,24 +40,24 @@ class TestMainEntryPoint:
         }
 
         # We need to inject the mock before executing
-        with patch.dict(sys.modules, {"zerg.cli": mock_cli_module}):
+        with patch.dict(sys.modules, {"mahabharatha.cli": mock_cli_module}):
             code = """
-from zerg.cli import cli
+from mahabharatha.cli import cli
 
 if __name__ == "__main__":
     cli()
 """
-            exec(compile(code, "zerg/__main__.py", "exec"), exec_globals)
+            exec(compile(code, "mahabharatha/__main__.py", "exec"), exec_globals)
 
         # cli should have been called once
         mock_cli.assert_called_once()
 
     def test_main_executed_via_python_m(self) -> None:
-        """Test module can be executed via python -m zerg."""
+        """Test module can be executed via python -m mahabharatha."""
         import subprocess
 
         result = subprocess.run(
-            [sys.executable, "-m", "zerg", "--help"],
+            [sys.executable, "-m", "mahabharatha", "--help"],
             capture_output=True,
             text=True,
             timeout=30,
@@ -68,25 +68,25 @@ if __name__ == "__main__":
         assert "Parallel Claude Code" in result.stdout
 
     def test_main_executed_shows_version(self) -> None:
-        """Test python -m zerg --version works."""
+        """Test python -m mahabharatha --version works."""
         import subprocess
 
         result = subprocess.run(
-            [sys.executable, "-m", "zerg", "--version"],
+            [sys.executable, "-m", "mahabharatha", "--version"],
             capture_output=True,
             text=True,
             timeout=30,
         )
 
         assert result.returncode == 0
-        assert "zerg" in result.stdout.lower()
+        assert "mahabharatha" in result.stdout.lower()
 
     def test_main_module_docstring(self) -> None:
         """Test that __main__ module has a docstring."""
-        import zerg.__main__
+        import mahabharatha.__main__
 
-        assert zerg.__main__.__doc__ is not None
-        assert "entry point" in zerg.__main__.__doc__.lower()
+        assert mahabharatha.__main__.__doc__ is not None
+        assert "entry point" in mahabharatha.__main__.__doc__.lower()
 
 
 class TestMainModuleAttributes:
@@ -94,13 +94,13 @@ class TestMainModuleAttributes:
 
     def test_module_has_cli_attribute(self) -> None:
         """Test that the module exposes cli function."""
-        from zerg import __main__
+        from mahabharatha import __main__
 
         assert hasattr(__main__, "cli")
 
     def test_cli_is_callable(self) -> None:
         """Test that cli attribute is callable."""
-        from zerg.__main__ import cli
+        from mahabharatha.__main__ import cli
 
         assert callable(cli)
 
@@ -108,7 +108,7 @@ class TestMainModuleAttributes:
         """Test that cli is a Click command group."""
         import click
 
-        from zerg.__main__ import cli
+        from mahabharatha.__main__ import cli
 
         assert isinstance(cli, click.core.Group)
 
@@ -118,25 +118,25 @@ class TestMainBlockExecution:
 
     def test_main_block_not_executed_on_import(self) -> None:
         """Test that cli() is not called when module is just imported."""
-        with patch("zerg.cli.cli") as mock_cli:
+        with patch("mahabharatha.cli.cli") as mock_cli:
             # Fresh import should not call cli
             import importlib
 
-            import zerg.__main__
+            import mahabharatha.__main__
 
-            importlib.reload(zerg.__main__)
+            importlib.reload(mahabharatha.__main__)
 
             # cli should NOT have been called during import
             mock_cli.assert_not_called()
 
     def test_main_block_executed_via_runpy(self) -> None:
         """Test running __main__ via runpy.run_module triggers cli()."""
-        with patch("zerg.cli.cli") as mock_cli:
+        with patch("mahabharatha.cli.cli") as mock_cli:
             # Make the mock raise SystemExit to stop further execution
             mock_cli.side_effect = SystemExit(0)
 
             with pytest.raises(SystemExit):
-                runpy.run_module("zerg", run_name="__main__", alter_sys=True)
+                runpy.run_module("mahabharatha", run_name="__main__", alter_sys=True)
 
             # cli should have been called
             mock_cli.assert_called_once()
@@ -147,7 +147,11 @@ class TestMainBlockExecution:
 
         # Use subprocess to verify runpy execution
         result = subprocess.run(
-            [sys.executable, "-c", "import runpy; runpy.run_module('zerg', run_name='__main__', alter_sys=True)"],
+            [
+                sys.executable,
+                "-c",
+                "import runpy; runpy.run_module('mahabharatha', run_name='__main__', alter_sys=True)",
+            ],
             capture_output=True,
             text=True,
             timeout=30,
@@ -164,7 +168,7 @@ class TestMainBlockExecution:
         import subprocess
 
         result = subprocess.run(
-            [sys.executable, "-m", "zerg", "nonexistent-command"],
+            [sys.executable, "-m", "mahabharatha", "nonexistent-command"],
             capture_output=True,
             text=True,
             timeout=30,
@@ -184,7 +188,7 @@ class TestCLIIntegrationFromMain:
         import subprocess
 
         result = subprocess.run(
-            [sys.executable, "-m", "zerg", "--verbose", "--help"],
+            [sys.executable, "-m", "mahabharatha", "--verbose", "--help"],
             capture_output=True,
             text=True,
             timeout=30,
@@ -197,7 +201,7 @@ class TestCLIIntegrationFromMain:
         import subprocess
 
         result = subprocess.run(
-            [sys.executable, "-m", "zerg", "--quiet", "--help"],
+            [sys.executable, "-m", "mahabharatha", "--quiet", "--help"],
             capture_output=True,
             text=True,
             timeout=30,
@@ -210,7 +214,7 @@ class TestCLIIntegrationFromMain:
         import subprocess
 
         result = subprocess.run(
-            [sys.executable, "-m", "zerg", "status", "--help"],
+            [sys.executable, "-m", "mahabharatha", "status", "--help"],
             capture_output=True,
             text=True,
             timeout=30,
@@ -225,12 +229,12 @@ class TestDirectMainBlockCoverage:
 
     def test_main_block_coverage_via_direct_execution(self) -> None:
         """Directly execute the if __name__ == '__main__' block for coverage."""
-        import zerg.__main__
+        import mahabharatha.__main__
 
         # Get the actual cli from the module
 
         # Mock the cli to prevent actual execution
-        with patch.object(zerg.__main__, "cli") as mock_cli:
+        with patch.object(mahabharatha.__main__, "cli") as mock_cli:
             # Directly call the code that would execute in the if __name__ == "__main__" block
             mock_cli()
 
@@ -240,8 +244,8 @@ class TestDirectMainBlockCoverage:
         """Test calling the entry point function directly."""
         from click.testing import CliRunner
 
-        # Import directly from zerg.cli to avoid any mocking side effects
-        from zerg.cli import cli
+        # Import directly from mahabharatha.cli to avoid any mocking side effects
+        from mahabharatha.cli import cli
 
         runner = CliRunner()
         result = runner.invoke(cli, ["--help"])
@@ -255,9 +259,9 @@ class TestDirectMainBlockCoverage:
         from pathlib import Path
 
         # Get the path to __main__.py
-        import zerg
+        import mahabharatha
 
-        main_path = Path(zerg.__file__).parent / "__main__.py"
+        main_path = Path(mahabharatha.__file__).parent / "__main__.py"
 
         # Create a mock cli
         mock_cli = MagicMock()
@@ -273,7 +277,7 @@ class TestDirectMainBlockCoverage:
         module.__name__ = "__main__"
 
         # Patch sys.modules to inject our mock
-        with patch.dict(sys.modules, {"zerg.cli": MagicMock(cli=mock_cli)}):
+        with patch.dict(sys.modules, {"mahabharatha.cli": MagicMock(cli=mock_cli)}):
             with pytest.raises(SystemExit):
                 spec.loader.exec_module(module)
 

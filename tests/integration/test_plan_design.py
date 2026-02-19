@@ -5,7 +5,7 @@ from pathlib import Path
 
 from click.testing import CliRunner
 
-from zerg.cli import cli
+from mahabharatha.cli import cli
 
 
 class TestPlanCommand:

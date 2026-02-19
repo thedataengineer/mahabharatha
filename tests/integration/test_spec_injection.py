@@ -7,9 +7,9 @@ from unittest.mock import patch
 
 import pytest
 
-from zerg.config import ZergConfig
-from zerg.protocol_state import WorkerProtocol
-from zerg.spec_loader import SpecLoader
+from mahabharatha.config import ZergConfig
+from mahabharatha.protocol_state import WorkerProtocol
+from mahabharatha.spec_loader import SpecLoader
 
 
 class TestSpecInjection:
@@ -37,10 +37,10 @@ class TestSpecInjection:
         specs = gsd / "specs"
         specs.mkdir()
 
-        # Create .zerg/state directory
-        zerg = workspace / ".zerg"
-        zerg.mkdir()
-        (zerg / "state").mkdir()
+        # Create .mahabharatha/state directory
+        mahabharatha = workspace / ".mahabharatha"
+        mahabharatha.mkdir()
+        (mahabharatha / "state").mkdir()
 
         return workspace
 
@@ -106,7 +106,7 @@ class TestSpecInjection:
             "ZERG_WORKER_ID": "1",
             "ZERG_FEATURE": "test-feature",
             "ZERG_WORKTREE": str(temp_workspace),
-            "ZERG_BRANCH": "zerg/test-feature/worker-1",
+            "ZERG_BRANCH": "mahabharatha/test-feature/worker-1",
             "ZERG_SPEC_DIR": str(feature_specs),
         }
 
@@ -129,7 +129,7 @@ class TestSpecInjection:
             "ZERG_WORKER_ID": "1",
             "ZERG_FEATURE": "test-feature",
             "ZERG_WORKTREE": str(temp_workspace),
-            "ZERG_BRANCH": "zerg/test-feature/worker-1",
+            "ZERG_BRANCH": "mahabharatha/test-feature/worker-1",
             "ZERG_SPEC_DIR": str(feature_specs),
         }
 
@@ -174,16 +174,16 @@ class TestSpecInjection:
         subprocess.run(["git", "config", "user.name", "Test"], cwd=workspace, capture_output=True)
 
         (workspace / ".gsd").mkdir()
-        # Create .zerg/state directory
-        zerg = workspace / ".zerg"
-        zerg.mkdir()
-        (zerg / "state").mkdir()
+        # Create .mahabharatha/state directory
+        mahabharatha = workspace / ".mahabharatha"
+        mahabharatha.mkdir()
+        (mahabharatha / "state").mkdir()
 
         env = {
             "ZERG_WORKER_ID": "1",
             "ZERG_FEATURE": "no-specs-feature",
             "ZERG_WORKTREE": str(workspace),
-            "ZERG_BRANCH": "zerg/no-specs/worker-1",
+            "ZERG_BRANCH": "mahabharatha/no-specs/worker-1",
         }
 
         with patch.dict(os.environ, env, clear=False):
@@ -211,7 +211,7 @@ class TestSpecInjection:
             "ZERG_WORKER_ID": "1",
             "ZERG_FEATURE": "test-feature",
             "ZERG_WORKTREE": str(temp_workspace),
-            "ZERG_BRANCH": "zerg/test-feature/worker-1",
+            "ZERG_BRANCH": "mahabharatha/test-feature/worker-1",
             "ZERG_SPEC_DIR": str(feature_specs),
         }
 
@@ -296,7 +296,7 @@ class TestLauncherSpecDirEnv:
 
     def test_subprocess_launcher_sets_spec_dir(self) -> None:
         """Verify SubprocessLauncher includes ZERG_SPEC_DIR in env."""
-        from zerg.env_validator import ALLOWED_ENV_VARS
+        from mahabharatha.env_validator import ALLOWED_ENV_VARS
 
         assert "ZERG_SPEC_DIR" in ALLOWED_ENV_VARS
 

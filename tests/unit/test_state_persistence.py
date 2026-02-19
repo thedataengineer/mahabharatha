@@ -15,8 +15,8 @@ from unittest.mock import patch
 
 import pytest
 
-from zerg.exceptions import StateError
-from zerg.state import StateManager
+from mahabharatha.exceptions import StateError
+from mahabharatha.state import StateManager
 
 
 class TestLoadEdgeCases:

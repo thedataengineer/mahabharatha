@@ -4,8 +4,8 @@ import json
 import threading
 from pathlib import Path
 
-from zerg.constants import LogEvent, LogPhase
-from zerg.log_writer import StructuredLogWriter, TaskArtifactCapture
+from mahabharatha.constants import LogEvent, LogPhase
+from mahabharatha.log_writer import StructuredLogWriter, TaskArtifactCapture
 
 
 class TestStructuredLogWriter:

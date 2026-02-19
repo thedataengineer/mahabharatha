@@ -5,13 +5,13 @@ from pathlib import Path
 
 import pytest
 
-from zerg.adaptive_detail import (
+from mahabharatha.adaptive_detail import (
     AdaptiveDetailManager,
     AdaptiveMetrics,
     DirectoryMetrics,
     FileMetrics,
 )
-from zerg.config import PlanningConfig
+from mahabharatha.config import PlanningConfig
 
 
 class TestFileMetrics:

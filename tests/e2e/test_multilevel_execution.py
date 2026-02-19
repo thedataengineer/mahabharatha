@@ -9,16 +9,16 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.constants import WorkerStatus
-from zerg.launcher_types import SpawnResult
-from zerg.orchestrator import Orchestrator
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.launcher_types import SpawnResult
+from mahabharatha.orchestrator import Orchestrator
 
 
 @pytest.fixture
 def multilevel_task_graph(tmp_path: Path):
     """Create a multi-level task graph."""
-    zerg_dir = tmp_path / ".zerg"
-    zerg_dir.mkdir()
+    mahabharatha_dir = tmp_path / ".mahabharatha"
+    mahabharatha_dir.mkdir()
 
     task_graph = {
         "feature": "multilevel-test",
@@ -76,7 +76,7 @@ def multilevel_task_graph(tmp_path: Path):
         },
     }
 
-    (zerg_dir / "task-graph.json").write_text(json.dumps(task_graph))
+    (mahabharatha_dir / "task-graph.json").write_text(json.dumps(task_graph))
     return tmp_path
 
 
@@ -84,15 +84,15 @@ def multilevel_task_graph(tmp_path: Path):
 def mock_orchestrator_deps():
     """Mock all orchestrator dependencies."""
     with (
-        patch("zerg.orchestrator.StateManager") as state_mock,
-        patch("zerg.orchestrator.LevelController") as levels_mock,
-        patch("zerg.orchestrator.TaskParser") as parser_mock,
-        patch("zerg.orchestrator.GateRunner"),
-        patch("zerg.orchestrator.WorktreeManager") as worktree_mock,
-        patch("zerg.orchestrator.ContainerManager"),
-        patch("zerg.orchestrator.PortAllocator") as ports_mock,
-        patch("zerg.orchestrator.MergeCoordinator") as merge_mock,
-        patch("zerg.orchestrator.SubprocessLauncher") as launcher_mock,
+        patch("mahabharatha.orchestrator.StateManager") as state_mock,
+        patch("mahabharatha.orchestrator.LevelController") as levels_mock,
+        patch("mahabharatha.orchestrator.TaskParser") as parser_mock,
+        patch("mahabharatha.orchestrator.GateRunner"),
+        patch("mahabharatha.orchestrator.WorktreeManager") as worktree_mock,
+        patch("mahabharatha.orchestrator.ContainerManager"),
+        patch("mahabharatha.orchestrator.PortAllocator") as ports_mock,
+        patch("mahabharatha.orchestrator.MergeCoordinator") as merge_mock,
+        patch("mahabharatha.orchestrator.SubprocessLauncher") as launcher_mock,
     ):
         state = MagicMock()
         state.load.return_value = {}
@@ -123,7 +123,7 @@ def mock_orchestrator_deps():
         worktree = MagicMock()
         worktree_info = MagicMock()
         worktree_info.path = Path("/tmp/worktree")
-        worktree_info.branch = "zerg/multilevel-test/worker-0"
+        worktree_info.branch = "mahabharatha/multilevel-test/worker-0"
         worktree.create.return_value = worktree_info
         worktree_mock.return_value = worktree
 
@@ -193,7 +193,7 @@ class TestLevelProgression:
         mock_orchestrator_deps["merge"].full_merge_flow.return_value.success = False
         mock_orchestrator_deps["merge"].full_merge_flow.return_value.error = "Conflict"
 
-        with patch("zerg.level_coordinator.time.sleep"):
+        with patch("mahabharatha.level_coordinator.time.sleep"):
             orch = Orchestrator("multilevel-test")
             orch._spawn_worker(0)
             orch._on_level_complete_handler(1)

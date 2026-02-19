@@ -1,9 +1,9 @@
-"""Unit tests for zerg.plugin_config models."""
+"""Unit tests for mahabharatha.plugin_config models."""
 
 import pytest
 from pydantic import ValidationError
 
-from zerg.plugin_config import HookConfig, LauncherPluginConfig, PluginGateConfig, PluginsConfig
+from mahabharatha.plugin_config import HookConfig, LauncherPluginConfig, PluginGateConfig, PluginsConfig
 
 
 def test_plugins_config_defaults():
@@ -62,7 +62,7 @@ def test_plugins_config_serialization():
         enabled=False,
         hooks=[HookConfig(event="pre_merge", command="./check.sh", timeout=30)],
         quality_gates=[PluginGateConfig(name="security", command="bandit -r .", required=True)],
-        launchers=[LauncherPluginConfig(name="docker", entry_point="zerg.docker:DockerLauncher")],
+        launchers=[LauncherPluginConfig(name="docker", entry_point="mahabharatha.docker:DockerLauncher")],
     )
     data = config.model_dump()
     restored = PluginsConfig(**data)
@@ -70,7 +70,7 @@ def test_plugins_config_serialization():
     assert data["enabled"] is False
     assert data["hooks"][0]["event"] == "pre_merge"
     assert data["quality_gates"][0]["required"] is True
-    assert data["launchers"][0]["entry_point"] == "zerg.docker:DockerLauncher"
+    assert data["launchers"][0]["entry_point"] == "mahabharatha.docker:DockerLauncher"
 
 
 def test_hook_config_timeout_validation():

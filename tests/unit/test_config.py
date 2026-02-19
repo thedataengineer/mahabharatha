@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from zerg.config import (
+from mahabharatha.config import (
     LoggingConfig,
     PortsConfig,
     ProjectConfig,
@@ -15,7 +15,7 @@ from zerg.config import (
     WorkersConfig,
     ZergConfig,
 )
-from zerg.launcher_types import LauncherType
+from mahabharatha.launcher_types import LauncherType
 
 
 class TestProjectConfig:
@@ -24,7 +24,7 @@ class TestProjectConfig:
     def test_default_and_custom(self) -> None:
         """Test default and custom project configuration."""
         default = ProjectConfig()
-        assert default.name == "zerg"
+        assert default.name == "mahabharatha"
         custom = ProjectConfig(name="custom", description="Custom project")
         assert custom.name == "custom"
 
@@ -118,7 +118,7 @@ class TestLoggingConfig:
         """Test default logging configuration."""
         config = LoggingConfig()
         assert config.level == "info"
-        assert config.directory == ".zerg/logs"
+        assert config.directory == ".mahabharatha/logs"
 
     def test_level_validation(self) -> None:
         """Test level pattern validation."""
@@ -152,7 +152,7 @@ class TestZergConfig:
     def test_default_values(self) -> None:
         """Test default ZergConfig values."""
         config = ZergConfig()
-        assert config.project.name == "zerg"
+        assert config.project.name == "mahabharatha"
         assert config.workers.max_concurrent == 5
         assert config.ports.range_start == 49152
         assert config.quality_gates == []
@@ -176,7 +176,7 @@ class TestZergConfig:
         config = ZergConfig()
         data = config.to_dict()
         assert isinstance(data, dict)
-        assert data["project"]["name"] == "zerg"
+        assert data["project"]["name"] == "mahabharatha"
 
     @pytest.mark.smoke
     def test_context_threshold_property(self) -> None:
@@ -221,7 +221,7 @@ class TestZergConfigLoad:
     def test_load_nonexistent_returns_defaults(self, tmp_path: Path) -> None:
         """Test loading with non-existent path returns defaults."""
         config = ZergConfig.load(tmp_path / "nonexistent.yaml")
-        assert config.project.name == "zerg"
+        assert config.project.name == "mahabharatha"
 
 
 class TestZergConfigSave:

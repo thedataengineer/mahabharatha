@@ -6,9 +6,9 @@ import click
 import pytest
 from click.testing import CliRunner
 
-from zerg.commands.loop_mixin import loop_options
-from zerg.config import LoopConfig
-from zerg.loops import (
+from mahabharatha.commands.loop_mixin import loop_options
+from mahabharatha.config import LoopConfig
+from mahabharatha.loops import (
     IterationResult,
     LoopController,
     LoopStatus,

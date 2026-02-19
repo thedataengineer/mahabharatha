@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 import pytest
 
-from zerg.security.rules import (
+from mahabharatha.security.rules import (
     FRAMEWORK_DETECTION,
     INFRASTRUCTURE_DETECTION,
     LANGUAGE_DETECTION,
@@ -150,7 +150,7 @@ class TestGenerateClaudeMdSection:
 class TestIntegrateSecurityRules:
     def test_integration_detects_and_fetches(self, tmp_path: Path) -> None:
         (tmp_path / "app.py").write_text("print('hello')")
-        with patch("zerg.security.rules.fetch_rules") as mock_fetch:
+        with patch("mahabharatha.security.rules.fetch_rules") as mock_fetch:
             mock_fetch.return_value = {}
             result = integrate_security_rules(
                 tmp_path, output_dir=tmp_path / ".claude" / "rules" / "security", update_claude_md=False

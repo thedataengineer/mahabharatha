@@ -3,8 +3,8 @@
 import json
 from pathlib import Path
 
-from zerg.assign import WorkerAssignment
-from zerg.types import Task
+from mahabharatha.assign import WorkerAssignment
+from mahabharatha.types import Task
 
 
 class TestWorkerAssignment:

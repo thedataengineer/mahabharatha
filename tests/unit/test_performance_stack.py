@@ -1,11 +1,11 @@
-"""Tests for zerg.performance.stack_detector module."""
+"""Tests for mahabharatha.performance.stack_detector module."""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
 
-from zerg.performance.stack_detector import detect_stack
+from mahabharatha.performance.stack_detector import detect_stack
 
 
 class TestDetectStack:

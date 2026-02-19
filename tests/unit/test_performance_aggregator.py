@@ -6,8 +6,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.performance.aggregator import PerformanceAuditor
-from zerg.performance.types import (
+from mahabharatha.performance.aggregator import PerformanceAuditor
+from mahabharatha.performance.types import (
     DetectedStack,
     PerformanceFinding,
     Severity,
@@ -71,9 +71,9 @@ def _make_finding(
 class TestPerformanceAuditor:
     """Tests for the PerformanceAuditor orchestrator."""
 
-    @patch("zerg.performance.aggregator.detect_stack")
-    @patch("zerg.performance.aggregator.ToolRegistry")
-    @patch("zerg.performance.aggregator.FactorCatalog.load")
+    @patch("mahabharatha.performance.aggregator.detect_stack")
+    @patch("mahabharatha.performance.aggregator.ToolRegistry")
+    @patch("mahabharatha.performance.aggregator.FactorCatalog.load")
     def test_no_tools_available(
         self,
         mock_catalog_load: MagicMock,
@@ -102,9 +102,9 @@ class TestPerformanceAuditor:
         assert report.overall_score is None
         assert report.factors_checked == 0
 
-    @patch("zerg.performance.aggregator.detect_stack")
-    @patch("zerg.performance.aggregator.ToolRegistry")
-    @patch("zerg.performance.aggregator.FactorCatalog.load")
+    @patch("mahabharatha.performance.aggregator.detect_stack")
+    @patch("mahabharatha.performance.aggregator.ToolRegistry")
+    @patch("mahabharatha.performance.aggregator.FactorCatalog.load")
     def test_synthetic_findings_scoring(
         self,
         mock_catalog_load: MagicMock,
@@ -156,9 +156,9 @@ class TestPerformanceAuditor:
         assert test_cat.factors_checked == 5
         assert test_cat.score == pytest.approx(50.0)
 
-    @patch("zerg.performance.aggregator.detect_stack")
-    @patch("zerg.performance.aggregator.ToolRegistry")
-    @patch("zerg.performance.aggregator.FactorCatalog.load")
+    @patch("mahabharatha.performance.aggregator.detect_stack")
+    @patch("mahabharatha.performance.aggregator.ToolRegistry")
+    @patch("mahabharatha.performance.aggregator.FactorCatalog.load")
     def test_low_finding_scoring(
         self,
         mock_catalog_load: MagicMock,
@@ -203,9 +203,9 @@ class TestPerformanceAuditor:
         assert big_cat.factors_checked == 10
         assert big_cat.score == pytest.approx(98.0)
 
-    @patch("zerg.performance.aggregator.detect_stack")
-    @patch("zerg.performance.aggregator.ToolRegistry")
-    @patch("zerg.performance.aggregator.FactorCatalog.load")
+    @patch("mahabharatha.performance.aggregator.detect_stack")
+    @patch("mahabharatha.performance.aggregator.ToolRegistry")
+    @patch("mahabharatha.performance.aggregator.FactorCatalog.load")
     def test_overall_score_weighted_average(
         self,
         mock_catalog_load: MagicMock,
@@ -252,9 +252,9 @@ class TestPerformanceAuditor:
         assert report.overall_score is not None
         assert report.overall_score == pytest.approx(82.0)
 
-    @patch("zerg.performance.aggregator.detect_stack")
-    @patch("zerg.performance.aggregator.ToolRegistry")
-    @patch("zerg.performance.aggregator.FactorCatalog.load")
+    @patch("mahabharatha.performance.aggregator.detect_stack")
+    @patch("mahabharatha.performance.aggregator.ToolRegistry")
+    @patch("mahabharatha.performance.aggregator.FactorCatalog.load")
     def test_empty_files(
         self,
         mock_catalog_load: MagicMock,

@@ -51,20 +51,20 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.config import (
+from mahabharatha.config import (
     LoggingConfig,
     ProjectConfig,
     WorkersConfig,
     ZergConfig,
 )
-from zerg.constants import (
+from mahabharatha.constants import (
     LevelMergeStatus,
     TaskStatus,
     WorkerStatus,
 )
-from zerg.launcher_types import LauncherConfig, LauncherType, SpawnResult, WorkerHandle
-from zerg.merge import MergeFlowResult
-from zerg.types import WorkerState
+from mahabharatha.launcher_types import LauncherConfig, LauncherType, SpawnResult, WorkerHandle
+from mahabharatha.merge import MergeFlowResult
+from mahabharatha.types import WorkerState
 
 # =============================================================================
 # Mock Orchestrator Dependencies
@@ -82,18 +82,18 @@ def mock_orchestrator_deps() -> Generator[dict[str, MagicMock], None, None]:
         Dictionary of mocked dependency objects
     """
     with (
-        patch("zerg.orchestrator.StateManager") as state_mock,
-        patch("zerg.orchestrator.LevelController") as levels_mock,
-        patch("zerg.orchestrator.TaskParser") as parser_mock,
-        patch("zerg.orchestrator.GateRunner") as gates_mock,
-        patch("zerg.orchestrator.WorktreeManager") as worktree_mock,
-        patch("zerg.orchestrator.ContainerManager") as container_mock,
-        patch("zerg.orchestrator.PortAllocator") as ports_mock,
-        patch("zerg.orchestrator.MergeCoordinator") as merge_mock,
-        patch("zerg.orchestrator.SubprocessLauncher") as subprocess_launcher_mock,
-        patch("zerg.orchestrator.ContainerLauncher") as container_launcher_mock,
-        patch("zerg.orchestrator.TaskSyncBridge") as task_sync_mock,
-        patch("zerg.orchestrator.MetricsCollector") as metrics_mock,
+        patch("mahabharatha.orchestrator.StateManager") as state_mock,
+        patch("mahabharatha.orchestrator.LevelController") as levels_mock,
+        patch("mahabharatha.orchestrator.TaskParser") as parser_mock,
+        patch("mahabharatha.orchestrator.GateRunner") as gates_mock,
+        patch("mahabharatha.orchestrator.WorktreeManager") as worktree_mock,
+        patch("mahabharatha.orchestrator.ContainerManager") as container_mock,
+        patch("mahabharatha.orchestrator.PortAllocator") as ports_mock,
+        patch("mahabharatha.orchestrator.MergeCoordinator") as merge_mock,
+        patch("mahabharatha.orchestrator.SubprocessLauncher") as subprocess_launcher_mock,
+        patch("mahabharatha.orchestrator.ContainerLauncher") as container_launcher_mock,
+        patch("mahabharatha.orchestrator.TaskSyncBridge") as task_sync_mock,
+        patch("mahabharatha.orchestrator.MetricsCollector") as metrics_mock,
     ):
         # StateManager mock
         state = MagicMock()
@@ -141,7 +141,7 @@ def mock_orchestrator_deps() -> Generator[dict[str, MagicMock], None, None]:
         worktree = MagicMock()
         worktree_info = MagicMock()
         worktree_info.path = Path("/tmp/worktree")
-        worktree_info.branch = "zerg/test/worker-0"
+        worktree_info.branch = "mahabharatha/test/worker-0"
         worktree.create.return_value = worktree_info
         worktree.get_worktree_path.return_value = Path("/tmp/worktree")
         worktree_mock.return_value = worktree
@@ -264,7 +264,7 @@ def merge_timeout_result() -> MergeFlowResult:
     return MergeFlowResult(
         success=False,
         level=1,
-        source_branches=["zerg/test/worker-0", "zerg/test/worker-1"],
+        source_branches=["mahabharatha/test/worker-0", "mahabharatha/test/worker-1"],
         target_branch="main",
         error="Merge timed out",
     )
@@ -280,7 +280,7 @@ def merge_conflict_result() -> MergeFlowResult:
     return MergeFlowResult(
         success=False,
         level=1,
-        source_branches=["zerg/test/worker-0"],
+        source_branches=["mahabharatha/test/worker-0"],
         target_branch="main",
         error="CONFLICT (content): Merge conflict in src/state.py",
     )
@@ -296,7 +296,7 @@ def merge_success_result() -> MergeFlowResult:
     return MergeFlowResult(
         success=True,
         level=1,
-        source_branches=["zerg/test/worker-0", "zerg/test/worker-1"],
+        source_branches=["mahabharatha/test/worker-0", "mahabharatha/test/worker-1"],
         target_branch="main",
         merge_commit="abc123def456789",
     )
@@ -321,7 +321,7 @@ def merge_retry_scenario(
     fail_result = MergeFlowResult(
         success=False,
         level=1,
-        source_branches=["zerg/test/worker-0"],
+        source_branches=["mahabharatha/test/worker-0"],
         target_branch="main",
         error="Merge timed out",
     )
@@ -329,7 +329,7 @@ def merge_retry_scenario(
     success_result = MergeFlowResult(
         success=True,
         level=1,
-        source_branches=["zerg/test/worker-0"],
+        source_branches=["mahabharatha/test/worker-0"],
         target_branch="main",
         merge_commit="retry123",
     )
@@ -450,8 +450,8 @@ def crashed_worker_state() -> WorkerState:
         current_task="TASK-001",
         port=49152,
         container_id="container-crashed",
-        worktree_path="/tmp/zerg-worktrees/test/worker-0",
-        branch="zerg/test/worker-0",
+        worktree_path="/tmp/mahabharatha-worktrees/test/worker-0",
+        branch="mahabharatha/test/worker-0",
         started_at=datetime.now() - timedelta(minutes=10),
         tasks_completed=2,
         context_usage=0.85,
@@ -471,8 +471,8 @@ def checkpointing_worker_state() -> WorkerState:
         current_task="TASK-002",
         port=49153,
         container_id="container-checkpoint",
-        worktree_path="/tmp/zerg-worktrees/test/worker-1",
-        branch="zerg/test/worker-1",
+        worktree_path="/tmp/mahabharatha-worktrees/test/worker-1",
+        branch="mahabharatha/test/worker-1",
         started_at=datetime.now() - timedelta(minutes=15),
         tasks_completed=3,
         context_usage=0.78,
@@ -492,8 +492,8 @@ def blocked_worker_state() -> WorkerState:
         current_task="TASK-003",
         port=49154,
         container_id="container-blocked",
-        worktree_path="/tmp/zerg-worktrees/test/worker-2",
-        branch="zerg/test/worker-2",
+        worktree_path="/tmp/mahabharatha-worktrees/test/worker-2",
+        branch="mahabharatha/test/worker-2",
         started_at=datetime.now() - timedelta(minutes=5),
         tasks_completed=1,
         context_usage=0.45,
@@ -571,7 +571,7 @@ def container_mode_config() -> ZergConfig:
         ),
         logging=LoggingConfig(
             level="debug",
-            directory="/tmp/zerg-logs",
+            directory="/tmp/mahabharatha-logs",
         ),
     )
 
@@ -592,7 +592,7 @@ def devcontainer_setup(tmp_path: Path) -> Path:
 
     devcontainer_json = {
         "name": "ZERG Worker",
-        "image": "zerg-worker:latest",
+        "image": "mahabharatha-worker:latest",
         "features": {},
         "mounts": [],
         "postCreateCommand": "echo 'Container ready'",
@@ -602,9 +602,9 @@ def devcontainer_setup(tmp_path: Path) -> Path:
         json.dumps(devcontainer_json, indent=2)
     )
 
-    # Create .zerg directory
-    (tmp_path / ".zerg").mkdir()
-    (tmp_path / ".zerg" / "state").mkdir()
+    # Create .mahabharatha directory
+    (tmp_path / ".mahabharatha").mkdir()
+    (tmp_path / ".mahabharatha" / "state").mkdir()
 
     return tmp_path
 
@@ -619,7 +619,7 @@ def container_launcher_config() -> LauncherConfig:
     return LauncherConfig(
         launcher_type=LauncherType.CONTAINER,
         timeout_seconds=3600,
-        log_dir=Path("/tmp/zerg-logs"),
+        log_dir=Path("/tmp/mahabharatha-logs"),
     )
 
 
@@ -633,7 +633,7 @@ def subprocess_launcher_config() -> LauncherConfig:
     return LauncherConfig(
         launcher_type=LauncherType.SUBPROCESS,
         timeout_seconds=1800,
-        log_dir=Path("/tmp/zerg-logs"),
+        log_dir=Path("/tmp/mahabharatha-logs"),
     )
 
 
@@ -744,7 +744,7 @@ def level_merge_in_progress_state() -> dict[str, Any]:
         "merge_status": LevelMergeStatus.MERGING.value,
         "started_at": datetime.now().isoformat(),
         "tasks": ["TASK-001", "TASK-002"],
-        "worker_branches": ["zerg/test/worker-0", "zerg/test/worker-1"],
+        "worker_branches": ["mahabharatha/test/worker-0", "mahabharatha/test/worker-1"],
     }
 
 
@@ -785,7 +785,7 @@ def orchestrator_factory(
     Returns:
         Callable that creates Orchestrator instances
     """
-    from zerg.orchestrator import Orchestrator
+    from mahabharatha.orchestrator import Orchestrator
 
     def _create_orchestrator(
         feature: str = "test-feature",
@@ -803,7 +803,7 @@ def orchestrator_factory(
             Configured Orchestrator instance
         """
         monkeypatch.chdir(tmp_path)
-        (tmp_path / ".zerg").mkdir(exist_ok=True)
+        (tmp_path / ".mahabharatha").mkdir(exist_ok=True)
 
         return Orchestrator(
             feature=feature,

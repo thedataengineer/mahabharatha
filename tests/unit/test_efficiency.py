@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from zerg.efficiency import (
+from mahabharatha.efficiency import (
     ABBREVIATIONS,
     SYMBOLS,
     CompactFormatter,
@@ -120,7 +120,7 @@ class TestConstants:
 
 class TestContextTrackerGetZone:
     def test_get_zone_returns_valid(self) -> None:
-        from zerg.context_tracker import ContextTracker
+        from mahabharatha.context_tracker import ContextTracker
 
         tracker = ContextTracker(threshold_percent=70.0)
         assert tracker.get_zone() == "green"

@@ -7,8 +7,8 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.testing import CliRunner
 
-from zerg.cli import cli
-from zerg.commands.cleanup import (
+from mahabharatha.cli import cli
+from mahabharatha.commands.cleanup import (
     create_cleanup_plan,
     discover_features,
     execute_cleanup,
@@ -37,7 +37,7 @@ class TestDiscoverFeatures:
     def test_discover_from_state_files(self, tmp_path: Path, monkeypatch) -> None:
         """Test discover finds features from state files."""
         monkeypatch.chdir(tmp_path)
-        state_dir = tmp_path / ".zerg" / "state"
+        state_dir = tmp_path / ".mahabharatha" / "state"
         state_dir.mkdir(parents=True)
         (state_dir / "user-auth.json").write_text("{}")
         (state_dir / "api-feature.json").write_text("{}")
@@ -46,18 +46,18 @@ class TestDiscoverFeatures:
         assert "user-auth" in features
         assert "api-feature" in features
 
-    @patch("zerg.commands.cleanup.GitOps")
+    @patch("mahabharatha.commands.cleanup.GitOps")
     def test_discover_from_branches(self, mock_git_cls: MagicMock, tmp_path: Path, monkeypatch) -> None:
         """Test discover finds features from git branches."""
         monkeypatch.chdir(tmp_path)
         mock_git = MagicMock()
         mock_git_cls.return_value = mock_git
 
-        from zerg.git_ops import BranchInfo
+        from mahabharatha.git_ops import BranchInfo
 
         mock_git.list_branches.return_value = [
-            BranchInfo(name="zerg/feature-one/worker-0", commit="abc123"),
-            BranchInfo(name="zerg/feature-two/staging", commit="def456"),
+            BranchInfo(name="mahabharatha/feature-one/worker-0", commit="abc123"),
+            BranchInfo(name="mahabharatha/feature-two/staging", commit="def456"),
             BranchInfo(name="main", commit="789abc"),
         ]
 
@@ -65,7 +65,7 @@ class TestDiscoverFeatures:
         assert "feature-one" in features
         assert "feature-two" in features
 
-    @patch("zerg.commands.cleanup.GitOps")
+    @patch("mahabharatha.commands.cleanup.GitOps")
     def test_discover_handles_git_error(self, mock_git_cls: MagicMock, tmp_path: Path, monkeypatch) -> None:
         """Test discover handles git errors gracefully."""
         monkeypatch.chdir(tmp_path)
@@ -92,7 +92,7 @@ class TestCreateCleanupPlan:
     def test_plan_includes_worktrees(self, tmp_path: Path, monkeypatch, mock_config) -> None:
         """Test plan finds worktree directories."""
         monkeypatch.chdir(tmp_path)
-        worktree_dir = tmp_path / ".zerg" / "worktrees"
+        worktree_dir = tmp_path / ".mahabharatha" / "worktrees"
         worktree_dir.mkdir(parents=True)
         (worktree_dir / "my-feature-worker-0").mkdir()
         (worktree_dir / "my-feature-worker-1").mkdir()
@@ -103,7 +103,7 @@ class TestCreateCleanupPlan:
     def test_plan_respects_keep_logs(self, tmp_path: Path, monkeypatch, mock_config) -> None:
         """Test plan respects keep_logs flag."""
         monkeypatch.chdir(tmp_path)
-        log_dir = tmp_path / ".zerg" / "logs"
+        log_dir = tmp_path / ".mahabharatha" / "logs"
         log_dir.mkdir(parents=True)
         (log_dir / "test.log").write_text("log")
 
@@ -138,11 +138,11 @@ class TestShowCleanupPlan:
         """Test show_plan displays populated plan."""
         plan = {
             "features": ["test-feature"],
-            "worktrees": [".zerg/worktrees/test-feature-worker-0"],
-            "branches": ["zerg/test-feature/worker-0"],
-            "containers": ["zerg-worker-test-feature-*"],
-            "state_files": [".zerg/state/test-feature.json"],
-            "log_files": [".zerg/logs/worker-0.log"],
+            "worktrees": [".mahabharatha/worktrees/test-feature-worker-0"],
+            "branches": ["mahabharatha/test-feature/worker-0"],
+            "containers": ["mahabharatha-worker-test-feature-*"],
+            "state_files": [".mahabharatha/state/test-feature.json"],
+            "log_files": [".mahabharatha/logs/worker-0.log"],
             "dirs_to_remove": [],
         }
         show_cleanup_plan(plan, dry_run=False)
@@ -151,9 +151,9 @@ class TestShowCleanupPlan:
 class TestExecuteCleanup:
     """Tests for execute_cleanup function."""
 
-    @patch("zerg.commands.cleanup.WorktreeManager")
-    @patch("zerg.commands.cleanup.ContainerManager")
-    @patch("zerg.commands.cleanup.GitOps")
+    @patch("mahabharatha.commands.cleanup.WorktreeManager")
+    @patch("mahabharatha.commands.cleanup.ContainerManager")
+    @patch("mahabharatha.commands.cleanup.GitOps")
     def test_execute_handles_empty_plan(self, mock_git_cls, mock_container_cls, mock_worktree_cls, mock_config) -> None:
         """Test execute handles empty plan."""
         plan = {
@@ -166,8 +166,8 @@ class TestExecuteCleanup:
         }
         execute_cleanup(plan, mock_config)
 
-    @patch("zerg.commands.cleanup.WorktreeManager")
-    @patch("zerg.commands.cleanup.ContainerManager")
+    @patch("mahabharatha.commands.cleanup.WorktreeManager")
+    @patch("mahabharatha.commands.cleanup.ContainerManager")
     def test_execute_removes_worktrees(
         self,
         mock_container_cls: MagicMock,
@@ -180,7 +180,7 @@ class TestExecuteCleanup:
         mock_worktree_cls.return_value = mock_worktree
         mock_container_cls.return_value = MagicMock()
 
-        wt_path = tmp_path / ".zerg" / "worktrees" / "test-worker-0"
+        wt_path = tmp_path / ".mahabharatha" / "worktrees" / "test-worker-0"
         wt_path.mkdir(parents=True)
 
         plan = {
@@ -194,8 +194,8 @@ class TestExecuteCleanup:
         execute_cleanup(plan, mock_config)
         assert mock_worktree.delete.call_count == 1
 
-    @patch("zerg.commands.cleanup.WorktreeManager")
-    @patch("zerg.commands.cleanup.ContainerManager")
+    @patch("mahabharatha.commands.cleanup.WorktreeManager")
+    @patch("mahabharatha.commands.cleanup.ContainerManager")
     def test_execute_handles_worktree_error(
         self,
         mock_container_cls: MagicMock,
@@ -209,7 +209,7 @@ class TestExecuteCleanup:
         mock_worktree_cls.return_value = mock_worktree
         mock_container_cls.return_value = MagicMock()
 
-        wt_path = tmp_path / ".zerg" / "worktrees" / "test-worker-0"
+        wt_path = tmp_path / ".mahabharatha" / "worktrees" / "test-worker-0"
         wt_path.mkdir(parents=True)
 
         plan = {
@@ -222,9 +222,9 @@ class TestExecuteCleanup:
         }
         execute_cleanup(plan, mock_config)
 
-    @patch("zerg.commands.cleanup.WorktreeManager")
-    @patch("zerg.commands.cleanup.ContainerManager")
-    @patch("zerg.commands.cleanup.GitOps")
+    @patch("mahabharatha.commands.cleanup.WorktreeManager")
+    @patch("mahabharatha.commands.cleanup.ContainerManager")
+    @patch("mahabharatha.commands.cleanup.GitOps")
     def test_execute_removes_branches(
         self,
         mock_git_cls: MagicMock,
@@ -241,7 +241,7 @@ class TestExecuteCleanup:
         plan = {
             "features": ["test"],
             "worktrees": [],
-            "branches": ["zerg/test/worker-0", "zerg/test/worker-1"],
+            "branches": ["mahabharatha/test/worker-0", "mahabharatha/test/worker-1"],
             "containers": [],
             "state_files": [],
             "log_files": [],
@@ -249,8 +249,8 @@ class TestExecuteCleanup:
         execute_cleanup(plan, mock_config)
         assert mock_git.delete_branch.call_count == 2
 
-    @patch("zerg.commands.cleanup.WorktreeManager")
-    @patch("zerg.commands.cleanup.ContainerManager")
+    @patch("mahabharatha.commands.cleanup.WorktreeManager")
+    @patch("mahabharatha.commands.cleanup.ContainerManager")
     def test_execute_removes_state_files(
         self,
         mock_container_cls: MagicMock,
@@ -262,7 +262,7 @@ class TestExecuteCleanup:
         mock_worktree_cls.return_value = MagicMock()
         mock_container_cls.return_value = MagicMock()
 
-        state_file = tmp_path / ".zerg" / "state" / "test.json"
+        state_file = tmp_path / ".mahabharatha" / "state" / "test.json"
         state_file.parent.mkdir(parents=True)
         state_file.write_text("{}")
 
@@ -277,8 +277,8 @@ class TestExecuteCleanup:
         execute_cleanup(plan, mock_config)
         assert not state_file.exists()
 
-    @patch("zerg.commands.cleanup.WorktreeManager")
-    @patch("zerg.commands.cleanup.ContainerManager")
+    @patch("mahabharatha.commands.cleanup.WorktreeManager")
+    @patch("mahabharatha.commands.cleanup.ContainerManager")
     def test_execute_clears_current_feature(
         self,
         mock_container_cls: MagicMock,
@@ -331,10 +331,10 @@ class TestCleanupCLI:
         result = runner.invoke(cli, ["cleanup"])
         assert result.exit_code == 1
 
-    @patch("zerg.commands.cleanup.ZergConfig")
-    @patch("zerg.commands.cleanup.discover_features")
-    @patch("zerg.commands.cleanup.create_cleanup_plan")
-    @patch("zerg.commands.cleanup.show_cleanup_plan")
+    @patch("mahabharatha.commands.cleanup.ZergConfig")
+    @patch("mahabharatha.commands.cleanup.discover_features")
+    @patch("mahabharatha.commands.cleanup.create_cleanup_plan")
+    @patch("mahabharatha.commands.cleanup.show_cleanup_plan")
     def test_cleanup_dry_run_skips_execution(
         self,
         mock_show,
@@ -360,7 +360,7 @@ class TestCleanupCLI:
         assert result.exit_code == 0
         assert "dry run" in result.output.lower()
 
-    @patch("zerg.commands.cleanup.ZergConfig")
+    @patch("mahabharatha.commands.cleanup.ZergConfig")
     def test_cleanup_handles_exception(self, mock_config_cls: MagicMock) -> None:
         """Test cleanup handles unexpected exceptions."""
         mock_config_cls.load.side_effect = Exception("Config error")

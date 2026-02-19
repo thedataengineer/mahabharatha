@@ -9,7 +9,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.testing import CliRunner
 
-from zerg.commands.refactor import (
+from mahabharatha.commands.refactor import (
     BaseTransform,
     DeadCodeTransform,
     NamingTransform,
@@ -382,8 +382,8 @@ class TestRefactorCLI:
         assert result.exit_code == 0
         assert "transforms" in result.output
 
-    @patch("zerg.commands.refactor.RefactorCommand")
-    @patch("zerg.commands.refactor.console")
+    @patch("mahabharatha.commands.refactor.RefactorCommand")
+    @patch("mahabharatha.commands.refactor.console")
     def test_refactor_dry_run(self, mock_console: MagicMock, mock_command_class: MagicMock) -> None:
         """Test refactor --dry-run."""
         mock_command = MagicMock()
@@ -393,18 +393,18 @@ class TestRefactorCLI:
         result = runner.invoke(refactor, ["--dry-run"])
         assert result.exit_code == 0
 
-    @patch("zerg.commands.refactor.console")
+    @patch("mahabharatha.commands.refactor.console")
     def test_refactor_keyboard_interrupt(self, mock_console: MagicMock) -> None:
         """Test refactor handles KeyboardInterrupt."""
-        with patch("zerg.commands.refactor._collect_files", side_effect=KeyboardInterrupt):
+        with patch("mahabharatha.commands.refactor._collect_files", side_effect=KeyboardInterrupt):
             runner = CliRunner()
             result = runner.invoke(refactor, [])
             assert result.exit_code == 130
 
-    @patch("zerg.commands.refactor.console")
+    @patch("mahabharatha.commands.refactor.console")
     def test_refactor_generic_exception(self, mock_console: MagicMock) -> None:
         """Test refactor handles generic exception."""
-        with patch("zerg.commands.refactor._collect_files", side_effect=RuntimeError("Unexpected error")):
+        with patch("mahabharatha.commands.refactor._collect_files", side_effect=RuntimeError("Unexpected error")):
             runner = CliRunner()
             result = runner.invoke(refactor, [])
             assert result.exit_code == 1

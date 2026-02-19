@@ -18,8 +18,8 @@ import time
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from zerg.security import SecurityFinding, SecurityResult
-from zerg.security.cve import (
+from mahabharatha.security import SecurityFinding, SecurityResult
+from mahabharatha.security.cve import (
     _check_known_bad_versions,
     _Dependency,
     _heuristic_scan,
@@ -29,13 +29,13 @@ from zerg.security.cve import (
     _parse_requirements_txt,
     scan_dependencies,
 )
-from zerg.security.patterns import (
+from mahabharatha.security.patterns import (
     PATTERN_REGISTRY,
     get_all_patterns,
     get_categories,
     get_patterns_for_extension,
 )
-from zerg.security.scanner import (
+from mahabharatha.security.scanner import (
     _scan_file_with_patterns,
     _scan_git_history,
     run_security_scan,
@@ -458,8 +458,8 @@ class TestScannerIntegration:
         """run_security_scan should return a SecurityResult instance."""
         (tmp_path / "clean.py").write_text("x = 42\n")
         with (
-            patch("zerg.security.cve.scan_dependencies", return_value=[]),
-            patch("zerg.security.scanner._scan_git_history", return_value=[]),
+            patch("mahabharatha.security.cve.scan_dependencies", return_value=[]),
+            patch("mahabharatha.security.scanner._scan_git_history", return_value=[]),
         ):
             result = run_security_scan(tmp_path)
         assert isinstance(result, SecurityResult)
@@ -468,8 +468,8 @@ class TestScannerIntegration:
         """SecurityResult should have all expected attributes."""
         (tmp_path / "clean.py").write_text("x = 42\n")
         with (
-            patch("zerg.security.cve.scan_dependencies", return_value=[]),
-            patch("zerg.security.scanner._scan_git_history", return_value=[]),
+            patch("mahabharatha.security.cve.scan_dependencies", return_value=[]),
+            patch("mahabharatha.security.scanner._scan_git_history", return_value=[]),
         ):
             result = run_security_scan(tmp_path)
         assert hasattr(result, "findings")
@@ -484,8 +484,8 @@ class TestScannerIntegration:
         # Write a file with a known secret pattern
         (tmp_path / "bad.py").write_text('password = "supersecret123"\n')
         with (
-            patch("zerg.security.cve.scan_dependencies", return_value=[]),
-            patch("zerg.security.scanner._scan_git_history", return_value=[]),
+            patch("mahabharatha.security.cve.scan_dependencies", return_value=[]),
+            patch("mahabharatha.security.scanner._scan_git_history", return_value=[]),
         ):
             result = run_security_scan(tmp_path)
         assert len(result.findings) >= 1
@@ -503,8 +503,8 @@ class TestScannerIntegration:
         """Scanning specific categories should only report those categories."""
         (tmp_path / "bad.py").write_text('password = "supersecret123"\ndata = pickle.loads(payload)\n')
         with (
-            patch("zerg.security.cve.scan_dependencies", return_value=[]),
-            patch("zerg.security.scanner._scan_git_history", return_value=[]),
+            patch("mahabharatha.security.cve.scan_dependencies", return_value=[]),
+            patch("mahabharatha.security.scanner._scan_git_history", return_value=[]),
         ):
             result = run_security_scan(tmp_path, categories=["deserialization_risks"])
         # Only deserialization findings should be present
@@ -525,8 +525,8 @@ class TestScannerIntegration:
         (tmp_path / "b.py").write_text("y = 2\n")
         (tmp_path / "c.js").write_text("let z = 3;\n")
         with (
-            patch("zerg.security.cve.scan_dependencies", return_value=[]),
-            patch("zerg.security.scanner._scan_git_history", return_value=[]),
+            patch("mahabharatha.security.cve.scan_dependencies", return_value=[]),
+            patch("mahabharatha.security.scanner._scan_git_history", return_value=[]),
         ):
             result = run_security_scan(tmp_path)
         assert result.files_scanned >= 3
@@ -535,8 +535,8 @@ class TestScannerIntegration:
         """scan_duration_seconds should be a non-negative float."""
         (tmp_path / "x.py").write_text("pass\n")
         with (
-            patch("zerg.security.cve.scan_dependencies", return_value=[]),
-            patch("zerg.security.scanner._scan_git_history", return_value=[]),
+            patch("mahabharatha.security.cve.scan_dependencies", return_value=[]),
+            patch("mahabharatha.security.scanner._scan_git_history", return_value=[]),
         ):
             result = run_security_scan(tmp_path)
         assert isinstance(result.scan_duration_seconds, float)
@@ -578,7 +578,7 @@ class TestCVEScannerAPI:
         mock_response.__enter__ = MagicMock(return_value=mock_response)
         mock_response.__exit__ = MagicMock(return_value=False)
 
-        with patch("zerg.security.cve.urllib.request.urlopen", return_value=mock_response):
+        with patch("mahabharatha.security.cve.urllib.request.urlopen", return_value=mock_response):
             findings = scan_dependencies(tmp_path)
 
         # Should have at least one CVE finding from the API
@@ -595,7 +595,7 @@ class TestCVEScannerAPI:
         req_file.write_text("somepackage\n")  # unpinned
 
         with patch(
-            "zerg.security.cve.urllib.request.urlopen",
+            "mahabharatha.security.cve.urllib.request.urlopen",
             side_effect=urllib.error.URLError("timeout"),
         ):
             findings = scan_dependencies(tmp_path)
@@ -776,8 +776,8 @@ class TestSecurityResultPassedLogic:
         # Create a file with DEBUG=True (medium severity)
         (tmp_path / "settings.py").write_text("DEBUG = True\n")
         with (
-            patch("zerg.security.cve.scan_dependencies", return_value=[]),
-            patch("zerg.security.scanner._scan_git_history", return_value=[]),
+            patch("mahabharatha.security.cve.scan_dependencies", return_value=[]),
+            patch("mahabharatha.security.scanner._scan_git_history", return_value=[]),
         ):
             result = run_security_scan(tmp_path, categories=["error_handling"])
         # Should have findings but still pass (medium)
@@ -790,8 +790,8 @@ class TestSecurityResultPassedLogic:
         """A critical finding should result in passed=False."""
         (tmp_path / "bad.py").write_text("data = pickle.loads(user_data)\n")
         with (
-            patch("zerg.security.cve.scan_dependencies", return_value=[]),
-            patch("zerg.security.scanner._scan_git_history", return_value=[]),
+            patch("mahabharatha.security.cve.scan_dependencies", return_value=[]),
+            patch("mahabharatha.security.scanner._scan_git_history", return_value=[]),
         ):
             result = run_security_scan(tmp_path, categories=["deserialization_risks"])
         critical = [f for f in result.findings if f.severity == "critical"]
@@ -802,8 +802,8 @@ class TestSecurityResultPassedLogic:
         """A high-severity finding should result in passed=False."""
         (tmp_path / "vuln.py").write_text("os.system(cmd)\n")
         with (
-            patch("zerg.security.cve.scan_dependencies", return_value=[]),
-            patch("zerg.security.scanner._scan_git_history", return_value=[]),
+            patch("mahabharatha.security.cve.scan_dependencies", return_value=[]),
+            patch("mahabharatha.security.scanner._scan_git_history", return_value=[]),
         ):
             result = run_security_scan(tmp_path, categories=["injection_detection"])
         high = [f for f in result.findings if f.severity == "high"]
@@ -817,8 +817,8 @@ class TestSecurityResultPassedLogic:
             "data = pickle.loads(x)\n"  # critical
         )
         with (
-            patch("zerg.security.cve.scan_dependencies", return_value=[]),
-            patch("zerg.security.scanner._scan_git_history", return_value=[]),
+            patch("mahabharatha.security.cve.scan_dependencies", return_value=[]),
+            patch("mahabharatha.security.scanner._scan_git_history", return_value=[]),
         ):
             result = run_security_scan(
                 tmp_path,
@@ -857,7 +857,7 @@ class TestGitHistoryScan:
 
         secret_patterns = PATTERN_REGISTRY["secret_detection"]
 
-        with patch("zerg.security.scanner.subprocess.run", return_value=mock_result):
+        with patch("mahabharatha.security.scanner.subprocess.run", return_value=mock_result):
             findings = _scan_git_history(tmp_path, depth=10, secret_patterns=secret_patterns)
 
         assert len(findings) >= 1
@@ -884,7 +884,7 @@ class TestGitHistoryScan:
 
         secret_patterns = PATTERN_REGISTRY["secret_detection"]
 
-        with patch("zerg.security.scanner.subprocess.run", return_value=mock_result):
+        with patch("mahabharatha.security.scanner.subprocess.run", return_value=mock_result):
             findings = _scan_git_history(tmp_path, depth=10, secret_patterns=secret_patterns)
 
         assert len(findings) == 0
@@ -896,7 +896,7 @@ class TestGitHistoryScan:
 
         secret_patterns = PATTERN_REGISTRY["secret_detection"]
 
-        with patch("zerg.security.scanner.subprocess.run", return_value=mock_result):
+        with patch("mahabharatha.security.scanner.subprocess.run", return_value=mock_result):
             findings = _scan_git_history(tmp_path, depth=10, secret_patterns=secret_patterns)
 
         assert findings == []
@@ -908,7 +908,7 @@ class TestGitHistoryScan:
         secret_patterns = PATTERN_REGISTRY["secret_detection"]
 
         with patch(
-            "zerg.security.scanner.subprocess.run",
+            "mahabharatha.security.scanner.subprocess.run",
             side_effect=subprocess.TimeoutExpired("git", 30),
         ):
             findings = _scan_git_history(tmp_path, depth=10, secret_patterns=secret_patterns)
@@ -924,7 +924,7 @@ class TestGitHistoryScan:
 
         secret_patterns = PATTERN_REGISTRY["secret_detection"]
 
-        with patch("zerg.security.scanner.subprocess.run", return_value=mock_result):
+        with patch("mahabharatha.security.scanner.subprocess.run", return_value=mock_result):
             findings = _scan_git_history(tmp_path, depth=5, secret_patterns=secret_patterns)
 
         assert len(findings) >= 1
@@ -948,8 +948,8 @@ class TestPerformance:
 
         start = time.time()
         with (
-            patch("zerg.security.cve.scan_dependencies", return_value=[]),
-            patch("zerg.security.scanner._scan_git_history", return_value=[]),
+            patch("mahabharatha.security.cve.scan_dependencies", return_value=[]),
+            patch("mahabharatha.security.scanner._scan_git_history", return_value=[]),
         ):
             result = run_security_scan(tmp_path)
         elapsed = time.time() - start
@@ -969,8 +969,8 @@ class TestPerformance:
 
         start = time.time()
         with (
-            patch("zerg.security.cve.scan_dependencies", return_value=[]),
-            patch("zerg.security.scanner._scan_git_history", return_value=[]),
+            patch("mahabharatha.security.cve.scan_dependencies", return_value=[]),
+            patch("mahabharatha.security.scanner._scan_git_history", return_value=[]),
         ):
             result = run_security_scan(tmp_path)
         elapsed = time.time() - start
@@ -991,8 +991,8 @@ class TestEdgeCases:
     def test_empty_directory_scan(self, tmp_path: Path) -> None:
         """Scanning an empty directory should succeed with zero findings."""
         with (
-            patch("zerg.security.cve.scan_dependencies", return_value=[]),
-            patch("zerg.security.scanner._scan_git_history", return_value=[]),
+            patch("mahabharatha.security.cve.scan_dependencies", return_value=[]),
+            patch("mahabharatha.security.scanner._scan_git_history", return_value=[]),
         ):
             result = run_security_scan(tmp_path)
         assert result.passed is True
@@ -1004,8 +1004,8 @@ class TestEdgeCases:
         (tmp_path / "image.png").write_bytes(b"\x89PNG\r\n\x1a\n" + b"\x00" * 100)
         (tmp_path / "clean.py").write_text("x = 1\n")
         with (
-            patch("zerg.security.cve.scan_dependencies", return_value=[]),
-            patch("zerg.security.scanner._scan_git_history", return_value=[]),
+            patch("mahabharatha.security.cve.scan_dependencies", return_value=[]),
+            patch("mahabharatha.security.scanner._scan_git_history", return_value=[]),
         ):
             result = run_security_scan(tmp_path)
         # image.png should not be scanned (not a code extension)
@@ -1016,8 +1016,8 @@ class TestEdgeCases:
         (tmp_path / "a.py").write_text('password = "leaked_secret!"\n')
         (tmp_path / "b.py").write_text('password = "another_secret!"\n')
         with (
-            patch("zerg.security.cve.scan_dependencies", return_value=[]),
-            patch("zerg.security.scanner._scan_git_history", return_value=[]),
+            patch("mahabharatha.security.cve.scan_dependencies", return_value=[]),
+            patch("mahabharatha.security.scanner._scan_git_history", return_value=[]),
         ):
             result = run_security_scan(tmp_path, files=[str(tmp_path / "a.py")])
         # Only a.py should be scanned

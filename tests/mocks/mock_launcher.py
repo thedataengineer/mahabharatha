@@ -11,9 +11,9 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 
-from zerg.constants import WorkerStatus
-from zerg.launcher_types import LauncherConfig, SpawnResult, WorkerHandle
-from zerg.launchers import WorkerLauncher
+from mahabharatha.constants import WorkerStatus
+from mahabharatha.launcher_types import LauncherConfig, SpawnResult, WorkerHandle
+from mahabharatha.launchers import WorkerLauncher
 
 
 @dataclass
@@ -64,12 +64,12 @@ class MockContainerLauncher(WorkerLauncher):
         assert not result.success  # Worker 1 exec fails
     """
 
-    CONTAINER_PREFIX = "mock-zerg-worker"
+    CONTAINER_PREFIX = "mock-mahabharatha-worker"
 
     def __init__(
         self,
         config: LauncherConfig | None = None,
-        image_name: str = "mock-zerg-worker",
+        image_name: str = "mock-mahabharatha-worker",
         network: str | None = None,
     ) -> None:
         """Initialize mock container launcher.

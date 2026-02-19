@@ -6,8 +6,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.exceptions import WorktreeError
-from zerg.worktree import WorktreeInfo, WorktreeManager
+from mahabharatha.exceptions import WorktreeError
+from mahabharatha.worktree import WorktreeInfo, WorktreeManager
 
 
 class TestWorktreeInfo:
@@ -17,7 +17,7 @@ class TestWorktreeInfo:
         """Test name property and default values."""
         info = WorktreeInfo(
             path=Path("/tmp/worktrees/feature/worker-0"),
-            branch="zerg/feature/worker-0",
+            branch="mahabharatha/feature/worker-0",
             commit="abc123",
         )
         assert info.name == "worker-0"
@@ -113,8 +113,8 @@ class TestBranchNaming:
     def test_get_branch_and_worktree_path(self, tmp_repo: Path) -> None:
         """Test branch name and worktree path generation."""
         manager = WorktreeManager(tmp_repo)
-        assert manager.get_branch_name("my-feature", 5) == "zerg/my-feature/worker-5"
-        expected = tmp_repo / ".zerg-worktrees" / "my-feature" / "worker-5"
+        assert manager.get_branch_name("my-feature", 5) == "mahabharatha/my-feature/worker-5"
+        expected = tmp_repo / ".mahabharatha-worktrees" / "my-feature" / "worker-5"
         assert manager.get_worktree_path("my-feature", 5) == expected
 
 
@@ -126,8 +126,8 @@ class TestWorktreeCreation:
         manager = WorktreeManager(tmp_repo)
         info = manager.create("test-feature", 0)
         assert info.path.exists()
-        assert info.branch == "zerg/test-feature/worker-0"
-        expected_path = tmp_repo / ".zerg-worktrees" / "test-feature" / "worker-0"
+        assert info.branch == "mahabharatha/test-feature/worker-0"
+        expected_path = tmp_repo / ".mahabharatha-worktrees" / "test-feature" / "worker-0"
         assert info.path == expected_path
 
     def test_create_worktree_replaces_existing(self, tmp_repo: Path) -> None:
@@ -157,7 +157,7 @@ class TestWorktreeDeletion:
         manager.create("test-feature", 2)
         count = manager.delete_all("test-feature")
         assert count == 3
-        feature_dir = tmp_repo / ".zerg-worktrees" / "test-feature"
+        feature_dir = tmp_repo / ".mahabharatha-worktrees" / "test-feature"
         assert not feature_dir.exists()
 
 
@@ -194,7 +194,7 @@ class TestWorktreeSync:
         info = manager.create("test-feature", 0)
         mock_result = MagicMock(returncode=0)
 
-        with patch("zerg.worktree.subprocess.run", return_value=mock_result) as mock_run:
+        with patch("mahabharatha.worktree.subprocess.run", return_value=mock_result) as mock_run:
             manager.sync_with_base(info.path, base_branch="main")
             assert mock_run.call_count == 2
             assert "fetch" in mock_run.call_args_list[0][0][0]
