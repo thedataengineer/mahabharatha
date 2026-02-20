@@ -1,4 +1,4 @@
-"""Git worktree management for ZERG worker isolation."""
+"""Git worktree management for MAHABHARATHA worker isolation."""
 
 import subprocess
 from dataclasses import dataclass
@@ -28,7 +28,7 @@ class WorktreeInfo:
 
 
 class WorktreeManager:
-    """Manage git worktrees for ZERG workers."""
+    """Manage git worktrees for MAHABHARATHA workers."""
 
     def __init__(self, repo_path: str | Path = ".") -> None:
         """Initialize worktree manager.

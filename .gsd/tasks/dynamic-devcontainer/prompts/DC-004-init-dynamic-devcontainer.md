@@ -5,23 +5,23 @@
 
 ## Objective
 
-Modify `create_devcontainer()` in `zerg/commands/init.py` to use `DynamicDevcontainerGenerator` with the detected `ProjectStack` instead of static single-language configuration.
+Modify `create_devcontainer()` in `mahabharatha/commands/init.py` to use `DynamicDevcontainerGenerator` with the detected `ProjectStack` instead of static single-language configuration.
 
 ## Files Owned
 
-- `zerg/commands/init.py` (modify)
+- `mahabharatha/commands/init.py` (modify)
 
 ## Files to Read
 
-- `zerg/devcontainer_features.py` (DynamicDevcontainerGenerator)
+- `mahabharatha/devcontainer_features.py` (DynamicDevcontainerGenerator)
 
 ## Implementation
 
 Replace the existing `create_devcontainer()` function:
 
 ```python
-from zerg.devcontainer_features import DynamicDevcontainerGenerator
-from zerg.security_rules import ProjectStack
+from mahabharatha.devcontainer_features import DynamicDevcontainerGenerator
+from mahabharatha.security_rules import ProjectStack
 
 
 def create_devcontainer(stack: ProjectStack, security: str) -> None:
@@ -32,7 +32,7 @@ def create_devcontainer(stack: ProjectStack, security: str) -> None:
         security: Security level
     """
     # Use dynamic generator for multi-language support
-    generator = DynamicDevcontainerGenerator(stack, name="ZERG Worker")
+    generator = DynamicDevcontainerGenerator(stack, name="MAHABHARATHA Worker")
     config = generator.generate_config()
 
     # Add security settings for strict mode
@@ -108,7 +108,7 @@ cd /tmp && rm -rf test-dc-multi && mkdir test-dc-multi && cd test-dc-multi
 touch requirements.txt package.json go.mod
 
 # Run init
-zerg init --no-security-rules
+mahabharatha init --no-security-rules
 
 # Check devcontainer has multiple features
 python -c "
@@ -137,4 +137,4 @@ print('OK: All expected features present')
 - [ ] Security level still applies runArgs for strict mode
 - [ ] create_config() stores full stack info in detected_stack
 - [ ] Backwards compatible: project_type still set (primary language)
-- [ ] No ruff errors: `ruff check zerg/commands/init.py`
+- [ ] No ruff errors: `ruff check mahabharatha/commands/init.py`

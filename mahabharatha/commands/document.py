@@ -1,4 +1,4 @@
-"""ZERG document command - generate documentation for individual components."""
+"""MAHABHARATHA document command - generate documentation for individual components."""
 
 from pathlib import Path
 
@@ -64,7 +64,7 @@ def document(
 
         mahabharatha document mahabharatha/doc_engine/extractor.py --depth deep
 
-        mahabharatha document mahabharatha/data/commands/rush.md --type command
+        mahabharatha document mahabharatha/data/commands/kurukshetra.md --type command
     """
     from mahabharatha.doc_engine.crossref import CrossRefBuilder
     from mahabharatha.doc_engine.dependencies import DependencyMapper
@@ -79,7 +79,7 @@ def document(
             console.print(f"[red]Error:[/red] File not found: {target}")
             raise SystemExit(1)
 
-        console.print(f"\n[bold cyan]ZERG Document[/bold cyan] - {target}\n")
+        console.print(f"\n[bold cyan]MAHABHARATHA Document[/bold cyan] - {target}\n")
         console.print(f"Tone: [cyan]{tone}[/cyan]")
 
         # 1. Detect component type

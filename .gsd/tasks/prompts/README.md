@@ -1,4 +1,4 @@
-# ZERG v2.0 Implementation Prompts
+# MAHABHARATHA v2.0 Implementation Prompts
 
 **Version**: 1.0.0
 **Created**: January 25, 2026
@@ -9,7 +9,7 @@
 
 ## Quick Start
 
-1. Open Claude Code in your ZERG project directory
+1. Open Claude Code in your MAHABHARATHA project directory
 2. Start with L0 tasks (no dependencies)
 3. Copy the task prompt into Claude Code
 4. Follow TDD and verification protocols
@@ -30,7 +30,7 @@
 | `L1-TASK-003-container-launcher.md` | 1 | Docker containers |
 | `L1-TASK-004-prompt-templates.md` | 1 | Worker/reviewer templates |
 | `L1-TASK-005-metrics-collector.md` | 1 | Metrics and cost tracking |
-| `L2-core-commands.md` | 6 | Init, rush, worker, status, plan, design |
+| `L2-core-commands.md` | 6 | Init, kurukshetra, worker, status, plan, design |
 | `L3-quality-commands.md` | 7 | Gates, analyze, test, security, refactor, review, debug |
 | `L4-advanced-commands.md` | 6 | Git, build, session, index, document, purge |
 | `L5-meta-commands.md` | 4 | Explain, research, estimate, spawn |
@@ -68,7 +68,7 @@ Update existing commands:
 
 ```
 Session 7: L2-TASK-001 (Init Update)
-Session 7: L2-TASK-002 (Rush Update) - CRITICAL PATH
+Session 7: L2-TASK-002 (Kurukshetra Update) - CRITICAL PATH
 Session 8: L2-TASK-003 (Worker Update)
 Session 8: L2-TASK-004 (Status Update)
 Session 9: L2-TASK-005 (Plan Update)
@@ -121,7 +121,7 @@ These tasks block the most downstream work:
 
 1. **L0-TASK-001**: Orchestrator Core → Everything depends on this
 2. **L1-TASK-001**: Worktree Manager → Worker isolation
-3. **L2-TASK-002**: Rush Update → Main execution command
+3. **L2-TASK-002**: Kurukshetra Update → Main execution command
 4. **L3-TASK-001**: Quality Gates → Code quality enforcement
 
 Complete these first to unblock parallel work.
@@ -146,7 +146,7 @@ Each prompt includes a verification command. Run it BEFORE claiming completion:
 
 ```bash
 # Example
-cd .zerg && python -c "from orchestrator import Orchestrator; o = Orchestrator(); print('OK')"
+cd .mahabharatha && python -c "from orchestrator import Orchestrator; o = Orchestrator(); print('OK')"
 ```
 
 ### TDD Protocol
@@ -187,7 +187,7 @@ Update `ZERG_V2_BACKLOG.md` after each session:
 ```
 L0-TASK-001 (Orchestrator)
 ├── L1-TASK-001 (Worktree)
-│   ├── L2-TASK-002 (Rush)
+│   ├── L2-TASK-002 (Kurukshetra)
 │   ├── L4-TASK-001 (Git)
 │   └── L4-TASK-006 (Purge)
 ├── L1-TASK-002 (Ports)
@@ -217,5 +217,5 @@ L0-TASK-004 (Protocol)
 - Tasks are designed for exclusive file ownership
 - Each task should take 0.5-2 sessions
 - Use Python 3.11+ features (dataclasses, type hints)
-- Follow existing ZERG code patterns
+- Follow existing MAHABHARATHA code patterns
 - Update ARCHITECTURE.md if design changes

@@ -32,7 +32,7 @@ None.
 
 ### Issue 6: is_level_complete Semantics
 
-**File**: `zerg/levels.py`, `zerg/types.py`, `zerg/orchestrator.py`
+**File**: `mahabharatha/levels.py`, `mahabharatha/types.py`, `mahabharatha/orchestrator.py`
 **Root Cause**: `is_level_complete()` counted `completed + failed == total`, treating failed tasks as resolved. This contradicted the test expectation that failed tasks should block level completion.
 **Fix**: Split into two methods:
 - `is_level_complete()` — True only when ALL tasks completed successfully
@@ -43,8 +43,8 @@ Orchestrator and `can_advance()` now use `is_level_resolved()` for advancement d
 ### Issue 7: MetricsCollector Patch Location
 
 **File**: `tests/integration/test_orchestrator_integration.py`
-**Root Cause**: Test patched `zerg.orchestrator.MetricsCollector` but `_on_level_complete_handler` delegates to `LevelCoordinator.handle_level_complete()` which imports `MetricsCollector` from `zerg.level_coordinator`.
-**Fix**: Changed patch target to `zerg.level_coordinator.MetricsCollector`.
+**Root Cause**: Test patched `mahabharatha.orchestrator.MetricsCollector` but `_on_level_complete_handler` delegates to `LevelCoordinator.handle_level_complete()` which imports `MetricsCollector` from `mahabharatha.level_coordinator`.
+**Fix**: Changed patch target to `mahabharatha.level_coordinator.MetricsCollector`.
 
 ---
 
@@ -54,11 +54,11 @@ SuperClaude capability gaps identified for future implementation.
 
 | # | Skill | Purpose | Priority |
 |---|-------|---------|----------|
-| 1 | `zerg:document` | Focused docs generation for components, APIs, and functions. Auto-detect docstring style, generate usage examples, parameter tables, return type docs. | DONE |
-| 2 | `zerg:index` | Project-wide knowledge base / API doc generation. Crawl codebase → build structured index with cross-references, dependency graphs, entry points. | DONE |
-| 3 | `zerg:estimate` | Structured effort estimation with confidence intervals. Analyze complexity, dependencies, risk factors → output ranges (optimistic/expected/pessimistic). | DONE |
-| 4 | `zerg:explain` | Educational code explanations with progressive depth. Layer 1: summary → Layer 2: logic flow → Layer 3: implementation details → Layer 4: design decisions. | DONE |
-| 5 | `zerg:select-tool` | Intelligent MCP server routing. Score task complexity, map to optimal MCP server combinations, handle fallback chains when preferred tools unavailable. | DONE |
+| 1 | `mahabharatha:document` | Focused docs generation for components, APIs, and functions. Auto-detect docstring style, generate usage examples, parameter tables, return type docs. | DONE |
+| 2 | `mahabharatha:index` | Project-wide knowledge base / API doc generation. Crawl codebase → build structured index with cross-references, dependency graphs, entry points. | DONE |
+| 3 | `mahabharatha:estimate` | Structured effort estimation with confidence intervals. Analyze complexity, dependencies, risk factors → output ranges (optimistic/expected/pessimistic). | DONE |
+| 4 | `mahabharatha:explain` | Educational code explanations with progressive depth. Layer 1: summary → Layer 2: logic flow → Layer 3: implementation details → Layer 4: design decisions. | DONE |
+| 5 | `mahabharatha:select-tool` | Intelligent MCP server routing. Score task complexity, map to optimal MCP server combinations, handle fallback chains when preferred tools unavailable. | DONE |
 
 ### Notes
 

@@ -1,6 +1,6 @@
 # Debug Guide
 
-This guide covers how to diagnose and resolve issues in ZERG using built-in tooling, log analysis, and state inspection.
+This guide covers how to diagnose and resolve issues in MAHABHARATHA using built-in tooling, log analysis, and state inspection.
 
 For quick answers to common problems, see [[Troubleshooting]].
 
@@ -8,7 +8,7 @@ For quick answers to common problems, see [[Troubleshooting]].
 
 ## Table of Contents
 
-- [Using /zerg:debug](#using-zergdebug)
+- [Using /mahabharatha:debug](#using-zergdebug)
 - [Reading Logs](#reading-logs)
 - [Inspecting Task State](#inspecting-task-state)
 - [Common Error Patterns](#common-error-patterns)
@@ -16,14 +16,14 @@ For quick answers to common problems, see [[Troubleshooting]].
 
 ---
 
-## Using /zerg:debug
+## Using /mahabharatha:debug
 
-The `/zerg:debug` command is the primary diagnostic tool. It runs a multi-phase investigation: context gathering, error intelligence, symptom classification, hypothesis testing, and recovery planning.
+The `/mahabharatha:debug` command is the primary diagnostic tool. It runs a multi-phase investigation: context gathering, error intelligence, symptom classification, hypothesis testing, and recovery planning.
 
 ### Basic Usage
 
 ```
-/zerg:debug
+/mahabharatha:debug
 ```
 
 When run without arguments, it auto-detects the active feature from `.gsd/.current-feature` and performs a standard diagnostic pass.
@@ -33,13 +33,13 @@ When run without arguments, it auto-detects the active feature from `.gsd/.curre
 Pass a plain-text description of the problem:
 
 ```
-/zerg:debug workers keep crashing after level 2
+/mahabharatha:debug workers keep crashing after level 2
 ```
 
 Or target a specific worker:
 
 ```
-/zerg:debug --worker w3 --feature my-feature
+/mahabharatha:debug --worker w3 --feature my-feature
 ```
 
 ### Flags Reference
@@ -59,7 +59,7 @@ Or target a specific worker:
 
 The debug command executes these phases in order:
 
-1. **Context Gathering** -- Reads ZERG state, logs, task graph, design doc, and git state in parallel. Produces a context snapshot.
+1. **Context Gathering** -- Reads MAHABHARATHA state, logs, task graph, design doc, and git state in parallel. Produces a context snapshot.
 
 2. **Error Intelligence** -- Parses errors from multiple languages (Python, JavaScript, Go, Rust, Java, C++). Fingerprints and deduplicates errors across workers. Traces "caused by" chains to find root errors.
 
@@ -89,7 +89,7 @@ The debug command executes these phases in order:
    - `[MODERATE]` -- File modifications with backup
    - `[DESTRUCTIVE]` -- State resets or force operations
 
-9. **Design Escalation Check** -- If the issue is architectural, recommends running `/zerg:design`.
+9. **Design Escalation Check** -- If the issue is architectural, recommends running `/mahabharatha:design`.
 
 ### Output
 
@@ -103,9 +103,9 @@ The debug report is saved to `claudedocs/debug-<timestamp>.md` by default, or to
 
 | Log | Location | Contents |
 |-----|----------|----------|
-| Worker stderr | `.zerg/logs/worker-<id>.stderr.log` | Worker errors, crashes, stack traces |
-| Worker stdout | `.zerg/logs/worker-<id>.stdout.log` | Worker progress, task output |
-| Merge logs | `.zerg/logs/merge-*.log` | Quality gate results, merge outcomes |
+| Worker stderr | `.mahabharatha/logs/worker-<id>.stderr.log` | Worker errors, crashes, stack traces |
+| Worker stdout | `.mahabharatha/logs/worker-<id>.stdout.log` | Worker progress, task output |
+| Merge logs | `.mahabharatha/logs/merge-*.log` | Quality gate results, merge outcomes |
 | Debug reports | `claudedocs/debug-<timestamp>.md` | Full diagnostic reports |
 
 ### Tailing Worker Logs
@@ -113,13 +113,13 @@ The debug report is saved to `claudedocs/debug-<timestamp>.md` by default, or to
 To watch a worker's output in real time:
 
 ```bash
-tail -f .zerg/logs/worker-w1.stderr.log
+tail -f .mahabharatha/logs/worker-w1.stderr.log
 ```
 
 To see the last 50 lines of all worker error logs:
 
 ```bash
-tail -50 .zerg/logs/worker-*.stderr.log
+tail -50 .mahabharatha/logs/worker-*.stderr.log
 ```
 
 ### Searching Across Logs
@@ -127,13 +127,13 @@ tail -50 .zerg/logs/worker-*.stderr.log
 Find a specific error across all worker logs:
 
 ```bash
-grep -r "ImportError" .zerg/logs/
+grep -r "ImportError" .mahabharatha/logs/
 ```
 
 Find when errors started occurring:
 
 ```bash
-grep -n "ERROR\|FAILED\|Exception" .zerg/logs/worker-*.stderr.log
+grep -n "ERROR\|FAILED\|Exception" .mahabharatha/logs/worker-*.stderr.log
 ```
 
 ### Interpreting Worker Logs
@@ -162,18 +162,18 @@ Warning signs to look for:
 
 ### Task System (Source of Truth)
 
-The Claude Code Task system is the authoritative source for task state. When running inside a Claude Code session, use `/zerg:status` to query it.
+The Claude Code Task system is the authoritative source for task state. When running inside a Claude Code session, use `/mahabharatha:status` to query it.
 
-`/zerg:status` cross-references the Task system with state JSON and flags any mismatches.
+`/mahabharatha:status` cross-references the Task system with state JSON and flags any mismatches.
 
 ### State JSON (Supplementary)
 
-State files live at `.zerg/state/<feature>.json`. These are supplementary to the Task system.
+State files live at `.mahabharatha/state/<feature>.json`. These are supplementary to the Task system.
 
 To inspect the state file directly:
 
 ```bash
-python -m json.tool .zerg/state/<feature>.json
+python -m json.tool .mahabharatha/state/<feature>.json
 ```
 
 Key fields to check:
@@ -224,7 +224,7 @@ for t in g['tasks']:
 If the Task system and state JSON disagree:
 
 1. The Task system wins. It is the source of truth.
-2. Run `/zerg:rush --resume` to reconcile. This reads `TaskList` first and aligns state.
+2. Run `/mahabharatha:kurukshetra --resume` to reconcile. This reads `TaskList` first and aligns state.
 3. If manual intervention is needed, update the state JSON to match the Task system, not the other way around.
 
 ---
@@ -240,7 +240,7 @@ If the Task system and state JSON disagree:
 2. Verify it is listed in project dependencies (`requirements.txt`, `package.json`).
 3. Check if the import path matches the project structure.
 
-**Resolution:** Install the missing dependency, or fix the import path in the task's context. Retry with `/zerg:retry <task-id>`.
+**Resolution:** Install the missing dependency, or fix the import path in the task's context. Retry with `/mahabharatha:retry <task-id>`.
 
 ### Pattern: Multiple workers failing at the same level
 
@@ -249,22 +249,22 @@ If the Task system and state JSON disagree:
 **Investigation:**
 1. Check if they share a common dependency from a previous level.
 2. Look for a failed merge that left the codebase in a broken state.
-3. Run `/zerg:debug` to get cross-worker correlation.
+3. Run `/mahabharatha:debug` to get cross-worker correlation.
 
 **Resolution:** Fix the upstream issue first (failed merge or broken dependency), then retry the level.
 
 ### Pattern: State corruption after crash
 
-**Symptom:** `/zerg:status` shows impossible state (e.g., tasks both completed and in-progress, negative counts).
+**Symptom:** `/mahabharatha:status` shows impossible state (e.g., tasks both completed and in-progress, negative counts).
 
 **Investigation:**
-1. Check `.zerg/state/<feature>.json` for JSON syntax errors.
+1. Check `.mahabharatha/state/<feature>.json` for JSON syntax errors.
 2. Compare against the Task system output.
 3. Look for workers that were killed mid-write.
 
 **Resolution:**
 1. Back up the corrupted state file.
-2. Run `/zerg:rush --resume` to rebuild state from the Task system.
+2. Run `/mahabharatha:kurukshetra --resume` to rebuild state from the Task system.
 3. If the Task system is also inconsistent, manually reset affected tasks to `pending` and re-run.
 
 ### Pattern: Timeout with no error
@@ -276,7 +276,7 @@ If the Task system and state JSON disagree:
 2. Look at system resources (`top`, `df -h`).
 3. Check if context engineering is enabled to reduce token usage.
 
-**Resolution:** Break large tasks into smaller ones via `/zerg:design`, or increase the timeout in `.zerg/config.yaml`.
+**Resolution:** Break large tasks into smaller ones via `/mahabharatha:design`, or increase the timeout in `.mahabharatha/config.yaml`.
 
 ### Pattern: Merge quality gate failure
 
@@ -285,12 +285,12 @@ If the Task system and state JSON disagree:
 **Investigation:**
 1. Check the merge log for specific gate failures:
    ```bash
-   cat .zerg/logs/merge-*.log
+   cat .mahabharatha/logs/merge-*.log
    ```
 2. Run the failing quality gate command manually to see full output.
 3. Identify which worker's code introduced the failure.
 
-**Resolution:** Fix the code that fails the quality gate. Run `/zerg:merge` to re-attempt. If the quality gate command itself is wrong, update it in `.zerg/config.yaml`.
+**Resolution:** Fix the code that fails the quality gate. Run `/mahabharatha:merge` to re-attempt. If the quality gate command itself is wrong, update it in `.mahabharatha/config.yaml`.
 
 ---
 
@@ -301,7 +301,7 @@ If the Task system and state JSON disagree:
 Run a deep diagnostic that covers infrastructure:
 
 ```
-/zerg:debug --deep
+/mahabharatha:debug --deep
 ```
 
 This checks:
@@ -316,14 +316,14 @@ This checks:
 Run environment diagnostics to verify the full toolchain:
 
 ```
-/zerg:debug --env
+/mahabharatha:debug --env
 ```
 
 This checks:
 - Python virtual environment and installed packages
 - Docker installation and version
 - System resources (CPU, memory, disk)
-- `.zerg/config.yaml` validation
+- `.mahabharatha/config.yaml` validation
 - Claude Code configuration
 
 ### Generating a Full Report
@@ -331,14 +331,14 @@ This checks:
 To produce a comprehensive diagnostic report for sharing or review:
 
 ```
-/zerg:debug --deep --env --report claudedocs/full-diagnostic.md
+/mahabharatha:debug --deep --env --report claudedocs/full-diagnostic.md
 ```
 
 The report includes all phases, evidence, hypotheses, and recommended actions in a single markdown document.
 
 ### Design Escalation
 
-If `/zerg:debug` determines that the issue is architectural (e.g., file ownership conflicts, missing tasks in the graph, incorrect dependency ordering), it will recommend running `/zerg:design` to regenerate the task graph. The debug task subject will be annotated with "DESIGN ESCALATION" in this case.
+If `/mahabharatha:debug` determines that the issue is architectural (e.g., file ownership conflicts, missing tasks in the graph, incorrect dependency ordering), it will recommend running `/mahabharatha:design` to regenerate the task graph. The debug task subject will be annotated with "DESIGN ESCALATION" in this case.
 
 ---
 
@@ -346,4 +346,4 @@ If `/zerg:debug` determines that the issue is architectural (e.g., file ownershi
 
 - [[Troubleshooting]] -- Quick problem/solution pairs for common issues
 - [[Testing]] -- Running the test suite to validate fixes
-- [[Command Reference]] -- Full syntax for all ZERG commands
+- [[Command Reference]] -- Full syntax for all MAHABHARATHA commands

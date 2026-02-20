@@ -113,7 +113,7 @@ $ {fix command}
 ## Example Output
 
 ```markdown
-# Tutorial: Your First Mahabharatha Rush
+# Tutorial: Your First Mahabharatha Kurukshetra
 
 > By the end of this tutorial, you'll plan, design, and execute a feature using parallel workers.
 
@@ -159,7 +159,7 @@ $ /mahabharatha:design
 
 You'll see the architecture, file ownership matrix, and task dependency graph. Review it carefully — this is the blueprint for parallel execution.
 
-## Step 3: Launch the Swarm
+## Step 3: Launch the Akshauhini
 
 Time to execute. Launch 3 parallel workers:
 

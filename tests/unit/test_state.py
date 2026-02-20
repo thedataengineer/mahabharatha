@@ -1,4 +1,4 @@
-"""Tests for ZERG state management module.
+"""Tests for MAHABHARATHA state management module.
 
 Covers core StateManager functionality: init, load, save, task/worker/level
 management, events, paused/error state, delete/exists, merge status, retry
@@ -353,7 +353,7 @@ class TestStateMdGeneration:
         content = manager.generate_state_md(gsd_dir=gsd_dir).read_text()
 
         for expected in [
-            "# ZERG State: my-feature",
+            "# MAHABHARATHA State: my-feature",
             "**Level:** 3",
             "**Status:** PAUSED",
             "**Error:** Test error message",

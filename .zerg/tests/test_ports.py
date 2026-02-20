@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 Port Allocator."""
+"""Tests for MAHABHARATHA v2 Port Allocator."""
 
 import sys
 from pathlib import Path

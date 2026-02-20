@@ -1,4 +1,4 @@
-"""ZERG plan command - capture feature requirements."""
+"""MAHABHARATHA plan command - capture feature requirements."""
 
 from __future__ import annotations
 
@@ -52,7 +52,7 @@ def plan(
         mahabharatha plan user-auth --template minimal --no-interactive
     """
     try:
-        console.print("\n[bold cyan]ZERG Plan[/bold cyan]\n")
+        console.print("\n[bold cyan]MAHABHARATHA Plan[/bold cyan]\n")
 
         # Validate feature name
         if not feature and not from_issue:
@@ -251,7 +251,7 @@ def get_default_template(feature: str, timestamp: str) -> str:
 - **Feature**: {feature}
 - **Status**: DRAFT
 - **Created**: {timestamp}
-- **Author**: ZERG Plan
+- **Author**: MAHABHARATHA Plan
 
 ---
 
@@ -606,7 +606,7 @@ def format_standard_requirements(feature: str, timestamp: str, req: dict[str, An
 - **Feature**: {feature}
 - **Status**: DRAFT
 - **Created**: {timestamp}
-- **Author**: ZERG Plan
+- **Author**: MAHABHARATHA Plan
 
 ---
 

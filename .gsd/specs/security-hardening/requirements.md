@@ -6,7 +6,7 @@
 
 ## Problem Statement
 
-ZERG has three security vulnerabilities related to command injection and path traversal that need remediation:
+MAHABHARATHA has three security vulnerabilities related to command injection and path traversal that need remediation:
 
 1. **Command Injection via shell=True** (Issue #131, Severity: HIGH, CWE-78)
    - Three modules bypass `CommandExecutor` and use `subprocess.run(..., shell=True)` directly
@@ -98,34 +98,34 @@ ZERG has three security vulnerabilities related to command injection and path tr
 
 ## Acceptance Criteria
 
-1. **AC-1**: `grep -r "shell=True" zerg/` returns only `command_executor.py` (conditional path)
+1. **AC-1**: `grep -r "shell=True" mahabharatha/` returns only `command_executor.py` (conditional path)
 2. **AC-2**: `CommandExecutor` is imported in hypothesis_engine.py, step_executor.py, recovery.py
 3. **AC-3**: `python -c` and `npx` removed from `ALLOWED_COMMAND_PREFIXES`
 4. **AC-4**: `os.walk(..., followlinks=False)` used in security.py
 5. **AC-5**: All existing tests pass: `pytest tests/`
 6. **AC-6**: New tests added for each vulnerability fix
-7. **AC-7**: bandit scan passes: `bandit -r zerg/ -ll`
+7. **AC-7**: bandit scan passes: `bandit -r mahabharatha/ -ll`
 
 ## Verification Commands
 
 ```bash
 # Check shell=True usage is consolidated
-grep -rn "shell=True" zerg/ | grep -v "command_executor.py"
+grep -rn "shell=True" mahabharatha/ | grep -v "command_executor.py"
 # Expected: empty output (only command_executor.py should have conditional shell)
 
 # Check dangerous prefixes removed
-grep -E "(python -c|python3 -c|npx)" zerg/command_executor.py
+grep -E "(python -c|python3 -c|npx)" mahabharatha/command_executor.py
 # Expected: empty output
 
 # Check followlinks=False
-grep -n "os.walk" zerg/security.py
+grep -n "os.walk" mahabharatha/security.py
 # Expected: contains followlinks=False
 
 # Run tests
 pytest tests/ -v
 
 # Run security linter
-bandit -r zerg/ -ll
+bandit -r mahabharatha/ -ll
 ```
 
 ## Technical Notes
@@ -134,16 +134,16 @@ bandit -r zerg/ -ll
 Recovery templates use `{feature}` and `{worker_id}` placeholders:
 ```python
 # Before (vulnerable to injection via feature name)
-cmd = f"zerg logs --worker {worker_id}"
+cmd = f"mahabharatha logs --worker {worker_id}"
 
 # After (safe)
 import shlex
-cmd = f"zerg logs --worker {shlex.quote(worker_id)}"
+cmd = f"mahabharatha logs --worker {shlex.quote(worker_id)}"
 ```
 
 ### CommandExecutor Integration Pattern
 ```python
-from zerg.command_executor import CommandExecutor, get_executor
+from mahabharatha.command_executor import CommandExecutor, get_executor
 
 # Option 1: Get default executor
 executor = get_executor()
@@ -168,7 +168,7 @@ executor = CommandExecutor(
 ## Dependencies
 
 - No external dependencies
-- Uses existing `zerg.command_executor` module
+- Uses existing `mahabharatha.command_executor` module
 - Uses standard library `shlex`, `pathlib`
 
 ## Open Questions

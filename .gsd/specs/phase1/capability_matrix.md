@@ -6,11 +6,11 @@
 
 ## Critical Update: Claude Native Tasks
 
-Claude Code's native Tasks feature provides several capabilities that external repositories implement from scratch. This significantly reduces ZERG's implementation burden.
+Claude Code's native Tasks feature provides several capabilities that external repositories implement from scratch. This significantly reduces MAHABHARATHA's implementation burden.
 
 ### What Claude Native Tasks Provides
 
-| Capability | Description | ZERG Impact |
+| Capability | Description | MAHABHARATHA Impact |
 |------------|-------------|-------------|
 | Persistent state | Tasks survive session boundaries | No custom persistence needed |
 | Cross-instance memory | Agents share context via Tasks | No spec file synchronization needed |
@@ -18,7 +18,7 @@ Claude Code's native Tasks feature provides several capabilities that external r
 | Coordination | Tasks visible to all instances | No custom IPC mechanism |
 | Conversation continuity | Context preserved | Workers can resume |
 
-### What ZERG Still Needs to Implement
+### What MAHABHARATHA Still Needs to Implement
 
 | Capability | Rationale |
 |------------|-----------|
@@ -34,7 +34,7 @@ Claude Code's native Tasks feature provides several capabilities that external r
 
 ### Implementation Status
 
-| Capability | Claude Tasks | ZERG | goose | packnplay | superpowers | SuperClaude |
+| Capability | Claude Tasks | MAHABHARATHA | goose | packnplay | superpowers | SuperClaude |
 |------------|--------------|------|-------|-----------|-------------|-------------|
 | **State & Coordination** |
 | Persistent state | ✅ Native | ❌ Design | ❌ | ❌ | ❌ PLAN.md | ✅ Session |
@@ -76,13 +76,13 @@ Claude Code's native Tasks feature provides several capabilities that external r
 
 | Capability | Source | Why Tasks Don't Cover |
 |------------|--------|----------------------|
-| Level synchronization | ZERG unique | Tasks don't enforce execution order |
+| Level synchronization | MAHABHARATHA unique | Tasks don't enforce execution order |
 | Git worktree creation | packnplay | Tasks don't manage git |
-| Merge conflict detection | ZERG unique | Tasks don't validate git state |
+| Merge conflict detection | MAHABHARATHA unique | Tasks don't validate git state |
 | Task decomposition | superpowers | Tasks don't generate subtasks |
 | Verification execution | superpowers | Tasks don't run commands |
 | Quality gates | superpowers | Tasks don't block on quality |
-| Port allocation | ZERG unique | Tasks don't manage networking |
+| Port allocation | MAHABHARATHA unique | Tasks don't manage networking |
 | Security rules | claude-secure | Tasks don't enforce code patterns |
 
 ---
@@ -135,11 +135,11 @@ Claude Tasks handles:
 
 ---
 
-## ZERG's Unique Value
+## MAHABHARATHA's Unique Value
 
-With Claude Tasks providing state/coordination, ZERG's value proposition:
+With Claude Tasks providing state/coordination, MAHABHARATHA's value proposition:
 
-| What Tasks Provides | What ZERG Adds |
+| What Tasks Provides | What MAHABHARATHA Adds |
 |---------------------|----------------|
 | Persistent state | Level-based execution ordering |
 | Cross-agent memory | Exclusive file ownership |
@@ -148,7 +148,7 @@ With Claude Tasks providing state/coordination, ZERG's value proposition:
 | | Devcontainer-based execution |
 | | Task decomposition from specs |
 
-ZERG is not a state management system. ZERG is a **parallel execution orchestration layer** that uses Claude Tasks for state while adding:
+MAHABHARATHA is not a state management system. MAHABHARATHA is a **parallel execution orchestration layer** that uses Claude Tasks for state while adding:
 1. Dependency-aware ordering (levels)
 2. Conflict-free parallelism (worktrees + file ownership)
 3. Quality enforcement (merge gates)

@@ -1,4 +1,4 @@
-"""ZERG type definitions using TypedDict and dataclass."""
+"""MAHABHARATHA type definitions using TypedDict and dataclass."""
 
 __all__ = [
     # Task types
@@ -216,7 +216,7 @@ class GraphNodeDict(TypedDict, total=False):
 
 
 class StateDict(TypedDict, total=False):
-    """Top-level ZERG execution state persisted to disk.
+    """Top-level MAHABHARATHA execution state persisted to disk.
 
     Represents the structure created by PersistenceLayer._create_initial_state()
     and managed by all state/ submodules.

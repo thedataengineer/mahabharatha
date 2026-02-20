@@ -23,9 +23,9 @@
 
 | ID | Task | Files Owned | Status | Verification |
 |----|------|-------------|--------|--------------|
-| **DC-001** | Update init.py to use ProjectStack | `zerg/commands/init.py` | ✅ Complete | `zerg init --detect` shows multiple langs |
-| **DC-002** ⭐ | Create devcontainer_features.py | `zerg/devcontainer_features.py` | ✅ Complete | Import succeeds |
-| **DC-006** | Implement ContainerLauncher base | `zerg/launcher.py` | ✅ Complete | Class inherits WorkerLauncher |
+| **DC-001** | Update init.py to use ProjectStack | `mahabharatha/commands/init.py` | ✅ Complete | `mahabharatha init --detect` shows multiple langs |
+| **DC-002** ⭐ | Create devcontainer_features.py | `mahabharatha/devcontainer_features.py` | ✅ Complete | Import succeeds |
+| **DC-006** | Implement ContainerLauncher base | `mahabharatha/launcher.py` | ✅ Complete | Class inherits WorkerLauncher |
 
 ---
 
@@ -33,8 +33,8 @@
 
 | ID | Task | Files Owned | Deps | Status | Verification |
 |----|------|-------------|------|--------|--------------|
-| **DC-003** ⭐ | Create DynamicDevcontainerGenerator | `zerg/devcontainer_features.py` | DC-002 | ✅ Complete | Generates multi-lang config |
-| **DC-007** | Add container spawn + claude exec | `zerg/launcher.py`, `.zerg/worker_entry.sh` | DC-006 | ✅ Complete | worker_entry.sh exists |
+| **DC-003** ⭐ | Create DynamicDevcontainerGenerator | `mahabharatha/devcontainer_features.py` | DC-002 | ✅ Complete | Generates multi-lang config |
+| **DC-007** | Add container spawn + claude exec | `mahabharatha/launcher.py`, `.mahabharatha/worker_entry.sh` | DC-006 | ✅ Complete | worker_entry.sh exists |
 
 ---
 
@@ -42,9 +42,9 @@
 
 | ID | Task | Files Owned | Deps | Status | Verification |
 |----|------|-------------|------|--------|--------------|
-| **DC-004** ⭐ | Update create_devcontainer() | `zerg/commands/init.py` | DC-001, DC-003 | ✅ Complete | Multi-lang devcontainer.json |
-| **DC-005** | Update .zerg/devcontainer.py | `.zerg/devcontainer.py` | DC-003 | ✅ Complete | Multi-lang support |
-| **DC-008** | Add auto-detect launcher mode | `zerg/orchestrator.py` | DC-006 | ✅ Complete | Auto-detects container mode |
+| **DC-004** ⭐ | Update create_devcontainer() | `mahabharatha/commands/init.py` | DC-001, DC-003 | ✅ Complete | Multi-lang devcontainer.json |
+| **DC-005** | Update .mahabharatha/devcontainer.py | `.mahabharatha/devcontainer.py` | DC-003 | ✅ Complete | Multi-lang support |
+| **DC-008** | Add auto-detect launcher mode | `mahabharatha/orchestrator.py` | DC-006 | ✅ Complete | Auto-detects container mode |
 
 ---
 
@@ -52,8 +52,8 @@
 
 | ID | Task | Files Owned | Deps | Status | Verification |
 |----|------|-------------|------|--------|--------------|
-| **DC-009** ⭐ | Wire ContainerLauncher to orchestrator | `zerg/orchestrator.py` | DC-007, DC-008 | ✅ Complete | Orchestrator uses containers |
-| **DC-010** | Add --mode flag to rush | `zerg/commands/rush.py` | DC-009 | ✅ Complete | CLI shows --mode option |
+| **DC-009** ⭐ | Wire ContainerLauncher to orchestrator | `mahabharatha/orchestrator.py` | DC-007, DC-008 | ✅ Complete | Orchestrator uses containers |
+| **DC-010** | Add --mode flag to kurukshetra | `mahabharatha/commands/kurukshetra.py` | DC-009 | ✅ Complete | CLI shows --mode option |
 
 ---
 
@@ -61,7 +61,7 @@
 
 | ID | Task | Files Owned | Deps | Status | Verification |
 |----|------|-------------|------|--------|--------------|
-| **DC-011** | Update skill file docs | `.claude/commands/zerg:*.md` | DC-010 | ✅ Complete | Docs mention container mode |
+| **DC-011** | Update skill file docs | `.claude/commands/mahabharatha:*.md` | DC-010 | ✅ Complete | Docs mention container mode |
 | **DC-012** ⭐ | Integration tests | `tests/integration/test_container_*.py` | All | ✅ Complete | 79 tests pass |
 
 ---
@@ -78,15 +78,15 @@ DC-002 ✅ → DC-003 ✅ → DC-004 ✅ → DC-009 ✅ → DC-012 ✅
 
 | File | Owner Task | Action | Status |
 |------|-----------|--------|--------|
-| `zerg/commands/init.py` | DC-001, DC-004 | Modify | ✅ |
-| `zerg/devcontainer_features.py` | DC-002, DC-003 | Create, Modify | ✅ |
-| `zerg/launcher.py` | DC-006, DC-007 | Modify | ✅ |
-| `zerg/orchestrator.py` | DC-008, DC-009 | Modify | ✅ |
-| `zerg/commands/rush.py` | DC-010 | Modify | ✅ |
-| `.zerg/devcontainer.py` | DC-005 | Modify | ✅ |
-| `.zerg/worker_entry.sh` | DC-007 | Create | ✅ |
-| `.claude/commands/zerg:init.md` | DC-011 | Modify | ✅ |
-| `.claude/commands/zerg:rush.md` | DC-011 | Modify | ✅ |
+| `mahabharatha/commands/init.py` | DC-001, DC-004 | Modify | ✅ |
+| `mahabharatha/devcontainer_features.py` | DC-002, DC-003 | Create, Modify | ✅ |
+| `mahabharatha/launcher.py` | DC-006, DC-007 | Modify | ✅ |
+| `mahabharatha/orchestrator.py` | DC-008, DC-009 | Modify | ✅ |
+| `mahabharatha/commands/kurukshetra.py` | DC-010 | Modify | ✅ |
+| `.mahabharatha/devcontainer.py` | DC-005 | Modify | ✅ |
+| `.mahabharatha/worker_entry.sh` | DC-007 | Create | ✅ |
+| `.claude/commands/mahabharatha:init.md` | DC-011 | Modify | ✅ |
+| `.claude/commands/mahabharatha:kurukshetra.md` | DC-011 | Modify | ✅ |
 | `tests/integration/test_container_*.py` | DC-012 | Create | ✅ |
 
 ---
@@ -116,7 +116,7 @@ DC-012 integration tests implemented with 79 passing tests covering:
 3. Container launcher checks (`test_container_launcher_checks.py`)
 4. Orchestrator mode selection (`test_container_orchestrator.py`)
 5. Init command integration (`test_container_init_cmd.py`)
-6. Rush command --mode flag (`test_container_rush_cmd.py`)
+6. Kurukshetra command --mode flag (`test_container_rush_cmd.py`)
 7. End-to-end flow (`test_container_e2e.py`)
 
 ```bash

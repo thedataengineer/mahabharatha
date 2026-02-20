@@ -1,4 +1,4 @@
-"""Thinned unit tests for ZERG git command.
+"""Thinned unit tests for MAHABHARATHA git command.
 
 Reduced from 101 to ~30 tests by:
 - TestDetectCommitType: 28 -> 1 parametrized (one keyword per type + file priority)

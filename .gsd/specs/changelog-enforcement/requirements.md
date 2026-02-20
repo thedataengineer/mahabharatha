@@ -4,14 +4,14 @@
 - **Feature**: changelog-enforcement
 - **Status**: APPROVED
 - **Created**: 2026-02-02
-- **Author**: ZERG Plan Mode
+- **Author**: MAHABHARATHA Plan Mode
 
 ---
 
 ## 1. Problem Statement
 
 ### 1.1 Problem
-CHANGELOG.md updates are required by CI (`check-changelog` workflow) but nothing in the ZERG workflow enforces this before it's too late. The `/zerg:design` phase generates task graphs without a CHANGELOG task, and the `/zerg:git --action ship` pipeline pushes and creates PRs without verifying CHANGELOG was updated.
+CHANGELOG.md updates are required by CI (`check-changelog` workflow) but nothing in the MAHABHARATHA workflow enforces this before it's too late. The `/mahabharatha:design` phase generates task graphs without a CHANGELOG task, and the `/mahabharatha:git --action ship` pipeline pushes and creates PRs without verifying CHANGELOG was updated.
 
 ### 1.2 Impact
 PRs fail CI, requiring an extra commit-push cycle to fix. This happened on PR #96.
@@ -24,7 +24,7 @@ PRs fail CI, requiring an extra commit-push cycle to fix. This happened on PR #9
 
 | ID | Requirement | Priority |
 |----|-------------|----------|
-| FR-A01 | `/zerg:design` must always include a CHANGELOG update task in the final quality level of the task graph | Must |
+| FR-A01 | `/mahabharatha:design` must always include a CHANGELOG update task in the final quality level of the task graph | Must |
 | FR-A02 | The CHANGELOG task should modify `CHANGELOG.md` under `[Unreleased]` with entries describing the feature's changes | Must |
 | FR-A03 | The CHANGELOG task should be in the last level (Quality phase), depending on all prior tasks | Must |
 
@@ -32,7 +32,7 @@ PRs fail CI, requiring an extra commit-push cycle to fix. This happened on PR #9
 
 | ID | Requirement | Priority |
 |----|-------------|----------|
-| FR-B01 | `/zerg:git --action ship` must check if CHANGELOG.md has been modified (via `git diff`) before pushing | Must |
+| FR-B01 | `/mahabharatha:git --action ship` must check if CHANGELOG.md has been modified (via `git diff`) before pushing | Must |
 | FR-B02 | If CHANGELOG.md is not modified, warn the user and ask to continue or abort | Must |
 | FR-B03 | The check should compare against the base branch (default: `main`) to detect CHANGELOG changes across all commits on the branch | Must |
 
@@ -61,7 +61,7 @@ PRs fail CI, requiring an extra commit-push cycle to fix. This happened on PR #9
 
 ## 5. Documentation
 
-After implementation, execute `/zerg:document` to update all documentation surfaces:
-- Ensure all ZERG commands and flags are accounted for in documentation
-- Wiki command pages must follow the `zerg-*.md` naming convention (non-command pages unaffected)
-- Before executing documentation updates, plan the work via `/zerg:design` and estimate via `/zerg:estimate`
+After implementation, execute `/mahabharatha:document` to update all documentation surfaces:
+- Ensure all MAHABHARATHA commands and flags are accounted for in documentation
+- Wiki command pages must follow the `mahabharatha-*.md` naming convention (non-command pages unaffected)
+- Before executing documentation updates, plan the work via `/mahabharatha:design` and estimate via `/mahabharatha:estimate`

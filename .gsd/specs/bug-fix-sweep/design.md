@@ -10,7 +10,7 @@ Fix 5 pre-existing test failures across 3 root causes: StateManager threading ra
 ## 2. Bug Fixes
 
 ### BF-L1-001: StateManager thread safety
-**File**: `zerg/state.py`
+**File**: `mahabharatha/state.py`
 **Root cause**: `_atomic_update()` releases `self._lock` (RLock) before `yield` at line 88. Multiple threads on a shared StateManager instance bypass the lock and operate on stale in-memory state concurrently.
 
 **Fix**: Hold `self._lock` for the entire yield duration in the outermost `_atomic_update` context. Move the `yield` INSIDE the `with self._lock:` block so threads are serialized.
@@ -30,7 +30,7 @@ with self._lock:
 ```
 
 ### BF-L1-002: VerificationExecutor always check dangerous patterns
-**File**: `zerg/verify.py`
+**File**: `mahabharatha/verify.py`
 **Root cause**: `_get_executor()` hardcodes `trust_commands=True` at line 63, which skips the dangerous pattern check in `CommandExecutor.validate_command()`.
 
 **Fix**: Change to `trust_commands=False`. Verification commands should still be validated for dangerous patterns (`;`, `rm -rf`, etc). The `allow_unlisted=True` already permits custom commands.
@@ -45,8 +45,8 @@ with self._lock:
 
 | File | Task | Operation |
 |------|------|-----------|
-| `zerg/state.py` | BF-L1-001 | modify |
-| `zerg/verify.py` | BF-L1-002 | modify |
+| `mahabharatha/state.py` | BF-L1-001 | modify |
+| `mahabharatha/verify.py` | BF-L1-002 | modify |
 | `tests/unit/test_worker_lifecycle.py` | BF-L1-003 | modify |
 | `tests/unit/test_state_extended.py` | BF-L1-001 | read (verify) |
 | `tests/unit/test_verify.py` | BF-L1-002 | read (verify) |

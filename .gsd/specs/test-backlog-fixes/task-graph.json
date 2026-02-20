@@ -65,7 +65,7 @@
           "tests/test_worker_protocol.py",
           "tests/integration/test_worker_protocol_extended.py"
         ],
-        "read": ["zerg/worker_protocol.py"]
+        "read": ["mahabharatha/worker_protocol.py"]
       },
       "acceptance_criteria": [
         "test_claim_next_task_none_available passes within 5s",

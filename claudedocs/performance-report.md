@@ -21,8 +21,8 @@
 | Severity | File | Line | Message |
 |----------|------|------|---------|
 | HIGH | _plugin_task_graph@12-369@./tests/e2e/test_dogfood_plugin.py | - | Function './tests/e2e/test_dogfood_plugin.py' has 343 lines of code |
-| HIGH | debug@997-1418@./zerg/commands/debug.py | - | Function './zerg/commands/debug.py' has 334 lines of code |
-| HIGH | generate_backlog_markdown@193-447@./zerg/backlog.py | - | Function './zerg/backlog.py' has 205 lines of code |
+| HIGH | debug@997-1418@./mahabharatha/commands/debug.py | - | Function './mahabharatha/commands/debug.py' has 334 lines of code |
+| HIGH | generate_backlog_markdown@193-447@./mahabharatha/backlog.py | - | Function './mahabharatha/backlog.py' has 205 lines of code |
 | HIGH | tests/e2e/test_container_e2e.py | 143 | Unused variable 'container_e2e_setup' (100% confidence) |
 | HIGH | tests/e2e/test_container_e2e.py | 155 | Unused variable 'container_e2e_setup' (100% confidence) |
 | HIGH | tests/e2e/test_container_e2e.py | 187 | Unused variable 'container_e2e_setup' (100% confidence) |
@@ -166,17 +166,17 @@
 | HIGH | tests/unit/test_orchestrator_container_mode.py | 529 | Unused variable 'mock_worktree_manager' (100% confidence) |
 | HIGH | tests/unit/test_orchestrator_container_mode.py | 531 | Unused variable 'mock_task_parser' (100% confidence) |
 | HIGH | tests/unit/test_orchestrator_container_mode.py | 532 | Unused variable 'mock_level_controller' (100% confidence) |
-| HIGH | zerg/commands/design.py | 355 | Unused variable 'min_minutes' (100% confidence) |
+| HIGH | mahabharatha/commands/design.py | 355 | Unused variable 'min_minutes' (100% confidence) |
 | MEDIUM | mock_orchestrator_deps@28-146@./tests/unit/test_orchestrator.py | - | Function './tests/unit/test_orchestrator.py' has 104 lines of code |
 | MEDIUM | mock_orchestrator_deps@23-143@./tests/unit/test_orchestrator_recovery.py | - | Function './tests/unit/test_orchestrator_recovery.py' has 106 lines of code |
 | MEDIUM | mock_orchestrator_deps@79-231@./tests/fixtures/orchestrator_fixtures.py | - | Function './tests/fixtures/orchestrator_fixtures.py' has 120 lines of code |
-| MEDIUM | test_cmd@517-664@./zerg/commands/test_cmd.py | - | Function './zerg/commands/test_cmd.py' has 101 lines of code |
-| MEDIUM | design@27-177@./zerg/commands/design.py | - | Function './zerg/commands/design.py' has 103 lines of code |
-| MEDIUM | create_task_graph_template@351-528@./zerg/commands/design.py | - | Function './zerg/commands/design.py' has 165 lines of code |
-| MEDIUM | run@400-546@./zerg/commands/debug.py | - | Function './zerg/commands/debug.py' has 103 lines of code |
-| MEDIUM | format_result@679-874@./zerg/commands/debug.py | - | Function './zerg/commands/debug.py' has 170 lines of code |
-| MEDIUM | handle_level_complete@163-304@./zerg/level_coordinator.py | - | Function './zerg/level_coordinator.py' has 108 lines of code |
-| MEDIUM | __init__@74-213@./zerg/orchestrator.py | - | Function './zerg/orchestrator.py' has 114 lines of code |
+| MEDIUM | test_cmd@517-664@./mahabharatha/commands/test_cmd.py | - | Function './mahabharatha/commands/test_cmd.py' has 101 lines of code |
+| MEDIUM | design@27-177@./mahabharatha/commands/design.py | - | Function './mahabharatha/commands/design.py' has 103 lines of code |
+| MEDIUM | create_task_graph_template@351-528@./mahabharatha/commands/design.py | - | Function './mahabharatha/commands/design.py' has 165 lines of code |
+| MEDIUM | run@400-546@./mahabharatha/commands/debug.py | - | Function './mahabharatha/commands/debug.py' has 103 lines of code |
+| MEDIUM | format_result@679-874@./mahabharatha/commands/debug.py | - | Function './mahabharatha/commands/debug.py' has 170 lines of code |
+| MEDIUM | handle_level_complete@163-304@./mahabharatha/level_coordinator.py | - | Function './mahabharatha/level_coordinator.py' has 108 lines of code |
+| MEDIUM | __init__@74-213@./mahabharatha/orchestrator.py | - | Function './mahabharatha/orchestrator.py' has 114 lines of code |
 | MEDIUM | tests/integration/test_orchestrator_fixes.py | 10 | Unused import 'PropertyMock' (90% confidence) |
 | MEDIUM | tests/unit/test_build_cmd.py | 8 | Unused import 'PropertyMock' (90% confidence) |
 | MEDIUM | tests/unit/test_log_aggregator.py | 8 | Unused import 'LogQuery' (90% confidence) |
@@ -209,7 +209,7 @@
 | MEDIUM | tests/unit/test_merge_flow.py | - | File has maintainability index 6.0 (rank C) |
 | MEDIUM | tests/unit/test_launcher.py | - | File has maintainability index 0.0 (rank C) |
 | MEDIUM | tests/unit/test_security_rules_full.py | - | File has maintainability index 0.0 (rank C) |
-| MEDIUM | zerg/commands/debug.py | - | File has maintainability index 0.0 (rank C) |
+| MEDIUM | mahabharatha/commands/debug.py | - | File has maintainability index 0.0 (rank C) |
 | LOW | configure@96-124@./tests/mocks/mock_git.py | - | Function './tests/mocks/mock_git.py' has 7 parameters |
 | LOW | configure@101-150@./tests/mocks/mock_merge.py | - | Function './tests/mocks/mock_merge.py' has 14 parameters |
 | LOW | _record_attempt@280-309@./tests/mocks/mock_merge.py | - | Function './tests/mocks/mock_merge.py' has 8 parameters |
@@ -329,107 +329,107 @@
 | LOW | __init__@102-123@./tests/helpers/async_helpers.py | - | Function './tests/helpers/async_helpers.py' has 6 parameters |
 | LOW | spawn@473-516@./tests/helpers/command_mocks.py | - | Function './tests/helpers/command_mocks.py' has 6 parameters |
 | LOW | run@1230-1296@./tests/helpers/command_mocks.py | - | Function './tests/helpers/command_mocks.py' has 9 parameters |
-| LOW | build@439-566@./zerg/commands/build.py | - | Function './zerg/commands/build.py' has 9 parameters |
-| LOW | plan@29-130@./zerg/commands/plan.py | - | Function './zerg/commands/plan.py' has 8 parameters |
-| LOW | refactor@446-560@./zerg/commands/refactor.py | - | Function './zerg/commands/refactor.py' has 7 parameters |
-| LOW | merge_cmd@29-157@./zerg/commands/merge_cmd.py | - | Function './zerg/commands/merge_cmd.py' has 6 parameters |
-| LOW | test_cmd@517-664@./zerg/commands/test_cmd.py | - | Function './zerg/commands/test_cmd.py' has 9 parameters |
-| LOW | design@27-177@./zerg/commands/design.py | - | Function './zerg/commands/design.py' has 7 parameters |
-| LOW | cleanup@34-103@./zerg/commands/cleanup.py | - | Function './zerg/commands/cleanup.py' has 7 parameters |
-| LOW | retry@25-107@./zerg/commands/retry.py | - | Function './zerg/commands/retry.py' has 6 parameters |
-| LOW | git_cmd@364-423@./zerg/commands/git_cmd.py | - | Function './zerg/commands/git_cmd.py' has 8 parameters |
-| LOW | logs@62-185@./zerg/commands/logs.py | - | Function './zerg/commands/logs.py' has 15 parameters |
-| LOW | _show_aggregated_logs@188-232@./zerg/commands/logs.py | - | Function './zerg/commands/logs.py' has 12 parameters |
-| LOW | run@400-546@./zerg/commands/debug.py | - | Function './zerg/commands/debug.py' has 8 parameters |
-| LOW | debug@997-1418@./zerg/commands/debug.py | - | Function './zerg/commands/debug.py' has 13 parameters |
-| LOW | init@113-230@./zerg/commands/init.py | - | Function './zerg/commands/init.py' has 7 parameters |
-| LOW | rush@46-203@./zerg/commands/rush.py | - | Function './zerg/commands/rush.py' has 13 parameters |
-| LOW | analyze@395-530@./zerg/commands/analyze.py | - | Function './zerg/commands/analyze.py' has 7 parameters |
-| LOW | status@57-116@./zerg/commands/status.py | - | Function './zerg/commands/status.py' has 7 parameters |
-| LOW | _ccn_finding@112-131@./zerg/performance/adapters/lizard_adapter.py | - | Function './zerg/performance/adapters/lizard_adapter.py' has 6 parameters |
-| LOW | _nloc_finding@133-152@./zerg/performance/adapters/lizard_adapter.py | - | Function './zerg/performance/adapters/lizard_adapter.py' has 6 parameters |
-| LOW | query@47-127@./zerg/log_aggregator.py | - | Function './zerg/log_aggregator.py' has 11 parameters |
-| LOW | setup_logging@145-194@./zerg/logging.py | - | Function './zerg/logging.py' has 6 parameters |
-| LOW | start_worker@162-225@./zerg/containers.py | - | Function './zerg/containers.py' has 6 parameters |
-| LOW | __init__@179-211@./zerg/command_executor.py | - | Function './zerg/command_executor.py' has 7 parameters |
-| LOW | execute@298-434@./zerg/command_executor.py | - | Function './zerg/command_executor.py' has 7 parameters |
-| LOW | __init__@48-94@./zerg/level_coordinator.py | - | Function './zerg/level_coordinator.py' has 14 parameters |
-| LOW | run_all_gates@126-201@./zerg/gates.py | - | Function './zerg/gates.py' has 7 parameters |
-| LOW | complete@32-61@./zerg/worker_metrics.py | - | Function './zerg/worker_metrics.py' has 6 parameters |
-| LOW | complete_task@181-233@./zerg/worker_metrics.py | - | Function './zerg/worker_metrics.py' has 7 parameters |
-| LOW | __init__@45-97@./zerg/worker_manager.py | - | Function './zerg/worker_manager.py' has 17 parameters |
-| LOW | __init__@39-52@./zerg/exceptions.py | - | Function './zerg/exceptions.py' has 7 parameters |
-| LOW | __init__@154-169@./zerg/exceptions.py | - | Function './zerg/exceptions.py' has 7 parameters |
-| LOW | spawn@197-217@./zerg/launcher.py | - | Function './zerg/launcher.py' has 6 parameters |
-| LOW | spawn_async@335-360@./zerg/launcher.py | - | Function './zerg/launcher.py' has 6 parameters |
-| LOW | spawn@423-525@./zerg/launcher.py | - | Function './zerg/launcher.py' has 6 parameters |
-| LOW | spawn_async@686-795@./zerg/launcher.py | - | Function './zerg/launcher.py' has 6 parameters |
-| LOW | __init__@896-918@./zerg/launcher.py | - | Function './zerg/launcher.py' has 6 parameters |
-| LOW | spawn@920-1035@./zerg/launcher.py | - | Function './zerg/launcher.py' has 6 parameters |
-| LOW | spawn_async@1481-1606@./zerg/launcher.py | - | Function './zerg/launcher.py' has 6 parameters |
-| LOW | verify@66-147@./zerg/verify.py | - | Function './zerg/verify.py' has 6 parameters |
-| LOW | verify_with_retry@185-218@./zerg/verify.py | - | Function './zerg/verify.py' has 6 parameters |
-| LOW | __init__@26-48@./zerg/task_retry_manager.py | - | Function './zerg/task_retry_manager.py' has 6 parameters |
-| LOW | emit@51-96@./zerg/log_writer.py | - | Function './zerg/log_writer.py' has 8 parameters |
-| LOW | __init__@91-195@./zerg/worker_protocol.py | - | Function './zerg/worker_protocol.py' has 6 parameters |
-| LOW | __init__@120-134@./zerg/dryrun.py | - | Function './zerg/dryrun.py' has 7 parameters |
-| LOW | __init__@62-78@./zerg/preflight.py | - | Function './zerg/preflight.py' has 8 parameters |
-| LOW | set_worker_state@187-230@./.zerg/tests/mocks/mock_state.py | - | Function './.zerg/tests/mocks/mock_state.py' has 7 parameters |
-| LOW | set_task_state@280-339@./.zerg/tests/mocks/mock_state.py | - | Function './.zerg/tests/mocks/mock_state.py' has 7 parameters |
-| LOW | create_checkpoint@616-650@./.zerg/tests/mocks/mock_state.py | - | Function './.zerg/tests/mocks/mock_state.py' has 7 parameters |
+| LOW | build@439-566@./mahabharatha/commands/build.py | - | Function './mahabharatha/commands/build.py' has 9 parameters |
+| LOW | plan@29-130@./mahabharatha/commands/plan.py | - | Function './mahabharatha/commands/plan.py' has 8 parameters |
+| LOW | refactor@446-560@./mahabharatha/commands/refactor.py | - | Function './mahabharatha/commands/refactor.py' has 7 parameters |
+| LOW | merge_cmd@29-157@./mahabharatha/commands/merge_cmd.py | - | Function './mahabharatha/commands/merge_cmd.py' has 6 parameters |
+| LOW | test_cmd@517-664@./mahabharatha/commands/test_cmd.py | - | Function './mahabharatha/commands/test_cmd.py' has 9 parameters |
+| LOW | design@27-177@./mahabharatha/commands/design.py | - | Function './mahabharatha/commands/design.py' has 7 parameters |
+| LOW | cleanup@34-103@./mahabharatha/commands/cleanup.py | - | Function './mahabharatha/commands/cleanup.py' has 7 parameters |
+| LOW | retry@25-107@./mahabharatha/commands/retry.py | - | Function './mahabharatha/commands/retry.py' has 6 parameters |
+| LOW | git_cmd@364-423@./mahabharatha/commands/git_cmd.py | - | Function './mahabharatha/commands/git_cmd.py' has 8 parameters |
+| LOW | logs@62-185@./mahabharatha/commands/logs.py | - | Function './mahabharatha/commands/logs.py' has 15 parameters |
+| LOW | _show_aggregated_logs@188-232@./mahabharatha/commands/logs.py | - | Function './mahabharatha/commands/logs.py' has 12 parameters |
+| LOW | run@400-546@./mahabharatha/commands/debug.py | - | Function './mahabharatha/commands/debug.py' has 8 parameters |
+| LOW | debug@997-1418@./mahabharatha/commands/debug.py | - | Function './mahabharatha/commands/debug.py' has 13 parameters |
+| LOW | init@113-230@./mahabharatha/commands/init.py | - | Function './mahabharatha/commands/init.py' has 7 parameters |
+| LOW | kurukshetra@46-203@./mahabharatha/commands/kurukshetra.py | - | Function './mahabharatha/commands/kurukshetra.py' has 13 parameters |
+| LOW | analyze@395-530@./mahabharatha/commands/analyze.py | - | Function './mahabharatha/commands/analyze.py' has 7 parameters |
+| LOW | status@57-116@./mahabharatha/commands/status.py | - | Function './mahabharatha/commands/status.py' has 7 parameters |
+| LOW | _ccn_finding@112-131@./mahabharatha/performance/adapters/lizard_adapter.py | - | Function './mahabharatha/performance/adapters/lizard_adapter.py' has 6 parameters |
+| LOW | _nloc_finding@133-152@./mahabharatha/performance/adapters/lizard_adapter.py | - | Function './mahabharatha/performance/adapters/lizard_adapter.py' has 6 parameters |
+| LOW | query@47-127@./mahabharatha/log_aggregator.py | - | Function './mahabharatha/log_aggregator.py' has 11 parameters |
+| LOW | setup_logging@145-194@./mahabharatha/logging.py | - | Function './mahabharatha/logging.py' has 6 parameters |
+| LOW | start_worker@162-225@./mahabharatha/containers.py | - | Function './mahabharatha/containers.py' has 6 parameters |
+| LOW | __init__@179-211@./mahabharatha/command_executor.py | - | Function './mahabharatha/command_executor.py' has 7 parameters |
+| LOW | execute@298-434@./mahabharatha/command_executor.py | - | Function './mahabharatha/command_executor.py' has 7 parameters |
+| LOW | __init__@48-94@./mahabharatha/level_coordinator.py | - | Function './mahabharatha/level_coordinator.py' has 14 parameters |
+| LOW | run_all_gates@126-201@./mahabharatha/gates.py | - | Function './mahabharatha/gates.py' has 7 parameters |
+| LOW | complete@32-61@./mahabharatha/worker_metrics.py | - | Function './mahabharatha/worker_metrics.py' has 6 parameters |
+| LOW | complete_task@181-233@./mahabharatha/worker_metrics.py | - | Function './mahabharatha/worker_metrics.py' has 7 parameters |
+| LOW | __init__@45-97@./mahabharatha/worker_manager.py | - | Function './mahabharatha/worker_manager.py' has 17 parameters |
+| LOW | __init__@39-52@./mahabharatha/exceptions.py | - | Function './mahabharatha/exceptions.py' has 7 parameters |
+| LOW | __init__@154-169@./mahabharatha/exceptions.py | - | Function './mahabharatha/exceptions.py' has 7 parameters |
+| LOW | spawn@197-217@./mahabharatha/launcher.py | - | Function './mahabharatha/launcher.py' has 6 parameters |
+| LOW | spawn_async@335-360@./mahabharatha/launcher.py | - | Function './mahabharatha/launcher.py' has 6 parameters |
+| LOW | spawn@423-525@./mahabharatha/launcher.py | - | Function './mahabharatha/launcher.py' has 6 parameters |
+| LOW | spawn_async@686-795@./mahabharatha/launcher.py | - | Function './mahabharatha/launcher.py' has 6 parameters |
+| LOW | __init__@896-918@./mahabharatha/launcher.py | - | Function './mahabharatha/launcher.py' has 6 parameters |
+| LOW | spawn@920-1035@./mahabharatha/launcher.py | - | Function './mahabharatha/launcher.py' has 6 parameters |
+| LOW | spawn_async@1481-1606@./mahabharatha/launcher.py | - | Function './mahabharatha/launcher.py' has 6 parameters |
+| LOW | verify@66-147@./mahabharatha/verify.py | - | Function './mahabharatha/verify.py' has 6 parameters |
+| LOW | verify_with_retry@185-218@./mahabharatha/verify.py | - | Function './mahabharatha/verify.py' has 6 parameters |
+| LOW | __init__@26-48@./mahabharatha/task_retry_manager.py | - | Function './mahabharatha/task_retry_manager.py' has 6 parameters |
+| LOW | emit@51-96@./mahabharatha/log_writer.py | - | Function './mahabharatha/log_writer.py' has 8 parameters |
+| LOW | __init__@91-195@./mahabharatha/worker_protocol.py | - | Function './mahabharatha/worker_protocol.py' has 6 parameters |
+| LOW | __init__@120-134@./mahabharatha/dryrun.py | - | Function './mahabharatha/dryrun.py' has 7 parameters |
+| LOW | __init__@62-78@./mahabharatha/preflight.py | - | Function './mahabharatha/preflight.py' has 8 parameters |
+| LOW | set_worker_state@187-230@./.mahabharatha/tests/mocks/mock_state.py | - | Function './.mahabharatha/tests/mocks/mock_state.py' has 7 parameters |
+| LOW | set_task_state@280-339@./.mahabharatha/tests/mocks/mock_state.py | - | Function './.mahabharatha/tests/mocks/mock_state.py' has 7 parameters |
+| LOW | create_checkpoint@616-650@./.mahabharatha/tests/mocks/mock_state.py | - | Function './.mahabharatha/tests/mocks/mock_state.py' has 7 parameters |
 
 ## Code Volume (Score: 0/100)
 | Severity | File | Line | Message |
 |----------|------|------|---------|
-| HIGH | .gsd/specs/coverage-100/task-graph.json | 1 | Duplicated block (635 lines, 0 tokens) between .gsd/specs/coverage-100/task-graph.json and .zerg/specs/coverage-100/task-graph.json |
-| HIGH | .zerg/templates/quality-reviewer.md | 5 | Duplicated block (52 lines, 0 tokens) between .zerg/templates/quality-reviewer.md and .gsd/tasks/prompts/L1-TASK-004-prompt-templates.md |
-| HIGH | .zerg/templates/implementer.md | 3 | Duplicated block (66 lines, 0 tokens) between .zerg/templates/implementer.md and .gsd/tasks/prompts/L1-TASK-004-prompt-templates.md |
-| HIGH | .claude/commands/zerg:worker.md | 3 | Duplicated block (382 lines, 0 tokens) between .claude/commands/zerg:worker.md and zerg/data/commands/zerg:worker.md |
-| HIGH | .claude/commands/zerg:test.md | 3 | Duplicated block (79 lines, 0 tokens) between .claude/commands/zerg:test.md and zerg/data/commands/zerg:test.md |
-| HIGH | .claude/commands/zerg:stop.md | 3 | Duplicated block (190 lines, 0 tokens) between .claude/commands/zerg:stop.md and zerg/data/commands/zerg:stop.md |
-| HIGH | .claude/commands/zerg:status.md | 3 | Duplicated block (311 lines, 0 tokens) between .claude/commands/zerg:status.md and zerg/data/commands/zerg:status.md |
-| HIGH | .claude/commands/zerg:security.md | 3 | Duplicated block (138 lines, 0 tokens) between .claude/commands/zerg:security.md and zerg/data/commands/zerg:security.md |
-| HIGH | .claude/commands/zerg:rush.md | 3 | Duplicated block (620 lines, 0 tokens) between .claude/commands/zerg:rush.md and zerg/data/commands/zerg:rush.md |
-| HIGH | .claude/commands/zerg:review.md | 3 | Duplicated block (82 lines, 0 tokens) between .claude/commands/zerg:review.md and zerg/data/commands/zerg:review.md |
-| HIGH | .claude/commands/zerg:retry.md | 3 | Duplicated block (229 lines, 0 tokens) between .claude/commands/zerg:retry.md and zerg/data/commands/zerg:retry.md |
-| HIGH | .claude/commands/zerg:refactor.md | 3 | Duplicated block (90 lines, 0 tokens) between .claude/commands/zerg:refactor.md and zerg/data/commands/zerg:refactor.md |
-| HIGH | .claude/commands/zerg:plugins.md | 3 | Duplicated block (542 lines, 0 tokens) between .claude/commands/zerg:plugins.md and zerg/data/commands/zerg:plugins.md |
-| HIGH | .claude/commands/zerg:plan.md | 3 | Duplicated block (466 lines, 0 tokens) between .claude/commands/zerg:plan.md and zerg/data/commands/zerg:plan.md |
-| HIGH | .claude/commands/zerg:merge.md | 3 | Duplicated block (313 lines, 0 tokens) between .claude/commands/zerg:merge.md and zerg/data/commands/zerg:merge.md |
-| HIGH | .claude/commands/zerg:logs.md | 3 | Duplicated block (226 lines, 0 tokens) between .claude/commands/zerg:logs.md and zerg/data/commands/zerg:logs.md |
-| HIGH | .claude/commands/zerg:init.md | 3 | Duplicated block (666 lines, 0 tokens) between .claude/commands/zerg:init.md and zerg/data/commands/zerg:init.md |
-| HIGH | .claude/commands/zerg:git.md | 3 | Duplicated block (94 lines, 0 tokens) between .claude/commands/zerg:git.md and zerg/data/commands/zerg:git.md |
-| HIGH | .claude/commands/zerg:design.md | 3 | Duplicated block (649 lines, 0 tokens) between .claude/commands/zerg:design.md and zerg/data/commands/zerg:design.md |
-| HIGH | .claude/commands/zerg:debug.md | 3 | Duplicated block (513 lines, 0 tokens) between .claude/commands/zerg:debug.md and zerg/data/commands/zerg:debug.md |
-| HIGH | .claude/commands/zerg:cleanup.md | 3 | Duplicated block (212 lines, 0 tokens) between .claude/commands/zerg:cleanup.md and zerg/data/commands/zerg:cleanup.md |
-| HIGH | .claude/commands/zerg:build.md | 3 | Duplicated block (69 lines, 0 tokens) between .claude/commands/zerg:build.md and zerg/data/commands/zerg:build.md |
-| HIGH | .claude/commands/zerg:analyze.md | 3 | Duplicated block (69 lines, 0 tokens) between .claude/commands/zerg:analyze.md and zerg/data/commands/zerg:analyze.md |
-| HIGH | .claude/commands/z:worker.md | 3 | Duplicated block (382 lines, 0 tokens) between .claude/commands/z:worker.md and zerg/data/commands/zerg:worker.md |
-| HIGH | .claude/commands/z:test.md | 3 | Duplicated block (79 lines, 0 tokens) between .claude/commands/z:test.md and zerg/data/commands/zerg:test.md |
-| HIGH | .claude/commands/z:stop.md | 3 | Duplicated block (190 lines, 0 tokens) between .claude/commands/z:stop.md and zerg/data/commands/zerg:stop.md |
-| HIGH | .claude/commands/z:status.md | 3 | Duplicated block (311 lines, 0 tokens) between .claude/commands/z:status.md and zerg/data/commands/zerg:status.md |
-| HIGH | .claude/commands/z:security.md | 3 | Duplicated block (138 lines, 0 tokens) between .claude/commands/z:security.md and zerg/data/commands/zerg:security.md |
-| HIGH | .claude/commands/z:rush.md | 3 | Duplicated block (620 lines, 0 tokens) between .claude/commands/z:rush.md and zerg/data/commands/zerg:rush.md |
-| HIGH | .claude/commands/z:review.md | 3 | Duplicated block (82 lines, 0 tokens) between .claude/commands/z:review.md and zerg/data/commands/zerg:review.md |
-| HIGH | .claude/commands/z:retry.md | 3 | Duplicated block (229 lines, 0 tokens) between .claude/commands/z:retry.md and zerg/data/commands/zerg:retry.md |
-| HIGH | .claude/commands/z:refactor.md | 3 | Duplicated block (90 lines, 0 tokens) between .claude/commands/z:refactor.md and zerg/data/commands/zerg:refactor.md |
-| HIGH | .claude/commands/z:plugins.md | 3 | Duplicated block (542 lines, 0 tokens) between .claude/commands/z:plugins.md and zerg/data/commands/zerg:plugins.md |
-| HIGH | .claude/commands/z:plan.md | 3 | Duplicated block (466 lines, 0 tokens) between .claude/commands/z:plan.md and zerg/data/commands/zerg:plan.md |
-| HIGH | .claude/commands/z:merge.md | 3 | Duplicated block (313 lines, 0 tokens) between .claude/commands/z:merge.md and zerg/data/commands/zerg:merge.md |
-| HIGH | .claude/commands/z:logs.md | 3 | Duplicated block (226 lines, 0 tokens) between .claude/commands/z:logs.md and zerg/data/commands/zerg:logs.md |
-| HIGH | .claude/commands/z:init.md | 3 | Duplicated block (666 lines, 0 tokens) between .claude/commands/z:init.md and zerg/data/commands/zerg:init.md |
-| HIGH | .claude/commands/z:git.md | 3 | Duplicated block (94 lines, 0 tokens) between .claude/commands/z:git.md and zerg/data/commands/zerg:git.md |
-| HIGH | .claude/commands/z:design.md | 3 | Duplicated block (649 lines, 0 tokens) between .claude/commands/z:design.md and zerg/data/commands/zerg:design.md |
-| HIGH | .claude/commands/z:debug.md | 3 | Duplicated block (513 lines, 0 tokens) between .claude/commands/z:debug.md and zerg/data/commands/zerg:debug.md |
-| HIGH | .claude/commands/z:cleanup.md | 3 | Duplicated block (212 lines, 0 tokens) between .claude/commands/z:cleanup.md and zerg/data/commands/zerg:cleanup.md |
-| HIGH | .claude/commands/z:build.md | 3 | Duplicated block (69 lines, 0 tokens) between .claude/commands/z:build.md and zerg/data/commands/zerg:build.md |
-| HIGH | .claude/commands/z:analyze.md | 3 | Duplicated block (69 lines, 0 tokens) between .claude/commands/z:analyze.md and zerg/data/commands/zerg:analyze.md |
-| HIGH | .zerg/build.py | 59 | Duplicated block (94 lines, 0 tokens) between .zerg/build.py and zerg/commands/build.py |
-| MEDIUM | .gsd/tasks/prompts/L4-advanced-commands.md | 21 | Duplicated block (42 lines, 0 tokens) between .gsd/tasks/prompts/L4-advanced-commands.md and zerg/data/commands/zerg:git.md |
-| MEDIUM | .gsd/specs/coverage-100/feature.yaml | 1 | Duplicated block (43 lines, 0 tokens) between .gsd/specs/coverage-100/feature.yaml and .zerg/specs/coverage-100/feature.yaml |
-| MEDIUM | zerg/commands/status.py | 113 | Duplicated block (27 lines, 0 tokens) between zerg/commands/status.py and zerg/commands/stop.py |
-| MEDIUM | zerg/commands/retry.py | 110 | Duplicated block (21 lines, 0 tokens) between zerg/commands/retry.py and zerg/commands/stop.py |
-| MEDIUM | zerg/commands/logs.py | 303 | Duplicated block (24 lines, 0 tokens) between zerg/commands/logs.py and zerg/commands/stop.py |
+| HIGH | .gsd/specs/coverage-100/task-graph.json | 1 | Duplicated block (635 lines, 0 tokens) between .gsd/specs/coverage-100/task-graph.json and .mahabharatha/specs/coverage-100/task-graph.json |
+| HIGH | .mahabharatha/templates/quality-reviewer.md | 5 | Duplicated block (52 lines, 0 tokens) between .mahabharatha/templates/quality-reviewer.md and .gsd/tasks/prompts/L1-TASK-004-prompt-templates.md |
+| HIGH | .mahabharatha/templates/implementer.md | 3 | Duplicated block (66 lines, 0 tokens) between .mahabharatha/templates/implementer.md and .gsd/tasks/prompts/L1-TASK-004-prompt-templates.md |
+| HIGH | .claude/commands/mahabharatha:worker.md | 3 | Duplicated block (382 lines, 0 tokens) between .claude/commands/mahabharatha:worker.md and mahabharatha/data/commands/mahabharatha:worker.md |
+| HIGH | .claude/commands/mahabharatha:test.md | 3 | Duplicated block (79 lines, 0 tokens) between .claude/commands/mahabharatha:test.md and mahabharatha/data/commands/mahabharatha:test.md |
+| HIGH | .claude/commands/mahabharatha:stop.md | 3 | Duplicated block (190 lines, 0 tokens) between .claude/commands/mahabharatha:stop.md and mahabharatha/data/commands/mahabharatha:stop.md |
+| HIGH | .claude/commands/mahabharatha:status.md | 3 | Duplicated block (311 lines, 0 tokens) between .claude/commands/mahabharatha:status.md and mahabharatha/data/commands/mahabharatha:status.md |
+| HIGH | .claude/commands/mahabharatha:security.md | 3 | Duplicated block (138 lines, 0 tokens) between .claude/commands/mahabharatha:security.md and mahabharatha/data/commands/mahabharatha:security.md |
+| HIGH | .claude/commands/mahabharatha:kurukshetra.md | 3 | Duplicated block (620 lines, 0 tokens) between .claude/commands/mahabharatha:kurukshetra.md and mahabharatha/data/commands/mahabharatha:kurukshetra.md |
+| HIGH | .claude/commands/mahabharatha:review.md | 3 | Duplicated block (82 lines, 0 tokens) between .claude/commands/mahabharatha:review.md and mahabharatha/data/commands/mahabharatha:review.md |
+| HIGH | .claude/commands/mahabharatha:retry.md | 3 | Duplicated block (229 lines, 0 tokens) between .claude/commands/mahabharatha:retry.md and mahabharatha/data/commands/mahabharatha:retry.md |
+| HIGH | .claude/commands/mahabharatha:refactor.md | 3 | Duplicated block (90 lines, 0 tokens) between .claude/commands/mahabharatha:refactor.md and mahabharatha/data/commands/mahabharatha:refactor.md |
+| HIGH | .claude/commands/mahabharatha:plugins.md | 3 | Duplicated block (542 lines, 0 tokens) between .claude/commands/mahabharatha:plugins.md and mahabharatha/data/commands/mahabharatha:plugins.md |
+| HIGH | .claude/commands/mahabharatha:plan.md | 3 | Duplicated block (466 lines, 0 tokens) between .claude/commands/mahabharatha:plan.md and mahabharatha/data/commands/mahabharatha:plan.md |
+| HIGH | .claude/commands/mahabharatha:merge.md | 3 | Duplicated block (313 lines, 0 tokens) between .claude/commands/mahabharatha:merge.md and mahabharatha/data/commands/mahabharatha:merge.md |
+| HIGH | .claude/commands/mahabharatha:logs.md | 3 | Duplicated block (226 lines, 0 tokens) between .claude/commands/mahabharatha:logs.md and mahabharatha/data/commands/mahabharatha:logs.md |
+| HIGH | .claude/commands/mahabharatha:init.md | 3 | Duplicated block (666 lines, 0 tokens) between .claude/commands/mahabharatha:init.md and mahabharatha/data/commands/mahabharatha:init.md |
+| HIGH | .claude/commands/mahabharatha:git.md | 3 | Duplicated block (94 lines, 0 tokens) between .claude/commands/mahabharatha:git.md and mahabharatha/data/commands/mahabharatha:git.md |
+| HIGH | .claude/commands/mahabharatha:design.md | 3 | Duplicated block (649 lines, 0 tokens) between .claude/commands/mahabharatha:design.md and mahabharatha/data/commands/mahabharatha:design.md |
+| HIGH | .claude/commands/mahabharatha:debug.md | 3 | Duplicated block (513 lines, 0 tokens) between .claude/commands/mahabharatha:debug.md and mahabharatha/data/commands/mahabharatha:debug.md |
+| HIGH | .claude/commands/mahabharatha:cleanup.md | 3 | Duplicated block (212 lines, 0 tokens) between .claude/commands/mahabharatha:cleanup.md and mahabharatha/data/commands/mahabharatha:cleanup.md |
+| HIGH | .claude/commands/mahabharatha:build.md | 3 | Duplicated block (69 lines, 0 tokens) between .claude/commands/mahabharatha:build.md and mahabharatha/data/commands/mahabharatha:build.md |
+| HIGH | .claude/commands/mahabharatha:analyze.md | 3 | Duplicated block (69 lines, 0 tokens) between .claude/commands/mahabharatha:analyze.md and mahabharatha/data/commands/mahabharatha:analyze.md |
+| HIGH | .claude/commands/z:worker.md | 3 | Duplicated block (382 lines, 0 tokens) between .claude/commands/z:worker.md and mahabharatha/data/commands/mahabharatha:worker.md |
+| HIGH | .claude/commands/z:test.md | 3 | Duplicated block (79 lines, 0 tokens) between .claude/commands/z:test.md and mahabharatha/data/commands/mahabharatha:test.md |
+| HIGH | .claude/commands/z:stop.md | 3 | Duplicated block (190 lines, 0 tokens) between .claude/commands/z:stop.md and mahabharatha/data/commands/mahabharatha:stop.md |
+| HIGH | .claude/commands/z:status.md | 3 | Duplicated block (311 lines, 0 tokens) between .claude/commands/z:status.md and mahabharatha/data/commands/mahabharatha:status.md |
+| HIGH | .claude/commands/z:security.md | 3 | Duplicated block (138 lines, 0 tokens) between .claude/commands/z:security.md and mahabharatha/data/commands/mahabharatha:security.md |
+| HIGH | .claude/commands/z:kurukshetra.md | 3 | Duplicated block (620 lines, 0 tokens) between .claude/commands/z:kurukshetra.md and mahabharatha/data/commands/mahabharatha:kurukshetra.md |
+| HIGH | .claude/commands/z:review.md | 3 | Duplicated block (82 lines, 0 tokens) between .claude/commands/z:review.md and mahabharatha/data/commands/mahabharatha:review.md |
+| HIGH | .claude/commands/z:retry.md | 3 | Duplicated block (229 lines, 0 tokens) between .claude/commands/z:retry.md and mahabharatha/data/commands/mahabharatha:retry.md |
+| HIGH | .claude/commands/z:refactor.md | 3 | Duplicated block (90 lines, 0 tokens) between .claude/commands/z:refactor.md and mahabharatha/data/commands/mahabharatha:refactor.md |
+| HIGH | .claude/commands/z:plugins.md | 3 | Duplicated block (542 lines, 0 tokens) between .claude/commands/z:plugins.md and mahabharatha/data/commands/mahabharatha:plugins.md |
+| HIGH | .claude/commands/z:plan.md | 3 | Duplicated block (466 lines, 0 tokens) between .claude/commands/z:plan.md and mahabharatha/data/commands/mahabharatha:plan.md |
+| HIGH | .claude/commands/z:merge.md | 3 | Duplicated block (313 lines, 0 tokens) between .claude/commands/z:merge.md and mahabharatha/data/commands/mahabharatha:merge.md |
+| HIGH | .claude/commands/z:logs.md | 3 | Duplicated block (226 lines, 0 tokens) between .claude/commands/z:logs.md and mahabharatha/data/commands/mahabharatha:logs.md |
+| HIGH | .claude/commands/z:init.md | 3 | Duplicated block (666 lines, 0 tokens) between .claude/commands/z:init.md and mahabharatha/data/commands/mahabharatha:init.md |
+| HIGH | .claude/commands/z:git.md | 3 | Duplicated block (94 lines, 0 tokens) between .claude/commands/z:git.md and mahabharatha/data/commands/mahabharatha:git.md |
+| HIGH | .claude/commands/z:design.md | 3 | Duplicated block (649 lines, 0 tokens) between .claude/commands/z:design.md and mahabharatha/data/commands/mahabharatha:design.md |
+| HIGH | .claude/commands/z:debug.md | 3 | Duplicated block (513 lines, 0 tokens) between .claude/commands/z:debug.md and mahabharatha/data/commands/mahabharatha:debug.md |
+| HIGH | .claude/commands/z:cleanup.md | 3 | Duplicated block (212 lines, 0 tokens) between .claude/commands/z:cleanup.md and mahabharatha/data/commands/mahabharatha:cleanup.md |
+| HIGH | .claude/commands/z:build.md | 3 | Duplicated block (69 lines, 0 tokens) between .claude/commands/z:build.md and mahabharatha/data/commands/mahabharatha:build.md |
+| HIGH | .claude/commands/z:analyze.md | 3 | Duplicated block (69 lines, 0 tokens) between .claude/commands/z:analyze.md and mahabharatha/data/commands/mahabharatha:analyze.md |
+| HIGH | .mahabharatha/build.py | 59 | Duplicated block (94 lines, 0 tokens) between .mahabharatha/build.py and mahabharatha/commands/build.py |
+| MEDIUM | .gsd/tasks/prompts/L4-advanced-commands.md | 21 | Duplicated block (42 lines, 0 tokens) between .gsd/tasks/prompts/L4-advanced-commands.md and mahabharatha/data/commands/mahabharatha:git.md |
+| MEDIUM | .gsd/specs/coverage-100/feature.yaml | 1 | Duplicated block (43 lines, 0 tokens) between .gsd/specs/coverage-100/feature.yaml and .mahabharatha/specs/coverage-100/feature.yaml |
+| MEDIUM | mahabharatha/commands/status.py | 113 | Duplicated block (27 lines, 0 tokens) between mahabharatha/commands/status.py and mahabharatha/commands/stop.py |
+| MEDIUM | mahabharatha/commands/retry.py | 110 | Duplicated block (21 lines, 0 tokens) between mahabharatha/commands/retry.py and mahabharatha/commands/stop.py |
+| MEDIUM | mahabharatha/commands/logs.py | 303 | Duplicated block (24 lines, 0 tokens) between mahabharatha/commands/logs.py and mahabharatha/commands/stop.py |
 | MEDIUM | tests/unit/test_worktree.py | 9 | Duplicated block (49 lines, 0 tokens) between tests/unit/test_worktree.py and tests/unit/test_worktree_extended.py |
 | MEDIUM | tests/unit/test_worktree.py | 187 | Duplicated block (23 lines, 0 tokens) between tests/unit/test_worktree.py and tests/unit/test_worktree_extended.py |
 | MEDIUM | tests/unit/test_orchestrator_recovery.py | 496 | Duplicated block (25 lines, 0 tokens) between tests/unit/test_orchestrator_recovery.py and tests/unit/test_orchestrator_recovery.py |
@@ -458,15 +458,15 @@
 | MEDIUM | tests/e2e/test_failure_recovery.py | 44 | Duplicated block (28 lines, 0 tokens) between tests/e2e/test_failure_recovery.py and tests/e2e/test_multilevel_execution.py |
 | MEDIUM | tests/e2e/test_failure_recovery.py | 81 | Duplicated block (29 lines, 0 tokens) between tests/e2e/test_failure_recovery.py and tests/e2e/test_subprocess_e2e.py |
 | MEDIUM | tests/e2e/test_bugfix_e2e.py | 21 | Duplicated block (22 lines, 0 tokens) between tests/e2e/test_bugfix_e2e.py and tests/unit/test_orchestrator_workers.py |
-| MEDIUM | .zerg/tests/test_task_graph.py | 166 | Duplicated block (27 lines, 0 tokens) between .zerg/tests/test_task_graph.py and .zerg/tests/test_task_graph.py |
-| MEDIUM | .zerg/tests/test_task_graph.py | 198 | Duplicated block (27 lines, 0 tokens) between .zerg/tests/test_task_graph.py and .zerg/tests/test_task_graph.py |
-| MEDIUM | .zerg/templates/spec-reviewer.md | 30 | Duplicated block (21 lines, 0 tokens) between .zerg/templates/spec-reviewer.md and .gsd/tasks/prompts/L1-TASK-004-prompt-templates.md |
+| MEDIUM | .mahabharatha/tests/test_task_graph.py | 166 | Duplicated block (27 lines, 0 tokens) between .mahabharatha/tests/test_task_graph.py and .mahabharatha/tests/test_task_graph.py |
+| MEDIUM | .mahabharatha/tests/test_task_graph.py | 198 | Duplicated block (27 lines, 0 tokens) between .mahabharatha/tests/test_task_graph.py and .mahabharatha/tests/test_task_graph.py |
+| MEDIUM | .mahabharatha/templates/spec-reviewer.md | 30 | Duplicated block (21 lines, 0 tokens) between .mahabharatha/templates/spec-reviewer.md and .gsd/tasks/prompts/L1-TASK-004-prompt-templates.md |
 | MEDIUM | .gsd/sessions/2026-01-26-test-coverage.md | 82 | Duplicated block (34 lines, 0 tokens) between .gsd/sessions/2026-01-26-test-coverage.md and .gsd/tasks/test-coverage/COMPLETE.md |
-| MEDIUM | zerg/orchestrator.py | 651 | Duplicated block (22 lines, 0 tokens) between zerg/orchestrator.py and zerg/orchestrator.py |
-| MEDIUM | zerg/orchestrator.py | 673 | Duplicated block (22 lines, 0 tokens) between zerg/orchestrator.py and zerg/orchestrator.py |
-| MEDIUM | zerg/orchestrator.py | 694 | Duplicated block (33 lines, 0 tokens) between zerg/orchestrator.py and zerg/orchestrator.py |
-| MEDIUM | zerg/orchestrator.py | 789 | Duplicated block (44 lines, 0 tokens) between zerg/orchestrator.py and zerg/orchestrator.py |
-| MEDIUM | zerg/orchestrator.py | 858 | Duplicated block (30 lines, 0 tokens) between zerg/orchestrator.py and zerg/orchestrator.py |
+| MEDIUM | mahabharatha/orchestrator.py | 651 | Duplicated block (22 lines, 0 tokens) between mahabharatha/orchestrator.py and mahabharatha/orchestrator.py |
+| MEDIUM | mahabharatha/orchestrator.py | 673 | Duplicated block (22 lines, 0 tokens) between mahabharatha/orchestrator.py and mahabharatha/orchestrator.py |
+| MEDIUM | mahabharatha/orchestrator.py | 694 | Duplicated block (33 lines, 0 tokens) between mahabharatha/orchestrator.py and mahabharatha/orchestrator.py |
+| MEDIUM | mahabharatha/orchestrator.py | 789 | Duplicated block (44 lines, 0 tokens) between mahabharatha/orchestrator.py and mahabharatha/orchestrator.py |
+| MEDIUM | mahabharatha/orchestrator.py | 858 | Duplicated block (30 lines, 0 tokens) between mahabharatha/orchestrator.py and mahabharatha/orchestrator.py |
 | MEDIUM | tests/test_worker_protocol.py | 413 | Duplicated block (25 lines, 0 tokens) between tests/test_worker_protocol.py and tests/test_worker_protocol.py |
 | MEDIUM | tests/test_orchestrator.py | 51 | Duplicated block (36 lines, 0 tokens) between tests/test_orchestrator.py and tests/unit/test_orchestrator_recovery.py |
 | MEDIUM | htmlcov/z_5ded25b5ad8e2eac_stop_py.html | 14 | Duplicated block (44 lines, 0 tokens) between htmlcov/z_5ded25b5ad8e2eac_stop_py.html and htmlcov/z_b7674d2cb1ab17f4___init___py.html |
@@ -508,31 +508,31 @@
 | MEDIUM | claudedocs/zerg_scratch.md | 385 | Duplicated block (26 lines, 0 tokens) between claudedocs/zerg_scratch.md and claudedocs/zerg_scratch.md |
 | MEDIUM | claudedocs/zerg_scratch.md | 457 | Duplicated block (25 lines, 0 tokens) between claudedocs/zerg_scratch.md and claudedocs/zerg_scratch.md |
 | MEDIUM | claudedocs/zerg_scratch.md | 510 | Duplicated block (23 lines, 0 tokens) between claudedocs/zerg_scratch.md and claudedocs/zerg_scratch.md |
-| MEDIUM | .zerg/test_runner.py | 14 | Duplicated block (45 lines, 0 tokens) between .zerg/test_runner.py and zerg/commands/test_cmd.py |
-| MEDIUM | .zerg/test_runner.py | 226 | Duplicated block (22 lines, 0 tokens) between .zerg/test_runner.py and zerg/commands/test_cmd.py |
-| MEDIUM | .zerg/test_runner.py | 269 | Duplicated block (22 lines, 0 tokens) between .zerg/test_runner.py and zerg/commands/test_cmd.py |
-| MEDIUM | .zerg/review.py | 8 | Duplicated block (26 lines, 0 tokens) between .zerg/review.py and zerg/commands/review.py |
-| MEDIUM | .zerg/review.py | 38 | Duplicated block (35 lines, 0 tokens) between .zerg/review.py and zerg/commands/review.py |
-| MEDIUM | .zerg/review.py | 171 | Duplicated block (22 lines, 0 tokens) between .zerg/review.py and zerg/commands/review.py |
-| MEDIUM | .zerg/refactor.py | 8 | Duplicated block (33 lines, 0 tokens) between .zerg/refactor.py and zerg/commands/refactor.py |
-| MEDIUM | .zerg/refactor.py | 40 | Duplicated block (39 lines, 0 tokens) between .zerg/refactor.py and zerg/commands/refactor.py |
-| MEDIUM | .zerg/refactor.py | 270 | Duplicated block (35 lines, 0 tokens) between .zerg/refactor.py and zerg/commands/refactor.py |
-| MEDIUM | .zerg/build.py | 15 | Duplicated block (45 lines, 0 tokens) between .zerg/build.py and zerg/commands/build.py |
-| MEDIUM | .zerg/build.py | 201 | Duplicated block (22 lines, 0 tokens) between .zerg/build.py and zerg/commands/build.py |
-| MEDIUM | .zerg/build.py | 286 | Duplicated block (26 lines, 0 tokens) between .zerg/build.py and zerg/commands/build.py |
-| MEDIUM | .zerg/analyze.py | 24 | Duplicated block (26 lines, 0 tokens) between .zerg/analyze.py and zerg/commands/analyze.py |
-| MEDIUM | .zerg/analyze.py | 91 | Duplicated block (37 lines, 0 tokens) between .zerg/analyze.py and zerg/commands/analyze.py |
-| MEDIUM | .zerg/analyze.py | 243 | Duplicated block (25 lines, 0 tokens) between .zerg/analyze.py and zerg/commands/analyze.py |
-| LOW | zerg/performance/adapters/dive_adapter.py | 67 | Duplicated block (12 lines, 0 tokens) between zerg/performance/adapters/dive_adapter.py and zerg/performance/adapters/hadolint_adapter.py |
+| MEDIUM | .mahabharatha/test_runner.py | 14 | Duplicated block (45 lines, 0 tokens) between .mahabharatha/test_runner.py and mahabharatha/commands/test_cmd.py |
+| MEDIUM | .mahabharatha/test_runner.py | 226 | Duplicated block (22 lines, 0 tokens) between .mahabharatha/test_runner.py and mahabharatha/commands/test_cmd.py |
+| MEDIUM | .mahabharatha/test_runner.py | 269 | Duplicated block (22 lines, 0 tokens) between .mahabharatha/test_runner.py and mahabharatha/commands/test_cmd.py |
+| MEDIUM | .mahabharatha/review.py | 8 | Duplicated block (26 lines, 0 tokens) between .mahabharatha/review.py and mahabharatha/commands/review.py |
+| MEDIUM | .mahabharatha/review.py | 38 | Duplicated block (35 lines, 0 tokens) between .mahabharatha/review.py and mahabharatha/commands/review.py |
+| MEDIUM | .mahabharatha/review.py | 171 | Duplicated block (22 lines, 0 tokens) between .mahabharatha/review.py and mahabharatha/commands/review.py |
+| MEDIUM | .mahabharatha/refactor.py | 8 | Duplicated block (33 lines, 0 tokens) between .mahabharatha/refactor.py and mahabharatha/commands/refactor.py |
+| MEDIUM | .mahabharatha/refactor.py | 40 | Duplicated block (39 lines, 0 tokens) between .mahabharatha/refactor.py and mahabharatha/commands/refactor.py |
+| MEDIUM | .mahabharatha/refactor.py | 270 | Duplicated block (35 lines, 0 tokens) between .mahabharatha/refactor.py and mahabharatha/commands/refactor.py |
+| MEDIUM | .mahabharatha/build.py | 15 | Duplicated block (45 lines, 0 tokens) between .mahabharatha/build.py and mahabharatha/commands/build.py |
+| MEDIUM | .mahabharatha/build.py | 201 | Duplicated block (22 lines, 0 tokens) between .mahabharatha/build.py and mahabharatha/commands/build.py |
+| MEDIUM | .mahabharatha/build.py | 286 | Duplicated block (26 lines, 0 tokens) between .mahabharatha/build.py and mahabharatha/commands/build.py |
+| MEDIUM | .mahabharatha/analyze.py | 24 | Duplicated block (26 lines, 0 tokens) between .mahabharatha/analyze.py and mahabharatha/commands/analyze.py |
+| MEDIUM | .mahabharatha/analyze.py | 91 | Duplicated block (37 lines, 0 tokens) between .mahabharatha/analyze.py and mahabharatha/commands/analyze.py |
+| MEDIUM | .mahabharatha/analyze.py | 243 | Duplicated block (25 lines, 0 tokens) between .mahabharatha/analyze.py and mahabharatha/commands/analyze.py |
+| LOW | mahabharatha/performance/adapters/dive_adapter.py | 67 | Duplicated block (12 lines, 0 tokens) between mahabharatha/performance/adapters/dive_adapter.py and mahabharatha/performance/adapters/hadolint_adapter.py |
 | LOW | tests/unit/test_diagnostics/test_recovery.py | 288 | Duplicated block (13 lines, 0 tokens) between tests/unit/test_diagnostics/test_recovery.py and tests/unit/test_diagnostics/test_recovery.py |
 | LOW | tests/unit/test_diagnostics/test_error_intel.py | 230 | Duplicated block (10 lines, 0 tokens) between tests/unit/test_diagnostics/test_error_intel.py and tests/unit/test_diagnostics/test_error_intel.py |
 | LOW | .gsd/specs/phase1/capability_matrix.md | 156 | Duplicated block (12 lines, 0 tokens) between .gsd/specs/phase1/capability_matrix.md and .gsd/specs/phase1/synthesis.md |
-| LOW | zerg/diagnostics/log_analyzer.py | 128 | Duplicated block (10 lines, 0 tokens) between zerg/diagnostics/log_analyzer.py and zerg/diagnostics/log_analyzer.py |
-| LOW | zerg/diagnostics/env_diagnostics.py | 109 | Duplicated block (17 lines, 0 tokens) between zerg/diagnostics/env_diagnostics.py and zerg/diagnostics/env_diagnostics.py |
-| LOW | zerg/diagnostics/env_diagnostics.py | 172 | Duplicated block (10 lines, 0 tokens) between zerg/diagnostics/env_diagnostics.py and zerg/diagnostics/env_diagnostics.py |
-| LOW | zerg/diagnostics/env_diagnostics.py | 217 | Duplicated block (17 lines, 0 tokens) between zerg/diagnostics/env_diagnostics.py and zerg/diagnostics/env_diagnostics.py |
-| LOW | zerg/commands/test_cmd.py | 265 | Duplicated block (10 lines, 0 tokens) between zerg/commands/test_cmd.py and zerg/commands/test_cmd.py |
-| LOW | zerg/commands/security_rules_cmd.py | 105 | Duplicated block (17 lines, 0 tokens) between zerg/commands/security_rules_cmd.py and zerg/commands/security_rules_cmd.py |
+| LOW | mahabharatha/diagnostics/log_analyzer.py | 128 | Duplicated block (10 lines, 0 tokens) between mahabharatha/diagnostics/log_analyzer.py and mahabharatha/diagnostics/log_analyzer.py |
+| LOW | mahabharatha/diagnostics/env_diagnostics.py | 109 | Duplicated block (17 lines, 0 tokens) between mahabharatha/diagnostics/env_diagnostics.py and mahabharatha/diagnostics/env_diagnostics.py |
+| LOW | mahabharatha/diagnostics/env_diagnostics.py | 172 | Duplicated block (10 lines, 0 tokens) between mahabharatha/diagnostics/env_diagnostics.py and mahabharatha/diagnostics/env_diagnostics.py |
+| LOW | mahabharatha/diagnostics/env_diagnostics.py | 217 | Duplicated block (17 lines, 0 tokens) between mahabharatha/diagnostics/env_diagnostics.py and mahabharatha/diagnostics/env_diagnostics.py |
+| LOW | mahabharatha/commands/test_cmd.py | 265 | Duplicated block (10 lines, 0 tokens) between mahabharatha/commands/test_cmd.py and mahabharatha/commands/test_cmd.py |
+| LOW | mahabharatha/commands/security_rules_cmd.py | 105 | Duplicated block (17 lines, 0 tokens) between mahabharatha/commands/security_rules_cmd.py and mahabharatha/commands/security_rules_cmd.py |
 | LOW | tests/unit/test_worktree.py | 70 | Duplicated block (20 lines, 0 tokens) between tests/unit/test_worktree.py and tests/unit/test_worktree_extended.py |
 | LOW | tests/unit/test_worktree.py | 171 | Duplicated block (17 lines, 0 tokens) between tests/unit/test_worktree.py and tests/unit/test_worktree_extended.py |
 | LOW | tests/unit/test_worktree.py | 231 | Duplicated block (15 lines, 0 tokens) between tests/unit/test_worktree.py and tests/unit/test_worktree_extended.py |
@@ -681,36 +681,36 @@
 | LOW | tests/e2e/test_container_e2e.py | 69 | Duplicated block (20 lines, 0 tokens) between tests/e2e/test_container_e2e.py and tests/e2e/test_multilevel_execution.py |
 | LOW | tests/e2e/test_bugfix_e2e.py | 414 | Duplicated block (15 lines, 0 tokens) between tests/e2e/test_bugfix_e2e.py and tests/e2e/test_bugfix_e2e.py |
 | LOW | tests/e2e/conftest.py | 147 | Duplicated block (14 lines, 0 tokens) between tests/e2e/conftest.py and tests/e2e/harness.py |
-| LOW | .zerg/tests/test_task_graph.py | 69 | Duplicated block (14 lines, 0 tokens) between .zerg/tests/test_task_graph.py and .zerg/tests/test_task_graph.py |
-| LOW | .zerg/tests/test_task_graph.py | 141 | Duplicated block (15 lines, 0 tokens) between .zerg/tests/test_task_graph.py and .zerg/tests/test_task_graph.py |
-| LOW | .zerg/tests/test_task_graph.py | 248 | Duplicated block (12 lines, 0 tokens) between .zerg/tests/test_task_graph.py and .zerg/tests/test_task_graph.py |
-| LOW | .zerg/tests/test_task_graph.py | 270 | Duplicated block (15 lines, 0 tokens) between .zerg/tests/test_task_graph.py and .zerg/tests/test_task_graph.py |
-| LOW | .zerg/tests/test_task_graph.py | 288 | Duplicated block (15 lines, 0 tokens) between .zerg/tests/test_task_graph.py and .zerg/tests/test_task_graph.py |
-| LOW | .zerg/tests/test_task_graph.py | 311 | Duplicated block (10 lines, 0 tokens) between .zerg/tests/test_task_graph.py and .zerg/tests/test_task_graph.py |
-| LOW | .zerg/tests/test_task_graph.py | 323 | Duplicated block (11 lines, 0 tokens) between .zerg/tests/test_task_graph.py and .zerg/tests/test_task_graph.py |
-| LOW | .zerg/tests/test_task_graph.py | 345 | Duplicated block (10 lines, 0 tokens) between .zerg/tests/test_task_graph.py and .zerg/tests/test_task_graph.py |
-| LOW | .zerg/tests/test_task_graph.py | 354 | Duplicated block (12 lines, 0 tokens) between .zerg/tests/test_task_graph.py and .zerg/tests/test_task_graph.py |
-| LOW | .zerg/tests/test_task_graph.py | 386 | Duplicated block (12 lines, 0 tokens) between .zerg/tests/test_task_graph.py and .zerg/tests/test_task_graph.py |
-| LOW | .zerg/tests/test_rush.py | 204 | Duplicated block (14 lines, 0 tokens) between .zerg/tests/test_rush.py and .zerg/tests/test_rush.py |
-| LOW | .zerg/tests/test_rush.py | 269 | Duplicated block (20 lines, 0 tokens) between .zerg/tests/test_rush.py and .zerg/tests/test_rush.py |
-| LOW | .zerg/tests/test_gates.py | 74 | Duplicated block (15 lines, 0 tokens) between .zerg/tests/test_gates.py and .zerg/tests/test_gates.py |
-| LOW | .zerg/tests/test_gates.py | 134 | Duplicated block (11 lines, 0 tokens) between .zerg/tests/test_gates.py and .zerg/tests/test_gates.py |
-| LOW | .zerg/tests/test_gates.py | 235 | Duplicated block (13 lines, 0 tokens) between .zerg/tests/test_gates.py and .zerg/tests/test_gates.py |
-| LOW | .zerg/tests/test_gates.py | 260 | Duplicated block (16 lines, 0 tokens) between .zerg/tests/test_gates.py and .zerg/tests/test_gates.py |
-| LOW | .zerg/tests/test_gates.py | 282 | Duplicated block (15 lines, 0 tokens) between .zerg/tests/test_gates.py and .zerg/tests/test_gates.py |
-| LOW | .zerg/schemas/state.schema.json | 24 | Duplicated block (11 lines, 0 tokens) between .zerg/schemas/state.schema.json and .zerg/schemas/task.schema.json |
-| LOW | zerg/state.py | 194 | Duplicated block (20 lines, 0 tokens) between zerg/state.py and tests/mocks/mock_state.py |
-| LOW | zerg/state.py | 223 | Duplicated block (18 lines, 0 tokens) between zerg/state.py and tests/mocks/mock_state.py |
-| LOW | zerg/state.py | 244 | Duplicated block (20 lines, 0 tokens) between zerg/state.py and tests/mocks/mock_state.py |
-| LOW | zerg/state.py | 319 | Duplicated block (13 lines, 0 tokens) between zerg/state.py and tests/mocks/mock_state.py |
-| LOW | zerg/state.py | 356 | Duplicated block (14 lines, 0 tokens) between zerg/state.py and tests/mocks/mock_state.py |
-| LOW | zerg/state.py | 423 | Duplicated block (18 lines, 0 tokens) between zerg/state.py and tests/mocks/mock_state.py |
-| LOW | zerg/state.py | 532 | Duplicated block (20 lines, 0 tokens) between zerg/state.py and tests/mocks/mock_state.py |
-| LOW | zerg/state.py | 551 | Duplicated block (18 lines, 0 tokens) between zerg/state.py and zerg/state.py |
-| LOW | zerg/state.py | 682 | Duplicated block (12 lines, 0 tokens) between zerg/state.py and tests/mocks/mock_state.py |
-| LOW | zerg/state.py | 720 | Duplicated block (11 lines, 0 tokens) between zerg/state.py and zerg/state.py |
-| LOW | zerg/state.py | 778 | Duplicated block (19 lines, 0 tokens) between zerg/state.py and tests/mocks/mock_state.py |
-| LOW | zerg/containers.py | 507 | Duplicated block (17 lines, 0 tokens) between zerg/containers.py and zerg/containers.py |
+| LOW | .mahabharatha/tests/test_task_graph.py | 69 | Duplicated block (14 lines, 0 tokens) between .mahabharatha/tests/test_task_graph.py and .mahabharatha/tests/test_task_graph.py |
+| LOW | .mahabharatha/tests/test_task_graph.py | 141 | Duplicated block (15 lines, 0 tokens) between .mahabharatha/tests/test_task_graph.py and .mahabharatha/tests/test_task_graph.py |
+| LOW | .mahabharatha/tests/test_task_graph.py | 248 | Duplicated block (12 lines, 0 tokens) between .mahabharatha/tests/test_task_graph.py and .mahabharatha/tests/test_task_graph.py |
+| LOW | .mahabharatha/tests/test_task_graph.py | 270 | Duplicated block (15 lines, 0 tokens) between .mahabharatha/tests/test_task_graph.py and .mahabharatha/tests/test_task_graph.py |
+| LOW | .mahabharatha/tests/test_task_graph.py | 288 | Duplicated block (15 lines, 0 tokens) between .mahabharatha/tests/test_task_graph.py and .mahabharatha/tests/test_task_graph.py |
+| LOW | .mahabharatha/tests/test_task_graph.py | 311 | Duplicated block (10 lines, 0 tokens) between .mahabharatha/tests/test_task_graph.py and .mahabharatha/tests/test_task_graph.py |
+| LOW | .mahabharatha/tests/test_task_graph.py | 323 | Duplicated block (11 lines, 0 tokens) between .mahabharatha/tests/test_task_graph.py and .mahabharatha/tests/test_task_graph.py |
+| LOW | .mahabharatha/tests/test_task_graph.py | 345 | Duplicated block (10 lines, 0 tokens) between .mahabharatha/tests/test_task_graph.py and .mahabharatha/tests/test_task_graph.py |
+| LOW | .mahabharatha/tests/test_task_graph.py | 354 | Duplicated block (12 lines, 0 tokens) between .mahabharatha/tests/test_task_graph.py and .mahabharatha/tests/test_task_graph.py |
+| LOW | .mahabharatha/tests/test_task_graph.py | 386 | Duplicated block (12 lines, 0 tokens) between .mahabharatha/tests/test_task_graph.py and .mahabharatha/tests/test_task_graph.py |
+| LOW | .mahabharatha/tests/test_rush.py | 204 | Duplicated block (14 lines, 0 tokens) between .mahabharatha/tests/test_rush.py and .mahabharatha/tests/test_rush.py |
+| LOW | .mahabharatha/tests/test_rush.py | 269 | Duplicated block (20 lines, 0 tokens) between .mahabharatha/tests/test_rush.py and .mahabharatha/tests/test_rush.py |
+| LOW | .mahabharatha/tests/test_gates.py | 74 | Duplicated block (15 lines, 0 tokens) between .mahabharatha/tests/test_gates.py and .mahabharatha/tests/test_gates.py |
+| LOW | .mahabharatha/tests/test_gates.py | 134 | Duplicated block (11 lines, 0 tokens) between .mahabharatha/tests/test_gates.py and .mahabharatha/tests/test_gates.py |
+| LOW | .mahabharatha/tests/test_gates.py | 235 | Duplicated block (13 lines, 0 tokens) between .mahabharatha/tests/test_gates.py and .mahabharatha/tests/test_gates.py |
+| LOW | .mahabharatha/tests/test_gates.py | 260 | Duplicated block (16 lines, 0 tokens) between .mahabharatha/tests/test_gates.py and .mahabharatha/tests/test_gates.py |
+| LOW | .mahabharatha/tests/test_gates.py | 282 | Duplicated block (15 lines, 0 tokens) between .mahabharatha/tests/test_gates.py and .mahabharatha/tests/test_gates.py |
+| LOW | .mahabharatha/schemas/state.schema.json | 24 | Duplicated block (11 lines, 0 tokens) between .mahabharatha/schemas/state.schema.json and .mahabharatha/schemas/task.schema.json |
+| LOW | mahabharatha/state.py | 194 | Duplicated block (20 lines, 0 tokens) between mahabharatha/state.py and tests/mocks/mock_state.py |
+| LOW | mahabharatha/state.py | 223 | Duplicated block (18 lines, 0 tokens) between mahabharatha/state.py and tests/mocks/mock_state.py |
+| LOW | mahabharatha/state.py | 244 | Duplicated block (20 lines, 0 tokens) between mahabharatha/state.py and tests/mocks/mock_state.py |
+| LOW | mahabharatha/state.py | 319 | Duplicated block (13 lines, 0 tokens) between mahabharatha/state.py and tests/mocks/mock_state.py |
+| LOW | mahabharatha/state.py | 356 | Duplicated block (14 lines, 0 tokens) between mahabharatha/state.py and tests/mocks/mock_state.py |
+| LOW | mahabharatha/state.py | 423 | Duplicated block (18 lines, 0 tokens) between mahabharatha/state.py and tests/mocks/mock_state.py |
+| LOW | mahabharatha/state.py | 532 | Duplicated block (20 lines, 0 tokens) between mahabharatha/state.py and tests/mocks/mock_state.py |
+| LOW | mahabharatha/state.py | 551 | Duplicated block (18 lines, 0 tokens) between mahabharatha/state.py and mahabharatha/state.py |
+| LOW | mahabharatha/state.py | 682 | Duplicated block (12 lines, 0 tokens) between mahabharatha/state.py and tests/mocks/mock_state.py |
+| LOW | mahabharatha/state.py | 720 | Duplicated block (11 lines, 0 tokens) between mahabharatha/state.py and mahabharatha/state.py |
+| LOW | mahabharatha/state.py | 778 | Duplicated block (19 lines, 0 tokens) between mahabharatha/state.py and tests/mocks/mock_state.py |
+| LOW | mahabharatha/containers.py | 507 | Duplicated block (17 lines, 0 tokens) between mahabharatha/containers.py and mahabharatha/containers.py |
 | LOW | tests/test_worker_protocol.py | 44 | Duplicated block (16 lines, 0 tokens) between tests/test_worker_protocol.py and tests/unit/test_worker_lifecycle.py |
 | LOW | tests/test_worker_protocol.py | 360 | Duplicated block (14 lines, 0 tokens) between tests/test_worker_protocol.py and tests/test_worker_protocol.py |
 | LOW | tests/test_worker_protocol.py | 388 | Duplicated block (17 lines, 0 tokens) between tests/test_worker_protocol.py and tests/test_worker_protocol.py |
@@ -806,21 +806,21 @@
 | LOW | htmlcov/index.html | 463 | Duplicated block (10 lines, 0 tokens) between htmlcov/index.html and htmlcov/index.html |
 | LOW | claudedocs/zerg_scratch.md | 289 | Duplicated block (10 lines, 0 tokens) between claudedocs/zerg_scratch.md and claudedocs/zerg_scratch.md |
 | LOW | claudedocs/zerg_scratch.md | 299 | Duplicated block (15 lines, 0 tokens) between claudedocs/zerg_scratch.md and claudedocs/zerg_scratch.md |
-| LOW | .zerg/test_runner.py | 58 | Duplicated block (18 lines, 0 tokens) between .zerg/test_runner.py and zerg/commands/test_cmd.py |
-| LOW | .zerg/test_runner.py | 94 | Duplicated block (16 lines, 0 tokens) between .zerg/test_runner.py and zerg/commands/test_cmd.py |
-| LOW | .zerg/test_runner.py | 138 | Duplicated block (16 lines, 0 tokens) between .zerg/test_runner.py and zerg/commands/test_cmd.py |
-| LOW | .zerg/test_runner.py | 174 | Duplicated block (13 lines, 0 tokens) between .zerg/test_runner.py and zerg/commands/test_cmd.py |
-| LOW | .zerg/test_runner.py | 310 | Duplicated block (11 lines, 0 tokens) between .zerg/test_runner.py and zerg/commands/test_cmd.py |
-| LOW | .zerg/test_runner.py | 319 | Duplicated block (19 lines, 0 tokens) between .zerg/test_runner.py and zerg/commands/test_cmd.py |
-| LOW | .zerg/state.py | 34 | Duplicated block (10 lines, 0 tokens) between .zerg/state.py and .zerg/tests/mocks/mock_state.py |
-| LOW | .zerg/refactor.py | 125 | Duplicated block (11 lines, 0 tokens) between .zerg/refactor.py and zerg/commands/refactor.py |
-| LOW | .zerg/refactor.py | 201 | Duplicated block (18 lines, 0 tokens) between .zerg/refactor.py and zerg/commands/refactor.py |
-| LOW | .zerg/build.py | 169 | Duplicated block (17 lines, 0 tokens) between .zerg/build.py and zerg/commands/build.py |
-| LOW | .zerg/build.py | 186 | Duplicated block (16 lines, 0 tokens) between .zerg/build.py and zerg/commands/build.py |
-| LOW | .zerg/build.py | 222 | Duplicated block (16 lines, 0 tokens) between .zerg/build.py and zerg/commands/build.py |
-| LOW | .zerg/build.py | 260 | Duplicated block (17 lines, 0 tokens) between .zerg/build.py and zerg/commands/build.py |
-| LOW | .zerg/analyze.py | 231 | Duplicated block (12 lines, 0 tokens) between .zerg/analyze.py and zerg/commands/analyze.py |
-| LOW | .zerg/analyze.py | 280 | Duplicated block (16 lines, 0 tokens) between .zerg/analyze.py and zerg/commands/analyze.py |
+| LOW | .mahabharatha/test_runner.py | 58 | Duplicated block (18 lines, 0 tokens) between .mahabharatha/test_runner.py and mahabharatha/commands/test_cmd.py |
+| LOW | .mahabharatha/test_runner.py | 94 | Duplicated block (16 lines, 0 tokens) between .mahabharatha/test_runner.py and mahabharatha/commands/test_cmd.py |
+| LOW | .mahabharatha/test_runner.py | 138 | Duplicated block (16 lines, 0 tokens) between .mahabharatha/test_runner.py and mahabharatha/commands/test_cmd.py |
+| LOW | .mahabharatha/test_runner.py | 174 | Duplicated block (13 lines, 0 tokens) between .mahabharatha/test_runner.py and mahabharatha/commands/test_cmd.py |
+| LOW | .mahabharatha/test_runner.py | 310 | Duplicated block (11 lines, 0 tokens) between .mahabharatha/test_runner.py and mahabharatha/commands/test_cmd.py |
+| LOW | .mahabharatha/test_runner.py | 319 | Duplicated block (19 lines, 0 tokens) between .mahabharatha/test_runner.py and mahabharatha/commands/test_cmd.py |
+| LOW | .mahabharatha/state.py | 34 | Duplicated block (10 lines, 0 tokens) between .mahabharatha/state.py and .mahabharatha/tests/mocks/mock_state.py |
+| LOW | .mahabharatha/refactor.py | 125 | Duplicated block (11 lines, 0 tokens) between .mahabharatha/refactor.py and mahabharatha/commands/refactor.py |
+| LOW | .mahabharatha/refactor.py | 201 | Duplicated block (18 lines, 0 tokens) between .mahabharatha/refactor.py and mahabharatha/commands/refactor.py |
+| LOW | .mahabharatha/build.py | 169 | Duplicated block (17 lines, 0 tokens) between .mahabharatha/build.py and mahabharatha/commands/build.py |
+| LOW | .mahabharatha/build.py | 186 | Duplicated block (16 lines, 0 tokens) between .mahabharatha/build.py and mahabharatha/commands/build.py |
+| LOW | .mahabharatha/build.py | 222 | Duplicated block (16 lines, 0 tokens) between .mahabharatha/build.py and mahabharatha/commands/build.py |
+| LOW | .mahabharatha/build.py | 260 | Duplicated block (17 lines, 0 tokens) between .mahabharatha/build.py and mahabharatha/commands/build.py |
+| LOW | .mahabharatha/analyze.py | 231 | Duplicated block (12 lines, 0 tokens) between .mahabharatha/analyze.py and mahabharatha/commands/analyze.py |
+| LOW | .mahabharatha/analyze.py | 280 | Duplicated block (16 lines, 0 tokens) between .mahabharatha/analyze.py and mahabharatha/commands/analyze.py |
 
 ## Container Runtime (Score: 0/100)
 | Severity | File | Line | Message |

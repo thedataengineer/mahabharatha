@@ -1,4 +1,4 @@
-"""ZERG v2 DevContainer - Generation and build automation for worker isolation."""
+"""MAHABHARATHA v2 DevContainer - Generation and build automation for worker isolation."""
 
 import json
 import subprocess
@@ -11,8 +11,8 @@ from typing import Any
 class DevcontainerConfig:
     """Configuration for devcontainer generation."""
 
-    name: str = "zerg-worker"
-    image_name: str = "zerg-worker"
+    name: str = "mahabharatha-worker"
+    image_name: str = "mahabharatha-worker"
     build_context: str = "."
     python_version: str = "3.12"
     node_version: str = "20"
@@ -23,7 +23,7 @@ class DevcontainerConfig:
 
 # Language-specific Dockerfile templates
 DOCKERFILE_TEMPLATES = {
-    "python": '''# ZERG Worker - Python
+    "python": '''# MAHABHARATHA Worker - Python
 FROM python:{python_version}-slim
 
 # Install system dependencies
@@ -51,7 +51,7 @@ RUN if [ -f requirements.txt ]; then pip install --no-cache-dir -r requirements.
 # Default command
 CMD ["bash"]
 ''',
-    "typescript": '''# ZERG Worker - TypeScript/Node.js
+    "typescript": '''# MAHABHARATHA Worker - TypeScript/Node.js
 FROM node:{node_version}-slim
 
 # Install system dependencies
@@ -73,7 +73,7 @@ RUN if [ -f package.json ]; then npm install; fi
 # Default command
 CMD ["bash"]
 ''',
-    "go": '''# ZERG Worker - Go
+    "go": '''# MAHABHARATHA Worker - Go
 FROM golang:{go_version}-alpine
 
 # Install system dependencies
@@ -92,7 +92,7 @@ RUN if [ -f go.mod ]; then go mod download; fi
 # Default command
 CMD ["bash"]
 ''',
-    "rust": '''# ZERG Worker - Rust
+    "rust": '''# MAHABHARATHA Worker - Rust
 FROM rust:{rust_version}-slim
 
 # Install system dependencies
@@ -117,7 +117,7 @@ WORKDIR /workspace
 # Default command
 CMD ["bash"]
 ''',
-    "default": '''# ZERG Worker - Generic
+    "default": '''# MAHABHARATHA Worker - Generic
 FROM ubuntu:22.04
 
 # Install system dependencies
@@ -146,7 +146,7 @@ CMD ["bash"]
 CLAUDE_INSTALL_CMD = "RUN npm install -g @anthropic-ai/claude-code"
 
 DEVCONTAINER_JSON_TEMPLATE = {
-    "name": "zerg-worker",
+    "name": "mahabharatha-worker",
     "build": {
         "dockerfile": "Dockerfile",
         "context": "..",
@@ -160,12 +160,12 @@ DEVCONTAINER_JSON_TEMPLATE = {
             "extensions": [],
         }
     },
-    "postCreateCommand": "echo 'ZERG worker ready'",
+    "postCreateCommand": "echo 'MAHABHARATHA worker ready'",
     "forwardPorts": [],
-    "runArgs": ["--network=zerg-internal"],
+    "runArgs": ["--network=mahabharatha-internal"],
 }
 
-DOCKER_COMPOSE_TEMPLATE = '''# ZERG Worker Compose Configuration
+DOCKER_COMPOSE_TEMPLATE = '''# MAHABHARATHA Worker Compose Configuration
 version: '3.8'
 
 services:
@@ -181,7 +181,7 @@ services:
       - ZERG_WORKER_ID=${{WORKER_ID:-0}}
       - ANTHROPIC_API_KEY=${{ANTHROPIC_API_KEY}}
     networks:
-      - zerg-internal
+      - mahabharatha-internal
     deploy:
       resources:
         limits:
@@ -189,17 +189,17 @@ services:
           memory: {memory_limit}
 
 networks:
-  zerg-internal:
+  mahabharatha-internal:
     driver: bridge
     internal: true
 '''
 
 POST_CREATE_TEMPLATE = '''#!/bin/bash
-# ZERG Worker Post-Create Script
+# MAHABHARATHA Worker Post-Create Script
 
 set -e
 
-echo "Setting up ZERG worker environment..."
+echo "Setting up MAHABHARATHA worker environment..."
 
 # Install project dependencies
 {install_commands}
@@ -211,7 +211,7 @@ else
     echo "Warning: Claude Code CLI not found"
 fi
 
-echo "ZERG worker setup complete"
+echo "MAHABHARATHA worker setup complete"
 '''
 
 
@@ -237,7 +237,7 @@ class BuildResult:
 
 
 class DevcontainerGenerator:
-    """Generate devcontainer configuration for ZERG workers."""
+    """Generate devcontainer configuration for MAHABHARATHA workers."""
 
     def __init__(self, project_path: Path, config: DevcontainerConfig | None = None):
         """Initialize generator.
@@ -365,7 +365,7 @@ class DevcontainerGenerator:
 
 
 class DevcontainerBuilder:
-    """Build devcontainer images for ZERG workers."""
+    """Build devcontainer images for MAHABHARATHA workers."""
 
     def __init__(self, project_path: Path):
         """Initialize builder.
@@ -398,7 +398,7 @@ class DevcontainerBuilder:
 
     def build(
         self,
-        image_name: str = "zerg-worker",
+        image_name: str = "mahabharatha-worker",
         no_cache: bool = False,
         pull: bool = True,
     ) -> BuildResult:
@@ -478,7 +478,7 @@ class DevcontainerBuilder:
 
     def build_if_needed(
         self,
-        image_name: str = "zerg-worker",
+        image_name: str = "mahabharatha-worker",
         force: bool = False,
     ) -> BuildResult:
         """Build image only if it doesn't exist or force is True.
@@ -537,7 +537,7 @@ class DevcontainerManager:
         # Build if requested
         build_result = None
         if build:
-            image_name = f"zerg-worker-{language}"
+            image_name = f"mahabharatha-worker-{language}"
             build_result = self.builder.build_if_needed(
                 image_name=image_name,
                 force=force_build,
@@ -564,7 +564,7 @@ class DevcontainerManager:
             self.generator.generate(language)
 
         # Build if needed
-        image_name = f"zerg-worker-{language}"
+        image_name = f"mahabharatha-worker-{language}"
         return self.builder.build_if_needed(image_name=image_name)
 
 

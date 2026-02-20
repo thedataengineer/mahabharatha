@@ -1,11 +1,11 @@
-# /zerg:git
+# /mahabharatha:git
 
 Git operations with intelligent commits, PR creation, releases, rescue, review, bisect, ship, cleanup, and issue creation.
 
 ## Synopsis
 
 ```
-/zerg:git --action commit|branch|merge|sync|history|finish|pr|release|review|rescue|bisect|ship|cleanup|issue
+/mahabharatha:git --action commit|branch|merge|sync|history|finish|pr|release|review|rescue|bisect|ship|cleanup|issue
           [--push]
           [--base main]
           [--mode auto|confirm|suggest]
@@ -22,38 +22,38 @@ Git operations with intelligent commits, PR creation, releases, rescue, review, 
 
 ## Description
 
-The `git` command wraps 14 Git operations with ZERG-aware intelligence. It auto-generates conventional commit messages from staged changes, manages branches, performs merges with conflict detection, provides a structured finish workflow, creates pull requests with full context assembly, automates semver releases, assembles pre-review context filtered by security rules, offers triple-layer undo/recovery, runs AI-powered bug bisection, performs repository cleanup, and creates AI-optimized GitHub issues.
+The `git` command wraps 14 Git operations with MAHABHARATHA-aware intelligence. It auto-generates conventional commit messages from staged changes, manages branches, performs merges with conflict detection, provides a structured finish workflow, creates pull requests with full context assembly, automates semver releases, assembles pre-review context filtered by security rules, offers triple-layer undo/recovery, runs AI-powered bug bisection, performs repository cleanup, and creates AI-optimized GitHub issues.
 
 ### Actions
 
 **commit** -- Stage and commit changes with an auto-generated conventional commit message. Supports multiple modes for different workflows. Optionally push to the remote.
 
 ```
-/zerg:git --action commit [--push] [--mode auto|confirm|suggest]
+/mahabharatha:git --action commit [--push] [--mode auto|confirm|suggest]
 ```
 
 **branch** -- Create and switch to a new branch, or list existing branches.
 
 ```
-/zerg:git --action branch --name feature/auth [--base main]
+/mahabharatha:git --action branch --name feature/auth [--base main]
 ```
 
 **merge** -- Merge a branch with intelligent conflict detection and configurable strategy.
 
 ```
-/zerg:git --action merge --branch feature/auth --strategy squash
+/mahabharatha:git --action merge --branch feature/auth --strategy squash
 ```
 
 **sync** -- Synchronize the local branch with its remote tracking branch. Fetches, pulls with rebase, and optionally rebases onto the base branch.
 
 ```
-/zerg:git --action sync [--base main]
+/mahabharatha:git --action sync [--base main]
 ```
 
 **history** -- Analyze commit history and generate a changelog from a given starting point. Optionally run history cleanup.
 
 ```
-/zerg:git --action history --since v1.0.0 [--cleanup] [--base main]
+/mahabharatha:git --action history --since v1.0.0 [--cleanup] [--base main]
 ```
 
 **finish** -- Complete a development branch with a structured set of options. This action presents an interactive menu:
@@ -72,52 +72,52 @@ Which option?
 **pr** -- Create a pull request with full context assembly. The PREngine gathers commits, linked issues, and project spec files to generate a structured PR title, body, labels, and reviewers. Supports draft PRs and reviewer assignment.
 
 ```
-/zerg:git --action pr --base main [--draft] [--reviewer octocat]
+/mahabharatha:git --action pr --base main [--draft] [--reviewer octocat]
 ```
 
 **release** -- Automated semver release workflow. Calculates the version bump from conventional commits (or accepts a manual override), generates a changelog entry, updates version files, commits, tags, pushes, and creates a GitHub release. Use `--dry-run` to preview without executing.
 
 ```
-/zerg:git --action release [--bump auto|major|minor|patch] [--dry-run]
+/mahabharatha:git --action release [--bump auto|major|minor|patch] [--dry-run]
 ```
 
 **review** -- Assemble pre-review context for Claude Code AI analysis. Prepares scoped diffs filtered by security rules per file extension and highlights areas matching the chosen focus domain.
 
 ```
-/zerg:git --action review --base main [--focus security|performance|quality|architecture]
+/mahabharatha:git --action review --base main [--focus security|performance|quality|architecture]
 ```
 
 **rescue** -- Triple-layer undo/recovery system. List recent git operations, undo the last change, restore repository state from snapshot tags, or recover deleted branches from the reflog.
 
 ```
-/zerg:git --action rescue --list-ops
-/zerg:git --action rescue --undo
-/zerg:git --action rescue --restore zerg-snapshot-20260201
-/zerg:git --action rescue --recover-branch feature/auth
+/mahabharatha:git --action rescue --list-ops
+/mahabharatha:git --action rescue --undo
+/mahabharatha:git --action rescue --restore mahabharatha-snapshot-20260201
+/mahabharatha:git --action rescue --recover-branch feature/auth
 ```
 
 **bisect** -- AI-powered bug bisection. Ranks commits by likelihood using file overlap and semantic analysis, then runs `git bisect` with test validation to pinpoint the commit that introduced a bug.
 
 ```
-/zerg:git --action bisect --symptom "login returns 500" --test-cmd "pytest tests/auth/" [--good v1.2.0]
+/mahabharatha:git --action bisect --symptom "login returns 500" --test-cmd "pytest tests/auth/" [--good v1.2.0]
 ```
 
 **ship** -- Full delivery pipeline: commit, push, create PR, merge, and cleanup in one shot. Non-interactive. Uses auto mode for commit generation. Tries regular merge first, falls back to admin merge if blocked by branch protection.
 
 ```
-/zerg:git --action ship [--base main] [--draft] [--reviewer USER] [--no-merge] [--admin]
+/mahabharatha:git --action ship [--base main] [--draft] [--reviewer USER] [--no-merge] [--admin]
 ```
 
-**cleanup** -- Repository hygiene: prune merged branches, stale remote refs, orphaned worktrees, and ZERG Docker resources. Auto-detects stopped containers. Use `--no-docker` to skip Docker cleanup, `--include-stashes` to clear stashes, `--dry-run` to preview.
+**cleanup** -- Repository hygiene: prune merged branches, stale remote refs, orphaned worktrees, and MAHABHARATHA Docker resources. Auto-detects stopped containers. Use `--no-docker` to skip Docker cleanup, `--include-stashes` to clear stashes, `--dry-run` to preview.
 
 ```
-/zerg:git --action cleanup [--dry-run] [--no-docker] [--include-stashes] [--base main]
+/mahabharatha:git --action cleanup [--dry-run] [--no-docker] [--include-stashes] [--base main]
 ```
 
 **issue** -- Create maximally-detailed GitHub issues optimized for AI coding assistants. Scan mode (default) auto-detects problems from test failures, TODO comments, lint errors, security findings, orphaned modules, stale deps, and CI results. Description mode enriches a user-provided title with codebase analysis.
 
 ```
-/zerg:git --action issue [--scan] [--title TEXT] [--dry-run] [--limit N] [--label LABEL] [--priority P0|P1|P2]
+/mahabharatha:git --action issue [--scan] [--title TEXT] [--dry-run] [--limit N] [--label LABEL] [--priority P0|P1|P2]
 ```
 
 ### Conventional Commit Types
@@ -174,175 +174,175 @@ Auto-generated commit messages follow the conventional commits specification:
 Commit staged changes with an auto-generated message:
 
 ```
-/zerg:git --action commit
+/mahabharatha:git --action commit
 ```
 
 Commit and push in one step:
 
 ```
-/zerg:git --action commit --push
+/mahabharatha:git --action commit --push
 ```
 
 Auto-commit without confirmation:
 
 ```
-/zerg:git --action commit --mode auto --push
+/mahabharatha:git --action commit --mode auto --push
 ```
 
 Preview a suggested commit message without committing:
 
 ```
-/zerg:git --action commit --mode suggest
+/mahabharatha:git --action commit --mode suggest
 ```
 
 Create a new feature branch:
 
 ```
-/zerg:git --action branch --name feature/auth
+/mahabharatha:git --action branch --name feature/auth
 ```
 
 Squash merge a feature branch:
 
 ```
-/zerg:git --action merge --branch feature/auth --strategy squash
+/mahabharatha:git --action merge --branch feature/auth --strategy squash
 ```
 
 Complete the current branch with the finish workflow:
 
 ```
-/zerg:git --action finish --base main
+/mahabharatha:git --action finish --base main
 ```
 
 Generate a changelog since v1.0.0:
 
 ```
-/zerg:git --action history --since v1.0.0
+/mahabharatha:git --action history --since v1.0.0
 ```
 
 Run history cleanup:
 
 ```
-/zerg:git --action history --cleanup --base main
+/mahabharatha:git --action history --cleanup --base main
 ```
 
 Create a pull request against main:
 
 ```
-/zerg:git --action pr --base main
+/mahabharatha:git --action pr --base main
 ```
 
 Create a draft PR with a reviewer:
 
 ```
-/zerg:git --action pr --draft --reviewer octocat
+/mahabharatha:git --action pr --draft --reviewer octocat
 ```
 
 Auto-detect version bump and release:
 
 ```
-/zerg:git --action release
+/mahabharatha:git --action release
 ```
 
 Force a minor release:
 
 ```
-/zerg:git --action release --bump minor
+/mahabharatha:git --action release --bump minor
 ```
 
 Preview a release without executing:
 
 ```
-/zerg:git --action release --dry-run
+/mahabharatha:git --action release --dry-run
 ```
 
 Generate a security-focused review context:
 
 ```
-/zerg:git --action review --focus security
+/mahabharatha:git --action review --focus security
 ```
 
 Generate an architecture review against develop:
 
 ```
-/zerg:git --action review --focus architecture --base develop
+/mahabharatha:git --action review --focus architecture --base develop
 ```
 
 List recent rescue operations:
 
 ```
-/zerg:git --action rescue --list-ops
+/mahabharatha:git --action rescue --list-ops
 ```
 
 Undo the last git operation:
 
 ```
-/zerg:git --action rescue --undo
+/mahabharatha:git --action rescue --undo
 ```
 
 Restore from a snapshot tag:
 
 ```
-/zerg:git --action rescue --restore zerg-snapshot-20260201
+/mahabharatha:git --action rescue --restore mahabharatha-snapshot-20260201
 ```
 
 Recover a deleted branch:
 
 ```
-/zerg:git --action rescue --recover-branch feature/auth
+/mahabharatha:git --action rescue --recover-branch feature/auth
 ```
 
 Bisect with a symptom and test command:
 
 ```
-/zerg:git --action bisect --symptom "login returns 500" --test-cmd "pytest tests/auth/"
+/mahabharatha:git --action bisect --symptom "login returns 500" --test-cmd "pytest tests/auth/"
 ```
 
 Bisect with a known good tag:
 
 ```
-/zerg:git --action bisect --symptom "CSS broken" --good v1.2.0
+/mahabharatha:git --action bisect --symptom "CSS broken" --good v1.2.0
 ```
 
 Ship current branch (full pipeline):
 
 ```
-/zerg:git --action ship
+/mahabharatha:git --action ship
 ```
 
 Ship with draft PR for team review:
 
 ```
-/zerg:git --action ship --no-merge --draft --reviewer octocat
+/mahabharatha:git --action ship --no-merge --draft --reviewer octocat
 ```
 
 Ship with admin merge (repo owner bypassing branch protection):
 
 ```
-/zerg:git --action ship --admin
+/mahabharatha:git --action ship --admin
 ```
 
 Cleanup merged branches, stale refs, and Docker resources:
 
 ```
-/zerg:git --action cleanup
+/mahabharatha:git --action cleanup
 ```
 
 Preview cleanup without executing:
 
 ```
-/zerg:git --action cleanup --dry-run
+/mahabharatha:git --action cleanup --dry-run
 ```
 
 Auto-scan codebase and create issues:
 
 ```
-/zerg:git --action issue
+/mahabharatha:git --action issue
 ```
 
 Create a specific issue from description:
 
 ```
-/zerg:git --action issue --title "Fix auth timeout" "Users report 504 errors on login"
+/mahabharatha:git --action issue --title "Fix auth timeout" "Users report 504 errors on login"
 ```
 
 ## Exit Codes
@@ -359,6 +359,6 @@ This command creates a Claude Code Task with the subject prefix `[Git]` on invoc
 
 ## See Also
 
-- [[zerg-review]] -- Review code before committing or finishing
-- [[zerg-build]] -- Verify the build passes before finishing a branch
-- [[zerg-test]] -- Ensure tests pass before the finish workflow
+- [[mahabharatha-review]] -- Review code before committing or finishing
+- [[mahabharatha-build]] -- Verify the build passes before finishing a branch
+- [[mahabharatha-test]] -- Ensure tests pass before the finish workflow

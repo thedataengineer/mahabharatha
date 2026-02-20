@@ -36,7 +36,7 @@ Orchestrator (no env var set)  →  uses DEFAULT task list
 
 ### 2.2 Fix Strategy
 
-Remove `feature` fallback from all 4 spawn methods in launcher.py. Only propagate the env var if the orchestrator actually has it set. Remove the safety net in worker_main.py that forces it. Update rush.core.md container template.
+Remove `feature` fallback from all 4 spawn methods in launcher.py. Only propagate the env var if the orchestrator actually has it set. Remove the safety net in worker_main.py that forces it. Update kurukshetra.core.md container template.
 
 ### 2.3 After Fix
 
@@ -80,7 +80,7 @@ if not env.get("CLAUDE_CODE_TASK_LIST_ID"):
     env["CLAUDE_CODE_TASK_LIST_ID"] = args.feature
 ```
 
-### 3.3 zerg:rush.core.md — line ~178
+### 3.3 mahabharatha:kurukshetra.core.md — line ~178
 ```bash
 # Before:
 -e CLAUDE_CODE_TASK_LIST_ID=$FEATURE \
@@ -111,16 +111,16 @@ if not env.get("CLAUDE_CODE_TASK_LIST_ID"):
 | Phase | Tasks | Parallel |
 |-------|-------|----------|
 | Foundation (L1) | 2 tasks: launcher.py + worker_main.py | Yes |
-| Integration (L2) | 1 task: rush.core.md + CLAUDE.md docs | No (depends on L1) |
+| Integration (L2) | 1 task: kurukshetra.core.md + CLAUDE.md docs | No (depends on L1) |
 | Verification (L3) | 1 task: run tests + grep validation | No (depends on L2) |
 
 ### File Ownership
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| zerg/launcher.py | TASK-L1-001 | modify |
-| zerg/worker_main.py | TASK-L1-002 | modify |
-| zerg/data/commands/zerg:rush.core.md | TASK-L2-001 | modify |
+| mahabharatha/launcher.py | TASK-L1-001 | modify |
+| mahabharatha/worker_main.py | TASK-L1-002 | modify |
+| mahabharatha/data/commands/mahabharatha:kurukshetra.core.md | TASK-L2-001 | modify |
 | CLAUDE.md | TASK-L2-001 | modify |
 
 ---
@@ -141,14 +141,14 @@ if not env.get("CLAUDE_CODE_TASK_LIST_ID"):
 python -m pytest tests/ -x -q
 
 # 2. launcher.py no longer has feature fallback
-grep -n "CLAUDE_CODE_TASK_LIST_ID" zerg/launcher.py
+grep -n "CLAUDE_CODE_TASK_LIST_ID" mahabharatha/launcher.py
 # Expect: ALLOWED_ENV_VARS entry + conditional sets (no `feature` fallback)
 
 # 3. worker_main.py no longer forces the env var
-grep -c "CLAUDE_CODE_TASK_LIST_ID" zerg/worker_main.py
+grep -c "CLAUDE_CODE_TASK_LIST_ID" mahabharatha/worker_main.py
 # Expect: 0
 
 # 4. Drift detection still passes (with updated threshold)
-count=$(grep -c "CLAUDE_CODE_TASK_LIST_ID" zerg/launcher.py)
+count=$(grep -c "CLAUDE_CODE_TASK_LIST_ID" mahabharatha/launcher.py)
 echo "launcher.py — $count CLAUDE_CODE_TASK_LIST_ID refs (expect ≥4)"
 ```

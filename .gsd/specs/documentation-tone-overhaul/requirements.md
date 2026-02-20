@@ -74,14 +74,14 @@ Write for someone who:
 Tutorials must include simulated dialogues for planning/discovery phases:
 
 ```
-ZERG: What problem does the minerals store solve for users?
+MAHABHARATHA: What problem does the minerals store solve for users?
 YOU:  Users need to browse and purchase mineral products through a REST API.
 
-ZERG: What are the core entities and their relationships?
+MAHABHARATHA: What are the core entities and their relationships?
 YOU:  Products, Cart, Orders. A cart becomes an order at checkout.
 ```
 
-Execution phases (rush, merge, status) show real command output instead.
+Execution phases (kurukshetra, merge, status) show real command output instead.
 
 ### FR-4: Command Reference Split
 
@@ -117,7 +117,7 @@ All documentation must be updated:
 
 ### FR-6: Workflow
 
-1. Run `/zerg:document --deep` on each subsystem to generate base content
+1. Run `/mahabharatha:document --deep` on each subsystem to generate base content
 2. Rewrite output following FR-1 educational tone standard
 3. Add simulated dialogues where appropriate (FR-3)
 4. Verify concept-first structure in all sections
@@ -137,7 +137,7 @@ Every concept must be explained at "deep" level:
 - All pages follow the same educational structure
 - Terminology consistent across all documents
 - Cross-references use same link format
-- All commands use `/zerg:` format
+- All commands use `/mahabharatha:` format
 
 ### NFR-3: Accessibility
 
@@ -150,14 +150,14 @@ Every concept must be explained at "deep" level:
 
 1. **Tone Test**: A developer new to AI assistants can understand any page without external references
 2. **Structure Test**: Every major concept has: explanation → narrative → diagram → command
-3. **Dialogue Test**: Planning tutorials have simulated ZERG/YOU dialogues
+3. **Dialogue Test**: Planning tutorials have simulated MAHABHARATHA/YOU dialogues
 4. **Split Test**: Command docs exist in both quick-reference and deep-dive versions
 5. **Coverage Test**: All 15+ documents updated with educational tone
 
 ## Implementation Approach
 
 ### Phase 1: Generate Base Content
-- Run `/zerg:document --deep` on each module
+- Run `/mahabharatha:document --deep` on each module
 - Collect output as raw material
 
 ### Phase 2: Rewrite Wiki Pages
@@ -181,4 +181,4 @@ None — all questions resolved via Socratic discovery.
 
 ## Future Enhancement
 
-GitHub Issue to be created for `/zerg:document --tone educational` flag that produces this style automatically.
+GitHub Issue to be created for `/mahabharatha:document --tone educational` flag that produces this style automatically.

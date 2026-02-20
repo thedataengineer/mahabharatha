@@ -1,4 +1,4 @@
-"""Pre-flight checks for ZERG rush execution.
+"""Pre-flight checks for MAHABHARATHA kurukshetra execution.
 
 Validates environment readiness before launching workers:
 Docker image availability, authentication, port availability,
@@ -57,7 +57,7 @@ class PreflightReport:
 
 
 class PreflightChecker:
-    """Run pre-flight checks before a rush."""
+    """Run pre-flight checks before a kurukshetra."""
 
     def __init__(
         self,

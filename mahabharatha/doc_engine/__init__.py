@@ -1,4 +1,4 @@
-"""ZERG doc_engine package for automated documentation generation."""
+"""MAHABHARATHA doc_engine package for automated documentation generation."""
 
 from __future__ import annotations
 

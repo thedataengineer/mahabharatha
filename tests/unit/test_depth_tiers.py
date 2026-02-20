@@ -1,4 +1,4 @@
-"""Unit tests for ZERG analysis depth tier system."""
+"""Unit tests for MAHABHARATHA analysis depth tier system."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Shared types and data models for the ZERG diagnostic system."""
+"""Shared types and data models for the MAHABHARATHA diagnostic system."""
 
 from __future__ import annotations
 

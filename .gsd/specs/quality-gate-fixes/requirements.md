@@ -36,7 +36,7 @@ Two quality gate failures need resolution:
 
 **Fix:** Move `RecoveryStep` import in `code_fixer.py` to TYPE_CHECKING block.
 
-**Files:** `zerg/diagnostics/code_fixer.py`
+**Files:** `mahabharatha/diagnostics/code_fixer.py`
 
 ### FR-2: Fix Circular Import #2 (verify → verification_gates → verify)
 
@@ -46,7 +46,7 @@ Two quality gate failures need resolution:
 
 **Fix:** The cycle exists because `verify.py` has runtime imports of `verification_gates`. Move these to TYPE_CHECKING or keep as function-level lazy imports.
 
-**Files:** `zerg/verify.py`, `zerg/verification_gates.py`
+**Files:** `mahabharatha/verify.py`, `mahabharatha/verification_gates.py`
 
 ### FR-3: Fix Circular Import #3 (dryrun → render_utils → dryrun)
 
@@ -56,14 +56,14 @@ Two quality gate failures need resolution:
 
 **Analysis:** This may already be properly guarded. Verify the import chain analysis tool's detection.
 
-**Files:** `zerg/dryrun.py`, `zerg/render_utils.py`
+**Files:** `mahabharatha/dryrun.py`, `mahabharatha/render_utils.py`
 
 ### FR-4: Add `__all__` to Core Public Modules
 
 Add explicit `__all__` exports to clarify public API:
-- `zerg/__init__.py` — main package exports
-- `zerg/config.py` — configuration classes
-- `zerg/types.py` — type definitions
+- `mahabharatha/__init__.py` — main package exports
+- `mahabharatha/config.py` — configuration classes
+- `mahabharatha/types.py` — type definitions
 
 ---
 
@@ -79,9 +79,9 @@ Run `/z:analyze` import-chain gate after changes. Target: score >80/100.
 
 ## Acceptance Criteria
 
-1. [ ] `python -c "from zerg.commands.debug import DebugCommand"` succeeds
-2. [ ] `python -c "from zerg.verify import VerificationExecutor"` succeeds
-3. [ ] `python -c "from zerg.dryrun import DryRunSimulator"` succeeds
+1. [ ] `python -c "from mahabharatha.commands.debug import DebugCommand"` succeeds
+2. [ ] `python -c "from mahabharatha.verify import VerificationExecutor"` succeeds
+3. [ ] `python -c "from mahabharatha.dryrun import DryRunSimulator"` succeeds
 4. [ ] Import-chain quality gate passes (score >80)
 5. [ ] All existing tests pass
 
@@ -98,14 +98,14 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from zerg.diagnostics.recovery import RecoveryStep
+    from mahabharatha.diagnostics.recovery import RecoveryStep
 ```
 
 For runtime imports needed at call time, use lazy imports inside functions:
 
 ```python
 def verify_task_tiered(self, ...):
-    from zerg.verification_tiers import VerificationTiers
+    from mahabharatha.verification_tiers import VerificationTiers
     # ...
 ```
 

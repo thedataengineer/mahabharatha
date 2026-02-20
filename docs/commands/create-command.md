@@ -1,18 +1,18 @@
-# /zerg:create-command
+# /mahabharatha:create-command
 
-Scaffold new ZERG slash commands with Task ecosystem integration, pressure tests, and documentation.
+Scaffold new MAHABHARATHA slash commands with Task ecosystem integration, pressure tests, and documentation.
 
 ## Usage
 
 ```bash
 # Quick mode (default) - scaffold from template
-/zerg:create-command my-command
+/mahabharatha:create-command my-command
 
 # Interactive wizard mode - prompts for metadata
-/zerg:create-command my-command --interactive
+/mahabharatha:create-command my-command --interactive
 
 # Show help
-/zerg:create-command --help
+/mahabharatha:create-command --help
 ```
 
 ## Arguments
@@ -51,7 +51,7 @@ Interactive mode prompts for command metadata before scaffolding:
 
 | File | Purpose |
 |------|---------|
-| `zerg/data/commands/{name}.md` | Command file with Task ecosystem integration |
+| `mahabharatha/data/commands/{name}.md` | Command file with Task ecosystem integration |
 | `tests/pressure/test_{name}.py` | Pressure test scaffold |
 | `docs/commands/{name}.md` | Documentation reference |
 | `docs/commands-quick.md` | Index (updated with new entry) |
@@ -69,7 +69,7 @@ Interactive mode prompts for command metadata before scaffolding:
 ### Quick scaffold
 
 ```bash
-/zerg:create-command my-command
+/mahabharatha:create-command my-command
 ```
 
 Output:
@@ -77,13 +77,13 @@ Output:
 [Create-Command] Scaffold my-command
 
 Created:
-  - zerg/data/commands/my-command.md
+  - mahabharatha/data/commands/my-command.md
   - tests/pressure/test_my_command.py
   - docs/commands/my-command.md
   - Updated docs/commands-quick.md index
 
 Run validation:
-  python -m zerg.validate_commands
+  python -m mahabharatha.validate_commands
 
 Task completed: [Create-Command] Scaffold my-command
 ```
@@ -91,7 +91,7 @@ Task completed: [Create-Command] Scaffold my-command
 ### Interactive mode
 
 ```bash
-/zerg:create-command my-command --interactive
+/mahabharatha:create-command my-command --interactive
 ```
 
 Prompts for description and flags before generating files.
@@ -101,10 +101,10 @@ Prompts for description and flags before generating files.
 After scaffolding, run validation to ensure the new command passes all checks:
 
 ```bash
-python -m zerg.validate_commands
+python -m mahabharatha.validate_commands
 ```
 
 ## See Also
 
-- [Commands Reference](../commands.md) — All ZERG commands
-- [/zerg:plugins](../commands.md#zergplugins) — Plugin management
+- [Commands Reference](../commands.md) — All MAHABHARATHA commands
+- [/mahabharatha:plugins](../commands.md#zergplugins) — Plugin management

@@ -9,7 +9,7 @@
 
 ## Problem Statement
 
-During multi-container, multi-worker execution (`zerg rush --mode container --workers=3`), several resilience gaps cause rushes to stall at high completion percentages. A single stuck task can block level progression indefinitely, requiring manual intervention.
+During multi-container, multi-worker execution (`mahabharatha kurukshetra --mode container --workers=3`), several resilience gaps cause rushes to stall at high completion percentages. A single stuck task can block level progression indefinitely, requiring manual intervention.
 
 **Observed failure modes:**
 1. Initial spawn failures with no auto-retry (transient Docker issues)
@@ -28,7 +28,7 @@ Build a comprehensive resilience system that auto-recovers from transient failur
 
 ### Activation
 - Resilience features enabled by default
-- Configurable via `.zerg/config.yaml` for per-project tuning
+- Configurable via `.mahabharatha/config.yaml` for per-project tuning
 - No explicit `--resilient` flag needed (always on)
 
 ---
@@ -37,7 +37,7 @@ Build a comprehensive resilience system that auto-recovers from transient failur
 
 ### FR-1: Spawn Retry with Exponential Backoff
 
-**Description:** Retry worker spawning on transient failures before failing the rush.
+**Description:** Retry worker spawning on transient failures before failing the kurukshetra.
 
 **Behavior:**
 - On spawn failure, retry up to N attempts (default: 3)
@@ -55,7 +55,7 @@ workers:
   spawn_backoff_max_seconds: 30    # Default: 30
 ```
 
-**Location:** `zerg/launcher.py` — Add retry loop in `SubprocessLauncher.spawn()` and `ContainerLauncher.spawn()`
+**Location:** `mahabharatha/launcher.py` — Add retry loop in `SubprocessLauncher.spawn()` and `ContainerLauncher.spawn()`
 
 **Acceptance Criteria:**
 - [ ] Spawn failures retry 3× with exponential backoff before failing
@@ -80,7 +80,7 @@ workers:
   task_stale_timeout_seconds: 600  # Default: 10 minutes
 ```
 
-**Location:** `zerg/task_retry_manager.py` — Add `check_stale_tasks()` method, call from orchestrator loop
+**Location:** `mahabharatha/task_retry_manager.py` — Add `check_stale_tasks()` method, call from orchestrator loop
 
 **Acceptance Criteria:**
 - [ ] Tasks in `in_progress` > timeout auto-fail and retry
@@ -97,7 +97,7 @@ workers:
 - Workers emit heartbeat every 30s with: `{worker_id, timestamp, task_id, step, progress_pct}`
 - Orchestrator marks worker stale if no heartbeat for 2 minutes (configurable)
 - Stale workers trigger task reassignment (FR-5)
-- Heartbeat files written atomically to `.zerg/state/heartbeat-{worker_id}.json`
+- Heartbeat files written atomically to `.mahabharatha/state/heartbeat-{worker_id}.json`
 
 **Configuration:**
 ```yaml
@@ -106,7 +106,7 @@ workers:
   heartbeat_stale_threshold: 120   # Default: 2 minutes
 ```
 
-**Location:** `zerg/heartbeat.py` — Enhance `HeartbeatWriter` and `HeartbeatMonitor` (existing infrastructure)
+**Location:** `mahabharatha/heartbeat.py` — Enhance `HeartbeatWriter` and `HeartbeatMonitor` (existing infrastructure)
 
 **Acceptance Criteria:**
 - [ ] Workers emit heartbeat every 30s during task execution
@@ -138,11 +138,11 @@ def is_level_complete(self, level: int) -> bool:
 ```
 
 **Location:**
-- `zerg/state_sync_service.py` — Add `StateReconciler` class
-- `zerg/levels.py` — Fix `is_level_complete()` logic
+- `mahabharatha/state_sync_service.py` — Add `StateReconciler` class
+- `mahabharatha/levels.py` — Fix `is_level_complete()` logic
 
 **Acceptance Criteria:**
-- [ ] Periodic state check every 60s during rush
+- [ ] Periodic state check every 60s during kurukshetra
 - [ ] Thorough reconciliation on level transitions
 - [ ] Level completion accurately reflects actual task states
 - [ ] Task level always populated (parse from ID if needed)
@@ -162,8 +162,8 @@ def is_level_complete(self, level: int) -> bool:
 - If no healthy workers available, queue task for when workers recover
 
 **Location:**
-- `zerg/launcher.py` — Add `handle_worker_exit()` callback
-- `zerg/orchestrator.py` — Implement reassignment logic
+- `mahabharatha/launcher.py` — Add `handle_worker_exit()` callback
+- `mahabharatha/orchestrator.py` — Implement reassignment logic
 
 **Acceptance Criteria:**
 - [ ] Worker crash triggers automatic task reassignment
@@ -190,7 +190,7 @@ workers:
   max_respawn_attempts: 5         # Per-worker respawn cap
 ```
 
-**Location:** `zerg/orchestrator.py` — Add respawn logic to worker exit handler
+**Location:** `mahabharatha/orchestrator.py` — Add respawn logic to worker exit handler
 
 **Acceptance Criteria:**
 - [ ] Failed workers auto-replaced to maintain target count
@@ -212,7 +212,7 @@ spec_dir = repo_path / ".gsd" / "specs" / feature
 cmd.extend(["-v", f"{spec_dir.absolute()}:/workspace/.gsd/specs/{feature}:ro"])
 ```
 
-**Location:** `zerg/launcher.py` — `ContainerLauncher._start_container()`
+**Location:** `mahabharatha/launcher.py` — `ContainerLauncher._start_container()`
 
 **Acceptance Criteria:**
 - [ ] task-graph.json readable inside containers at expected path
@@ -223,7 +223,7 @@ cmd.extend(["-v", f"{spec_dir.absolute()}:/workspace/.gsd/specs/{feature}:ro"])
 
 ### FR-8: Structured Resilience Logging
 
-**Description:** Write detailed resilience events to `.zerg/monitor.log` for debugging.
+**Description:** Write detailed resilience events to `.mahabharatha/monitor.log` for debugging.
 
 **Format:**
 ```
@@ -239,10 +239,10 @@ cmd.extend(["-v", f"{spec_dir.absolute()}:/workspace/.gsd/specs/{feature}:ro"])
 - State reconciliation: divergence detected, auto-fixes applied
 - Container: health check, process verification
 
-**Location:** `zerg/log_writer.py` — Enhance `StructuredLogWriter` for monitor.log output
+**Location:** `mahabharatha/log_writer.py` — Enhance `StructuredLogWriter` for monitor.log output
 
 **Acceptance Criteria:**
-- [ ] All resilience events written to `.zerg/monitor.log`
+- [ ] All resilience events written to `.mahabharatha/monitor.log`
 - [ ] ISO8601 timestamps with milliseconds
 - [ ] Worker ID prefix for correlation
 - [ ] Structured enough for automated analysis
@@ -270,7 +270,7 @@ cmd.extend(["-v", f"{spec_dir.absolute()}:/workspace/.gsd/specs/{feature}:ro"])
 
 ## Configuration Schema
 
-Add to `.zerg/config.yaml`:
+Add to `.mahabharatha/config.yaml`:
 
 ```yaml
 resilience:
@@ -304,16 +304,16 @@ workers:
 **Description:** Ensure all new modules have production callers — no orphaned code.
 
 **Behavior:**
-- Every new `.py` file in `zerg/` must be imported by at least one other production file
+- Every new `.py` file in `mahabharatha/` must be imported by at least one other production file
 - Test-only imports don't count as production callers
 - Standalone entry points (`__main__.py`, `if __name__`) are exempt
-- Run `python -m zerg.validate_commands` to verify wiring
+- Run `python -m mahabharatha.validate_commands` to verify wiring
 - CI and pre-commit hooks enforce this automatically
 
 **Verification:**
 ```bash
 # Check for orphaned modules
-python -m zerg.validate_commands --check-wiring
+python -m mahabharatha.validate_commands --check-wiring
 
 # Expected output: "All modules properly wired" or list of orphans
 ```
@@ -381,7 +381,7 @@ python -m zerg.validate_commands --check-wiring
 
 - Existing: `circuit_breaker.py`, `heartbeat.py`, `task_retry_manager.py`, `retry_backoff.py`
 - New modules: `state_reconciler.py` (or extend `state_sync_service.py`)
-- Container mode: Docker daemon available, `zerg-worker` image built
+- Container mode: Docker daemon available, `mahabharatha-worker` image built
 - Documentation: GitHub Wiki write access, `gh` CLI for Wiki operations
 
 ---
@@ -398,12 +398,12 @@ Per GitHub Issue #102:
 
 Additional — Resilience:
 - [x] Auto-respawn workers to maintain target count
-- [x] Structured logging to `.zerg/monitor.log`
+- [x] Structured logging to `.mahabharatha/monitor.log`
 - [x] Configuration-driven timeouts and retry behavior
 
 Additional — Quality:
 - [x] 100% module wiring — no orphaned code, all imports verified
-- [x] `python -m zerg.validate_commands` passes
+- [x] `python -m mahabharatha.validate_commands` passes
 
 Additional — Documentation:
 - [x] README.md updated with resilience features
@@ -417,24 +417,24 @@ Additional — Documentation:
 
 - GitHub Issue: #102
 - GitHub Comment: Worker logging enhancement proposal
-- Previous implementation: 95% completion stalled during `mega-issue-rush`
+- Previous implementation: 95% completion stalled during `mega-issue-kurukshetra`
 
 ---
 
 ## Files Summary
 
 **Code (modify):**
-- `zerg/launcher.py` — Spawn retry, container mount fix, worker exit handling
-- `zerg/task_retry_manager.py` — Stale task detection
-- `zerg/heartbeat.py` — Enhanced heartbeat
-- `zerg/levels.py` — Fix `is_level_complete()` logic
-- `zerg/state_sync_service.py` — State reconciliation
-- `zerg/log_writer.py` — Structured monitor.log output
-- `zerg/config.py` — New resilience config fields
-- `zerg/orchestrator.py` — Respawn logic, reassignment
+- `mahabharatha/launcher.py` — Spawn retry, container mount fix, worker exit handling
+- `mahabharatha/task_retry_manager.py` — Stale task detection
+- `mahabharatha/heartbeat.py` — Enhanced heartbeat
+- `mahabharatha/levels.py` — Fix `is_level_complete()` logic
+- `mahabharatha/state_sync_service.py` — State reconciliation
+- `mahabharatha/log_writer.py` — Structured monitor.log output
+- `mahabharatha/config.py` — New resilience config fields
+- `mahabharatha/orchestrator.py` — Respawn logic, reassignment
 
 **Code (possibly new):**
-- `zerg/state_reconciler.py` — If not extending state_sync_service.py
+- `mahabharatha/state_reconciler.py` — If not extending state_sync_service.py
 
 **Documentation:**
 - `README.md` — Resilience features section
@@ -458,5 +458,5 @@ After approval:
    - Code implementation tasks (FR-1 through FR-8)
    - Wiring verification tasks (FR-9)
    - Documentation tasks (FR-10) — README, Wiki, CHANGELOG
-3. Execute with `/z:rush`
-4. Post-rush: Verify Wiki pages published, validate_commands passes
+3. Execute with `/z:kurukshetra`
+4. Post-kurukshetra: Verify Wiki pages published, validate_commands passes

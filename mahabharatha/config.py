@@ -1,4 +1,4 @@
-"""ZERG configuration management using Pydantic."""
+"""MAHABHARATHA configuration management using Pydantic."""
 
 __all__ = [
     # Main config
@@ -388,7 +388,7 @@ class PlanningConfig(BaseModel):
 
 
 class RushConfig(BaseModel):
-    """Rush execution configuration."""
+    """Kurukshetra execution configuration."""
 
     defer_merge_to_ship: bool = Field(
         default=True,
@@ -412,7 +412,7 @@ class LLMConfig(BaseModel):
 
 
 class ZergConfig(BaseModel):
-    """Complete ZERG configuration."""
+    """Complete MAHABHARATHA configuration."""
 
     # Class-level cache for singleton pattern with mtime invalidation
     _cached_instance: ClassVar["ZergConfig | None"] = None
@@ -445,7 +445,7 @@ class ZergConfig(BaseModel):
     repo_map: RepoMapConfig = Field(default_factory=RepoMapConfig)
     token_metrics: TokenMetricsConfig = Field(default_factory=TokenMetricsConfig)
     planning: PlanningConfig = Field(default_factory=PlanningConfig)
-    rush: RushConfig = Field(default_factory=RushConfig)
+    kurukshetra: RushConfig = Field(default_factory=RushConfig)
     llm: LLMConfig = Field(default_factory=LLMConfig)
 
     @classmethod

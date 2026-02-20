@@ -1,11 +1,11 @@
-# /zerg:review
+# /mahabharatha:review
 
 Two-stage code review workflow with spec compliance and quality checks.
 
 ## Synopsis
 
 ```
-/zerg:review [--mode prepare|self|receive|full]
+/mahabharatha:review [--mode prepare|self|receive|full]
 ```
 
 ## Description
@@ -43,19 +43,19 @@ The `review` command provides a structured code review process. It operates in f
 Run the full two-stage review:
 
 ```
-/zerg:review
+/mahabharatha:review
 ```
 
 Prepare a PR for review:
 
 ```
-/zerg:review --mode prepare
+/mahabharatha:review --mode prepare
 ```
 
 Run the self-review checklist:
 
 ```
-/zerg:review --mode self
+/mahabharatha:review --mode self
 ```
 
 ## Sample Output
@@ -84,6 +84,6 @@ This command creates a Claude Code Task with the subject prefix `[Review]` on in
 
 ## See Also
 
-- [[zerg-git]] -- Git operations including the finish workflow for merging reviewed code
-- [[zerg-analyze]] -- Static analysis to supplement manual review
-- [[zerg-security]] -- Security-focused scanning
+- [[mahabharatha-git]] -- Git operations including the finish workflow for merging reviewed code
+- [[mahabharatha-analyze]] -- Static analysis to supplement manual review
+- [[mahabharatha-security]] -- Security-focused scanning

@@ -4,14 +4,14 @@
 - **Feature**: worker-metrics
 - **Status**: DRAFT
 - **Created**: 2026-01-27T12:00:00
-- **Author**: ZERG Plan Mode
+- **Author**: MAHABHARATHA Plan Mode
 
 ---
 
 ## 1. Problem Statement
 
 ### 1.1 Background
-ZERG orchestrates parallel Claude Code workers but lacks visibility into worker performance. Current state tracks basic status but not timing, throughput, or efficiency metrics.
+MAHABHARATHA orchestrates parallel Claude Code workers but lacks visibility into worker performance. Current state tracks basic status but not timing, throughput, or efficiency metrics.
 
 ### 1.2 Problem
 No way to understand:
@@ -33,7 +33,7 @@ Without metrics:
 ## 2. Users
 
 ### 2.1 Primary Users
-- Developers running ZERG rush to complete features
+- Developers running MAHABHARATHA kurukshetra to complete features
 
 ### 2.2 User Stories
 - As a developer, I want to see how long each worker takes so I can identify bottlenecks
@@ -67,7 +67,7 @@ Without metrics:
 - Claude invocation results (already have duration_ms)
 
 ### 3.3 Outputs
-- Enhanced `zerg status` display with metrics
+- Enhanced `mahabharatha status` display with metrics
 - Metrics section in state JSON
 - Optional JSON export
 
@@ -107,7 +107,7 @@ Without metrics:
 
 ## 6. Technical Design
 
-### 6.1 New Types (zerg/types.py)
+### 6.1 New Types (mahabharatha/types.py)
 
 ```python
 @dataclass
@@ -161,7 +161,7 @@ class FeatureMetrics:
 - `claimed_at: str | None`
 - `duration_ms: int | None`
 
-### 6.3 New Module (zerg/metrics.py)
+### 6.3 New Module (mahabharatha/metrics.py)
 
 ```python
 class MetricsCollector:
@@ -192,12 +192,12 @@ class MetricsCollector:
 
 | File | Changes | Priority |
 |------|---------|----------|
-| `zerg/types.py` | Add metric types, extend WorkerState/TaskExecution | P0 |
-| `zerg/metrics.py` | New MetricsCollector class | P0 |
-| `zerg/state.py` | Store/compute metrics, timestamp tracking | P0 |
-| `zerg/orchestrator.py` | Record timestamps, trigger metrics computation | P1 |
-| `zerg/commands/status.py` | Display metrics in status output | P1 |
-| `.zerg/schemas/state.schema.json` | Add metrics schema section | P1 |
+| `mahabharatha/types.py` | Add metric types, extend WorkerState/TaskExecution | P0 |
+| `mahabharatha/metrics.py` | New MetricsCollector class | P0 |
+| `mahabharatha/state.py` | Store/compute metrics, timestamp tracking | P0 |
+| `mahabharatha/orchestrator.py` | Record timestamps, trigger metrics computation | P1 |
+| `mahabharatha/commands/status.py` | Display metrics in status output | P1 |
+| `.mahabharatha/schemas/state.schema.json` | Add metrics schema section | P1 |
 | `tests/unit/test_metrics.py` | Unit tests for MetricsCollector | P2 |
 
 ---
@@ -208,9 +208,9 @@ class MetricsCollector:
 - [ ] All metric types defined
 - [ ] MetricsCollector computes all metrics
 - [ ] Metrics persist in state file
-- [ ] `zerg status` shows metrics summary
+- [ ] `mahabharatha status` shows metrics summary
 - [ ] Unit tests for metrics calculations
-- [ ] Integration test with mock rush
+- [ ] Integration test with mock kurukshetra
 
 ### 8.2 Test Scenarios
 
@@ -219,30 +219,30 @@ class MetricsCollector:
 | TC-001 | Worker init timing | Worker spawns | Ready state reached | initialization_ms calculated |
 | TC-002 | Task duration | Task starts/completes | Status check | duration_ms accurate |
 | TC-003 | Level metrics | Level completes | Metrics computed | p50/p95 available |
-| TC-004 | Status display | Rush in progress | `zerg status` | Metrics shown |
+| TC-004 | Status display | Kurukshetra in progress | `mahabharatha status` | Metrics shown |
 | TC-005 | Persistence | Metrics computed | State saved | Metrics in JSON |
 
 ---
 
-## 9. Task Breakdown (ZERG Tasks)
+## 9. Task Breakdown (MAHABHARATHA Tasks)
 
 ### Level 0: Foundation
 | Task | Files | Description |
 |------|-------|-------------|
-| WM-001 | `zerg/types.py` | Add WorkerMetrics, TaskMetrics, LevelMetrics, FeatureMetrics types |
+| WM-001 | `mahabharatha/types.py` | Add WorkerMetrics, TaskMetrics, LevelMetrics, FeatureMetrics types |
 
 ### Level 1: Core Implementation
 | Task | Files | Deps | Description |
 |------|-------|------|-------------|
-| WM-002 | `zerg/metrics.py` | WM-001 | Create MetricsCollector class with compute methods |
-| WM-003 | `zerg/state.py` | WM-001 | Extend state with timestamp tracking and metrics storage |
-| WM-004 | `.zerg/schemas/state.schema.json` | WM-001 | Add metrics schema section |
+| WM-002 | `mahabharatha/metrics.py` | WM-001 | Create MetricsCollector class with compute methods |
+| WM-003 | `mahabharatha/state.py` | WM-001 | Extend state with timestamp tracking and metrics storage |
+| WM-004 | `.mahabharatha/schemas/state.schema.json` | WM-001 | Add metrics schema section |
 
 ### Level 2: Integration
 | Task | Files | Deps | Description |
 |------|-------|------|-------------|
-| WM-005 | `zerg/orchestrator.py` | WM-002, WM-003 | Record timestamps, trigger metrics computation |
-| WM-006 | `zerg/commands/status.py` | WM-002 | Display metrics in status output |
+| WM-005 | `mahabharatha/orchestrator.py` | WM-002, WM-003 | Record timestamps, trigger metrics computation |
+| WM-006 | `mahabharatha/commands/status.py` | WM-002 | Display metrics in status output |
 
 ### Level 3: Testing
 | Task | Files | Deps | Description |

@@ -1,4 +1,4 @@
-# ZERG + Claude Code Agent Teams: Implementation Analysis
+# MAHABHARATHA + Claude Code Agent Teams: Implementation Analysis
 
 > Full sequential thinking analysis from brainstorm session on 2026-02-07.
 > 13-dimension deep analysis using sequential-thinking MCP server.
@@ -29,15 +29,15 @@
 
 ## Executive Summary
 
-ZERG was built before Claude Code Agent Teams existed. It reimplemented, from scratch, many primitives that Agent Teams now provides natively: worker spawning, task coordination, state management, and quality gates. But ZERG also has capabilities Agent Teams does NOT provide: intelligent task decomposition, context engineering for token efficiency, file ownership models, architectural guardrails, multi-mode execution (subprocess, container, CI/CD), crash-safe resume, and workflow orchestration.
+MAHABHARATHA was built before Claude Code Agent Teams existed. It reimplemented, from scratch, many primitives that Agent Teams now provides natively: worker spawning, task coordination, state management, and quality gates. But MAHABHARATHA also has capabilities Agent Teams does NOT provide: intelligent task decomposition, context engineering for token efficiency, file ownership models, architectural guardrails, multi-mode execution (subprocess, container, CI/CD), crash-safe resume, and workflow orchestration.
 
-**The strategic opportunity**: ZERG becomes a **higher-level orchestration framework** that uses Agent Teams as its execution runtime (when available), while maintaining its own execution runtimes for headless/CI/container scenarios.
+**The strategic opportunity**: MAHABHARATHA becomes a **higher-level orchestration framework** that uses Agent Teams as its execution runtime (when available), while maintaining its own execution runtimes for headless/CI/container scenarios.
 
 Think of it as:
 - **Agent Teams** = low-level runtime (like a JVM or Docker)
-- **ZERG** = application framework (like Spring Boot or Kubernetes)
+- **MAHABHARATHA** = application framework (like Spring Boot or Kubernetes)
 
-**Key architectural alignment**: Agent Teams uses the **same Claude Code Task system** (`TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`) that ZERG already mandates as its authoritative source of truth. They are built for each other.
+**Key architectural alignment**: Agent Teams uses the **same Claude Code Task system** (`TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`) that MAHABHARATHA already mandates as its authoritative source of truth. They are built for each other.
 
 ---
 
@@ -45,13 +45,13 @@ Think of it as:
 
 ### Dimension 1: Worker Spawning & Lifecycle
 
-#### Current ZERG Architecture
+#### Current MAHABHARATHA Architecture
 - `launcher.py` handles spawning via subprocess or Docker
 - Workers get `ANTHROPIC_API_KEY`, `CLAUDE_CODE_TASK_LIST_ID`, and other env vars
 - Workers are launched with `claude --print -p "prompt"` (headless mode)
 - No interactive communication after spawn — fire and forget
 - Worker lifecycle: spawn → execute spec → write results → exit
-- Crash recovery: `/zerg:rush --resume` re-reads task states
+- Crash recovery: `/mahabharatha:kurukshetra --resume` re-reads task states
 
 #### Agent Teams Model
 - Native teammate spawning from the lead session
@@ -82,7 +82,7 @@ Adapter pattern: `AgentTeamLauncher` alongside `SubprocessLauncher` and `Contain
 | `terminate()` | Send graceful shutdown request |
 | `get_output()` | Read teammate session output / messages |
 
-**Key concern**: Agent Teams says "no nested teams" — teammates can't spawn their own teams. This is fine since ZERG workers are leaf nodes.
+**Key concern**: Agent Teams says "no nested teams" — teammates can't spawn their own teams. This is fine since MAHABHARATHA workers are leaf nodes.
 
 ---
 
@@ -104,28 +104,28 @@ Adapter pattern: `AgentTeamLauncher` alongside `SubprocessLauncher` and `Contain
 
 #### Opportunity — MASSIVE
 
-This is the single most transformative capability Agent Teams adds to ZERG:
+This is the single most transformative capability Agent Teams adds to MAHABHARATHA:
 
 1. **Intra-level collaboration**: Workers within the same level could coordinate on interface boundaries. Worker building the API endpoint could message worker building the frontend component: "Hey, I changed the response shape to X." Currently this requires spec precision + level boundary + merge.
 
 2. **Streaming dependency resolution**: Instead of rigid level boundaries, workers could signal "my output file X is ready" and unblock individual downstream workers. This breaks the all-or-nothing level barrier.
 
-3. **Debugging hypothesis mode**: The Agent Teams doc explicitly calls out "competing hypotheses" as a use case. `/zerg:debug` could spawn multiple investigators that debate root causes.
+3. **Debugging hypothesis mode**: The Agent Teams doc explicitly calls out "competing hypotheses" as a use case. `/mahabharatha:debug` could spawn multiple investigators that debate root causes.
 
-4. **Review panels**: `/zerg:review` could spawn specialized reviewers (security, performance, test coverage) that challenge each other's findings.
+4. **Review panels**: `/mahabharatha:review` could spawn specialized reviewers (security, performance, test coverage) that challenge each other's findings.
 
-5. **Design collaboration**: During `/zerg:design`, architect teammates could debate trade-offs before the task graph is finalized.
+5. **Design collaboration**: During `/mahabharatha:design`, architect teammates could debate trade-offs before the task graph is finalized.
 
 #### Risk
 
-More communication = more tokens. ZERG's isolation is token-efficient. Need a communication budget or opt-in model.
+More communication = more tokens. MAHABHARATHA's isolation is token-efficient. Need a communication budget or opt-in model.
 
 ---
 
 ### Dimension 3: Task Coordination & Claiming
 
 #### Current State
-- Task graph defined upfront during `/zerg:design`
+- Task graph defined upfront during `/mahabharatha:design`
 - Tasks have explicit levels (L1, L2, L3...)
 - File ownership is pre-assigned per task (exclusive)
 - Workers claim tasks via `TaskUpdate(status: "in_progress")`
@@ -141,7 +141,7 @@ More communication = more tokens. ZERG's isolation is token-efficient. Need a co
 
 #### Opportunity: From Levels to DAG
 
-ZERG could evolve from rigid LEVELS to a true dependency DAG:
+MAHABHARATHA could evolve from rigid LEVELS to a true dependency DAG:
 
 ```
 Current:  L1=[A,B,C] → barrier → L2=[D,E] → barrier → L3=[F]
@@ -185,13 +185,13 @@ Worker finishes task A → task D immediately unblocks → any available worker 
 
 #### Tension and Resolution
 
-Agent Teams is inherently MORE token-hungry because teammates are full interactive sessions. ZERG's context engineering is designed to MINIMIZE tokens. These seem to be in opposition.
+Agent Teams is inherently MORE token-hungry because teammates are full interactive sessions. MAHABHARATHA's context engineering is designed to MINIMIZE tokens. These seem to be in opposition.
 
-**Resolution**: ZERG's context engineering becomes MORE valuable with Agent Teams, not less.
+**Resolution**: MAHABHARATHA's context engineering becomes MORE valuable with Agent Teams, not less.
 
-- Agent Teams teammates load full CLAUDE.md → ZERG's task-scoped context should be injected via the **spawn prompt** instead
+- Agent Teams teammates load full CLAUDE.md → MAHABHARATHA's task-scoped context should be injected via the **spawn prompt** instead
 - Spawn prompt is the key lever: "Review auth module at src/auth/. Here are the relevant security rules for Python files: [filtered rules]. Here's the spec excerpt for your task: [scoped content]"
-- ZERG's context engineering plugin generates optimized spawn prompts
+- MAHABHARATHA's context engineering plugin generates optimized spawn prompts
 - Command splitting still applies for the lead/orchestrator session
 
 #### Hybrid Approach
@@ -199,18 +199,18 @@ Agent Teams is inherently MORE token-hungry because teammates are full interacti
 1. Lead session uses command splitting (`core.md` for orchestration)
 2. Worker spawn prompts use task-scoped context (filtered rules, scoped specs)
 3. Inter-worker messages carry minimal context updates (delta information)
-4. Token budget monitoring via `/zerg:status` tracks per-teammate usage
+4. Token budget monitoring via `/mahabharatha:status` tracks per-teammate usage
 
-**New capability**: Since teammates can MESSAGE each other, the lead could broadcast context updates: "Spec change: API endpoint renamed from /users to /accounts." This is impossible in current ZERG where workers are isolated.
+**New capability**: Since teammates can MESSAGE each other, the lead could broadcast context updates: "Spec change: API endpoint renamed from /users to /accounts." This is impossible in current MAHABHARATHA where workers are isolated.
 
 ---
 
 ### Dimension 5: Quality Gates & Hooks
 
 #### Current State
-- Quality gates run at level boundaries during `/zerg:merge`
+- Quality gates run at level boundaries during `/mahabharatha:merge`
 - Gates include: lint, typecheck, test, build
-- Configurable in `.zerg/config.yaml`
+- Configurable in `.mahabharatha/config.yaml`
 - Merge process: branch per task → merge to feature branch → run gates → proceed to next level
 - If gate fails: task marked failed, can retry
 
@@ -223,7 +223,7 @@ Agent Teams is inherently MORE token-hungry because teammates are full interacti
 
 This is a natural integration point:
 
-**1. TaskCompleted hook → ZERG gate runner (per-task)**
+**1. TaskCompleted hook → MAHABHARATHA gate runner (per-task)**
 
 When worker marks task complete → hook runs lint/typecheck on modified files → if gate fails → exit code 2 → worker gets feedback → worker fixes → re-marks complete.
 
@@ -237,19 +237,19 @@ NEW: task done → gate → FAIL → worker fixes immediately (warm context, sam
 
 When worker goes idle → hook checks if there are unfinished tasks → if yes → send worker to claim next task (keep workers busy) → if no → allow idle (level complete).
 
-**3. Custom hooks for ZERG-specific gates**:
+**3. Custom hooks for MAHABHARATHA-specific gates**:
 - File ownership verification: ensure worker only modified files in its ownership set
 - Spec compliance check: verify output matches spec requirements
 - Integration smoke test: run integration tests for the modified subsystem
 
-**Migration**: ZERG's current quality gate config in `.zerg/config.yaml` generates hook configurations for Agent Teams. The hook script is a thin wrapper that invokes ZERG's gate runner with the task context.
+**Migration**: MAHABHARATHA's current quality gate config in `.mahabharatha/config.yaml` generates hook configurations for Agent Teams. The hook script is a thin wrapper that invokes MAHABHARATHA's gate runner with the task context.
 
 ---
 
 ### Dimension 6: Plan Approval Workflow
 
 #### Current State
-- Sequential phases: `/zerg:plan` → user approves → `/zerg:design` → user approves → `/zerg:rush`
+- Sequential phases: `/mahabharatha:plan` → user approves → `/mahabharatha:design` → user approves → `/mahabharatha:kurukshetra`
 - Plan approval is at the FEATURE level (approve the whole plan)
 - Design approval is at the ARCHITECTURE level (approve the task graph)
 - Workers don't have individual plan approval — they just execute their assigned task
@@ -276,7 +276,7 @@ When worker goes idle → hook checks if there are unfinished tasks → if yes �
 
 **3. Cross-worker plan coordination**: When worker B's plan would conflict with worker A's approach, the lead detects this during approval and sends B back with feedback referencing A's approved plan.
 
-This addresses a current ZERG weakness: workers sometimes interpret specs differently and produce incompatible implementations. Plan approval adds a lightweight consensus check.
+This addresses a current MAHABHARATHA weakness: workers sometimes interpret specs differently and produce incompatible implementations. Plan approval adds a lightweight consensus check.
 
 #### Configuration
 
@@ -290,9 +290,9 @@ Make plan approval opt-in per complexity tier:
 ### Dimension 7: Display & Observability
 
 #### Current State
-- `/zerg:status` reads TaskList + state JSON + log files
+- `/mahabharatha:status` reads TaskList + state JSON + log files
 - Workers are opaque subprocesses — you see their output only after completion
-- Logs stored in `.zerg/logs/`
+- Logs stored in `.mahabharatha/logs/`
 - No real-time visibility into worker progress
 - Status is polled, not pushed
 
@@ -305,65 +305,65 @@ Make plan approval opt-in per complexity tier:
 
 #### Opportunity: From "Launch and Pray" to "Live Orchestra"
 
-1. **Split-pane dashboard**: During `/zerg:rush`, each worker gets a visible pane. The user can watch workers in real-time, see what files they're editing, what tests they're running.
+1. **Split-pane dashboard**: During `/mahabharatha:kurukshetra`, each worker gets a visible pane. The user can watch workers in real-time, see what files they're editing, what tests they're running.
 
 2. **Interactive steering**: If a worker is going off-track, the user (or lead) can message it directly: "Stop — you're modifying files outside your ownership set. Focus on src/auth/ only."
 
-3. **Live status**: Instead of polling `/zerg:status`, the lead receives automatic notifications when workers finish tasks, encounter errors, or go idle.
+3. **Live status**: Instead of polling `/mahabharatha:status`, the lead receives automatic notifications when workers finish tasks, encounter errors, or go idle.
 
 4. **Worker health monitoring**: If a worker is stuck (spending too long on a task), the lead can proactively check in or reassign the work.
 
-5. **/zerg:status upgrade**: Instead of reading static state files, `/zerg:status` could show live teammate sessions, their current task, elapsed time, and recent activity.
+5. **/mahabharatha:status upgrade**: Instead of reading static state files, `/mahabharatha:status` could show live teammate sessions, their current task, elapsed time, and recent activity.
 
 #### Critical Constraint
 
-Split-pane mode requires tmux or iTerm2. ZERG currently works in any terminal. Need graceful degradation:
+Split-pane mode requires tmux or iTerm2. MAHABHARATHA currently works in any terminal. Need graceful degradation:
 - tmux/iTerm2 available → split-pane mode
 - Neither available → in-process mode (still interactive, just tabbed)
 - `--headless` flag → current subprocess mode (CI/CD compatibility)
 
-**ZERG must not LOSE the headless/CI mode.** Agent Teams is designed for interactive use. ZERG must support BOTH modes.
+**MAHABHARATHA must not LOSE the headless/CI mode.** Agent Teams is designed for interactive use. MAHABHARATHA must support BOTH modes.
 
 ---
 
 ### Dimension 8: New Command Opportunities
 
-With Agent Teams, ZERG could introduce or transform several commands:
+With Agent Teams, MAHABHARATHA could introduce or transform several commands:
 
-#### /zerg:debate (NEW)
+#### /mahabharatha:debate (NEW)
 - Spawn adversarial teammates to debate a design decision
 - Each teammate advocates for a different approach
 - Lead synthesizes findings into a recommendation
 - Use case: "Should we use REST or GraphQL for this API?"
 - Maps directly to Agent Teams' "competing hypotheses" pattern
 
-#### /zerg:pair (NEW)
+#### /mahabharatha:pair (NEW)
 - Two-agent pair programming
 - One writes code, other reviews in real-time
 - Continuous feedback loop
 - Low overhead, high quality
 
-#### /zerg:review (ENHANCED)
+#### /mahabharatha:review (ENHANCED)
 - Currently: single-pass review
 - With teams: spawn specialized reviewers (security, perf, tests, architecture)
 - Reviewers challenge each other's findings
 - Lead produces comprehensive review report
 - Maps to Agent Teams' "parallel code review" use case
 
-#### /zerg:debug (ENHANCED)
+#### /mahabharatha:debug (ENHANCED)
 - Currently: single-threaded investigation
 - With teams: spawn investigators with different hypotheses
 - Investigators share evidence and disprove each other
 - Faster convergence on root cause
 - Maps to Agent Teams' "competing hypotheses" use case
 
-#### /zerg:brainstorm (ENHANCED)
+#### /mahabharatha:brainstorm (ENHANCED)
 - Currently: single-session brainstorming
 - With teams: multiple perspectives exploring simultaneously
 - UX researcher + technical architect + devil's advocate pattern
 - Richer exploration of problem space
 
-#### /zerg:rush (TRANSFORMED)
+#### /mahabharatha:kurukshetra (TRANSFORMED)
 - Currently: subprocess launcher with opaque workers
 - With teams: interactive teammates with live visibility
 - Plan approval before implementation
@@ -379,15 +379,15 @@ Given everything above, the right approach is a **layered migration**, not a rip
 #### Phase 1: Adapter Layer (Low risk, high value)
 - Add `AgentTeamLauncher` alongside existing `SubprocessLauncher` and `ContainerLauncher`
 - `--mode` flag gets new option: `--mode team` (alongside `subprocess` and `container`)
-- `AgentTeamLauncher` translates ZERG's task-graph into Agent Teams task list
+- `AgentTeamLauncher` translates MAHABHARATHA's task-graph into Agent Teams task list
 - Spawn prompt generated from task-scoped context (reuse context engineering)
 - Existing commands work unchanged — just a new execution backend
 
 #### Phase 2: Hook Integration (Medium risk, high value)
 - Implement `TaskCompleted` hook for per-task quality gates
 - Implement `TeammateIdle` hook for work reassignment
-- Configure hooks in `.zerg/config.yaml`
-- Hook scripts wrap ZERG's existing gate runner
+- Configure hooks in `.mahabharatha/config.yaml`
+- Hook scripts wrap MAHABHARATHA's existing gate runner
 - Self-healing: workers fix their own gate failures
 
 #### Phase 3: Plan Approval (Medium risk, high value)
@@ -405,8 +405,8 @@ Given everything above, the right approach is a **layered migration**, not a rip
 
 #### Phase 5: Communication & New Commands (High complexity, transformative)
 - Enable worker-to-worker messaging for coordination
-- New commands: `/zerg:debate`, `/zerg:pair`
-- Enhanced: `/zerg:review`, `/zerg:debug`
+- New commands: `/mahabharatha:debate`, `/mahabharatha:pair`
+- Enhanced: `/mahabharatha:review`, `/mahabharatha:debug`
 - Communication budget tracking
 - Spawn prompt optimization
 - Live dashboard
@@ -416,7 +416,7 @@ Given everything above, the right approach is a **layered migration**, not a rip
 
 1. Keep `launcher.py` as an abstraction layer with multiple backends
 2. `AgentTeamLauncher` implements the same interface as other launchers
-3. ZERG's Task system maps 1:1 to Agent Teams' shared task list
+3. MAHABHARATHA's Task system maps 1:1 to Agent Teams' shared task list
 4. Context engineering generates spawn prompts instead of spec files
 5. Headless/CI mode preserved via subprocess backend
 6. Agent Teams mode is opt-in, not default (until stable)
@@ -425,11 +425,11 @@ Given everything above, the right approach is a **layered migration**, not a rip
 
 | Phase | New Files | Modified Files |
 |-------|-----------|----------------|
-| 1 | `zerg/launchers/agent_team_launcher.py` | `launcher_types.py`, `launcher_configurator.py`, `cli.py`, `orchestrator.py`, `context_plugin.py` |
-| 2 | Hook scripts in `.claude/hooks/`, `zerg/hooks/` | `gates.py`, `level_coordinator.py`, `worker_manager.py`, `state/manager.py` |
-| 3 | — | `context_plugin.py`, `capability_resolver.py`, `rush.core.md` |
-| 4 | `zerg/dag_executor.py` (or rearchitect `level_coordinator.py`) | `merge.py`, `task_sync.py`, `orchestrator.py`, `config.py` |
-| 5 | `zerg/messaging.py`, `debate.md`, `pair.md` | `context_plugin.py`, `capability_resolver.py`, `spec_loader.py`, `status.core.md`, `review.md`, `debug.core.md` |
+| 1 | `mahabharatha/launchers/agent_team_launcher.py` | `launcher_types.py`, `launcher_configurator.py`, `cli.py`, `orchestrator.py`, `context_plugin.py` |
+| 2 | Hook scripts in `.claude/hooks/`, `mahabharatha/hooks/` | `gates.py`, `level_coordinator.py`, `worker_manager.py`, `state/manager.py` |
+| 3 | — | `context_plugin.py`, `capability_resolver.py`, `kurukshetra.core.md` |
+| 4 | `mahabharatha/dag_executor.py` (or rearchitect `level_coordinator.py`) | `merge.py`, `task_sync.py`, `orchestrator.py`, `config.py` |
+| 5 | `mahabharatha/messaging.py`, `debate.md`, `pair.md` | `context_plugin.py`, `capability_resolver.py`, `spec_loader.py`, `status.core.md`, `review.md`, `debug.core.md` |
 
 ---
 
@@ -440,48 +440,48 @@ Given everything above, the right approach is a **layered migration**, not a rip
 | Risk | Severity | Probability | Mitigation |
 |------|----------|-------------|------------|
 | Agent Teams experimental, API may change | High | Medium | `AgentTeamLauncher` behind stable ABC. Changes isolated to one file. Subprocess/container unchanged |
-| Token cost explosion | High | High | ZERG's context engineering as efficiency layer. Task-scoped prompts (4000 tokens). Communication budgets |
-| No session resumption | Medium | Certain | ZERG's spec-as-memory works. Crash recovery respawns from task state. NEW teammates for incomplete tasks |
-| One team per session | Low | Certain | ZERG already sequential. Natural alignment |
+| Token cost explosion | High | High | MAHABHARATHA's context engineering as efficiency layer. Task-scoped prompts (4000 tokens). Communication budgets |
+| No session resumption | Medium | Certain | MAHABHARATHA's spec-as-memory works. Crash recovery respawns from task state. NEW teammates for incomplete tasks |
+| One team per session | Low | Certain | MAHABHARATHA already sequential. Natural alignment |
 | No nested teams | Low | Certain | Workers are leaf nodes — no sub-teams needed |
-| Lead is fixed | Low | Certain | ZERG's orchestrator IS the lead. Natural alignment |
-| Permissions inherit from lead | Medium | Certain | ZERG assumes `--dangerously-skip-permissions`. File ownership enforced by convention + gates |
+| Lead is fixed | Low | Certain | MAHABHARATHA's orchestrator IS the lead. Natural alignment |
+| Permissions inherit from lead | Medium | Certain | MAHABHARATHA assumes `--dangerously-skip-permissions`. File ownership enforced by convention + gates |
 | Split-pane not everywhere | Low | Certain | In-process mode works in any terminal. Split-pane is bonus |
 | Merge complexity with DAG | High | Medium | Phase 4 is last. Start with level barriers in team mode (Phases 1-3), evolve |
 | Programmatic control unknown | High | Unknown | **Must investigate before Phase 1**: can Python spawn teammates? |
 
 #### Critical Limitation to Address
 
-Agent Teams teammates load CLAUDE.md automatically. ZERG's CLAUDE.md is large and contains security rules, command documentation, etc. This is GOOD (teammates get all project context) but means higher baseline token usage per teammate.
+Agent Teams teammates load CLAUDE.md automatically. MAHABHARATHA's CLAUDE.md is large and contains security rules, command documentation, etc. This is GOOD (teammates get all project context) but means higher baseline token usage per teammate.
 
 #### Key Alignment Discovery
 
-Re-reading the Agent Teams doc: "Shared task list: all agents can see task status and claim available work" stored at `~/.claude/tasks/{team-name}/` — this IS the Claude Code Task system. Agent Teams USES `TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`. This is PERFECT alignment with ZERG's existing Task ecosystem requirement. ZERG already mandates Claude Code Tasks as source of truth. Agent Teams uses the same system. They're built for each other.
+Re-reading the Agent Teams doc: "Shared task list: all agents can see task status and claim available work" stored at `~/.claude/tasks/{team-name}/` — this IS the Claude Code Task system. Agent Teams USES `TaskCreate`/`TaskUpdate`/`TaskList`/`TaskGet`. This is PERFECT alignment with MAHABHARATHA's existing Task ecosystem requirement. MAHABHARATHA already mandates Claude Code Tasks as source of truth. Agent Teams uses the same system. They're built for each other.
 
 ---
 
 ### Dimension 11: Synthesis — The Big Picture
 
-ZERG was built before Agent Teams existed. It reimplemented many primitives. But ZERG also has capabilities Agent Teams DOESN'T:
+MAHABHARATHA was built before Agent Teams existed. It reimplemented many primitives. But MAHABHARATHA also has capabilities Agent Teams DOESN'T:
 
-| ZERG-Only Capability | Why It Matters |
+| MAHABHARATHA-Only Capability | Why It Matters |
 |----------------------|----------------|
-| Task graph generation from specs | Agent Teams gives you teammates. ZERG tells you WHAT tasks to give them |
-| Context engineering for token efficiency | Agent Teams loads full context. ZERG injects task-scoped context |
-| File ownership model | Agent Teams lets teammates do anything. ZERG enforces file boundaries |
-| Level-based execution with merge gates | Agent Teams has no merge concept. ZERG manages branch integration |
-| Container execution mode | Agent Teams is interactive only. ZERG works in Docker |
+| Task graph generation from specs | Agent Teams gives you teammates. MAHABHARATHA tells you WHAT tasks to give them |
+| Context engineering for token efficiency | Agent Teams loads full context. MAHABHARATHA injects task-scoped context |
+| File ownership model | Agent Teams lets teammates do anything. MAHABHARATHA enforces file boundaries |
+| Level-based execution with merge gates | Agent Teams has no merge concept. MAHABHARATHA manages branch integration |
+| Container execution mode | Agent Teams is interactive only. MAHABHARATHA works in Docker |
 | Cross-cutting capabilities (TDD, security, loops) | Agent Teams has no concept of behavioral modes |
-| Crash-safe resume | Agent Teams can't resume teammates. ZERG respawns from state |
+| Crash-safe resume | Agent Teams can't resume teammates. MAHABHARATHA respawns from state |
 | CLI interface for non-interactive use | Agent Teams requires interactive terminal |
 
-#### ZERG's Unique Value WITH Agent Teams
+#### MAHABHARATHA's Unique Value WITH Agent Teams
 
-1. **Intelligent task decomposition**: Agent Teams gives you teammates. ZERG tells you WHAT tasks to give them and in what order.
-2. **Optimized context**: Agent Teams loads full context. ZERG injects task-scoped context for efficiency.
-3. **Architectural guardrails**: Agent Teams lets teammates do anything. ZERG enforces file ownership, quality gates, spec compliance.
-4. **Workflow orchestration**: Agent Teams coordinates one team. ZERG orchestrates plan → design → execute → merge → verify.
-5. **Multi-mode execution**: Agent Teams = interactive only. ZERG = interactive, headless, container, CI/CD.
+1. **Intelligent task decomposition**: Agent Teams gives you teammates. MAHABHARATHA tells you WHAT tasks to give them and in what order.
+2. **Optimized context**: Agent Teams loads full context. MAHABHARATHA injects task-scoped context for efficiency.
+3. **Architectural guardrails**: Agent Teams lets teammates do anything. MAHABHARATHA enforces file ownership, quality gates, spec compliance.
+4. **Workflow orchestration**: Agent Teams coordinates one team. MAHABHARATHA orchestrates plan → design → execute → merge → verify.
+5. **Multi-mode execution**: Agent Teams = interactive only. MAHABHARATHA = interactive, headless, container, CI/CD.
 
 #### Summary of All Improvements
 
@@ -493,15 +493,15 @@ ZERG was built before Agent Teams existed. It reimplemented many primitives. But
 | 4 | Plan approval (architectural consistency) | 3 | High | Medium |
 | 5 | DAG execution (break level barriers) | 4 | Very High | High |
 | 6 | Inter-agent communication | 5 | Transformative | High |
-| 7 | /zerg:debate (adversarial design) | 5 | Medium | Medium |
-| 8 | /zerg:pair (pair programming) | 5 | Medium | Medium |
-| 9 | Enhanced /zerg:review (reviewer panels) | 5 | High | Medium |
-| 10 | Enhanced /zerg:debug (competing hypotheses) | 5 | High | Medium |
+| 7 | /mahabharatha:debate (adversarial design) | 5 | Medium | Medium |
+| 8 | /mahabharatha:pair (pair programming) | 5 | Medium | Medium |
+| 9 | Enhanced /mahabharatha:review (reviewer panels) | 5 | High | Medium |
+| 10 | Enhanced /mahabharatha:debug (competing hypotheses) | 5 | High | Medium |
 | 11 | Spawn prompt optimization | 5 | High | Medium |
 | 12 | Live observability dashboard | 5 | Medium | Low |
 | 13 | Delegate mode for lead | 5 | Low | Low |
 
-This positions ZERG as the premier orchestration framework for Claude Code, with Agent Teams as a native execution backend alongside subprocess and container modes.
+This positions MAHABHARATHA as the premier orchestration framework for Claude Code, with Agent Teams as a native execution backend alongside subprocess and container modes.
 
 ---
 
@@ -576,13 +576,13 @@ These must be answered before implementation begins:
 
 ### Critical (Block Phase 1)
 
-1. **Programmatic spawning**: Can ZERG's Python orchestrator programmatically spawn Agent Teams teammates? Or must the lead session do this via natural language prompts? This determines whether `AgentTeamLauncher` can implement the full `WorkerLauncher` interface.
+1. **Programmatic spawning**: Can MAHABHARATHA's Python orchestrator programmatically spawn Agent Teams teammates? Or must the lead session do this via natural language prompts? This determines whether `AgentTeamLauncher` can implement the full `WorkerLauncher` interface.
 
-2. **Task list ID scoping**: Agent Teams uses `~/.claude/tasks/{team-name}/`. ZERG uses `CLAUDE_CODE_TASK_LIST_ID`. How do these interact? Can ZERG control which task list the team uses?
+2. **Task list ID scoping**: Agent Teams uses `~/.claude/tasks/{team-name}/`. MAHABHARATHA uses `CLAUDE_CODE_TASK_LIST_ID`. How do these interact? Can MAHABHARATHA control which task list the team uses?
 
 ### Important (Block Phase 2)
 
-3. **Hook execution environment**: Where do `TaskCompleted`/`TeammateIdle` hooks run? In the lead's process? As separate scripts? Can they access `.zerg/state/` and invoke `GateRunner`?
+3. **Hook execution environment**: Where do `TaskCompleted`/`TeammateIdle` hooks run? In the lead's process? As separate scripts? Can they access `.mahabharatha/state/` and invoke `GateRunner`?
 
 4. **Hook metadata format**: What metadata do hooks receive? Task ID? Subject? Modified files? This determines what the hook script can do.
 
@@ -600,4 +600,4 @@ These must be answered before implementation begins:
 
 9. **Agent Teams API stability timeline**: When does experimental graduate to stable? What breaking changes expected?
 
-10. **Token measurement across teammates**: Agent Teams has no built-in cross-teammate token tracking. How does ZERG's `TokenTracker` extend?
+10. **Token measurement across teammates**: Agent Teams has no built-in cross-teammate token tracking. How does MAHABHARATHA's `TokenTracker` extend?

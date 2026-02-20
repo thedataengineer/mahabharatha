@@ -1,21 +1,21 @@
-# /zerg:hooks
+# /mahabharatha:hooks
 
-Install or check ZERG pre-commit hooks.
+Install or check MAHABHARATHA pre-commit hooks.
 
 ## Usage
 
 ```bash
 # Install hooks to .git/hooks/
-zerg hooks install
+mahabharatha hooks install
 
 # Check hook status
-zerg hooks status
+mahabharatha hooks status
 
 # Run hooks manually on staged files
-zerg hooks run
+mahabharatha hooks run
 
 # Uninstall hooks
-zerg hooks uninstall
+mahabharatha hooks uninstall
 ```
 
 ## What the Hook Checks
@@ -44,12 +44,12 @@ zerg hooks uninstall
 | Merge markers | `<<<<<<<`, `=======`, `>>>>>>>` |
 | Large files | >5MB |
 
-### ZERG-Specific (Warns Only)
+### MAHABHARATHA-Specific (Warns Only)
 
 | Check | Validation |
 |-------|------------|
-| Branch naming | `zerg/{feature}/worker-{N}` |
-| Print statements | `print()` in `zerg/` directory |
+| Branch naming | `mahabharatha/{feature}/worker-{N}` |
+| Print statements | `print()` in `mahabharatha/` directory |
 | Hardcoded localhost | `localhost:PORT` outside tests |
 
 ## Exempt Paths
@@ -61,7 +61,7 @@ zerg hooks uninstall
 
 ## Configuration
 
-In `.zerg/config.yaml`:
+In `.mahabharatha/config.yaml`:
 
 ```yaml
 hooks:
@@ -78,6 +78,6 @@ hooks:
 
 ## Related
 
-- `zerg/security.py`: HOOK_PATTERNS definitions
-- `.zerg/hooks/pre-commit`: Hook script
+- `mahabharatha/security.py`: HOOK_PATTERNS definitions
+- `.mahabharatha/hooks/pre-commit`: Hook script
 - `tests/unit/test_hooks.py`: Pattern tests

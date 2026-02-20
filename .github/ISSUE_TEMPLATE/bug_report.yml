@@ -1,5 +1,5 @@
 name: Bug Report
-description: Report a bug in ZERG
+description: Report a bug in MAHABHARATHA
 labels: ["bug"]
 
 body:
@@ -45,8 +45,8 @@ body:
   - type: input
     id: zerg_version
     attributes:
-      label: ZERG Version
-      description: What version of ZERG are you using?
+      label: MAHABHARATHA Version
+      description: What version of MAHABHARATHA are you using?
       placeholder: "e.g., 0.2.0 or git hash"
     validations:
       required: true

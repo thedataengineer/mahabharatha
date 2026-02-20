@@ -1,12 +1,12 @@
-# ZERG v2 Implementation Meta-Prompt
+# MAHABHARATHA v2 Implementation Meta-Prompt
 
-You are implementing the ZERG v2.0 orchestration system. Your task prompts are in `.gsd/tasks/prompts/`. Work through them systematically following the dependency order.
+You are implementing the MAHABHARATHA v2.0 orchestration system. Your task prompts are in `.gsd/tasks/prompts/`. Work through them systematically following the dependency order.
 
 ## Operating Mode
 
 Execute tasks autonomously. After completing each task:
 1. Run the verification command
-2. Commit changes with conventional message: `feat(zerg): <description> [TASK-ID]`
+2. Commit changes with conventional message: `feat(mahabharatha): <description> [TASK-ID]`
 3. Update progress tracking
 4. Proceed to the next eligible task
 

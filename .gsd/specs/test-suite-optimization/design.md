@@ -11,7 +11,7 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Optimize the ZERG test suite (7,634 tests / 128K LOC) by implementing test tiering via pytest markers, parameterizing repetitive tests, consolidating fragmented test files, and updating quality gate configurations. Target: reduce CI time from 8-10 minutes to < 2 minutes while maintaining 80% coverage.
+Optimize the MAHABHARATHA test suite (7,634 tests / 128K LOC) by implementing test tiering via pytest markers, parameterizing repetitive tests, consolidating fragmented test files, and updating quality gate configurations. Target: reduce CI time from 8-10 minutes to < 2 minutes while maintaining 80% coverage.
 
 ### 1.2 Goals
 - Implement three-tier test execution (smoke < 30s, fast < 90s, full < 10min)
@@ -63,7 +63,7 @@ Optimize the ZERG test suite (7,634 tests / 128K LOC) by implementing test tieri
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
 | Pytest Markers | Define test tiers | pyproject.toml, conftest.py |
-| Gate Config | Configure quality gates | .zerg/config.yaml |
+| Gate Config | Configure quality gates | .mahabharatha/config.yaml |
 | CI Workflow | Run tiered tests | .github/workflows/pytest.yml |
 | Smoke Tests | Critical path coverage | tests/unit/test_{config,state,validation,constants}.py |
 | Parameterized Tests | Consolidate repetitive tests | tests/unit/test_debug_cmd.py |
@@ -214,7 +214,7 @@ def test_analyze_detects_pattern(self, error_input, expected_pattern):
 |------|---------|-----------|
 | pyproject.toml | TASK-001 | modify |
 | tests/conftest.py | TASK-001 | modify |
-| .zerg/config.yaml | TASK-002 | modify |
+| .mahabharatha/config.yaml | TASK-002 | modify |
 | .github/workflows/pytest.yml | TASK-003 | modify |
 | tests/unit/test_config.py | TASK-004 | modify |
 | tests/unit/test_state.py | TASK-004 | modify |
@@ -264,14 +264,14 @@ graph TD
 
 ### 7.2 Integration Tests
 - CI workflow tested via GitHub Actions
-- Quality gates tested via `/zerg:rush --dry-run`
+- Quality gates tested via `/mahabharatha:kurukshetra --dry-run`
 
 ### 7.3 Verification Commands
 
 | Task | Verification Command |
 |------|---------------------|
 | TASK-001 | `pytest --markers \| grep -E "smoke\|slow"` |
-| TASK-002 | `python -c "from zerg.config import ZergConfig; c=ZergConfig(); print([g.name for g in c.quality_gates])"` |
+| TASK-002 | `python -c "from mahabharatha.config import ZergConfig; c=ZergConfig(); print([g.name for g in c.quality_gates])"` |
 | TASK-003 | `grep -q "smoke" .github/workflows/pytest.yml && echo "OK"` |
 | TASK-004 | `pytest -m smoke --collect-only \| grep "test session starts"` |
 | TASK-005 | `pytest tests/unit/test_debug_cmd.py -v --collect-only \| grep -c "test_analyze"` |

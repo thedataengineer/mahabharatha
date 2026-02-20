@@ -1,4 +1,4 @@
-"""Security pattern registry for ZERG.
+"""Security pattern registry for MAHABHARATHA.
 
 Declarative pattern definitions for 15 capability areas. Capabilities 7 (CVE
 scanning) and 10 (git history scanning) are handled by cve.py and scanner.py

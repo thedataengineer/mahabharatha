@@ -1,4 +1,4 @@
-"""Unit tests for ZERG exceptions module."""
+"""Unit tests for MAHABHARATHA exceptions module."""
 
 import pytest
 

@@ -1,4 +1,4 @@
-# Research: ZERG Website
+# Research: MAHABHARATHA Website
 
 ## Reference Sites
 
@@ -30,19 +30,19 @@ Source: Evil Martians study of 100+ pages
 - Code examples are expected and essential
 - Mobile-first responsive design
 
-## Zerg Visual Aesthetic
+## Mahabharatha Visual Aesthetic
 - Primary palette: deep purple, toxic green, amber/orange
 - Creep: viscous purple substance, organic carpet
 - Structures = giant organs, invertebrate/crustacean/insect inspired
 - Hard shells, tentacles, reptilian textures
 - Purple = foreign, mystical, alien
-- Green = nature, wild, constantly evolving (Primal Zerg)
-- Key visual motifs: hive clusters, creep spread, swarm patterns
+- Green = nature, wild, constantly evolving (Primal Mahabharatha)
+- Key visual motifs: hive clusters, creep spread, akshauhini patterns
 
 ## Current Setup
 - MkDocs Material theme deployed via GitHub Pages
 - docs.yml workflow: push to main → build → deploy
-- URL: https://rocklambros.github.io/zerg/
+- URL: https://rocklambros.github.io/mahabharatha/
 - Existing palette: deep purple primary, amber accent
 - Logo: logo/zerg_logo.png
 - Content: commands, tutorial, config, plugins, architecture docs

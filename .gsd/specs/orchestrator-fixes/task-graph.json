@@ -12,7 +12,7 @@
       "files": {
         "create": ["tests/unit/test_schema_validation.py"],
         "modify": [],
-        "read": ["zerg/validation.py", "zerg/schemas/task_graph.json"]
+        "read": ["mahabharatha/validation.py", "mahabharatha/schemas/task_graph.json"]
       },
       "verification": {
         "command": "python -c \"import tests.unit.test_schema_validation; print('Test module created')\"",
@@ -28,7 +28,7 @@
       "files": {
         "create": ["tests/unit/test_worker_lifecycle.py"],
         "modify": [],
-        "read": ["zerg/orchestrator.py", "zerg/launcher.py"]
+        "read": ["mahabharatha/orchestrator.py", "mahabharatha/launcher.py"]
       },
       "verification": {
         "command": "python -c \"import tests.unit.test_worker_lifecycle; print('Test module created')\"",
@@ -44,7 +44,7 @@
       "files": {
         "create": ["tests/unit/test_state_sync.py"],
         "modify": [],
-        "read": ["zerg/orchestrator.py", "zerg/launcher.py"]
+        "read": ["mahabharatha/orchestrator.py", "mahabharatha/launcher.py"]
       },
       "verification": {
         "command": "python -c \"import tests.unit.test_state_sync; print('Test module created')\"",
@@ -54,13 +54,13 @@
     {
       "id": "OFX-004",
       "title": "Create orchestrator integration tests",
-      "description": "TDD: Create end-to-end tests for worker lifecycle, level transitions, failure recovery, initialization wait. Tests should define expected behavior for full rush cycle.",
+      "description": "TDD: Create end-to-end tests for worker lifecycle, level transitions, failure recovery, initialization wait. Tests should define expected behavior for full kurukshetra cycle.",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": ["tests/integration/test_orchestrator_fixes.py"],
         "modify": [],
-        "read": ["zerg/orchestrator.py", "zerg/launcher.py", "zerg/worktree.py"]
+        "read": ["mahabharatha/orchestrator.py", "mahabharatha/launcher.py", "mahabharatha/worktree.py"]
       },
       "verification": {
         "command": "python -c \"import tests.integration.test_orchestrator_fixes; print('Test module created')\"",
@@ -70,29 +70,29 @@
     {
       "id": "OFX-005",
       "title": "Consolidate schema definitions",
-      "description": "Update zerg/schemas/task_graph.json to be single source of truth: level >= 1, files optional but validated as arrays. Archive old schema to .zerg/schemas/archived/task-graph.schema.json and add archived/ to .gitignore. Update .zerg/task_graph.py to not load old schema.",
+      "description": "Update mahabharatha/schemas/task_graph.json to be single source of truth: level >= 1, files optional but validated as arrays. Archive old schema to .mahabharatha/schemas/archived/task-graph.schema.json and add archived/ to .gitignore. Update .mahabharatha/task_graph.py to not load old schema.",
       "level": 2,
       "dependencies": ["OFX-001"],
       "files": {
-        "create": [".zerg/schemas/archived/task-graph.schema.json"],
-        "modify": ["zerg/schemas/task_graph.json", ".zerg/task_graph.py", ".gitignore"],
-        "read": [".zerg/schemas/task-graph.schema.json"]
+        "create": [".mahabharatha/schemas/archived/task-graph.schema.json"],
+        "modify": ["mahabharatha/schemas/task_graph.json", ".mahabharatha/task_graph.py", ".gitignore"],
+        "read": [".mahabharatha/schemas/task-graph.schema.json"]
       },
       "verification": {
-        "command": "python -c \"import json; s=json.load(open('zerg/schemas/task_graph.json')); assert s['definitions']['task']['properties']['level']['minimum'] == 1; print('Schema consolidated')\"",
+        "command": "python -c \"import json; s=json.load(open('mahabharatha/schemas/task_graph.json')); assert s['definitions']['task']['properties']['level']['minimum'] == 1; print('Schema consolidated')\"",
         "timeout_seconds": 30
       }
     },
     {
       "id": "OFX-006",
       "title": "Update validation module",
-      "description": "Update zerg/validation.py to: 1) Add explicit level >= 1 check with clear error message, 2) Improve files structure validation, 3) Add schema version checking, 4) Improve error messages. Should make OFX-001 tests pass.",
+      "description": "Update mahabharatha/validation.py to: 1) Add explicit level >= 1 check with clear error message, 2) Improve files structure validation, 3) Add schema version checking, 4) Improve error messages. Should make OFX-001 tests pass.",
       "level": 2,
       "dependencies": ["OFX-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/validation.py"],
-        "read": ["zerg/schemas/task_graph.json"]
+        "modify": ["mahabharatha/validation.py"],
+        "read": ["mahabharatha/schemas/task_graph.json"]
       },
       "verification": {
         "command": "pytest tests/unit/test_schema_validation.py -v --tb=short",
@@ -107,8 +107,8 @@
       "dependencies": ["OFX-002"],
       "files": {
         "create": [],
-        "modify": ["zerg/orchestrator.py"],
-        "read": ["zerg/worktree.py"]
+        "modify": ["mahabharatha/orchestrator.py"],
+        "read": ["mahabharatha/worktree.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_worker_lifecycle.py -v --tb=short",
@@ -123,7 +123,7 @@
       "dependencies": ["OFX-003"],
       "files": {
         "create": [],
-        "modify": ["zerg/launcher.py"],
+        "modify": ["mahabharatha/launcher.py"],
         "read": []
       },
       "verification": {
@@ -134,16 +134,16 @@
     {
       "id": "OFX-009",
       "title": "Update parser integration",
-      "description": "Remove any jsonschema calls to old schema in zerg/parser.py. Use validate_task_graph() only. Ensure backward compatibility with existing task graphs.",
+      "description": "Remove any jsonschema calls to old schema in mahabharatha/parser.py. Use validate_task_graph() only. Ensure backward compatibility with existing task graphs.",
       "level": 3,
       "dependencies": ["OFX-005", "OFX-006"],
       "files": {
         "create": [],
-        "modify": ["zerg/parser.py"],
-        "read": ["zerg/validation.py"]
+        "modify": ["mahabharatha/parser.py"],
+        "read": ["mahabharatha/validation.py"]
       },
       "verification": {
-        "command": "python -c \"from zerg.parser import TaskParser; print('Parser updated')\"",
+        "command": "python -c \"from mahabharatha.parser import TaskParser; print('Parser updated')\"",
         "timeout_seconds": 30
       }
     },
@@ -155,34 +155,34 @@
       "dependencies": ["OFX-005", "OFX-006"],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/design.py"],
-        "read": ["zerg/validation.py"]
+        "modify": ["mahabharatha/commands/design.py"],
+        "read": ["mahabharatha/validation.py"]
       },
       "verification": {
-        "command": "python -c \"from zerg.commands.design import create_task_graph; print('Design command updated')\"",
+        "command": "python -c \"from mahabharatha.commands.design import create_task_graph; print('Design command updated')\"",
         "timeout_seconds": 30
       }
     },
     {
       "id": "OFX-011",
       "title": "Update skill documentation",
-      "description": "Update zerg:rush.md and zerg:design.md skills with: 1) Schema requirements (level >= 1), 2) Files structure format {create, modify, read}, 3) Dependency rules (must be lower level), 4) File ownership rules.",
+      "description": "Update mahabharatha:kurukshetra.md and mahabharatha:design.md skills with: 1) Schema requirements (level >= 1), 2) Files structure format {create, modify, read}, 3) Dependency rules (must be lower level), 4) File ownership rules.",
       "level": 4,
       "dependencies": ["OFX-010"],
       "files": {
         "create": [],
-        "modify": [".claude/commands/zerg:rush.md", ".claude/commands/zerg:design.md"],
+        "modify": [".claude/commands/mahabharatha:kurukshetra.md", ".claude/commands/mahabharatha:design.md"],
         "read": []
       },
       "verification": {
-        "command": "grep -q 'level >= 1\\|level must be' .claude/commands/zerg:design.md && echo 'Skills updated'",
+        "command": "grep -q 'level >= 1\\|level must be' .claude/commands/mahabharatha:design.md && echo 'Skills updated'",
         "timeout_seconds": 30
       }
     },
     {
       "id": "OFX-012",
       "title": "Final integration tests",
-      "description": "Create comprehensive integration tests: 1) Full rush cycle test, 2) Schema validation end-to-end, 3) Worker lifecycle end-to-end. Run all tests to verify fixes.",
+      "description": "Create comprehensive integration tests: 1) Full kurukshetra cycle test, 2) Schema validation end-to-end, 3) Worker lifecycle end-to-end. Run all tests to verify fixes.",
       "level": 5,
       "dependencies": ["OFX-004", "OFX-007", "OFX-008", "OFX-009", "OFX-010", "OFX-011"],
       "files": {

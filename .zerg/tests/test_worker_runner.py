@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 Worker Runner with TDD Protocol."""
+"""Tests for MAHABHARATHA v2 Worker Runner with TDD Protocol."""
 
 import sys
 from pathlib import Path

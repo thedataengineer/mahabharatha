@@ -1,20 +1,20 @@
-# /zerg:security
+# /mahabharatha:security
 
 Security review, vulnerability scanning, secure coding rules, and hardening recommendations.
 
 ## Synopsis
 
 ```
-/zerg:security [--preset owasp|pci|hipaa|soc2]
+/mahabharatha:security [--preset owasp|pci|hipaa|soc2]
                [--autofix]
                [--format text|json|sarif]
 ```
 
 ```
-/zerg:security-rules detect
-/zerg:security-rules list
-/zerg:security-rules fetch
-/zerg:security-rules integrate
+/mahabharatha:security-rules detect
+/mahabharatha:security-rules list
+/mahabharatha:security-rules fetch
+/mahabharatha:security-rules integrate
 ```
 
 ## Description
@@ -31,7 +31,7 @@ Runs security scans against the codebase using the selected compliance preset. C
 
 ### Secure Coding Rules
 
-ZERG integrates with [TikiTribe/claude-secure-coding-rules](https://github.com/TikiTribe/claude-secure-coding-rules) to provide stack-specific security guidance. The subcommands manage rule lifecycle:
+MAHABHARATHA integrates with [TikiTribe/claude-secure-coding-rules](https://github.com/TikiTribe/claude-secure-coding-rules) to provide stack-specific security guidance. The subcommands manage rule lifecycle:
 
 - `detect` -- Automatically detect the project technology stack (languages, frameworks, databases, infrastructure, AI/ML).
 - `list` -- List all rules relevant to the detected stack.
@@ -71,33 +71,33 @@ Rules fetched depend on the detected stack:
 Run an OWASP scan with defaults:
 
 ```
-/zerg:security
+/mahabharatha:security
 ```
 
 Run a PCI compliance check:
 
 ```
-/zerg:security --preset pci
+/mahabharatha:security --preset pci
 ```
 
 Scan with auto-fix suggestions:
 
 ```
-/zerg:security --autofix
+/mahabharatha:security --autofix
 ```
 
 Generate SARIF output for IDE integration:
 
 ```
-/zerg:security --format sarif > security.sarif
+/mahabharatha:security --format sarif > security.sarif
 ```
 
 Detect the project stack and fetch matching rules:
 
 ```
-/zerg:security-rules detect
-/zerg:security-rules fetch
-/zerg:security-rules integrate
+/mahabharatha:security-rules detect
+/mahabharatha:security-rules fetch
+/mahabharatha:security-rules integrate
 ```
 
 ## Exit Codes
@@ -114,6 +114,6 @@ This command creates a Claude Code Task with the subject prefix `[Security]` on 
 
 ## See Also
 
-- [[zerg-analyze]] -- General static analysis including a security check type
-- [[zerg-review]] -- Code review with security considerations
-- [[zerg-build]] -- Build verification after applying security fixes
+- [[mahabharatha-analyze]] -- General static analysis including a security check type
+- [[mahabharatha-review]] -- Code review with security considerations
+- [[mahabharatha-build]] -- Build verification after applying security fixes

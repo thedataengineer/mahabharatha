@@ -9,25 +9,25 @@
     {
       "id": "BS-001",
       "title": "Create brainstorm command files",
-      "description": "Create brainstorm.md, brainstorm.core.md, and brainstorm.details.md following ZERG command patterns. Core file includes: flags, pre-flight, task tracking (TaskCreate/TaskUpdate), 4-phase workflow overview, completion criteria, help text. Details file includes: Socratic question templates (3 rounds x 3-4 questions), research analysis framework, issue template with gh CLI commands, output schemas (brainstorm.md, issues.json), example sessions. Main file mirrors core with SPLIT marker. Follow plan.core.md and plan.details.md as pattern references. Context management features: command splitting, scoped loading, session resumability, question batching.",
+      "description": "Create brainstorm.md, brainstorm.core.md, and brainstorm.details.md following MAHABHARATHA command patterns. Core file includes: flags, pre-flight, task tracking (TaskCreate/TaskUpdate), 4-phase workflow overview, completion criteria, help text. Details file includes: Socratic question templates (3 rounds x 3-4 questions), research analysis framework, issue template with gh CLI commands, output schemas (brainstorm.md, issues.json), example sessions. Main file mirrors core with SPLIT marker. Follow plan.core.md and plan.details.md as pattern references. Context management features: command splitting, scoped loading, session resumability, question batching.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [
-          "zerg/data/commands/brainstorm.md",
-          "zerg/data/commands/brainstorm.core.md",
-          "zerg/data/commands/brainstorm.details.md"
+          "mahabharatha/data/commands/brainstorm.md",
+          "mahabharatha/data/commands/brainstorm.core.md",
+          "mahabharatha/data/commands/brainstorm.details.md"
         ],
         "modify": [],
         "read": [
-          "zerg/data/commands/plan.core.md",
-          "zerg/data/commands/plan.details.md",
-          "zerg/data/commands/analyze.md"
+          "mahabharatha/data/commands/plan.core.md",
+          "mahabharatha/data/commands/plan.details.md",
+          "mahabharatha/data/commands/analyze.md"
         ]
       },
       "verification": {
-        "command": "test -f zerg/data/commands/brainstorm.md && test -f zerg/data/commands/brainstorm.core.md && test -f zerg/data/commands/brainstorm.details.md && grep -q 'SPLIT' zerg/data/commands/brainstorm.core.md && grep -q 'TaskCreate' zerg/data/commands/brainstorm.core.md && grep -q 'TaskUpdate' zerg/data/commands/brainstorm.core.md",
+        "command": "test -f mahabharatha/data/commands/brainstorm.md && test -f mahabharatha/data/commands/brainstorm.core.md && test -f mahabharatha/data/commands/brainstorm.details.md && grep -q 'SPLIT' mahabharatha/data/commands/brainstorm.core.md && grep -q 'TaskCreate' mahabharatha/data/commands/brainstorm.core.md && grep -q 'TaskUpdate' mahabharatha/data/commands/brainstorm.core.md",
         "timeout_seconds": 60
       },
       "context": "## Pattern Reference\nFollow plan.core.md structure exactly: SPLIT marker, title, flags, pre-flight bash, task tracking section, workflow phases, completion criteria, help.\n\n## Flags\n--rounds N (default 3, max 5) | --skip-research | --skip-issues | --dry-run | --resume | --help\n\n## Context Management\n1. Command splitting: .core.md (~30%) + .details.md (~70%)\n2. Scoped web research: 3-5 WebSearch queries, cache in .gsd/specs/brainstorm-{id}/research.md\n3. Incremental loading: PROJECT.md first, codebase only in Phase 2 if needed\n4. Session resumability: save state after each phase\n5. AskUserQuestion batching: 3-4 questions per round\n\n## Task Ecosystem\nTaskCreate '[Brainstorm] Discovery: {domain}' -> in_progress -> completed"
@@ -53,10 +53,10 @@
         "read": []
       },
       "verification": {
-        "command": "! grep -r '25 slash commands\\|25 commands\\|all 25\\|25 ZERG\\|list of 25\\|19 .*/zerg' docs/ README.md ARCHITECTURE.md CLAUDE.md CHANGELOG.md --include='*.md' | grep -v '.gsd/' | grep -v node_modules",
+        "command": "! grep -r '25 slash commands\\|25 commands\\|all 25\\|25 MAHABHARATHA\\|list of 25\\|19 .*/mahabharatha' docs/ README.md ARCHITECTURE.md CLAUDE.md CHANGELOG.md --include='*.md' | grep -v '.gsd/' | grep -v node_modules",
         "timeout_seconds": 60
       },
-      "context": "## Count Updates\nREADME.md lines 3,52,86,400,576: '25' -> '26'\nCHANGELOG.md line 27: '25 slash commands' -> '26 slash commands', add /zerg:brainstorm to list\ndocs/commands.md line 3: 'all 25' -> 'all 26'\ndocs/tutorial-minerals-store.md line 1557: 'all 25' -> 'all 26'\ndocs/context-engineering.md line 47: '9 total' -> '10 total'\n\n## New Content\ndocs/commands.md: Add /zerg:brainstorm section under Core Workflow between init and plan. Include synopsis, description, flags table, examples, output format.\nREADME.md: Add row to command overview table.\nARCHITECTURE.md ~line 407: Add row to CLI Commands table.\nCLAUDE.md: Add [Brainstorm] to task subject convention. Add /zerg:brainstorm to quick start.\nCHANGELOG.md [Unreleased]: Add brainstorm command entry."
+      "context": "## Count Updates\nREADME.md lines 3,52,86,400,576: '25' -> '26'\nCHANGELOG.md line 27: '25 slash commands' -> '26 slash commands', add /mahabharatha:brainstorm to list\ndocs/commands.md line 3: 'all 25' -> 'all 26'\ndocs/tutorial-minerals-store.md line 1557: 'all 25' -> 'all 26'\ndocs/context-engineering.md line 47: '9 total' -> '10 total'\n\n## New Content\ndocs/commands.md: Add /mahabharatha:brainstorm section under Core Workflow between init and plan. Include synopsis, description, flags table, examples, output format.\nREADME.md: Add row to command overview table.\nARCHITECTURE.md ~line 407: Add row to CLI Commands table.\nCLAUDE.md: Add [Brainstorm] to task subject convention. Add /mahabharatha:brainstorm to quick start.\nCHANGELOG.md [Unreleased]: Add brainstorm command entry."
     },
     {
       "id": "BS-003",
@@ -67,28 +67,28 @@
       "dependencies": [],
       "files": {
         "create": [
-          ".zerg/wiki/Command-brainstorm.md"
+          ".mahabharatha/wiki/Command-brainstorm.md"
         ],
         "modify": [
-          ".zerg/wiki/Command-Reference.md",
-          ".zerg/wiki/_Sidebar.md",
-          ".zerg/wiki/Home.md",
-          ".zerg/wiki/Quick-Start.md",
-          ".zerg/wiki/Your-First-Feature.md",
-          ".zerg/wiki/Getting-Started.md",
-          ".zerg/wiki/Tutorials.md",
-          ".zerg/wiki/Installation.md",
-          ".zerg/wiki/FAQ.md",
-          ".zerg/wiki/Glossary.md",
-          ".zerg/wiki/Context-Engineering.md",
-          ".zerg/wiki/Contributing.md"
+          ".mahabharatha/wiki/Command-Reference.md",
+          ".mahabharatha/wiki/_Sidebar.md",
+          ".mahabharatha/wiki/Home.md",
+          ".mahabharatha/wiki/Quick-Start.md",
+          ".mahabharatha/wiki/Your-First-Feature.md",
+          ".mahabharatha/wiki/Getting-Started.md",
+          ".mahabharatha/wiki/Tutorials.md",
+          ".mahabharatha/wiki/Installation.md",
+          ".mahabharatha/wiki/FAQ.md",
+          ".mahabharatha/wiki/Glossary.md",
+          ".mahabharatha/wiki/Context-Engineering.md",
+          ".mahabharatha/wiki/Contributing.md"
         ],
         "read": [
-          ".zerg/wiki/Command-plan.md"
+          ".mahabharatha/wiki/Command-plan.md"
         ]
       },
       "verification": {
-        "command": "test -f .zerg/wiki/Command-brainstorm.md && ! grep -r '25 commands\\|all 25\\|25 ZERG\\|list of 25\\|19 .*/zerg\\|all 19' .zerg/wiki/ --include='*.md' && grep -q 'brainstorm' .zerg/wiki/_Sidebar.md && grep -q 'brainstorm' .zerg/wiki/Command-Reference.md",
+        "command": "test -f .mahabharatha/wiki/Command-brainstorm.md && ! grep -r '25 commands\\|all 25\\|25 MAHABHARATHA\\|list of 25\\|19 .*/mahabharatha\\|all 19' .mahabharatha/wiki/ --include='*.md' && grep -q 'brainstorm' .mahabharatha/wiki/_Sidebar.md && grep -q 'brainstorm' .mahabharatha/wiki/Command-Reference.md",
         "timeout_seconds": 60
       },
       "context": "## New File: Command-brainstorm.md\nFollow Command-plan.md pattern: Synopsis, Description (4 phases), Options table, Examples (basic + advanced), Output section, Completion Criteria, See Also links.\n\n## Count Updates\nCommand-Reference.md line 2: '25' -> '26'\nHome.md line 80: '25' -> '26'\nContributing.md lines 87,363: '25' -> '26'\nYour-First-Feature.md line 412: '19' -> '26'\nContext-Engineering.md line 47: '9 total' -> '10 total'\n\n## Sidebar Placement\nAdd brainstorm between init and plan under Core Workflow:\n  * [[brainstorm|Command-brainstorm]]\n\n## Glossary Entry\nAdd under B section: 'Brainstorm' - discovery command description."
@@ -124,7 +124,7 @@
         "read": []
       },
       "verification": {
-        "command": "echo '=== Checking stale counts ===' && ! grep -rn '25 slash commands\\|25 commands\\|all 25\\|list of 25' --include='*.md' . | grep -v '.gsd/specs' | grep -v node_modules | grep -v '.git/' && echo '=== Checking brainstorm files ===' && test -f zerg/data/commands/brainstorm.md && test -f zerg/data/commands/brainstorm.core.md && test -f zerg/data/commands/brainstorm.details.md && test -f .zerg/wiki/Command-brainstorm.md && echo '=== Checking task ecosystem ===' && grep -q 'TaskCreate' zerg/data/commands/brainstorm.core.md && grep -q 'TaskUpdate' zerg/data/commands/brainstorm.core.md && echo '=== Checking SPLIT markers ===' && grep -q 'SPLIT.*core' zerg/data/commands/brainstorm.core.md && grep -q 'SPLIT.*details' zerg/data/commands/brainstorm.details.md && echo '=== All checks passed ==='",
+        "command": "echo '=== Checking stale counts ===' && ! grep -rn '25 slash commands\\|25 commands\\|all 25\\|list of 25' --include='*.md' . | grep -v '.gsd/specs' | grep -v node_modules | grep -v '.git/' && echo '=== Checking brainstorm files ===' && test -f mahabharatha/data/commands/brainstorm.md && test -f mahabharatha/data/commands/brainstorm.core.md && test -f mahabharatha/data/commands/brainstorm.details.md && test -f .mahabharatha/wiki/Command-brainstorm.md && echo '=== Checking task ecosystem ===' && grep -q 'TaskCreate' mahabharatha/data/commands/brainstorm.core.md && grep -q 'TaskUpdate' mahabharatha/data/commands/brainstorm.core.md && echo '=== Checking SPLIT markers ===' && grep -q 'SPLIT.*core' mahabharatha/data/commands/brainstorm.core.md && grep -q 'SPLIT.*details' mahabharatha/data/commands/brainstorm.details.md && echo '=== All checks passed ==='",
         "timeout_seconds": 120
       }
     }

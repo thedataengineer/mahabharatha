@@ -1,4 +1,4 @@
-# L4-TASK-001: /zerg:git Command
+# L4-TASK-001: /mahabharatha:git Command
 
 ## Objective
 
@@ -14,9 +14,9 @@ The git command provides smart git operations including the critical "finish" wo
 
 ```
 .claude/commands/
-└── zerg:git.md
+└── mahabharatha:git.md
 
-.zerg/
+.mahabharatha/
 └── git_ops.py
 ```
 
@@ -25,38 +25,38 @@ The git command provides smart git operations including the critical "finish" wo
 ### commit
 Intelligent commit with auto-generated conventional message:
 ```bash
-/zerg:git --action commit [--push]
+/mahabharatha:git --action commit [--push]
 ```
 
 ### branch
 Branch management:
 ```bash
-/zerg:git --action branch --name feature/auth
+/mahabharatha:git --action branch --name feature/auth
 ```
 
 ### merge
 Intelligent merge with conflict detection:
 ```bash
-/zerg:git --action merge --branch feature/auth --strategy squash
+/mahabharatha:git --action merge --branch feature/auth --strategy squash
 ```
 
 ### sync
 Synchronize with remote:
 ```bash
-/zerg:git --action sync
+/mahabharatha:git --action sync
 ```
 
 ### history
 Analyze and generate changelog:
 ```bash
-/zerg:git --action history --since v1.0.0
+/mahabharatha:git --action history --since v1.0.0
 ```
 
 ### finish (CRITICAL)
 Complete development branch with structured options:
 
 ```bash
-/zerg:git --action finish [--base main]
+/mahabharatha:git --action finish [--base main]
 ```
 
 **Finish Workflow**:
@@ -83,10 +83,10 @@ def finish_branch(branch: str, base: str = "main") -> FinishResult:
             blocked=True,
             reason=f"Tests failing ({test_result.failures} failures)"
         )
-    
+
     # Step 2: Present options
     choice = present_finish_options(branch, base)
-    
+
     # Step 3: Execute choice
     if choice == 1:  # Merge locally
         checkout(base)
@@ -94,14 +94,14 @@ def finish_branch(branch: str, base: str = "main") -> FinishResult:
         verify_tests()
         delete_branch(branch)
         cleanup_worktree(branch)
-        
+
     elif choice == 2:  # Create PR
         push(branch, set_upstream=True)
         create_pr(title, body)
-        
+
     elif choice == 3:  # Keep as-is
         pass
-        
+
     elif choice == 4:  # Discard
         if confirm_discard():
             delete_branch(branch, force=True)
@@ -111,7 +111,7 @@ def finish_branch(branch: str, base: str = "main") -> FinishResult:
 ## Verification
 
 ```bash
-cd .zerg && python -c "
+cd .mahabharatha && python -c "
 from git_ops import GitOps
 go = GitOps()
 print('Available actions:', go.available_actions())
@@ -120,7 +120,7 @@ print('Available actions:', go.available_actions())
 
 ---
 
-# L4-TASK-002: /zerg:build Command
+# L4-TASK-002: /mahabharatha:build Command
 
 ## Objective
 
@@ -130,9 +130,9 @@ Implement build orchestration with error recovery.
 
 ```
 .claude/commands/
-└── zerg:build.md
+└── mahabharatha:build.md
 
-.zerg/
+.mahabharatha/
 └── build.py
 ```
 
@@ -154,7 +154,7 @@ Implement build orchestration with error recovery.
 ## Usage
 
 ```bash
-/zerg:build [--target all]
+/mahabharatha:build [--target all]
             [--mode dev|staging|prod]
             [--clean]
             [--watch]
@@ -163,7 +163,7 @@ Implement build orchestration with error recovery.
 
 ---
 
-# L4-TASK-003: /zerg:session Command
+# L4-TASK-003: /mahabharatha:session Command
 
 ## Objective
 
@@ -173,9 +173,9 @@ Implement session save/load for multi-session continuity.
 
 ```
 .claude/commands/
-└── zerg:session.md
+└── mahabharatha:session.md
 
-.zerg/
+.mahabharatha/
 └── session.py
 ```
 
@@ -183,7 +183,7 @@ Implement session save/load for multi-session continuity.
 
 ### save
 ```bash
-/zerg:session --action save [--name my-session] [--compress]
+/mahabharatha:session --action save [--name my-session] [--compress]
 ```
 
 Saves:
@@ -194,17 +194,17 @@ Saves:
 
 ### load
 ```bash
-/zerg:session --action load --name my-session
+/mahabharatha:session --action load --name my-session
 ```
 
 ### list
 ```bash
-/zerg:session --action list
+/mahabharatha:session --action list
 ```
 
 ### delete
 ```bash
-/zerg:session --action delete --name old-session
+/mahabharatha:session --action delete --name old-session
 ```
 
 ## Session Manifest
@@ -226,7 +226,7 @@ Saves:
 
 ---
 
-# L4-TASK-004: /zerg:index Command
+# L4-TASK-004: /mahabharatha:index Command
 
 ## Objective
 
@@ -236,9 +236,9 @@ Implement project knowledge base generation.
 
 ```
 .claude/commands/
-└── zerg:index.md
+└── mahabharatha:index.md
 
-.zerg/
+.mahabharatha/
 ├── indexer.py
 └── index/              # Index output
 ```
@@ -276,7 +276,7 @@ Implement project knowledge base generation.
 ## Usage
 
 ```bash
-/zerg:index [--format json|sqlite]
+/mahabharatha:index [--format json|sqlite]
             [--embeddings]
             [--include "src/**"]
             [--exclude "node_modules"]
@@ -284,7 +284,7 @@ Implement project knowledge base generation.
 
 ---
 
-# L4-TASK-005: /zerg:document Command
+# L4-TASK-005: /mahabharatha:document Command
 
 ## Objective
 
@@ -294,9 +294,9 @@ Implement documentation generation and maintenance.
 
 ```
 .claude/commands/
-└── zerg:document.md
+└── mahabharatha:document.md
 
-.zerg/
+.mahabharatha/
 └── document.py
 ```
 
@@ -310,9 +310,9 @@ Implement documentation generation and maintenance.
 ## Usage
 
 ```bash
-/zerg:document --type api [--output docs/api.md]
-/zerg:document --type readme [--update]
-/zerg:document --type architecture [--diagram]
+/mahabharatha:document --type api [--output docs/api.md]
+/mahabharatha:document --type readme [--update]
+/mahabharatha:document --type architecture [--diagram]
 ```
 
 ## Features
@@ -324,7 +324,7 @@ Implement documentation generation and maintenance.
 
 ---
 
-# L4-TASK-006: /zerg:purge Command
+# L4-TASK-006: /mahabharatha:purge Command
 
 ## Objective
 
@@ -334,24 +334,24 @@ Implement artifact and worktree cleanup (renamed from cleanup).
 
 ```
 .claude/commands/
-└── zerg:purge.md
+└── mahabharatha:purge.md
 
-.zerg/
+.mahabharatha/
 └── purge.py
 ```
 
 ## Targets
 
-1. **worktrees**: Remove `.zerg/worktrees/`
-2. **logs**: Remove `.zerg/logs/`
-3. **checkpoints**: Remove `.zerg/checkpoints/`
-4. **metrics**: Remove `.zerg/metrics/`
+1. **worktrees**: Remove `.mahabharatha/worktrees/`
+2. **logs**: Remove `.mahabharatha/logs/`
+3. **checkpoints**: Remove `.mahabharatha/checkpoints/`
+4. **metrics**: Remove `.mahabharatha/metrics/`
 5. **all**: Everything above
 
 ## Usage
 
 ```bash
-/zerg:purge [--target worktrees|logs|all]
+/mahabharatha:purge [--target worktrees|logs|all]
             [--preserve-specs]
             [--dry-run]
             [--force]

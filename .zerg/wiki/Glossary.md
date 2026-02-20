@@ -1,6 +1,6 @@
 # Glossary
 
-Key terms and concepts used throughout the ZERG documentation. Terms are listed alphabetically.
+Key terms and concepts used throughout the MAHABHARATHA documentation. Terms are listed alphabetically.
 
 ---
 
@@ -8,9 +8,9 @@ Key terms and concepts used throughout the ZERG documentation. Terms are listed 
 
 ### Brainstorm
 
-An optional discovery phase before planning. The `/zerg:brainstorm` command performs competitive research via web search, conducts structured Socratic questioning, and creates prioritized GitHub issues. Feeds into `/zerg:plan` when a specific feature is selected.
+An optional discovery phase before planning. The `/mahabharatha:brainstorm` command performs competitive research via web search, conducts structured Socratic questioning, and creates prioritized GitHub issues. Feeds into `/mahabharatha:plan` when a specific feature is selected.
 
-See: [[zerg-brainstorm]]
+See: [[mahabharatha-brainstorm]]
 
 ---
 
@@ -18,7 +18,7 @@ See: [[zerg-brainstorm]]
 
 ### Claude Code Task System
 
-The built-in task management API provided by Claude Code (`TaskCreate`, `TaskUpdate`, `TaskList`, `TaskGet`). ZERG uses this as the **authoritative source of truth** for all task state. Tasks persist in `~/.claude/tasks/` and survive session restarts. When the Task system and state JSON files disagree, the Task system wins.
+The built-in task management API provided by Claude Code (`TaskCreate`, `TaskUpdate`, `TaskList`, `TaskGet`). MAHABHARATHA uses this as the **authoritative source of truth** for all task state. Tasks persist in `~/.claude/tasks/` and survive session restarts. When the Task system and state JSON files disagree, the Task system wins.
 
 See: [[Getting Started#the-task-ecosystem]], [[Architecture-State-Management]]
 
@@ -30,13 +30,13 @@ See: [[Context Engineering#subsystem-1-command-splitting]]
 
 ### Container Mode
 
-An execution mode where workers run inside Docker containers instead of local subprocesses. Provides filesystem isolation and reproducible environments. Activated with the `--mode container` flag on `/zerg:rush`. Supports OAuth and API key authentication.
+An execution mode where workers run inside Docker containers instead of local subprocesses. Provides filesystem isolation and reproducible environments. Activated with the `--mode container` flag on `/mahabharatha:kurukshetra`. Supports OAuth and API key authentication.
 
 See: [[Tutorial-Container-Mode]], [[Configuration#workers]]
 
 ### Context Engineering
 
-A system of optimizations that reduces token usage across workers by scoping context to each task. Includes three subsystems: command splitting, task-scoped context, and security rule filtering. Configured under `plugins.context_engineering` in `.zerg/config.yaml`.
+A system of optimizations that reduces token usage across workers by scoping context to each task. Includes three subsystems: command splitting, task-scoped context, and security rule filtering. Configured under `plugins.context_engineering` in `.mahabharatha/config.yaml`.
 
 See: [[Context Engineering]], [[Context Engineering Internals]]
 
@@ -52,9 +52,9 @@ See: [[Architecture-Dependency-Graph]]
 
 ### Design Phase
 
-The second stage of the ZERG workflow. Reads approved requirements, generates a technical architecture (`design.md`), and produces a task graph (`task-graph.json`) with exclusive file ownership. Invoked with `/zerg:design`.
+The second stage of the MAHABHARATHA workflow. Reads approved requirements, generates a technical architecture (`design.md`), and produces a task graph (`task-graph.json`) with exclusive file ownership. Invoked with `/mahabharatha:design`.
 
-See: [[zerg-design]], [[Quick Start#step-3-design]]
+See: [[mahabharatha-design]], [[Quick Start#step-3-design]]
 
 ---
 
@@ -62,7 +62,7 @@ See: [[zerg-design]], [[Quick Start#step-3-design]]
 
 ### Feature
 
-A named unit of work that flows through the full ZERG pipeline (plan, design, rush, merge). Each feature has its own spec directory (`.gsd/specs/<feature>/`), task graph, state file, and worker branches.
+A named unit of work that flows through the full MAHABHARATHA pipeline (plan, design, kurukshetra, merge). Each feature has its own spec directory (`.gsd/specs/<feature>/`), task graph, state file, and worker branches.
 
 ### File Ownership
 
@@ -86,9 +86,9 @@ See: [[Getting Started#levels]], [[Architecture-Execution-Flow]]
 
 ### Merge
 
-The process that occurs between levels. After all tasks at a level complete, the orchestrator collects worker branches, merges them into a staging branch, and runs quality gates. If gates pass, the next level begins. Triggered automatically by the orchestrator or manually with `/zerg:merge`.
+The process that occurs between levels. After all tasks at a level complete, the orchestrator collects worker branches, merges them into a staging branch, and runs quality gates. If gates pass, the next level begins. Triggered automatically by the orchestrator or manually with `/mahabharatha:merge`.
 
-See: [[zerg-merge]], [[Quick Start#step-6-merge]]
+See: [[mahabharatha-merge]], [[Quick Start#step-6-merge]]
 
 ---
 
@@ -96,7 +96,7 @@ See: [[zerg-merge]], [[Quick Start#step-6-merge]]
 
 ### Orchestrator
 
-The central coordination component that manages the full execution lifecycle. The orchestrator reads the task graph, assigns tasks to workers, monitors progress, triggers merges between levels, runs quality gates, and handles failures. It runs in the primary Claude Code session that invoked `/zerg:rush`.
+The central coordination component that manages the full execution lifecycle. The orchestrator reads the task graph, assigns tasks to workers, monitors progress, triggers merges between levels, runs quality gates, and handles failures. It runs in the primary Claude Code session that invoked `/mahabharatha:kurukshetra`.
 
 See: [[Architecture-Overview]], [[Architecture-Execution-Flow]]
 
@@ -106,9 +106,9 @@ See: [[Architecture-Overview]], [[Architecture-Execution-Flow]]
 
 ### Plan Phase
 
-The first stage of the ZERG workflow. ZERG asks clarifying questions about the requested feature, then generates a `requirements.md` file from the answers. Requires explicit user approval before proceeding. Invoked with `/zerg:plan <feature>`.
+The first stage of the MAHABHARATHA workflow. MAHABHARATHA asks clarifying questions about the requested feature, then generates a `requirements.md` file from the answers. Requires explicit user approval before proceeding. Invoked with `/mahabharatha:plan <feature>`.
 
-See: [[zerg-plan]], [[Quick Start#step-2-plan]]
+See: [[mahabharatha-plan]], [[Quick Start#step-2-plan]]
 
 ---
 
@@ -116,7 +116,7 @@ See: [[zerg-plan]], [[Quick Start#step-2-plan]]
 
 ### Quality Gate
 
-A validation command that runs after each level merge to verify code quality. Gates are defined in `.zerg/config.yaml` under `quality_gates`. Each gate produces one of five results: `PASS`, `FAIL`, `SKIP`, `TIMEOUT`, or `ERROR`. Required gates that fail block the merge; non-required gates log warnings only.
+A validation command that runs after each level merge to verify code quality. Gates are defined in `.mahabharatha/config.yaml` under `quality_gates`. Each gate produces one of five results: `PASS`, `FAIL`, `SKIP`, `TIMEOUT`, or `ERROR`. Required gates that fail block the merge; non-required gates log warnings only.
 
 Common gates include lint checks, type checking, unit tests, coverage thresholds, and security scans.
 
@@ -126,11 +126,11 @@ See: [[Configuration#quality_gates]], [[Plugin System]]
 
 ## R
 
-### Rush
+### Kurukshetra
 
-The third stage of the ZERG workflow and the primary execution phase. Multiple Claude Code workers execute tasks in parallel, organized by dependency levels. Invoked with `/zerg:rush --workers=N`. The rush occupies the current Claude Code session; use a separate terminal for monitoring.
+The third stage of the MAHABHARATHA workflow and the primary execution phase. Multiple Claude Code workers execute tasks in parallel, organized by dependency levels. Invoked with `/mahabharatha:kurukshetra --workers=N`. The kurukshetra occupies the current Claude Code session; use a separate terminal for monitoring.
 
-See: [[zerg-rush]], [[Quick Start#step-4-rush]]
+See: [[mahabharatha-kurukshetra]], [[Quick Start#step-4-kurukshetra]]
 
 ---
 
@@ -150,7 +150,7 @@ See: [[Getting Started#spec-as-memory]]
 
 ### State JSON
 
-Supplementary state files stored in `.zerg/state/<feature>.json`. These cache task status, worker assignments, and progress data. State JSON is **not** the source of truth -- the Claude Code Task system is. If the two disagree, the Task system wins.
+Supplementary state files stored in `.mahabharatha/state/<feature>.json`. These cache task status, worker assignments, and progress data. State JSON is **not** the source of truth -- the Claude Code Task system is. If the two disagree, the Task system wins.
 
 See: [[Architecture-State-Management]]
 
@@ -166,7 +166,7 @@ See: [[Configuration#workers]]
 
 ### Task
 
-The atomic unit of work in ZERG. Each task has a unique ID, title, description, list of owned files, dependencies on other tasks, a level assignment, and a verification command. Tasks are defined in `task-graph.json` and tracked through the Claude Code Task system.
+The atomic unit of work in MAHABHARATHA. Each task has a unique ID, title, description, list of owned files, dependencies on other tasks, a level assignment, and a verification command. Tasks are defined in `task-graph.json` and tracked through the Claude Code Task system.
 
 ### Task Graph
 
@@ -198,11 +198,11 @@ See: [[Getting Started#verification]]
 
 A Claude Code instance that executes assigned tasks. Each worker runs in its own git worktree on a dedicated branch. Workers are stateless -- they read spec files for instructions and communicate status through the Claude Code Task system and state JSON files. Multiple workers execute in parallel within a level.
 
-See: [[zerg-worker]], [[Architecture-Overview#worker-isolation]]
+See: [[mahabharatha-worker]], [[Architecture-Overview#worker-isolation]]
 
 ### Worktree
 
-A git worktree created for each worker to provide filesystem isolation. Each worker operates on a separate branch in a separate directory, preventing file system conflicts between parallel workers. Worktrees are created by the launcher and cleaned up by `/zerg:cleanup`.
+A git worktree created for each worker to provide filesystem isolation. Each worker operates on a separate branch in a separate directory, preventing file system conflicts between parallel workers. Worktrees are created by the launcher and cleaned up by `/mahabharatha:cleanup`.
 
 See: [[Architecture-Overview#worker-isolation]]
 
@@ -210,10 +210,10 @@ See: [[Architecture-Overview#worker-isolation]]
 
 ## Z
 
-### Zergling
+### Warrior
 
-Informal name for a ZERG worker, drawn from the StarCraft game terminology. Used interchangeably with "worker" throughout the project.
+Informal name for a MAHABHARATHA worker, drawn from the StarCraft game terminology. Used interchangeably with "worker" throughout the project.
 
-### ZERG
+### MAHABHARATHA
 
-The overall system. A parallel Claude Code execution framework that coordinates multiple worker instances to implement features concurrently. The name references the "Zerg rush" strategy from StarCraft -- overwhelming a problem with many coordinated units.
+The overall system. A parallel Claude Code execution framework that coordinates multiple worker instances to implement features concurrently. The name references the "Mahabharatha kurukshetra" strategy from StarCraft -- overwhelming a problem with many coordinated units.

@@ -9,7 +9,7 @@ Create integration test that validates the full flow:
 1. Init with multi-language detection
 2. Dynamic devcontainer generation
 3. Container mode selection (or graceful skip if no Docker)
-4. Rush dry-run verification
+4. Kurukshetra dry-run verification
 
 ## Files Owned
 
@@ -52,7 +52,7 @@ class TestMultiLanguageDetection:
         (tmp_path / "package.json").write_text('{"name": "test"}')
 
         # Run detection
-        from zerg.security_rules import detect_project_stack
+        from mahabharatha.security_rules import detect_project_stack
 
         stack = detect_project_stack(tmp_path)
 
@@ -64,7 +64,7 @@ class TestMultiLanguageDetection:
         (tmp_path / "go.mod").write_text("module test")
         (tmp_path / "Cargo.toml").write_text("[package]\nname = 'test'")
 
-        from zerg.security_rules import detect_project_stack
+        from mahabharatha.security_rules import detect_project_stack
 
         stack = detect_project_stack(tmp_path)
 
@@ -77,8 +77,8 @@ class TestDynamicDevcontainer:
 
     def test_multi_language_features(self) -> None:
         """Test features generated for multi-language project."""
-        from zerg.devcontainer_features import DynamicDevcontainerGenerator
-        from zerg.security_rules import ProjectStack
+        from mahabharatha.devcontainer_features import DynamicDevcontainerGenerator
+        from mahabharatha.security_rules import ProjectStack
 
         stack = ProjectStack(languages={"python", "go", "typescript"})
         gen = DynamicDevcontainerGenerator(stack)
@@ -96,8 +96,8 @@ class TestDynamicDevcontainer:
 
     def test_custom_install_for_r(self) -> None:
         """Test custom install command for R."""
-        from zerg.devcontainer_features import DynamicDevcontainerGenerator
-        from zerg.security_rules import ProjectStack
+        from mahabharatha.devcontainer_features import DynamicDevcontainerGenerator
+        from mahabharatha.security_rules import ProjectStack
 
         stack = ProjectStack(languages={"python", "r"})
         gen = DynamicDevcontainerGenerator(stack)
@@ -108,8 +108,8 @@ class TestDynamicDevcontainer:
 
     def test_write_devcontainer_file(self, tmp_path: Path) -> None:
         """Test writing devcontainer.json to disk."""
-        from zerg.devcontainer_features import DynamicDevcontainerGenerator
-        from zerg.security_rules import ProjectStack
+        from mahabharatha.devcontainer_features import DynamicDevcontainerGenerator
+        from mahabharatha.security_rules import ProjectStack
 
         stack = ProjectStack(languages={"python"})
         gen = DynamicDevcontainerGenerator(stack)
@@ -126,7 +126,7 @@ class TestDynamicDevcontainer:
 
 
 class TestInitCommand:
-    """Test zerg init with multi-language support."""
+    """Test mahabharatha init with multi-language support."""
 
     def test_init_creates_multi_lang_devcontainer(self, tmp_path: Path) -> None:
         """Test that init creates proper devcontainer for multi-lang project."""
@@ -140,7 +140,7 @@ class TestInitCommand:
             os.chdir(tmp_path)
 
             from click.testing import CliRunner
-            from zerg.commands.init import init
+            from mahabharatha.commands.init import init
 
             runner = CliRunner()
             result = runner.invoke(init, ["--no-security-rules"])
@@ -166,7 +166,7 @@ class TestContainerLauncher:
 
     def test_docker_available_check(self) -> None:
         """Test Docker availability check."""
-        from zerg.launcher import ContainerLauncher
+        from mahabharatha.launcher import ContainerLauncher
 
         # Should return bool without error
         result = ContainerLauncher.docker_available()
@@ -174,7 +174,7 @@ class TestContainerLauncher:
 
     def test_image_exists_check(self) -> None:
         """Test image existence check."""
-        from zerg.launcher import ContainerLauncher
+        from mahabharatha.launcher import ContainerLauncher
 
         # Non-existent image
         result = ContainerLauncher.image_exists("definitely-not-a-real-image-12345")
@@ -183,12 +183,12 @@ class TestContainerLauncher:
     @pytest.mark.skipif(not docker_available(), reason="Docker not available")
     def test_spawn_requires_image(self) -> None:
         """Test that spawn fails gracefully without image."""
-        from zerg.launcher import ContainerLauncher, LauncherConfig
+        from mahabharatha.launcher import ContainerLauncher, LauncherConfig
 
         launcher = ContainerLauncher(LauncherConfig())
 
         # Spawn with non-existent image
-        launcher._image_name = "zerg-test-nonexistent"
+        launcher._image_name = "mahabharatha-test-nonexistent"
         result = launcher.spawn(
             worker_id=0,
             feature="test",
@@ -205,9 +205,9 @@ class TestOrchestratorModeSelection:
 
     def test_auto_detect_without_devcontainer(self, tmp_path: Path) -> None:
         """Test auto-detect falls back to subprocess without devcontainer."""
-        from zerg.config import ZergConfig
-        from zerg.launcher import SubprocessLauncher
-        from zerg.orchestrator import Orchestrator
+        from mahabharatha.config import ZergConfig
+        from mahabharatha.launcher import SubprocessLauncher
+        from mahabharatha.orchestrator import Orchestrator
 
         config = ZergConfig()
         orch = Orchestrator("test", config, repo_path=tmp_path)
@@ -218,8 +218,8 @@ class TestOrchestratorModeSelection:
 
     def test_container_mode_available_check(self, tmp_path: Path) -> None:
         """Test container_mode_available() returns proper info."""
-        from zerg.config import ZergConfig
-        from zerg.orchestrator import Orchestrator
+        from mahabharatha.config import ZergConfig
+        from mahabharatha.orchestrator import Orchestrator
 
         config = ZergConfig()
         orch = Orchestrator("test", config, repo_path=tmp_path)
@@ -235,15 +235,15 @@ class TestOrchestratorModeSelection:
 
 
 class TestRushCommand:
-    """Test rush command with mode flag."""
+    """Test kurukshetra command with mode flag."""
 
     def test_rush_help_shows_mode_option(self) -> None:
-        """Test that --mode appears in rush help."""
+        """Test that --mode appears in kurukshetra help."""
         from click.testing import CliRunner
-        from zerg.commands.rush import rush
+        from mahabharatha.commands.kurukshetra import kurukshetra
 
         runner = CliRunner()
-        result = runner.invoke(rush, ["--help"])
+        result = runner.invoke(kurukshetra, ["--help"])
 
         assert "--mode" in result.output or "-m" in result.output
         assert "subprocess" in result.output
@@ -255,7 +255,7 @@ class TestEndToEndFlow:
     """End-to-end integration tests."""
 
     def test_full_init_to_dry_run(self, tmp_path: Path) -> None:
-        """Test complete flow from init to rush dry-run."""
+        """Test complete flow from init to kurukshetra dry-run."""
         # Create multi-lang project
         (tmp_path / "requirements.txt").write_text("flask")
         (tmp_path / "package.json").write_text('{"name": "test"}')
@@ -265,7 +265,7 @@ class TestEndToEndFlow:
             os.chdir(tmp_path)
 
             from click.testing import CliRunner
-            from zerg.commands.init import init
+            from mahabharatha.commands.init import init
 
             runner = CliRunner()
 
@@ -293,7 +293,7 @@ class TestEndToEndFlow:
 pytest tests/integration/test_container_flow.py -v --tb=short
 
 # Run with coverage
-pytest tests/integration/test_container_flow.py -v --cov=zerg --cov-report=term-missing
+pytest tests/integration/test_container_flow.py -v --cov=mahabharatha --cov-report=term-missing
 ```
 
 ## Acceptance Criteria

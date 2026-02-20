@@ -1,7 +1,7 @@
-"""Reusable mock utilities for testing ZERG commands.
+"""Reusable mock utilities for testing MAHABHARATHA commands.
 
 This module provides configurable mock objects and fixtures for testing
-ZERG orchestration, launching, git operations, filesystem, and subprocess
+MAHABHARATHA orchestration, launching, git operations, filesystem, and subprocess
 execution without requiring actual processes or system resources.
 
 Example usage:

@@ -1,4 +1,4 @@
-"""Component type detection for ZERG source files."""
+"""Component type detection for MAHABHARATHA source files."""
 
 from __future__ import annotations
 

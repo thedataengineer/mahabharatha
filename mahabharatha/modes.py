@@ -1,4 +1,4 @@
-"""Behavioral mode system for ZERG -- auto-detect and manage execution modes."""
+"""Behavioral mode system for MAHABHARATHA -- auto-detect and manage execution modes."""
 
 from __future__ import annotations
 

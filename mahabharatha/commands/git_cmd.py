@@ -1,4 +1,4 @@
-"""ZERG git command - intelligent git operations."""
+"""MAHABHARATHA git command - intelligent git operations."""
 
 import contextlib
 import re
@@ -288,7 +288,7 @@ def action_finish(git: GitOps, base: str, push: bool) -> int:
     console.print(
         Panel(
             f"Finishing branch: [cyan]{current}[/cyan]\nTarget: [cyan]{base}[/cyan]",
-            title="ZERG Git Finish",
+            title="MAHABHARATHA Git Finish",
         )
     )
 
@@ -481,14 +481,14 @@ def action_ship(git: GitOps, base: str, draft: bool, reviewer: str | None, no_me
     # Step 3: Merge PR
     console.print("\n[bold]Step 3/5: Merge PR[/bold]")
 
-    # Check if we should use ZERG merge with gates
+    # Check if we should use MAHABHARATHA merge with gates
     config = ZergConfig.load()
     feature = _detect_mahabharatha_feature(current)
-    use_mahabharatha_merge = feature is not None and config.rush.gates_at_ship_only
+    use_mahabharatha_merge = feature is not None and config.kurukshetra.gates_at_ship_only
 
     if use_mahabharatha_merge:
         assert feature is not None  # guaranteed by use_mahabharatha_merge condition
-        console.print("[dim]Using ZERG merge coordinator with quality gates...[/dim]")
+        console.print("[dim]Using MAHABHARATHA merge coordinator with quality gates...[/dim]")
         try:
             merger = MergeCoordinator(feature, config=config)
 
@@ -501,7 +501,7 @@ def action_ship(git: GitOps, base: str, draft: bool, reviewer: str | None, no_me
             )
 
             if not result.success:
-                console.print(f"[red]ZERG merge failed:[/red] {result.error}")
+                console.print(f"[red]MAHABHARATHA merge failed:[/red] {result.error}")
                 if result.gate_results:
                     for gr in result.gate_results:
                         if gr.result != GateResult.PASS:
@@ -509,8 +509,8 @@ def action_ship(git: GitOps, base: str, draft: bool, reviewer: str | None, no_me
                 return 1
 
             console.print(f"[green]\u2713[/green] Merged with commit {result.merge_commit}")
-        except Exception as e:  # noqa: BLE001 — intentional: fallback to gh merge on ZERG merge failure
-            console.print(f"[yellow]ZERG merge failed, falling back to gh merge:[/yellow] {e}")
+        except Exception as e:  # noqa: BLE001 — intentional: fallback to gh merge on MAHABHARATHA merge failure
+            console.print(f"[yellow]MAHABHARATHA merge failed, falling back to gh merge:[/yellow] {e}")
             use_mahabharatha_merge = False
 
     if not use_mahabharatha_merge:
@@ -573,15 +573,15 @@ def action_ship(git: GitOps, base: str, draft: bool, reviewer: str | None, no_me
 
 
 def _detect_mahabharatha_feature(branch: str) -> str | None:
-    """Detect ZERG feature name from branch name.
+    """Detect MAHABHARATHA feature name from branch name.
 
     Args:
         branch: Git branch name
 
     Returns:
-        Feature name if this is a ZERG branch, None otherwise
+        Feature name if this is a MAHABHARATHA branch, None otherwise
     """
-    # ZERG branches follow pattern: mahabharatha/{feature}/worker-{n}
+    # MAHABHARATHA branches follow pattern: mahabharatha/{feature}/worker-{n}
     if branch.startswith("mahabharatha/"):
         parts = branch.split("/")
         if len(parts) >= 2:
@@ -708,7 +708,7 @@ def git_cmd(
         mahabharatha git --action ship --base main --no-merge
     """
     try:
-        console.print("\n[bold cyan]ZERG Git[/bold cyan]\n")
+        console.print("\n[bold cyan]MAHABHARATHA Git[/bold cyan]\n")
 
         git = GitOps()
         current = git.current_branch()

@@ -4,7 +4,7 @@
 - **Feature**: orchestrator-coordination-fix
 - **Status**: APPROVED
 - **Created**: 2026-02-04
-- **GitHub Issues**: Related to #65, #119 (bite-sized-planning rush failures)
+- **GitHub Issues**: Related to #65, #119 (bite-sized-planning kurukshetra failures)
 
 ---
 
@@ -12,11 +12,11 @@
 
 ### 1.1 Summary
 
-Fix 6 critical bugs in ZERG orchestrator that cause merge conflicts, level violations, and redundant gate runs. The core fix is simple: defer all merges to ship time instead of merging after each level.
+Fix 6 critical bugs in MAHABHARATHA orchestrator that cause merge conflicts, level violations, and redundant gate runs. The core fix is simple: defer all merges to ship time instead of merging after each level.
 
 ### 1.2 Goals
 
-- Main branch untouched during rush execution
+- Main branch untouched during kurukshetra execution
 - Strict level enforcement at task claim time
 - Strict dependency enforcement at runtime
 - Quality gates run exactly once (at ship)
@@ -46,7 +46,7 @@ Level 2 complete → merge_level() → full_merge_flow(target="main") → MAIN M
 Level 1 complete → set_level_status("complete") → advance to Level 2 → NO MERGE
 Level 2 complete → set_level_status("complete") → advance to Level 3 → NO MERGE
 ...
-All levels complete → Rush DONE (main untouched)
+All levels complete → Kurukshetra DONE (main untouched)
 
 /z:git --action ship:
   → Create staging from main
@@ -73,7 +73,7 @@ All levels complete → Rush DONE (main untouched)
 ### 3.1 Config Changes
 
 ```python
-# zerg/config.py
+# mahabharatha/config.py
 
 class RushConfig(BaseModel):
     # Existing fields...
@@ -92,7 +92,7 @@ class RushConfig(BaseModel):
 ### 3.2 DependencyChecker Helper
 
 ```python
-# zerg/dependency_checker.py
+# mahabharatha/dependency_checker.py
 
 class DependencyChecker:
     def __init__(self, state: StateManager, parser: TaskParser):
@@ -130,7 +130,7 @@ class DependencyChecker:
 ### 3.3 EventEmitter for Live Streaming
 
 ```python
-# zerg/event_emitter.py
+# mahabharatha/event_emitter.py
 
 class EventEmitter:
     def __init__(self, feature: str, state_dir: Path):
@@ -154,7 +154,7 @@ class EventEmitter:
 ### 3.4 Modified claim_task()
 
 ```python
-# zerg/state.py
+# mahabharatha/state.py
 
 def claim_task(
     self,
@@ -199,13 +199,13 @@ def claim_task(
 ### 3.5 Modified handle_level_complete()
 
 ```python
-# zerg/level_coordinator.py
+# mahabharatha/level_coordinator.py
 
 def handle_level_complete(self, level: int) -> bool:
     """Handle level completion."""
     # Check config
-    if self.config.rush.defer_merge_to_ship:
-        # NEW: No merge during rush
+    if self.config.kurukshetra.defer_merge_to_ship:
+        # NEW: No merge during kurukshetra
         logger.info(f"Level {level} complete. Merge deferred to ship.")
         self.state.set_level_status(level, "complete")
         self._emit_event("level_complete", {"level": level, "merge": "deferred"})
@@ -218,7 +218,7 @@ def handle_level_complete(self, level: int) -> bool:
 ### 3.6 Modified finalize()
 
 ```python
-# zerg/merge.py
+# mahabharatha/merge.py
 
 def finalize(self, staging_branch: str, target_branch: str) -> str:
     """Finalize merge to target branch."""
@@ -229,7 +229,7 @@ def finalize(self, staging_branch: str, target_branch: str) -> str:
 
     # Checkout target and merge
     self.git.checkout(target_branch)
-    commit = self.git.merge(staging_branch, message=f"ZERG: Complete level merge from {staging_branch}")
+    commit = self.git.merge(staging_branch, message=f"MAHABHARATHA: Complete level merge from {staging_branch}")
 
     # Cleanup
     self.git.delete_branch(staging_branch, force=True)
@@ -287,16 +287,16 @@ def finalize(self, staging_branch: str, target_branch: str) -> str:
 
 | File | Task(s) |
 |------|---------|
-| `zerg/config.py` | OCF-L1-001 |
-| `zerg/dependency_checker.py` | OCF-L1-002 |
-| `zerg/event_emitter.py` | OCF-L1-003 |
-| `zerg/state.py` | OCF-L2-001, OCF-L2-002 |
-| `zerg/level_coordinator.py` | OCF-L2-003 |
-| `zerg/merge.py` | OCF-L2-004, OCF-L3-002 |
-| `zerg/commands/git_cmd.py` | OCF-L3-001 |
-| `zerg/orchestrator.py` | OCF-L3-003 |
-| `zerg/commands/status.py` | OCF-L3-004 |
-| `zerg/worker_manager.py` | OCF-L3-005 |
+| `mahabharatha/config.py` | OCF-L1-001 |
+| `mahabharatha/dependency_checker.py` | OCF-L1-002 |
+| `mahabharatha/event_emitter.py` | OCF-L1-003 |
+| `mahabharatha/state.py` | OCF-L2-001, OCF-L2-002 |
+| `mahabharatha/level_coordinator.py` | OCF-L2-003 |
+| `mahabharatha/merge.py` | OCF-L2-004, OCF-L3-002 |
+| `mahabharatha/commands/git_cmd.py` | OCF-L3-001 |
+| `mahabharatha/orchestrator.py` | OCF-L3-003 |
+| `mahabharatha/commands/status.py` | OCF-L3-004 |
+| `mahabharatha/worker_manager.py` | OCF-L3-005 |
 
 ---
 
@@ -306,7 +306,7 @@ def finalize(self, staging_branch: str, target_branch: str) -> str:
 |------|-------------|--------|------------|
 | Breaking existing workflows | Low | High | Config flags with opt-out |
 | Gate failures at ship time | Medium | Medium | Clear error messages, manual fix path |
-| Event file growth | Low | Low | Cleanup at rush end |
+| Event file growth | Low | Low | Cleanup at kurukshetra end |
 
 ---
 
@@ -320,7 +320,7 @@ def finalize(self, staging_branch: str, target_branch: str) -> str:
 
 ### 7.2 Integration Tests
 
-- `test_deferred_merge.py`: Main untouched during rush
+- `test_deferred_merge.py`: Main untouched during kurukshetra
 - `test_claim_enforcement.py`: End-to-end level/dep enforcement
 
 ---

@@ -1,6 +1,6 @@
 # Tuning Guide
 
-This page explains when and how to adjust ZERG configuration values for different project sizes, hardware constraints, and reliability requirements. All options referenced here are documented in [[Configuration]].
+This page explains when and how to adjust MAHABHARATHA configuration values for different project sizes, hardware constraints, and reliability requirements. All options referenced here are documented in [[Configuration]].
 
 ---
 
@@ -78,7 +78,7 @@ quality_gates:
 
 ## Retry Configuration
 
-When a task fails (verification command returns non-zero, or worker crashes), ZERG can retry it automatically.
+When a task fails (verification command returns non-zero, or worker crashes), MAHABHARATHA can retry it automatically.
 
 | Option | Effect | Trade-off |
 |--------|--------|-----------|
@@ -195,7 +195,7 @@ quality_gates:
     timeout: 120
 ```
 
-Setting a gate as `required: false` means its failure produces a warning in `/zerg:status` output but does not block the merge or prevent the next level from starting.
+Setting a gate as `required: false` means its failure produces a warning in `/mahabharatha:status` output but does not block the merge or prevent the next level from starting.
 
 ---
 

@@ -6,26 +6,26 @@
 
 ## Executive Summary
 
-ZERG's scope is narrower than initially assessed. Claude's native Tasks feature handles state persistence, cross-agent memory, and coordination primitives. ZERG becomes a **parallel execution orchestration layer** that adds: level-based dependency ordering, git worktree isolation, exclusive file ownership, and merge gates. The orchestrator implementation simplifies significantly.
+MAHABHARATHA's scope is narrower than initially assessed. Claude's native Tasks feature handles state persistence, cross-agent memory, and coordination primitives. MAHABHARATHA becomes a **parallel execution orchestration layer** that adds: level-based dependency ordering, git worktree isolation, exclusive file ownership, and merge gates. The orchestrator implementation simplifies significantly.
 
 ---
 
 ## What Claude Native Tasks Provides
 
-| Capability | How It Works | ZERG Integration |
+| Capability | How It Works | MAHABHARATHA Integration |
 |------------|--------------|------------------|
 | **Persistent state** | Tasks survive sessions | Workers resume from task state |
 | **Cross-agent memory** | All instances see same Tasks | No custom IPC needed |
 | **Task status** | Built-in progress tracking | Orchestrator polls for level completion |
 | **Coordination** | Tasks act as shared record | Level gates check task completion |
 
-**Key Insight**: ZERG doesn't build a distributed system. ZERG orchestrates Claude instances that already share state via Tasks.
+**Key Insight**: MAHABHARATHA doesn't build a distributed system. MAHABHARATHA orchestrates Claude instances that already share state via Tasks.
 
 ---
 
-## What ZERG Uniquely Provides
+## What MAHABHARATHA Uniquely Provides
 
-| Capability | Why Tasks Don't Cover | ZERG Implementation |
+| Capability | Why Tasks Don't Cover | MAHABHARATHA Implementation |
 |------------|----------------------|---------------------|
 | **Level synchronization** | Tasks don't enforce execution order | Orchestrator blocks level N+1 until N complete |
 | **Git worktree isolation** | Tasks don't manage git | Create worktree per worker branch |
@@ -42,23 +42,23 @@ ZERG's scope is narrower than initially assessed. Claude's native Tasks feature 
 **Previous Understanding**: Workers share state via spec files
 **Revised Understanding**: Claude Tasks handles state. Specs define *what* to decompose, not *how* to communicate.
 
-**ZERG Role**: Parse spec → generate Tasks with levels and file assignments
+**MAHABHARATHA Role**: Parse spec → generate Tasks with levels and file assignments
 
 ### 2. Git Worktrees for Isolation
 
-**Sources**: ZERG design, packnplay, superpowers
-**ZERG Role**: Create worktree per worker, merge on level completion
+**Sources**: MAHABHARATHA design, packnplay, superpowers
+**MAHABHARATHA Role**: Create worktree per worker, merge on level completion
 
-### 3. Level-Based Execution (ZERG Unique)
+### 3. Level-Based Execution (MAHABHARATHA Unique)
 
 **No External Source Provides This**
 
-ZERG's level synchronization remains unique. Claude Tasks tracks completion but doesn't enforce ordering. ZERG adds the orchestration logic:
+MAHABHARATHA's level synchronization remains unique. Claude Tasks tracks completion but doesn't enforce ordering. MAHABHARATHA adds the orchestration logic:
 
 ```
 Level 0: foundation tasks
     ↓ (all complete)
-Level 1: core tasks  
+Level 1: core tasks
     ↓ (all complete)
 Level 2: integration tasks
     ↓ (all complete)
@@ -75,7 +75,7 @@ Level 4: quality tasks
 
 ```
 ┌─────────────────────────────────────────────┐
-│              ZERG Orchestrator              │
+│              MAHABHARATHA Orchestrator              │
 ├─────────────────────────────────────────────┤
 │ • State persistence      ← Build this       │
 │ • Cross-agent memory     ← Build this       │
@@ -102,7 +102,7 @@ Level 4: quality tasks
                     │
                     ▼
 ┌─────────────────────────────────────────────┐
-│              ZERG Orchestrator              │
+│              MAHABHARATHA Orchestrator              │
 ├─────────────────────────────────────────────┤
 │ • Level synchronization  ← Build this       │
 │ • Git worktrees          ← Build this       │
@@ -183,13 +183,13 @@ Level 4: quality tasks
 ## Architecture Decisions
 
 ### AD-001: Use Claude Tasks for State
-Claude Tasks provides persistent state, cross-agent memory, and coordination. ZERG does not implement custom state management.
+Claude Tasks provides persistent state, cross-agent memory, and coordination. MAHABHARATHA does not implement custom state management.
 
-### AD-002: ZERG Owns Execution Ordering
-Claude Tasks tracks completion but doesn't enforce order. ZERG implements level-based synchronization by monitoring Tasks and gating level transitions.
+### AD-002: MAHABHARATHA Owns Execution Ordering
+Claude Tasks tracks completion but doesn't enforce order. MAHABHARATHA implements level-based synchronization by monitoring Tasks and gating level transitions.
 
 ### AD-003: Preserve Level Synchronization
-Level-based execution is unique to ZERG and provides dependency ordering without complex scheduling.
+Level-based execution is unique to MAHABHARATHA and provides dependency ordering without complex scheduling.
 
 ### AD-004: Preserve Exclusive File Ownership
 File assignments happen at decomposition time, stored in Task metadata. Workers check assignments before modifying files.

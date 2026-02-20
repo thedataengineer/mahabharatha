@@ -1,4 +1,4 @@
-# Plan: Build ZERG Container for Dogfooding
+# Plan: Build MAHABHARATHA Container for Dogfooding
 
 **Goal**: Build Docker container with Claude Code, enable both host-based development and container-based development workflows.
 
@@ -11,12 +11,12 @@
 | Component | Status |
 |-----------|--------|
 | Dockerfile | ✅ Ready (Claude Code installed via npm) |
-| docker-compose.yaml | ✅ Ready (workspace + zerg-worker services) |
-| ContainerLauncher | ✅ Implemented (expects image: `zerg-worker`) |
+| docker-compose.yaml | ✅ Ready (workspace + mahabharatha-worker services) |
+| ContainerLauncher | ✅ Implemented (expects image: `mahabharatha-worker`) |
 | worker_entry.sh | ✅ Ready |
-| Rush --mode flag | ✅ Implemented |
+| Kurukshetra --mode flag | ✅ Implemented |
 
-**Gap**: Image not built. ContainerLauncher expects `zerg-worker` image to exist.
+**Gap**: Image not built. ContainerLauncher expects `mahabharatha-worker` image to exist.
 
 ---
 
@@ -25,7 +25,7 @@
 ### Step 1: Build the Docker Image
 
 ```bash
-docker build -t zerg-worker -f .devcontainer/Dockerfile .
+docker build -t mahabharatha-worker -f .devcontainer/Dockerfile .
 ```
 
 Image includes: Ubuntu + Python 3.12 + Node.js 20 + Claude Code CLI + MCP servers
@@ -33,13 +33,13 @@ Image includes: Ubuntu + Python 3.12 + Node.js 20 + Claude Code CLI + MCP server
 ### Step 2: Verify Claude Code in Container
 
 ```bash
-docker run --rm -e ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY zerg-worker claude --version
+docker run --rm -e ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY mahabharatha-worker claude --version
 ```
 
 ### Step 3: Test Container Launcher
 
 ```bash
-zerg rush --mode container --dry-run
+mahabharatha kurukshetra --mode container --dry-run
 ```
 
 ---
@@ -52,10 +52,10 @@ Run Claude Code on Mac, spawn workers in containers:
 # Your main session (Mac)
 claude
 
-# Inside session, rush spawns container workers
-/zerg:plan my-feature
-/zerg:design
-/zerg:rush --mode container --workers 3
+# Inside session, kurukshetra spawns container workers
+/mahabharatha:plan my-feature
+/mahabharatha:design
+/mahabharatha:kurukshetra --mode container --workers 3
 ```
 
 ---
@@ -74,7 +74,7 @@ docker-compose -f .devcontainer/docker-compose.yaml exec workspace bash
 # Inside container - run Claude Code
 claude
 
-# From inside, rush can spawn sibling containers (requires docker socket mount)
+# From inside, kurukshetra can spawn sibling containers (requires docker socket mount)
 ```
 
 **Note**: For Workflow B to spawn worker containers, need Docker-in-Docker or socket mount. Current docker-compose.yaml has `privileged: true` which enables this.
@@ -85,10 +85,10 @@ claude
 
 | Command | Effect |
 |---------|--------|
-| `zerg rush --mode container` | Force container workers |
-| `zerg rush --mode subprocess` | Force local subprocess workers |
-| `zerg rush --mode auto` | Auto-detect (default) |
-| `zerg rush --dry-run` | Preview without executing |
+| `mahabharatha kurukshetra --mode container` | Force container workers |
+| `mahabharatha kurukshetra --mode subprocess` | Force local subprocess workers |
+| `mahabharatha kurukshetra --mode auto` | Auto-detect (default) |
+| `mahabharatha kurukshetra --dry-run` | Preview without executing |
 
 ---
 
@@ -98,18 +98,18 @@ claude
 |------|------|
 | `.devcontainer/Dockerfile` | Image definition |
 | `.devcontainer/docker-compose.yaml` | Multi-container orchestration |
-| `.zerg/worker_entry.sh` | Container startup script |
-| `zerg/launcher.py:544-700` | ContainerLauncher class |
-| `zerg/orchestrator.py:87-177` | Launcher auto-detection |
+| `.mahabharatha/worker_entry.sh` | Container startup script |
+| `mahabharatha/launcher.py:544-700` | ContainerLauncher class |
+| `mahabharatha/orchestrator.py:87-177` | Launcher auto-detection |
 
 ---
 
 ## Verification
 
-1. **Image exists**: `docker images | grep zerg-worker`
-2. **Claude works**: `docker run --rm zerg-worker claude --version`
-3. **Launcher detects**: `zerg rush --mode container --dry-run` shows "container mode"
-4. **Full test**: Create test feature, run `zerg rush --mode container --workers 2`
+1. **Image exists**: `docker images | grep mahabharatha-worker`
+2. **Claude works**: `docker run --rm mahabharatha-worker claude --version`
+3. **Launcher detects**: `mahabharatha kurukshetra --mode container --dry-run` shows "container mode"
+4. **Full test**: Create test feature, run `mahabharatha kurukshetra --mode container --workers 2`
 
 ---
 

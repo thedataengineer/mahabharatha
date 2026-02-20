@@ -1,4 +1,4 @@
-"""ZERG status command - show execution progress."""
+"""MAHABHARATHA status command - show execution progress."""
 
 import json
 import time
@@ -231,7 +231,7 @@ def status(
                         except Exception:  # noqa: BLE001 -- best-effort JSON display
                             pass  # Best-effort JSON display
                         console.print(
-                            f"\nRun [cyan]mahabharatha rush[/cyan] to start execution,"
+                            f"\nRun [cyan]mahabharatha kurukshetra[/cyan] to start execution,"
                             f" or [cyan]mahabharatha cleanup -f {feature}[/cyan] to remove."
                         )
                     elif started.exists():

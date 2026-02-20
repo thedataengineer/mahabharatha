@@ -1,5 +1,5 @@
 {
-  "feature": "zerg-explain",
+  "feature": "mahabharatha-explain",
   "version": "2.0",
   "generated": "2026-01-31T23:00:00Z",
   "total_tasks": 4,
@@ -10,15 +10,15 @@
   "tasks": [
     {
       "id": "EXPLAIN-L1-001",
-      "title": "Create zerg:explain.core.md",
+      "title": "Create mahabharatha:explain.core.md",
       "description": "Create the core command file with split marker, flags (--scope, --save, --format, --no-diagrams), pre-flight (target parsing, scope auto-detection), 4-layer workflow overview referencing details.md, task tracking (TaskCreate/TaskUpdate), and completion criteria.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/data/commands/zerg:explain.core.md"],
+        "create": ["mahabharatha/data/commands/mahabharatha:explain.core.md"],
         "modify": [],
-        "read": ["zerg/data/commands/zerg:estimate.core.md", "zerg/data/commands/zerg:debug.core.md"]
+        "read": ["mahabharatha/data/commands/mahabharatha:estimate.core.md", "mahabharatha/data/commands/mahabharatha:debug.core.md"]
       },
       "acceptance_criteria": [
         "File exists with <!-- SPLIT: core --> marker",
@@ -29,7 +29,7 @@
         "Under 150 lines"
       ],
       "verification": {
-        "command": "test -f zerg/data/commands/zerg:explain.core.md && grep -q TaskCreate zerg/data/commands/zerg:explain.core.md && grep -q 'SPLIT' zerg/data/commands/zerg:explain.core.md",
+        "command": "test -f mahabharatha/data/commands/mahabharatha:explain.core.md && grep -q TaskCreate mahabharatha/data/commands/mahabharatha:explain.core.md && grep -q 'SPLIT' mahabharatha/data/commands/mahabharatha:explain.core.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -37,15 +37,15 @@
     },
     {
       "id": "EXPLAIN-L1-002",
-      "title": "Create zerg:explain.details.md",
+      "title": "Create mahabharatha:explain.details.md",
       "description": "Create the details reference file with: all 4 layer output templates (Summary, Logic Flow, Implementation Details, Design Decisions), python -c snippets for SymbolExtractor/DependencyMapper/ComponentDetector/MermaidGenerator, Mermaid diagram generation instructions, --save file format and path schema, edge cases (non-Python files, missing doc_engine, empty targets).",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/data/commands/zerg:explain.details.md"],
+        "create": ["mahabharatha/data/commands/mahabharatha:explain.details.md"],
         "modify": [],
-        "read": ["zerg/data/commands/zerg:estimate.details.md", "zerg/doc_engine/extractor.py", "zerg/doc_engine/dependencies.py", "zerg/doc_engine/mermaid.py", "zerg/doc_engine/detector.py"]
+        "read": ["mahabharatha/data/commands/mahabharatha:estimate.details.md", "mahabharatha/doc_engine/extractor.py", "mahabharatha/doc_engine/dependencies.py", "mahabharatha/doc_engine/mermaid.py", "mahabharatha/doc_engine/detector.py"]
       },
       "acceptance_criteria": [
         "File exists with <!-- SPLIT: details --> marker",
@@ -57,7 +57,7 @@
         "Under 300 lines"
       ],
       "verification": {
-        "command": "test -f zerg/data/commands/zerg:explain.details.md && grep -c 'LAYER' zerg/data/commands/zerg:explain.details.md && grep -q 'MermaidGenerator' zerg/data/commands/zerg:explain.details.md",
+        "command": "test -f mahabharatha/data/commands/mahabharatha:explain.details.md && grep -c 'LAYER' mahabharatha/data/commands/mahabharatha:explain.details.md && grep -q 'MermaidGenerator' mahabharatha/data/commands/mahabharatha:explain.details.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
@@ -65,23 +65,23 @@
     },
     {
       "id": "EXPLAIN-L2-001",
-      "title": "Create zerg:explain.md parent + update backlog",
-      "description": "Create the parent command file (copy of core content for backward compatibility, with SPLIT marker referencing core and details). Update claudedocs/backlog.md to mark zerg:explain as DONE.",
+      "title": "Create mahabharatha:explain.md parent + update backlog",
+      "description": "Create the parent command file (copy of core content for backward compatibility, with SPLIT marker referencing core and details). Update claudedocs/backlog.md to mark mahabharatha:explain as DONE.",
       "phase": "integration",
       "level": 2,
       "dependencies": ["EXPLAIN-L1-001", "EXPLAIN-L1-002"],
       "files": {
-        "create": ["zerg/data/commands/zerg:explain.md"],
+        "create": ["mahabharatha/data/commands/mahabharatha:explain.md"],
         "modify": ["claudedocs/backlog.md"],
-        "read": ["zerg/data/commands/zerg:explain.core.md"]
+        "read": ["mahabharatha/data/commands/mahabharatha:explain.core.md"]
       },
       "acceptance_criteria": [
         "Parent file exists with content matching core",
         "Parent has SPLIT marker referencing core and details files",
-        "claudedocs/backlog.md shows zerg:explain as DONE"
+        "claudedocs/backlog.md shows mahabharatha:explain as DONE"
       ],
       "verification": {
-        "command": "test -f zerg/data/commands/zerg:explain.md && grep -q 'SPLIT' zerg/data/commands/zerg:explain.md && grep 'explain' claudedocs/backlog.md | grep -q 'DONE'",
+        "command": "test -f mahabharatha/data/commands/mahabharatha:explain.md && grep -q 'SPLIT' mahabharatha/data/commands/mahabharatha:explain.md && grep 'explain' claudedocs/backlog.md | grep -q 'DONE'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5,
@@ -97,7 +97,7 @@
       "files": {
         "create": [],
         "modify": [],
-        "read": ["zerg/data/commands/zerg:explain.md", "zerg/data/commands/zerg:explain.core.md", "zerg/data/commands/zerg:explain.details.md", "claudedocs/backlog.md"]
+        "read": ["mahabharatha/data/commands/mahabharatha:explain.md", "mahabharatha/data/commands/mahabharatha:explain.core.md", "mahabharatha/data/commands/mahabharatha:explain.details.md", "claudedocs/backlog.md"]
       },
       "acceptance_criteria": [
         "All 3 explain command files exist",
@@ -107,7 +107,7 @@
         "Existing tests pass"
       ],
       "verification": {
-        "command": "ls zerg/data/commands/zerg:explain.md zerg/data/commands/zerg:explain.core.md zerg/data/commands/zerg:explain.details.md && python -m pytest tests/ -x -q --ignore=tests/test_doc_engine.py 2>&1 | tail -5",
+        "command": "ls mahabharatha/data/commands/mahabharatha:explain.md mahabharatha/data/commands/mahabharatha:explain.core.md mahabharatha/data/commands/mahabharatha:explain.details.md && python -m pytest tests/ -x -q --ignore=tests/test_doc_engine.py 2>&1 | tail -5",
         "timeout_seconds": 600
       },
       "estimate_minutes": 5,

@@ -8,7 +8,7 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Add `zerg analyze --performance` as a comprehensive static performance audit. A new `zerg/performance/` submodule (following the `zerg/diagnostics/` pattern) houses 11 tool adapters, a factor catalog, stack detection, scoring aggregation, and 4 output formatters. Integration into the existing `analyze.py` is minimal: one new CheckType enum value, one bridge checker class, and CLI flag additions.
+Add `mahabharatha analyze --performance` as a comprehensive static performance audit. A new `mahabharatha/performance/` submodule (following the `mahabharatha/diagnostics/` pattern) houses 11 tool adapters, a factor catalog, stack detection, scoring aggregation, and 4 output formatters. Integration into the existing `analyze.py` is minimal: one new CheckType enum value, one bridge checker class, and CLI flag additions.
 
 ### 1.2 Goals
 - Cover 140 performance factors across 16 categories via static analysis
@@ -50,13 +50,13 @@ CLI (analyze.py)
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| types | Data models for findings, reports, scores | `zerg/performance/types.py` |
-| catalog | Factor loading, filtering, tool-to-factor mapping | `zerg/performance/catalog.py` |
-| stack_detector | Detect languages, frameworks, infra | `zerg/performance/stack_detector.py` |
-| tool_registry | Check tool availability, advisory output | `zerg/performance/tool_registry.py` |
-| adapters | 11 tool adapters + base ABC | `zerg/performance/adapters/` |
-| aggregator | Orchestrate adapters, score categories | `zerg/performance/aggregator.py` |
-| formatters | Rich, JSON, SARIF, Markdown output | `zerg/performance/formatters.py` |
+| types | Data models for findings, reports, scores | `mahabharatha/performance/types.py` |
+| catalog | Factor loading, filtering, tool-to-factor mapping | `mahabharatha/performance/catalog.py` |
+| stack_detector | Detect languages, frameworks, infra | `mahabharatha/performance/stack_detector.py` |
+| tool_registry | Check tool availability, advisory output | `mahabharatha/performance/tool_registry.py` |
+| adapters | 11 tool adapters + base ABC | `mahabharatha/performance/adapters/` |
+| aggregator | Orchestrate adapters, score categories | `mahabharatha/performance/aggregator.py` |
+| formatters | Rich, JSON, SARIF, Markdown output | `mahabharatha/performance/formatters.py` |
 
 ### 2.3 Data Flow
 
@@ -183,8 +183,8 @@ overall = weighted_sum / max(1, total_weight)
 ## 4. Key Decisions
 
 ### 4.1 Submodule vs Inline
-**Decision**: New `zerg/performance/` submodule
-**Rationale**: 11 adapters + orchestrator + formatters would bloat analyze.py past 2000 lines. Follows established `zerg/diagnostics/` pattern.
+**Decision**: New `mahabharatha/performance/` submodule
+**Rationale**: 11 adapters + orchestrator + formatters would bloat analyze.py past 2000 lines. Follows established `mahabharatha/diagnostics/` pattern.
 
 ### 4.2 Tool Dependencies
 **Decision**: All optional externals, no pip deps

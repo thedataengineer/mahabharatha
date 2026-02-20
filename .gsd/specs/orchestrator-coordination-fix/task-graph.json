@@ -9,18 +9,18 @@
   "tasks": [
     {
       "id": "OCF-L1-001",
-      "title": "Add rush config flags",
-      "description": "Add defer_merge_to_ship and gates_at_ship_only config flags to RushConfig in zerg/config.py. Both should default to True.",
+      "title": "Add kurukshetra config flags",
+      "description": "Add defer_merge_to_ship and gates_at_ship_only config flags to RushConfig in mahabharatha/config.py. Both should default to True.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/config.py"],
+        "modify": ["mahabharatha/config.py"],
         "read": []
       },
       "verification": {
-        "command": "python -c \"from zerg.config import ZergConfig; c = ZergConfig(); print(c.rush.defer_merge_to_ship, c.rush.gates_at_ship_only)\"",
+        "command": "python -c \"from mahabharatha.config import ZergConfig; c = ZergConfig(); print(c.kurukshetra.defer_merge_to_ship, c.kurukshetra.gates_at_ship_only)\"",
         "timeout_seconds": 60
       },
       "estimate_minutes": 15,
@@ -31,14 +31,14 @@
     {
       "id": "OCF-L1-002",
       "title": "Create DependencyChecker helper",
-      "description": "Create zerg/dependency_checker.py with DependencyChecker class. Methods: are_dependencies_complete(task_id) -> bool, get_incomplete_dependencies(task_id) -> list[str]. Uses StateManager and TaskParser.",
+      "description": "Create mahabharatha/dependency_checker.py with DependencyChecker class. Methods: are_dependencies_complete(task_id) -> bool, get_incomplete_dependencies(task_id) -> list[str]. Uses StateManager and TaskParser.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/dependency_checker.py"],
+        "create": ["mahabharatha/dependency_checker.py"],
         "modify": [],
-        "read": ["zerg/state.py", "zerg/dsl/task_parser.py"]
+        "read": ["mahabharatha/state.py", "mahabharatha/dsl/task_parser.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_dependency_checker.py -v",
@@ -52,12 +52,12 @@
     {
       "id": "OCF-L1-003",
       "title": "Create EventEmitter for live streaming",
-      "description": "Create zerg/event_emitter.py with EventEmitter class. JSONL file-based emitter with emit(event_type, data) and subscribe(callback) methods. Events written to .zerg/state/{feature}-events.jsonl.",
+      "description": "Create mahabharatha/event_emitter.py with EventEmitter class. JSONL file-based emitter with emit(event_type, data) and subscribe(callback) methods. Events written to .mahabharatha/state/{feature}-events.jsonl.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/event_emitter.py"],
+        "create": ["mahabharatha/event_emitter.py"],
         "modify": [],
         "read": []
       },
@@ -73,13 +73,13 @@
     {
       "id": "OCF-L2-001",
       "title": "Add level enforcement to claim_task",
-      "description": "Modify claim_task() in zerg/state.py to accept optional current_level parameter. If provided, verify task.level == current_level before allowing claim. Return False and log warning if mismatch.",
+      "description": "Modify claim_task() in mahabharatha/state.py to accept optional current_level parameter. If provided, verify task.level == current_level before allowing claim. Return False and log warning if mismatch.",
       "phase": "core",
       "level": 2,
       "dependencies": ["OCF-L1-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/state.py"],
+        "modify": ["mahabharatha/state.py"],
         "read": []
       },
       "verification": {
@@ -94,13 +94,13 @@
     {
       "id": "OCF-L2-002",
       "title": "Add dependency enforcement to claim_task",
-      "description": "Modify claim_task() in zerg/state.py to accept optional DependencyChecker. If provided, verify all dependencies are COMPLETE before allowing claim. Return False and log warning if incomplete deps.",
+      "description": "Modify claim_task() in mahabharatha/state.py to accept optional DependencyChecker. If provided, verify all dependencies are COMPLETE before allowing claim. Return False and log warning if incomplete deps.",
       "phase": "core",
       "level": 2,
       "dependencies": ["OCF-L1-002", "OCF-L2-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/state.py"],
+        "modify": ["mahabharatha/state.py"],
         "read": []
       },
       "verification": {
@@ -115,13 +115,13 @@
     {
       "id": "OCF-L2-003",
       "title": "Disable per-level merge to main",
-      "description": "Modify handle_level_complete() in zerg/level_coordinator.py. When config.rush.defer_merge_to_ship is True, skip full_merge_flow() call. Just set level status to complete and advance.",
+      "description": "Modify handle_level_complete() in mahabharatha/level_coordinator.py. When config.kurukshetra.defer_merge_to_ship is True, skip full_merge_flow() call. Just set level status to complete and advance.",
       "phase": "core",
       "level": 2,
       "dependencies": ["OCF-L1-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/level_coordinator.py"],
+        "modify": ["mahabharatha/level_coordinator.py"],
         "read": []
       },
       "verification": {
@@ -136,13 +136,13 @@
     {
       "id": "OCF-L2-004",
       "title": "Add skip_gates_until_ship to merge",
-      "description": "Modify full_merge_flow() in zerg/merge.py to accept skip_gates parameter. When True with gates_at_ship_only config, skip pre/post merge gates.",
+      "description": "Modify full_merge_flow() in mahabharatha/merge.py to accept skip_gates parameter. When True with gates_at_ship_only config, skip pre/post merge gates.",
       "phase": "core",
       "level": 2,
       "dependencies": ["OCF-L1-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/merge.py"],
+        "modify": ["mahabharatha/merge.py"],
         "read": []
       },
       "verification": {
@@ -157,13 +157,13 @@
     {
       "id": "OCF-L3-001",
       "title": "Integrate gates at ship time",
-      "description": "Modify action_ship() in zerg/commands/git_cmd.py to use MergeCoordinator.full_merge_flow() with gates enabled instead of direct gh pr merge.",
+      "description": "Modify action_ship() in mahabharatha/commands/git_cmd.py to use MergeCoordinator.full_merge_flow() with gates enabled instead of direct gh pr merge.",
       "phase": "integration",
       "level": 3,
       "dependencies": ["OCF-L2-004"],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/git_cmd.py"],
+        "modify": ["mahabharatha/commands/git_cmd.py"],
         "read": []
       },
       "verification": {
@@ -178,13 +178,13 @@
     {
       "id": "OCF-L3-002",
       "title": "Fix staging branch worktree lock",
-      "description": "Modify finalize() in zerg/merge.py to use detached HEAD checkout before merging. Prevents 'cannot delete branch used by worktree' errors.",
+      "description": "Modify finalize() in mahabharatha/merge.py to use detached HEAD checkout before merging. Prevents 'cannot delete branch used by worktree' errors.",
       "phase": "integration",
       "level": 3,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/merge.py"],
+        "modify": ["mahabharatha/merge.py"],
         "read": []
       },
       "verification": {
@@ -205,7 +205,7 @@
       "dependencies": ["OCF-L1-003"],
       "files": {
         "create": [],
-        "modify": ["zerg/orchestrator.py"],
+        "modify": ["mahabharatha/orchestrator.py"],
         "read": []
       },
       "verification": {
@@ -226,7 +226,7 @@
       "dependencies": ["OCF-L3-003"],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/status.py"],
+        "modify": ["mahabharatha/commands/status.py"],
         "read": []
       },
       "verification": {
@@ -247,7 +247,7 @@
       "dependencies": ["OCF-L2-002"],
       "files": {
         "create": [],
-        "modify": ["zerg/worker_manager.py"],
+        "modify": ["mahabharatha/worker_manager.py"],
         "read": []
       },
       "verification": {
@@ -272,7 +272,7 @@
         "read": []
       },
       "verification": {
-        "command": "pytest tests/unit/test_dependency_checker.py --cov=zerg.dependency_checker -v",
+        "command": "pytest tests/unit/test_dependency_checker.py --cov=mahabharatha.dependency_checker -v",
         "timeout_seconds": 120
       },
       "estimate_minutes": 25,
@@ -293,7 +293,7 @@
         "read": []
       },
       "verification": {
-        "command": "pytest tests/unit/test_event_emitter.py --cov=zerg.event_emitter -v",
+        "command": "pytest tests/unit/test_event_emitter.py --cov=mahabharatha.event_emitter -v",
         "timeout_seconds": 120
       },
       "estimate_minutes": 20,
@@ -304,7 +304,7 @@
     {
       "id": "OCF-L4-003",
       "title": "Integration tests for deferred merge",
-      "description": "Create integration tests: main untouched during rush, gates run at ship, config flag toggles behavior.",
+      "description": "Create integration tests: main untouched during kurukshetra, gates run at ship, config flag toggles behavior.",
       "phase": "testing",
       "level": 4,
       "dependencies": ["OCF-L3-001"],
@@ -408,12 +408,12 @@
     "conflicts": [
       {
         "tasks": ["OCF-L2-001", "OCF-L2-002"],
-        "file": "zerg/state.py",
+        "file": "mahabharatha/state.py",
         "resolution": "L2-002 depends on L2-001"
       },
       {
         "tasks": ["OCF-L2-004", "OCF-L3-002"],
-        "file": "zerg/merge.py",
+        "file": "mahabharatha/merge.py",
         "resolution": "L3-002 in different level, no conflict"
       }
     ]

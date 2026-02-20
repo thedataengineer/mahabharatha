@@ -16,11 +16,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/config.py"],
+        "modify": ["mahabharatha/config.py"],
         "read": [".gsd/specs/issue-102-resilience/requirements.md"]
       },
       "verification": {
-        "command": "python -c \"from zerg.config import ZergConfig; c=ZergConfig(); assert hasattr(c, 'resilience'); assert c.workers.spawn_retry_attempts == 3; assert c.workers.task_stale_timeout_seconds == 600\"",
+        "command": "python -c \"from mahabharatha.config import ZergConfig; c=ZergConfig(); assert hasattr(c, 'resilience'); assert c.workers.spawn_retry_attempts == 3; assert c.workers.task_stale_timeout_seconds == 600\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
@@ -38,11 +38,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/constants.py"],
+        "modify": ["mahabharatha/constants.py"],
         "read": [".gsd/specs/issue-102-resilience/requirements.md"]
       },
       "verification": {
-        "command": "python -c \"from zerg.constants import ResilienceEvent; assert hasattr(ResilienceEvent, 'WORKER_SPAWN'); assert hasattr(ResilienceEvent, 'TASK_TIMEOUT')\"",
+        "command": "python -c \"from mahabharatha.constants import ResilienceEvent; assert hasattr(ResilienceEvent, 'WORKER_SPAWN'); assert hasattr(ResilienceEvent, 'TASK_TIMEOUT')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
@@ -60,8 +60,8 @@
       "dependencies": ["RES-L1-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/launcher.py"],
-        "read": ["zerg/retry_backoff.py", "zerg/config.py"]
+        "modify": ["mahabharatha/launcher.py"],
+        "read": ["mahabharatha/retry_backoff.py", "mahabharatha/config.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_launcher.py -k spawn -v --tb=short",
@@ -82,8 +82,8 @@
       "dependencies": ["RES-L1-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/task_retry_manager.py"],
-        "read": ["zerg/config.py"]
+        "modify": ["mahabharatha/task_retry_manager.py"],
+        "read": ["mahabharatha/config.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_task_retry_manager.py -k stale -v --tb=short",
@@ -104,8 +104,8 @@
       "dependencies": ["RES-L1-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/heartbeat.py"],
-        "read": ["zerg/config.py"]
+        "modify": ["mahabharatha/heartbeat.py"],
+        "read": ["mahabharatha/config.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_heartbeat.py -v --tb=short",
@@ -126,7 +126,7 @@
       "dependencies": ["RES-L1-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/levels.py"],
+        "modify": ["mahabharatha/levels.py"],
         "read": []
       },
       "verification": {
@@ -142,14 +142,14 @@
     {
       "id": "RES-L2-005",
       "title": "Create StateReconciler class",
-      "description": "Create new zerg/state_reconciler.py with StateReconciler class. Implements periodic reconciliation (60s) and level-transition thorough checks. Parses level from task ID pattern.",
+      "description": "Create new mahabharatha/state_reconciler.py with StateReconciler class. Implements periodic reconciliation (60s) and level-transition thorough checks. Parses level from task ID pattern.",
       "phase": "core",
       "level": 2,
       "dependencies": ["RES-L1-002"],
       "files": {
-        "create": ["zerg/state_reconciler.py"],
+        "create": ["mahabharatha/state_reconciler.py"],
         "modify": [],
-        "read": ["zerg/state_sync_service.py", "zerg/heartbeat.py"]
+        "read": ["mahabharatha/state_sync_service.py", "mahabharatha/heartbeat.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_state_reconciler.py -v --tb=short",
@@ -164,14 +164,14 @@
     {
       "id": "RES-L3-001",
       "title": "Add MonitorLogWriter",
-      "description": "Add MonitorLogWriter class to log_writer.py for structured resilience event logging to .zerg/monitor.log with ISO8601 timestamps and worker ID prefix.",
+      "description": "Add MonitorLogWriter class to log_writer.py for structured resilience event logging to .mahabharatha/monitor.log with ISO8601 timestamps and worker ID prefix.",
       "phase": "integration",
       "level": 3,
       "dependencies": ["RES-L1-002"],
       "files": {
         "create": [],
-        "modify": ["zerg/log_writer.py"],
-        "read": ["zerg/constants.py"]
+        "modify": ["mahabharatha/log_writer.py"],
+        "read": ["mahabharatha/constants.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_log_writer.py -k monitor -v --tb=short",
@@ -181,7 +181,7 @@
       "skills_required": ["python"],
       "consumers": [],
       "integration_test": "tests/integration/test_resilience_e2e.py",
-      "context": "## Requirements\nFR-8: Write to .zerg/monitor.log. ISO8601 timestamps with ms. Worker ID prefix. Structured enough for automated analysis.\n\n## Format\n{\"ts\": \"2026-02-03T05:41:55.123Z\", \"level\": \"INFO\", \"worker_id\": \"W0\", \"event\": \"task_claimed\", \"task_id\": \"A-L1-002\", \"data\": {}}"
+      "context": "## Requirements\nFR-8: Write to .mahabharatha/monitor.log. ISO8601 timestamps with ms. Worker ID prefix. Structured enough for automated analysis.\n\n## Format\n{\"ts\": \"2026-02-03T05:41:55.123Z\", \"level\": \"INFO\", \"worker_id\": \"W0\", \"event\": \"task_claimed\", \"task_id\": \"A-L1-002\", \"data\": {}}"
     },
     {
       "id": "RES-L3-002",
@@ -192,11 +192,11 @@
       "dependencies": ["RES-L2-001", "RES-L2-002", "RES-L2-003", "RES-L2-004", "RES-L2-005"],
       "files": {
         "create": [],
-        "modify": ["zerg/orchestrator.py"],
-        "read": ["zerg/launcher.py", "zerg/task_retry_manager.py", "zerg/state_reconciler.py", "zerg/log_writer.py"]
+        "modify": ["mahabharatha/orchestrator.py"],
+        "read": ["mahabharatha/launcher.py", "mahabharatha/task_retry_manager.py", "mahabharatha/state_reconciler.py", "mahabharatha/log_writer.py"]
       },
       "verification": {
-        "command": "pytest tests/unit/test_orchestrator.py -v --tb=short && python -m zerg.validate_commands",
+        "command": "pytest tests/unit/test_orchestrator.py -v --tb=short && python -m mahabharatha.validate_commands",
         "timeout_seconds": 180
       },
       "estimate_minutes": 60,
@@ -214,8 +214,8 @@
       "dependencies": ["RES-L2-004", "RES-L2-005"],
       "files": {
         "create": [],
-        "modify": ["zerg/state_sync_service.py"],
-        "read": ["zerg/state_reconciler.py", "zerg/levels.py"]
+        "modify": ["mahabharatha/state_sync_service.py"],
+        "read": ["mahabharatha/state_reconciler.py", "mahabharatha/levels.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_state_sync_service.py -v --tb=short",
@@ -236,18 +236,18 @@
       "dependencies": ["RES-L2-005"],
       "files": {
         "create": [],
-        "modify": ["zerg/validate_commands.py"],
+        "modify": ["mahabharatha/validate_commands.py"],
         "read": []
       },
       "verification": {
-        "command": "python -m zerg.validate_commands --check-wiring",
+        "command": "python -m mahabharatha.validate_commands --check-wiring",
         "timeout_seconds": 60
       },
       "estimate_minutes": 20,
       "skills_required": ["python"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Requirements\nFR-9: Every new .py file in zerg/ must be imported by at least one other production file. Test-only imports don't count.\n\n## Check\nstate_reconciler.py must be imported by state_sync_service.py or orchestrator.py."
+      "context": "## Requirements\nFR-9: Every new .py file in mahabharatha/ must be imported by at least one other production file. Test-only imports don't count.\n\n## Check\nstate_reconciler.py must be imported by state_sync_service.py or orchestrator.py."
     },
     {
       "id": "RES-L4-001",
@@ -259,7 +259,7 @@
       "files": {
         "create": ["tests/unit/test_resilience_config.py"],
         "modify": [],
-        "read": ["zerg/config.py"]
+        "read": ["mahabharatha/config.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_resilience_config.py -v --tb=short",
@@ -281,7 +281,7 @@
       "files": {
         "create": ["tests/unit/test_state_reconciler.py"],
         "modify": [],
-        "read": ["zerg/state_reconciler.py"]
+        "read": ["mahabharatha/state_reconciler.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_state_reconciler.py -v --tb=short",
@@ -303,7 +303,7 @@
       "files": {
         "create": ["tests/integration/test_resilience_e2e.py"],
         "modify": [],
-        "read": ["zerg/orchestrator.py", "zerg/launcher.py"]
+        "read": ["mahabharatha/orchestrator.py", "mahabharatha/launcher.py"]
       },
       "verification": {
         "command": "pytest tests/integration/test_resilience_e2e.py -v --tb=short",
@@ -357,7 +357,7 @@
       "skills_required": ["documentation"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Entry\nUnder [Unreleased] → Added:\n- Container mode resilience: spawn retry with exponential backoff, task timeout watchdog, state reconciliation (#102)\n- Worker crash recovery with automatic task reassignment\n- Auto-respawn of failed workers\n- Structured resilience logging to .zerg/monitor.log"
+      "context": "## Entry\nUnder [Unreleased] → Added:\n- Container mode resilience: spawn retry with exponential backoff, task timeout watchdog, state reconciliation (#102)\n- Worker crash recovery with automatic task reassignment\n- Auto-respawn of failed workers\n- Structured resilience logging to .mahabharatha/monitor.log"
     },
     {
       "id": "RES-L5-003",

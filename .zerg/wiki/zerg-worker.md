@@ -1,14 +1,14 @@
-# /zerg:worker
+# /mahabharatha:worker
 
-Worker execution protocol for parallel task processing within a ZERG swarm.
+Worker execution protocol for parallel task processing within a MAHABHARATHA akshauhini.
 
 ## Synopsis
 
-This command is not invoked directly by users. Workers are spawned by the `/zerg:rush` orchestrator and execute tasks according to the protocol described below.
+This command is not invoked directly by users. Workers are spawned by the `/mahabharatha:kurukshetra` orchestrator and execute tasks according to the protocol described below.
 
 ## Description
 
-A ZERG worker is an isolated Claude Code instance that executes tasks assigned to it from the task graph. Workers operate in parallel, each owning exclusive files to prevent conflicts. They coordinate through the shared Claude Code Task system and communicate progress through state files and logs.
+A MAHABHARATHA worker is an isolated Claude Code instance that executes tasks assigned to it from the task graph. Workers operate in parallel, each owning exclusive files to prevent conflicts. They coordinate through the shared Claude Code Task system and communicate progress through state files and logs.
 
 ### Environment Variables
 
@@ -66,7 +66,7 @@ Workers include three health subsystems introduced in the worker-intelligence fe
 
 #### Heartbeat Health Monitoring
 
-Workers write a heartbeat file (`.zerg/state/heartbeat-{id}.json`) every 15 seconds containing:
+Workers write a heartbeat file (`.mahabharatha/state/heartbeat-{id}.json`) every 15 seconds containing:
 
 ```json
 {
@@ -102,11 +102,11 @@ When a failure is ambiguous, workers escalate instead of retrying blindly. Escal
 | `dependency_missing` | Required dependency not available |
 | `verification_unclear` | Can't determine if verification passed |
 
-Escalations are written to `.zerg/state/escalations.json`. The orchestrator alerts the terminal with escalation details.
+Escalations are written to `.mahabharatha/state/escalations.json`. The orchestrator alerts the terminal with escalation details.
 
 #### Structured Progress Reporting
 
-Workers write structured progress to `.zerg/state/progress-{id}.json`:
+Workers write structured progress to `.mahabharatha/state/progress-{id}.json`:
 
 ```json
 {
@@ -124,7 +124,7 @@ Workers write structured progress to `.zerg/state/progress-{id}.json`:
 
 #### Repository Symbol Map
 
-At rush start, ZERG builds a symbol graph using Python AST and JS/TS regex extraction. Per-task context includes relevant symbols (functions, classes, imports), giving workers awareness of nearby code without reading full source files.
+At kurukshetra start, MAHABHARATHA builds a symbol graph using Python AST and JS/TS regex extraction. Per-task context includes relevant symbols (functions, classes, imports), giving workers awareness of nearby code without reading full source files.
 
 ### Failure Handling
 
@@ -175,18 +175,18 @@ STARTING --> RUNNING --> STOPPED
 
 | Channel | Path | Purpose |
 |---------|------|---------|
-| State file | `.zerg/state/{feature}.json` | Shared task state |
-| Heartbeat | `.zerg/state/heartbeat-{id}.json` | Worker liveness signal (15s interval) |
-| Progress | `.zerg/state/progress-{id}.json` | Structured per-worker progress |
-| Escalations | `.zerg/state/escalations.json` | Shared escalation file for ambiguous failures |
+| State file | `.mahabharatha/state/{feature}.json` | Shared task state |
+| Heartbeat | `.mahabharatha/state/heartbeat-{id}.json` | Worker liveness signal (15s interval) |
+| Progress | `.mahabharatha/state/progress-{id}.json` | Structured per-worker progress |
+| Escalations | `.mahabharatha/state/escalations.json` | Shared escalation file for ambiguous failures |
 | Progress log | `.gsd/specs/{feature}/progress.md` | Human-readable activity log |
-| Worker log | `.zerg/logs/worker-{id}.log` | Detailed worker output |
+| Worker log | `.mahabharatha/logs/worker-{id}.log` | Detailed worker output |
 | Event stream | State manager | Append-only events for orchestrator |
 
 ### WIP Commit Format
 
 ```
-WIP: ZERG [worker-{id}] checkpoint during {task_id}
+WIP: MAHABHARATHA [worker-{id}] checkpoint during {task_id}
 
 Status: {percentage}% complete
 Files modified:
@@ -226,6 +226,6 @@ Workers use the Claude Code Task system extensively:
 
 ## See Also
 
-- [[zerg-debug]] -- Diagnose worker failures
-- [[zerg-plugins]] -- Custom lifecycle hooks that observe worker events
-- [[zerg-index]] -- Generate documentation for the worker protocol
+- [[mahabharatha-debug]] -- Diagnose worker failures
+- [[mahabharatha-plugins]] -- Custom lifecycle hooks that observe worker events
+- [[mahabharatha-index]] -- Generate documentation for the worker protocol

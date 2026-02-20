@@ -1,4 +1,4 @@
-"""MCP server auto-routing for ZERG."""
+"""MCP server auto-routing for MAHABHARATHA."""
 
 from __future__ import annotations
 

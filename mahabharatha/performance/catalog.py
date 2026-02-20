@@ -1,4 +1,4 @@
-"""Factor catalog loader for the ZERG performance analysis system."""
+"""Factor catalog loader for the MAHABHARATHA performance analysis system."""
 
 from __future__ import annotations
 

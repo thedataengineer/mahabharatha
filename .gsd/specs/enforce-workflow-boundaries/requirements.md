@@ -4,7 +4,7 @@
 - **Feature**: enforce-workflow-boundaries
 - **Status**: APPROVED
 - **Created**: 2026-02-05
-- **Author**: /zerg:plan
+- **Author**: /mahabharatha:plan
 
 ---
 
@@ -27,7 +27,7 @@ This is a workflow discipline requirement to ensure the user maintains full cont
 - **Gap**: No explicit HARD STOP language; Claude might interpret instructions loosely
 
 ### `/z:brainstorm` (brainstorm.md, brainstorm.core.md)
-- Phase 4 (Handoff) only SUGGESTS next step: `/zerg:plan {top-feature}`
+- Phase 4 (Handoff) only SUGGESTS next step: `/mahabharatha:plan {top-feature}`
 - No AskUserQuestion mechanism for user to choose next step
 - **Gap**: Missing explicit handoff prompt; missing HARD STOP language
 
@@ -133,10 +133,10 @@ Based on user response:
 
 | File | Change |
 |------|--------|
-| `zerg/data/commands/plan.md` | Add workflow boundary section, strengthen Phase 5.5 |
-| `zerg/data/commands/plan.core.md` | Same changes (keep in sync) |
-| `zerg/data/commands/brainstorm.md` | Add workflow boundary section, add AskUserQuestion to Phase 4 |
-| `zerg/data/commands/brainstorm.core.md` | Same changes (keep in sync) |
+| `mahabharatha/data/commands/plan.md` | Add workflow boundary section, strengthen Phase 5.5 |
+| `mahabharatha/data/commands/plan.core.md` | Same changes (keep in sync) |
+| `mahabharatha/data/commands/brainstorm.md` | Add workflow boundary section, add AskUserQuestion to Phase 4 |
+| `mahabharatha/data/commands/brainstorm.core.md` | Same changes (keep in sync) |
 
 ---
 
@@ -164,5 +164,5 @@ Based on user response:
 ## 7. Out of Scope
 
 - Programmatic enforcement (Python code) - this is prompt-level enforcement
-- Changes to `/z:design` or `/z:rush` commands
+- Changes to `/z:design` or `/z:kurukshetra` commands
 - CI/CD validation of workflow boundaries

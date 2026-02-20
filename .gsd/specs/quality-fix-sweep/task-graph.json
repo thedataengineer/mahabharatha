@@ -10,22 +10,22 @@
     {
       "id": "QFS-L1-001",
       "title": "Fix cleanup.py broken method calls",
-      "description": "Fix 7 attr-defined errors in commands/cleanup.py:\n1. Lines 134,135,184,185: BranchInfo objects used as strings — change `branch.startswith()` to `branch.name.startswith()` and `branch.split()` to `branch.name.split()`\n2. Line 185: Same fix for `branch.startswith(f'zerg/{feature}/')`\n3. Line 281: `worktree_mgr.remove(path)` should be `worktree_mgr.delete(path)`\n4. Line 306: `container_mgr.stop_matching(pattern)` doesn't exist — implement using `stop_all()` or iterate `get_all_containers()` and call `stop_worker()` per match\n5. Lines 207,265: Fix missing dict type params",
+      "description": "Fix 7 attr-defined errors in commands/cleanup.py:\n1. Lines 134,135,184,185: BranchInfo objects used as strings — change `branch.startswith()` to `branch.name.startswith()` and `branch.split()` to `branch.name.split()`\n2. Line 185: Same fix for `branch.startswith(f'mahabharatha/{feature}/')`\n3. Line 281: `worktree_mgr.remove(path)` should be `worktree_mgr.delete(path)`\n4. Line 306: `container_mgr.stop_matching(pattern)` doesn't exist — implement using `stop_all()` or iterate `get_all_containers()` and call `stop_worker()` per match\n5. Lines 207,265: Fix missing dict type params",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/cleanup.py"],
-        "read": ["zerg/git_ops.py", "zerg/worktree.py", "zerg/containers.py"]
+        "modify": ["mahabharatha/commands/cleanup.py"],
+        "read": ["mahabharatha/git_ops.py", "mahabharatha/worktree.py", "mahabharatha/containers.py"]
       },
       "acceptance_criteria": [
-        "mypy reports 0 errors for zerg/commands/cleanup.py",
-        "ruff reports 0 errors for zerg/commands/cleanup.py",
+        "mypy reports 0 errors for mahabharatha/commands/cleanup.py",
+        "ruff reports 0 errors for mahabharatha/commands/cleanup.py",
         "No behavioral changes to cleanup logic"
       ],
       "verification": {
-        "command": "python -m mypy zerg/commands/cleanup.py --no-error-summary && python -m ruff check zerg/commands/cleanup.py",
+        "command": "python -m mypy mahabharatha/commands/cleanup.py --no-error-summary && python -m ruff check mahabharatha/commands/cleanup.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 10
@@ -39,15 +39,15 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/stop.py"],
-        "read": ["zerg/containers.py", "zerg/state.py"]
+        "modify": ["mahabharatha/commands/stop.py"],
+        "read": ["mahabharatha/containers.py", "mahabharatha/state.py"]
       },
       "acceptance_criteria": [
-        "mypy reports 0 errors for zerg/commands/stop.py",
-        "ruff reports 0 errors for zerg/commands/stop.py"
+        "mypy reports 0 errors for mahabharatha/commands/stop.py",
+        "ruff reports 0 errors for mahabharatha/commands/stop.py"
       ],
       "verification": {
-        "command": "python -m mypy zerg/commands/stop.py --no-error-summary && python -m ruff check zerg/commands/stop.py",
+        "command": "python -m mypy mahabharatha/commands/stop.py --no-error-summary && python -m ruff check mahabharatha/commands/stop.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 10
@@ -61,15 +61,15 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/retry.py"],
-        "read": ["zerg/state.py"]
+        "modify": ["mahabharatha/commands/retry.py"],
+        "read": ["mahabharatha/state.py"]
       },
       "acceptance_criteria": [
-        "mypy reports 0 errors for zerg/commands/retry.py",
-        "ruff reports 0 errors for zerg/commands/retry.py"
+        "mypy reports 0 errors for mahabharatha/commands/retry.py",
+        "ruff reports 0 errors for mahabharatha/commands/retry.py"
       ],
       "verification": {
-        "command": "python -m mypy zerg/commands/retry.py --no-error-summary && python -m ruff check zerg/commands/retry.py",
+        "command": "python -m mypy mahabharatha/commands/retry.py --no-error-summary && python -m ruff check mahabharatha/commands/retry.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 5
@@ -77,14 +77,14 @@
     {
       "id": "QFS-L1-004",
       "title": "Fix merge_cmd.py broken method calls and type errors",
-      "description": "Fix 7 errors in commands/merge_cmd.py:\n1. Lines 129,131: `result.conflicts` — MergeFlowResult has no conflicts field. Add `conflicts: list[str] = field(default_factory=list)` to MergeFlowResult in types.py.\n2. Line 139: `merge_coordinator.merge_level(level)` — MergeCoordinator has no merge_level(). Replace with the correct sequence: prepare_merge() → run_pre_merge_gates() → execute_merge().\n3. Line 265: `gates.items()` on list[QualityGate] — config.quality_gates is a list, not dict. Fix iteration to `for gate in gates:`\n4. Line 276: `result == GateResult.PASS` — GateRunResult is not comparable to GateResult enum. Use `result.result == GateResult.PASS` (access the .result field).\n5. Lines 182,217: Fix missing dict type params.\n\nAlso modify zerg/types.py to add the `conflicts` field to MergeFlowResult dataclass.",
+      "description": "Fix 7 errors in commands/merge_cmd.py:\n1. Lines 129,131: `result.conflicts` — MergeFlowResult has no conflicts field. Add `conflicts: list[str] = field(default_factory=list)` to MergeFlowResult in types.py.\n2. Line 139: `merge_coordinator.merge_level(level)` — MergeCoordinator has no merge_level(). Replace with the correct sequence: prepare_merge() → run_pre_merge_gates() → execute_merge().\n3. Line 265: `gates.items()` on list[QualityGate] — config.quality_gates is a list, not dict. Fix iteration to `for gate in gates:`\n4. Line 276: `result == GateResult.PASS` — GateRunResult is not comparable to GateResult enum. Use `result.result == GateResult.PASS` (access the .result field).\n5. Lines 182,217: Fix missing dict type params.\n\nAlso modify mahabharatha/types.py to add the `conflicts` field to MergeFlowResult dataclass.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/merge_cmd.py", "zerg/types.py"],
-        "read": ["zerg/merge.py", "zerg/gates.py", "zerg/config.py"]
+        "modify": ["mahabharatha/commands/merge_cmd.py", "mahabharatha/types.py"],
+        "read": ["mahabharatha/merge.py", "mahabharatha/gates.py", "mahabharatha/config.py"]
       },
       "acceptance_criteria": [
         "mypy reports 0 attr-defined/comparison-overlap errors for merge_cmd.py",
@@ -92,30 +92,30 @@
         "ruff reports 0 errors for merge_cmd.py"
       ],
       "verification": {
-        "command": "python -m mypy zerg/commands/merge_cmd.py --no-error-summary && python -m ruff check zerg/commands/merge_cmd.py",
+        "command": "python -m mypy mahabharatha/commands/merge_cmd.py --no-error-summary && python -m ruff check mahabharatha/commands/merge_cmd.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 15
     },
     {
       "id": "QFS-L1-005",
-      "title": "Fix rush.py type errors and undefined name",
-      "description": "Fix 6 errors in commands/rush.py:\n1. Lines 139-140: DryRunReport assigned to variable typed as WhatIfReport. Fix: use correct variable type or separate variables.\n2. Line 226: Forward reference `'RiskReport'` is undefined. Fix: add `from __future__ import annotations` at top OR use TYPE_CHECKING block: `from typing import TYPE_CHECKING; if TYPE_CHECKING: from zerg.risk_scoring import RiskReport`. Move the runtime import at line 231 to stay.\n3. Line 231: After fixing line 226, the runtime import of RiskReport becomes the actual usage (not unused). Ruff F401 should resolve.\n4. Lines 290,318,332: Fix missing dict type params.",
+      "title": "Fix kurukshetra.py type errors and undefined name",
+      "description": "Fix 6 errors in commands/kurukshetra.py:\n1. Lines 139-140: DryRunReport assigned to variable typed as WhatIfReport. Fix: use correct variable type or separate variables.\n2. Line 226: Forward reference `'RiskReport'` is undefined. Fix: add `from __future__ import annotations` at top OR use TYPE_CHECKING block: `from typing import TYPE_CHECKING; if TYPE_CHECKING: from mahabharatha.risk_scoring import RiskReport`. Move the runtime import at line 231 to stay.\n3. Line 231: After fixing line 226, the runtime import of RiskReport becomes the actual usage (not unused). Ruff F401 should resolve.\n4. Lines 290,318,332: Fix missing dict type params.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/rush.py"],
-        "read": ["zerg/dryrun.py", "zerg/whatif.py", "zerg/risk_scoring.py"]
+        "modify": ["mahabharatha/commands/kurukshetra.py"],
+        "read": ["mahabharatha/dryrun.py", "mahabharatha/whatif.py", "mahabharatha/risk_scoring.py"]
       },
       "acceptance_criteria": [
-        "mypy reports 0 errors for zerg/commands/rush.py",
-        "ruff reports 0 errors for zerg/commands/rush.py",
+        "mypy reports 0 errors for mahabharatha/commands/kurukshetra.py",
+        "ruff reports 0 errors for mahabharatha/commands/kurukshetra.py",
         "RiskReport is properly importable at type-check time"
       ],
       "verification": {
-        "command": "python -m mypy zerg/commands/rush.py --no-error-summary && python -m ruff check zerg/commands/rush.py",
+        "command": "python -m mypy mahabharatha/commands/kurukshetra.py --no-error-summary && python -m ruff check mahabharatha/commands/kurukshetra.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 10
@@ -129,15 +129,15 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/review.py"],
-        "read": ["zerg/types.py"]
+        "modify": ["mahabharatha/commands/review.py"],
+        "read": ["mahabharatha/types.py"]
       },
       "acceptance_criteria": [
-        "mypy reports 0 errors for zerg/commands/review.py",
-        "ruff reports 0 errors for zerg/commands/review.py"
+        "mypy reports 0 errors for mahabharatha/commands/review.py",
+        "ruff reports 0 errors for mahabharatha/commands/review.py"
       ],
       "verification": {
-        "command": "python -m mypy zerg/commands/review.py --no-error-summary && python -m ruff check zerg/commands/review.py",
+        "command": "python -m mypy mahabharatha/commands/review.py --no-error-summary && python -m ruff check mahabharatha/commands/review.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 12
@@ -151,15 +151,15 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/plan.py"],
+        "modify": ["mahabharatha/commands/plan.py"],
         "read": []
       },
       "acceptance_criteria": [
-        "mypy reports 0 errors for zerg/commands/plan.py",
-        "ruff reports 0 errors for zerg/commands/plan.py"
+        "mypy reports 0 errors for mahabharatha/commands/plan.py",
+        "ruff reports 0 errors for mahabharatha/commands/plan.py"
       ],
       "verification": {
-        "command": "python -m mypy zerg/commands/plan.py --no-error-summary && python -m ruff check zerg/commands/plan.py",
+        "command": "python -m mypy mahabharatha/commands/plan.py --no-error-summary && python -m ruff check mahabharatha/commands/plan.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 8
@@ -173,15 +173,15 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/state.py"],
+        "modify": ["mahabharatha/state.py"],
         "read": []
       },
       "acceptance_criteria": [
-        "mypy reports 0 errors for zerg/state.py",
-        "ruff reports 0 errors for zerg/state.py"
+        "mypy reports 0 errors for mahabharatha/state.py",
+        "ruff reports 0 errors for mahabharatha/state.py"
       ],
       "verification": {
-        "command": "python -m mypy zerg/state.py --no-error-summary && python -m ruff check zerg/state.py",
+        "command": "python -m mypy mahabharatha/state.py --no-error-summary && python -m ruff check mahabharatha/state.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 12
@@ -195,7 +195,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/logging.py", "zerg/ports.py", "zerg/retry_backoff.py", "zerg/validation.py"],
+        "modify": ["mahabharatha/logging.py", "mahabharatha/ports.py", "mahabharatha/retry_backoff.py", "mahabharatha/validation.py"],
         "read": []
       },
       "acceptance_criteria": [
@@ -203,7 +203,7 @@
         "ruff reports 0 errors for all 4 files"
       ],
       "verification": {
-        "command": "python -m mypy zerg/logging.py zerg/ports.py zerg/retry_backoff.py zerg/validation.py --no-error-summary && python -m ruff check zerg/logging.py zerg/ports.py zerg/retry_backoff.py zerg/validation.py",
+        "command": "python -m mypy mahabharatha/logging.py mahabharatha/ports.py mahabharatha/retry_backoff.py mahabharatha/validation.py --no-error-summary && python -m ruff check mahabharatha/logging.py mahabharatha/ports.py mahabharatha/retry_backoff.py mahabharatha/validation.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 8
@@ -217,7 +217,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/launcher.py", "zerg/command_executor.py"],
+        "modify": ["mahabharatha/launcher.py", "mahabharatha/command_executor.py"],
         "read": []
       },
       "acceptance_criteria": [
@@ -225,7 +225,7 @@
         "ruff reports 0 errors for both files"
       ],
       "verification": {
-        "command": "python -m mypy zerg/launcher.py zerg/command_executor.py --no-error-summary && python -m ruff check zerg/launcher.py zerg/command_executor.py",
+        "command": "python -m mypy mahabharatha/launcher.py mahabharatha/command_executor.py --no-error-summary && python -m ruff check mahabharatha/launcher.py mahabharatha/command_executor.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 8
@@ -239,7 +239,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/security.py", "zerg/plugins.py", "zerg/config.py"],
+        "modify": ["mahabharatha/security.py", "mahabharatha/plugins.py", "mahabharatha/config.py"],
         "read": []
       },
       "acceptance_criteria": [
@@ -247,7 +247,7 @@
         "ruff reports 0 errors for all 3 files"
       ],
       "verification": {
-        "command": "python -m mypy zerg/security.py zerg/plugins.py zerg/config.py --no-error-summary && python -m ruff check zerg/security.py zerg/plugins.py zerg/config.py",
+        "command": "python -m mypy mahabharatha/security.py mahabharatha/plugins.py mahabharatha/config.py --no-error-summary && python -m ruff check mahabharatha/security.py mahabharatha/plugins.py mahabharatha/config.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 10
@@ -261,7 +261,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/parser.py", "zerg/metrics.py", "zerg/orchestrator.py"],
+        "modify": ["mahabharatha/parser.py", "mahabharatha/metrics.py", "mahabharatha/orchestrator.py"],
         "read": []
       },
       "acceptance_criteria": [
@@ -269,7 +269,7 @@
         "ruff reports 0 errors for all 3 files (except orchestrator ruff deferred to L3)"
       ],
       "verification": {
-        "command": "python -m mypy zerg/parser.py zerg/metrics.py zerg/orchestrator.py --no-error-summary",
+        "command": "python -m mypy mahabharatha/parser.py mahabharatha/metrics.py mahabharatha/orchestrator.py --no-error-summary",
         "timeout_seconds": 60
       },
       "estimate_minutes": 10
@@ -283,7 +283,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/dryrun.py", "zerg/whatif.py"],
+        "modify": ["mahabharatha/dryrun.py", "mahabharatha/whatif.py"],
         "read": []
       },
       "acceptance_criteria": [
@@ -291,7 +291,7 @@
         "ruff reports 0 errors for both files (except whatif line-length deferred to L3)"
       ],
       "verification": {
-        "command": "python -m mypy zerg/dryrun.py zerg/whatif.py --no-error-summary && python -m ruff check zerg/dryrun.py",
+        "command": "python -m mypy mahabharatha/dryrun.py mahabharatha/whatif.py --no-error-summary && python -m ruff check mahabharatha/dryrun.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 5
@@ -299,21 +299,21 @@
     {
       "id": "QFS-L3-001",
       "title": "Fix types.py generic type params",
-      "description": "Fix 18 missing generic type parameters in zerg/types.py. Every bare `dict` annotation needs to become `dict[str, Any]` or the appropriate specific types. Every bare `list` needs `list[specific_type]`. Every bare `Callable` needs proper signature.\n\nIMPORTANT: Task QFS-L1-004 may have already added a `conflicts` field to MergeFlowResult. Do NOT revert that change. Only add generic params to existing bare dict/list/Callable annotations.",
+      "description": "Fix 18 missing generic type parameters in mahabharatha/types.py. Every bare `dict` annotation needs to become `dict[str, Any]` or the appropriate specific types. Every bare `list` needs `list[specific_type]`. Every bare `Callable` needs proper signature.\n\nIMPORTANT: Task QFS-L1-004 may have already added a `conflicts` field to MergeFlowResult. Do NOT revert that change. Only add generic params to existing bare dict/list/Callable annotations.",
       "phase": "integration",
       "level": 3,
       "dependencies": ["QFS-L1-004"],
       "files": {
         "create": [],
-        "modify": ["zerg/types.py"],
+        "modify": ["mahabharatha/types.py"],
         "read": []
       },
       "acceptance_criteria": [
-        "mypy reports 0 type-arg errors for zerg/types.py",
+        "mypy reports 0 type-arg errors for mahabharatha/types.py",
         "MergeFlowResult.conflicts field preserved from L1-004"
       ],
       "verification": {
-        "command": "python -m mypy zerg/types.py --no-error-summary && python -m ruff check zerg/types.py",
+        "command": "python -m mypy mahabharatha/types.py --no-error-summary && python -m ruff check mahabharatha/types.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 10
@@ -321,21 +321,21 @@
     {
       "id": "QFS-L3-002",
       "title": "Fix backlog.py generic type params",
-      "description": "Fix 11 missing generic type parameters in zerg/backlog.py. Add proper dict[str, Any], list[str], etc. to all bare generic annotations.",
+      "description": "Fix 11 missing generic type parameters in mahabharatha/backlog.py. Add proper dict[str, Any], list[str], etc. to all bare generic annotations.",
       "phase": "integration",
       "level": 3,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/backlog.py"],
+        "modify": ["mahabharatha/backlog.py"],
         "read": []
       },
       "acceptance_criteria": [
-        "mypy reports 0 errors for zerg/backlog.py",
-        "ruff reports 0 errors for zerg/backlog.py"
+        "mypy reports 0 errors for mahabharatha/backlog.py",
+        "ruff reports 0 errors for mahabharatha/backlog.py"
       ],
       "verification": {
-        "command": "python -m mypy zerg/backlog.py --no-error-summary && python -m ruff check zerg/backlog.py",
+        "command": "python -m mypy mahabharatha/backlog.py --no-error-summary && python -m ruff check mahabharatha/backlog.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 8
@@ -349,7 +349,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/diagnostics/system_diagnostics.py", "zerg/diagnostics/state_introspector.py", "zerg/diagnostics/log_analyzer.py", "zerg/diagnostics/recovery.py"],
+        "modify": ["mahabharatha/diagnostics/system_diagnostics.py", "mahabharatha/diagnostics/state_introspector.py", "mahabharatha/diagnostics/log_analyzer.py", "mahabharatha/diagnostics/recovery.py"],
         "read": []
       },
       "acceptance_criteria": [
@@ -357,7 +357,7 @@
         "ruff reports 0 errors for all 4 diagnostics files"
       ],
       "verification": {
-        "command": "python -m mypy zerg/diagnostics/ --no-error-summary && python -m ruff check zerg/diagnostics/",
+        "command": "python -m mypy mahabharatha/diagnostics/ --no-error-summary && python -m ruff check mahabharatha/diagnostics/",
         "timeout_seconds": 60
       },
       "estimate_minutes": 10
@@ -371,7 +371,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/init.py", "zerg/commands/design.py", "zerg/commands/build.py", "zerg/commands/refactor.py", "zerg/commands/logs.py", "zerg/commands/status.py", "zerg/commands/troubleshoot.py", "zerg/commands/analyze.py"],
+        "modify": ["mahabharatha/commands/init.py", "mahabharatha/commands/design.py", "mahabharatha/commands/build.py", "mahabharatha/commands/refactor.py", "mahabharatha/commands/logs.py", "mahabharatha/commands/status.py", "mahabharatha/commands/troubleshoot.py", "mahabharatha/commands/analyze.py"],
         "read": []
       },
       "acceptance_criteria": [
@@ -379,7 +379,7 @@
         "ruff reports 0 errors for all listed command files"
       ],
       "verification": {
-        "command": "python -m mypy zerg/commands/init.py zerg/commands/design.py zerg/commands/build.py zerg/commands/refactor.py zerg/commands/logs.py zerg/commands/status.py zerg/commands/troubleshoot.py zerg/commands/analyze.py --no-error-summary && python -m ruff check zerg/commands/init.py zerg/commands/design.py zerg/commands/build.py zerg/commands/refactor.py zerg/commands/logs.py zerg/commands/status.py zerg/commands/troubleshoot.py zerg/commands/analyze.py",
+        "command": "python -m mypy mahabharatha/commands/init.py mahabharatha/commands/design.py mahabharatha/commands/build.py mahabharatha/commands/refactor.py mahabharatha/commands/logs.py mahabharatha/commands/status.py mahabharatha/commands/troubleshoot.py mahabharatha/commands/analyze.py --no-error-summary && python -m ruff check mahabharatha/commands/init.py mahabharatha/commands/design.py mahabharatha/commands/build.py mahabharatha/commands/refactor.py mahabharatha/commands/logs.py mahabharatha/commands/status.py mahabharatha/commands/troubleshoot.py mahabharatha/commands/analyze.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 12
@@ -393,15 +393,15 @@
       "dependencies": ["QFS-L2-005", "QFS-L2-006"],
       "files": {
         "create": [],
-        "modify": ["zerg/gates.py", "zerg/plugin_config.py", "zerg/preflight.py", "zerg/risk_scoring.py", "zerg/orchestrator.py", "zerg/whatif.py"],
+        "modify": ["mahabharatha/gates.py", "mahabharatha/plugin_config.py", "mahabharatha/preflight.py", "mahabharatha/risk_scoring.py", "mahabharatha/orchestrator.py", "mahabharatha/whatif.py"],
         "read": []
       },
       "acceptance_criteria": [
-        "ruff check zerg/ reports 0 violations",
+        "ruff check mahabharatha/ reports 0 violations",
         "mypy reports 0 errors for all modified files"
       ],
       "verification": {
-        "command": "python -m mypy zerg/gates.py zerg/plugin_config.py zerg/preflight.py zerg/risk_scoring.py --no-error-summary && python -m ruff check zerg/gates.py zerg/plugin_config.py zerg/plugins.py zerg/preflight.py zerg/whatif.py zerg/orchestrator.py zerg/risk_scoring.py",
+        "command": "python -m mypy mahabharatha/gates.py mahabharatha/plugin_config.py mahabharatha/preflight.py mahabharatha/risk_scoring.py --no-error-summary && python -m ruff check mahabharatha/gates.py mahabharatha/plugin_config.py mahabharatha/plugins.py mahabharatha/preflight.py mahabharatha/whatif.py mahabharatha/orchestrator.py mahabharatha/risk_scoring.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 10

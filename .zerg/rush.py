@@ -1,4 +1,4 @@
-"""ZERG v2 Rush Command - Task graph execution with orchestrator."""
+"""MAHABHARATHA v2 Kurukshetra Command - Task graph execution with orchestrator."""
 
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -16,7 +16,7 @@ class GraphLoadError(Exception):
 
 @dataclass
 class ExecutionResult:
-    """Result of a rush execution."""
+    """Result of a kurukshetra execution."""
 
     validated: bool
     execution_id: str | None = None
@@ -31,7 +31,7 @@ class RushCommand:
     default_workers: int = 5
 
     def __init__(self):
-        """Initialize rush command."""
+        """Initialize kurukshetra command."""
         self.orchestrator = Orchestrator()
 
     def execute(

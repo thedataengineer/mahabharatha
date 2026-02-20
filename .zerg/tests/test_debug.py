@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 Debug Command."""
+"""Tests for MAHABHARATHA v2 Debug Command."""
 
 import sys
 from pathlib import Path

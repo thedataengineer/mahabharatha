@@ -1,4 +1,4 @@
-"""ZERG CLI commands."""
+"""MAHABHARATHA CLI commands."""
 
 from mahabharatha.commands.analyze import analyze
 from mahabharatha.commands.build import build
@@ -10,13 +10,13 @@ from mahabharatha.commands.git_cmd import git_cmd
 from mahabharatha.commands.health import health
 from mahabharatha.commands.init import init
 from mahabharatha.commands.install_commands import install_commands, uninstall_commands
+from mahabharatha.commands.kurukshetra import kurukshetra
 from mahabharatha.commands.logs import logs
 from mahabharatha.commands.merge_cmd import merge_cmd
 from mahabharatha.commands.plan import plan
 from mahabharatha.commands.refactor import refactor
 from mahabharatha.commands.retry import retry
 from mahabharatha.commands.review import review
-from mahabharatha.commands.rush import rush
 from mahabharatha.commands.security_rules_cmd import security_rules_group
 from mahabharatha.commands.status import status
 from mahabharatha.commands.stop import stop
@@ -36,7 +36,7 @@ __all__ = [
     "refactor",
     "retry",
     "review",
-    "rush",
+    "kurukshetra",
     "security_rules_group",
     "status",
     "stop",

@@ -16,11 +16,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/git/pr_engine.py"],
+        "modify": ["mahabharatha/git/pr_engine.py"],
         "read": []
       },
       "verification": {
-        "command": "ruff check zerg/git/pr_engine.py && python -m pytest tests/ -x --timeout=120 -q",
+        "command": "ruff check mahabharatha/git/pr_engine.py && python -m pytest tests/ -x --timeout=120 -q",
         "timeout_seconds": 180
       },
       "estimate_minutes": 2,
@@ -38,11 +38,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/git/history_engine.py"],
+        "modify": ["mahabharatha/git/history_engine.py"],
         "read": []
       },
       "verification": {
-        "command": "ruff check zerg/git/history_engine.py && python -m pytest tests/ -x --timeout=120 -q",
+        "command": "ruff check mahabharatha/git/history_engine.py && python -m pytest tests/ -x --timeout=120 -q",
         "timeout_seconds": 180
       },
       "estimate_minutes": 3,
@@ -64,7 +64,7 @@
         "read": []
       },
       "verification": {
-        "command": "python -m pytest tests/ --timeout=120 -q && ruff check zerg/ tests/ && python -m zerg.validate_commands",
+        "command": "python -m pytest tests/ --timeout=120 -q && ruff check mahabharatha/ tests/ && python -m mahabharatha.validate_commands",
         "timeout_seconds": 300
       },
       "estimate_minutes": 2,

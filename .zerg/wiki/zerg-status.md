@@ -1,23 +1,23 @@
-# /zerg:status
+# /mahabharatha:status
 
 Display current execution status and progress.
 
 ## Synopsis
 
 ```
-/zerg:status [OPTIONS]
+/mahabharatha:status [OPTIONS]
 ```
 
 ## Description
 
-`/zerg:status` produces a snapshot of the current ZERG execution state, including feature name, phase, orchestrator status, elapsed time, and per-level progress bars.
+`/mahabharatha:status` produces a snapshot of the current MAHABHARATHA execution state, including feature name, phase, orchestrator status, elapsed time, and per-level progress bars.
 
 ### Data Sources
 
 The command uses two data sources:
 
 1. **Claude Code Task system** (primary) -- Retrieves task statuses via `TaskList`. This is the authoritative source of truth.
-2. **State JSON** (supplementary) -- Reads `.zerg/state/<feature>.json` for worker assignment details not stored in the Task system.
+2. **State JSON** (supplementary) -- Reads `.mahabharatha/state/<feature>.json` for worker assignment details not stored in the Task system.
 
 If the two sources disagree, the Task system takes precedence. Mismatches are flagged in the output.
 
@@ -47,19 +47,19 @@ The status report shows the current phase of the feature:
 
 ```bash
 # One-shot status check
-/zerg:status
+/mahabharatha:status
 
 # Detailed task list
-/zerg:status --tasks
+/mahabharatha:status --tasks
 
-# Live TUI dashboard (run in a separate terminal during rush)
-/zerg:status --dashboard
+# Live TUI dashboard (run in a separate terminal during kurukshetra)
+/mahabharatha:status --dashboard
 
 # Auto-refreshing text output
-/zerg:status --watch --interval 2
+/mahabharatha:status --watch --interval 2
 
 # JSON output for scripting
-/zerg:status --json
+/mahabharatha:status --json
 ```
 
 ## Output
@@ -92,9 +92,9 @@ Level 4 (Testing):      [                    ] Pending (0/2 tasks)
 ======================================================================
 
 Commands:
-  /zerg:logs {N}      View logs from worker N
-  /zerg:stop          Stop all workers
-  /zerg:retry {ID}    Retry a failed task
+  /mahabharatha:logs {N}      View logs from worker N
+  /mahabharatha:stop          Stop all workers
+  /mahabharatha:retry {ID}    Retry a failed task
 
 ======================================================================
 ```
@@ -129,9 +129,9 @@ The Worker Intelligence panel reads from:
 
 | File | Content |
 |------|---------|
-| `.zerg/state/heartbeat-{id}.json` | Per-worker heartbeat with task, step, and progress |
-| `.zerg/state/progress-{id}.json` | Tasks completed/total, current step, tier results |
-| `.zerg/state/escalations.json` | Unresolved escalations from workers |
+| `.mahabharatha/state/heartbeat-{id}.json` | Per-worker heartbeat with task, step, and progress |
+| `.mahabharatha/state/progress-{id}.json` | Tasks completed/total, current step, tier results |
+| `.mahabharatha/state/escalations.json` | Unresolved escalations from workers |
 
 ### Configuration
 
@@ -143,7 +143,7 @@ The Worker Intelligence panel reads from:
 
 ## See Also
 
-- [[zerg-rush]] -- Starts the execution that status monitors
-- [[zerg-logs]] -- Detailed worker and task logs
-- [[zerg-stop]] -- Stop execution
-- [[zerg-Reference]] -- Full command index
+- [[mahabharatha-kurukshetra]] -- Starts the execution that status monitors
+- [[mahabharatha-logs]] -- Detailed worker and task logs
+- [[mahabharatha-stop]] -- Stop execution
+- [[mahabharatha-Reference]] -- Full command index

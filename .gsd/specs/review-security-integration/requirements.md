@@ -3,24 +3,24 @@
 **Feature**: Consolidate security into a unified engine and integrate as Stage 3 of `/z:review`
 **Status**: APPROVED
 **Created**: 2026-02-15
-**Author**: ZERG Plan (Socratic mode, 3 rounds)
+**Author**: MAHABHARATHA Plan (Socratic mode, 3 rounds)
 
 ---
 
 ## 1. Problem Statement
 
 Security logic is scattered across three locations with overlap and gaps:
-- `zerg/security.py` — 27 secret patterns, sensitive files, large files, symlink escapes
-- `zerg/security.py:HOOK_PATTERNS` — shell injection, code injection, unsafe deserialization (defined but **never called**)
-- `zerg/commands/review.py:CodeAnalyzer` — duplicate hardcoded_secret pattern (weaker version)
+- `mahabharatha/security.py` — 27 secret patterns, sensitive files, large files, symlink escapes
+- `mahabharatha/security.py:HOOK_PATTERNS` — shell injection, code injection, unsafe deserialization (defined but **never called**)
+- `mahabharatha/commands/review.py:CodeAnalyzer` — duplicate hardcoded_secret pattern (weaker version)
 
 Meanwhile, `/z:security` slash command *describes* OWASP presets, CVE scanning, injection/XSS analysis, and compliance frameworks — but these exist only as Claude-directed behaviors, not as Python functions callable by the CLI.
 
-Result: `zerg review` CLI provides shallow security checks. The slash command promises deep security but the programmatic path can't deliver it.
+Result: `mahabharatha review` CLI provides shallow security checks. The slash command promises deep security but the programmatic path can't deliver it.
 
 ## 2. Goals
 
-1. **Consolidate** all security logic into a single `zerg/security/` package — zero duplication
+1. **Consolidate** all security logic into a single `mahabharatha/security/` package — zero duplication
 2. **Deepen** security scanning with 10 new capability areas
 3. **Integrate** security as always-on Stage 3 in `/z:review` (both slash command and CLI)
 4. **Reuse** — `/z:security` and `/z:review` call the same engine. No parallel implementations
@@ -28,18 +28,18 @@ Result: `zerg review` CLI provides shallow security checks. The slash command pr
 
 ## 3. Non-Goals
 
-- Replacing external security tools (Snyk, Semgrep, Trivy) — ZERG supplements, doesn't replace
+- Replacing external security tools (Snyk, Semgrep, Trivy) — MAHABHARATHA supplements, doesn't replace
 - Real-time monitoring or runtime security — this is static analysis only
-- Modifying the `/z:rush` or `/z:worker` pipelines (future scope)
+- Modifying the `/z:kurukshetra` or `/z:worker` pipelines (future scope)
 
 ## 4. Functional Requirements
 
 ### FR-1: Consolidated Security Package
 
-Promote `zerg/security.py` and `zerg/security_rules.py` into a `zerg/security/` package:
+Promote `mahabharatha/security.py` and `mahabharatha/security_rules.py` into a `mahabharatha/security/` package:
 
 ```
-zerg/security/
+mahabharatha/security/
   __init__.py      # Public API: run_security_scan(), SecurityResult
   scanner.py       # Main scanning engine (consolidates all patterns)
   patterns.py      # All detection patterns (secrets, injection, crypto, etc.)
@@ -48,7 +48,7 @@ zerg/security/
   hooks.py         # Git hook installation/management (from security.py)
 ```
 
-- **All existing callers** must be updated to import from `zerg.security` (package)
+- **All existing callers** must be updated to import from `mahabharatha.security` (package)
 - **HOOK_PATTERNS** security patterns must be incorporated into the scanner, not just defined
 - **CodeAnalyzer.hardcoded_secret** pattern in `review.py` must be removed — defer to security engine
 - `run_security_scan()` returns a `SecurityResult` dataclass with structured findings
@@ -108,7 +108,7 @@ class SecurityResult:
 - Always-on by default
 
 **CLI** (`review.py`):
-- `ReviewCommand.run()` calls `zerg.security.run_security_scan()`
+- `ReviewCommand.run()` calls `mahabharatha.security.run_security_scan()`
 - `ReviewResult` gains `security_passed: bool` and `security_result: SecurityResult`
 - `overall_passed` requires all 3 stages to pass
 - Rich table output adds row: `Stage 3 (Security): check/cross`
@@ -135,7 +135,7 @@ class SecurityResult:
 - `/z:security` slash command and `/z:review` Stage 3 use the same `run_security_scan()`
 - `security_rules_cmd.py` CLI uses the same package for rule management
 - `review.py:CodeAnalyzer` removes its `hardcoded_secret` pattern
-- Single source of truth: `zerg/security/patterns.py`
+- Single source of truth: `mahabharatha/security/patterns.py`
 
 ## 5. Non-Functional Requirements
 
@@ -149,7 +149,7 @@ class SecurityResult:
 
 ### NFR-3: Context Engineering Compatibility
 - Package structure enables task-scoped context (workers load only needed submodules)
-- Follows ZERG command splitting philosophy (if review.md grows > 300 lines, split to core/details)
+- Follows MAHABHARATHA command splitting philosophy (if review.md grows > 300 lines, split to core/details)
 
 ### NFR-4: Test Coverage
 - Unit tests for each capability area in `tests/unit/test_security_engine.py`
@@ -159,10 +159,10 @@ class SecurityResult:
 
 ## 6. Acceptance Criteria
 
-- [ ] `zerg review` CLI output shows 3-stage table (Spec, Quality, Security)
-- [ ] `zerg review --no-security` skips Stage 3 with warning
+- [ ] `mahabharatha review` CLI output shows 3-stage table (Spec, Quality, Security)
+- [ ] `mahabharatha review --no-security` skips Stage 3 with warning
 - [ ] `/z:review` slash command describes 3-stage process with security
-- [ ] `/z:security` and `/z:review` both call `zerg.security.run_security_scan()`
+- [ ] `/z:security` and `/z:review` both call `mahabharatha.security.run_security_scan()`
 - [ ] All 15 capability areas have at least one detection pattern
 - [ ] CVE scanning attempts API, falls back to heuristics
 - [ ] No duplicate security patterns exist across codebase
@@ -174,12 +174,12 @@ class SecurityResult:
 
 | File | Purpose |
 |------|---------|
-| `zerg/security/__init__.py` | Public API surface |
-| `zerg/security/scanner.py` | Main scanning engine |
-| `zerg/security/patterns.py` | All detection patterns |
-| `zerg/security/rules.py` | Migrated from `zerg/security_rules.py` |
-| `zerg/security/cve.py` | CVE scanning with fallback |
-| `zerg/security/hooks.py` | Git hook management (migrated) |
+| `mahabharatha/security/__init__.py` | Public API surface |
+| `mahabharatha/security/scanner.py` | Main scanning engine |
+| `mahabharatha/security/patterns.py` | All detection patterns |
+| `mahabharatha/security/rules.py` | Migrated from `mahabharatha/security_rules.py` |
+| `mahabharatha/security/cve.py` | CVE scanning with fallback |
+| `mahabharatha/security/hooks.py` | Git hook management (migrated) |
 | `tests/unit/test_security_engine.py` | New consolidated tests |
 | `tests/integration/test_review_security.py` | Integration tests |
 | `docs/wiki/Security-Philosophy.md` | New wiki page |
@@ -188,12 +188,12 @@ class SecurityResult:
 
 | File | Change |
 |------|--------|
-| `zerg/commands/review.py` | Add Stage 3, import security engine, extend ReviewResult, remove hardcoded_secret from CodeAnalyzer |
-| `zerg/commands/security_rules_cmd.py` | Update imports to `zerg.security.rules` |
-| `zerg/commands/__init__.py` | Update imports if needed |
-| `zerg/cli.py` | No change expected (review and security-rules already registered) |
-| `zerg/data/commands/review.md` | Add Stage 3 security, --no-security flag, 3-stage output |
-| `zerg/data/commands/security.md` | Reference shared engine, note review integration |
+| `mahabharatha/commands/review.py` | Add Stage 3, import security engine, extend ReviewResult, remove hardcoded_secret from CodeAnalyzer |
+| `mahabharatha/commands/security_rules_cmd.py` | Update imports to `mahabharatha.security.rules` |
+| `mahabharatha/commands/__init__.py` | Update imports if needed |
+| `mahabharatha/cli.py` | No change expected (review and security-rules already registered) |
+| `mahabharatha/data/commands/review.md` | Add Stage 3 security, --no-security flag, 3-stage output |
+| `mahabharatha/data/commands/security.md` | Reference shared engine, note review integration |
 | `docs/commands-quick.md` | Update review entry (3-stage), add --no-security flag |
 | `docs/commands-deep.md` | Update review section (3-stage diagram), update security section |
 | `docs/index.html` | Update review description, add security philosophy narrative |
@@ -204,12 +204,12 @@ class SecurityResult:
 
 | File | Reason |
 |------|--------|
-| `zerg/security.py` | Migrated to `zerg/security/` package |
-| `zerg/security_rules.py` | Migrated to `zerg/security/rules.py` |
+| `mahabharatha/security.py` | Migrated to `mahabharatha/security/` package |
+| `mahabharatha/security_rules.py` | Migrated to `mahabharatha/security/rules.py` |
 
 ## 10. Migration Plan
 
-1. Create `zerg/security/` package with all modules
+1. Create `mahabharatha/security/` package with all modules
 2. Migrate `security.py` functions to `scanner.py`, `patterns.py`, `hooks.py`
 3. Migrate `security_rules.py` to `rules.py`
 4. Update all callers (`review.py`, `security_rules_cmd.py`, any others)
@@ -225,11 +225,11 @@ class SecurityResult:
 
 | Document | Section | Change |
 |----------|---------|--------|
-| `zerg/data/commands/review.md` | Modes/Output/Help | Add Stage 3, --no-security flag |
-| `zerg/data/commands/security.md` | Capabilities | Reference shared engine |
-| `docs/commands-quick.md` | /zerg:review row | Add --no-security flag |
-| `docs/commands-deep.md` | /zerg:review section | New 3-stage diagram, security stage details |
-| `docs/commands-deep.md` | /zerg:security section | Note shared engine with review |
+| `mahabharatha/data/commands/review.md` | Modes/Output/Help | Add Stage 3, --no-security flag |
+| `mahabharatha/data/commands/security.md` | Capabilities | Reference shared engine |
+| `docs/commands-quick.md` | /mahabharatha:review row | Add --no-security flag |
+| `docs/commands-deep.md` | /mahabharatha:review section | New 3-stage diagram, security stage details |
+| `docs/commands-deep.md` | /mahabharatha:security section | Note shared engine with review |
 | `docs/index.html` | Command table + hero/features | Update review desc, add security narrative |
 | `docs/wiki/Security-Philosophy.md` | New page | Security-as-core-value philosophy |
 | `CHANGELOG.md` | [Unreleased] | Feature entry |
@@ -253,4 +253,4 @@ class SecurityResult:
 
 ---
 
-*Generated by /zerg:plan --socratic (3 rounds)*
+*Generated by /mahabharatha:plan --socratic (3 rounds)*

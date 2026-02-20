@@ -1,6 +1,6 @@
 # Context Engineering
 
-ZERG's token optimization system for parallel workers. Reduces per-worker context usage by 30-50% while preserving the information each task needs.
+MAHABHARATHA's token optimization system for parallel workers. Reduces per-worker context usage by 30-50% while preserving the information each task needs.
 
 ---
 
@@ -32,9 +32,9 @@ LLMs have a **context window** - the maximum amount of text they can "see" at on
 
 That sounds like a lot - about 150,000 words, or a 500-page book. So why worry?
 
-### Why Does This Matter for ZERG?
+### Why Does This Matter for MAHABHARATHA?
 
-Here's the catch: **every ZERG worker is stateless**. Each worker starts fresh with no memory of previous conversations. To do its job, every worker must load:
+Here's the catch: **every MAHABHARATHA worker is stateless**. Each worker starts fresh with no memory of previous conversations. To do its job, every worker must load:
 
 1. **Command instructions** - How to execute the task
 2. **Security rules** - Safe coding practices for the file types involved
@@ -53,7 +53,7 @@ With optimization:
   10 workers x 10,000 tokens = 100,000 tokens (fits comfortably)
 ```
 
-**Context engineering is how ZERG makes parallel execution practical.**
+**Context engineering is how MAHABHARATHA makes parallel execution practical.**
 
 ---
 
@@ -74,7 +74,7 @@ Here's how a worker's context budget breaks down:
 
 System prompt includes:
   - Base Claude instructions
-  - ZERG command file (.core.md)
+  - MAHABHARATHA command file (.core.md)
   - Security rules (filtered)
   - Project CLAUDE.md
 
@@ -88,7 +88,7 @@ Every token spent on instructions is a token *not* available for actual code gen
 
 ---
 
-## Why ZERG Engineers Context
+## Why MAHABHARATHA Engineers Context
 
 Before explaining *how* context engineering works, let's be clear about *why*:
 
@@ -193,7 +193,7 @@ These 10 commands are split:
 | brainstorm | ~120 lines | ~280 lines |
 | init | ~150 lines | ~350 lines |
 | design | ~180 lines | ~420 lines |
-| rush | ~135 lines | ~315 lines |
+| kurukshetra | ~135 lines | ~315 lines |
 | plugins | ~105 lines | ~245 lines |
 | debug | ~120 lines | ~280 lines |
 | plan | ~105 lines | ~245 lines |
@@ -203,20 +203,20 @@ These 10 commands are split:
 
 ### How Splitting Works
 
-During ZERG initialization, the `CommandSplitter` analyzes command files:
+During MAHABHARATHA initialization, the `CommandSplitter` analyzes command files:
 
 1. **Identify core content**: Sections marked with `<!-- CORE -->` or detected as essential
 2. **Identify detail content**: Examples, edge cases, reference tables
 3. **Generate `.core.md`**: Essential content only
 4. **Generate `.details.md`**: Everything else
 
-Run `python -m zerg.validate_commands --auto-split` to automatically split oversized files.
+Run `python -m mahabharatha.validate_commands --auto-split` to automatically split oversized files.
 
 ---
 
 ## Security Rule Filtering
 
-ZERG detects which file types each task will create/modify, then loads only relevant security rules.
+MAHABHARATHA detects which file types each task will create/modify, then loads only relevant security rules.
 
 ### Why Filter?
 
@@ -256,14 +256,14 @@ When assembling task context, security rules receive a portion of the total budg
 
 ### Available Rule Sets
 
-ZERG auto-fetches security rules from [TikiTribe/claude-secure-coding-rules](https://github.com/TikiTribe/claude-secure-coding-rules):
+MAHABHARATHA auto-fetches security rules from [TikiTribe/claude-secure-coding-rules](https://github.com/TikiTribe/claude-secure-coding-rules):
 
 - `_core/owasp-2025.md` - OWASP Top 10 2025 core rules
 - `languages/python/CLAUDE.md` - Python-specific security
 - `languages/javascript/CLAUDE.md` - JavaScript/Node.js security
 - `containers/docker/CLAUDE.md` - Docker security
 
-Rules are fetched during `/zerg:init` and stored in `.claude/rules/security/`.
+Rules are fetched during `/mahabharatha:init` and stored in `.claude/rules/security/`.
 
 ---
 
@@ -333,7 +333,7 @@ If content exceeds budget, lower-priority items are truncated.
 
 ## Configuration
 
-Configure context engineering in `.zerg/config.yaml`:
+Configure context engineering in `.mahabharatha/config.yaml`:
 
 ```yaml
 plugins:
@@ -382,7 +382,7 @@ plugins:
 
 ## Monitoring
 
-`/zerg:status` includes a **CONTEXT BUDGET** section:
+`/mahabharatha:status` includes a **CONTEXT BUDGET** section:
 
 ```
 CONTEXT BUDGET
@@ -413,7 +413,7 @@ CONTEXT BUDGET
 
 ## Integration Points
 
-### During `/zerg:design`
+### During `/mahabharatha:design`
 
 The design phase populates task context:
 
@@ -425,7 +425,7 @@ The design phase populates task context:
    - Filter security rules by the task's file extensions
 3. Write the `context` field into `task-graph.json`
 
-### During `/zerg:rush`
+### During `/mahabharatha:kurukshetra`
 
 The orchestrator passes task context to workers:
 
@@ -496,7 +496,7 @@ Keep `fallback_to_full: true` unless you have a specific reason to disable it. A
 
 ### Low Task Context Rate
 
-**Symptom**: `/zerg:status` shows task context population below 80%.
+**Symptom**: `/mahabharatha:status` shows task context population below 80%.
 
 **Solutions**:
 1. Add clear section headers to requirements.md and design.md
@@ -510,22 +510,22 @@ Keep `fallback_to_full: true` unless you have a specific reason to disable it. A
 **Solutions**:
 1. Verify tasks have correct file extensions in `files.create`/`files.modify`
 2. Check that security rules exist in `.claude/rules/security/`
-3. Run `/zerg:init` to fetch latest security rules
+3. Run `/mahabharatha:init` to fetch latest security rules
 
 ### Command Splitting Not Working
 
 **Symptom**: Workers loading full command files despite splitting enabled.
 
 **Solutions**:
-1. Run `python -m zerg.validate_commands` to check split consistency
+1. Run `python -m mahabharatha.validate_commands` to check split consistency
 2. Use `--auto-split` to regenerate split files
-3. Verify `.core.md` files exist in `zerg/data/commands/`
+3. Verify `.core.md` files exist in `mahabharatha/data/commands/`
 
 ---
 
 ## Summary
 
-Context engineering makes ZERG parallel execution practical by:
+Context engineering makes MAHABHARATHA parallel execution practical by:
 
 1. **Splitting commands** - Workers load core instructions, not reference material
 2. **Filtering security rules** - Workers see rules for their file types only
@@ -539,6 +539,6 @@ This enables more parallel workers, lower costs, and focused execution.
 
 ## See Also
 
-- [Architecture](Architecture.md) - Overall ZERG architecture
+- [Architecture](Architecture.md) - Overall MAHABHARATHA architecture
 - [Configuration](Configuration.md) - Full configuration reference
 - [Security](Security.md) - Security rules and scanning

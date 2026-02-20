@@ -1,11 +1,11 @@
-# /zerg:refactor
+# /mahabharatha:refactor
 
 Automated code improvement and cleanup with configurable transforms.
 
 ## Synopsis
 
 ```
-/zerg:refactor [--transforms dead-code,simplify,types,patterns,naming]
+/mahabharatha:refactor [--transforms dead-code,simplify,types,patterns,naming]
                [--dry-run]
                [--interactive]
 ```
@@ -56,19 +56,19 @@ The `refactor` command analyzes the codebase and applies automated code improvem
 Preview dead-code and simplify transforms without applying:
 
 ```
-/zerg:refactor --transforms dead-code,simplify --dry-run
+/mahabharatha:refactor --transforms dead-code,simplify --dry-run
 ```
 
 Run in interactive mode to approve changes one by one:
 
 ```
-/zerg:refactor --interactive
+/mahabharatha:refactor --interactive
 ```
 
 Apply only type and naming improvements:
 
 ```
-/zerg:refactor --transforms types,naming
+/mahabharatha:refactor --transforms types,naming
 ```
 
 ## Sample Output
@@ -101,6 +101,6 @@ This command creates a Claude Code Task with the subject prefix `[Refactor]` on 
 
 ## See Also
 
-- [[zerg-analyze]] -- Static analysis to identify areas needing refactoring
-- [[zerg-review]] -- Review refactored code before committing
-- [[zerg-test]] -- Verify tests still pass after refactoring
+- [[mahabharatha-analyze]] -- Static analysis to identify areas needing refactoring
+- [[mahabharatha-review]] -- Review refactored code before committing
+- [[mahabharatha-test]] -- Verify tests still pass after refactoring

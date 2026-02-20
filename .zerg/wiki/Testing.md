@@ -1,6 +1,6 @@
 # Testing
 
-This page covers the ZERG testing approach: how tests are organized, how to run them, coverage targets, and how to write tests for new features.
+This page covers the MAHABHARATHA testing approach: how tests are organized, how to run them, coverage targets, and how to write tests for new features.
 
 ---
 
@@ -13,7 +13,7 @@ This page covers the ZERG testing approach: how tests are organized, how to run 
 - [Fixtures and Helpers](#fixtures-and-helpers)
 - [Coverage Targets](#coverage-targets)
 - [Debugging Failed Tests](#debugging-failed-tests)
-- [Using /zerg:test](#using-zergtest)
+- [Using /mahabharatha:test](#using-zergtest)
 
 ---
 
@@ -73,10 +73,10 @@ pytest
 
 ```bash
 # Terminal output with missing line numbers
-pytest --cov=zerg --cov-report=term-missing
+pytest --cov=mahabharatha --cov-report=term-missing
 
 # HTML report (opens in browser)
-pytest --cov=zerg --cov-report=html
+pytest --cov=mahabharatha --cov-report=html
 # Open htmlcov/index.html
 ```
 
@@ -149,7 +149,7 @@ from unittest.mock import patch, MagicMock
 
 def test_level_controller_advances_when_all_complete():
     """Level controller advances to next level when all tasks complete."""
-    with patch("zerg.levels.StateManager") as mock_state:
+    with patch("mahabharatha.levels.StateManager") as mock_state:
         mock_state.get_level_tasks.return_value = [
             {"id": "t1", "status": "completed"},
             {"id": "t2", "status": "completed"},
@@ -194,7 +194,7 @@ def test_merge_after_level_completion(integration_setup):
 
 **Location:** `tests/e2e/`
 
-**Purpose:** Test complete workflows from start to finish, simulating the full ZERG pipeline.
+**Purpose:** Test complete workflows from start to finish, simulating the full MAHABHARATHA pipeline.
 
 **Characteristics:**
 - Longer execution time.
@@ -206,7 +206,7 @@ def test_merge_after_level_completion(integration_setup):
 
 ```python
 def test_full_pipeline_two_levels(tmp_repo):
-    """Full pipeline: plan -> design -> rush -> merge across 2 levels."""
+    """Full pipeline: plan -> design -> kurukshetra -> merge across 2 levels."""
     harness = E2EHarness(tmp_repo)
     harness.setup_feature("test-feature")
     harness.run_rush(workers=2)
@@ -277,13 +277,13 @@ def test_task_parser_extracts_dependencies():
 
 ```python
 # Good: mock the external boundary
-with patch("zerg.launcher.subprocess.run") as mock_run:
+with patch("mahabharatha.launcher.subprocess.run") as mock_run:
     mock_run.return_value = CompletedProcess(args=[], returncode=0)
     launcher.spawn_worker(task)
     mock_run.assert_called_once()
 
 # Bad: mock deep internals
-with patch("zerg.launcher.SubprocessLauncher._internal_method"):
+with patch("mahabharatha.launcher.SubprocessLauncher._internal_method"):
     ...
 ```
 
@@ -301,7 +301,7 @@ def test_state_manager_raises_on_missing_file():
 
 def test_launcher_handles_docker_timeout():
     """Launcher raises TimeoutError when Docker container does not start."""
-    with patch("zerg.launcher.subprocess.run") as mock_run:
+    with patch("mahabharatha.launcher.subprocess.run") as mock_run:
         mock_run.side_effect = subprocess.TimeoutExpired(cmd="docker", timeout=30)
 
         with pytest.raises(TimeoutError):
@@ -324,7 +324,7 @@ def test_launcher_handles_docker_timeout():
 
 | Helper | Description |
 |--------|-------------|
-| `harness.py` | E2E test harness for setting up features, running rush, and asserting outcomes. |
+| `harness.py` | E2E test harness for setting up features, running kurukshetra, and asserting outcomes. |
 | `mock_worker.py` | Simulated worker that creates files and reports task completion without calling the Claude API. |
 
 ### Creating New Fixtures
@@ -360,7 +360,7 @@ Current coverage targets by module:
 When adding new code, aim for at least 85% coverage on the new lines. Use the coverage report to identify untested paths:
 
 ```bash
-pytest --cov=zerg --cov-report=term-missing tests/unit/test_<your_module>.py
+pytest --cov=mahabharatha --cov-report=term-missing tests/unit/test_<your_module>.py
 ```
 
 ---
@@ -408,30 +408,30 @@ pytest tests/unit/test_launcher.py::TestLauncher::test_spawn_worker -v --tb=long
 
 ---
 
-## Using /zerg:test
+## Using /mahabharatha:test
 
-The `/zerg:test` slash command provides a convenient interface for running tests within a Claude Code session.
+The `/mahabharatha:test` slash command provides a convenient interface for running tests within a Claude Code session.
 
 ### Basic Usage
 
 ```
-/zerg:test                      # Run all tests
-/zerg:test --coverage           # Run with coverage report
-/zerg:test --parallel 8         # Run with 8 parallel workers
-/zerg:test --watch              # Watch mode for continuous testing
-/zerg:test --generate           # Generate test stubs for uncovered code
+/mahabharatha:test                      # Run all tests
+/mahabharatha:test --coverage           # Run with coverage report
+/mahabharatha:test --parallel 8         # Run with 8 parallel workers
+/mahabharatha:test --watch              # Watch mode for continuous testing
+/mahabharatha:test --generate           # Generate test stubs for uncovered code
 ```
 
 ### Framework Detection
 
-`/zerg:test` automatically detects the test framework. For ZERG, it detects pytest.
+`/mahabharatha:test` automatically detects the test framework. For MAHABHARATHA, it detects pytest.
 
 ### Test Generation
 
 The `--generate` flag creates test stubs for code that lacks test coverage:
 
 ```
-/zerg:test --generate
+/mahabharatha:test --generate
 ```
 
 This scans the codebase, identifies uncovered functions and classes, and creates skeleton test files. You must fill in the actual test logic.

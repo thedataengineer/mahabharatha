@@ -4,7 +4,7 @@
 - **Feature**: fix-issues-78-91
 - **Status**: DRAFT
 - **Created**: 2026-02-02
-- **Author**: /zerg:design
+- **Author**: /mahabharatha:design
 
 ---
 
@@ -116,7 +116,7 @@ tests/unit/test_worktree_extended.py: DELETE local tmp_repo fixture (use global)
 
 **Context**: Local wiki files are correct but the live GitHub Wiki hasn't been updated.
 
-**Decision**: Run `zerg wiki --push` as part of this feature delivery. No CI automation added.
+**Decision**: Run `mahabharatha wiki --push` as part of this feature delivery. No CI automation added.
 
 **Rationale**: Wiki publishing is already implemented as a manual command. Automating it is a separate feature request.
 
@@ -137,19 +137,19 @@ tests/unit/test_worktree_extended.py: DELETE local tmp_repo fixture (use global)
 
 | File(s) | Task | Op |
 |---------|------|----|
-| zerg/doc_engine/extractor.py | T-001 | modify |
+| mahabharatha/doc_engine/extractor.py | T-001 | modify |
 | tests/unit/test_launcher_coverage.py | T-002 | modify |
-| zerg/cli.py (deprecated flags) | T-003 | modify |
-| zerg/commands/refactor.py, analyze.py | T-004 | modify |
+| mahabharatha/cli.py (deprecated flags) | T-003 | modify |
+| mahabharatha/commands/refactor.py, analyze.py | T-004 | modify |
 | (close issues #80, #89 via gh) | T-005 | gh CLI |
 | .github/workflows/pytest.yml | T-006 | modify |
 | tests/conftest.py, test_worktree.py, test_worktree_extended.py | T-006 | modify |
 | pyproject.toml, .github/workflows/pytest.yml | T-007 | modify |
-| zerg/mcp_router.py, zerg/mcp_telemetry.py, tests/unit/test_mcp_telemetry.py | T-008 | modify+create |
-| zerg/orchestrator.py | T-009 | modify |
-| zerg/context_plugin.py | T-010 | modify |
+| mahabharatha/mcp_router.py, mahabharatha/mcp_telemetry.py, tests/unit/test_mcp_telemetry.py | T-008 | modify+create |
+| mahabharatha/orchestrator.py | T-009 | modify |
+| mahabharatha/context_plugin.py | T-010 | modify |
 | CHANGELOG.md | T-011 | modify |
-| (wiki push via zerg wiki --push) | T-012 | command |
+| (wiki push via mahabharatha wiki --push) | T-012 | command |
 
 ### 4.3 Dependency Graph
 
@@ -166,7 +166,7 @@ L3: T-011 → T-012                               [sequential, depends on L2]
 
 ### T-001: Fix ast.Str deprecation (#87)
 - Remove `ast.Str` from isinstance check in `extractor.py:73`
-- Verify: `grep -rn 'ast\.Str' zerg/` returns empty
+- Verify: `grep -rn 'ast\.Str' mahabharatha/` returns empty
 - Verify: `pytest tests/unit/test_extractor*.py -v` passes
 
 ### T-002: Fix unawaited coroutine warning (#91)
@@ -224,12 +224,12 @@ L3: T-011 → T-012                               [sequential, depends on L2]
 
 ### T-011: CHANGELOG + documentation update
 - Update CHANGELOG.md [Unreleased] section with all changes
-- Verify: `python -m zerg.validate_commands` passes
+- Verify: `python -m mahabharatha.validate_commands` passes
 - Verify: `pytest tests/ -q` shows 7218+ pass, 0 fail
 
 ### T-012: Push wiki + final validation
-- Run `zerg wiki --push` to publish updated wiki to GitHub
-- Verify live wiki at github.com/rocklambros/zerg/wiki shows /zerg: prefix format
+- Run `mahabharatha wiki --push` to publish updated wiki to GitHub
+- Verify live wiki at github.com/rocklambros/mahabharatha/wiki shows /mahabharatha: prefix format
 - Close issues #78, #79, #81, #84, #85, #87, #88, #90, #91 via `gh issue close`
 
 ---

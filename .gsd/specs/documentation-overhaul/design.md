@@ -4,7 +4,7 @@
 - **Feature**: documentation-overhaul
 - **Status**: APPROVED
 - **Created**: 2026-02-04
-- **Author**: ZERG Design Mode
+- **Author**: MAHABHARATHA Design Mode
 
 ---
 
@@ -19,7 +19,7 @@ Comprehensive documentation overhaul creating a complete GitHub wiki (11 pages),
 - Exhaustive command reference (26 commands, every flag, 3-5 examples each)
 - Tutorial-focused README with minerals-store walkthrough
 - ARCHITECTURE.md verified against current source code
-- All commands referenced as `/zerg:command` format
+- All commands referenced as `/mahabharatha:command` format
 
 ### 1.3 Non-Goals
 - New features or code changes (documentation only)
@@ -53,7 +53,7 @@ Wiki Pages (Primary)          docs/ (Mirror)              README.md
 Each command gets exhaustive documentation:
 
 ```markdown
-## /zerg:{command}
+## /mahabharatha:{command}
 
 {Synopsis — one line}
 
@@ -82,8 +82,8 @@ Each command gets exhaustive documentation:
 
 ### Related Commands
 
-- `/zerg:{related1}` — {why related}
-- `/zerg:{related2}` — {why related}
+- `/mahabharatha:{related1}` — {why related}
+- `/mahabharatha:{related2}` — {why related}
 
 ### Notes
 
@@ -95,10 +95,10 @@ Each command gets exhaustive documentation:
 ### 2.3 Data Flow
 
 ```
-Source files (zerg/data/commands/*.md)
+Source files (mahabharatha/data/commands/*.md)
           │
           ▼
-    /zerg:document --deep
+    /mahabharatha:document --deep
           │
           ▼
     Generated content
@@ -135,46 +135,46 @@ Source files (zerg/data/commands/*.md)
 Commands grouped by workflow phase, alphabetical within groups:
 
 **Core Workflow** (5 commands):
-- `/zerg:brainstorm`
-- `/zerg:design`
-- `/zerg:init`
-- `/zerg:plan`
-- `/zerg:rush`
+- `/mahabharatha:brainstorm`
+- `/mahabharatha:design`
+- `/mahabharatha:init`
+- `/mahabharatha:plan`
+- `/mahabharatha:kurukshetra`
 
 **Monitoring & Control** (6 commands):
-- `/zerg:cleanup`
-- `/zerg:logs`
-- `/zerg:merge`
-- `/zerg:retry`
-- `/zerg:status`
-- `/zerg:stop`
+- `/mahabharatha:cleanup`
+- `/mahabharatha:logs`
+- `/mahabharatha:merge`
+- `/mahabharatha:retry`
+- `/mahabharatha:status`
+- `/mahabharatha:stop`
 
 **Quality & Analysis** (6 commands):
-- `/zerg:analyze`
-- `/zerg:build`
-- `/zerg:refactor`
-- `/zerg:review`
-- `/zerg:security`
-- `/zerg:test`
+- `/mahabharatha:analyze`
+- `/mahabharatha:build`
+- `/mahabharatha:refactor`
+- `/mahabharatha:review`
+- `/mahabharatha:security`
+- `/mahabharatha:test`
 
 **Utilities** (4 commands):
-- `/zerg:create-command`
-- `/zerg:debug`
-- `/zerg:git`
-- `/zerg:plugins`
-- `/zerg:worker`
+- `/mahabharatha:create-command`
+- `/mahabharatha:debug`
+- `/mahabharatha:git`
+- `/mahabharatha:plugins`
+- `/mahabharatha:worker`
 
 **Documentation & AI** (5 commands):
-- `/zerg:document`
-- `/zerg:estimate`
-- `/zerg:explain`
-- `/zerg:index`
-- `/zerg:select-tool`
+- `/mahabharatha:document`
+- `/mahabharatha:estimate`
+- `/mahabharatha:explain`
+- `/mahabharatha:index`
+- `/mahabharatha:select-tool`
 
 ### 3.3 README Tutorial Structure
 
 ```markdown
-# ZERG
+# MAHABHARATHA
 
 {Logo}
 
@@ -184,19 +184,19 @@ Commands grouped by workflow phase, alphabetical within groups:
 
 Step-by-step from zero to first feature:
 1. Installation
-2. /zerg:init
-3. /zerg:brainstorm (optional)
-4. /zerg:plan
-5. /zerg:design
-6. /zerg:rush
+2. /mahabharatha:init
+3. /mahabharatha:brainstorm (optional)
+4. /mahabharatha:plan
+5. /mahabharatha:design
+6. /mahabharatha:kurukshetra
 7. Monitor & Review
-8. /zerg:git --action ship
+8. /mahabharatha:git --action ship
 
 ## Command Quick Reference
 
 | Category | Command | Purpose |
 |----------|---------|---------|
-| Core | /zerg:init | Initialize project |
+| Core | /mahabharatha:init | Initialize project |
 | ... | ... | ... |
 
 → Full documentation: [Wiki](link)
@@ -316,7 +316,7 @@ Level 5 (Validation):
 |------|-------------|--------|------------|
 | Wiki push requires manual steps | Medium | Low | Document wiki clone/push process |
 | Flag extraction misses edge cases | Low | Medium | Cross-check against command source files |
-| Tutorial becomes stale | Low | Low | Tutorial uses actual ZERG commands |
+| Tutorial becomes stale | Low | Low | Tutorial uses actual MAHABHARATHA commands |
 | Large context for command docs | Medium | Low | Split into multiple tasks by group |
 
 ---
@@ -328,7 +328,7 @@ Level 5 (Validation):
 All wiki pages must have valid cross-links. Check:
 - Internal wiki links resolve
 - External links to docs/ work
-- Command references use `/zerg:` format
+- Command references use `/mahabharatha:` format
 
 ### 7.2 Acceptance Criteria Validation
 
@@ -336,7 +336,7 @@ All wiki pages must have valid cross-links. Check:
 2. **Commands Documented**: All 26 commands have flags, examples
 3. **Tutorial Works**: New user can follow README end-to-end
 4. **Architecture Current**: ARCHITECTURE.md matches current modules
-5. **Format Consistent**: All `/zerg:` references, no "Command-init"
+5. **Format Consistent**: All `/mahabharatha:` references, no "Command-init"
 
 ---
 

@@ -1,4 +1,4 @@
-"""Tests for ZERG port allocation module."""
+"""Tests for MAHABHARATHA port allocation module."""
 
 import socket
 from unittest.mock import MagicMock, patch

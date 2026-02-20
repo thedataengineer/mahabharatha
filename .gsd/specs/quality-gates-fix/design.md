@@ -11,7 +11,7 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Fix 943 pre-existing lint errors blocking ZERG merge gates by configuring ruff with 120-char line limit, running auto-fixes, and adding pre-commit hooks for early enforcement.
+Fix 943 pre-existing lint errors blocking MAHABHARATHA merge gates by configuring ruff with 120-char line limit, running auto-fixes, and adding pre-commit hooks for early enforcement.
 
 ### 1.2 Goals
 - Zero lint errors from `ruff check .`
@@ -48,7 +48,7 @@ Fix 943 pre-existing lint errors blocking ZERG merge gates by configuring ruff w
 |-----------|---------------|-------|
 | Ruff Config | Line length 120, rule selection, exclusions | pyproject.toml |
 | Pre-commit | Early lint enforcement before commit | .pre-commit-config.yaml |
-| Quality Gate | Merge-time lint verification | .zerg/config.yaml (unchanged) |
+| Quality Gate | Merge-time lint verification | .mahabharatha/config.yaml (unchanged) |
 
 ### 2.3 Data Flow
 1. Developer writes code
@@ -67,7 +67,7 @@ Fix 943 pre-existing lint errors blocking ZERG merge gates by configuring ruff w
 # pyproject.toml additions
 [tool.ruff]
 line-length = 120  # Up from 100
-exclude = [".zerg", "tests/fixtures"]
+exclude = [".mahabharatha", "tests/fixtures"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
@@ -96,7 +96,7 @@ repos:
 | SIM117 | 91 | Yes | `ruff check --fix` |
 | F841 | 90 | Unsafe | `--unsafe-fixes --select F841` (test files) |
 | I001 | 87 | Yes | `ruff check --fix` |
-| N999 | 4 | No | Exclude `.zerg/` |
+| N999 | 4 | No | Exclude `.mahabharatha/` |
 | Other | 172 | Mixed | Manual review |
 
 ---
@@ -133,20 +133,20 @@ repos:
 
 **Consequences**: Some `_mock` variables will be removed. Tests should still pass.
 
-### 4.3 Exclude .zerg/ Directory
+### 4.3 Exclude .mahabharatha/ Directory
 
-**Context**: 4 N999 (invalid module name) errors from `.zerg/` being treated as a package.
+**Context**: 4 N999 (invalid module name) errors from `.mahabharatha/` being treated as a package.
 
 **Options Considered**:
-1. Rename .zerg to zerg_internal
+1. Rename .mahabharatha to zerg_internal
 2. Exclude from linting
 3. Ignore N999 globally
 
-**Decision**: Exclude `.zerg/` from ruff
+**Decision**: Exclude `.mahabharatha/` from ruff
 
-**Rationale**: `.zerg/` contains config/logs, not production code. N999 is correct (dotfiles aren't valid Python packages).
+**Rationale**: `.mahabharatha/` contains config/logs, not production code. N999 is correct (dotfiles aren't valid Python packages).
 
-**Consequences**: `.zerg/` Python files won't be linted (acceptable for config files).
+**Consequences**: `.mahabharatha/` Python files won't be linted (acceptable for config files).
 
 ---
 

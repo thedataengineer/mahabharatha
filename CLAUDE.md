@@ -28,7 +28,7 @@ These are Claude Code slash commands. Use them inside a Claude Code session:
 
 **File Ownership**: Each task owns specific files. No conflicts possible.
 
-**Spec as Memory**: Zerglings read spec files, not conversation history. Stateless and restartable.
+**Spec as Memory**: Warriors read spec files, not conversation history. Stateless and restartable.
 
 **Verification**: Every task has an automated verification command. Pass or fail, no subjectivity.
 
@@ -181,7 +181,7 @@ These integrate with the context engineering plugin to inject rules, MCP hints, 
 ## Configuration
 
 Edit `.mahabharatha/config.yaml` for:
-- Zergling limits
+- Warrior limits
 - Timeouts
 - Quality gate commands
 - MCP servers
@@ -244,7 +244,7 @@ If the PR is trivial (typo fix, CI config, test-only), apply the `skip-changelog
 
 ## Troubleshooting
 
-Zerglings not starting? Check Docker, ANTHROPIC_API_KEY, and port availability.
+Warriors not starting? Check Docker, ANTHROPIC_API_KEY, and port availability.
 
 Tasks failing? Check verification commands in task-graph.json.
 

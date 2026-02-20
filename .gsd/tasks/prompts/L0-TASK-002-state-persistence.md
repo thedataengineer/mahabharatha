@@ -6,12 +6,12 @@ Implement JSON-based state persistence for execution state, checkpoints, and tas
 
 ## Context
 
-This is a **root task** with no dependencies. The state layer provides durable storage for ZERG execution, enabling resume after restart.
+This is a **root task** with no dependencies. The state layer provides durable storage for MAHABHARATHA execution, enabling resume after restart.
 
 ## Files to Create
 
 ```
-.zerg/
+.mahabharatha/
 ├── state.py                      # State management classes
 └── schemas/
     ├── state.schema.json         # ExecutionState schema
@@ -27,22 +27,22 @@ This is a **root task** with no dependencies. The state layer provides durable s
 @dataclass
 class ExecutionState:
     """Persistent execution state."""
-    
+
     feature: str
     started_at: datetime
     current_level: int
     tasks: dict[str, TaskState]
     workers: dict[str, WorkerState]
     checkpoints: list[str]
-    
-    def save(self, path: str = ".zerg/state.json") -> None:
+
+    def save(self, path: str = ".mahabharatha/state.json") -> None:
         """Atomically save state to disk."""
         # Write to temp file, then rename (atomic on POSIX)
-        
+
     @classmethod
-    def load(cls, path: str = ".zerg/state.json") -> "ExecutionState":
+    def load(cls, path: str = ".mahabharatha/state.json") -> "ExecutionState":
         """Load state from disk, validate against schema."""
-        
+
     @classmethod
     def create(cls, feature: str) -> "ExecutionState":
         """Create new execution state for feature."""
@@ -65,7 +65,7 @@ class TaskStatus(Enum):
 @dataclass
 class Checkpoint:
     """Worker checkpoint for context threshold recovery."""
-    
+
     task_id: str
     worker_id: str
     timestamp: datetime
@@ -112,7 +112,7 @@ def atomic_write(path: str, data: str) -> None:
 ## Verification
 
 ```bash
-cd .zerg && python -c "
+cd .mahabharatha && python -c "
 from state import ExecutionState, TaskStatus, Checkpoint
 
 # Test create and save
@@ -177,7 +177,7 @@ print('OK: State persistence works')
 ## Test Cases
 
 ```python
-# .zerg/tests/test_state.py
+# .mahabharatha/tests/test_state.py
 import pytest
 import os
 from state import ExecutionState, TaskStatus
@@ -191,7 +191,7 @@ def test_save_load_roundtrip(tmp_path):
     path = tmp_path / "state.json"
     s = ExecutionState.create('test')
     s.save(str(path))
-    
+
     s2 = ExecutionState.load(str(path))
     assert s2.feature == s.feature
 
@@ -208,5 +208,5 @@ def test_schema_validation_rejects_invalid():
 
 1. All acceptance criteria checked
 2. Verification command passes
-3. Unit tests pass: `pytest .zerg/tests/test_state.py`
+3. Unit tests pass: `pytest .mahabharatha/tests/test_state.py`
 4. Schemas validate correctly: `python -c "import jsonschema; ..."`

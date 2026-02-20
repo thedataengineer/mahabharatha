@@ -1,4 +1,4 @@
-"""ZERG validation functions for task graphs and configurations."""
+"""MAHABHARATHA validation functions for task graphs and configurations."""
 
 import re
 from pathlib import Path

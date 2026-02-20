@@ -1,11 +1,11 @@
-# ZERG State: bite-sized-planning
+# MAHABHARATHA State: bite-sized-planning
 
 ## Current Phase
 - **Level:** 2
 - **Started:** 2026-02-04T18:35:00Z
 - **Last Update:** 2026-02-04T11:02:46.797607
 - **Status:** PAUSED
-- **Error:** Level 1 merge failed after 3 attempts: Git command failed: error: cannot delete branch 'zerg/bite-sized-planning/staging' used by worktree at '/Users/klambros/PycharmProjects/ZERG'
+- **Error:** Level 1 merge failed after 3 attempts: Git command failed: error: cannot delete branch 'mahabharatha/bite-sized-planning/staging' used by worktree at '/Users/klambros/PycharmProjects/MAHABHARATHA'
 
 ## Tasks
 

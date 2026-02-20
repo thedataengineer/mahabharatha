@@ -1,4 +1,4 @@
-"""Unit tests for sync/async deduplication in the ZERG codebase.
+"""Unit tests for sync/async deduplication in the MAHABHARATHA codebase.
 
 Verifies that the dedup refactoring (Level 1-2 of core-refactoring) is correct:
 

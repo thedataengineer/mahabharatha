@@ -1,11 +1,11 @@
-# /zerg:debug
+# /mahabharatha:debug
 
-Deep diagnostic investigation for ZERG execution issues with error intelligence, log correlation, hypothesis testing, and code-aware recovery.
+Deep diagnostic investigation for MAHABHARATHA execution issues with error intelligence, log correlation, hypothesis testing, and code-aware recovery.
 
 ## Synopsis
 
 ```
-/zerg:debug [PROBLEM_DESCRIPTION]
+/mahabharatha:debug [PROBLEM_DESCRIPTION]
             [--feature <name>] [-f <name>]
             [--worker <id>] [-w <id>]
             [--deep]
@@ -19,13 +19,13 @@ Deep diagnostic investigation for ZERG execution issues with error intelligence,
 
 ## Description
 
-The `debug` command performs systematic diagnosis of ZERG execution failures. It follows a multi-phase investigation pipeline that gathers context, classifies symptoms, collects evidence, tests hypotheses using Bayesian probability scoring, determines root causes, and generates recovery plans.
+The `debug` command performs systematic diagnosis of MAHABHARATHA execution failures. It follows a multi-phase investigation pipeline that gathers context, classifies symptoms, collects evidence, tests hypotheses using Bayesian probability scoring, determines root causes, and generates recovery plans.
 
 If `PROBLEM_DESCRIPTION` is provided as plain text (without flags), it is treated as a free-form description of the problem to investigate.
 
 ### Investigation Phases
 
-1. **Context Gathering** -- Read ZERG state, logs, task graph, design documents, and git state in parallel.
+1. **Context Gathering** -- Read MAHABHARATHA state, logs, task graph, design documents, and git state in parallel.
 2. **Error Intelligence** -- Multi-language error parsing, fingerprinting, chain analysis, and semantic classification.
 3. **Symptom Classification** -- Classify into one category: `WORKER_FAILURE`, `TASK_FAILURE`, `STATE_CORRUPTION`, `INFRASTRUCTURE`, `CODE_ERROR`, `DEPENDENCY`, `MERGE_CONFLICT`, or `UNKNOWN`.
 4. **Log Correlation** -- Timeline reconstruction, temporal clustering, cross-worker correlation, and error evolution tracking.
@@ -33,7 +33,7 @@ If `PROBLEM_DESCRIPTION` is provided as plain text (without flags), it is treate
 6. **Hypothesis Testing** -- Bayesian probability scoring with a maximum of 3 hypotheses and automated test commands.
 7. **Root Cause Determination** -- Synthesize findings into a root cause statement with a confidence level.
 8. **Recovery Plan** -- Code-aware fix suggestions with risk levels: `[SAFE]`, `[MODERATE]`, or `[DESTRUCTIVE]`. When `--fix` is used, each step requires confirmation before execution.
-9. **Design Escalation Check** -- If issues require architectural changes, recommend running `/zerg:design`.
+9. **Design Escalation Check** -- If issues require architectural changes, recommend running `/mahabharatha:design`.
 10. **Report** -- Save a diagnostic report to `claudedocs/debug-<timestamp>.md` or the path specified by `--report`.
 11. **Environment Diagnostics** -- When `--env` is set, run Python, Docker, system resource, and config validation checks.
 
@@ -60,49 +60,49 @@ If `--feature` is not provided, the command auto-detects the active feature from
 Investigate a general problem described in plain text:
 
 ```
-/zerg:debug workers keep crashing
+/mahabharatha:debug workers keep crashing
 ```
 
 Debug a specific feature:
 
 ```
-/zerg:debug --feature user-auth
+/mahabharatha:debug --feature user-auth
 ```
 
 Focus on a single worker:
 
 ```
-/zerg:debug --worker 3
+/mahabharatha:debug --worker 3
 ```
 
 Run deep system-level diagnostics:
 
 ```
-/zerg:debug --deep
+/mahabharatha:debug --deep
 ```
 
 Diagnose and attempt recovery:
 
 ```
-/zerg:debug --fix
+/mahabharatha:debug --fix
 ```
 
 Analyze a specific error message:
 
 ```
-/zerg:debug --error "ModuleNotFoundError: No module named 'zerg.launcher'"
+/mahabharatha:debug --error "ModuleNotFoundError: No module named 'mahabharatha.launcher'"
 ```
 
 Run environment diagnostics:
 
 ```
-/zerg:debug --env
+/mahabharatha:debug --env
 ```
 
 Save the report to a custom path:
 
 ```
-/zerg:debug --report claudedocs/auth-debug.md
+/mahabharatha:debug --report claudedocs/auth-debug.md
 ```
 
 ## Symptom Categories
@@ -132,7 +132,7 @@ This command creates a Claude Code Task with the subject prefix `[Debug]` on inv
 
 ## See Also
 
-- [[zerg-worker]] -- Worker execution protocol and failure handling
-- [[zerg-plugins]] -- Plugin system for custom quality gates and hooks
-- [[zerg-build]] -- Rebuild after applying fixes
-- [[zerg-test]] -- Re-run tests to verify fixes
+- [[mahabharatha-worker]] -- Worker execution protocol and failure handling
+- [[mahabharatha-plugins]] -- Plugin system for custom quality gates and hooks
+- [[mahabharatha-build]] -- Rebuild after applying fixes
+- [[mahabharatha-test]] -- Re-run tests to verify fixes

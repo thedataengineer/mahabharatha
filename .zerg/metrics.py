@@ -1,4 +1,4 @@
-"""ZERG v2 Metrics Collector - Execution monitoring and cost tracking."""
+"""MAHABHARATHA v2 Metrics Collector - Execution monitoring and cost tracking."""
 
 import json
 from dataclasses import dataclass, field
@@ -40,7 +40,7 @@ class LevelMetrics:
 class MetricsCollector:
     """Collects and exports execution metrics."""
 
-    METRICS_DIR = Path(".zerg/metrics")
+    METRICS_DIR = Path(".mahabharatha/metrics")
 
     def __init__(self):
         """Initialize metrics collector."""

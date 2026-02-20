@@ -1,4 +1,4 @@
-"""Unit tests for ZERG stop command.
+"""Unit tests for MAHABHARATHA stop command.
 
 Thinned from 40 tests to cover unique code paths:
 - detect_feature (no dir, single file, multiple files)

@@ -1,4 +1,4 @@
-"""Tests for ZERG worker assignment module — thinned Phase 4/5."""
+"""Tests for MAHABHARATHA worker assignment module — thinned Phase 4/5."""
 
 import json
 from pathlib import Path

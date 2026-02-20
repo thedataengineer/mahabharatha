@@ -1,4 +1,4 @@
-"""Level coordination for ZERG orchestrator.
+"""Level coordination for MAHABHARATHA orchestrator.
 
 Handles level START, COMPLETE, and MERGE workflows extracted from the
 Orchestrator class.
@@ -74,7 +74,7 @@ class LevelCoordinator:
 
         Args:
             feature: Feature name being executed
-            config: ZERG configuration
+            config: MAHABHARATHA configuration
             state: State manager instance
             levels: Level controller instance
             parser: Task parser instance
@@ -186,7 +186,7 @@ class LevelCoordinator:
         logger.info(f"Level {level} complete")
 
         # Check if merge should be deferred to ship time
-        if self.config.rush.defer_merge_to_ship:
+        if self.config.kurukshetra.defer_merge_to_ship:
             logger.info(f"Deferring merge for level {level} (defer_merge_to_ship=True)")
             self.state.set_level_status(level, "complete")
             self.state.set_level_merge_status(level, LevelMergeStatus.PENDING)
@@ -378,7 +378,7 @@ class LevelCoordinator:
             )
 
         # Check if gates should be skipped (only run at ship time)
-        skip_gates = self.config.rush.gates_at_ship_only
+        skip_gates = self.config.kurukshetra.gates_at_ship_only
         if skip_gates:
             logger.info(f"Skipping gates for level {level} (gates_at_ship_only=True)")
 
@@ -429,7 +429,7 @@ class LevelCoordinator:
         logger.info("Intervention required. Options:")
         logger.info("  1. Resolve conflicts and run /mahabharatha:merge")
         logger.info("  2. Use /mahabharatha:retry to re-run failed tasks")
-        logger.info("  3. Use /mahabharatha:rush --resume to continue")
+        logger.info("  3. Use /mahabharatha:kurukshetra --resume to continue")
 
     def set_recoverable_error(self, error: str) -> None:
         """Set recoverable error state (pause instead of stop).

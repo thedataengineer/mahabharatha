@@ -10,10 +10,10 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Add `/zerg:brainstorm` (alias `/z:brainstorm`) as a new discovery command that performs competitive research, Socratic ideation, and automated GitHub issue creation. Update all 18+ documentation files to reflect 26 commands. Create 6-10 feature issues for the open-source roadmap.
+Add `/mahabharatha:brainstorm` (alias `/z:brainstorm`) as a new discovery command that performs competitive research, Socratic ideation, and automated GitHub issue creation. Update all 18+ documentation files to reflect 26 commands. Create 6-10 feature issues for the open-source roadmap.
 
 ### 1.2 Goals
-- New brainstorm command following all ZERG patterns (command splitting, task ecosystem, context management)
+- New brainstorm command following all MAHABHARATHA patterns (command splitting, task ecosystem, context management)
 - Complete documentation sweep: every reference to "25 commands" updated, wiki page created, tutorials updated
 - Feature issues created with full acceptance criteria and priority labels
 
@@ -28,7 +28,7 @@ Add `/zerg:brainstorm` (alias `/z:brainstorm`) as a new discovery command that p
 ### 2.1 Command File Structure
 
 ```
-zerg/data/commands/
+mahabharatha/data/commands/
   brainstorm.md          # Main file (mirrors core, backward compat)
   brainstorm.core.md     # Essential: workflow, flags, task tracking (~150 lines)
   brainstorm.details.md  # Reference: question templates, schemas (~250 lines)
@@ -68,13 +68,13 @@ Phase 4: Handoff (save artifacts, suggest /z:plan)
 | File | Line | Change |
 |------|------|--------|
 | `README.md` | 3, 52, 86, 400, 576 | "25" → "26" |
-| `CHANGELOG.md` | 27 | "25 slash commands" → "26 slash commands" + add `/zerg:brainstorm` |
+| `CHANGELOG.md` | 27 | "25 slash commands" → "26 slash commands" + add `/mahabharatha:brainstorm` |
 | `docs/commands.md` | 3 | "all 25" → "all 26" |
 | `docs/tutorial-minerals-store.md` | 1557 | "all 25" → "all 26" |
-| `.zerg/wiki/Home.md` | 80 | "25 commands" → "26 commands" |
-| `.zerg/wiki/Command-Reference.md` | 2 | "all 25" → "all 26" |
-| `.zerg/wiki/Contributing.md` | 87, 363 | "25 commands" → "26 commands" |
-| `.zerg/wiki/Your-First-Feature.md` | 412 | "19" → "26" (was already stale) |
+| `.mahabharatha/wiki/Home.md` | 80 | "25 commands" → "26 commands" |
+| `.mahabharatha/wiki/Command-Reference.md` | 2 | "all 25" → "all 26" |
+| `.mahabharatha/wiki/Contributing.md` | 87, 363 | "25 commands" → "26 commands" |
+| `.mahabharatha/wiki/Your-First-Feature.md` | 412 | "19" → "26" (was already stale) |
 
 ### 3.2 Files Requiring New Content
 
@@ -83,18 +83,18 @@ Phase 4: Handoff (save artifacts, suggest /z:plan)
 | `docs/commands.md` | TOC entry + full brainstorm section (~80 lines) |
 | `README.md` | Command overview table row |
 | `ARCHITECTURE.md` | CLI Commands table row (~line 407) |
-| `.zerg/wiki/Command-brainstorm.md` | New wiki page (full reference, ~90 lines) |
-| `.zerg/wiki/Command-Reference.md` | Index table row + category entry |
-| `.zerg/wiki/_Sidebar.md` | Link under Core Workflow |
-| `.zerg/wiki/Home.md` | Key Commands listing |
-| `.zerg/wiki/Quick-Start.md` | Optional brainstorm step before Plan |
-| `.zerg/wiki/Your-First-Feature.md` | Tip about brainstorm for discovery |
-| `.zerg/wiki/Getting-Started.md` | Workflow table row |
-| `.zerg/wiki/Tutorials.md` | Lifecycle reference update |
-| `.zerg/wiki/Installation.md` | Slash commands listing |
-| `.zerg/wiki/FAQ.md` | Workflow description |
-| `.zerg/wiki/Glossary.md` | "Brainstorm" term definition |
-| `.zerg/wiki/Context-Engineering.md` | Split commands list (9 → 10) |
+| `.mahabharatha/wiki/Command-brainstorm.md` | New wiki page (full reference, ~90 lines) |
+| `.mahabharatha/wiki/Command-Reference.md` | Index table row + category entry |
+| `.mahabharatha/wiki/_Sidebar.md` | Link under Core Workflow |
+| `.mahabharatha/wiki/Home.md` | Key Commands listing |
+| `.mahabharatha/wiki/Quick-Start.md` | Optional brainstorm step before Plan |
+| `.mahabharatha/wiki/Your-First-Feature.md` | Tip about brainstorm for discovery |
+| `.mahabharatha/wiki/Getting-Started.md` | Workflow table row |
+| `.mahabharatha/wiki/Tutorials.md` | Lifecycle reference update |
+| `.mahabharatha/wiki/Installation.md` | Slash commands listing |
+| `.mahabharatha/wiki/FAQ.md` | Workflow description |
+| `.mahabharatha/wiki/Glossary.md` | "Brainstorm" term definition |
+| `.mahabharatha/wiki/Context-Engineering.md` | Split commands list (9 → 10) |
 | `CLAUDE.md` | Quick Start + Task Subject Convention |
 | `docs/context-engineering.md` | Split commands list (9 → 10) |
 
@@ -104,13 +104,13 @@ Phase 4: Handoff (save artifacts, suggest /z:plan)
 
 ### Decision: Brainstorm placement in workflow
 
-**Context**: Where does brainstorm fit in init → plan → design → rush?
+**Context**: Where does brainstorm fit in init → plan → design → kurukshetra?
 
 **Decision**: Before plan, as an optional discovery step.
 
 **Rationale**: Brainstorm produces feature ideas and GitHub issues. Plan takes a specific feature name. Brainstorm feeds into plan naturally.
 
-**Workflow**: `brainstorm (optional) → plan → design → rush → merge`
+**Workflow**: `brainstorm (optional) → plan → design → kurukshetra → merge`
 
 ### Decision: Command categorization
 
@@ -126,9 +126,9 @@ Phase 4: Handoff (save artifacts, suggest /z:plan)
 
 | File | Task | Operation |
 |------|------|-----------|
-| `zerg/data/commands/brainstorm.md` | BS-001 | create |
-| `zerg/data/commands/brainstorm.core.md` | BS-001 | create |
-| `zerg/data/commands/brainstorm.details.md` | BS-001 | create |
+| `mahabharatha/data/commands/brainstorm.md` | BS-001 | create |
+| `mahabharatha/data/commands/brainstorm.core.md` | BS-001 | create |
+| `mahabharatha/data/commands/brainstorm.details.md` | BS-001 | create |
 | `docs/commands.md` | BS-002 | modify |
 | `README.md` | BS-002 | modify |
 | `ARCHITECTURE.md` | BS-002 | modify |
@@ -136,19 +136,19 @@ Phase 4: Handoff (save artifacts, suggest /z:plan)
 | `docs/context-engineering.md` | BS-002 | modify |
 | `docs/tutorial-minerals-store.md` | BS-002 | modify |
 | `CHANGELOG.md` | BS-002 | modify |
-| `.zerg/wiki/Command-brainstorm.md` | BS-003 | create |
-| `.zerg/wiki/Command-Reference.md` | BS-003 | modify |
-| `.zerg/wiki/_Sidebar.md` | BS-003 | modify |
-| `.zerg/wiki/Home.md` | BS-003 | modify |
-| `.zerg/wiki/Quick-Start.md` | BS-003 | modify |
-| `.zerg/wiki/Your-First-Feature.md` | BS-003 | modify |
-| `.zerg/wiki/Getting-Started.md` | BS-003 | modify |
-| `.zerg/wiki/Tutorials.md` | BS-003 | modify |
-| `.zerg/wiki/Installation.md` | BS-003 | modify |
-| `.zerg/wiki/FAQ.md` | BS-003 | modify |
-| `.zerg/wiki/Glossary.md` | BS-003 | modify |
-| `.zerg/wiki/Context-Engineering.md` | BS-003 | modify |
-| `.zerg/wiki/Contributing.md` | BS-003 | modify |
+| `.mahabharatha/wiki/Command-brainstorm.md` | BS-003 | create |
+| `.mahabharatha/wiki/Command-Reference.md` | BS-003 | modify |
+| `.mahabharatha/wiki/_Sidebar.md` | BS-003 | modify |
+| `.mahabharatha/wiki/Home.md` | BS-003 | modify |
+| `.mahabharatha/wiki/Quick-Start.md` | BS-003 | modify |
+| `.mahabharatha/wiki/Your-First-Feature.md` | BS-003 | modify |
+| `.mahabharatha/wiki/Getting-Started.md` | BS-003 | modify |
+| `.mahabharatha/wiki/Tutorials.md` | BS-003 | modify |
+| `.mahabharatha/wiki/Installation.md` | BS-003 | modify |
+| `.mahabharatha/wiki/FAQ.md` | BS-003 | modify |
+| `.mahabharatha/wiki/Glossary.md` | BS-003 | modify |
+| `.mahabharatha/wiki/Context-Engineering.md` | BS-003 | modify |
+| `.mahabharatha/wiki/Contributing.md` | BS-003 | modify |
 | (GitHub issues) | BS-004 | create |
 
 ---

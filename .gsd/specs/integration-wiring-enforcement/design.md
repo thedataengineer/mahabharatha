@@ -12,7 +12,7 @@
 
 ### 1.1 Summary
 
-Add wiring enforcement to ZERG's feature delivery pipeline so that every module delivered has at least one production caller and an integration test proving end-to-end behavior. Changes touch 4 command files, 1 validation module, 1 CI workflow, and CLAUDE.md.
+Add wiring enforcement to MAHABHARATHA's feature delivery pipeline so that every module delivered has at least one production caller and an integration test proving end-to-end behavior. Changes touch 4 command files, 1 validation module, 1 CI workflow, and CLAUDE.md.
 
 ### 1.2 Goals
 - Every task-graph task that creates a module specifies its `consumers`
@@ -72,9 +72,9 @@ Add two optional fields per task in task-graph.json:
   "id": "TASK-003",
   "title": "Implement auth service",
   "files": {
-    "create": ["zerg/auth_service.py"],
+    "create": ["mahabharatha/auth_service.py"],
     "modify": [],
-    "read": ["zerg/types.py"]
+    "read": ["mahabharatha/types.py"]
   },
   "verification": {
     "command": "pytest tests/unit/test_auth_service.py -v",
@@ -100,9 +100,9 @@ Every task that creates a module must declare who calls it.
 
 | Task | Creates | Consumed By | Integration Test |
 |------|---------|-------------|-----------------|
-| TASK-001 | zerg/types.py | TASK-003, TASK-004 | tests/integration/test_types_wiring.py |
-| TASK-003 | zerg/service.py | TASK-005 | tests/integration/test_service_wiring.py |
-| TASK-005 | zerg/routes.py | (leaf: CLI entry) | — |
+| TASK-001 | mahabharatha/types.py | TASK-003, TASK-004 | tests/integration/test_types_wiring.py |
+| TASK-003 | mahabharatha/service.py | TASK-005 | tests/integration/test_service_wiring.py |
+| TASK-005 | mahabharatha/routes.py | (leaf: CLI entry) | — |
 ```
 
 Add validation rule to Phase 5 (Validate Task Graph):
@@ -164,7 +164,7 @@ NEW_FILES=$(git diff --name-only --diff-filter=A HEAD~$TASK_COUNT HEAD -- '*.py'
 for FILE in $NEW_FILES; do
   MODULE=$(echo $FILE | sed 's|/|.|g' | sed 's|.py$||')
   # Check if any other production file imports this module
-  IMPORTERS=$(grep -rl "from $MODULE import\|import $MODULE" zerg/ --include="*.py" | grep -v "tests/" | grep -v "$FILE")
+  IMPORTERS=$(grep -rl "from $MODULE import\|import $MODULE" mahabharatha/ --include="*.py" | grep -v "tests/" | grep -v "$FILE")
   if [ -z "$IMPORTERS" ] && ! echo "$FILE" | grep -q "tests/"; then
     echo "WARNING: $FILE has no production imports (orphaned module)"
     WIRING_WARNINGS+=("$FILE")
@@ -186,14 +186,14 @@ def validate_module_wiring(
     package_dir: Path | None = None,
     tests_dir: Path | None = None,
 ) -> tuple[bool, list[str]]:
-    """Verify all modules in zerg/ have at least one production import.
+    """Verify all modules in mahabharatha/ have at least one production import.
 
     Scans for .py files with zero production imports (only test imports
     don't count). Allowlisted patterns: __init__.py, __main__.py,
     conftest.py, and files with if __name__ == "__main__".
 
     Args:
-        package_dir: Path to zerg/ package. Defaults to zerg/.
+        package_dir: Path to mahabharatha/ package. Defaults to mahabharatha/.
         tests_dir: Path to tests/ directory. Defaults to tests/.
 
     Returns:
@@ -202,8 +202,8 @@ def validate_module_wiring(
 ```
 
 **Implementation approach:**
-1. Walk all `.py` files in `zerg/`
-2. For each file, search all other `.py` files in `zerg/` for import statements referencing it
+1. Walk all `.py` files in `mahabharatha/`
+2. For each file, search all other `.py` files in `mahabharatha/` for import statements referencing it
 3. Exclude `tests/` imports — only count production imports
 4. Allowlist: `__init__.py`, `__main__.py`, `conftest.py`, CLI entry points, files with `if __name__`
 5. Report modules with zero production imports as warnings
@@ -228,7 +228,7 @@ jobs:
           python-version: '3.12'
       - run: pip install -e ".[dev]"
       - run: pytest tests/unit tests/integration -v --tb=short
-      - run: python -m zerg.validate_commands
+      - run: python -m mahabharatha.validate_commands
 ```
 
 ### 3.7 CLAUDE.md Anti-Drift Addition
@@ -237,9 +237,9 @@ Add to the "Anti-Drift Rules" section:
 
 ```markdown
 6. **Every new module must have a production caller.** If a PR creates a new `.py`
-   file in `zerg/`, at least one other production file must import it. Test-only
+   file in `mahabharatha/`, at least one other production file must import it. Test-only
    imports don't count. If the module is a standalone entry point
-   (CLI, `__main__`), it's exempt. Run `python -m zerg.validate_commands` to check.
+   (CLI, `__main__`), it's exempt. Run `python -m mahabharatha.validate_commands` to check.
 
 7. **Every new module must have an integration test.** Unit tests prove the module
    works in isolation. Integration tests prove it works with its callers. A module
@@ -250,10 +250,10 @@ Add to drift detection checklist:
 
 ```bash
 # 6. No orphaned modules (production imports only)
-python -m zerg.validate_commands  # includes module wiring check
+python -m mahabharatha.validate_commands  # includes module wiring check
 
 # 7. Integration test coverage
-for f in $(git diff --name-only --diff-filter=A HEAD~1 -- 'zerg/*.py'); do
+for f in $(git diff --name-only --diff-filter=A HEAD~1 -- 'mahabharatha/*.py'); do
   stem=$(basename "$f" .py)
   if ! find tests/integration -name "*${stem}*" | grep -q .; then
     echo "DRIFT: $f has no integration test"
@@ -308,11 +308,11 @@ done
 | File | Task ID | Operation |
 |------|---------|-----------|
 | .github/workflows/pytest.yml | TASK-001 | create |
-| zerg/validate_commands.py | TASK-002 | modify |
-| zerg/data/commands/design.md | TASK-003 | modify |
-| zerg/data/commands/design.core.md | TASK-003 | modify |
-| zerg/data/commands/worker.core.md | TASK-004 | modify |
-| zerg/data/commands/merge.core.md | TASK-005 | modify |
+| mahabharatha/validate_commands.py | TASK-002 | modify |
+| mahabharatha/data/commands/design.md | TASK-003 | modify |
+| mahabharatha/data/commands/design.core.md | TASK-003 | modify |
+| mahabharatha/data/commands/worker.core.md | TASK-004 | modify |
+| mahabharatha/data/commands/merge.core.md | TASK-005 | modify |
 | CLAUDE.md | TASK-006 | modify |
 | tests/unit/test_validate_commands.py | TASK-007 | modify |
 | tests/integration/test_wiring_enforcement.py | TASK-007 | create |
@@ -361,11 +361,11 @@ Level 4 (depends on all):
 ### 7.2 Integration Tests
 - `test_wiring_enforcement.py`: End-to-end test proving:
   - A task-graph with `consumers` field is parsed correctly
-  - `validate_module_wiring()` detects real orphaned modules in zerg/
+  - `validate_module_wiring()` detects real orphaned modules in mahabharatha/
   - CI workflow YAML is valid
 
 ### 7.3 Verification Commands
-- `python -m zerg.validate_commands` passes
+- `python -m mahabharatha.validate_commands` passes
 - `pytest tests/unit/test_validate_commands.py -v` passes
 - `pytest tests/integration/test_wiring_enforcement.py -v` passes
 

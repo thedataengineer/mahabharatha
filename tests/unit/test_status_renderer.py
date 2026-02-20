@@ -1147,7 +1147,7 @@ class TestShowStatus:
         sm = _make_state_manager(feature="my-feat")
         show_status(sm, "my-feat", None, _console=c)
         output = _get_output(c)
-        assert "ZERG Status" in output
+        assert "MAHABHARATHA Status" in output
         assert "my-feat" in output
         assert "Progress" in output
 

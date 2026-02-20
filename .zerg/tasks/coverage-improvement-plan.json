@@ -1,7 +1,7 @@
 {
   "feature": "coverage-100",
   "title": "100% Test Coverage Achievement",
-  "summary": "Complete test coverage for all core ZERG modules",
+  "summary": "Complete test coverage for all core MAHABHARATHA modules",
   "current_coverage": {
     "config.py": 100,
     "git_ops.py": 100,
@@ -252,7 +252,7 @@
           "title": "Run full coverage report and verify 100%",
           "description": "Execute comprehensive test suite with coverage and verify all core modules at 100%",
           "files": [],
-          "verification": "pytest tests/unit/ --cov=zerg.merge --cov=zerg.state --cov=zerg.launcher --cov=zerg.orchestrator --cov-fail-under=100 -q",
+          "verification": "pytest tests/unit/ --cov=mahabharatha.merge --cov=mahabharatha.state --cov=mahabharatha.launcher --cov=mahabharatha.orchestrator --cov-fail-under=100 -q",
           "dependencies": ["COV-019", "COV-020", "COV-021", "COV-022"],
           "owner": null
         },

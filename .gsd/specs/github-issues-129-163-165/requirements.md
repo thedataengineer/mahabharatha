@@ -11,19 +11,19 @@
 ## 1. Problem Statement
 
 ### 1.1 Background
-Three related issues affect ZERG's documentation and workflow quality:
-- Issue #129: `/zerg:document` produces only terse reference docs. An educational tone was manually developed but must be applied by hand.
-- Issue #163: `/z:plan` occasionally bypasses the plan->design->rush workflow and auto-implements, violating the strict phase boundaries.
+Three related issues affect MAHABHARATHA's documentation and workflow quality:
+- Issue #129: `/mahabharatha:document` produces only terse reference docs. An educational tone was manually developed but must be applied by hand.
+- Issue #163: `/z:plan` occasionally bypasses the plan->design->kurukshetra workflow and auto-implements, violating the strict phase boundaries.
 - Issue #165: Neither `/z:plan` nor `/z:design` systematically track documentation impact, leading to features shipping without updated docs.
 
 ### 1.2 Problem
-1. No automated way to generate educational-style documentation from `/zerg:document`
+1. No automated way to generate educational-style documentation from `/mahabharatha:document`
 2. Plan command lacks sufficient prompt-level guards against auto-implementation drift
 3. Documentation drift: features ship without CHANGELOG, README, wiki, or command reference updates
 
 ### 1.3 Impact
 - New users struggle with terse reference docs (no concept explanations, no diagrams)
-- Workflow violations waste time and break the plan->design->rush contract
+- Workflow violations waste time and break the plan->design->kurukshetra contract
 - Stale documentation erodes trust and creates confusion
 
 ---
@@ -31,12 +31,12 @@ Three related issues affect ZERG's documentation and workflow quality:
 ## 2. Users
 
 ### 2.1 Primary Users
-- Developers using ZERG to parallelize Claude Code work
-- Contributors modifying ZERG commands
+- Developers using MAHABHARATHA to parallelize Claude Code work
+- Contributors modifying MAHABHARATHA commands
 
 ### 2.2 User Stories
-- As a developer, I want `/zerg:document --tone educational` to auto-generate concept-first documentation so I don't have to manually rewrite reference docs
-- As a user, I want `/z:plan` to never start implementing so the plan->design->rush workflow is respected
+- As a developer, I want `/mahabharatha:document --tone educational` to auto-generate concept-first documentation so I don't have to manually rewrite reference docs
+- As a user, I want `/z:plan` to never start implementing so the plan->design->kurukshetra workflow is respected
 - As a contributor, I want `/z:plan` and `/z:design` to surface documentation impacts so docs stay current
 
 ---
@@ -47,9 +47,9 @@ Three related issues affect ZERG's documentation and workflow quality:
 
 | ID | Requirement | Priority | Issue |
 |----|-------------|----------|-------|
-| FR-001 | Add `--tone educational\|reference\|tutorial` flag to `/zerg:document` | Must | #129 |
+| FR-001 | Add `--tone educational\|reference\|tutorial` flag to `/mahabharatha:document` | Must | #129 |
 | FR-002 | `educational` is the DEFAULT tone (not reference) | Must | #129 |
-| FR-003 | Tone definitions stored as separate files at `zerg/data/tones/{tone}.md` | Must | #129 |
+| FR-003 | Tone definitions stored as separate files at `mahabharatha/data/tones/{tone}.md` | Must | #129 |
 | FR-004 | Educational tone: every concept has CONCEPT, NARRATIVE, DIAGRAM, COMMAND sections | Must | #129 |
 | FR-005 | Reference tone: terse tables and API signatures (current behavior) | Must | #129 |
 | FR-006 | Tutorial tone: step-by-step walkthrough with simulated dialogues | Must | #129 |
@@ -62,7 +62,7 @@ Three related issues affect ZERG's documentation and workflow quality:
 
 ### 3.2 Inputs
 - `--tone` flag value: `educational` (default), `reference`, `tutorial`
-- Tone definition files: `zerg/data/tones/{tone}.md`
+- Tone definition files: `mahabharatha/data/tones/{tone}.md`
 
 ### 3.3 Outputs
 - Documentation generated in the specified tone style
@@ -91,7 +91,7 @@ Three related issues affect ZERG's documentation and workflow quality:
 ## 5. Scope
 
 ### 5.1 In Scope
-- `--tone` flag for `/zerg:document` with 3 tones
+- `--tone` flag for `/mahabharatha:document` with 3 tones
 - 3 tone definition files (`educational.md`, `reference.md`, `tutorial.md`)
 - Anti-implementation hardening of `plan.core.md` and `plan.md` (prompt-level only)
 - Section 11 in plan's requirements.md template
@@ -105,7 +105,7 @@ Three related issues affect ZERG's documentation and workflow quality:
 - Splitting `document.md` into core/details (stays under 300 lines)
 
 ### 5.3 Assumptions
-- `/zerg:document` is a Claude Code slash command where Claude has file access to read tone files
+- `/mahabharatha:document` is a Claude Code slash command where Claude has file access to read tone files
 - Parent files (`plan.md`, `design.md`) must stay synchronized with their `.core.md` counterparts
 
 ---
@@ -115,11 +115,11 @@ Three related issues affect ZERG's documentation and workflow quality:
 ### 6.1 Internal Dependencies
 | Dependency | Type | Status |
 |------------|------|--------|
-| `zerg/commands/document.py` | Modify | Exists |
-| `zerg/data/commands/document.md` | Modify | Exists |
-| `zerg/data/commands/plan.core.md` | Modify | Exists |
-| `zerg/data/commands/plan.details.md` | Modify | Exists |
-| `zerg/data/commands/design.core.md` | Modify | Exists |
+| `mahabharatha/commands/document.py` | Modify | Exists |
+| `mahabharatha/data/commands/document.md` | Modify | Exists |
+| `mahabharatha/data/commands/plan.core.md` | Modify | Exists |
+| `mahabharatha/data/commands/plan.details.md` | Modify | Exists |
+| `mahabharatha/data/commands/design.core.md` | Modify | Exists |
 | `.gsd/specs/documentation-tone-overhaul/requirements.md` | Reference | Approved |
 
 ---
@@ -127,8 +127,8 @@ Three related issues affect ZERG's documentation and workflow quality:
 ## 7. Acceptance Criteria
 
 ### 7.1 Definition of Done
-- [ ] `--tone` flag accepted by `/zerg:document` with educational as default
-- [ ] 3 tone definition files exist at `zerg/data/tones/`
+- [ ] `--tone` flag accepted by `/mahabharatha:document` with educational as default
+- [ ] 3 tone definition files exist at `mahabharatha/data/tones/`
 - [ ] `plan.core.md` has anti-implementation guards at 4+ locations
 - [ ] Plan terminal output shows "PLANNING COMPLETE" banner
 - [ ] `plan.details.md` requirements template includes Section 11
@@ -142,9 +142,9 @@ Three related issues affect ZERG's documentation and workflow quality:
 
 | ID | Scenario | Given | When | Then |
 |----|----------|-------|------|------|
-| TC-001 | Default tone | No --tone flag | Run /zerg:document | Educational tone used |
-| TC-002 | Explicit reference | --tone reference | Run /zerg:document | Reference style output |
-| TC-003 | Invalid tone | --tone bogus | Run /zerg:document | Click rejects with error |
+| TC-001 | Default tone | No --tone flag | Run /mahabharatha:document | Educational tone used |
+| TC-002 | Explicit reference | --tone reference | Run /mahabharatha:document | Reference style output |
+| TC-003 | Invalid tone | --tone bogus | Run /mahabharatha:document | Click rejects with error |
 | TC-004 | Plan guards | Run /z:plan | Requirements approved | No implementation occurs; "PLANNING COMPLETE" shown |
 | TC-005 | Design doc tasks | Run /z:design | Task graph generated | CHANGELOG task present in Level 5 |
 
@@ -166,7 +166,7 @@ None — all resolved through Socratic discovery rounds.
 
 ## 10. Documentation
 
-After implementation, execute `/zerg:document` to update all documentation surfaces.
+After implementation, execute `/mahabharatha:document` to update all documentation surfaces.
 
 ---
 
@@ -176,7 +176,7 @@ After implementation, execute `/zerg:document` to update all documentation surfa
 | File | Current State | Required Update | Priority |
 |------|--------------|-----------------|----------|
 | `CHANGELOG.md` | [Unreleased] section | Add entries for --tone flag, plan guards, doc impact analysis | Must |
-| `README.md` | Shows `/zerg:document` without --tone | Add --tone flag to usage examples | Must |
+| `README.md` | Shows `/mahabharatha:document` without --tone | Add --tone flag to usage examples | Must |
 | `docs/commands-quick.md` | Document flag table lacks --tone | Add --tone row | Must |
 | `docs/commands-deep.md` | No tone documentation | Add --tone deep docs with tone descriptions | Must |
 | `.gsd/wiki/Command-Reference.md` | Document entry lacks --tone | Update with --tone flag | Must |

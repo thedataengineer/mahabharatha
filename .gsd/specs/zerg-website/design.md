@@ -1,7 +1,7 @@
-# Technical Design: zerg-website
+# Technical Design: mahabharatha-website
 
 ## Metadata
-- **Feature**: zerg-website
+- **Feature**: mahabharatha-website
 - **Status**: DRAFT
 - **Created**: 2026-02-07
 - **Author**: Factory Design Mode
@@ -12,10 +12,10 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Single-page landing site replacing the MkDocs homepage at `rocklambros.github.io/zerg/`. Pure HTML + Tailwind CDN + vanilla JS. Dark-first with light mode toggle. 9 sections (sticky nav, hero + 4 glass pillars, why, how, commands, quick start, stats, FAQ, footer). Deployed via modified GitHub Actions workflow. Existing markdown docs preserved at sub-paths.
+Single-page landing site replacing the MkDocs homepage at `rocklambros.github.io/mahabharatha/`. Pure HTML + Tailwind CDN + vanilla JS. Dark-first with light mode toggle. 9 sections (sticky nav, hero + 4 glass pillars, why, how, commands, quick start, stats, FAQ, footer). Deployed via modified GitHub Actions workflow. Existing markdown docs preserved at sub-paths.
 
 ### 1.2 Goals
-- Visually compelling landing page communicating ZERG's value proposition
+- Visually compelling landing page communicating MAHABHARATHA's value proposition
 - All 26 commands in a cheat sheet table
 - Dark/light mode with localStorage persistence
 - Mobile-responsive (320px-2560px)
@@ -44,7 +44,7 @@ docs/
 │   ├── js/
 │   │   └── main.js         ← NEW: Toggle, copy, FAQ, scroll, nav, counters
 │   └── img/
-│       ├── zerg-logo-web.png  ← NEW: Optimized logo (<200KB)
+│       ├── mahabharatha-logo-web.png  ← NEW: Optimized logo (<200KB)
 │       └── og-image.png       ← NEW: Open Graph 1200x630
 ├── commands-quick.md       (preserved)
 ├── commands-deep.md        (preserved)
@@ -57,13 +57,13 @@ docs/
 ```
 ┌──────────────────────────────────────────────────────┐
 │                  GitHub Pages CDN                     │
-│    rocklambros.github.io/zerg/                       │
+│    rocklambros.github.io/mahabharatha/                       │
 ├──────────────────────────────────────────────────────┤
 │  index.html ──→ Tailwind Play CDN (pinned v3.4.17)  │
 │       │                                               │
 │       ├── assets/css/custom.css                       │
 │       ├── assets/js/main.js                          │
-│       └── assets/img/zerg-logo-web.png               │
+│       └── assets/img/mahabharatha-logo-web.png               │
 ├──────────────────────────────────────────────────────┤
 │  *.md files ──→ Served raw (no MkDocs build)         │
 │  (GitHub renders .md natively, or link to wiki)      │
@@ -82,7 +82,7 @@ docs/
 
 ### 2.3 Data Flow
 
-1. User visits `rocklambros.github.io/zerg/` → GitHub Pages serves `docs/index.html`
+1. User visits `rocklambros.github.io/mahabharatha/` → GitHub Pages serves `docs/index.html`
 2. Browser loads Tailwind Play CDN (pinned version) → applies utility classes
 3. Browser loads `custom.css` → applies glassmorphism, CSS variables, animations
 4. Browser loads `main.js` → initializes dark/light from localStorage, registers IntersectionObservers, binds event listeners
@@ -106,7 +106,7 @@ docs/
   <main>
     <section id="hero"><!-- Headline, subheadline, CTA, 4 glass cards --></section>
     <section id="why"><!-- Pain→solution pairs --></section>
-    <section id="how"><!-- Plan→Design→Rush→Merge pipeline --></section>
+    <section id="how"><!-- Plan→Design→Kurukshetra→Merge pipeline --></section>
     <section id="commands"><!-- 26-command cheat sheet table --></section>
     <section id="quickstart"><!-- 4-step code block --></section>
     <section id="stats"><!-- Animated counter cards --></section>
@@ -168,7 +168,7 @@ docs/
 ### 3.5 Logo Optimization
 
 Using macOS `sips` (available locally):
-- Resize to max 400px width: `sips -Z 400 --out docs/assets/img/zerg-logo-web.png logo/zerg_logo.png`
+- Resize to max 400px width: `sips -Z 400 --out docs/assets/img/mahabharatha-logo-web.png logo/zerg_logo.png`
 - OG image: create 1200x630 dark bg with centered logo (can use sips + python PIL, or manual)
 
 ---
@@ -255,7 +255,7 @@ Using macOS `sips` (available locally):
 | File | Task ID | Operation |
 |------|---------|-----------|
 | `docs/assets/css/custom.css` | TASK-001 | create |
-| `docs/assets/img/zerg-logo-web.png` | TASK-002 | create |
+| `docs/assets/img/mahabharatha-logo-web.png` | TASK-002 | create |
 | `docs/assets/img/og-image.png` | TASK-002 | create |
 | `docs/index.html` | TASK-003 | create |
 | `docs/assets/js/main.js` | TASK-004 | create |
@@ -320,9 +320,9 @@ graph TD
 - HTML validity: `python3 -c "from html.parser import HTMLParser; HTMLParser().feed(open('docs/index.html').read()); print('Valid HTML')"`
 - CSS syntax: file exists and is non-empty
 - JS syntax: `node --check docs/assets/js/main.js`
-- Logo size: `test $(stat -f%z docs/assets/img/zerg-logo-web.png) -lt 204800`
+- Logo size: `test $(stat -f%z docs/assets/img/mahabharatha-logo-web.png) -lt 204800`
 - Workflow YAML: `python3 -c "import yaml; yaml.safe_load(open('.github/workflows/docs.yml')); print('Valid YAML')"`
-- 26 commands in table: `grep -c '/zerg:' docs/index.html` should be >=26
+- 26 commands in table: `grep -c '/mahabharatha:' docs/index.html` should be >=26
 
 ---
 

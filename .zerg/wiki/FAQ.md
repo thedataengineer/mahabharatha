@@ -1,24 +1,24 @@
 # FAQ
 
-Frequently asked questions about ZERG. Questions are grouped by topic.
+Frequently asked questions about MAHABHARATHA. Questions are grouped by topic.
 
 ---
 
 ## General
 
-### What is ZERG?
+### What is MAHABHARATHA?
 
-ZERG is a parallel execution system for Claude Code. It coordinates multiple Claude Code instances (workers) to build features concurrently. You describe what to build, ZERG breaks the work into tasks with exclusive file ownership, and workers execute those tasks in parallel across dependency levels.
+MAHABHARATHA is a parallel execution system for Claude Code. It coordinates multiple Claude Code instances (workers) to build features concurrently. You describe what to build, MAHABHARATHA breaks the work into tasks with exclusive file ownership, and workers execute those tasks in parallel across dependency levels.
 
-### How is ZERG different from just running Claude Code?
+### How is MAHABHARATHA different from just running Claude Code?
 
-A single Claude Code session executes tasks sequentially. ZERG launches multiple sessions that work on different parts of a feature simultaneously. A feature that takes 3 hours with one session might take 1 hour with 3 parallel workers. ZERG handles the coordination: splitting work, preventing file conflicts, merging results, and running quality checks.
+A single Claude Code session executes tasks sequentially. MAHABHARATHA launches multiple sessions that work on different parts of a feature simultaneously. A feature that takes 3 hours with one session might take 1 hour with 3 parallel workers. MAHABHARATHA handles the coordination: splitting work, preventing file conflicts, merging results, and running quality checks.
 
 ### What does the name mean?
 
-ZERG references the "Zerg rush" strategy from StarCraft -- overwhelming an objective with many coordinated units. In ZERG's case, the units are Claude Code instances (called workers or zerglings) and the objective is a feature implementation.
+MAHABHARATHA references the "Mahabharatha kurukshetra" strategy from StarCraft -- overwhelming an objective with many coordinated units. In MAHABHARATHA's case, the units are Claude Code instances (called workers or warriors) and the objective is a feature implementation.
 
-### Do I need Docker to use ZERG?
+### Do I need Docker to use MAHABHARATHA?
 
 No. The default execution mode (subprocess) runs workers as local processes. Docker is only required for container mode (`--mode container`), which provides additional isolation.
 
@@ -35,23 +35,23 @@ No. The default execution mode (subprocess) runs workers as local processes. Doc
 
 See [[Installation]] for full setup instructions.
 
-### How do I install ZERG?
+### How do I install MAHABHARATHA?
 
 ```bash
-pip install zerg-ai
+pip install mahabharatha-ai
 ```
 
 Then initialize your project:
 
 ```
-/zerg:init
+/mahabharatha:init
 ```
 
 See [[Installation]] for detailed steps.
 
-### Does ZERG work with any programming language?
+### Does MAHABHARATHA work with any programming language?
 
-Yes. ZERG is language-agnostic. It coordinates Claude Code sessions and manages git branches. The workers themselves can generate code in any language that Claude Code supports. Quality gates and verification commands in your configuration should match your project's toolchain.
+Yes. MAHABHARATHA is language-agnostic. It coordinates Claude Code sessions and manages git branches. The workers themselves can generate code in any language that Claude Code supports. Quality gates and verification commands in your configuration should match your project's toolchain.
 
 ---
 
@@ -61,39 +61,39 @@ Yes. ZERG is language-agnostic. It coordinates Claude Code sessions and manages 
 
 Four stages, each requiring explicit approval:
 
-0. **Brainstorm** (`/zerg:brainstorm`) -- (Optional) Discover features through competitive research and Socratic questioning.
-1. **Plan** (`/zerg:plan <feature>`) -- Capture requirements through interactive questions.
-2. **Design** (`/zerg:design`) -- Generate architecture and task graph.
-3. **Rush** (`/zerg:rush --workers=N`) -- Execute tasks in parallel.
-4. **Merge** (automatic or `/zerg:merge`) -- Merge branches and run quality gates.
+0. **Brainstorm** (`/mahabharatha:brainstorm`) -- (Optional) Discover features through competitive research and Socratic questioning.
+1. **Plan** (`/mahabharatha:plan <feature>`) -- Capture requirements through interactive questions.
+2. **Design** (`/mahabharatha:design`) -- Generate architecture and task graph.
+3. **Kurukshetra** (`/mahabharatha:kurukshetra --workers=N`) -- Execute tasks in parallel.
+4. **Merge** (automatic or `/mahabharatha:merge`) -- Merge branches and run quality gates.
 
 See [[Quick Start]] for a step-by-step walkthrough.
 
 ### Can I skip the plan phase?
 
-The plan phase produces `requirements.md`, which the design phase reads. If you already have a requirements document or want to write one manually, you can place it at `.gsd/specs/<feature>/requirements.md` and proceed directly to `/zerg:design`. The file should follow the format described in [[zerg-plan]].
+The plan phase produces `requirements.md`, which the design phase reads. If you already have a requirements document or want to write one manually, you can place it at `.gsd/specs/<feature>/requirements.md` and proceed directly to `/mahabharatha:design`. The file should follow the format described in [[mahabharatha-plan]].
 
-### How do I resume an interrupted rush?
+### How do I resume an interrupted kurukshetra?
 
 ```
-/zerg:rush --resume
+/mahabharatha:kurukshetra --resume
 ```
 
 The `--resume` flag calls `TaskList` first and only creates tasks that do not already exist. Workers pick up from where they left off.
 
 ### How many workers should I use?
 
-Start with the maximum parallelization reported by `/zerg:design`. Using more workers than tasks at the widest level provides no benefit. For most features, 3 to 5 workers is practical. Consider your API rate limits and system resources when choosing.
+Start with the maximum parallelization reported by `/mahabharatha:design`. Using more workers than tasks at the widest level provides no benefit. For most features, 3 to 5 workers is practical. Consider your API rate limits and system resources when choosing.
 
 See [[Tuning Guide]] for detailed guidance.
 
 ### What happens if a worker fails?
 
-The failed task is marked in both the Claude Code Task system and the state JSON. Other workers at the same level continue unaffected. You can retry the failed task with `/zerg:retry <task-id>`. The orchestrator will not advance to the next level until all tasks at the current level succeed.
+The failed task is marked in both the Claude Code Task system and the state JSON. Other workers at the same level continue unaffected. You can retry the failed task with `/mahabharatha:retry <task-id>`. The orchestrator will not advance to the next level until all tasks at the current level succeed.
 
 ### Can I modify the task graph after design?
 
-Yes. The task graph is a JSON file at `.gsd/specs/<feature>/task-graph.json`. You can edit it directly to adjust file ownership, change verification commands, or reorder dependencies. After editing, run `/zerg:rush --resume` to apply changes.
+Yes. The task graph is a JSON file at `.gsd/specs/<feature>/task-graph.json`. You can edit it directly to adjust file ownership, change verification commands, or reorder dependencies. After editing, run `/mahabharatha:kurukshetra --resume` to apply changes.
 
 Be careful with file ownership -- every file must be owned by exactly one task per level, or merge conflicts will occur.
 
@@ -101,7 +101,7 @@ Be careful with file ownership -- every file must be owned by exactly one task p
 
 ## Architecture
 
-### How does ZERG prevent merge conflicts?
+### How does MAHABHARATHA prevent merge conflicts?
 
 Through **file ownership**. The design phase assigns every file to exactly one task per level. No two workers modify the same file simultaneously. After all tasks at a level complete, branches are merged. Since each branch touched different files, the merge is conflict-free.
 
@@ -121,7 +121,7 @@ See [[Getting Started#spec-as-memory]].
 
 ### What is the Task system and why does it matter?
 
-The Claude Code Task system (`TaskCreate`, `TaskUpdate`, `TaskList`, `TaskGet`) is the authoritative source of truth for task state in ZERG. Tasks persist in `~/.claude/tasks/` and survive session restarts. Workers claim tasks, report progress, and signal completion through this system. Without it, parallel workers could not coordinate.
+The Claude Code Task system (`TaskCreate`, `TaskUpdate`, `TaskList`, `TaskGet`) is the authoritative source of truth for task state in MAHABHARATHA. Tasks persist in `~/.claude/tasks/` and survive session restarts. Workers claim tasks, report progress, and signal completion through this system. Without it, parallel workers could not coordinate.
 
 See [[Getting Started#the-task-ecosystem]].
 
@@ -131,13 +131,13 @@ See [[Getting Started#the-task-ecosystem]].
 
 ### What are quality gates?
 
-Quality gates are validation commands that run after each level merge. They are defined in `.zerg/config.yaml` and typically include linting, type checking, and tests. Required gates must pass before the next level begins. Non-required gates log warnings without blocking progress.
+Quality gates are validation commands that run after each level merge. They are defined in `.mahabharatha/config.yaml` and typically include linting, type checking, and tests. Required gates must pass before the next level begins. Non-required gates log warnings without blocking progress.
 
 See [[Configuration#quality_gates]].
 
 ### What happens when a quality gate fails?
 
-Execution pauses at the current level. The status dashboard shows which gate failed and its error output. You can fix the issue manually and then run `/zerg:merge` to retry. Alternatively, use `/zerg:retry <task-id>` to re-run a specific task that produced the failing code.
+Execution pauses at the current level. The status dashboard shows which gate failed and its error output. You can fix the issue manually and then run `/mahabharatha:merge` to retry. Alternatively, use `/mahabharatha:retry <task-id>` to re-run a specific task that produced the failing code.
 
 ### How are tasks verified?
 
@@ -184,11 +184,11 @@ See [[Context Engineering]].
 
 ### How much does context engineering save?
 
-Estimated savings are 2,000 to 5,000 tokens per worker, depending on spec size and task complexity. Use `/zerg:status` to view the CONTEXT BUDGET section for actual savings in your project.
+Estimated savings are 2,000 to 5,000 tokens per worker, depending on spec size and task complexity. Use `/mahabharatha:status` to view the CONTEXT BUDGET section for actual savings in your project.
 
 ### Can I disable context engineering?
 
-Yes. Set `plugins.context_engineering.enabled: false` in `.zerg/config.yaml`. Workers will load full, unscoped context. You can also disable individual subsystems while keeping the others active.
+Yes. Set `plugins.context_engineering.enabled: false` in `.mahabharatha/config.yaml`. Workers will load full, unscoped context. You can also disable individual subsystems while keeping the others active.
 
 See [[Context Engineering#disabling-context-engineering]].
 
@@ -198,29 +198,29 @@ See [[Context Engineering#disabling-context-engineering]].
 
 ### Workers launch but immediately exit
 
-The most common cause is missing spec files. Verify that `.gsd/specs/<feature>/task-graph.json` exists and is valid JSON. Check worker logs at `.zerg/logs/worker-*.stderr.log` for the specific error.
+The most common cause is missing spec files. Verify that `.gsd/specs/<feature>/task-graph.json` exists and is valid JSON. Check worker logs at `.mahabharatha/logs/worker-*.stderr.log` for the specific error.
 
 See [[Troubleshooting#workers-not-starting]].
 
 ### I get "port already in use" errors
 
-A previous ZERG run may not have cleaned up. Run `/zerg:stop` to terminate workers, then `/zerg:cleanup` to release resources. You can also expand the port range in `.zerg/config.yaml`.
+A previous MAHABHARATHA run may not have cleaned up. Run `/mahabharatha:stop` to terminate workers, then `/mahabharatha:cleanup` to release resources. You can also expand the port range in `.mahabharatha/config.yaml`.
 
 See [[Troubleshooting#port-conflicts]].
 
-### How do I clean up after a rush?
+### How do I clean up after a kurukshetra?
 
 ```
-/zerg:cleanup
+/mahabharatha:cleanup
 ```
 
-This removes worktrees, worker branches, and temporary state files. Your feature code remains on the `zerg/<feature>/base` branch.
+This removes worktrees, worker branches, and temporary state files. Your feature code remains on the `mahabharatha/<feature>/base` branch.
 
 ### Where are the logs?
 
-Worker logs are in `.zerg/logs/`. Each worker produces stdout and stderr log files. The orchestrator also writes to this directory. Use `/zerg:logs` to view logs or `/zerg:debug` for structured diagnostics.
+Worker logs are in `.mahabharatha/logs/`. Each worker produces stdout and stderr log files. The orchestrator also writes to this directory. Use `/mahabharatha:logs` to view logs or `/mahabharatha:debug` for structured diagnostics.
 
-See [[zerg-logs]], [[Debug Guide]].
+See [[mahabharatha-logs]], [[Debug Guide]].
 
 ---
 
@@ -229,4 +229,4 @@ See [[zerg-logs]], [[Debug Guide]].
 - [[Getting Started]] -- Core concepts explained
 - [[Quick Start]] -- Step-by-step first run
 - [[Troubleshooting]] -- Detailed problem resolution
-- [[Glossary]] -- Definitions of all ZERG terms
+- [[Glossary]] -- Definitions of all MAHABHARATHA terms

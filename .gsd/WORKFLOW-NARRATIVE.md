@@ -1,7 +1,7 @@
 
-The workflow begins the moment you run `/zerg:init`. What happens next depends entirely on what ZERG finds.
+The workflow begins the moment you run `/mahabharatha:init`. What happens next depends entirely on what MAHABHARATHA finds.
 
-ZERG's orchestrator spawns a lightweight reconnaissance subagent using Claude's Task tool. This subagent has read-only permissions. It scans the directory for project markers: package.json, pyproject.toml, Cargo.toml, go.mod, Makefile, Dockerfile, any signal that code already lives here. The scan takes seconds. The subagent returns a structured assessment: either "existing project with characteristics X, Y, Z" or "empty directory, nothing to analyze."
+MAHABHARATHA's orchestrator spawns a lightweight reconnaissance subagent using Claude's Task tool. This subagent has read-only permissions. It scans the directory for project markers: package.json, pyproject.toml, Cargo.toml, go.mod, Makefile, Dockerfile, any signal that code already lives here. The scan takes seconds. The subagent returns a structured assessment: either "existing project with characteristics X, Y, Z" or "empty directory, nothing to analyze."
 
 That fork determines everything that follows.
 
@@ -9,23 +9,23 @@ That fork determines everything that follows.
 
 **The Empty Directory Path: Inception Mode**
 
-When reconnaissance returns empty, ZERG shifts from discovery to conversation. There's nothing to analyze, so it asks questions instead.
+When reconnaissance returns empty, MAHABHARATHA shifts from discovery to conversation. There's nothing to analyze, so it asks questions instead.
 
-ZERG opens a dialogue about what you're building. Not technical specifications. The problem itself. Who uses this system? What problem does it solve? What constraints exist? Regulatory requirements? Performance targets? Integration points with existing systems? Your answers get captured in `.gsd/PROJECT.md` as a project charter. This document becomes the source of truth for all downstream decisions.
+MAHABHARATHA opens a dialogue about what you're building. Not technical specifications. The problem itself. Who uses this system? What problem does it solve? What constraints exist? Regulatory requirements? Performance targets? Integration points with existing systems? Your answers get captured in `.gsd/PROJECT.md` as a project charter. This document becomes the source of truth for all downstream decisions.
 
-From the charter, ZERG asks about technology. Do you have preferences? Organizational mandates? Existing infrastructure you must integrate with? If you have opinions, ZERG records them. If you're open to recommendations, ZERG makes them based on the problem domain. A REST API serving mobile clients might get Python FastAPI with PostgreSQL. A real-time collaboration tool might get TypeScript, Next.js, and WebSockets. A CLI utility might get Go for single-binary distribution. ZERG explains its reasoning so you can override with cause.
+From the charter, MAHABHARATHA asks about technology. Do you have preferences? Organizational mandates? Existing infrastructure you must integrate with? If you have opinions, MAHABHARATHA records them. If you're open to recommendations, MAHABHARATHA makes them based on the problem domain. A REST API serving mobile clients might get Python FastAPI with PostgreSQL. A real-time collaboration tool might get TypeScript, Next.js, and WebSockets. A CLI utility might get Go for single-binary distribution. MAHABHARATHA explains its reasoning so you can override with cause.
 
-Once technology is locked, ZERG spawns a scaffolding subagent. This subagent generates the entire project skeleton in a single atomic operation. Directory structure following community conventions for the chosen stack. Configuration files for the language runtime, package manager, and build tools. A README with setup instructions, architecture overview, and contribution guidelines. A Dockerfile for the application itself, not just development. CI pipeline configuration for GitHub Actions or GitLab CI. License file. Gitignore tuned to the stack.
+Once technology is locked, MAHABHARATHA spawns a scaffolding subagent. This subagent generates the entire project skeleton in a single atomic operation. Directory structure following community conventions for the chosen stack. Configuration files for the language runtime, package manager, and build tools. A README with setup instructions, architecture overview, and contribution guidelines. A Dockerfile for the application itself, not just development. CI pipeline configuration for GitHub Actions or GitLab CI. License file. Gitignore tuned to the stack.
 
-In parallel, ZERG generates the devcontainer. It selects a base image appropriate to the stack. Python projects get the Microsoft Python devcontainer image with the detected Python version. Node projects get the Node image. Polyglot projects get a composite. The devcontainer configuration includes VS Code extensions for the languages involved, debugger configurations, and port forwarding for common development servers.
+In parallel, MAHABHARATHA generates the devcontainer. It selects a base image appropriate to the stack. Python projects get the Microsoft Python devcontainer image with the detected Python version. Node projects get the Node image. Polyglot projects get a composite. The devcontainer configuration includes VS Code extensions for the languages involved, debugger configurations, and port forwarding for common development servers.
 
-The devcontainer also receives secure coding rules. ZERG pulls from TikiTribe/claude-secure-coding-rules public github repo based on the technology choices. A Python backend gets OWASP Top 10 rules, SQL injection prevention patterns, and authentication best practices. A React frontend gets XSS prevention rules, CSP configuration guidance, and secure state management patterns, etc. These rules get installed in the .claude/rules/ directory or subdirectory CLAUDE.md files to organize modular, relevant rules inside the devcontainer, so every worker that runs in that container inherits security constraints automatically. No explicit prompting required.
+The devcontainer also receives secure coding rules. MAHABHARATHA pulls from TikiTribe/claude-secure-coding-rules public github repo based on the technology choices. A Python backend gets OWASP Top 10 rules, SQL injection prevention patterns, and authentication best practices. A React frontend gets XSS prevention rules, CSP configuration guidance, and secure state management patterns, etc. These rules get installed in the .claude/rules/ directory or subdirectory CLAUDE.md files to organize modular, relevant rules inside the devcontainer, so every worker that runs in that container inherits security constraints automatically. No explicit prompting required.
 
 Code quality tooling installs in the same pass. Linters configured with strict settings: ESLint for TypeScript, Ruff for Python, clippy for Rust. Formatters with opinionated defaults: Prettier, Black, rustfmt. Static analyzers with security focus: Semgrep with OWASP patterns, Bandit for Python, npm audit for Node. These tools get cached in the devcontainer image layer so worker startup is fast.
 
-ZERG doesn't stop at infrastructure. With an empty directory, there's no code to extend. So it continues into backlog generation automatically. The scaffolding subagent takes the charter and produces an initial product backlog. These aren't implementation tasks yet. They're user stories at the epic level. User authentication. Data persistence. Core domain logic. API surface. Administrative interface. Each story has a rough priority based on dependency order and risk. High-risk items surface early because you want to validate uncertain assumptions before building on them.
+MAHABHARATHA doesn't stop at infrastructure. With an empty directory, there's no code to extend. So it continues into backlog generation automatically. The scaffolding subagent takes the charter and produces an initial product backlog. These aren't implementation tasks yet. They're user stories at the epic level. User authentication. Data persistence. Core domain logic. API surface. Administrative interface. Each story has a rough priority based on dependency order and risk. High-risk items surface early because you want to validate uncertain assumptions before building on them.
 
-ZERG presents everything for approval. The charter summary. The technology choices with rationale. The project structure. The initial backlog. You review. You modify. You challenge the recommendations. ZERG adjusts. Only after explicit approval does ZERG commit the scaffolding. It initializes a git repository if one doesn't exist, creates the initial commit with the skeleton, and tags it as the inception point.
+MAHABHARATHA presents everything for approval. The charter summary. The technology choices with rationale. The project structure. The initial backlog. You review. You modify. You challenge the recommendations. MAHABHARATHA adjusts. Only after explicit approval does MAHABHARATHA commit the scaffolding. It initializes a git repository if one doesn't exist, creates the initial commit with the skeleton, and tags it as the inception point.
 
 At this moment, the empty directory contains a runnable project. You can build it. You can run it. The tests execute but fail because there's no implementation. The structure exists. The tooling works. The security rules are active. Sprint Zero is complete.
 
@@ -33,29 +33,29 @@ At this moment, the empty directory contains a runnable project. You can build i
 
 **The Existing Directory Path: Discovery Mode**
 
-When reconnaissance returns a populated assessment, ZERG has material to work with. It doesn't ask what you're building. It figures that out from what exists.
+When reconnaissance returns a populated assessment, MAHABHARATHA has material to work with. It doesn't ask what you're building. It figures that out from what exists.
 
-The reconnaissance subagent's report includes detected languages, frameworks, test runners, build systems, and deployment configurations. ZERG spawns additional discovery subagents in parallel, each focused on a different aspect. One maps the directory structure and identifies architectural patterns. One reads configuration files to understand dependencies and their versions. One scans for existing tests and measures coverage. One checks for security configurations, environment variable handling, and secret management.
+The reconnaissance subagent's report includes detected languages, frameworks, test runners, build systems, and deployment configurations. MAHABHARATHA spawns additional discovery subagents in parallel, each focused on a different aspect. One maps the directory structure and identifies architectural patterns. One reads configuration files to understand dependencies and their versions. One scans for existing tests and measures coverage. One checks for security configurations, environment variable handling, and secret management.
 
 These subagents run concurrently using Claude's Task parallelism. Each operates in its own context window with read-only tool access. They can't modify anything. They report findings to the orchestrator, which synthesizes a comprehensive project profile.
 
-The profile feeds devcontainer generation. Unlike inception mode, ZERG doesn't choose technologies. It matches them. If the project uses Python 3.11, the devcontainer gets Python 3.11. If it uses Node 18, Node 18. ZERG detects the test framework and includes its runner. It finds the linter configuration and preserves those settings rather than imposing defaults.
+The profile feeds devcontainer generation. Unlike inception mode, MAHABHARATHA doesn't choose technologies. It matches them. If the project uses Python 3.11, the devcontainer gets Python 3.11. If it uses Node 18, Node 18. MAHABHARATHA detects the test framework and includes its runner. It finds the linter configuration and preserves those settings rather than imposing defaults.
 
 Secure coding rules still get injected, but they're filtered to the detected stack. A Django project gets Django-specific rules in addition to Python core rules. A NestJS project gets NestJS patterns alongside TypeScript basics. The rules don't conflict with existing project conventions because they focus on security constraints, not style preferences.
 
-Code quality gates configure themselves from existing tooling. If the project already has ESLint, ZERG uses that configuration. If it has pytest with coverage thresholds, ZERG adopts those thresholds. ZERG augments but doesn't replace. It adds Semgrep security scanning if absent. It adds pre-commit hooks if missing. It fills gaps without disrupting established workflows.
+Code quality gates configure themselves from existing tooling. If the project already has ESLint, MAHABHARATHA uses that configuration. If it has pytest with coverage thresholds, MAHABHARATHA adopts those thresholds. MAHABHARATHA augments but doesn't replace. It adds Semgrep security scanning if absent. It adds pre-commit hooks if missing. It fills gaps without disrupting established workflows.
 
-ZERG captures the infrastructure assessment in `.gsd/INFRASTRUCTURE.md`. This document records what exists, what ZERG added, and what assumptions it made. If you disagree with an assumption, you modify the document and ZERG adjusts.
+MAHABHARATHA captures the infrastructure assessment in `.gsd/INFRASTRUCTURE.md`. This document records what exists, what MAHABHARATHA added, and what assumptions it made. If you disagree with an assumption, you modify the document and MAHABHARATHA adjusts.
 
-Discovery mode ends with a working devcontainer that matches the existing project. You can open the project in the container and develop normally. All existing scripts work. All existing tests run. ZERG added security and quality tooling, but the core development experience is unchanged.
+Discovery mode ends with a working devcontainer that matches the existing project. You can open the project in the container and develop normally. All existing scripts work. All existing tests run. MAHABHARATHA added security and quality tooling, but the core development experience is unchanged.
 
 ---
 
 **Convergence: Planning Forward**
 
-Both paths converge at `/zerg:plan`. Whether you started from nothing or from a mature codebase, planning works identically.
+Both paths converge at `/mahabharatha:plan`. Whether you started from nothing or from a mature codebase, planning works identically.
 
-You describe what you want to build next. A new feature. A refactor. A bug fix. A migration. ZERG spawns a product owner subagent that engages in requirements elicitation. It asks clarifying questions. It identifies edge cases. It extracts acceptance criteria. It validates that the scope is achievable and testable.
+You describe what you want to build next. A new feature. A refactor. A bug fix. A migration. MAHABHARATHA spawns a product owner subagent that engages in requirements elicitation. It asks clarifying questions. It identifies edge cases. It extracts acceptance criteria. It validates that the scope is achievable and testable.
 
 The output is a feature specification in `.gsd/specs/{feature}/REQUIREMENTS.md`. This document contains the problem statement, user stories with acceptance criteria, constraints, and verification commands that prove the feature works. The spec is human-readable and version-controlled. It becomes the contract that implementation must satisfy.
 
@@ -65,9 +65,9 @@ For projects that started empty, the first planning session typically pulls from
 
 **Design: Task Graph Generation**
 
-`/zerg:design` transforms specifications into executable work.
+`/mahabharatha:design` transforms specifications into executable work.
 
-ZERG spawns an architect subagent that reads all specs for the feature and produces the technical blueprint. This subagent makes structural decisions: where new files live, what interfaces look like, how components interact, what the data model requires. It produces architecture documentation in `.gsd/specs/{feature}/ARCHITECTURE.md`.
+MAHABHARATHA spawns an architect subagent that reads all specs for the feature and produces the technical blueprint. This subagent makes structural decisions: where new files live, what interfaces look like, how components interact, what the data model requires. It produces architecture documentation in `.gsd/specs/{feature}/ARCHITECTURE.md`.
 
 The architect also generates the task graph. Each task is atomic: one clear objective, one verification command, exclusive file ownership. No two tasks modify the same file. Dependencies between tasks determine the wave structure.
 
@@ -89,13 +89,13 @@ For projects that started empty, the first design session produces substantial s
 
 **Execution: Parallel Workers in Isolated Containers**
 
-`/zerg:rush` launches the workforce.
+`/mahabharatha:kurukshetra` launches the workforce.
 
 The orchestrator reads the task graph and identifies all Level 0 tasks. For each task, it provisions a worker. Provisioning means:
 
-First, creating a git worktree. The orchestrator runs `git worktree add .zerg-worktrees/{feature}/worker-{N} -b zerg/{feature}/worker-{N}`. Each worker gets its own branch and its own directory. Changes in one worktree don't affect others until merge.
+First, creating a git worktree. The orchestrator runs `git worktree add .mahabharatha-worktrees/{feature}/worker-{N} -b mahabharatha/{feature}/worker-{N}`. Each worker gets its own branch and its own directory. Changes in one worktree don't affect others until merge.
 
-Second, launching a devcontainer instance. The orchestrator runs `docker-compose` with environment variables that identify the worker: `ZERG_WORKER_ID`, `ZERG_FEATURE`, `ZERG_TASK_ID`. The container mounts the worker's worktree as `/workspace`. It mounts `.gsd/specs/` as read-only so the worker can read specifications but not modify them. It connects to the `zerg-net` Docker network for inter-worker communication if needed.
+Second, launching a devcontainer instance. The orchestrator runs `docker-compose` with environment variables that identify the worker: `ZERG_WORKER_ID`, `ZERG_FEATURE`, `ZERG_TASK_ID`. The container mounts the worker's worktree as `/workspace`. It mounts `.gsd/specs/` as read-only so the worker can read specifications but not modify them. It connects to the `mahabharatha-net` Docker network for inter-worker communication if needed.
 
 Third, spawning a Claude Code subagent inside the container. The orchestrator uses Claude's Task tool to create a specialized subagent. The subagent's system prompt comes from `.claude/agents/worker.md`, which includes the secure coding rules, the quality standards, and the execution protocol. The subagent receives the task specification as its initial prompt.
 
@@ -133,7 +133,7 @@ This pattern repeats for each level. Parallel execution within the wave. Quality
 
 Throughout execution, Claude's native Tasks feature provides the coordination layer.
 
-When ZERG generates the task graph, it creates a Claude Task for each ZERG task. The Task includes structured metadata: dependencies, assigned worker, current status, verification results, retry count. All workers connect to the same Task list via the `CLAUDE_CODE_TASK_LIST_ID` environment variable, which is set to the feature name.
+When MAHABHARATHA generates the task graph, it creates a Claude Task for each MAHABHARATHA task. The Task includes structured metadata: dependencies, assigned worker, current status, verification results, retry count. All workers connect to the same Task list via the `CLAUDE_CODE_TASK_LIST_ID` environment variable, which is set to the feature name.
 
 Workers query the Task list to find their assignment. They update Task status as they progress: `pending` to `in_progress` when starting, `in_progress` to `completed` when verification passes, `in_progress` to `blocked` when retries exhaust.
 
@@ -159,16 +159,16 @@ You have working software. Not prototype software. Working, tested, secure, docu
 
 For the next sprint, infrastructure persists. The devcontainer exists. The quality gates are configured. The secure coding rules are active. You don't rebuild the foundation.
 
-You run `/zerg:plan` with new stories. Maybe they come from the initial backlog if you started empty. Maybe they come from user feedback if you shipped the previous sprint. The product owner subagent refines them into specifications.
+You run `/mahabharatha:plan` with new stories. Maybe they come from the initial backlog if you started empty. Maybe they come from user feedback if you shipped the previous sprint. The product owner subagent refines them into specifications.
 
-You run `/zerg:design`. The architect subagent reads existing code alongside new specs. It extends the architecture rather than replacing it. It generates tasks that modify existing files where necessary, always ensuring exclusive ownership within each wave.
+You run `/mahabharatha:design`. The architect subagent reads existing code alongside new specs. It extends the architecture rather than replacing it. It generates tasks that modify existing files where necessary, always ensuring exclusive ownership within each wave.
 
-You run `/zerg:rush`. Workers execute against the current codebase. They build on what exists. Each sprint adds a vertical slice of functionality. Each slice is tested, secure, and deployable.
+You run `/mahabharatha:kurukshetra`. Workers execute against the current codebase. They build on what exists. Each sprint adds a vertical slice of functionality. Each slice is tested, secure, and deployable.
 
 The cycle repeats. Plan, design, execute, deliver. Parallel execution within sprints compresses timelines. Wave boundaries enforce dependency ordering. Quality gates catch regressions before they merge. Secure coding rules prevent vulnerabilities at generation time rather than detection time.
 
-Whether you started from an empty directory or a mature codebase, the steady state is identical. ZERG adapts to what exists, provisions what's missing, and executes in parallel against a verified foundation. The inception cost differs. The ongoing workflow converges.
+Whether you started from an empty directory or a mature codebase, the steady state is identical. MAHABHARATHA adapts to what exists, provisions what's missing, and executes in parallel against a verified foundation. The inception cost differs. The ongoing workflow converges.
 
 </worflow narrative>
 
-The output will be a .md file that is optimized for consumption by claude code so that there is no mistake in how zerg should operate.
+The output will be a .md file that is optimized for consumption by claude code so that there is no mistake in how mahabharatha should operate.

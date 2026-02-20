@@ -36,7 +36,7 @@ Documentation-only feature that synchronizes 10 missing CLI flags across 5 docum
 ```
 ┌─────────────────────────────────────────────────┐
 │               Source of Truth                     │
-│  Python CLI code (click options in zerg/commands) │
+│  Python CLI code (click options in mahabharatha/commands) │
 └──────────────────────┬──────────────────────────┘
                        │
           ┌────────────┼────────────┐
@@ -84,22 +84,22 @@ All 5 doc surfaces must agree on flag names, types, defaults, and descriptions.
 
 | Command | Flag | Type | Default | Help Text |
 |---------|------|------|---------|-----------|
-| `/zerg:rush` | `--check-gates` | bool | false | Pre-run quality gates during dry-run |
-| `/zerg:rush` | `--what-if` | bool | false | Compare different worker counts and modes |
-| `/zerg:rush` | `--risk` | bool | false | Show risk assessment for task graph |
-| `/zerg:rush` | `--skip-tests` | bool | false | Skip test gates (lint-only mode) |
-| `/zerg:plan` | `--from-issue` | string | "" | Import requirements from GitHub issue URL |
-| `/zerg:debug` | `--deep` | bool | false | System-level diagnostics |
-| `/zerg:debug` | `--env` | bool | false | Environment diagnostics |
-| `/zerg:merge` | `--target` | string | main | Target branch |
-| `/zerg:retry` | `--worker` | int | — | Assign task to specific worker |
-| `/zerg:analyze` | `--performance` | bool | false | Comprehensive performance audit (140 factors) |
+| `/mahabharatha:kurukshetra` | `--check-gates` | bool | false | Pre-run quality gates during dry-run |
+| `/mahabharatha:kurukshetra` | `--what-if` | bool | false | Compare different worker counts and modes |
+| `/mahabharatha:kurukshetra` | `--risk` | bool | false | Show risk assessment for task graph |
+| `/mahabharatha:kurukshetra` | `--skip-tests` | bool | false | Skip test gates (lint-only mode) |
+| `/mahabharatha:plan` | `--from-issue` | string | "" | Import requirements from GitHub issue URL |
+| `/mahabharatha:debug` | `--deep` | bool | false | System-level diagnostics |
+| `/mahabharatha:debug` | `--env` | bool | false | Environment diagnostics |
+| `/mahabharatha:merge` | `--target` | string | main | Target branch |
+| `/mahabharatha:retry` | `--worker` | int | — | Assign task to specific worker |
+| `/mahabharatha:analyze` | `--performance` | bool | false | Comprehensive performance audit (140 factors) |
 
 **Note**: `--deep` and `--env` already exist in commands-quick.md and wiki but are confirmed missing from commands-quick.md per requirements. On inspection, commands-quick.md **does** include `--deep` and `--env` for debug (lines 297-302). The wiki also has them (lines 2441, 2444). The requirements claim they're missing from commands-quick.md — but upon reading the file, they are present. We will verify and only add what's truly missing.
 
-**Verified missing from commands-quick.md**: `--check-gates`, `--what-if`, `--risk`, `--skip-tests` (rush), `--from-issue` (plan), `--target` (merge), `--worker` (retry), `--performance` (analyze). Debug flags `--deep` and `--env` are already present — will verify wiki.
+**Verified missing from commands-quick.md**: `--check-gates`, `--what-if`, `--risk`, `--skip-tests` (kurukshetra), `--from-issue` (plan), `--target` (merge), `--worker` (retry), `--performance` (analyze). Debug flags `--deep` and `--env` are already present — will verify wiki.
 
-**Verified missing from wiki Command-Reference.md**: Same flags as above. Wiki rush flags table (line 731-740) is missing the 4 rush flags. Wiki plan flags table (lines 603-605) missing `--from-issue`. Wiki merge flags table (lines 1118-1125) missing `--target`. Wiki retry flags table (lines 1242-1250) missing `--worker`. Wiki analyze flags table (lines 1600-1605) missing `--performance`.
+**Verified missing from wiki Command-Reference.md**: Same flags as above. Wiki kurukshetra flags table (line 731-740) is missing the 4 kurukshetra flags. Wiki plan flags table (lines 603-605) missing `--from-issue`. Wiki merge flags table (lines 1118-1125) missing `--target`. Wiki retry flags table (lines 1242-1250) missing `--worker`. Wiki analyze flags table (lines 1600-1605) missing `--performance`.
 
 ### 3.2 Tone Expansion Plan
 

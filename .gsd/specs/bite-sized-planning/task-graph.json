@@ -17,7 +17,7 @@
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/formatter_detector.py"],
+        "create": ["mahabharatha/formatter_detector.py"],
         "modify": [],
         "read": []
       },
@@ -47,17 +47,17 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/config.py"],
+        "modify": ["mahabharatha/config.py"],
         "read": []
       },
       "acceptance_criteria": [
         "PlanningConfig model with all fields",
         "Default values match requirements",
         "Validated via Pydantic",
-        "Loaded from .zerg/config.yaml"
+        "Loaded from .mahabharatha/config.yaml"
       ],
       "verification": {
-        "command": "python -c \"from zerg.config import ZergConfig; c = ZergConfig.load(); print(c.planning)\"",
+        "command": "python -c \"from mahabharatha.config import ZergConfig; c = ZergConfig.load(); print(c.planning)\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -67,13 +67,13 @@
     {
       "id": "BITE-L1-003",
       "title": "Extend task_graph.json schema with steps",
-      "description": "Add 'steps' array definition to zerg/schemas/task_graph.json. Step object: step (int), action (enum), file (string), code_snippet (string), run (string), verify (enum: exit_code|exit_code_nonzero|none). Update task definition to include optional steps array.",
+      "description": "Add 'steps' array definition to mahabharatha/schemas/task_graph.json. Step object: step (int), action (enum), file (string), code_snippet (string), run (string), verify (enum: exit_code|exit_code_nonzero|none). Update task definition to include optional steps array.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/schemas/task_graph.json"],
+        "modify": ["mahabharatha/schemas/task_graph.json"],
         "read": []
       },
       "acceptance_criteria": [
@@ -83,7 +83,7 @@
         "Tasks can have optional steps array"
       ],
       "verification": {
-        "command": "python -c \"import json; s = json.load(open('zerg/schemas/task_graph.json')); assert 'step' in s.get('definitions', {})\"",
+        "command": "python -c \"import json; s = json.load(open('mahabharatha/schemas/task_graph.json')); assert 'step' in s.get('definitions', {})\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -98,9 +98,9 @@
       "level": 2,
       "dependencies": ["BITE-L1-001", "BITE-L1-002", "BITE-L1-003"],
       "files": {
-        "create": ["zerg/step_generator.py"],
+        "create": ["mahabharatha/step_generator.py"],
         "modify": [],
-        "read": ["zerg/formatter_detector.py", "zerg/config.py"]
+        "read": ["mahabharatha/formatter_detector.py", "mahabharatha/config.py"]
       },
       "acceptance_criteria": [
         "Generates 6 TDD steps for each task",
@@ -127,9 +127,9 @@
       "level": 2,
       "dependencies": ["BITE-L1-002"],
       "files": {
-        "create": ["zerg/ast_analyzer.py"],
+        "create": ["mahabharatha/ast_analyzer.py"],
         "modify": [],
-        "read": ["zerg/ast_cache.py"]
+        "read": ["mahabharatha/ast_cache.py"]
       },
       "acceptance_criteria": [
         "Extracts import patterns from Python files",
@@ -149,14 +149,14 @@
     {
       "id": "BITE-L2-003",
       "title": "Create AdaptiveDetail module",
-      "description": "Implement adaptive detail logic. Track file modification counts and task success rates in .zerg/state/adaptive-detail.json. Reduce detail level when: file modified >= threshold times, or success rate >= threshold in same directory. Expose should_reduce_detail(task, metrics) method.",
+      "description": "Implement adaptive detail logic. Track file modification counts and task success rates in .mahabharatha/state/adaptive-detail.json. Reduce detail level when: file modified >= threshold times, or success rate >= threshold in same directory. Expose should_reduce_detail(task, metrics) method.",
       "phase": "core",
       "level": 2,
       "dependencies": ["BITE-L1-002"],
       "files": {
-        "create": ["zerg/adaptive_detail.py"],
+        "create": ["mahabharatha/adaptive_detail.py"],
         "modify": [],
-        "read": ["zerg/config.py"]
+        "read": ["mahabharatha/config.py"]
       },
       "acceptance_criteria": [
         "Tracks file modification counts",
@@ -181,9 +181,9 @@
       "level": 2,
       "dependencies": ["BITE-L1-003"],
       "files": {
-        "create": ["zerg/step_executor.py"],
+        "create": ["mahabharatha/step_executor.py"],
         "modify": [],
-        "read": ["zerg/heartbeat.py"]
+        "read": ["mahabharatha/heartbeat.py"]
       },
       "acceptance_criteria": [
         "Executes steps in order",
@@ -205,14 +205,14 @@
     {
       "id": "BITE-L3-001",
       "title": "Integrate --detail flag into design command",
-      "description": "Add --detail option to zerg/commands/design.py. Values: standard (default), medium, high. When medium/high: call StepGenerator for each task, insert steps into task-graph.json. Validate steps in --validate-only mode. Update design summary to show detail level.",
+      "description": "Add --detail option to mahabharatha/commands/design.py. Values: standard (default), medium, high. When medium/high: call StepGenerator for each task, insert steps into task-graph.json. Validate steps in --validate-only mode. Update design summary to show detail level.",
       "phase": "integration",
       "level": 3,
       "dependencies": ["BITE-L2-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/design.py"],
-        "read": ["zerg/step_generator.py"]
+        "modify": ["mahabharatha/commands/design.py"],
+        "read": ["mahabharatha/step_generator.py"]
       },
       "acceptance_criteria": [
         "--detail flag accepts standard|medium|high",
@@ -222,7 +222,7 @@
         "Summary shows detail level"
       ],
       "verification": {
-        "command": "zerg design --help | grep -q 'detail' && echo 'OK'",
+        "command": "mahabharatha design --help | grep -q 'detail' && echo 'OK'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
@@ -233,14 +233,14 @@
     {
       "id": "BITE-L3-002",
       "title": "Add step progress to status command",
-      "description": "Extend zerg/commands/status.py to display step-level progress. Format: [Step 3/5: ✅✅🔄⏳⏳]. Read step progress from heartbeat files. Show completed/in_progress/pending/failed indicators. Gracefully handle tasks without steps.",
+      "description": "Extend mahabharatha/commands/status.py to display step-level progress. Format: [Step 3/5: ✅✅🔄⏳⏳]. Read step progress from heartbeat files. Show completed/in_progress/pending/failed indicators. Gracefully handle tasks without steps.",
       "phase": "integration",
       "level": 3,
       "dependencies": ["BITE-L2-004"],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/status.py"],
-        "read": ["zerg/heartbeat.py"]
+        "modify": ["mahabharatha/commands/status.py"],
+        "read": ["mahabharatha/heartbeat.py"]
       },
       "acceptance_criteria": [
         "Shows step progress for tasks with steps",
@@ -250,7 +250,7 @@
         "Handles missing heartbeat gracefully"
       ],
       "verification": {
-        "command": "zerg status --help && echo 'OK'",
+        "command": "mahabharatha status --help && echo 'OK'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
@@ -260,13 +260,13 @@
     {
       "id": "BITE-L3-003",
       "title": "Update worker protocol for step execution",
-      "description": "Update zerg/data/commands/worker.core.md with step execution protocol. Add Step 4.x sections for: loading steps from task, executing steps in order, verifying exit codes, updating heartbeat per step, failing on verification mismatch. Emphasize strict protocol (no deviation).",
+      "description": "Update mahabharatha/data/commands/worker.core.md with step execution protocol. Add Step 4.x sections for: loading steps from task, executing steps in order, verifying exit codes, updating heartbeat per step, failing on verification mismatch. Emphasize strict protocol (no deviation).",
       "phase": "integration",
       "level": 3,
       "dependencies": ["BITE-L2-004"],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/worker.core.md", "zerg/data/commands/worker.md"],
+        "modify": ["mahabharatha/data/commands/worker.core.md", "mahabharatha/data/commands/worker.md"],
         "read": []
       },
       "acceptance_criteria": [
@@ -277,7 +277,7 @@
         "Strict protocol emphasized"
       ],
       "verification": {
-        "command": "grep -q 'step' zerg/data/commands/worker.core.md && echo 'OK'",
+        "command": "grep -q 'step' mahabharatha/data/commands/worker.core.md && echo 'OK'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,

@@ -1,1 +1,1 @@
-"""Tests for ZERG v2 .zerg modules."""
+"""Tests for MAHABHARATHA v2 .mahabharatha modules."""

@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 Quality Tools detection and configuration."""
+"""Tests for MAHABHARATHA v2 Quality Tools detection and configuration."""
 
 import sys
 import tempfile
@@ -212,13 +212,13 @@ class TestDetectAndConfigure:
 
 
 class TestRealProjectDetection:
-    """Tests with real project (ZERG itself)."""
+    """Tests with real project (MAHABHARATHA itself)."""
 
     def test_detect_zerg_project_tools(self):
-        """Test detecting tools in ZERG project."""
+        """Test detecting tools in MAHABHARATHA project."""
         from quality_tools import ToolDetector
 
-        # Use the actual ZERG project path
+        # Use the actual MAHABHARATHA project path
         project_path = Path(__file__).parent.parent.parent
         if not (project_path / "pyproject.toml").exists():
             # Skip if not in expected location
@@ -227,7 +227,7 @@ class TestRealProjectDetection:
         detector = ToolDetector(project_path)
         toolset = detector.detect("python")
 
-        # ZERG should have ruff and pytest available
+        # MAHABHARATHA should have ruff and pytest available
         assert toolset.language == "python"
         # These may or may not be detected depending on environment
         # Just verify the detection runs without error

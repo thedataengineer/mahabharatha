@@ -1,4 +1,4 @@
-"""Task retry management for ZERG orchestrator."""
+"""Task retry management for MAHABHARATHA orchestrator."""
 
 from __future__ import annotations
 
@@ -37,7 +37,7 @@ class TaskRetryManager:
         """Initialize TaskRetryManager.
 
         Args:
-            config: ZERG configuration
+            config: MAHABHARATHA configuration
             state: State manager for task state operations
             levels: Level controller for marking task failures
             repo_path: Path to the repository root

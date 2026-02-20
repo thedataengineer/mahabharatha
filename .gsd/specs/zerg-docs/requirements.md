@@ -1,15 +1,15 @@
-# Requirements: zerg-docs
+# Requirements: mahabharatha-docs
 
 **Status**: APPROVED
 **Created**: 2026-01-31
-**Feature**: zerg-docs
+**Feature**: mahabharatha-docs
 
 ## Summary
 
-Build a complete documentation system for the ZERG project, including:
+Build a complete documentation system for the MAHABHARATHA project, including:
 
 1. A `doc_engine` package with 7 modules for automated documentation generation
-2. CLI commands (`zerg document`, `zerg wiki`) for generating docs
+2. CLI commands (`mahabharatha document`, `mahabharatha wiki`) for generating docs
 3. A complete GitHub Wiki with 50 pages covering all aspects of the project
 4. Unit tests for the doc_engine package
 
@@ -25,8 +25,8 @@ Build a complete documentation system for the ZERG project, including:
 - SidebarGenerator: generate GitHub Wiki sidebar navigation
 
 ### FR-2: CLI Commands
-- `zerg document <target>`: generate docs for a single file/module
-- `zerg wiki`: generate complete wiki with all pages
+- `mahabharatha document <target>`: generate docs for a single file/module
+- `mahabharatha wiki`: generate complete wiki with all pages
 
 ### FR-3: Wiki Content
 - Getting started guides (Home, Installation, Quick Start, First Feature)

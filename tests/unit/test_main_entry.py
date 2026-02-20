@@ -1,4 +1,4 @@
-"""Unit tests for ZERG __main__.py entry point.
+"""Unit tests for MAHABHARATHA __main__.py entry point.
 
 Test pattern: uses both `import mahabharatha.__main__` (for reload/attribute access)
 and `from mahabharatha.__main__ import cli` (for direct symbol testing).
@@ -64,7 +64,7 @@ if __name__ == "__main__":
         )
 
         assert result.returncode == 0
-        assert "ZERG" in result.stdout
+        assert "MAHABHARATHA" in result.stdout
         assert "Parallel Claude Code" in result.stdout
 
     def test_main_executed_shows_version(self) -> None:
@@ -161,7 +161,7 @@ class TestMainBlockExecution:
         # The help should show since no args provided
         # Exit code 0 means help was shown successfully
         # or non-zero if no command was given (depends on click version)
-        assert "ZERG" in result.stdout or "Usage" in result.stderr or result.returncode in (0, 1, 2)
+        assert "MAHABHARATHA" in result.stdout or "Usage" in result.stderr or result.returncode in (0, 1, 2)
 
     def test_main_execution_with_invalid_command(self) -> None:
         """Test main execution with invalid command shows error."""
@@ -251,7 +251,7 @@ class TestDirectMainBlockCoverage:
         result = runner.invoke(cli, ["--help"])
 
         assert result.exit_code == 0
-        assert "ZERG" in result.output
+        assert "MAHABHARATHA" in result.output
 
     def test_main_module_reload_with_main_name(self) -> None:
         """Test reloading module with __name__ set to __main__."""

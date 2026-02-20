@@ -1,4 +1,4 @@
-"""Unit tests for ZERG behavioral mode system — thinned to essentials."""
+"""Unit tests for MAHABHARATHA behavioral mode system — thinned to essentials."""
 
 from __future__ import annotations
 

@@ -1,1 +1,1 @@
-"""Integration tests for ZERG."""
+"""Integration tests for MAHABHARATHA."""

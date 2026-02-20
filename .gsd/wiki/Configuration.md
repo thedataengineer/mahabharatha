@@ -1,16 +1,16 @@
 # Configuration
 
-This guide explains every ZERG configuration option with practical scenarios for when and why you would change each setting. Understanding these options helps you tune ZERG for your specific workflow, hardware, and project requirements.
+This guide explains every MAHABHARATHA configuration option with practical scenarios for when and why you would change each setting. Understanding these options helps you tune MAHABHARATHA for your specific workflow, hardware, and project requirements.
 
 ## Overview
 
-ZERG uses a YAML configuration file at `.zerg/config.yaml` to control worker behavior, quality gates, plugins, and cross-cutting capabilities. The file is created automatically by `/zerg:init` with sensible defaults.
+MAHABHARATHA uses a YAML configuration file at `.mahabharatha/config.yaml` to control worker behavior, quality gates, plugins, and cross-cutting capabilities. The file is created automatically by `/mahabharatha:init` with sensible defaults.
 
-**Location**: `.zerg/config.yaml`
+**Location**: `.mahabharatha/config.yaml`
 
 ## Quick Start Configuration
 
-If you are new to ZERG, start with this minimal configuration and expand as needed:
+If you are new to MAHABHARATHA, start with this minimal configuration and expand as needed:
 
 ```yaml
 project:
@@ -35,18 +35,18 @@ This gives you parallel execution with basic quality enforcement. Read on to und
 
 ## Workers
 
-The workers section controls how ZERG spawns and manages Claude Code instances.
+The workers section controls how MAHABHARATHA spawns and manages Claude Code instances.
 
 ### max_concurrent
 
-**What it does:** Limits how many Claude Code instances ZERG can spawn simultaneously.
+**What it does:** Limits how many Claude Code instances MAHABHARATHA can spawn simultaneously.
 
 **Default:** `5` — Balances speed with resource usage. Most development machines can handle 5 workers without memory pressure or API rate limiting issues.
 
 **When to change it:**
 - Increase to 8-10 if you have 32GB+ RAM and your task graph has many independent tasks at the same level
 - Decrease to 2-3 on laptops, when running other heavy processes, or if you hit API rate limits
-- Match your task graph's max parallelization (visible in `/zerg:status`)
+- Match your task graph's max parallelization (visible in `/mahabharatha:status`)
 
 **Example:**
 ```yaml
@@ -77,7 +77,7 @@ workers:
 
 ### retry_attempts
 
-**What it does:** Number of times ZERG retries a failed task before marking it as blocked and escalating.
+**What it does:** Number of times MAHABHARATHA retries a failed task before marking it as blocked and escalating.
 
 **Default:** `2` — Two retries catches transient failures (network hiccups, temporary file locks) without wasting time on truly broken tasks.
 
@@ -96,7 +96,7 @@ workers:
 
 ### context_threshold_percent
 
-**What it does:** When a worker's context usage reaches this percentage, ZERG triggers a checkpoint to preserve progress before context exhaustion.
+**What it does:** When a worker's context usage reaches this percentage, MAHABHARATHA triggers a checkpoint to preserve progress before context exhaustion.
 
 **Default:** `70` — Leaves 30% headroom for the checkpoint operation itself and any final work.
 
@@ -115,13 +115,13 @@ workers:
 
 ### launcher_type
 
-**What it does:** How ZERG spawns worker processes.
+**What it does:** How MAHABHARATHA spawns worker processes.
 
 **Default:** `subprocess` — Runs Claude Code directly on your machine. Simple, fast startup, shares your environment.
 
 **When to change it:**
 - Use `container` for isolated execution with Docker (recommended for untrusted code or security-sensitive projects)
-- Use `task` for Claude Code's built-in Task Tool Mode (the implicit default for `/zerg:rush`)
+- Use `task` for Claude Code's built-in Task Tool Mode (the implicit default for `/mahabharatha:kurukshetra`)
 - Stick with `subprocess` for local development where you trust the code
 
 | Mode | Isolation | Startup Time | Use Case |
@@ -182,7 +182,7 @@ Port configuration for worker communication. Only relevant when workers need net
 
 ### range_start / range_end
 
-**What it does:** Defines the port range ZERG can allocate to workers.
+**What it does:** Defines the port range MAHABHARATHA can allocate to workers.
 
 **Default:** `49152` / `65535` — The IANA dynamic/private port range, avoiding conflicts with well-known services.
 
@@ -239,7 +239,7 @@ quality_gates:
 
 **What it does:** Human-readable identifier for the gate.
 
-**Why it matters:** Appears in `/zerg:status` output and error messages. Use descriptive names so you know what failed.
+**Why it matters:** Appears in `/mahabharatha:status` output and error messages. Use descriptive names so you know what failed.
 
 **Example:**
 ```yaml
@@ -252,7 +252,7 @@ quality_gates:
 
 ### command
 
-**What it does:** The shell command ZERG executes to run this gate.
+**What it does:** The shell command MAHABHARATHA executes to run this gate.
 
 **Why it matters:** This is where you define what "passing" means for your project.
 
@@ -355,17 +355,17 @@ quality_gates:
 
 ## Plugins
 
-Plugins extend ZERG with hooks, custom gates, and context engineering features.
+Plugins extend MAHABHARATHA with hooks, custom gates, and context engineering features.
 
 ### enabled
 
 **What it does:** Master switch for the plugin system.
 
-**Default:** `true` — Plugins are a core ZERG feature.
+**Default:** `true` — Plugins are a core MAHABHARATHA feature.
 
 **When to disable:**
 - Debugging plugin-related issues
-- Minimal setups where you want pure ZERG behavior
+- Minimal setups where you want pure MAHABHARATHA behavior
 - Temporary troubleshooting
 
 ---
@@ -404,7 +404,7 @@ plugins:
 | `merge_complete` | Level branches merged | Integration alerts |
 | `worker_spawned` | New worker starts | Resource monitoring |
 | `quality_gate_run` | Gate executes | Audit logging |
-| `rush_started` | `/zerg:rush` begins | Session start |
+| `rush_started` | `/mahabharatha:kurukshetra` begins | Session start |
 | `rush_finished` | All levels complete | Final notification |
 
 **Variable substitution:** Use `{level}`, `{feature}`, `{task_id}`, `{worker_id}` in commands.
@@ -437,7 +437,7 @@ plugins:
 
 ## Error Recovery
 
-ZERG includes automatic error recovery to handle transient failures gracefully.
+MAHABHARATHA includes automatic error recovery to handle transient failures gracefully.
 
 ### circuit_breaker
 
@@ -489,7 +489,7 @@ Controls automatic token-saving features.
 
 ### auto_compact_threshold
 
-**What it does:** When context usage exceeds this percentage, ZERG switches to compact output mode.
+**What it does:** When context usage exceeds this percentage, MAHABHARATHA switches to compact output mode.
 
 **Default:** `0.75` — At 75% context usage, start conserving tokens.
 
@@ -528,13 +528,13 @@ efficiency:
 
 ## MCP Routing
 
-Configure how ZERG selects MCP servers for workers.
+Configure how MAHABHARATHA selects MCP servers for workers.
 
 ### auto_detect
 
 **What it does:** Automatically matches MCP servers to tasks based on their capabilities.
 
-**Default:** `true` — Lets ZERG pick the best tools for each task type.
+**Default:** `true` — Lets MAHABHARATHA pick the best tools for each task type.
 
 **When to disable:**
 - When you want explicit control over which servers workers use
@@ -545,7 +545,7 @@ Configure how ZERG selects MCP servers for workers.
 
 ### available_servers
 
-**What it does:** List of MCP servers ZERG can route to.
+**What it does:** List of MCP servers MAHABHARATHA can route to.
 
 **Default:** Common useful servers. Add or remove based on what you have installed.
 
@@ -614,7 +614,7 @@ verification:
 
 **What it does:** Saves verification results to disk for debugging and auditing.
 
-**Defaults:** `store_artifacts: true`, `artifact_dir: ".zerg/artifacts"`
+**Defaults:** `store_artifacts: true`, `artifact_dir: ".mahabharatha/artifacts"`
 
 **When to change:**
 - Disable `store_artifacts` to save disk space in CI environments
@@ -752,7 +752,7 @@ Controls automatic mode detection for different task types.
 
 **What it does:** Automatically detects optimal mode from task keywords.
 
-**Default:** `true` — Lets ZERG adapt behavior to task requirements.
+**Default:** `true` — Lets MAHABHARATHA adapt behavior to task requirements.
 
 ---
 
@@ -853,7 +853,7 @@ Configure security boundaries and protections.
 
 ### audit_logging
 
-**What it does:** Logs all ZERG actions for audit purposes.
+**What it does:** Logs all MAHABHARATHA actions for audit purposes.
 
 **Default:** `true` — Provides accountability and debugging information.
 
@@ -941,7 +941,7 @@ resources:
 
 ## Logging
 
-Configure ZERG logging behavior.
+Configure MAHABHARATHA logging behavior.
 
 ### level
 
@@ -952,7 +952,7 @@ Configure ZERG logging behavior.
 **Options:** `debug`, `info`, `warning`, `error`
 
 **When to change:**
-- Use `debug` when troubleshooting ZERG issues
+- Use `debug` when troubleshooting MAHABHARATHA issues
 - Use `warning` for quieter production runs
 
 ---
@@ -961,7 +961,7 @@ Configure ZERG logging behavior.
 
 **What it does:** Where log files are written.
 
-**Default:** `.zerg/logs` — Keeps logs with other ZERG state.
+**Default:** `.mahabharatha/logs` — Keeps logs with other MAHABHARATHA state.
 
 ---
 
@@ -985,7 +985,7 @@ Configure ZERG logging behavior.
 |----------|-------------|-------------|
 | `ANTHROPIC_API_KEY` | Claude API key | Container and subprocess modes |
 
-### ZERG-Set Variables
+### MAHABHARATHA-Set Variables
 
 These are set automatically by the orchestrator. You do not configure them, but workers can read them:
 
@@ -1010,7 +1010,7 @@ These are set automatically by the orchestrator. You do not configure them, but 
 
 ### Security: Filtered Variables
 
-ZERG intentionally blocks certain variables from passing to workers:
+MAHABHARATHA intentionally blocks certain variables from passing to workers:
 
 **Blocked (security risk):**
 - `LD_PRELOAD`, `DYLD_INSERT_LIBRARIES` — Library injection
@@ -1018,7 +1018,7 @@ ZERG intentionally blocks certain variables from passing to workers:
 - `HOME`, `USER`, `SHELL` — Identity information
 
 **Allowed:**
-- `ZERG_*` — All ZERG-specific variables
+- `ZERG_*` — All MAHABHARATHA-specific variables
 - `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` — API credentials
 - `CI`, `DEBUG`, `LOG_LEVEL` — Environment flags
 
@@ -1133,10 +1133,10 @@ verification:
 
 ## Directory Structure
 
-ZERG maintains its state in the `.zerg/` directory:
+MAHABHARATHA maintains its state in the `.mahabharatha/` directory:
 
 ```
-.zerg/
+.mahabharatha/
 ├── config.yaml              # Main configuration file (you edit this)
 ├── hooks/
 │   └── pre-commit           # Git pre-commit hook
@@ -1165,5 +1165,5 @@ ZERG maintains its state in the `.zerg/` directory:
 ## See Also
 
 - [Getting Started](Getting-Started.md) — Initial setup and first run
-- [Commands](Commands.md) — CLI reference for all ZERG commands
+- [Commands](Commands.md) — CLI reference for all MAHABHARATHA commands
 - [Plugins](Plugins.md) — Plugin development and hooks

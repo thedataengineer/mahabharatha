@@ -16,8 +16,8 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/_utils.py"],
-        "read": ["zerg/constants.py"]
+        "modify": ["mahabharatha/commands/_utils.py"],
+        "read": ["mahabharatha/constants.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_lockfile.py tests/unit/test_commands_utils.py -x -q",
@@ -39,7 +39,7 @@
       "files": {
         "create": [],
         "modify": ["tests/unit/test_lockfile.py"],
-        "read": ["zerg/commands/_utils.py"]
+        "read": ["mahabharatha/commands/_utils.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_lockfile.py -v",
@@ -61,7 +61,7 @@
       "files": {
         "create": [],
         "modify": ["tests/unit/test_commands_utils.py"],
-        "read": ["zerg/commands/_utils.py"]
+        "read": ["mahabharatha/commands/_utils.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_commands_utils.py -v",

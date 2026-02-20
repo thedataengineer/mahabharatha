@@ -103,7 +103,7 @@ class TestDynamicDevcontainerGenerator:
         generator = DynamicDevcontainerGenerator()
         spec = generator.generate_spec({"python"})
 
-        assert spec.name == "ZERG Worker"
+        assert spec.name == "MAHABHARATHA Worker"
         # Single language should use optimized image
         assert "python" in spec.base_image.lower()
 
@@ -132,7 +132,7 @@ class TestDynamicDevcontainerGenerator:
         spec = generator.generate_spec({"python", "javascript"})
         config = generator.generate_devcontainer_json(spec)
 
-        assert config["name"] == "ZERG Worker"
+        assert config["name"] == "MAHABHARATHA Worker"
         assert "image" in config
         assert "features" in config
         assert "customizations" in config
@@ -155,7 +155,7 @@ class TestDynamicDevcontainerGenerator:
         with open(devcontainer_path) as f:
             config = json.load(f)
 
-        assert config["name"] == "ZERG Worker"
+        assert config["name"] == "MAHABHARATHA Worker"
         assert "features" in config
 
     def test_generate_worker_entry_script(self, tmp_path: Path) -> None:

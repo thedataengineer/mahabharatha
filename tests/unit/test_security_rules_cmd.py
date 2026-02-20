@@ -1,4 +1,4 @@
-"""Unit tests for ZERG security-rules command.
+"""Unit tests for MAHABHARATHA security-rules command.
 
 Thinned from 50 tests to cover unique code paths:
 - security_rules_group (help)

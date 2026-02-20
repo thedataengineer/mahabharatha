@@ -1,11 +1,11 @@
-# /zerg:explain
+# /mahabharatha:explain
 
 Educational code explanations with progressive depth layers, powered by doc_engine AST extractors.
 
 ## Synopsis
 
 ```
-/zerg:explain <target> [--scope function|file|module|system]
+/mahabharatha:explain <target> [--scope function|file|module|system]
                        [--save]
                        [--format text|md|json]
                        [--no-diagrams]
@@ -22,7 +22,7 @@ The target argument is resolved in this order:
 1. **Function reference** (`path/to/file.py:function_name`) — Explains a specific function or method.
 2. **File path** (`path/to/file.py`) — Explains an entire file.
 3. **Directory path** (`path/to/module/`) — Explains a module.
-4. **Dotted module** (`zerg.launcher`) — Resolved to a file path.
+4. **Dotted module** (`mahabharatha.launcher`) — Resolved to a file path.
 
 If `--scope` is not provided, the scope is auto-detected from the target format.
 
@@ -53,31 +53,31 @@ Each explanation builds through four progressive layers:
 Explain a single file:
 
 ```
-/zerg:explain zerg/launcher.py
+/mahabharatha:explain mahabharatha/launcher.py
 ```
 
 Explain a specific function:
 
 ```
-/zerg:explain zerg/launcher.py:spawn_worker
+/mahabharatha:explain mahabharatha/launcher.py:spawn_worker
 ```
 
 Explain an entire module:
 
 ```
-/zerg:explain zerg/doc_engine/ --scope module
+/mahabharatha:explain mahabharatha/doc_engine/ --scope module
 ```
 
 Save explanation to a file:
 
 ```
-/zerg:explain zerg/launcher.py --save
+/mahabharatha:explain mahabharatha/launcher.py --save
 ```
 
 System-level explanation without diagrams:
 
 ```
-/zerg:explain zerg/ --scope system --no-diagrams
+/mahabharatha:explain mahabharatha/ --scope system --no-diagrams
 ```
 
 ## Error Handling
@@ -92,6 +92,6 @@ This command creates a Claude Code Task with the subject prefix `[Explain]` on i
 
 ## See Also
 
-- [[zerg-document]] -- Generate formal documentation (vs educational explanation)
-- [[zerg-analyze]] -- Static analysis that complements explanations
-- [[zerg-review]] -- Review code rather than explain it
+- [[mahabharatha-document]] -- Generate formal documentation (vs educational explanation)
+- [[mahabharatha-analyze]] -- Static analysis that complements explanations
+- [[mahabharatha-review]] -- Review code rather than explain it

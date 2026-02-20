@@ -1,4 +1,4 @@
-"""ZERG launcher data types.
+"""MAHABHARATHA launcher data types.
 
 Pure data types extracted from launcher.py: LauncherType enum, LauncherConfig,
 SpawnResult, and WorkerHandle dataclasses.

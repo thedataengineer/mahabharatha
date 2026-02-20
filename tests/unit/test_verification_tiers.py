@@ -1,4 +1,4 @@
-"""Tests for ZERG verification tiers module."""
+"""Tests for MAHABHARATHA verification tiers module."""
 
 from unittest.mock import MagicMock, patch
 

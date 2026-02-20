@@ -28,7 +28,7 @@ if TYPE_CHECKING:
 
 
 class StateManager:
-    """Manage ZERG execution state with file-based persistence.
+    """Manage MAHABHARATHA execution state with file-based persistence.
 
     Thin facade that delegates to specialized submodules while preserving
     the exact public API of the original monolithic StateManager.

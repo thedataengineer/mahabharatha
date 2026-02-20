@@ -73,6 +73,14 @@ Concrete CLI examples showing how to use or interact with this concept.
 graph TD
     A["{Related Component}"] --> B["{This Component}"]
     B --> C["{Downstream Component}"]
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 ## COMMAND
@@ -120,6 +128,14 @@ graph TD
     T --> W["Worker Execution"]
     S --> W
     D --> W
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 ## COMMAND

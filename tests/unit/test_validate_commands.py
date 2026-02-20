@@ -1,4 +1,4 @@
-"""Unit tests for ZERG command validation module.
+"""Unit tests for MAHABHARATHA command validation module.
 
 Tests all validation functions that enforce context engineering compliance
 for command files: Task marker presence, backbone depth, split pairs,
@@ -167,7 +167,7 @@ class TestValidateStateJsonWithoutTasks:
         """A file referencing .mahabharatha/state without TaskList or TaskGet must be flagged."""
         content = (
             "# Bad Command\n\n"
-            "Read the state from `.mahabharatha/state/rush-state.json`.\n"
+            "Read the state from `.mahabharatha/state/kurukshetra-state.json`.\n"
             "Use TaskCreate to track.\nUse TaskUpdate to update progress.\n"
         )
         (tmp_path / "badstate.md").write_text(content)
@@ -182,7 +182,7 @@ class TestValidateStateJsonWithoutTasks:
     )
     def test_state_ref_with_task_query_passes(self, tmp_path: Path, task_ref: str) -> None:
         """A file referencing .mahabharatha/state that also references TaskList/TaskGet should pass."""
-        content = f"# Cmd\n\nRead `.mahabharatha/state/rush-state.json`.\nUse {task_ref} for auth data.\n"
+        content = f"# Cmd\n\nRead `.mahabharatha/state/kurukshetra-state.json`.\nUse {task_ref} for auth data.\n"
         (tmp_path / "good.md").write_text(content)
         passed, errors = validate_state_json_without_tasks(tmp_path)
         assert passed

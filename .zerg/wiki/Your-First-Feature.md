@@ -1,11 +1,11 @@
 # Your First Feature
 
-This tutorial walks through building a health check endpoint for an existing Python/FastAPI project using ZERG. The example is intentionally small (5 tasks across 3 levels) so you can complete it quickly and understand the mechanics before tackling larger features.
+This tutorial walks through building a health check endpoint for an existing Python/FastAPI project using MAHABHARATHA. The example is intentionally small (5 tasks across 3 levels) so you can complete it quickly and understand the mechanics before tackling larger features.
 
 **Time estimate:** 20 to 30 minutes.
 
 **Prerequisites:**
-- ZERG installed and project initialized (see [[Installation]])
+- MAHABHARATHA installed and project initialized (see [[Installation]])
 - A Python project with FastAPI (or adapt the example to your stack)
 - Familiarity with the [[Quick Start]] workflow
 
@@ -16,7 +16,7 @@ This tutorial walks through building a health check endpoint for an existing Pyt
 - [The Feature](#the-feature)
 - [Phase 1: Plan the Feature](#phase-1-plan-the-feature)
 - [Phase 2: Review the Design](#phase-2-review-the-design)
-- [Phase 3: Launch the Rush](#phase-3-launch-the-rush)
+- [Phase 3: Launch the Kurukshetra](#phase-3-launch-the-kurukshetra)
 - [Phase 4: Monitor and Merge](#phase-4-monitor-and-merge)
 - [Phase 5: Integrate the Result](#phase-5-integrate-the-result)
 - [What You Built](#what-you-built)
@@ -42,10 +42,10 @@ This is a good first feature because it touches multiple layers (types, service,
 Open Claude Code in your project directory and start the planning phase.
 
 ```
-/zerg:plan health-check
+/mahabharatha:plan health-check
 ```
 
-ZERG will explore your codebase and ask questions. Here is an example interaction:
+MAHABHARATHA will explore your codebase and ask questions. Here is an example interaction:
 
 ```
 Planning: health-check
@@ -68,7 +68,7 @@ I've analyzed your project structure. A few questions:
 4. Detailed component status with overall status and per-component breakdown.
 ```
 
-ZERG generates the requirements document and presents it for review.
+MAHABHARATHA generates the requirements document and presents it for review.
 
 ```
 Requirements generated: .gsd/specs/health-check/requirements.md
@@ -102,10 +102,10 @@ ls .gsd/specs/health-check/
 Generate the architecture and task graph.
 
 ```
-/zerg:design
+/mahabharatha:design
 ```
 
-ZERG reads the requirements, analyzes your codebase for existing patterns, and produces a technical design. For this feature, expect something like:
+MAHABHARATHA reads the requirements, analyzes your codebase for existing patterns, and produces a technical design. For this feature, expect something like:
 
 ```
 DESIGN READY FOR REVIEW
@@ -128,7 +128,7 @@ Files to Create:
 
 ### Understanding the Task Graph
 
-Before approving, examine the task graph to understand what ZERG will build:
+Before approving, examine the task graph to understand what MAHABHARATHA will build:
 
 ```bash
 jq '.tasks[] | {id, title, level, files}' .gsd/specs/health-check/task-graph.json
@@ -195,17 +195,17 @@ ls .gsd/specs/health-check/
 
 ---
 
-## Phase 3: Launch the Rush
+## Phase 3: Launch the Kurukshetra
 
 Start parallel execution with 2 workers (matching the max parallelization for this task graph).
 
 ```
-/zerg:rush --workers=2
+/mahabharatha:kurukshetra --workers=2
 ```
 
 **What happens behind the scenes:**
 
-1. ZERG creates git worktrees -- one per worker, each on its own branch.
+1. MAHABHARATHA creates git worktrees -- one per worker, each on its own branch.
 2. Two Claude Code instances launch.
 3. **Level 1:** Worker 0 gets TASK-001 (types). Worker 1 gets TASK-002 (config). Both run in parallel.
 4. After both complete, the orchestrator merges their branches and runs quality gates.
@@ -215,7 +215,7 @@ Start parallel execution with 2 workers (matching the max parallelization for th
 8. Final merge and quality gates.
 
 ```
-Launching ZERG Rush: health-check
+Launching MAHABHARATHA Kurukshetra: health-check
 
 Task graph: 5 tasks across 3 levels
 Workers: 2
@@ -226,7 +226,7 @@ Launching Worker 1 on port 49153...
 Orchestrator running (PID: 54321).
 
 Monitor progress in a separate terminal:
-  zerg status --dashboard
+  mahabharatha status --dashboard
 ```
 
 ---
@@ -236,7 +236,7 @@ Monitor progress in a separate terminal:
 Open a second terminal and monitor progress.
 
 ```bash
-zerg status --watch --interval 5
+mahabharatha status --watch --interval 5
 ```
 
 You will see progress advance through the levels:
@@ -270,7 +270,7 @@ You have two options:
 
 ```bash
 # In the main project directory
-git checkout zerg/health-check/staging
+git checkout mahabharatha/health-check/staging
 # Fix the lint issue
 git add -A && git commit -m "Fix lint issue in health routes"
 ```
@@ -278,13 +278,13 @@ git add -A && git commit -m "Fix lint issue in health routes"
 Then in Claude Code:
 
 ```
-/zerg:merge
+/mahabharatha:merge
 ```
 
 **Option B: Retry the task.** If the issue is in the worker's output, retry the task so the worker produces corrected code.
 
 ```
-/zerg:retry TASK-004
+/mahabharatha:retry TASK-004
 ```
 
 ### When Everything Passes
@@ -302,28 +302,28 @@ Level 1 (Foundation):   [====================] COMPLETE (2/2)
 Level 2 (Core):         [====================] COMPLETE (2/2)
 Level 3 (Testing):      [====================] COMPLETE (1/1)
 
-All tasks complete. Code on branch: zerg/health-check/base
+All tasks complete. Code on branch: mahabharatha/health-check/base
 ```
 
 ---
 
 ## Phase 5: Integrate the Result
 
-The finished code is on the `zerg/health-check/base` branch. Integrate it into your main branch.
+The finished code is on the `mahabharatha/health-check/base` branch. Integrate it into your main branch.
 
 ```bash
 # Review what changed
-git log main..zerg/health-check/base --oneline
+git log main..mahabharatha/health-check/base --oneline
 
 # Merge into main
 git checkout main
-git merge zerg/health-check/base -m "feat: add health check endpoint"
+git merge mahabharatha/health-check/base -m "feat: add health check endpoint"
 ```
 
 Verify the feature works:
 
 ```bash
-# Run the tests that ZERG created
+# Run the tests that MAHABHARATHA created
 pytest tests/test_health.py -v
 
 # Start the app and test manually
@@ -347,10 +347,10 @@ Expected response:
 
 ### Clean Up
 
-Remove ZERG's working artifacts:
+Remove MAHABHARATHA's working artifacts:
 
 ```
-/zerg:cleanup
+/mahabharatha:cleanup
 ```
 
 This removes worktrees, worker branches, and temporary state files. The spec files in `.gsd/specs/health-check/` are preserved for reference.
@@ -359,7 +359,7 @@ This removes worktrees, worker branches, and temporary state files. The spec fil
 
 ## What You Built
 
-Here is a summary of what ZERG produced:
+Here is a summary of what MAHABHARATHA produced:
 
 | File | Task | Purpose |
 |------|------|---------|
@@ -378,11 +378,11 @@ The work was distributed across 2 workers and 3 levels. Level 1 and Level 2 each
 
 ### Right-Size Your Features
 
-ZERG works best with features that decompose into 5 to 15 tasks. Smaller features (1 to 3 tasks) have more coordination overhead than benefit. Larger features (20+ tasks) work but are harder to review at the design stage.
+MAHABHARATHA works best with features that decompose into 5 to 15 tasks. Smaller features (1 to 3 tasks) have more coordination overhead than benefit. Larger features (20+ tasks) work but are harder to review at the design stage.
 
 ### Write Clear Requirements
 
-The quality of ZERG's output depends directly on the quality of the requirements. During the planning phase:
+The quality of MAHABHARATHA's output depends directly on the quality of the requirements. During the planning phase:
 
 - Be specific about data formats, error handling, and edge cases.
 - Call out what is out of scope explicitly.
@@ -398,7 +398,7 @@ The design phase is your last chance to influence the architecture before worker
 
 ### Use Brainstorm for Discovery
 
-If you are starting a new project and do not have a clear feature list, try `/zerg:brainstorm` before planning. It conducts competitive research and structured questioning to help you identify and prioritize features. The output includes GitHub issues that you can feed directly into `/zerg:plan`.
+If you are starting a new project and do not have a clear feature list, try `/mahabharatha:brainstorm` before planning. It conducts competitive research and structured questioning to help you identify and prioritize features. The output includes GitHub issues that you can feed directly into `/mahabharatha:plan`.
 
 ### Start with Fewer Workers
 
@@ -406,13 +406,13 @@ For your first few features, use 2 to 3 workers. This makes the execution easier
 
 ### Use the Dashboard
 
-The TUI dashboard (`zerg status --dashboard`) gives you real-time visibility into what each worker is doing. It is significantly more useful than the one-shot `/zerg:status` command during a rush.
+The TUI dashboard (`mahabharatha status --dashboard`) gives you real-time visibility into what each worker is doing. It is significantly more useful than the one-shot `/mahabharatha:status` command during a kurukshetra.
 
 ---
 
 ## Next Steps
 
 - [[Getting Started]] -- Review core concepts in depth.
-- Command Reference -- Full documentation for all 26 `/zerg:*` commands.
+- Command Reference -- Full documentation for all 26 `/mahabharatha:*` commands.
 - Configuration -- Customize quality gates, worker limits, and resource constraints.
 - Troubleshooting -- Solutions for common problems.

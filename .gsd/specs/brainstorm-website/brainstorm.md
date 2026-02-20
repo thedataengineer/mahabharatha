@@ -1,7 +1,7 @@
-# Brainstorm Summary: ZERG Website
+# Brainstorm Summary: MAHABHARATHA Website
 
 ## Session
-- **Domain**: zerg-website
+- **Domain**: mahabharatha-website
 - **Date**: 2026-02-07
 - **Mode**: Socratic (single-question)
 
@@ -25,7 +25,7 @@ Custom single-page landing site replacing the broken MkDocs deployment. Pure HTM
 - Repurpose existing docs.yml workflow
 - Dark-first with light mode toggle
 - Docs link to GitHub wiki (commands cheat sheet on-site only)
-- Subtle Zerg theme nods (palette, logo) — not immersive
+- Subtle Mahabharatha theme nods (palette, logo) — not immersive
 - Hero: commanding statement + three glass pillar cards
 - Visual: dark + glassmorphism + nav bar + deep scroll + animated code + FAQ accordion
 
@@ -34,4 +34,4 @@ Custom single-page landing site replacing the broken MkDocs deployment. Pure HTM
 - superclaude.netlify.app — nav bar, light/dark toggle, clean card grid, quick start
 
 ## Epic
-#204 — https://github.com/rocklambros/zerg/issues/204
+#204 — https://github.com/rocklambros/mahabharatha/issues/204

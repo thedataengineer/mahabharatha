@@ -4,8 +4,8 @@
   "workers": [
     {
       "id": 0,
-      "branch": "zerg/orchestrator-coordination-fix/worker-0",
-      "worktree": "../.zerg-worktrees/orchestrator-coordination-fix/worker-0",
+      "branch": "mahabharatha/orchestrator-coordination-fix/worker-0",
+      "worktree": "../.mahabharatha-worktrees/orchestrator-coordination-fix/worker-0",
       "port": 49152,
       "assignments": {
         "1": ["OCF-L1-001", "OCF-L1-002", "OCF-L1-003"],

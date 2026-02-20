@@ -1,4 +1,4 @@
-"""Unit tests for ZERG debug command — thinned Phase 4/5."""
+"""Unit tests for MAHABHARATHA debug command — thinned Phase 4/5."""
 
 from __future__ import annotations
 

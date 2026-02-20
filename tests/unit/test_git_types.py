@@ -1,4 +1,4 @@
-"""Tests for ZERG git types."""
+"""Tests for MAHABHARATHA git types."""
 
 import pytest
 

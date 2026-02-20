@@ -4,7 +4,7 @@
 - **Feature**: fix-issues-78-91
 - **Status**: REVIEW
 - **Created**: 2026-02-02
-- **Author**: /zerg:plan
+- **Author**: /mahabharatha:plan
 
 ---
 
@@ -14,7 +14,7 @@
 
 | # | Title | Reason |
 |---|-------|--------|
-| #80 | worker_main.py not used by launcher | FALSE POSITIVE — invoked dynamically via `python -m zerg.worker_main` at launcher.py:493 and :764 |
+| #80 | worker_main.py not used by launcher | FALSE POSITIVE — invoked dynamically via `python -m mahabharatha.worker_main` at launcher.py:493 and :764 |
 | #89 | TODO stubs in test_cmd.py | BY DESIGN — these are template strings for generated test files, not incomplete code |
 
 ### Issues to FIX (grouped by size)
@@ -105,7 +105,7 @@ Current state: resolver → env vars → launcher → context plugin guidance (t
 All 7218 existing tests must continue to pass.
 
 ### NFR-2: validate_commands passes
-`python -m zerg.validate_commands` must pass (no orphaned modules, no drift).
+`python -m mahabharatha.validate_commands` must pass (no orphaned modules, no drift).
 
 ### NFR-3: CI compatibility
 All fixes must work in both local (macOS) and CI (Ubuntu) environments.
@@ -136,7 +136,7 @@ Large:                 #78
 ## Acceptance Criteria
 
 - [ ] Issues #80, #89 closed with comments
-- [ ] `grep -rn 'ast\.Str' zerg/` returns empty
+- [ ] `grep -rn 'ast\.Str' mahabharatha/` returns empty
 - [ ] `pytest tests/ -W error::RuntimeWarning -q` passes (no unawaited coroutine)
 - [ ] `--uc`, `--compact`, `--loop` rejected by CLI (not accepted at all)
 - [ ] `--files` rejected by refactor and analyze commands

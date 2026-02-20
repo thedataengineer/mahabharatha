@@ -1,4 +1,4 @@
-"""ZERG v2 State Persistence - JSON-based state management."""
+"""MAHABHARATHA v2 State Persistence - JSON-based state management."""
 
 import json
 import os
@@ -170,7 +170,7 @@ class ExecutionState:
             checkpoints=data.get("checkpoints", []),
         )
 
-    def save(self, path: str = ".zerg/state.json") -> None:
+    def save(self, path: str = ".mahabharatha/state.json") -> None:
         """Atomically save state to disk."""
         data = self.to_dict()
 
@@ -187,7 +187,7 @@ class ExecutionState:
         atomic_write(path, json.dumps(data, indent=2))
 
     @classmethod
-    def load(cls, path: str = ".zerg/state.json") -> "ExecutionState | None":
+    def load(cls, path: str = ".mahabharatha/state.json") -> "ExecutionState | None":
         """Load state from disk, validate against schema."""
         path_obj = Path(path)
         if not path_obj.exists():

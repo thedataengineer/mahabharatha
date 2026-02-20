@@ -1,4 +1,4 @@
-"""Escalation subsystem for ZERG workers — ambiguous failure reporting."""
+"""Escalation subsystem for MAHABHARATHA workers — ambiguous failure reporting."""
 
 from __future__ import annotations
 

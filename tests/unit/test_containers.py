@@ -1,4 +1,4 @@
-"""Tests for ZERG containers module."""
+"""Tests for MAHABHARATHA containers module."""
 
 import subprocess
 from pathlib import Path

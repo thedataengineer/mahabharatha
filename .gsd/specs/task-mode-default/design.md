@@ -4,14 +4,14 @@
 - **Feature**: task-mode-default
 - **Status**: APPROVED
 - **Created**: 2026-02-05
-- **Author**: /zerg:design
+- **Author**: /mahabharatha:design
 
 ---
 
 ## 1. Overview
 
 ### 1.1 Summary
-Simplify `/zerg:rush` mode selection: task mode becomes the default, container mode requires explicit `--mode container`. Remove devcontainer auto-detection logic from Python code.
+Simplify `/mahabharatha:kurukshetra` mode selection: task mode becomes the default, container mode requires explicit `--mode container`. Remove devcontainer auto-detection logic from Python code.
 
 ### 1.2 Goals
 - Task mode as default (simplest mental model)
@@ -30,7 +30,7 @@ Simplify `/zerg:rush` mode selection: task mode becomes the default, container m
 ### 2.1 High-Level Design
 
 ```
-User invokes /zerg:rush
+User invokes /mahabharatha:kurukshetra
          │
          ▼
     ┌─────────────────────────────┐
@@ -49,15 +49,15 @@ User invokes /zerg:rush
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| Documentation | Define mode selection rules | rush.md, rush.core.md, rush.details.md |
+| Documentation | Define mode selection rules | kurukshetra.md, kurukshetra.core.md, kurukshetra.details.md |
 | Python auto-detect | Always return SUBPROCESS | launcher_configurator.py |
-| Config | Document default | .zerg/config.yaml |
+| Config | Document default | .mahabharatha/config.yaml |
 | Unit tests | Verify new behavior | test_launcher_configurator.py |
 | Integration tests | Update/remove auto-detect tests | test_container_launcher.py |
 
 ### 2.3 Data Flow
 
-1. User runs `/zerg:rush` or `zerg rush`
+1. User runs `/mahabharatha:kurukshetra` or `mahabharatha kurukshetra`
 2. Mode determined: explicit flag > "auto" (= SUBPROCESS)
 3. For SUBPROCESS in slash command context → task mode (Task tool subagents)
 4. For SUBPROCESS in CLI context → subprocess mode (Python processes)
@@ -69,7 +69,7 @@ User invokes /zerg:rush
 
 ### 3.1 Python Changes
 
-**File**: `zerg/launcher_configurator.py`
+**File**: `mahabharatha/launcher_configurator.py`
 
 ```python
 def _auto_detect_launcher_type(self) -> LauncherType:
@@ -84,7 +84,7 @@ Remove lines 129-155 (devcontainer check, Docker image check).
 
 ### 3.2 Documentation Changes
 
-**File**: `rush.details.md` (lines 163-167)
+**File**: `kurukshetra.details.md` (lines 163-167)
 
 From:
 ```markdown
@@ -102,7 +102,7 @@ Auto-detection logic:
 2. Otherwise → task mode (default)
 ```
 
-**File**: `rush.core.md` and `rush.md` help text (line ~230)
+**File**: `kurukshetra.core.md` and `kurukshetra.md` help text (line ~230)
 
 From:
 ```
@@ -116,7 +116,7 @@ To:
 
 ### 3.3 Config Changes
 
-**File**: `.zerg/config.yaml` (line 13)
+**File**: `.mahabharatha/config.yaml` (line 13)
 
 Change comment to clarify task mode is implicit default:
 ```yaml
@@ -158,11 +158,11 @@ launcher_type: subprocess  # Python fallback; task mode is implicit default for 
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| zerg/data/commands/rush.details.md | TASK-001 | modify |
-| zerg/data/commands/rush.core.md | TASK-002 | modify |
-| zerg/data/commands/rush.md | TASK-003 | modify |
-| zerg/launcher_configurator.py | TASK-004 | modify |
-| .zerg/config.yaml | TASK-005 | modify |
+| mahabharatha/data/commands/kurukshetra.details.md | TASK-001 | modify |
+| mahabharatha/data/commands/kurukshetra.core.md | TASK-002 | modify |
+| mahabharatha/data/commands/kurukshetra.md | TASK-003 | modify |
+| mahabharatha/launcher_configurator.py | TASK-004 | modify |
+| .mahabharatha/config.yaml | TASK-005 | modify |
 | tests/unit/test_launcher_configurator.py | TASK-006 | modify |
 | tests/integration/test_container_launcher.py | TASK-007 | modify |
 
@@ -170,9 +170,9 @@ launcher_type: subprocess  # Python fallback; task mode is implicit default for 
 
 ```mermaid
 graph TD
-    T001[TASK-001: rush.details.md]
-    T002[TASK-002: rush.core.md]
-    T003[TASK-003: rush.md]
+    T001[TASK-001: kurukshetra.details.md]
+    T002[TASK-002: kurukshetra.core.md]
+    T003[TASK-003: kurukshetra.md]
     T004[TASK-004: launcher_configurator.py]
     T005[TASK-005: config.yaml]
     T006[TASK-006: unit tests]
@@ -193,7 +193,7 @@ Level 2 tasks (TASK-006, TASK-007) depend on TASK-004 (Python changes).
 |------|-------------|--------|------------|
 | Breaking explicit --mode container | Low | High | Preserve explicit mode handling |
 | Tests fail | Low | Medium | Update tests to expect new behavior |
-| Documentation inconsistency | Low | Low | Update all 3 rush files together |
+| Documentation inconsistency | Low | Low | Update all 3 kurukshetra files together |
 
 ---
 

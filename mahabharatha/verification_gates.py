@@ -1,4 +1,4 @@
-"""Verification gate pipeline for ZERG."""
+"""Verification gate pipeline for MAHABHARATHA."""
 
 from __future__ import annotations
 

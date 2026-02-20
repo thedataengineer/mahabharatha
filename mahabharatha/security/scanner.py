@@ -1,4 +1,4 @@
-"""Security scanning functions for ZERG.
+"""Security scanning functions for MAHABHARATHA.
 
 Migrated from mahabharatha/security.py — contains all scan functions and constants.
 Upgraded in TASK-004 to use PATTERN_REGISTRY from patterns.py and return
@@ -94,7 +94,7 @@ HOOK_PATTERNS = {
         "merge_conflict": r"^(<{7}|={7}|>{7})",
         "print_stmt": r"^[^#]*\bprint\s*\(",
     },
-    # ZERG-specific patterns
+    # MAHABHARATHA-specific patterns
     "mahabharatha": {
         "branch_name": r"^mahabharatha/[a-z0-9-]+/worker-[0-9]+$",
         "localhost": r"(localhost|127\.0\.0\.1|0\.0\.0\.0):[0-9]+",

@@ -19,4 +19,4 @@
 - [ ] Tests pass (`pytest`)
 - [ ] CHANGELOG.md updated under `[Unreleased]` (or `skip-changelog` label applied)
 - [ ] Linting clean (`ruff check . && ruff format --check .`)
-- [ ] Type checking clean (`mypy zerg/`)
+- [ ] Type checking clean (`mypy mahabharatha/`)

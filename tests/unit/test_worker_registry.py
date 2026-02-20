@@ -1,4 +1,4 @@
-"""Tests for ZERG WorkerRegistry module."""
+"""Tests for MAHABHARATHA WorkerRegistry module."""
 
 import threading
 

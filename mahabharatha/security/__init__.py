@@ -1,4 +1,4 @@
-"""Unified security package for ZERG.
+"""Unified security package for MAHABHARATHA.
 
 This package consolidates all security logic:
 - scanner.py: Scan functions and pattern constants (from security.py)

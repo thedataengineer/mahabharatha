@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 Rush Command."""
+"""Tests for MAHABHARATHA v2 Kurukshetra Command."""
 
 import json
 import sys
@@ -13,7 +13,7 @@ class TestExecutionResult:
 
     def test_execution_result_creation(self):
         """Test ExecutionResult can be created."""
-        from rush import ExecutionResult
+        from kurukshetra import ExecutionResult
 
         result = ExecutionResult(
             validated=True,
@@ -27,7 +27,7 @@ class TestExecutionResult:
 
     def test_execution_result_defaults(self):
         """Test ExecutionResult default values."""
-        from rush import ExecutionResult
+        from kurukshetra import ExecutionResult
 
         result = ExecutionResult(validated=True)
         assert result.execution_id is None
@@ -41,14 +41,14 @@ class TestRushCommandInit:
 
     def test_rush_command_creation(self):
         """Test RushCommand can be created."""
-        from rush import RushCommand
+        from kurukshetra import RushCommand
 
         rc = RushCommand()
         assert rc is not None
 
     def test_rush_command_has_orchestrator(self):
         """Test RushCommand has orchestrator reference."""
-        from rush import RushCommand
+        from kurukshetra import RushCommand
 
         rc = RushCommand()
         assert hasattr(rc, "orchestrator")
@@ -59,7 +59,7 @@ class TestDryRun:
 
     def test_dry_run_validates_graph(self, tmp_path):
         """Test dry run validates task graph."""
-        from rush import RushCommand
+        from kurukshetra import RushCommand
 
         # Create a valid task graph
         graph_data = {
@@ -88,7 +88,7 @@ class TestDryRun:
 
     def test_dry_run_reports_validation_errors(self, tmp_path):
         """Test dry run reports validation errors (circular dependency detected at load)."""
-        from rush import RushCommand
+        from kurukshetra import RushCommand
 
         # Create an invalid task graph (circular dependency)
         # Cycles are detected during graph loading and result in GraphLoadError
@@ -134,7 +134,7 @@ class TestFeatureName:
 
     def test_get_feature_name_from_graph_path(self, tmp_path):
         """Test extracting feature name from graph path."""
-        from rush import RushCommand
+        from kurukshetra import RushCommand
 
         # Create path like .gsd/specs/my-feature/task-graph.json
         feature_dir = tmp_path / ".gsd" / "specs" / "my-feature"
@@ -148,7 +148,7 @@ class TestFeatureName:
 
     def test_get_feature_name_default(self, tmp_path):
         """Test default feature name."""
-        from rush import RushCommand
+        from kurukshetra import RushCommand
 
         graph_file = tmp_path / "task-graph.json"
         graph_file.write_text('{"tasks": []}')
@@ -161,10 +161,10 @@ class TestFeatureName:
 class TestResumeExecution:
     """Tests for resume functionality."""
 
-    @patch("rush.ExecutionState")
+    @patch("kurukshetra.ExecutionState")
     def test_resume_loads_existing_state(self, mock_state_class, tmp_path):
         """Test resume loads existing execution state."""
-        from rush import RushCommand
+        from kurukshetra import RushCommand
 
         # Create mock state
         mock_state = MagicMock()
@@ -195,7 +195,7 @@ class TestGraphLoading:
 
     def test_load_graph_from_file(self, tmp_path):
         """Test loading task graph from file."""
-        from rush import RushCommand
+        from kurukshetra import RushCommand
 
         graph_data = {
             "tasks": [
@@ -220,7 +220,7 @@ class TestGraphLoading:
 
     def test_load_graph_missing_file(self, tmp_path):
         """Test loading missing graph file raises error."""
-        from rush import GraphLoadError, RushCommand
+        from kurukshetra import GraphLoadError, RushCommand
 
         graph_file = tmp_path / "nonexistent.json"
 
@@ -237,14 +237,14 @@ class TestWorkerCount:
 
     def test_default_worker_count(self):
         """Test default worker count."""
-        from rush import RushCommand
+        from kurukshetra import RushCommand
 
         rc = RushCommand()
         assert rc.default_workers == 5
 
     def test_custom_worker_count(self, tmp_path):
         """Test custom worker count."""
-        from rush import RushCommand
+        from kurukshetra import RushCommand
 
         graph_file = tmp_path / "task-graph.json"
         graph_file.write_text('{"tasks": []}')
@@ -266,7 +266,7 @@ class TestExecutionSummary:
 
     def test_summary_includes_task_counts(self, tmp_path):
         """Test summary includes task counts."""
-        from rush import RushCommand
+        from kurukshetra import RushCommand
 
         graph_data = {
             "tasks": [

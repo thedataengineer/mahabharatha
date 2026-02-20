@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 Test Runner Command."""
+"""Tests for MAHABHARATHA v2 Test Runner Command."""
 
 import sys
 from pathlib import Path
@@ -86,7 +86,7 @@ class TestFrameworkDetector:
         from test_runner import FrameworkDetector
 
         detector = FrameworkDetector()
-        # Current project has pytest - use parent of .zerg
+        # Current project has pytest - use parent of .mahabharatha
         project_root = Path(__file__).parent.parent.parent
         frameworks = detector.detect(project_root)
         # May not detect if pyproject.toml doesn't exist, check for any detection

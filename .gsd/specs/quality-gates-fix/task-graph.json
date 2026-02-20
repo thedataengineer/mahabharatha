@@ -10,7 +10,7 @@
     {
       "id": "L1-001",
       "title": "Configure ruff in pyproject.toml",
-      "description": "Update ruff configuration: line-length=120, exclude .zerg and tests/fixtures, select E/F/I/UP rules, fixable=ALL",
+      "description": "Update ruff configuration: line-length=120, exclude .mahabharatha and tests/fixtures, select E/F/I/UP rules, fixable=ALL",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
@@ -20,14 +20,14 @@
         "read": []
       },
       "verification": {
-        "command": "grep -q 'line-length = 120' pyproject.toml && grep -q 'exclude.*\\.zerg' pyproject.toml",
+        "command": "grep -q 'line-length = 120' pyproject.toml && grep -q 'exclude.*\\.mahabharatha' pyproject.toml",
         "timeout_seconds": 10
       },
       "estimate_minutes": 5,
       "skills_required": ["python", "toml"],
       "consumers": ["L2-001"],
       "integration_test": null,
-      "context": "## Spec Context\nR1: Line length 120 chars, exclude .zerg/ and tests/fixtures/, select E/F/I/UP rules.\n\n## Changes Required\n1. Set line-length = 120\n2. Add exclude = [\".zerg\", \"tests/fixtures\"]\n3. Set select = [\"E\", \"F\", \"I\", \"UP\"]\n4. Set fixable = [\"ALL\"]"
+      "context": "## Spec Context\nR1: Line length 120 chars, exclude .mahabharatha/ and tests/fixtures/, select E/F/I/UP rules.\n\n## Changes Required\n1. Set line-length = 120\n2. Add exclude = [\".mahabharatha\", \"tests/fixtures\"]\n3. Set select = [\"E\", \"F\", \"I\", \"UP\"]\n4. Set fixable = [\"ALL\"]"
     },
     {
       "id": "L2-001",
@@ -60,7 +60,7 @@
       "dependencies": ["L2-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/**/*.py", "tests/**/*.py"],
+        "modify": ["mahabharatha/**/*.py", "tests/**/*.py"],
         "read": []
       },
       "verification": {

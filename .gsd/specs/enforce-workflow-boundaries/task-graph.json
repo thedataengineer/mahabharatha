@@ -16,11 +16,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/plan.md"],
+        "modify": ["mahabharatha/data/commands/plan.md"],
         "read": []
       },
       "verification": {
-        "command": "grep -q 'WORKFLOW BOUNDARY' zerg/data/commands/plan.md && grep -q 'MUST NEVER' zerg/data/commands/plan.md",
+        "command": "grep -q 'WORKFLOW BOUNDARY' mahabharatha/data/commands/plan.md && grep -q 'MUST NEVER' mahabharatha/data/commands/plan.md",
         "timeout_seconds": 10
       },
       "estimate_minutes": 3,
@@ -38,11 +38,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/plan.core.md"],
+        "modify": ["mahabharatha/data/commands/plan.core.md"],
         "read": []
       },
       "verification": {
-        "command": "grep -q 'WORKFLOW BOUNDARY' zerg/data/commands/plan.core.md && grep -q 'MUST NEVER' zerg/data/commands/plan.core.md",
+        "command": "grep -q 'WORKFLOW BOUNDARY' mahabharatha/data/commands/plan.core.md && grep -q 'MUST NEVER' mahabharatha/data/commands/plan.core.md",
         "timeout_seconds": 10
       },
       "estimate_minutes": 3,
@@ -60,11 +60,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/brainstorm.md"],
+        "modify": ["mahabharatha/data/commands/brainstorm.md"],
         "read": []
       },
       "verification": {
-        "command": "grep -q 'WORKFLOW BOUNDARY' zerg/data/commands/brainstorm.md && grep -q 'MUST NEVER' zerg/data/commands/brainstorm.md",
+        "command": "grep -q 'WORKFLOW BOUNDARY' mahabharatha/data/commands/brainstorm.md && grep -q 'MUST NEVER' mahabharatha/data/commands/brainstorm.md",
         "timeout_seconds": 10
       },
       "estimate_minutes": 3,
@@ -82,11 +82,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/brainstorm.core.md"],
+        "modify": ["mahabharatha/data/commands/brainstorm.core.md"],
         "read": []
       },
       "verification": {
-        "command": "grep -q 'WORKFLOW BOUNDARY' zerg/data/commands/brainstorm.core.md && grep -q 'MUST NEVER' zerg/data/commands/brainstorm.core.md",
+        "command": "grep -q 'WORKFLOW BOUNDARY' mahabharatha/data/commands/brainstorm.core.md && grep -q 'MUST NEVER' mahabharatha/data/commands/brainstorm.core.md",
         "timeout_seconds": 10
       },
       "estimate_minutes": 3,

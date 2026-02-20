@@ -19,13 +19,13 @@
 ### F2: test_metrics_computed_after_level_completion
 - **File**: tests/integration/test_orchestrator_integration.py:678
 - **Type**: TEST BUG
-- **Root Cause**: Patches `zerg.orchestrator.MetricsCollector` but `_on_level_complete_handler` delegates to `LevelCoordinator.handle_level_complete()` which calls `MetricsCollector` from `zerg.level_coordinator` (line 238). Wrong patch location.
-- **Fix**: Patch `zerg.level_coordinator.MetricsCollector` instead.
+- **Root Cause**: Patches `mahabharatha.orchestrator.MetricsCollector` but `_on_level_complete_handler` delegates to `LevelCoordinator.handle_level_complete()` which calls `MetricsCollector` from `mahabharatha.level_coordinator` (line 238). Wrong patch location.
+- **Fix**: Patch `mahabharatha.level_coordinator.MetricsCollector` instead.
 
 ### F3: test_task_failure_blocks_level
 - **File**: tests/integration/test_rush_flow.py:145
 - **Type**: SOURCE BUG
-- **Root Cause**: `LevelController.is_level_complete()` at `zerg/levels.py:220-223` treats failed tasks as resolved (`completed + failed == total`). Should only count completed tasks.
+- **Root Cause**: `LevelController.is_level_complete()` at `mahabharatha/levels.py:220-223` treats failed tasks as resolved (`completed + failed == total`). Should only count completed tasks.
 - **Fix**: Change `is_level_complete` to require all tasks completed (not just resolved). Add separate `is_level_resolved` method for the "all tasks terminal" check.
 
 ## Acceptance Criteria

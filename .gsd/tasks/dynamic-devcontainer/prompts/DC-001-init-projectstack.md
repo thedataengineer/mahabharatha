@@ -8,15 +8,15 @@ Replace the single-type `detect_project_type()` function with `ProjectStack` fro
 
 ## Files Owned
 
-- `zerg/commands/init.py` (modify)
+- `mahabharatha/commands/init.py` (modify)
 
 ## Files to Read
 
-- `zerg/security_rules.py` (reference ProjectStack, detect_project_stack)
+- `mahabharatha/security_rules.py` (reference ProjectStack, detect_project_stack)
 
 ## Implementation Steps
 
-1. Import `detect_project_stack` and `ProjectStack` from `zerg.security_rules`
+1. Import `detect_project_stack` and `ProjectStack` from `mahabharatha.security_rules`
 2. Replace `detect_project_type()` call with `detect_project_stack(Path("."))`
 3. Update `create_config()` to accept `ProjectStack` instead of `str | None`
 4. Update console output to show all detected languages, frameworks, databases
@@ -32,7 +32,7 @@ if project_type:
     console.print(f"Detected project type: [cyan]{project_type}[/cyan]")
 
 # New
-from zerg.security_rules import detect_project_stack, ProjectStack
+from mahabharatha.security_rules import detect_project_stack, ProjectStack
 
 stack = detect_project_stack(Path("."))
 if stack.languages:
@@ -48,7 +48,7 @@ if stack.frameworks:
 ```bash
 cd /tmp && rm -rf test-dc && mkdir test-dc && cd test-dc
 touch requirements.txt package.json go.mod
-zerg init --no-security-rules 2>&1 | grep -E 'python|javascript|go'
+mahabharatha init --no-security-rules 2>&1 | grep -E 'python|javascript|go'
 # Should show all three languages
 ```
 
@@ -58,4 +58,4 @@ zerg init --no-security-rules 2>&1 | grep -E 'python|javascript|go'
 - [ ] Init output shows all detected languages
 - [ ] Init output shows detected frameworks if any
 - [ ] Config still saves project_type for backwards compat (use primary language)
-- [ ] No ruff errors: `ruff check zerg/commands/init.py`
+- [ ] No ruff errors: `ruff check mahabharatha/commands/init.py`

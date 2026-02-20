@@ -13,50 +13,50 @@
 
 | File | Stmts | Uncovered |
 |------|-------|-----------|
-| `zerg/doc_engine/renderer.py` | 210 | 210 |
-| `zerg/doc_engine/extractor.py` | 135 | 135 |
-| `zerg/doc_engine/crossref.py` | 134 | 134 |
-| `zerg/doc_engine/dependencies.py` | 112 | 112 |
-| `zerg/doc_engine/mermaid.py` | 99 | 99 |
-| `zerg/doc_engine/publisher.py` | 92 | 92 |
-| `zerg/doc_engine/detector.py` | 91 | 91 |
-| `zerg/doc_engine/sidebar.py` | 47 | 47 |
-| `zerg/doc_engine/templates.py` | 7 | 7 |
-| `zerg/doc_engine/__init__.py` | 3 | 3 |
+| `mahabharatha/doc_engine/renderer.py` | 210 | 210 |
+| `mahabharatha/doc_engine/extractor.py` | 135 | 135 |
+| `mahabharatha/doc_engine/crossref.py` | 134 | 134 |
+| `mahabharatha/doc_engine/dependencies.py` | 112 | 112 |
+| `mahabharatha/doc_engine/mermaid.py` | 99 | 99 |
+| `mahabharatha/doc_engine/publisher.py` | 92 | 92 |
+| `mahabharatha/doc_engine/detector.py` | 91 | 91 |
+| `mahabharatha/doc_engine/sidebar.py` | 47 | 47 |
+| `mahabharatha/doc_engine/templates.py` | 7 | 7 |
+| `mahabharatha/doc_engine/__init__.py` | 3 | 3 |
 
 ### Tier 2: Core infrastructure (67-71%) — 446 lines uncovered
 
 | File | Stmts | Uncovered | Coverage |
 |------|-------|-----------|----------|
-| `zerg/launcher.py` | 688 | 226 | 67% |
-| `zerg/orchestrator.py` | 503 | 152 | 70% |
-| `zerg/containers.py` | 232 | 68 | 71% |
+| `mahabharatha/launcher.py` | 688 | 226 | 67% |
+| `mahabharatha/orchestrator.py` | 503 | 152 | 70% |
+| `mahabharatha/containers.py` | 232 | 68 | 71% |
 
 ### Tier 3: Commands (16-76%) — 528 lines uncovered
 
 | File | Stmts | Uncovered | Coverage |
 |------|-------|-----------|----------|
-| `zerg/commands/debug.py` | 731 | 172 | 76% |
-| `zerg/commands/install_commands.py` | 154 | 122 | 21% |
-| `zerg/commands/wiki.py` | 90 | 76 | 16% |
-| `zerg/commands/cleanup.py` | 256 | 72 | 72% |
-| `zerg/commands/rush.py` | 190 | 46 | 76% |
-| `zerg/commands/document.py` | 54 | 40 | 26% |
+| `mahabharatha/commands/debug.py` | 731 | 172 | 76% |
+| `mahabharatha/commands/install_commands.py` | 154 | 122 | 21% |
+| `mahabharatha/commands/wiki.py` | 90 | 76 | 16% |
+| `mahabharatha/commands/cleanup.py` | 256 | 72 | 72% |
+| `mahabharatha/commands/kurukshetra.py` | 190 | 46 | 76% |
+| `mahabharatha/commands/document.py` | 54 | 40 | 26% |
 
 ### Tier 4: Adapters & utilities (25-73%) — 350 lines uncovered
 
 | File | Stmts | Uncovered | Coverage |
 |------|-------|-----------|----------|
-| `zerg/performance/adapters/jscpd_adapter.py` | 66 | 47 | 29% |
-| `zerg/performance/adapters/pipdeptree_adapter.py` | 60 | 45 | 25% |
-| `zerg/performance/adapters/cloc_adapter.py` | 47 | 33 | 30% |
-| `zerg/performance/adapters/deptry_adapter.py` | 42 | 26 | 38% |
-| `zerg/performance/stack_detector.py` | 103 | 28 | 73% |
-| `zerg/spec_loader.py` | 129 | 43 | 67% |
-| `zerg/gates.py` | 120 | 41 | 66% |
-| `zerg/env_diagnostics.py` | 254 | 58 | 77% |
-| `zerg/render_utils.py` | 61 | 20 | 67% |
-| `zerg/retry_backoff.py` | 15 | 5 | 67% |
+| `mahabharatha/performance/adapters/jscpd_adapter.py` | 66 | 47 | 29% |
+| `mahabharatha/performance/adapters/pipdeptree_adapter.py` | 60 | 45 | 25% |
+| `mahabharatha/performance/adapters/cloc_adapter.py` | 47 | 33 | 30% |
+| `mahabharatha/performance/adapters/deptry_adapter.py` | 42 | 26 | 38% |
+| `mahabharatha/performance/stack_detector.py` | 103 | 28 | 73% |
+| `mahabharatha/spec_loader.py` | 129 | 43 | 67% |
+| `mahabharatha/gates.py` | 120 | 41 | 66% |
+| `mahabharatha/env_diagnostics.py` | 254 | 58 | 77% |
+| `mahabharatha/render_utils.py` | 61 | 20 | 67% |
+| `mahabharatha/retry_backoff.py` | 15 | 5 | 67% |
 
 ### Tier 5: Near-complete (77-92%) — ~200 lines uncovered
 
@@ -78,7 +78,7 @@ All tasks are Level 1 (independent — each tests different source files). Only 
 | COV-008 | commands/debug.py uncovered paths | `tests/unit/test_debug_coverage.py` | commands/debug.py | 172 |
 | COV-009 | commands/install_commands.py | `tests/unit/test_install_commands.py` | commands/install_commands.py | 122 |
 | COV-010 | commands/wiki.py + document.py | `tests/unit/test_wiki_document.py` | commands/wiki.py, commands/document.py | 116 |
-| COV-011 | commands/cleanup.py + rush.py | `tests/unit/test_cleanup_rush_coverage.py` | commands/cleanup.py, commands/rush.py | 118 |
+| COV-011 | commands/cleanup.py + kurukshetra.py | `tests/unit/test_cleanup_rush_coverage.py` | commands/cleanup.py, commands/kurukshetra.py | 118 |
 | COV-012 | Performance adapters (jscpd, pipdeptree, cloc, deptry) | `tests/unit/test_perf_adapters_coverage.py` | 4 adapter files | 151 |
 | COV-013 | Utilities (spec_loader, gates, render_utils, retry_backoff, stack_detector) | `tests/unit/test_utils_coverage.py` | 5 utility files | 137 |
 | COV-014 | Near-complete files (worker_manager, worker_protocol, state, logging, etc.) | `tests/unit/test_near_complete_coverage.py` | ~10 files at 77-92% | ~200 |
@@ -101,7 +101,7 @@ Each test file is created by exactly one task. No source files are modified — 
 ## Verification
 
 Per-task: `python -m pytest {test_file} -v --cov={source_module} --cov-report=term-missing`
-Final: `python -m pytest tests/ --cov=zerg --cov-report=term-missing | grep TOTAL`
+Final: `python -m pytest tests/ --cov=mahabharatha --cov-report=term-missing | grep TOTAL`
 
 ## Risk Assessment
 

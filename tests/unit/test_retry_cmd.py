@@ -1,4 +1,4 @@
-"""Unit tests for ZERG retry command module.
+"""Unit tests for MAHABHARATHA retry command module.
 
 Thinned from 46 tests to cover unique code paths:
 - detect_feature (no dir, single file)

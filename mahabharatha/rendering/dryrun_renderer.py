@@ -366,11 +366,11 @@ class DryRunRenderer:
 
         console.print()
         if error_count > 0:
-            msg = f"\u2717 {error_count} error(s), {warning_count} warning(s) \u2014 not ready to rush"
+            msg = f"\u2717 {error_count} error(s), {warning_count} warning(s) \u2014 not ready to kurukshetra"
             console.print(f"[bold red]{msg}[/bold red]")
         elif warning_count > 0:
-            msg = f"\u26a0 {warning_count} warning(s) \u2014 ready to rush (with warnings)"
+            msg = f"\u26a0 {warning_count} warning(s) \u2014 ready to kurukshetra (with warnings)"
             console.print(f"[bold yellow]{msg}[/bold yellow]")
         else:
-            console.print("[bold green]\u2713 All checks passed \u2014 ready to rush[/bold green]")
+            console.print("[bold green]\u2713 All checks passed \u2014 ready to kurukshetra[/bold green]")
         console.print()

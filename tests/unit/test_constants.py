@@ -1,4 +1,4 @@
-"""Unit tests for ZERG constants module."""
+"""Unit tests for MAHABHARATHA constants module."""
 
 import pytest
 

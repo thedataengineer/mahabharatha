@@ -16,7 +16,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/launcher.py"],
+        "modify": ["mahabharatha/launcher.py"],
         "read": []
       },
       "acceptance_criteria": [
@@ -25,7 +25,7 @@
         "ALLOWED_ENV_VARS entry preserved"
       ],
       "verification": {
-        "command": "python -m pytest tests/unit/test_orchestrator.py tests/unit/test_orchestrator_recovery.py -x -q 2>/dev/null; grep -c 'feature' zerg/launcher.py | grep -v CLAUDE_CODE_TASK_LIST_ID || true",
+        "command": "python -m pytest tests/unit/test_orchestrator.py tests/unit/test_orchestrator_recovery.py -x -q 2>/dev/null; grep -c 'feature' mahabharatha/launcher.py | grep -v CLAUDE_CODE_TASK_LIST_ID || true",
         "timeout_seconds": 120
       }
     },
@@ -38,7 +38,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/worker_main.py"],
+        "modify": ["mahabharatha/worker_main.py"],
         "read": []
       },
       "acceptance_criteria": [
@@ -46,29 +46,29 @@
         "No other behavioral changes in worker env setup"
       ],
       "verification": {
-        "command": "grep -c CLAUDE_CODE_TASK_LIST_ID zerg/worker_main.py | grep '^0$'",
+        "command": "grep -c CLAUDE_CODE_TASK_LIST_ID mahabharatha/worker_main.py | grep '^0$'",
         "timeout_seconds": 30
       }
     },
     {
       "id": "TASK-L2-001",
-      "title": "Update rush.core.md container template and CLAUDE.md docs",
-      "description": "In zerg:rush.core.md line ~178, change -e CLAUDE_CODE_TASK_LIST_ID=$FEATURE to -e CLAUDE_CODE_TASK_LIST_ID=${CLAUDE_CODE_TASK_LIST_ID:-}. In CLAUDE.md, update rule 5 to document inheritance behavior and lower drift check #5 threshold from ≥5 to ≥4.",
+      "title": "Update kurukshetra.core.md container template and CLAUDE.md docs",
+      "description": "In mahabharatha:kurukshetra.core.md line ~178, change -e CLAUDE_CODE_TASK_LIST_ID=$FEATURE to -e CLAUDE_CODE_TASK_LIST_ID=${CLAUDE_CODE_TASK_LIST_ID:-}. In CLAUDE.md, update rule 5 to document inheritance behavior and lower drift check #5 threshold from ≥5 to ≥4.",
       "phase": "integration",
       "level": 2,
       "dependencies": ["TASK-L1-001", "TASK-L1-002"],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/zerg:rush.core.md", "CLAUDE.md"],
+        "modify": ["mahabharatha/data/commands/mahabharatha:kurukshetra.core.md", "CLAUDE.md"],
         "read": []
       },
       "acceptance_criteria": [
-        "rush.core.md uses ${CLAUDE_CODE_TASK_LIST_ID:-} not $FEATURE",
+        "kurukshetra.core.md uses ${CLAUDE_CODE_TASK_LIST_ID:-} not $FEATURE",
         "CLAUDE.md rule 5 documents inheritance",
         "Drift check #5 expects ≥4"
       ],
       "verification": {
-        "command": "grep 'CLAUDE_CODE_TASK_LIST_ID' zerg/data/commands/zerg:rush.core.md | grep -v FEATURE",
+        "command": "grep 'CLAUDE_CODE_TASK_LIST_ID' mahabharatha/data/commands/mahabharatha:kurukshetra.core.md | grep -v FEATURE",
         "timeout_seconds": 30
       }
     },
@@ -82,7 +82,7 @@
       "files": {
         "create": [],
         "modify": [],
-        "read": ["zerg/launcher.py", "zerg/worker_main.py", "zerg/data/commands/zerg:rush.core.md", "CLAUDE.md"]
+        "read": ["mahabharatha/launcher.py", "mahabharatha/worker_main.py", "mahabharatha/data/commands/mahabharatha:kurukshetra.core.md", "CLAUDE.md"]
       },
       "acceptance_criteria": [
         "All existing tests pass",

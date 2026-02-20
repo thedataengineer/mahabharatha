@@ -1,4 +1,4 @@
-"""Unit tests for ZERG rush command.
+"""Unit tests for MAHABHARATHA kurukshetra command.
 
 Thinned from 59 tests to ~25 tests. Retained:
 - find_task_graph: 3 (feature path, fallback, not found)
@@ -21,9 +21,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from click.testing import CliRunner
+from mahabharatha.commands.kurukshetra import find_task_graph, show_dry_run, show_summary
 
 from mahabharatha.cli import cli
-from mahabharatha.commands.rush import find_task_graph, show_dry_run, show_summary
 
 if TYPE_CHECKING:
     from pytest import MonkeyPatch
@@ -238,42 +238,42 @@ class TestShowDryRun:
 
 
 class TestRushCommand:
-    """Tests for rush CLI command."""
+    """Tests for kurukshetra CLI command."""
 
     def test_help(self) -> None:
-        """Test rush --help."""
+        """Test kurukshetra --help."""
         runner = CliRunner()
-        result = runner.invoke(cli, ["rush", "--help"])
+        result = runner.invoke(cli, ["kurukshetra", "--help"])
         assert result.exit_code == 0
         assert "workers" in result.output
         assert "dry-run" in result.output
 
     def test_no_task_graph_error(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
-        """Test rush fails when no task graph found."""
+        """Test kurukshetra fails when no task graph found."""
         monkeypatch.chdir(tmp_path)
         (tmp_path / ".mahabharatha").mkdir()
         runner = CliRunner()
-        result = runner.invoke(cli, ["rush"])
+        result = runner.invoke(cli, ["kurukshetra"])
         assert result.exit_code == 1
         assert "No task-graph.json found" in result.output
 
     def test_dry_run(self, tmp_path: Path, task_graph_file_setup: Path, monkeypatch: MonkeyPatch) -> None:
-        """Test rush --dry-run."""
+        """Test kurukshetra --dry-run."""
         monkeypatch.chdir(tmp_path)
         runner = CliRunner()
-        with patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls:
+        with patch("mahabharatha.commands.kurukshetra.ZergConfig") as mock_config_cls:
             mock_config_cls.load.return_value = MagicMock()
-            result = runner.invoke(cli, ["rush", "--task-graph", str(task_graph_file_setup), "--dry-run"])
+            result = runner.invoke(cli, ["kurukshetra", "--task-graph", str(task_graph_file_setup), "--dry-run"])
         assert "Validation" in result.output
 
     def test_workers_option(self, tmp_path: Path, task_graph_file_setup: Path, monkeypatch: MonkeyPatch) -> None:
-        """Test rush --workers option."""
+        """Test kurukshetra --workers option."""
         monkeypatch.chdir(tmp_path)
         runner = CliRunner()
-        with patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls:
+        with patch("mahabharatha.commands.kurukshetra.ZergConfig") as mock_config_cls:
             mock_config_cls.load.return_value = MagicMock()
             result = runner.invoke(
-                cli, ["rush", "--task-graph", str(task_graph_file_setup), "--dry-run", "--workers", "10"]
+                cli, ["kurukshetra", "--task-graph", str(task_graph_file_setup), "--dry-run", "--workers", "10"]
             )
         assert "10" in result.output
 
@@ -284,60 +284,60 @@ class TestRushCommand:
 
 
 class TestRushExecution:
-    """Tests for rush execution paths."""
+    """Tests for kurukshetra execution paths."""
 
     def test_abort_on_decline(self, tmp_path: Path, task_graph_file_setup: Path, monkeypatch: MonkeyPatch) -> None:
-        """Test rush aborts when user declines."""
+        """Test kurukshetra aborts when user declines."""
         monkeypatch.chdir(tmp_path)
         runner = CliRunner()
-        with patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls:
+        with patch("mahabharatha.commands.kurukshetra.ZergConfig") as mock_config_cls:
             mock_config_cls.load.return_value = MagicMock()
-            result = runner.invoke(cli, ["rush", "--task-graph", str(task_graph_file_setup)], input="n\n")
+            result = runner.invoke(cli, ["kurukshetra", "--task-graph", str(task_graph_file_setup)], input="n\n")
         assert "Aborted" in result.output
 
     def test_proceeds_on_confirm(
         self, tmp_path: Path, task_graph_file_setup: Path, monkeypatch: MonkeyPatch, mock_orchestrator: MagicMock
     ) -> None:
-        """Test rush proceeds when user confirms."""
+        """Test kurukshetra proceeds when user confirms."""
         monkeypatch.chdir(tmp_path)
         runner = CliRunner()
         with (
-            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
-            patch("mahabharatha.commands.rush.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.kurukshetra.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.kurukshetra.Orchestrator") as mock_orch_cls,
         ):
             mock_config_cls.load.return_value = MagicMock()
             mock_orch_cls.return_value = mock_orchestrator
-            runner.invoke(cli, ["rush", "--task-graph", str(task_graph_file_setup)], input="y\n")
+            runner.invoke(cli, ["kurukshetra", "--task-graph", str(task_graph_file_setup)], input="y\n")
         mock_orchestrator.start.assert_called_once()
 
     def test_resume_skips_confirm(
         self, tmp_path: Path, task_graph_file_setup: Path, monkeypatch: MonkeyPatch, mock_orchestrator: MagicMock
     ) -> None:
-        """Test rush --resume skips confirmation."""
+        """Test kurukshetra --resume skips confirmation."""
         monkeypatch.chdir(tmp_path)
         runner = CliRunner()
         with (
-            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
-            patch("mahabharatha.commands.rush.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.kurukshetra.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.kurukshetra.Orchestrator") as mock_orch_cls,
         ):
             mock_config_cls.load.return_value = MagicMock()
             mock_orch_cls.return_value = mock_orchestrator
-            runner.invoke(cli, ["rush", "--task-graph", str(task_graph_file_setup), "--resume"])
+            runner.invoke(cli, ["kurukshetra", "--task-graph", str(task_graph_file_setup), "--resume"])
         mock_orchestrator.start.assert_called_once()
 
     def test_shows_complete(
         self, tmp_path: Path, task_graph_file_setup: Path, monkeypatch: MonkeyPatch, mock_orchestrator: MagicMock
     ) -> None:
-        """Test rush shows completion when all tasks complete."""
+        """Test kurukshetra shows completion when all tasks complete."""
         monkeypatch.chdir(tmp_path)
         runner = CliRunner()
         with (
-            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
-            patch("mahabharatha.commands.rush.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.kurukshetra.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.kurukshetra.Orchestrator") as mock_orch_cls,
         ):
             mock_config_cls.load.return_value = MagicMock()
             mock_orch_cls.return_value = mock_orchestrator
-            result = runner.invoke(cli, ["rush", "--task-graph", str(task_graph_file_setup), "--resume"])
+            result = runner.invoke(cli, ["kurukshetra", "--task-graph", str(task_graph_file_setup), "--resume"])
         assert "All tasks complete" in result.output
 
     def test_shows_incomplete(
@@ -347,16 +347,16 @@ class TestRushExecution:
         monkeypatch: MonkeyPatch,
         mock_orchestrator_incomplete: MagicMock,
     ) -> None:
-        """Test rush shows progress when not all tasks complete."""
+        """Test kurukshetra shows progress when not all tasks complete."""
         monkeypatch.chdir(tmp_path)
         runner = CliRunner()
         with (
-            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
-            patch("mahabharatha.commands.rush.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.kurukshetra.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.kurukshetra.Orchestrator") as mock_orch_cls,
         ):
             mock_config_cls.load.return_value = MagicMock()
             mock_orch_cls.return_value = mock_orchestrator_incomplete
-            result = runner.invoke(cli, ["rush", "--task-graph", str(task_graph_file_setup), "--resume"])
+            result = runner.invoke(cli, ["kurukshetra", "--task-graph", str(task_graph_file_setup), "--resume"])
         assert "stopped at" in result.output or "33" in result.output
 
 
@@ -366,49 +366,49 @@ class TestRushExecution:
 
 
 class TestRushErrorHandling:
-    """Tests for rush error handling."""
+    """Tests for kurukshetra error handling."""
 
     def test_keyboard_interrupt(self, tmp_path: Path, task_graph_file_setup: Path, monkeypatch: MonkeyPatch) -> None:
-        """Test rush handles KeyboardInterrupt."""
+        """Test kurukshetra handles KeyboardInterrupt."""
         monkeypatch.chdir(tmp_path)
         mock_orch = MagicMock()
         mock_orch.start.side_effect = KeyboardInterrupt()
         runner = CliRunner()
         with (
-            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
-            patch("mahabharatha.commands.rush.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.kurukshetra.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.kurukshetra.Orchestrator") as mock_orch_cls,
         ):
             mock_config_cls.load.return_value = MagicMock()
             mock_orch_cls.return_value = mock_orch
-            result = runner.invoke(cli, ["rush", "--task-graph", str(task_graph_file_setup), "--resume"])
+            result = runner.invoke(cli, ["kurukshetra", "--task-graph", str(task_graph_file_setup), "--resume"])
         assert result.exit_code == 130
 
     def test_general_exception(self, tmp_path: Path, task_graph_file_setup: Path, monkeypatch: MonkeyPatch) -> None:
-        """Test rush handles general exceptions."""
+        """Test kurukshetra handles general exceptions."""
         monkeypatch.chdir(tmp_path)
         mock_orch = MagicMock()
         mock_orch.start.side_effect = RuntimeError("Something went wrong")
         runner = CliRunner()
         with (
-            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
-            patch("mahabharatha.commands.rush.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.kurukshetra.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.kurukshetra.Orchestrator") as mock_orch_cls,
         ):
             mock_config_cls.load.return_value = MagicMock()
             mock_orch_cls.return_value = mock_orch
-            result = runner.invoke(cli, ["rush", "--task-graph", str(task_graph_file_setup), "--resume"])
+            result = runner.invoke(cli, ["kurukshetra", "--task-graph", str(task_graph_file_setup), "--resume"])
         assert result.exit_code == 1
         assert "Something went wrong" in result.output
 
     def test_invalid_task_graph(self, tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
-        """Test rush handles invalid task graph."""
+        """Test kurukshetra handles invalid task graph."""
         monkeypatch.chdir(tmp_path)
         tasks_dir = tmp_path / ".gsd" / "tasks"
         tasks_dir.mkdir(parents=True)
         (tasks_dir / "task-graph.json").write_text('{"invalid": "graph"}')
         runner = CliRunner()
-        with patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls:
+        with patch("mahabharatha.commands.kurukshetra.ZergConfig") as mock_config_cls:
             mock_config_cls.load.return_value = MagicMock()
-            result = runner.invoke(cli, ["rush", "--dry-run"])
+            result = runner.invoke(cli, ["kurukshetra", "--dry-run"])
         assert result.exit_code == 1
 
 
@@ -421,7 +421,7 @@ class TestRushDryRunEnhanced:
     """Tests for enhanced dry-run with DryRunSimulator."""
 
     def test_enhanced(self, tmp_path: Path, task_graph_file_setup: Path, monkeypatch: MonkeyPatch) -> None:
-        """Invoke rush --dry-run and verify DryRunSimulator is called."""
+        """Invoke kurukshetra --dry-run and verify DryRunSimulator is called."""
         monkeypatch.chdir(tmp_path)
         mock_sim = MagicMock()
         mock_report = MagicMock()
@@ -429,11 +429,11 @@ class TestRushDryRunEnhanced:
         mock_sim.return_value.run.return_value = mock_report
         runner = CliRunner()
         with (
-            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.kurukshetra.ZergConfig") as mock_config_cls,
             patch("mahabharatha.dryrun.DryRunSimulator", mock_sim) as _,
         ):
             mock_config_cls.load.return_value = MagicMock()
-            result = runner.invoke(cli, ["rush", "--task-graph", str(task_graph_file_setup), "--dry-run"])
+            result = runner.invoke(cli, ["kurukshetra", "--task-graph", str(task_graph_file_setup), "--dry-run"])
         mock_sim.assert_called_once()
         assert result.exit_code == 0
 
@@ -446,12 +446,12 @@ class TestRushDryRunEnhanced:
         mock_sim.return_value.run.return_value = mock_report
         runner = CliRunner()
         with (
-            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.kurukshetra.ZergConfig") as mock_config_cls,
             patch("mahabharatha.dryrun.DryRunSimulator", mock_sim) as _,
         ):
             mock_config_cls.load.return_value = MagicMock()
             result = runner.invoke(
-                cli, ["rush", "--task-graph", str(task_graph_file_setup), "--dry-run", "--check-gates"]
+                cli, ["kurukshetra", "--task-graph", str(task_graph_file_setup), "--dry-run", "--check-gates"]
             )
         assert mock_sim.call_args[1]["run_gates"] is True
         assert result.exit_code == 0
@@ -465,11 +465,11 @@ class TestRushDryRunEnhanced:
         mock_sim.return_value.run.return_value = mock_report
         runner = CliRunner()
         with (
-            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.kurukshetra.ZergConfig") as mock_config_cls,
             patch("mahabharatha.dryrun.DryRunSimulator", mock_sim) as _,
         ):
             mock_config_cls.load.return_value = MagicMock()
-            result = runner.invoke(cli, ["rush", "--task-graph", str(task_graph_file_setup), "--dry-run"])
+            result = runner.invoke(cli, ["kurukshetra", "--task-graph", str(task_graph_file_setup), "--dry-run"])
         assert result.exit_code == 1
 
 
@@ -479,7 +479,7 @@ class TestRushDryRunEnhanced:
 
 
 class TestRushBacklog:
-    """Tests for rush backlog callback integration."""
+    """Tests for kurukshetra backlog callback integration."""
 
     def test_registers_callback(
         self, tmp_path: Path, task_graph_file_setup: Path, monkeypatch: MonkeyPatch, mock_orchestrator: MagicMock
@@ -493,13 +493,13 @@ class TestRushBacklog:
         )
         runner = CliRunner()
         with (
-            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
-            patch("mahabharatha.commands.rush.Orchestrator") as mock_orch_cls,
-            patch("mahabharatha.commands.rush.update_backlog_task_status") as mock_update,
+            patch("mahabharatha.commands.kurukshetra.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.kurukshetra.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.kurukshetra.update_backlog_task_status") as mock_update,
         ):
             mock_config_cls.load.return_value = MagicMock()
             mock_orch_cls.return_value = mock_orchestrator
-            runner.invoke(cli, ["rush", "--task-graph", str(task_graph_file_setup), "--resume"])
+            runner.invoke(cli, ["kurukshetra", "--task-graph", str(task_graph_file_setup), "--resume"])
             callback = mock_orchestrator.on_task_complete.call_args[0][0]
             callback("L1-001")
         mock_update.assert_called_once_with(Path("tasks/TEST-FEATURE-BACKLOG.md"), "L1-001", "COMPLETE")
@@ -511,11 +511,11 @@ class TestRushBacklog:
         monkeypatch.chdir(tmp_path)
         runner = CliRunner()
         with (
-            patch("mahabharatha.commands.rush.ZergConfig") as mock_config_cls,
-            patch("mahabharatha.commands.rush.Orchestrator") as mock_orch_cls,
+            patch("mahabharatha.commands.kurukshetra.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.commands.kurukshetra.Orchestrator") as mock_orch_cls,
         ):
             mock_config_cls.load.return_value = MagicMock()
             mock_orch_cls.return_value = mock_orchestrator
-            runner.invoke(cli, ["rush", "--task-graph", str(task_graph_file_setup), "--resume"])
+            runner.invoke(cli, ["kurukshetra", "--task-graph", str(task_graph_file_setup), "--resume"])
             callback = mock_orchestrator.on_task_complete.call_args[0][0]
             callback("L1-001")  # Should not raise

@@ -357,11 +357,11 @@ def run_inception_mode(security_level: str = "standard") -> bool:
     1. Requirements gathering (conversational)
     2. Technology selection (with recommendations)
     3. Project scaffolding (file generation)
-    4. ZERG infrastructure setup
+    4. MAHABHARATHA infrastructure setup
     5. Git initialization
 
     Args:
-        security_level: Security level for ZERG config.
+        security_level: Security level for MAHABHARATHA config.
 
     Returns:
         True if inception completed successfully.
@@ -369,7 +369,7 @@ def run_inception_mode(security_level: str = "standard") -> bool:
     console.print()
     console.print(
         Panel(
-            "[bold cyan]ZERG Inception Mode[/bold cyan]\n\n"
+            "[bold cyan]MAHABHARATHA Inception Mode[/bold cyan]\n\n"
             "Starting a new project from scratch.\n"
             "I'll guide you through requirements and setup.",
             title="🥚 Inception",
@@ -410,7 +410,7 @@ def run_inception_mode(security_level: str = "standard") -> bool:
         console.print(f"  1. Run [cyan]cd {charter.name}[/cyan] (if needed)")
         console.print("  2. Run [cyan]mahabharatha plan <feature>[/cyan] to plan your first feature")
         console.print("  3. Run [cyan]mahabharatha design[/cyan] to create the task graph")
-        console.print("  4. Run [cyan]mahabharatha rush[/cyan] to execute!")
+        console.print("  4. Run [cyan]mahabharatha kurukshetra[/cyan] to execute!")
 
         return True
 
@@ -444,7 +444,7 @@ def _init_git_repo() -> None:
             check=True,
         )
         subprocess.run(
-            ["git", "commit", "-q", "-m", "Initial commit (ZERG Inception)"],
+            ["git", "commit", "-q", "-m", "Initial commit (MAHABHARATHA Inception)"],
             capture_output=True,
             check=True,
         )

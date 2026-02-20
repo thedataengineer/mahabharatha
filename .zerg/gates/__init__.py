@@ -1,4 +1,4 @@
-"""ZERG v2 Quality Gates - Two-stage quality verification."""
+"""MAHABHARATHA v2 Quality Gates - Two-stage quality verification."""
 
 import shlex
 import sys
@@ -7,7 +7,7 @@ from pathlib import Path
 
 # Import secure command executor
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from zerg.command_executor import CommandExecutor, CommandValidationError
+from mahabharatha.command_executor import CommandExecutor, CommandValidationError
 
 
 @dataclass

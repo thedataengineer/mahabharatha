@@ -1,6 +1,6 @@
 # Socratic Question Trees
 
-Six domain-specific question trees for `--socratic` mode in `/zerg:brainstorm`.
+Six domain-specific question trees for `--socratic` mode in `/mahabharatha:brainstorm`.
 Each tree uses branch IDs (Q1, Q2a, Q2b, etc.) to link options to follow-up questions.
 
 ---

@@ -1,18 +1,18 @@
-# Phase 1 Checkpoint 1: Local ZERG Analysis
+# Phase 1 Checkpoint 1: Local MAHABHARATHA Analysis
 
 **Date**: January 25, 2026
 **Status**: Complete
 
 ## Repository Overview
 
-**Location**: /Users/klambros/PycharmProjects/ZERG
+**Location**: /Users/klambros/PycharmProjects/MAHABHARATHA
 **Purpose**: Parallel Claude Code execution orchestration
 
 ## Directory Structure
 
 ```
-ZERG/
-├── .zerg/
+MAHABHARATHA/
+├── .mahabharatha/
 │   ├── config.yaml          ✅ Implemented
 │   └── orchestrator.py      ❌ MISSING (critical)
 ├── .claude/
@@ -20,7 +20,7 @@ ZERG/
 │       ├── init.md          ✅ Prompt template
 │       ├── plan.md          ✅ Prompt template
 │       ├── design.md        ✅ Prompt template
-│       ├── rush.md          ✅ Prompt template
+│       ├── kurukshetra.md          ✅ Prompt template
 │       ├── worker.md        ✅ Prompt template
 │       └── status.md        ✅ Prompt template
 ├── .devcontainer/
@@ -33,7 +33,7 @@ ZERG/
 ├── .gsd/
 │   ├── PROJECT.md           ✅ Implemented
 │   └── INFRASTRUCTURE.md    ✅ Implemented
-├── zerg/                    ❌ EMPTY Python package
+├── mahabharatha/                    ❌ EMPTY Python package
 │   └── __init__.py          ❌ Empty
 ├── ARCHITECTURE.md          ✅ Implemented (comprehensive)
 ├── README.md                ✅ Implemented
@@ -129,16 +129,16 @@ ZERG/
 These design elements align with external best practices and should be preserved:
 
 1. **Spec as memory**: Workers share files not conversation (matches superpowers, SuperClaude)
-2. **Exclusive file ownership**: Design-time conflict prevention (unique to ZERG)
-3. **Level-based execution**: Dependency ordering via waves (unique to ZERG)
+2. **Exclusive file ownership**: Design-time conflict prevention (unique to MAHABHARATHA)
+3. **Level-based execution**: Dependency ordering via waves (unique to MAHABHARATHA)
 4. **Git worktrees**: Branch isolation (matches packnplay, superpowers)
 5. **Native Tasks integration**: Claude Code persistence (matches ecosystem)
 6. **Verification commands**: Task completion criteria (matches superpowers)
-7. **70% context threshold**: Handoff trigger (unique to ZERG)
+7. **70% context threshold**: Handoff trigger (unique to MAHABHARATHA)
 8. **Port allocation strategy**: 49152-65535 ephemeral range (standard practice)
 
 ## Conclusion
 
-ZERG has a well-designed architecture with comprehensive documentation. The critical gap is implementation: no orchestrator runtime exists. The devcontainer infrastructure is working and can be preserved. The slash command templates provide workflow structure but need execution logic.
+MAHABHARATHA has a well-designed architecture with comprehensive documentation. The critical gap is implementation: no orchestrator runtime exists. The devcontainer infrastructure is working and can be preserved. The slash command templates provide workflow structure but need execution logic.
 
-**Recommendation**: Implement orchestrator.py as the first priority, using patterns from packnplay (worktrees) and superpowers (task execution) while preserving ZERG's unique level-based synchronization design.
+**Recommendation**: Implement orchestrator.py as the first priority, using patterns from packnplay (worktrees) and superpowers (task execution) while preserving MAHABHARATHA's unique level-based synchronization design.

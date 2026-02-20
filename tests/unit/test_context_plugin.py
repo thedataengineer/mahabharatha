@@ -1,4 +1,4 @@
-"""Tests for ZERG context engineering plugin module."""
+"""Tests for MAHABHARATHA context engineering plugin module."""
 
 from pathlib import Path
 from unittest.mock import patch

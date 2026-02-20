@@ -9,11 +9,11 @@ Complete the orchestrator integration so that `_spawn_worker`, `_poll_workers`, 
 
 ## Files Owned
 
-- `zerg/orchestrator.py` (modify)
+- `mahabharatha/orchestrator.py` (modify)
 
 ## Files to Read
 
-- `zerg/launcher.py` (ContainerLauncher methods)
+- `mahabharatha/launcher.py` (ContainerLauncher methods)
 
 ## Implementation
 
@@ -216,9 +216,9 @@ def status(self) -> dict[str, Any]:
 
 ```bash
 python -c "
-from zerg.orchestrator import Orchestrator
-from zerg.config import ZergConfig
-from zerg.launcher import ContainerLauncher
+from mahabharatha.orchestrator import Orchestrator
+from mahabharatha.config import ZergConfig
+from mahabharatha.launcher import ContainerLauncher
 
 # Check orchestrator has updated methods
 orch = Orchestrator('test', ZergConfig())
@@ -246,4 +246,4 @@ print('get_launcher_mode exists:', hasattr(orch, 'get_launcher_mode'))
 - [ ] status() includes launcher_mode
 - [ ] status() includes container_id for workers
 - [ ] Events include mode information
-- [ ] No ruff errors: `ruff check zerg/orchestrator.py`
+- [ ] No ruff errors: `ruff check mahabharatha/orchestrator.py`

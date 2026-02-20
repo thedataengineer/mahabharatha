@@ -11,7 +11,7 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Systematic reduction of the ZERG test suite from ~5,608 tests to ~3,700 tests through module consolidation (Phase 4: delete 18 files, thin 12 files) and secondary thinning (Phase 5: thin 53 files). No production code changes. All work is test file deletion and thinning using established rules from Phase 2.
+Systematic reduction of the MAHABHARATHA test suite from ~5,608 tests to ~3,700 tests through module consolidation (Phase 4: delete 18 files, thin 12 files) and secondary thinning (Phase 5: thin 53 files). No production code changes. All work is test file deletion and thinning using established rules from Phase 2.
 
 ### 1.2 Goals
 - Reduce test count to 3,500–3,800 range
@@ -300,7 +300,7 @@ After each level completes, spot-check a sample of modified files.
 ### 7.3 Final Verification (Level 4)
 - Full test suite: `python -m pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow' --timeout=120`
 - Smoke tests: `python -m pytest -m smoke -x --timeout=5`
-- Validation: `python -m zerg.validate_commands`
+- Validation: `python -m mahabharatha.validate_commands`
 - Test count verification: must be in 3,500–3,800 range
 
 ---

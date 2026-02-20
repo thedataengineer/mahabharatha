@@ -4,7 +4,7 @@
 - **Feature**: plan-mode-conflict-fix
 - **Status**: DRAFT
 - **Created**: 2026-02-13
-- **Author**: ZERG Design Mode
+- **Author**: MAHABHARATHA Design Mode
 
 ---
 
@@ -21,7 +21,7 @@ Replace the manual "Press Shift+Tab twice" plan mode instruction in `/z:plan` an
 
 ### 1.3 Non-Goals
 - Changing Claude Code's plan mode behavior (platform-level)
-- Modifying other ZERG commands (design, rush, etc.)
+- Modifying other MAHABHARATHA commands (design, kurukshetra, etc.)
 - Modifying `.details.md` files (reference material only)
 
 ---
@@ -86,10 +86,10 @@ Replace the manual "Press Shift+Tab twice" plan mode instruction in `/z:plan` an
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| plan.md | Full plan command (backward compat) | `zerg/data/commands/plan.md` |
-| plan.core.md | Core split (workers get this) | `zerg/data/commands/plan.core.md` |
-| brainstorm.md | Full brainstorm command | `zerg/data/commands/brainstorm.md` |
-| brainstorm.core.md | Core split (workers get this) | `zerg/data/commands/brainstorm.core.md` |
+| plan.md | Full plan command (backward compat) | `mahabharatha/data/commands/plan.md` |
+| plan.core.md | Core split (workers get this) | `mahabharatha/data/commands/plan.core.md` |
+| brainstorm.md | Full brainstorm command | `mahabharatha/data/commands/brainstorm.md` |
+| brainstorm.core.md | Core split (workers get this) | `mahabharatha/data/commands/brainstorm.core.md` |
 | CHANGELOG.md | Release notes | `CHANGELOG.md` |
 
 ### 2.3 Data Flow
@@ -266,10 +266,10 @@ Identical to brainstorm.md changes.
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/data/commands/plan.md` | TASK-001 | modify |
-| `zerg/data/commands/plan.core.md` | TASK-002 | modify |
-| `zerg/data/commands/brainstorm.md` | TASK-003 | modify |
-| `zerg/data/commands/brainstorm.core.md` | TASK-004 | modify |
+| `mahabharatha/data/commands/plan.md` | TASK-001 | modify |
+| `mahabharatha/data/commands/plan.core.md` | TASK-002 | modify |
+| `mahabharatha/data/commands/brainstorm.md` | TASK-003 | modify |
+| `mahabharatha/data/commands/brainstorm.core.md` | TASK-004 | modify |
 | `CHANGELOG.md` | TASK-005 | modify |
 
 ### 5.3 Dependency Graph
@@ -303,10 +303,10 @@ graph TD
 ## 7. Testing Strategy
 
 ### 7.1 Verification Commands
-- `python -m zerg.validate_commands` — ensures all command files pass structural validation
-- `grep -c "EnterPlanMode" zerg/data/commands/plan.md` — confirms tool call present
-- `grep -c "ExitPlanMode" zerg/data/commands/plan.md` — confirms exit present
-- `grep -c "POST-EXIT GUARD" zerg/data/commands/plan.md` — confirms guard present
+- `python -m mahabharatha.validate_commands` — ensures all command files pass structural validation
+- `grep -c "EnterPlanMode" mahabharatha/data/commands/plan.md` — confirms tool call present
+- `grep -c "ExitPlanMode" mahabharatha/data/commands/plan.md` — confirms exit present
+- `grep -c "POST-EXIT GUARD" mahabharatha/data/commands/plan.md` — confirms guard present
 - Same checks for plan.core.md, brainstorm.md, brainstorm.core.md
 
 ### 7.2 Manual Validation

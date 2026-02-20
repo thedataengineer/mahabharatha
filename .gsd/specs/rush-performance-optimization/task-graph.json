@@ -1,5 +1,5 @@
 {
-  "feature": "rush-performance-optimization",
+  "feature": "kurukshetra-performance-optimization",
   "version": "2.0",
   "generated": "2026-02-03T12:00:00Z",
   "total_tasks": 7,
@@ -10,17 +10,17 @@
     {
       "id": "TASK-001",
       "title": "Update config.yaml with performance settings",
-      "description": "Add verification.staleness_threshold_seconds=1800 and improvement_loops.max_iterations=1 to .zerg/config.yaml. This reduces cache invalidation and limits loop iterations.",
+      "description": "Add verification.staleness_threshold_seconds=1800 and improvement_loops.max_iterations=1 to .mahabharatha/config.yaml. This reduces cache invalidation and limits loop iterations.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": [".zerg/config.yaml"],
+        "modify": [".mahabharatha/config.yaml"],
         "read": []
       },
       "verification": {
-        "command": "grep -q 'staleness_threshold_seconds: 1800' .zerg/config.yaml && grep -q 'max_iterations: 1' .zerg/config.yaml",
+        "command": "grep -q 'staleness_threshold_seconds: 1800' .mahabharatha/config.yaml && grep -q 'max_iterations: 1' .mahabharatha/config.yaml",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5,
@@ -38,10 +38,10 @@
       "files": {
         "create": [],
         "modify": [],
-        "read": ["zerg/orchestrator.py", "zerg/merge.py"]
+        "read": ["mahabharatha/orchestrator.py", "mahabharatha/merge.py"]
       },
       "verification": {
-        "command": "python -c 'from zerg.orchestrator import Orchestrator; from zerg.merge import MergeCoordinator'",
+        "command": "python -c 'from mahabharatha.orchestrator import Orchestrator; from mahabharatha.merge import MergeCoordinator'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5,
@@ -58,11 +58,11 @@
       "dependencies": ["TASK-001", "TASK-002"],
       "files": {
         "create": [],
-        "modify": ["zerg/orchestrator.py"],
-        "read": ["zerg/merge.py", "zerg/types.py"]
+        "modify": ["mahabharatha/orchestrator.py"],
+        "read": ["mahabharatha/merge.py", "mahabharatha/types.py"]
       },
       "verification": {
-        "command": "grep -q 'merge_result.*MergeFlowResult' zerg/orchestrator.py && python -c 'from zerg.orchestrator import Orchestrator'",
+        "command": "grep -q 'merge_result.*MergeFlowResult' mahabharatha/orchestrator.py && python -c 'from mahabharatha.orchestrator import Orchestrator'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 30,
@@ -73,17 +73,17 @@
     {
       "id": "TASK-004",
       "title": "Add --skip-tests CLI flag and propagate to gates",
-      "description": "Add --skip-tests flag to zerg/commands/rush.py. Propagate flag through Orchestrator to MergeCoordinator. In merge.py, filter out test gates when skip_tests=True. On final level, always run full test suite.",
+      "description": "Add --skip-tests flag to mahabharatha/commands/kurukshetra.py. Propagate flag through Orchestrator to MergeCoordinator. In merge.py, filter out test gates when skip_tests=True. On final level, always run full test suite.",
       "phase": "core",
       "level": 3,
       "dependencies": ["TASK-003"],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/rush.py", "zerg/merge.py"],
-        "read": ["zerg/orchestrator.py"]
+        "modify": ["mahabharatha/commands/kurukshetra.py", "mahabharatha/merge.py"],
+        "read": ["mahabharatha/orchestrator.py"]
       },
       "verification": {
-        "command": "zerg rush --help | grep -q 'skip-tests' && python -c 'from zerg.merge import MergeCoordinator'",
+        "command": "mahabharatha kurukshetra --help | grep -q 'skip-tests' && python -c 'from mahabharatha.merge import MergeCoordinator'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 45,
@@ -126,7 +126,7 @@
       "files": {
         "create": ["tests/integration/test_rush_performance.py"],
         "modify": [],
-        "read": ["zerg/commands/rush.py", "zerg/orchestrator.py"]
+        "read": ["mahabharatha/commands/kurukshetra.py", "mahabharatha/orchestrator.py"]
       },
       "verification": {
         "command": "pytest tests/integration/test_rush_performance.py -v --timeout=60",

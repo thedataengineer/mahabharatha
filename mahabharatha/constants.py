@@ -1,4 +1,4 @@
-"""ZERG constants and enumerations."""
+"""MAHABHARATHA constants and enumerations."""
 
 from enum import Enum, IntEnum
 

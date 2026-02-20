@@ -11,7 +11,7 @@
 
 ## Summary
 
-Enhance `/zerg:design` with fine-grained planning mode that generates bite-sized implementation steps within each task. Includes auto-detection of project formatters to ensure pre-commit hooks pass on first attempt.
+Enhance `/mahabharatha:design` with fine-grained planning mode that generates bite-sized implementation steps within each task. Includes auto-detection of project formatters to ensure pre-commit hooks pass on first attempt.
 
 ---
 
@@ -36,7 +36,7 @@ Enhance `/zerg:design` with fine-grained planning mode that generates bite-sized
 
 ### FR-1: Detail Level Flag
 
-Add `--detail` flag to `/zerg:design`:
+Add `--detail` flag to `/mahabharatha:design`:
 - `--detail standard` — Current behavior (task-level only)
 - `--detail medium` — Steps without code snippets
 - `--detail high` — Steps with AST-generated code snippets
@@ -109,7 +109,7 @@ Insert format step before commit in TDD sequence:
 
 ### FR-7: Step-Level Progress Tracking
 
-Extend `/zerg:status` to show step progress:
+Extend `/mahabharatha:status` to show step progress:
 
 ```
 TASK-003: Implement auth service [Step 3/5: ✅✅🔄⏳⏳]
@@ -121,10 +121,10 @@ Symbols: ✅ completed, 🔄 in progress, ⏳ pending, ❌ failed
 ### FR-8: Adaptive Detail
 
 Automatically reduce detail level when:
-- **File familiarity**: Worker has modified this file/module before in the same rush
+- **File familiarity**: Worker has modified this file/module before in the same kurukshetra
 - **Success rate**: Previous tasks in same area succeeded without step guidance
 
-Track metrics in `.zerg/state/adaptive-detail.json`.
+Track metrics in `.mahabharatha/state/adaptive-detail.json`.
 
 ### FR-9: Worker Protocol Update
 
@@ -137,7 +137,7 @@ Update worker.md to execute steps strictly:
 
 ### FR-10: Configuration
 
-Add to `.zerg/config.yaml`:
+Add to `.mahabharatha/config.yaml`:
 
 ```yaml
 planning:
@@ -167,20 +167,20 @@ planning:
 
 ### NFR-3: Schema Validation
 
-- Extend `zerg/schemas/task_graph.json` with step definitions
-- Validate step structure in `zerg design --validate-only`
+- Extend `mahabharatha/schemas/task_graph.json` with step definitions
+- Validate step structure in `mahabharatha design --validate-only`
 
 ---
 
 ## Acceptance Criteria
 
-- [ ] `--detail` flag on `/zerg:design` (standard/medium/high)
+- [ ] `--detail` flag on `/mahabharatha:design` (standard/medium/high)
 - [ ] Step-level task definitions in task-graph.json
 - [ ] TDD step ordering enforced (test → verify-fail → implement → verify-pass → format → commit)
 - [ ] AST-aware code snippet generation for `--detail high`
 - [ ] Formatter auto-detection from project config files
 - [ ] Format step inserted before commit
-- [ ] Step-level progress in `/zerg:status` with visual indicators
+- [ ] Step-level progress in `/mahabharatha:status` with visual indicators
 - [ ] Adaptive detail based on file familiarity and success rate
 - [ ] Worker protocol updated for strict step execution
 - [ ] Config section for planning options

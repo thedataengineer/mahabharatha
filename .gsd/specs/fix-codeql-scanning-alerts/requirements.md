@@ -11,7 +11,7 @@
 ## 1. Problem Statement
 
 ### 1.1 Background
-GitHub CodeQL scanning on `rocklambros/zerg` reports 115 open alerts. CodeQL runs on every push/PR and these alerts create noise, mask real issues, and block adoption of branch protection rules requiring zero alerts.
+GitHub CodeQL scanning on `rocklambros/mahabharatha` reports 115 open alerts. CodeQL runs on every push/PR and these alerts create noise, mask real issues, and block adoption of branch protection rules requiring zero alerts.
 
 Additionally, the `/z:plan` command has a recurring bug where it fails to generate its primary output (`requirements.md`) due to an overbroad WORKFLOW BOUNDARY guard that prohibits the Write tool entirely — including for spec files which are the command's intended output.
 
@@ -33,7 +33,7 @@ Without this fix:
 ## 2. Users
 
 ### 2.1 Primary Users
-- ZERG maintainers reviewing code scanning alerts
+- MAHABHARATHA maintainers reviewing code scanning alerts
 - CI/CD pipeline enforcing quality gates
 
 ### 2.2 Secondary Users
@@ -66,7 +66,7 @@ Without this fix:
 | FR-011 | Suppress 3 undefined-export false positives | Must | Lazy `__getattr__` pattern |
 | FR-012 | Fix 2 redundant comparison alerts | Should | Remove tautological conditions |
 | FR-013 | Fix remaining 7 misc alerts | Should | Lambda, assignment, conditional, BaseException, etc. |
-| FR-014 | Fix 7 alerts in .zerg/ runtime files | Must | These are runtime, not generated |
+| FR-014 | Fix 7 alerts in .mahabharatha/ runtime files | Must | These are runtime, not generated |
 | FR-015 | Fix `/z:plan` WORKFLOW BOUNDARY bug | Must | Allow Write for .gsd/ files; add sentinel |
 | FR-016 | Add programmatic stop sentinel to `/z:plan` | Must | `.plan-complete` sentinel file |
 
@@ -99,7 +99,7 @@ Without this fix:
 
 ### 4.3 Reliability
 - Zero test regressions — full test suite must pass
-- `python -m zerg.validate_commands` must pass (drift check)
+- `python -m mahabharatha.validate_commands` must pass (drift check)
 - `ruff check` must show no new lint errors
 
 ---
@@ -151,8 +151,8 @@ Without this fix:
 ### 7.1 Definition of Done
 - [ ] All 115 CodeQL alerts resolved (98 fixes + 17 suppressions)
 - [ ] `python -m pytest tests/ --timeout=120` — full suite green
-- [ ] `python -m zerg.validate_commands` — drift check clean
-- [ ] `ruff check zerg/ tests/` — no new lint errors
+- [ ] `python -m mahabharatha.validate_commands` — drift check clean
+- [ ] `ruff check mahabharatha/ tests/` — no new lint errors
 - [ ] CHANGELOG.md updated under `[Unreleased]` > `Fixed`
 - [ ] `/z:plan` produces requirements.md when invoked
 - [ ] `/z:plan` stops and prompts user at Phase 5.5 (never auto-proceeds)

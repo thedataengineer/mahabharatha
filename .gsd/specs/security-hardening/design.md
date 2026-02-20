@@ -5,7 +5,7 @@
 - **Status**: APPROVED
 - **Created**: 2026-02-04
 - **Completed**: 2026-02-04
-- **Author**: ZERG Design Mode
+- **Author**: MAHABHARATHA Design Mode
 
 ---
 
@@ -34,7 +34,7 @@ Remediate three security vulnerabilities: (1) consolidate shell=True subprocess 
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                      ZERG Diagnostics                            │
+│                      MAHABHARATHA Diagnostics                            │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  │
 │  │ HypothesisEngine │  │  StepExecutor   │  │ RecoveryPlanner │  │
 │  └────────┬────────┘  └────────┬────────┘  └────────┬────────┘  │
@@ -63,11 +63,11 @@ Remediate three security vulnerabilities: (1) consolidate shell=True subprocess 
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| CommandExecutor | Secure command execution with allowlist | `zerg/command_executor.py` |
-| HypothesisTestRunner | Test hypothesis commands safely | `zerg/diagnostics/hypothesis_engine.py` |
-| StepExecutor | Execute TDD steps safely | `zerg/step_executor.py` |
-| RecoveryPlanner | Execute recovery commands safely | `zerg/diagnostics/recovery.py` |
-| SecurityScanner | Scan for secrets without traversal | `zerg/security.py` |
+| CommandExecutor | Secure command execution with allowlist | `mahabharatha/command_executor.py` |
+| HypothesisTestRunner | Test hypothesis commands safely | `mahabharatha/diagnostics/hypothesis_engine.py` |
+| StepExecutor | Execute TDD steps safely | `mahabharatha/step_executor.py` |
+| RecoveryPlanner | Execute recovery commands safely | `mahabharatha/diagnostics/recovery.py` |
+| SecurityScanner | Scan for secrets without traversal | `mahabharatha/security.py` |
 
 ### 2.3 Data Flow
 
@@ -106,7 +106,7 @@ result = subprocess.run(
 
 **New design**:
 ```python
-from zerg.command_executor import CommandExecutor, get_executor
+from mahabharatha.command_executor import CommandExecutor, get_executor
 
 class HypothesisTestRunner:
     def __init__(self) -> None:
@@ -156,7 +156,7 @@ result = subprocess.run(
 
 **New design**:
 ```python
-from zerg.command_executor import CommandExecutor, CommandValidationError
+from mahabharatha.command_executor import CommandExecutor, CommandValidationError
 
 class StepExecutor:
     def __init__(
@@ -210,7 +210,7 @@ result = subprocess.run(
 **New design**:
 ```python
 import shlex
-from zerg.command_executor import CommandExecutor, CommandValidationError, get_executor
+from mahabharatha.command_executor import CommandExecutor, CommandValidationError, get_executor
 
 class RecoveryPlanner:
     def __init__(self) -> None:
@@ -421,11 +421,11 @@ def run_security_scan(path: str | Path = ".") -> dict[str, Any]:
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| zerg/command_executor.py | TASK-001, TASK-002 | modify |
-| zerg/diagnostics/hypothesis_engine.py | TASK-003 | modify |
-| zerg/step_executor.py | TASK-004 | modify |
-| zerg/diagnostics/recovery.py | TASK-005 | modify |
-| zerg/security.py | TASK-006 | modify |
+| mahabharatha/command_executor.py | TASK-001, TASK-002 | modify |
+| mahabharatha/diagnostics/hypothesis_engine.py | TASK-003 | modify |
+| mahabharatha/step_executor.py | TASK-004 | modify |
+| mahabharatha/diagnostics/recovery.py | TASK-005 | modify |
+| mahabharatha/security.py | TASK-006 | modify |
 | tests/unit/test_command_executor_hardening.py | TASK-007 | create |
 | tests/unit/test_security_path_traversal.py | TASK-008 | create |
 | tests/integration/test_diagnostics_secure_execution.py | TASK-009 | create |
@@ -454,7 +454,7 @@ graph TD
 | Risk | Probability | Impact | Mitigation |
 |------|-------------|--------|------------|
 | Task-graph verification commands break | Medium | High | trust_commands=True preserves shell operator support |
-| Recovery command templates fail validation | Low | Medium | Templates use safe commands (git, zerg CLI) |
+| Recovery command templates fail validation | Low | Medium | Templates use safe commands (git, mahabharatha CLI) |
 | Performance regression from path validation | Low | Low | O(1) per file, negligible overhead |
 | Existing tests fail due to allowlist changes | Medium | Low | Run full test suite, add tests for new behavior |
 
@@ -491,19 +491,19 @@ graph TD
 
 ```bash
 # AC-1: shell=True only in command_executor.py
-grep -rn "shell=True" zerg/ | grep -v "command_executor.py"
+grep -rn "shell=True" mahabharatha/ | grep -v "command_executor.py"
 # Expected: empty output
 
 # AC-2: CommandExecutor imported in all three modules
-grep -l "CommandExecutor\|get_executor" zerg/diagnostics/hypothesis_engine.py zerg/step_executor.py zerg/diagnostics/recovery.py
+grep -l "CommandExecutor\|get_executor" mahabharatha/diagnostics/hypothesis_engine.py mahabharatha/step_executor.py mahabharatha/diagnostics/recovery.py
 # Expected: 3 files listed
 
 # AC-3: Dangerous prefixes removed
-grep -E "(python -c|python3 -c|npx)" zerg/command_executor.py | grep -v "#"
+grep -E "(python -c|python3 -c|npx)" mahabharatha/command_executor.py | grep -v "#"
 # Expected: empty output
 
 # AC-4: followlinks=False explicit
-grep -n "os.walk" zerg/security.py | grep "followlinks=False"
+grep -n "os.walk" mahabharatha/security.py | grep "followlinks=False"
 # Expected: 1 match
 
 # AC-5: All tests pass
@@ -513,7 +513,7 @@ pytest tests/ -v
 ls tests/unit/test_command_executor_hardening.py tests/unit/test_security_path_traversal.py tests/integration/test_diagnostics_secure_execution.py
 
 # AC-7: bandit clean
-bandit -r zerg/ -ll
+bandit -r mahabharatha/ -ll
 ```
 
 ---

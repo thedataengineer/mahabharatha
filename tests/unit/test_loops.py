@@ -1,4 +1,4 @@
-"""Tests for ZERG iterative improvement loop controller — thinned Phase 4/5."""
+"""Tests for MAHABHARATHA iterative improvement loop controller — thinned Phase 4/5."""
 
 from __future__ import annotations
 

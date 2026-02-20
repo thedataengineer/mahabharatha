@@ -89,7 +89,7 @@ class TestCreateRequirementsTemplate:
             ("minimal", ["Problem Statement", "Out of Scope"], ["Risk Assessment"]),
             ("default", ["Functional Requirements", "Acceptance Criteria"], []),
             ("detailed", ["Technical Constraints", "Risk Assessment", "Success Metrics"], []),
-            ("unknown", ["**Author**: ZERG Plan"], []),
+            ("unknown", ["**Author**: MAHABHARATHA Plan"], []),
         ],
     )
     def test_template_creation(
@@ -201,7 +201,7 @@ class TestWriteRequirements:
         }
         write_requirements(spec_dir, "test", requirements)
         content = (spec_dir / "requirements.md").read_text()
-        assert "**Author**: ZERG Plan" in content
+        assert "**Author**: MAHABHARATHA Plan" in content
         assert "The problem" in content
 
 

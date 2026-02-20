@@ -195,7 +195,7 @@ AskUserQuestion:
 
 ## 5. Updated Transcript Template
 
-Record all brainstorm phases in a single transcript for downstream consumption by `/zerg:plan`.
+Record all brainstorm phases in a single transcript for downstream consumption by `/mahabharatha:plan`.
 
 ```markdown
 ### Socratic Discovery (--socratic mode)

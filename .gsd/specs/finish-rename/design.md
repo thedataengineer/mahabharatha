@@ -7,15 +7,15 @@
 
 ## 1. Overview
 
-Finish the troubleshoot→debug rename. Previous work completed all `zerg/` package renames (commands, diagnostics, CLI, tests). Remaining: `.zerg/` runtime scripts, installed commands, documentation.
+Finish the troubleshoot→debug rename. Previous work completed all `mahabharatha/` package renames (commands, diagnostics, CLI, tests). Remaining: `.mahabharatha/` runtime scripts, installed commands, documentation.
 
 ## 2. Scope
 
 ### Already Completed
-- `zerg/commands/debug.py` (renamed from troubleshoot.py)
-- `zerg/commands/__init__.py`, `zerg/cli.py` (imports updated)
-- `zerg/data/commands/zerg:debug.md` (slash command renamed)
-- `zerg/diagnostics/` (all refs cleaned)
+- `mahabharatha/commands/debug.py` (renamed from troubleshoot.py)
+- `mahabharatha/commands/__init__.py`, `mahabharatha/cli.py` (imports updated)
+- `mahabharatha/data/commands/mahabharatha:debug.md` (slash command renamed)
+- `mahabharatha/diagnostics/` (all refs cleaned)
 - `tests/unit/test_debug_cmd.py`, `tests/integration/test_debug.py` (renamed)
 - `install_commands.py` (z: shortcut support added)
 
@@ -23,7 +23,7 @@ Finish the troubleshoot→debug rename. Previous work completed all `zerg/` pack
 
 | Level | Tasks | Parallel |
 |-------|-------|----------|
-| L1 - Code | 2 tasks: .zerg/ scripts + command reinstall | Yes |
+| L1 - Code | 2 tasks: .mahabharatha/ scripts + command reinstall | Yes |
 | L2 - Docs | 2 tasks: backlog/coverage docs + .gsd task docs | Yes |
 | L3 - Quality | 1 task: gates | No |
 
@@ -31,12 +31,12 @@ Finish the troubleshoot→debug rename. Previous work completed all `zerg/` pack
 
 | File | Task | Operation |
 |------|------|-----------|
-| `.zerg/debug.py` | FR-L1-001 | create (from rename) |
-| `.zerg/troubleshoot.py` | FR-L1-001 | delete |
-| `.zerg/tests/test_debug.py` | FR-L1-001 | create (from rename) |
-| `.zerg/tests/test_troubleshoot.py` | FR-L1-001 | delete |
+| `.mahabharatha/debug.py` | FR-L1-001 | create (from rename) |
+| `.mahabharatha/troubleshoot.py` | FR-L1-001 | delete |
+| `.mahabharatha/tests/test_debug.py` | FR-L1-001 | create (from rename) |
+| `.mahabharatha/tests/test_troubleshoot.py` | FR-L1-001 | delete |
 | `.claude/commands/` | FR-L1-002 | reinstall |
-| `zerg/data/commands/zerg:debug.md` | FR-L1-002 | modify (1 line) |
+| `mahabharatha/data/commands/mahabharatha:debug.md` | FR-L1-002 | modify (1 line) |
 | `tasks/COVERAGE-100-BACKLOG.md` | FR-L2-001 | modify |
 | `claudedocs/backlog.md` | FR-L2-001 | modify |
 | `.gsd/tasks/prompts/L3-quality-commands.md` | FR-L2-002 | modify |
@@ -47,7 +47,7 @@ Finish the troubleshoot→debug rename. Previous work completed all `zerg/` pack
 ## 4. Dependency Graph
 
 ```
-L1: FR-L1-001 (rename .zerg/ scripts) ──┐
+L1: FR-L1-001 (rename .mahabharatha/ scripts) ──┐
     FR-L1-002 (reinstall + fix cmd)   ──┤
                                          │
 L2: FR-L2-001 (user docs)             ──┤─ depends on L1

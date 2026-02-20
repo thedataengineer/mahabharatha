@@ -60,7 +60,7 @@ SINGLE_LANGUAGE_IMAGES: dict[str, str] = {
 class DevcontainerSpec:
     """Specification for a devcontainer configuration."""
 
-    name: str = "ZERG Worker"
+    name: str = "MAHABHARATHA Worker"
     base_image: str = DEFAULT_BASE_IMAGE
     features: dict[str, dict[str, Any]] = field(default_factory=dict)
     post_create_commands: list[str] = field(default_factory=list)
@@ -170,7 +170,7 @@ class DynamicDevcontainerGenerator:
 
     def __init__(
         self,
-        name: str = "ZERG Worker",
+        name: str = "MAHABHARATHA Worker",
         install_claude: bool = True,
         network_name: str = "mahabharatha-internal",
     ) -> None:
@@ -225,8 +225,8 @@ class DynamicDevcontainerGenerator:
         if self.install_claude:
             post_create_commands.append("npm install -g @anthropic-ai/claude-code || true")
 
-        # Add ZERG ready signal
-        post_create_commands.append("echo 'ZERG worker ready'")
+        # Add MAHABHARATHA ready signal
+        post_create_commands.append("echo 'MAHABHARATHA worker ready'")
 
         # Build extensions list
         extensions = [
@@ -369,7 +369,7 @@ class DynamicDevcontainerGenerator:
         output_dir.mkdir(parents=True, exist_ok=True)
 
         script_content = """#!/bin/bash
-# ZERG Worker Entry - Invokes Claude with native task list
+# MAHABHARATHA Worker Entry - Invokes Claude with native task list
 set -e
 
 WORKER_ID=${ZERG_WORKER_ID:-0}
@@ -377,7 +377,7 @@ TASK_LIST_ID=${ZERG_TASK_LIST_ID}
 WORKTREE=${ZERG_WORKTREE:-/workspace}
 
 echo "========================================"
-echo "ZERG Worker $WORKER_ID starting..."
+echo "MAHABHARATHA Worker $WORKER_ID starting..."
 echo "Task List: $TASK_LIST_ID"
 echo "Worktree: $WORKTREE"
 echo "========================================"

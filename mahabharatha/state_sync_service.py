@@ -1,4 +1,4 @@
-"""State synchronization service for ZERG orchestrator.
+"""State synchronization service for MAHABHARATHA orchestrator.
 
 Syncs in-memory LevelController state with on-disk task state,
 and reassigns tasks stranded on stopped/crashed workers.

@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 Container Launcher."""
+"""Tests for MAHABHARATHA v2 Container Launcher."""
 
 import sys
 from pathlib import Path
@@ -51,7 +51,7 @@ class TestContainerConfig:
         )
         assert config.memory_limit == "4g"
         assert config.cpu_limit == 2.0
-        assert config.network == "zerg-internal"
+        assert config.network == "mahabharatha-internal"
 
 
 class TestRunningContainer:
@@ -123,7 +123,7 @@ class TestContainerLauncherInit:
         # Network should exist after initialization
         client = docker.from_env()
         networks = [n.name for n in client.networks.list()]
-        assert "zerg-internal" in networks
+        assert "mahabharatha-internal" in networks
 
 
 class TestContainerLauncherOperations:

@@ -1,4 +1,4 @@
-"""Cross-cutting capability resolution for ZERG.
+"""Cross-cutting capability resolution for MAHABHARATHA.
 
 Resolves CLI flags, config, and task graph analysis into a unified
 ResolvedCapabilities that gets passed as env vars to workers.
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 # Commands where loops apply (code-touching commands)
 LOOP_COMMANDS = frozenset(
     {
-        "rush",
+        "kurukshetra",
         "refactor",
         "test",
         "security",
@@ -125,7 +125,7 @@ class CapabilityResolver:
             cli_flags: ctx.obj dict from Click (depth, compact, mode, tdd, etc.)
             config: ZergConfig instance
             task_graph: Parsed task-graph.json dict (optional)
-            command: Active command name (e.g. "rush") for loop applicability
+            command: Active command name (e.g. "kurukshetra") for loop applicability
 
         Returns:
             ResolvedCapabilities ready for worker injection

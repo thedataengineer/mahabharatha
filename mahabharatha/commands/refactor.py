@@ -1,4 +1,4 @@
-"""ZERG refactor command - automated code improvement."""
+"""MAHABHARATHA refactor command - automated code improvement."""
 
 import re
 from abc import ABC, abstractmethod
@@ -463,7 +463,7 @@ def refactor(
         mahabharatha refactor --transforms types,naming
     """
     try:
-        console.print("\n[bold cyan]ZERG Refactor[/bold cyan]\n")
+        console.print("\n[bold cyan]MAHABHARATHA Refactor[/bold cyan]\n")
 
         # Parse transforms
         transform_list = [t.strip() for t in transforms.split(",") if t.strip()]

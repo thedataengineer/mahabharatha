@@ -6,11 +6,11 @@
 
 ## Context
 
-Backlog item #12: Add `--performance` option to `zerg analyze` that runs a comprehensive performance audit covering 140 factors across 16 categories. Uses optional external static analysis tools with graceful degradation. Dynamically selects semgrep registry rules based on detected project stack.
+Backlog item #12: Add `--performance` option to `mahabharatha analyze` that runs a comprehensive performance audit covering 140 factors across 16 categories. Uses optional external static analysis tools with graceful degradation. Dynamically selects semgrep registry rules based on detected project stack.
 
 ## Functional Requirements
 
-### FR-1: Performance audit via `zerg analyze --performance`
+### FR-1: Performance audit via `mahabharatha analyze --performance`
 - Add `--performance` boolean flag to CLI
 - Add `"performance"` to `--check` choices
 - EXCLUDE performance from `--check all` (heavyweight)

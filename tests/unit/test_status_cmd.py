@@ -1,4 +1,4 @@
-"""Thinned unit tests for ZERG status command.
+"""Thinned unit tests for MAHABHARATHA status command.
 
 Reduced from 82 to ~25 tests by:
 - Collapsing per-status permutations into single parametrized tests

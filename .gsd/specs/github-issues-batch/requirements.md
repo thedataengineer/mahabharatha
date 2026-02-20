@@ -4,7 +4,7 @@
 
 ## Overview
 
-Address GitHub issues 105-111 related to ZERG quality gates and bug fixes.
+Address GitHub issues 105-111 related to MAHABHARATHA quality gates and bug fixes.
 
 ## Issues Covered
 

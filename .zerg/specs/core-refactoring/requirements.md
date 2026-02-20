@@ -62,7 +62,7 @@ Refactor `launcher.py` (2,010 lines), `orchestrator.py` (1,344 lines), and `work
 #### launcher.py (2,010 lines) → launchers/ subpackage
 
 ```
-zerg/
+mahabharatha/
 ├── launcher_types.py          # LauncherConfig, SpawnResult, WorkerHandle dataclasses
 ├── env_validator.py           # Environment variable validation logic
 └── launchers/
@@ -82,7 +82,7 @@ zerg/
 #### worker_protocol.py (1,143 lines) → flat modules
 
 ```
-zerg/
+mahabharatha/
 ├── protocol_types.py     # Message types, enums, dataclasses
 ├── protocol_handler.py   # Protocol parsing, message routing
 └── protocol_state.py     # State machine, transitions
@@ -105,7 +105,7 @@ zerg/
 - [ ] Each class has single responsibility
 - [ ] All imports updated — no broken references
 - [ ] Unit tests can mock individual components
-- [ ] `python -m zerg.validate_commands` passes
+- [ ] `python -m mahabharatha.validate_commands` passes
 
 ---
 
@@ -141,7 +141,7 @@ class WorkerRegistry:
 
 ### New File
 
-- `zerg/worker_registry.py` — WorkerRegistry class (~100-150 lines)
+- `mahabharatha/worker_registry.py` — WorkerRegistry class (~100-150 lines)
 
 ### Acceptance Criteria
 
@@ -163,7 +163,7 @@ class WorkerRegistry:
 
 ### Quality Gates
 
-- `python -m zerg.validate_commands` must pass (drift detection)
+- `python -m mahabharatha.validate_commands` must pass (drift detection)
 - `ruff check` / `ruff format` pass
 - Type checking passes (if configured)
 - All existing CI checks green

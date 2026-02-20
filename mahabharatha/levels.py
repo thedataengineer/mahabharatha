@@ -1,4 +1,4 @@
-"""Level-based execution control for ZERG."""
+"""Level-based execution control for MAHABHARATHA."""
 
 from datetime import datetime
 from typing import Any

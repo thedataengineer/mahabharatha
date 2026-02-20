@@ -4,25 +4,25 @@
   "tasks": [
     {
       "subject": "[L1] Create FormatterDetector module",
-      "description": "Implement formatter auto-detection from project config files. Detect ruff/black from pyproject.toml, prettier from .prettierrc/package.json, rustfmt from rustfmt.toml, clang-format from .clang-format, gofmt from go.mod presence. Return FormatterConfig dataclass with format_cmd, fix_cmd, and file_patterns.\nFiles \u2014 create: zerg/formatter_detector.py\nVerify: pytest tests/unit/test_formatter_detector.py -v --tb=short",
+      "description": "Implement formatter auto-detection from project config files. Detect ruff/black from pyproject.toml, prettier from .prettierrc/package.json, rustfmt from rustfmt.toml, clang-format from .clang-format, gofmt from go.mod presence. Return FormatterConfig dataclass with format_cmd, fix_cmd, and file_patterns.\nFiles \u2014 create: mahabharatha/formatter_detector.py\nVerify: pytest tests/unit/test_formatter_detector.py -v --tb=short",
       "active_form": "Executing Create FormatterDetector module",
       "dependencies": []
     },
     {
       "subject": "[L1] Add PlanningConfig to config.py",
-      "description": "Extend ZergConfig with PlanningConfig section. Fields: default_detail (standard|medium|high), include_code_snippets (bool), include_test_first (bool), step_verification (bool), adaptive_detail (bool), adaptive_familiarity_threshold (int), adaptive_success_threshold (float). Add to config.yaml schema.\nFiles \u2014 modify: zerg/config.py\nVerify: python -c \"from zerg.config import ZergConfig; c = ZergConfig.load(); print(c.planning)\"",
+      "description": "Extend ZergConfig with PlanningConfig section. Fields: default_detail (standard|medium|high), include_code_snippets (bool), include_test_first (bool), step_verification (bool), adaptive_detail (bool), adaptive_familiarity_threshold (int), adaptive_success_threshold (float). Add to config.yaml schema.\nFiles \u2014 modify: mahabharatha/config.py\nVerify: python -c \"from mahabharatha.config import ZergConfig; c = ZergConfig.load(); print(c.planning)\"",
       "active_form": "Executing Add PlanningConfig to config.py",
       "dependencies": []
     },
     {
       "subject": "[L1] Extend task_graph.json schema with steps",
-      "description": "Add 'steps' array definition to zerg/schemas/task_graph.json. Step object: step (int), action (enum), file (string), code_snippet (string), run (string), verify (enum: exit_code|exit_code_nonzero|none). Update task definition to include optional steps array.\nFiles \u2014 modify: zerg/schemas/task_graph.json\nVerify: python -c \"import json; s = json.load(open('zerg/schemas/task_graph.json')); assert 'step' in s.get('definitions', {})\"",
+      "description": "Add 'steps' array definition to mahabharatha/schemas/task_graph.json. Step object: step (int), action (enum), file (string), code_snippet (string), run (string), verify (enum: exit_code|exit_code_nonzero|none). Update task definition to include optional steps array.\nFiles \u2014 modify: mahabharatha/schemas/task_graph.json\nVerify: python -c \"import json; s = json.load(open('mahabharatha/schemas/task_graph.json')); assert 'step' in s.get('definitions', {})\"",
       "active_form": "Executing Extend task_graph.json schema with steps",
       "dependencies": []
     },
     {
       "subject": "[L2] Create StepGenerator module",
-      "description": "Implement step generation for tasks. Takes task definition and detail level, outputs steps array. For medium/high: generate TDD sequence (write_test, verify_fail, implement, verify_pass, format, commit). For high: include code_snippet field. Use FormatterDetector for format step command. Integrate with ASTAnalyzer for snippets.\nFiles \u2014 create: zerg/step_generator.py; read: zerg/formatter_detector.py, zerg/config.py\nVerify: pytest tests/unit/test_step_generator.py -v --tb=short",
+      "description": "Implement step generation for tasks. Takes task definition and detail level, outputs steps array. For medium/high: generate TDD sequence (write_test, verify_fail, implement, verify_pass, format, commit). For high: include code_snippet field. Use FormatterDetector for format step command. Integrate with ASTAnalyzer for snippets.\nFiles \u2014 create: mahabharatha/step_generator.py; read: mahabharatha/formatter_detector.py, mahabharatha/config.py\nVerify: pytest tests/unit/test_step_generator.py -v --tb=short",
       "active_form": "Executing Create StepGenerator module",
       "dependencies": [
         "BITE-L1-001",
@@ -32,7 +32,7 @@
     },
     {
       "subject": "[L2] Create ASTAnalyzer module",
-      "description": "Implement AST analysis for code pattern extraction. Use existing ASTCache. Extract: import patterns, base classes, common utilities, naming conventions. Generate realistic test and implementation snippets matching project style. Fallback gracefully if parsing fails.\nFiles \u2014 create: zerg/ast_analyzer.py; read: zerg/ast_cache.py\nVerify: pytest tests/unit/test_ast_analyzer.py -v --tb=short",
+      "description": "Implement AST analysis for code pattern extraction. Use existing ASTCache. Extract: import patterns, base classes, common utilities, naming conventions. Generate realistic test and implementation snippets matching project style. Fallback gracefully if parsing fails.\nFiles \u2014 create: mahabharatha/ast_analyzer.py; read: mahabharatha/ast_cache.py\nVerify: pytest tests/unit/test_ast_analyzer.py -v --tb=short",
       "active_form": "Executing Create ASTAnalyzer module",
       "dependencies": [
         "BITE-L1-002"
@@ -40,7 +40,7 @@
     },
     {
       "subject": "[L2] Create AdaptiveDetail module",
-      "description": "Implement adaptive detail logic. Track file modification counts and task success rates in .zerg/state/adaptive-detail.json. Reduce detail level when: file modified >= threshold times, or success rate >= threshold in same directory. Expose should_reduce_detail(task, metrics) method.\nFiles \u2014 create: zerg/adaptive_detail.py; read: zerg/config.py\nVerify: pytest tests/unit/test_adaptive_detail.py -v --tb=short",
+      "description": "Implement adaptive detail logic. Track file modification counts and task success rates in .mahabharatha/state/adaptive-detail.json. Reduce detail level when: file modified >= threshold times, or success rate >= threshold in same directory. Expose should_reduce_detail(task, metrics) method.\nFiles \u2014 create: mahabharatha/adaptive_detail.py; read: mahabharatha/config.py\nVerify: pytest tests/unit/test_adaptive_detail.py -v --tb=short",
       "active_form": "Executing Create AdaptiveDetail module",
       "dependencies": [
         "BITE-L1-002"
@@ -48,7 +48,7 @@
     },
     {
       "subject": "[L2] Create StepExecutor module",
-      "description": "Implement step execution for workers. Execute steps in strict order. Verify exit codes per step.verify field. Update heartbeat with current step number. Return TaskResult with success/failure and failed_step if applicable. Handle tasks without steps (classic mode).\nFiles \u2014 create: zerg/step_executor.py; read: zerg/heartbeat.py\nVerify: pytest tests/unit/test_step_executor.py -v --tb=short",
+      "description": "Implement step execution for workers. Execute steps in strict order. Verify exit codes per step.verify field. Update heartbeat with current step number. Return TaskResult with success/failure and failed_step if applicable. Handle tasks without steps (classic mode).\nFiles \u2014 create: mahabharatha/step_executor.py; read: mahabharatha/heartbeat.py\nVerify: pytest tests/unit/test_step_executor.py -v --tb=short",
       "active_form": "Executing Create StepExecutor module",
       "dependencies": [
         "BITE-L1-003"
@@ -56,7 +56,7 @@
     },
     {
       "subject": "[L3] Integrate --detail flag into design command",
-      "description": "Add --detail option to zerg/commands/design.py. Values: standard (default), medium, high. When medium/high: call StepGenerator for each task, insert steps into task-graph.json. Validate steps in --validate-only mode. Update design summary to show detail level.\nFiles \u2014 modify: zerg/commands/design.py; read: zerg/step_generator.py\nVerify: zerg design --help | grep -q 'detail' && echo 'OK'",
+      "description": "Add --detail option to mahabharatha/commands/design.py. Values: standard (default), medium, high. When medium/high: call StepGenerator for each task, insert steps into task-graph.json. Validate steps in --validate-only mode. Update design summary to show detail level.\nFiles \u2014 modify: mahabharatha/commands/design.py; read: mahabharatha/step_generator.py\nVerify: mahabharatha design --help | grep -q 'detail' && echo 'OK'",
       "active_form": "Executing Integrate --detail flag into design command",
       "dependencies": [
         "BITE-L2-001"
@@ -64,7 +64,7 @@
     },
     {
       "subject": "[L3] Add step progress to status command",
-      "description": "Extend zerg/commands/status.py to display step-level progress. Format: [Step 3/5: \u2705\u2705\ud83d\udd04\u23f3\u23f3]. Read step progress from heartbeat files. Show completed/in_progress/pending/failed indicators. Gracefully handle tasks without steps.\nFiles \u2014 modify: zerg/commands/status.py; read: zerg/heartbeat.py\nVerify: zerg status --help && echo 'OK'",
+      "description": "Extend mahabharatha/commands/status.py to display step-level progress. Format: [Step 3/5: \u2705\u2705\ud83d\udd04\u23f3\u23f3]. Read step progress from heartbeat files. Show completed/in_progress/pending/failed indicators. Gracefully handle tasks without steps.\nFiles \u2014 modify: mahabharatha/commands/status.py; read: mahabharatha/heartbeat.py\nVerify: mahabharatha status --help && echo 'OK'",
       "active_form": "Executing Add step progress to status command",
       "dependencies": [
         "BITE-L2-004"
@@ -72,7 +72,7 @@
     },
     {
       "subject": "[L3] Update worker protocol for step execution",
-      "description": "Update zerg/data/commands/worker.core.md with step execution protocol. Add Step 4.x sections for: loading steps from task, executing steps in order, verifying exit codes, updating heartbeat per step, failing on verification mismatch. Emphasize strict protocol (no deviation).\nFiles \u2014 modify: zerg/data/commands/worker.core.md, zerg/data/commands/worker.md\nVerify: grep -q 'step' zerg/data/commands/worker.core.md && echo 'OK'",
+      "description": "Update mahabharatha/data/commands/worker.core.md with step execution protocol. Add Step 4.x sections for: loading steps from task, executing steps in order, verifying exit codes, updating heartbeat per step, failing on verification mismatch. Emphasize strict protocol (no deviation).\nFiles \u2014 modify: mahabharatha/data/commands/worker.core.md, mahabharatha/data/commands/worker.md\nVerify: grep -q 'step' mahabharatha/data/commands/worker.core.md && echo 'OK'",
       "active_form": "Executing Update worker protocol for step execution",
       "dependencies": [
         "BITE-L2-004"

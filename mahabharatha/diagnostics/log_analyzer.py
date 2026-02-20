@@ -1,4 +1,4 @@
-"""ZERG log analysis for pattern detection and error correlation."""
+"""MAHABHARATHA log analysis for pattern detection and error correlation."""
 
 from __future__ import annotations
 

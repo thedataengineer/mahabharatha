@@ -67,7 +67,7 @@ class TestDetectContext:
 
         lines = "\n".join(f"  mahabharatha/feat/worker-{i}" for i in range(5))
         runner._run.return_value = MagicMock(stdout=lines)
-        assert detect_context(runner) == "swarm"
+        assert detect_context(runner) == "akshauhini"
 
     def test_exception_returns_solo(self) -> None:
         runner = MagicMock()

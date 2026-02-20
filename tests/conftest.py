@@ -1,4 +1,4 @@
-"""Pytest configuration and fixtures for ZERG tests."""
+"""Pytest configuration and fixtures for MAHABHARATHA tests."""
 
 import json
 import os
@@ -71,7 +71,7 @@ def tmp_repo(tmp_path: Path) -> Generator[Path, None, None]:
 
 @pytest.fixture
 def sample_config() -> ZergConfig:
-    """Create a sample ZERG configuration.
+    """Create a sample MAHABHARATHA configuration.
 
     Returns:
         Sample ZergConfig instance
@@ -194,13 +194,13 @@ def mock_container_manager() -> MagicMock:
 
 @pytest.fixture
 def mahabharatha_dirs(tmp_path: Path) -> Path:
-    """Create ZERG directory structure.
+    """Create MAHABHARATHA directory structure.
 
     Args:
         tmp_path: Temporary directory
 
     Returns:
-        Path to the temporary directory with ZERG structure
+        Path to the temporary directory with MAHABHARATHA structure
     """
     dirs = [
         ".mahabharatha",
@@ -223,7 +223,7 @@ def feature_state(mahabharatha_dirs: Path) -> Path:
     """Create a feature state file.
 
     Args:
-        mahabharatha_dirs: ZERG directory structure
+        mahabharatha_dirs: MAHABHARATHA directory structure
 
     Returns:
         Path to the state file

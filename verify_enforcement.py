@@ -8,8 +8,8 @@ from unittest.mock import MagicMock
 # Add repo to path
 sys.path.append(str(Path.cwd()))
 
-from zerg.governance import CharterEnforcer, GovernanceService
-from zerg.state.manager import StateManager
+from mahabharatha.governance import CharterEnforcer, GovernanceService
+from mahabharatha.state.manager import StateManager
 
 
 class TestEnforcement(unittest.TestCase):

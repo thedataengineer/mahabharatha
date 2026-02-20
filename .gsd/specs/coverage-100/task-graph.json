@@ -18,7 +18,7 @@
       "files": {
         "create": [],
         "modify": ["tests/mocks/mock_merge.py"],
-        "read": ["zerg/merge.py"]
+        "read": ["mahabharatha/merge.py"]
       },
       "acceptance_criteria": [
         "MockMergeCoordinator supports configure() for timeout/failure simulation",
@@ -44,7 +44,7 @@
       "files": {
         "create": ["tests/mocks/mock_state.py"],
         "modify": [],
-        "read": ["zerg/state.py"]
+        "read": ["mahabharatha/state.py"]
       },
       "acceptance_criteria": [
         "MockStateManager with configurable initial state",
@@ -70,7 +70,7 @@
       "files": {
         "create": ["tests/fixtures/orchestrator_fixtures.py"],
         "modify": [],
-        "read": ["zerg/orchestrator.py", "zerg/launcher.py"]
+        "read": ["mahabharatha/orchestrator.py", "mahabharatha/launcher.py"]
       },
       "acceptance_criteria": [
         "Fixture for simulating container launcher failures",
@@ -96,7 +96,7 @@
       "files": {
         "create": ["tests/unit/test_merge_flow.py"],
         "modify": [],
-        "read": ["zerg/merge.py", "tests/mocks/mock_merge.py"]
+        "read": ["mahabharatha/merge.py", "tests/mocks/mock_merge.py"]
       },
       "acceptance_criteria": [
         "Test MergeFlowResult initialization with all fields",
@@ -122,7 +122,7 @@
       "files": {
         "create": ["tests/unit/test_merge_coordinator_init.py"],
         "modify": [],
-        "read": ["zerg/merge.py", "tests/mocks/mock_merge.py"]
+        "read": ["mahabharatha/merge.py", "tests/mocks/mock_merge.py"]
       },
       "acceptance_criteria": [
         "Test __init__ with default config",
@@ -148,7 +148,7 @@
       "files": {
         "create": ["tests/unit/test_merge_gates.py"],
         "modify": [],
-        "read": ["zerg/merge.py", "zerg/gates.py"]
+        "read": ["mahabharatha/merge.py", "mahabharatha/gates.py"]
       },
       "acceptance_criteria": [
         "Test run_pre_merge_gates with all gates passing",
@@ -174,7 +174,7 @@
       "files": {
         "create": ["tests/unit/test_merge_execute.py"],
         "modify": [],
-        "read": ["zerg/merge.py", "zerg/exceptions.py"]
+        "read": ["mahabharatha/merge.py", "mahabharatha/exceptions.py"]
       },
       "acceptance_criteria": [
         "Test successful merge of single branch",
@@ -200,7 +200,7 @@
       "files": {
         "create": ["tests/unit/test_merge_full_flow.py"],
         "modify": [],
-        "read": ["zerg/merge.py"]
+        "read": ["mahabharatha/merge.py"]
       },
       "acceptance_criteria": [
         "Test full_merge_flow success path",
@@ -226,7 +226,7 @@
       "files": {
         "create": ["tests/unit/test_state_persistence.py"],
         "modify": [],
-        "read": ["zerg/state.py", "tests/mocks/mock_state.py"]
+        "read": ["mahabharatha/state.py", "tests/mocks/mock_state.py"]
       },
       "acceptance_criteria": [
         "Test load with missing state file (creates new)",
@@ -252,7 +252,7 @@
       "files": {
         "create": ["tests/unit/test_state_workers.py"],
         "modify": [],
-        "read": ["zerg/state.py"]
+        "read": ["mahabharatha/state.py"]
       },
       "acceptance_criteria": [
         "Test get_worker_state with non-existent worker ID",
@@ -278,7 +278,7 @@
       "files": {
         "create": ["tests/unit/test_state_tasks.py"],
         "modify": [],
-        "read": ["zerg/state.py"]
+        "read": ["mahabharatha/state.py"]
       },
       "acceptance_criteria": [
         "Test get_task_status for non-existent task",
@@ -304,7 +304,7 @@
       "files": {
         "create": ["tests/unit/test_state_levels.py"],
         "modify": [],
-        "read": ["zerg/state.py"]
+        "read": ["mahabharatha/state.py"]
       },
       "acceptance_criteria": [
         "Test set_level_status transitions",
@@ -330,7 +330,7 @@
       "files": {
         "create": ["tests/unit/test_launcher_errors.py"],
         "modify": [],
-        "read": ["zerg/launcher.py", "tests/fixtures/orchestrator_fixtures.py"]
+        "read": ["mahabharatha/launcher.py", "tests/fixtures/orchestrator_fixtures.py"]
       },
       "acceptance_criteria": [
         "Test spawn with Docker daemon not running",
@@ -356,7 +356,7 @@
       "files": {
         "create": ["tests/unit/test_launcher_network.py"],
         "modify": [],
-        "read": ["zerg/launcher.py"]
+        "read": ["mahabharatha/launcher.py"]
       },
       "acceptance_criteria": [
         "Test custom network configuration",
@@ -382,7 +382,7 @@
       "files": {
         "create": ["tests/unit/test_launcher_process.py"],
         "modify": [],
-        "read": ["zerg/launcher.py"]
+        "read": ["mahabharatha/launcher.py"]
       },
       "acceptance_criteria": [
         "Test _exec_worker_entry success path",
@@ -408,7 +408,7 @@
       "files": {
         "create": ["tests/unit/test_orchestrator_container_mode.py"],
         "modify": [],
-        "read": ["zerg/orchestrator.py", "tests/fixtures/orchestrator_fixtures.py"]
+        "read": ["mahabharatha/orchestrator.py", "tests/fixtures/orchestrator_fixtures.py"]
       },
       "acceptance_criteria": [
         "Test container mode initialization",
@@ -434,7 +434,7 @@
       "files": {
         "create": ["tests/unit/test_orchestrator_timeout.py"],
         "modify": [],
-        "read": ["zerg/orchestrator.py"]
+        "read": ["mahabharatha/orchestrator.py"]
       },
       "acceptance_criteria": [
         "Test merge timeout triggers retry",
@@ -460,7 +460,7 @@
       "files": {
         "create": ["tests/unit/test_orchestrator_recovery.py"],
         "modify": [],
-        "read": ["zerg/orchestrator.py"]
+        "read": ["mahabharatha/orchestrator.py"]
       },
       "acceptance_criteria": [
         "Test _set_recoverable_error sets pause state",
@@ -486,7 +486,7 @@
       "files": {
         "create": ["tests/integration/test_merge_integration.py"],
         "modify": [],
-        "read": ["zerg/merge.py", "tests/mocks/mock_merge.py"]
+        "read": ["mahabharatha/merge.py", "tests/mocks/mock_merge.py"]
       },
       "acceptance_criteria": [
         "Test full merge flow end-to-end",
@@ -512,7 +512,7 @@
       "files": {
         "create": ["tests/integration/test_state_integration.py"],
         "modify": [],
-        "read": ["zerg/state.py"]
+        "read": ["mahabharatha/state.py"]
       },
       "acceptance_criteria": [
         "Test state save and load roundtrip",
@@ -538,7 +538,7 @@
       "files": {
         "create": ["tests/integration/test_launcher_integration.py"],
         "modify": [],
-        "read": ["zerg/launcher.py", "tests/mocks/mock_launcher.py"]
+        "read": ["mahabharatha/launcher.py", "tests/mocks/mock_launcher.py"]
       },
       "acceptance_criteria": [
         "Test spawn to terminate lifecycle",
@@ -564,7 +564,7 @@
       "files": {
         "create": ["tests/integration/test_orchestrator_integration.py"],
         "modify": [],
-        "read": ["zerg/orchestrator.py"]
+        "read": ["mahabharatha/orchestrator.py"]
       },
       "acceptance_criteria": [
         "Test orchestrator recovery from worker crash",
@@ -601,7 +601,7 @@
         "orchestrator.py coverage >= 95%"
       ],
       "verification": {
-        "command": "pytest tests/unit/ tests/integration/ --cov=zerg.merge --cov=zerg.state --cov=zerg.launcher --cov=zerg.orchestrator --cov-fail-under=95 -q",
+        "command": "pytest tests/unit/ tests/integration/ --cov=mahabharatha.merge --cov=mahabharatha.state --cov=mahabharatha.launcher --cov=mahabharatha.orchestrator --cov-fail-under=95 -q",
         "timeout_seconds": 300
       },
       "estimate_minutes": 5,
@@ -625,7 +625,7 @@
         "All modules included in report"
       ],
       "verification": {
-        "command": "pytest tests/unit/ --cov=zerg --cov-report=html -q && test -f htmlcov/index.html && echo 'HTML report generated'",
+        "command": "pytest tests/unit/ --cov=mahabharatha --cov-report=html -q && test -f htmlcov/index.html && echo 'HTML report generated'",
         "timeout_seconds": 300
       },
       "estimate_minutes": 5,

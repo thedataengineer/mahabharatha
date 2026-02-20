@@ -8,7 +8,7 @@
 
 ## Problem
 
-After rush completes, there is no human-friendly confirmation of which launcher mode was used. The #2 fix added a class name print (`ContainerLauncher`/`SubprocessLauncher`) but the issue expects a user-friendly format with worker count.
+After kurukshetra completes, there is no human-friendly confirmation of which launcher mode was used. The #2 fix added a class name print (`ContainerLauncher`/`SubprocessLauncher`) but the issue expects a user-friendly format with worker count.
 
 ## Requirements
 

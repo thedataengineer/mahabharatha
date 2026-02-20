@@ -1,4 +1,4 @@
-"""Tests for ZERG security module."""
+"""Tests for MAHABHARATHA security module."""
 
 import os
 from pathlib import Path

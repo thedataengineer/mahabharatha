@@ -23,8 +23,8 @@ Fix 182 mypy errors across 38 files and 19 ruff lint violations. Errors break in
 8. **merge_cmd.py** — `MergeCoordinator.merge_level()` (line 139) — method doesn't exist
 9. **merge_cmd.py** — `list[QualityGate].items()` (line 265) — list treated as dict
 10. **merge_cmd.py** — `GateRunResult == GateResult.PASS` (line 276) — wrong comparison
-11. **rush.py** — `WhatIfReport.has_errors` (line 140) — DryRunReport assigned to wrong type
-12. **rush.py** — `RiskReport` undefined (line 226) — forward ref without TYPE_CHECKING import
+11. **kurukshetra.py** — `WhatIfReport.has_errors` (line 140) — DryRunReport assigned to wrong type
+12. **kurukshetra.py** — `RiskReport` undefined (line 226) — forward ref without TYPE_CHECKING import
 13. **review.py** — `str.file/line/message` (lines 516-527) — ReviewItem assigned to str-typed variable
 14. **plan.py** — `Collection[str].append()` (lines 421,434,448) — dict value typed too narrowly
 
@@ -62,5 +62,5 @@ Fix 182 mypy errors across 38 files and 19 ruff lint violations. Errors break in
 38. **SIM115** — 3 open() without context manager in state.py
 39. **SIM102** — 1 collapsible if in orchestrator.py
 40. **B007** — 1 unused loop variable in orchestrator.py
-41. **F821+F401** — RiskReport forward ref + unused import in rush.py
+41. **F821+F401** — RiskReport forward ref + unused import in kurukshetra.py
 42. **F401** — unused import in dryrun.py

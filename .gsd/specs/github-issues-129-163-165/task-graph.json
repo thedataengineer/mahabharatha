@@ -10,79 +10,79 @@
     {
       "id": "TASK-001",
       "title": "Create educational tone definition",
-      "description": "Create zerg/data/tones/educational.md defining the educational documentation tone. Must include: tone name/description, required sections per concept (CONCEPT, NARRATIVE, DIAGRAM, COMMAND), output structure template, and example output. This is the DEFAULT tone for /zerg:document.",
+      "description": "Create mahabharatha/data/tones/educational.md defining the educational documentation tone. Must include: tone name/description, required sections per concept (CONCEPT, NARRATIVE, DIAGRAM, COMMAND), output structure template, and example output. This is the DEFAULT tone for /mahabharatha:document.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/data/tones/educational.md"],
+        "create": ["mahabharatha/data/tones/educational.md"],
         "modify": [],
-        "read": ["zerg/data/commands/document.md"]
+        "read": ["mahabharatha/data/commands/document.md"]
       },
       "acceptance_criteria": [
-        "File exists at zerg/data/tones/educational.md",
+        "File exists at mahabharatha/data/tones/educational.md",
         "Contains CONCEPT, NARRATIVE, DIAGRAM, COMMAND section definitions",
         "Includes example output demonstrating the tone",
         "Explains when to use this tone"
       ],
       "verification": {
-        "command": "test -f zerg/data/tones/educational.md && grep -q 'CONCEPT' zerg/data/tones/educational.md && grep -q 'NARRATIVE' zerg/data/tones/educational.md",
+        "command": "test -f mahabharatha/data/tones/educational.md && grep -q 'CONCEPT' mahabharatha/data/tones/educational.md && grep -q 'NARRATIVE' mahabharatha/data/tones/educational.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
       "skills_required": ["documentation"],
       "consumers": ["TASK-004"],
       "integration_test": "tests/unit/test_document_tone.py",
-      "context": "## Spec Context\nFR-001: Add --tone educational|reference|tutorial flag to /zerg:document\nFR-002: educational is the DEFAULT tone (not reference)\nFR-004: Educational tone: every concept has CONCEPT, NARRATIVE, DIAGRAM, COMMAND sections\n\nThe educational tone was manually developed for issue #129. It teaches 'why' not just 'what'. Every concept gets a plain-language explanation, a narrative connecting it to the bigger picture, a Mermaid diagram, and concrete CLI examples.\n\n## Dependencies\nNo upstream dependencies — this is a foundation task."
+      "context": "## Spec Context\nFR-001: Add --tone educational|reference|tutorial flag to /mahabharatha:document\nFR-002: educational is the DEFAULT tone (not reference)\nFR-004: Educational tone: every concept has CONCEPT, NARRATIVE, DIAGRAM, COMMAND sections\n\nThe educational tone was manually developed for issue #129. It teaches 'why' not just 'what'. Every concept gets a plain-language explanation, a narrative connecting it to the bigger picture, a Mermaid diagram, and concrete CLI examples.\n\n## Dependencies\nNo upstream dependencies — this is a foundation task."
     },
     {
       "id": "TASK-002",
       "title": "Create reference tone definition",
-      "description": "Create zerg/data/tones/reference.md defining the reference documentation tone. This preserves the current terse documentation behavior: tables, API signatures, parameter lists, minimal prose.",
+      "description": "Create mahabharatha/data/tones/reference.md defining the reference documentation tone. This preserves the current terse documentation behavior: tables, API signatures, parameter lists, minimal prose.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/data/tones/reference.md"],
+        "create": ["mahabharatha/data/tones/reference.md"],
         "modify": [],
-        "read": ["zerg/data/commands/document.md"]
+        "read": ["mahabharatha/data/commands/document.md"]
       },
       "acceptance_criteria": [
-        "File exists at zerg/data/tones/reference.md",
+        "File exists at mahabharatha/data/tones/reference.md",
         "Defines terse table-driven output style",
         "Includes example output demonstrating the tone",
-        "Matches current /zerg:document default behavior"
+        "Matches current /mahabharatha:document default behavior"
       ],
       "verification": {
-        "command": "test -f zerg/data/tones/reference.md && grep -qi 'reference' zerg/data/tones/reference.md",
+        "command": "test -f mahabharatha/data/tones/reference.md && grep -qi 'reference' mahabharatha/data/tones/reference.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
       "skills_required": ["documentation"],
       "consumers": ["TASK-004"],
       "integration_test": "tests/unit/test_document_tone.py",
-      "context": "## Spec Context\nFR-005: Reference tone: terse tables and API signatures (current behavior)\n\nThe reference tone preserves backward compatibility with current /zerg:document output. It's the 'just the facts' style — parameter tables, return types, function signatures. No narrative, no diagrams unless structurally necessary.\n\n## Dependencies\nNo upstream dependencies — this is a foundation task."
+      "context": "## Spec Context\nFR-005: Reference tone: terse tables and API signatures (current behavior)\n\nThe reference tone preserves backward compatibility with current /mahabharatha:document output. It's the 'just the facts' style — parameter tables, return types, function signatures. No narrative, no diagrams unless structurally necessary.\n\n## Dependencies\nNo upstream dependencies — this is a foundation task."
     },
     {
       "id": "TASK-003",
       "title": "Create tutorial tone definition",
-      "description": "Create zerg/data/tones/tutorial.md defining the tutorial documentation tone. Step-by-step walkthrough style with simulated dialogues and progressive complexity.",
+      "description": "Create mahabharatha/data/tones/tutorial.md defining the tutorial documentation tone. Step-by-step walkthrough style with simulated dialogues and progressive complexity.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/data/tones/tutorial.md"],
+        "create": ["mahabharatha/data/tones/tutorial.md"],
         "modify": [],
-        "read": ["zerg/data/commands/document.md"]
+        "read": ["mahabharatha/data/commands/document.md"]
       },
       "acceptance_criteria": [
-        "File exists at zerg/data/tones/tutorial.md",
+        "File exists at mahabharatha/data/tones/tutorial.md",
         "Defines step-by-step walkthrough style",
         "Includes simulated dialogue examples",
         "Shows progressive complexity structure"
       ],
       "verification": {
-        "command": "test -f zerg/data/tones/tutorial.md && grep -qi 'tutorial' zerg/data/tones/tutorial.md",
+        "command": "test -f mahabharatha/data/tones/tutorial.md && grep -qi 'tutorial' mahabharatha/data/tones/tutorial.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -93,33 +93,33 @@
     },
     {
       "id": "TASK-004",
-      "title": "Add --tone flag to /zerg:document",
-      "description": "Modify zerg/commands/document.py to add --tone click option (educational|reference|tutorial, default educational). Modify zerg/data/commands/document.md prompt to instruct Claude to read the appropriate tone file from zerg/data/tones/{tone}.md and apply its style.",
+      "title": "Add --tone flag to /mahabharatha:document",
+      "description": "Modify mahabharatha/commands/document.py to add --tone click option (educational|reference|tutorial, default educational). Modify mahabharatha/data/commands/document.md prompt to instruct Claude to read the appropriate tone file from mahabharatha/data/tones/{tone}.md and apply its style.",
       "phase": "core",
       "level": 2,
       "dependencies": ["TASK-001", "TASK-002", "TASK-003"],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/document.py", "zerg/data/commands/document.md"],
-        "read": ["zerg/data/tones/educational.md", "zerg/data/tones/reference.md", "zerg/data/tones/tutorial.md"]
+        "modify": ["mahabharatha/commands/document.py", "mahabharatha/data/commands/document.md"],
+        "read": ["mahabharatha/data/tones/educational.md", "mahabharatha/data/tones/reference.md", "mahabharatha/data/tones/tutorial.md"]
       },
       "acceptance_criteria": [
         "--tone flag accepted by Click with choices educational|reference|tutorial",
         "Default tone is educational",
         "Tone value passed through to renderer/prompt layer",
-        "document.md instructs Claude to read zerg/data/tones/{tone}.md",
+        "document.md instructs Claude to read mahabharatha/data/tones/{tone}.md",
         "Help text updated to show --tone flag",
         "document.md stays under 300 lines"
       ],
       "verification": {
-        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -c \"from zerg.commands.document import document; print('OK')\" && grep -q 'tone' zerg/commands/document.py && grep -q 'tone' zerg/data/commands/document.md",
+        "command": "cd /Users/klambros/PycharmProjects/MAHABHARATHA && python -c \"from mahabharatha.commands.document import document; print('OK')\" && grep -q 'tone' mahabharatha/commands/document.py && grep -q 'tone' mahabharatha/data/commands/document.md",
         "timeout_seconds": 60
       },
       "estimate_minutes": 20,
       "skills_required": ["python", "click"],
       "consumers": ["TASK-008"],
       "integration_test": "tests/unit/test_document_tone.py",
-      "context": "## Security Rules (Python)\n- Use click.Choice for input validation (already standard pattern)\n- No user-controlled file paths — tone maps to a fixed set of files\n\n## Spec Context\nFR-001: Add --tone educational|reference|tutorial flag\nFR-002: educational is DEFAULT\nFR-003: Tone definitions stored at zerg/data/tones/{tone}.md\n\nExisting document.py has @click.option for --type, --output, --depth, --update. Add --tone in the same pattern. The prompt file (document.md) must instruct Claude to read the tone file and follow its style guidelines.\n\n## Dependencies\nTASK-001/002/003 create the tone definition files at zerg/data/tones/."
+      "context": "## Security Rules (Python)\n- Use click.Choice for input validation (already standard pattern)\n- No user-controlled file paths — tone maps to a fixed set of files\n\n## Spec Context\nFR-001: Add --tone educational|reference|tutorial flag\nFR-002: educational is DEFAULT\nFR-003: Tone definitions stored at mahabharatha/data/tones/{tone}.md\n\nExisting document.py has @click.option for --type, --output, --depth, --update. Add --tone in the same pattern. The prompt file (document.md) must instruct Claude to read the tone file and follow its style guidelines.\n\n## Dependencies\nTASK-001/002/003 create the tone definition files at mahabharatha/data/tones/."
     },
     {
       "id": "TASK-005",
@@ -130,7 +130,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/plan.core.md", "zerg/data/commands/plan.md"],
+        "modify": ["mahabharatha/data/commands/plan.core.md", "mahabharatha/data/commands/plan.md"],
         "read": []
       },
       "acceptance_criteria": [
@@ -142,14 +142,14 @@
         "TaskCreate/TaskUpdate references preserved (no drift)"
       ],
       "verification": {
-        "command": "count=$(grep -c 'MUST NEVER\\|DO NOT.*implement\\|DO NOT.*write code\\|DO NOT.*design' zerg/data/commands/plan.core.md); test $count -ge 4 && echo \"OK: $count guards\" || echo \"FAIL: only $count guards\"",
+        "command": "count=$(grep -c 'MUST NEVER\\|DO NOT.*implement\\|DO NOT.*write code\\|DO NOT.*design' mahabharatha/data/commands/plan.core.md); test $count -ge 4 && echo \"OK: $count guards\" || echo \"FAIL: only $count guards\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
       "skills_required": ["prompt-engineering"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nFR-007: Add redundant anti-implementation guards to plan.core.md at 4 locations\nFR-008: Plan terminal output: 'PLANNING COMPLETE' banner with explicit EXIT statement\n\nIssue #163: /z:plan occasionally bypasses the plan->design->rush workflow and auto-implements. The existing guard at top-of-file is insufficient because Claude forgets it by Phase 5. Redundant guards at decision boundaries prevent drift.\n\nCurrent plan.core.md already has one guard section at the top. Add 3 more at strategic locations. The parent plan.md must stay synced.\n\n## Anti-Drift\nplan.core.md and plan.md both contain TaskCreate/TaskUpdate references. These are load-bearing — DO NOT remove them."
+      "context": "## Spec Context\nFR-007: Add redundant anti-implementation guards to plan.core.md at 4 locations\nFR-008: Plan terminal output: 'PLANNING COMPLETE' banner with explicit EXIT statement\n\nIssue #163: /z:plan occasionally bypasses the plan->design->kurukshetra workflow and auto-implements. The existing guard at top-of-file is insufficient because Claude forgets it by Phase 5. Redundant guards at decision boundaries prevent drift.\n\nCurrent plan.core.md already has one guard section at the top. Add 3 more at strategic locations. The parent plan.md must stay synced.\n\n## Anti-Drift\nplan.core.md and plan.md both contain TaskCreate/TaskUpdate references. These are load-bearing — DO NOT remove them."
     },
     {
       "id": "TASK-006",
@@ -160,7 +160,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/plan.details.md"],
+        "modify": ["mahabharatha/data/commands/plan.details.md"],
         "read": []
       },
       "acceptance_criteria": [
@@ -170,7 +170,7 @@
         "11.2 contains a checklist including CHANGELOG (always required), README, command refs, CLAUDE.md, wiki"
       ],
       "verification": {
-        "command": "grep -q 'Documentation Impact Analysis' zerg/data/commands/plan.details.md && grep -q '11.1' zerg/data/commands/plan.details.md && grep -q '11.2' zerg/data/commands/plan.details.md",
+        "command": "grep -q 'Documentation Impact Analysis' mahabharatha/data/commands/plan.details.md && grep -q '11.1' mahabharatha/data/commands/plan.details.md && grep -q '11.2' mahabharatha/data/commands/plan.details.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -188,7 +188,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/design.core.md", "zerg/data/commands/design.md"],
+        "modify": ["mahabharatha/data/commands/design.core.md", "mahabharatha/data/commands/design.md"],
         "read": []
       },
       "acceptance_criteria": [
@@ -200,7 +200,7 @@
         "TaskCreate/TaskUpdate references preserved (no drift)"
       ],
       "verification": {
-        "command": "grep -q 'Mandatory Documentation Tasks' zerg/data/commands/design.core.md && grep -q 'CHANGELOG' zerg/data/commands/design.core.md",
+        "command": "grep -q 'Mandatory Documentation Tasks' mahabharatha/data/commands/design.core.md && grep -q 'CHANGELOG' mahabharatha/data/commands/design.core.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
@@ -219,7 +219,7 @@
       "files": {
         "create": ["tests/unit/test_document_tone.py"],
         "modify": [],
-        "read": ["zerg/commands/document.py", "tests/unit/test_wiki_document.py"]
+        "read": ["mahabharatha/commands/document.py", "tests/unit/test_wiki_document.py"]
       },
       "acceptance_criteria": [
         "Test file exists at tests/unit/test_document_tone.py",
@@ -228,7 +228,7 @@
         "Follows existing test patterns from test_wiki_document.py"
       ],
       "verification": {
-        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -m pytest tests/unit/test_document_tone.py -x -q --timeout=60",
+        "command": "cd /Users/klambros/PycharmProjects/MAHABHARATHA && python -m pytest tests/unit/test_document_tone.py -x -q --timeout=60",
         "timeout_seconds": 120
       },
       "estimate_minutes": 15,
@@ -251,7 +251,7 @@
       },
       "acceptance_criteria": [
         "CHANGELOG.md has entries under [Unreleased] for all 3 issues",
-        "README.md shows --tone flag in /zerg:document examples",
+        "README.md shows --tone flag in /mahabharatha:document examples",
         "docs/commands-quick.md has --tone row in document flag table",
         "docs/commands-deep.md has --tone documentation"
       ],
@@ -263,12 +263,12 @@
       "skills_required": ["documentation"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nFR-012: Update project documentation (README, wiki, command refs, CLAUDE.md) for this feature\n\nCHANGELOG entries needed:\n- Added: --tone flag for /zerg:document with educational (default), reference, tutorial tones\n- Added: 3 tone definition files at zerg/data/tones/\n- Changed: /z:plan anti-implementation guards hardened at 4 locations\n- Changed: Plan requirements template includes Section 11 Documentation Impact Analysis\n- Changed: /z:design mandates CHANGELOG and doc tasks in task graphs"
+      "context": "## Spec Context\nFR-012: Update project documentation (README, wiki, command refs, CLAUDE.md) for this feature\n\nCHANGELOG entries needed:\n- Added: --tone flag for /mahabharatha:document with educational (default), reference, tutorial tones\n- Added: 3 tone definition files at mahabharatha/data/tones/\n- Changed: /z:plan anti-implementation guards hardened at 4 locations\n- Changed: Plan requirements template includes Section 11 Documentation Impact Analysis\n- Changed: /z:design mandates CHANGELOG and doc tasks in task graphs"
     },
     {
       "id": "TASK-010",
       "title": "Update wiki and CLAUDE.md",
-      "description": "Update .gsd/wiki/Command-Reference.md with --tone flag for /zerg:document. Update .gsd/wiki/Tutorial.md with tone examples. Update CLAUDE.md to document the new documentation impact analysis requirement for /z:plan and /z:design.",
+      "description": "Update .gsd/wiki/Command-Reference.md with --tone flag for /mahabharatha:document. Update .gsd/wiki/Tutorial.md with tone examples. Update CLAUDE.md to document the new documentation impact analysis requirement for /z:plan and /z:design.",
       "phase": "quality",
       "level": 4,
       "dependencies": ["TASK-008"],
@@ -278,7 +278,7 @@
         "read": []
       },
       "acceptance_criteria": [
-        "Command-Reference.md shows --tone flag for /zerg:document",
+        "Command-Reference.md shows --tone flag for /mahabharatha:document",
         "Tutorial.md mentions tone in documentation examples",
         "CLAUDE.md documents documentation impact analysis requirement"
       ],
@@ -290,7 +290,7 @@
       "skills_required": ["documentation"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nFR-012: Update project documentation for this feature\n\nCommand-Reference.md is a large wiki page (~28K tokens). Find the /zerg:document section and add --tone to its flag table. Tutorial.md should mention tone selection in its documentation examples. CLAUDE.md needs a note about the new convention that /z:plan and /z:design track documentation impact."
+      "context": "## Spec Context\nFR-012: Update project documentation for this feature\n\nCommand-Reference.md is a large wiki page (~28K tokens). Find the /mahabharatha:document section and add --tone to its flag table. Tutorial.md should mention tone selection in its documentation examples. CLAUDE.md needs a note about the new convention that /z:plan and /z:design track documentation impact."
     },
     {
       "id": "TASK-011",
@@ -302,7 +302,7 @@
       "files": {
         "create": [],
         "modify": [],
-        "read": ["zerg/**/*.py", "tests/**/*.py"]
+        "read": ["mahabharatha/**/*.py", "tests/**/*.py"]
       },
       "acceptance_criteria": [
         "validate_commands passes",
@@ -310,7 +310,7 @@
         "No drift detected in command files"
       ],
       "verification": {
-        "command": "cd /Users/klambros/PycharmProjects/ZERG && python -m zerg.validate_commands && python -m pytest tests/unit/test_document_tone.py tests/unit/test_wiki_document.py -x --timeout=60 -q",
+        "command": "cd /Users/klambros/PycharmProjects/MAHABHARATHA && python -m mahabharatha.validate_commands && python -m pytest tests/unit/test_document_tone.py tests/unit/test_wiki_document.py -x --timeout=60 -q",
         "timeout_seconds": 120
       },
       "estimate_minutes": 5,

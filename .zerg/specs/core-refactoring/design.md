@@ -53,7 +53,7 @@ Refactor 3 god classes (~4,500 lines) into maintainable modules across 3 sequenc
 
 **After PR 2 (Split):**
 ```
-zerg/
+mahabharatha/
 ├── launcher_types.py         ~80L   # LauncherConfig, SpawnResult, WorkerHandle
 ├── env_validator.py          ~50L   # validate_env_vars, ALLOWED/DANGEROUS sets
 ├── launchers/
@@ -69,7 +69,7 @@ zerg/
 
 **After PR 3 (Registry):**
 ```
-zerg/
+mahabharatha/
 ├── worker_registry.py        ~150L  # WorkerRegistry: thread-safe worker state
 └── (5 consumers migrated from raw dict to registry)
 ```
@@ -167,10 +167,10 @@ class WorkerLauncher(ABC):
 - Factory `get_plugin_launcher()` → `launchers/__init__.py`
 
 **Import migration**: All 4 importers updated:
-- `orchestrator.py` → `from zerg.launchers import ...`
-- `worker_manager.py` → `from zerg.launchers import WorkerLauncher`
-- `launcher_configurator.py` → `from zerg.launchers import ...`
-- `config.py` → `from zerg.launcher_types import LauncherType`
+- `orchestrator.py` → `from mahabharatha.launchers import ...`
+- `worker_manager.py` → `from mahabharatha.launchers import WorkerLauncher`
+- `launcher_configurator.py` → `from mahabharatha.launchers import ...`
+- `config.py` → `from mahabharatha.launcher_types import LauncherType`
 
 #### orchestrator.py Slimming
 
@@ -206,8 +206,8 @@ class WorkerProtocol:
 ```python
 # worker_registry.py
 import threading
-from zerg.types import WorkerState
-from zerg.constants import WorkerStatus
+from mahabharatha.types import WorkerState
+from mahabharatha.constants import WorkerStatus
 
 class WorkerRegistry:
     """Single source of truth for worker state. Thread-safe."""
@@ -308,7 +308,7 @@ class WorkerRegistry:
 
 **Decision**: Clean break — update all imports in-PR, no re-exports.
 
-**Rationale**: Re-exports add tech debt. With `python -m zerg.validate_commands` in CI, broken imports are caught immediately.
+**Rationale**: Re-exports add tech debt. With `python -m mahabharatha.validate_commands` in CI, broken imports are caught immediately.
 
 ---
 
@@ -335,34 +335,34 @@ class WorkerRegistry:
 
 | File | Task ID | Operation | PR |
 |------|---------|-----------|-----|
-| `zerg/launcher.py` | TASK-001 | modify (dedup spawn_with_retry) | PR1 |
-| `zerg/launcher.py` | TASK-002 | modify (dedup _start_container) | PR1 |
-| `zerg/launcher.py` | TASK-003 | modify (dedup terminate) | PR1 |
-| `zerg/orchestrator.py` | TASK-004 | modify (unify _main_loop) | PR1 |
-| `zerg/orchestrator.py` | TASK-005 | modify (unify _poll_workers) | PR1 |
-| `zerg/worker_protocol.py` | TASK-006 | modify (dedup claim/wait) | PR1 |
-| `zerg/level_coordinator.py` | TASK-007 | modify (dedup claim_next_task) | PR1 |
+| `mahabharatha/launcher.py` | TASK-001 | modify (dedup spawn_with_retry) | PR1 |
+| `mahabharatha/launcher.py` | TASK-002 | modify (dedup _start_container) | PR1 |
+| `mahabharatha/launcher.py` | TASK-003 | modify (dedup terminate) | PR1 |
+| `mahabharatha/orchestrator.py` | TASK-004 | modify (unify _main_loop) | PR1 |
+| `mahabharatha/orchestrator.py` | TASK-005 | modify (unify _poll_workers) | PR1 |
+| `mahabharatha/worker_protocol.py` | TASK-006 | modify (dedup claim/wait) | PR1 |
+| `mahabharatha/level_coordinator.py` | TASK-007 | modify (dedup claim_next_task) | PR1 |
 | `tests/unit/test_dedup_unified.py` | TASK-008 | create | PR1 |
 | `tests/integration/test_dedup_behavioral.py` | TASK-009 | create | PR1 |
-| `zerg/launcher_types.py` | TASK-010 | create | PR2 |
-| `zerg/env_validator.py` | TASK-011 | create | PR2 |
-| `zerg/launchers/__init__.py` | TASK-012 | create | PR2 |
-| `zerg/launchers/base.py` | TASK-013 | create | PR2 |
-| `zerg/launchers/subprocess_launcher.py` | TASK-014 | create | PR2 |
-| `zerg/launchers/container_launcher.py` | TASK-015 | create | PR2 |
-| `zerg/launcher.py` | TASK-016 | delete (replaced) | PR2 |
-| `zerg/protocol_types.py` | TASK-017 | create | PR2 |
-| `zerg/protocol_handler.py` | TASK-018 | create | PR2 |
-| `zerg/protocol_state.py` | TASK-019 | create | PR2 |
-| `zerg/worker_protocol.py` | TASK-020 | delete (replaced) | PR2 |
-| `zerg/orchestrator.py` | TASK-021 | modify (slim thin wrappers) | PR2 |
-| `zerg/*` (imports) | TASK-022 | modify (all import paths) | PR2 |
+| `mahabharatha/launcher_types.py` | TASK-010 | create | PR2 |
+| `mahabharatha/env_validator.py` | TASK-011 | create | PR2 |
+| `mahabharatha/launchers/__init__.py` | TASK-012 | create | PR2 |
+| `mahabharatha/launchers/base.py` | TASK-013 | create | PR2 |
+| `mahabharatha/launchers/subprocess_launcher.py` | TASK-014 | create | PR2 |
+| `mahabharatha/launchers/container_launcher.py` | TASK-015 | create | PR2 |
+| `mahabharatha/launcher.py` | TASK-016 | delete (replaced) | PR2 |
+| `mahabharatha/protocol_types.py` | TASK-017 | create | PR2 |
+| `mahabharatha/protocol_handler.py` | TASK-018 | create | PR2 |
+| `mahabharatha/protocol_state.py` | TASK-019 | create | PR2 |
+| `mahabharatha/worker_protocol.py` | TASK-020 | delete (replaced) | PR2 |
+| `mahabharatha/orchestrator.py` | TASK-021 | modify (slim thin wrappers) | PR2 |
+| `mahabharatha/*` (imports) | TASK-022 | modify (all import paths) | PR2 |
 | `tests/**` (imports) | TASK-023 | modify (test import paths) | PR2 |
-| `zerg/worker_registry.py` | TASK-024 | create | PR3 |
-| `zerg/orchestrator.py` | TASK-025 | modify (use registry) | PR3 |
-| `zerg/worker_manager.py` | TASK-026 | modify (use registry) | PR3 |
-| `zerg/level_coordinator.py` | TASK-027 | modify (use registry) | PR3 |
-| `zerg/launcher_configurator.py` | TASK-028 | modify (use registry) | PR3 |
+| `mahabharatha/worker_registry.py` | TASK-024 | create | PR3 |
+| `mahabharatha/orchestrator.py` | TASK-025 | modify (use registry) | PR3 |
+| `mahabharatha/worker_manager.py` | TASK-026 | modify (use registry) | PR3 |
+| `mahabharatha/level_coordinator.py` | TASK-027 | modify (use registry) | PR3 |
+| `mahabharatha/launcher_configurator.py` | TASK-028 | modify (use registry) | PR3 |
 | `tests/unit/test_worker_registry.py` | TASK-029 | create | PR3 |
 | `tests/integration/test_registry_wiring.py` | TASK-030 | create | PR3 |
 
@@ -422,7 +422,7 @@ PR3 — WorkerRegistry:
 
 | Risk | Probability | Impact | Mitigation |
 |------|-------------|--------|------------|
-| Import breakage after split | Medium | High | `python -m zerg.validate_commands` after every task |
+| Import breakage after split | Medium | High | `python -m mahabharatha.validate_commands` after every task |
 | Async behavior change | Low | High | Integration tests verify behavioral equivalence |
 | Thread safety gap in registry | Low | Medium | RLock on all operations; existing code is single-threaded |
 | CI test timeout from import churn | Low | Low | Keep test changes in dedicated task |
@@ -439,11 +439,11 @@ PR3 — WorkerRegistry:
 
 ### 7.2 Integration Tests
 - PR1: `test_dedup_behavioral.py` — end-to-end flow still works with unified methods
-- PR2: Full `python -m zerg.validate_commands` + existing integration suite
+- PR2: Full `python -m mahabharatha.validate_commands` + existing integration suite
 - PR3: `test_registry_wiring.py` — all 5 consumers interact correctly via registry
 
 ### 7.3 Verification Commands
-All tasks use: `python -m pytest tests/ -x -q --timeout=60 && python -m zerg.validate_commands && ruff check zerg/`
+All tasks use: `python -m pytest tests/ -x -q --timeout=60 && python -m mahabharatha.validate_commands && ruff check mahabharatha/`
 
 ---
 

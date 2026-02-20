@@ -1,4 +1,4 @@
-"""Real Docker E2E tests for ZERG container management.
+"""Real Docker E2E tests for MAHABHARATHA container management.
 
 These tests require a running Docker daemon. They are auto-skipped
 when Docker is unavailable (see conftest.py pytest_collection_modifyitems).

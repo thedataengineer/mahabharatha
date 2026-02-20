@@ -1,4 +1,4 @@
-"""Environment variable validation for ZERG workers.
+"""Environment variable validation for MAHABHARATHA workers.
 
 Provides allowlists, blocklists, and validation logic for environment
 variables passed to worker processes and containers.
@@ -12,7 +12,7 @@ logger = get_logger("env_validator")
 
 # Allowlisted environment variables that can be set from config
 ALLOWED_ENV_VARS = {
-    # ZERG-specific
+    # MAHABHARATHA-specific
     "ZERG_WORKER_ID",
     "ZERG_FEATURE",
     "ZERG_WORKTREE",

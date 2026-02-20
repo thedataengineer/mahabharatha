@@ -1,6 +1,6 @@
-# ZERG Test Suite
+# MAHABHARATHA Test Suite
 
-Comprehensive test coverage for the ZERG parallel execution system.
+Comprehensive test coverage for the MAHABHARATHA parallel execution system.
 
 ## Test Organization
 
@@ -44,8 +44,8 @@ pytest
 
 ### With Coverage
 ```bash
-pytest --cov=zerg --cov-report=term-missing
-pytest --cov=zerg --cov-report=html  # HTML report in htmlcov/
+pytest --cov=mahabharatha --cov-report=term-missing
+pytest --cov=mahabharatha --cov-report=html  # HTML report in htmlcov/
 ```
 
 ### Specific Categories
@@ -97,7 +97,7 @@ pytest -n 4     # Use 4 processes
 ```python
 def test_example_isolated(self) -> None:
     """Test description."""
-    with patch("zerg.module.dependency") as mock_dep:
+    with patch("mahabharatha.module.dependency") as mock_dep:
         mock_dep.return_value = expected_value
 
         result = component_under_test()

@@ -1,4 +1,4 @@
-"""Port allocation for ZERG workers."""
+"""Port allocation for MAHABHARATHA workers."""
 
 import asyncio
 import random

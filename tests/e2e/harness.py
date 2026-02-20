@@ -1,6 +1,6 @@
-"""E2E test harness for ZERG orchestration.
+"""E2E test harness for MAHABHARATHA orchestration.
 
-Sets up real git repos and simulates the ZERG orchestrator flow
+Sets up real git repos and simulates the MAHABHARATHA orchestrator flow
 for end-to-end testing without requiring the full subprocess worker
 infrastructure.
 """
@@ -30,9 +30,9 @@ class E2EResult:
 
 
 class E2EHarness:
-    """End-to-end test harness for ZERG orchestration.
+    """End-to-end test harness for MAHABHARATHA orchestration.
 
-    Creates a real git repository with the full ZERG directory structure,
+    Creates a real git repository with the full MAHABHARATHA directory structure,
     sets up task graphs, and simulates orchestrator execution using
     mock workers.
     """
@@ -57,10 +57,10 @@ class E2EHarness:
         self.repo_path: Path | None = None
 
     def setup_repo(self) -> Path:
-        """Create a git repository with full ZERG directory structure.
+        """Create a git repository with full MAHABHARATHA directory structure.
 
         Initializes a new git repo at tmp_path/repo with all required
-        ZERG directories and a default config, then creates an initial commit.
+        MAHABHARATHA directories and a default config, then creates an initial commit.
 
         Returns:
             Path to the initialized repository.
@@ -68,7 +68,7 @@ class E2EHarness:
         repo_path = self.tmp_path / "repo"
         repo_path.mkdir(parents=True, exist_ok=True)
 
-        # Create ZERG infrastructure directories
+        # Create MAHABHARATHA infrastructure directories
         (repo_path / ".mahabharatha").mkdir(parents=True, exist_ok=True)
         (repo_path / ".mahabharatha" / "state").mkdir(parents=True, exist_ok=True)
         (repo_path / ".mahabharatha" / "logs").mkdir(parents=True, exist_ok=True)
@@ -373,8 +373,8 @@ def _git_env() -> dict[str, str]:
     import os
 
     env = os.environ.copy()
-    env["GIT_AUTHOR_NAME"] = "ZERG Test"
+    env["GIT_AUTHOR_NAME"] = "MAHABHARATHA Test"
     env["GIT_AUTHOR_EMAIL"] = "test@mahabharatha.dev"
-    env["GIT_COMMITTER_NAME"] = "ZERG Test"
+    env["GIT_COMMITTER_NAME"] = "MAHABHARATHA Test"
     env["GIT_COMMITTER_EMAIL"] = "test@mahabharatha.dev"
     return env

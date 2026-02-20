@@ -5,7 +5,7 @@
 - **Status**: APPROVED
 - **Created**: 2026-02-07
 - **Author**: Factory Plan Mode
-- **Parent Epic**: #179 (ZERG Public Release)
+- **Parent Epic**: #179 (MAHABHARATHA Public Release)
 - **Issues**: #189, #190
 
 ---
@@ -13,7 +13,7 @@
 ## 1. Problem Statement
 
 ### 1.1 Background
-ZERG is preparing for public release. Phase 0 (blockers) and Phase 1 (community governance) are complete. The repo has basic CI (`ci.yml` with quality, smoke, test, audit jobs) but lacks security scanning, type checking in CI, Python 3.13 coverage, a documentation site, and structured GitHub Discussions.
+MAHABHARATHA is preparing for public release. Phase 0 (blockers) and Phase 1 (community governance) are complete. The repo has basic CI (`ci.yml` with quality, smoke, test, audit jobs) but lacks security scanning, type checking in CI, Python 3.13 coverage, a documentation site, and structured GitHub Discussions.
 
 ### 1.2 Problem
 - No automated security scanning (CodeQL) — vulnerabilities in PRs go undetected
@@ -36,7 +36,7 @@ Without Phase 2:
 
 ### 2.1 Primary Users
 - Open-source contributors submitting PRs (benefit from CI checks)
-- Developers evaluating ZERG (benefit from docs site)
+- Developers evaluating MAHABHARATHA (benefit from docs site)
 
 ### 2.2 Secondary Users
 - Maintainer (rocklambros) — benefits from automated security scanning and type enforcement
@@ -179,7 +179,7 @@ Without Phase 2:
 | TC-002 | mypy in CI | mypy step in quality | PR with type error | quality job fails |
 | TC-003 | Python 3.13 | Matrix includes 3.13 | Tests run | All tests pass on 3.13 |
 | TC-004 | Docs build | mkdocs.yml exists | `mkdocs build --strict` | Build succeeds |
-| TC-005 | CODEOWNERS | File exists | PR touches zerg/*.py | @rocklambros auto-requested |
+| TC-005 | CODEOWNERS | File exists | PR touches mahabharatha/*.py | @rocklambros auto-requested |
 
 ---
 

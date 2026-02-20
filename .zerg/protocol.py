@@ -1,4 +1,4 @@
-"""ZERG v2 Protocol - Worker communication protocol and state machine."""
+"""MAHABHARATHA v2 Protocol - Worker communication protocol and state machine."""
 
 from datetime import datetime
 from enum import Enum

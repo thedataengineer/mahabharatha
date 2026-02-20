@@ -1,4 +1,4 @@
-# ZERG Command Quick Reference
+# MAHABHARATHA Command Quick Reference
 
 Fast lookup for experienced users. For detailed explanations, see [Command Guide](commands-deep.md).
 
@@ -55,7 +55,7 @@ Fast lookup for experienced users. For detailed explanations, see [Command Guide
 
 ## Core Workflow
 
-### /zerg:brainstorm
+### /mahabharatha:brainstorm
 
 Open-ended feature discovery with competitive research and GitHub issue creation.
 
@@ -68,7 +68,7 @@ Open-ended feature discovery with competitive research and GitHub issue creation
 | `--dry-run` | bool | false | Preview issues only |
 | `--resume` | bool | false | Resume from checkpoint |
 
-### /zerg:design
+### /mahabharatha:design
 
 Generate architecture and task graph for parallel execution.
 
@@ -78,9 +78,9 @@ Generate architecture and task graph for parallel execution.
 
 Prerequisite: `.gsd/specs/{feature}/requirements.md` with APPROVED status.
 
-### /zerg:init
+### /mahabharatha:init
 
-Initialize ZERG for a project. Inception mode (empty dir) or Discovery mode (existing project).
+Initialize MAHABHARATHA for a project. Inception mode (empty dir) or Discovery mode (existing project).
 
 | Flag | Type | Default | Description |
 |------|------|---------|-------------|
@@ -89,7 +89,7 @@ Initialize ZERG for a project. Inception mode (empty dir) or Discovery mode (exi
 | `--no-security-rules` | bool | false | Skip TikiTribe security rules |
 | `--with-containers` | bool | false | Build devcontainer after init |
 
-### /zerg:plan
+### /mahabharatha:plan
 
 Capture requirements through interactive questioning.
 
@@ -99,7 +99,7 @@ Capture requirements through interactive questioning.
 | `--rounds` | int | 3 | Socratic rounds (max 5) |
 | `--from-issue` | string | "" | Import requirements from GitHub issue URL |
 
-### /zerg:rush
+### /mahabharatha:kurukshetra
 
 Launch parallel workers to execute task graph.
 
@@ -122,9 +122,9 @@ Launch parallel workers to execute task graph.
 
 ## Monitoring & Control
 
-### /zerg:cleanup
+### /mahabharatha:cleanup
 
-Remove ZERG artifacts and free resources.
+Remove MAHABHARATHA artifacts and free resources.
 
 | Flag | Type | Default | Description |
 |------|------|---------|-------------|
@@ -134,7 +134,7 @@ Remove ZERG artifacts and free resources.
 | `--keep-branches` | bool | false | Preserve git branches |
 | `--dry-run` | bool | false | Preview only |
 
-### /zerg:logs
+### /mahabharatha:logs
 
 Stream, filter, and aggregate worker logs.
 
@@ -155,7 +155,7 @@ Stream, filter, and aggregate worker logs.
 | `--until` | string | "" | Before ISO8601 timestamp |
 | `--search` | string | "" | Text search |
 
-### /zerg:merge
+### /mahabharatha:merge
 
 Manually trigger level merge operations.
 
@@ -169,7 +169,7 @@ Manually trigger level merge operations.
 | `--no-rebase` | bool | false | Don't rebase after merge |
 | `--target` / `-t` | string | main | Target branch |
 
-### /zerg:retry
+### /mahabharatha:retry
 
 Retry failed or blocked tasks.
 
@@ -184,7 +184,7 @@ Retry failed or blocked tasks.
 | `--dry-run` | bool | false | Preview only |
 | `--worker` / `-w` | int | — | Assign task to specific worker |
 
-### /zerg:status
+### /mahabharatha:status
 
 Display real-time execution progress.
 
@@ -200,7 +200,7 @@ Display real-time execution progress.
 | `--workers` | bool | false | Detailed worker info |
 | `--commits` | bool | false | Recent commits per branch |
 
-### /zerg:stop
+### /mahabharatha:stop
 
 Stop workers gracefully or forcefully.
 
@@ -215,7 +215,7 @@ Stop workers gracefully or forcefully.
 
 ## Quality & Analysis
 
-### /zerg:analyze
+### /mahabharatha:analyze
 
 Static analysis, complexity metrics, and quality assessment.
 
@@ -227,7 +227,7 @@ Static analysis, complexity metrics, and quality assessment.
 | `--files` | string | all | Restrict to files |
 | `--performance` | bool | false | Run comprehensive performance audit (140 factors) |
 
-### /zerg:build
+### /mahabharatha:build
 
 Build orchestration with auto-detection and error recovery.
 
@@ -239,7 +239,7 @@ Build orchestration with auto-detection and error recovery.
 | `--watch` | bool | false | Rebuild on changes |
 | `--retry` | int | 3 | Retries on failure |
 
-### /zerg:refactor
+### /mahabharatha:refactor
 
 Automated code improvement and cleanup.
 
@@ -249,7 +249,7 @@ Automated code improvement and cleanup.
 | `--dry-run` | bool | false | Preview only |
 | `--interactive` | bool | false | Approve one by one |
 
-### /zerg:review
+### /mahabharatha:review
 
 Three-stage code review workflow (Spec → Quality → Security).
 
@@ -258,7 +258,7 @@ Three-stage code review workflow (Spec → Quality → Security).
 | `--mode` | string | full | Mode: `prepare`, `self`, `receive`, `full` |
 | `--no-security` | bool | false | Skip Stage 3 security scan |
 
-### /zerg:security
+### /mahabharatha:security
 
 Security scanning and rules management.
 
@@ -268,9 +268,9 @@ Security scanning and rules management.
 | `--autofix` | bool | false | Generate fix suggestions |
 | `--format` | string | text | Output: `text`, `json`, `sarif` |
 
-CLI subcommand: `zerg security-rules detect|list|fetch|integrate`
+CLI subcommand: `mahabharatha security-rules detect|list|fetch|integrate`
 
-### /zerg:test
+### /mahabharatha:test
 
 Execute tests with coverage and generation.
 
@@ -286,16 +286,16 @@ Execute tests with coverage and generation.
 
 ## Utilities
 
-### /zerg:create-command
+### /mahabharatha:create-command
 
-Scaffold new ZERG commands with Task integration and tests.
+Scaffold new MAHABHARATHA commands with Task integration and tests.
 
 | Flag | Type | Default | Description |
 |------|------|---------|-------------|
 | `<name>` | string | required | Command name |
 | `--interactive` | bool | false | Enable wizard |
 
-### /zerg:debug
+### /mahabharatha:debug
 
 Deep diagnostic investigation with error intelligence.
 
@@ -311,7 +311,7 @@ Deep diagnostic investigation with error intelligence.
 | `--interactive` / `-i` | bool | false | Wizard mode |
 | `--report` | string | "" | Write report to file |
 
-### /zerg:git
+### /mahabharatha:git
 
 Git operations with intelligent commits, PRs, releases, and more.
 
@@ -351,15 +351,15 @@ Git operations with intelligent commits, PRs, releases, and more.
 
 **Actions**: `commit`, `branch`, `merge`, `sync`, `history`, `finish`, `pr`, `release`, `review`, `rescue`, `bisect`, `ship`, `cleanup`, `issue`
 
-### /zerg:plugins
+### /mahabharatha:plugins
 
-Extend ZERG with quality gates, hooks, and launchers.
+Extend MAHABHARATHA with quality gates, hooks, and launchers.
 
 | Flag | Type | Default | Description |
 |------|------|---------|-------------|
 | `--help` | bool | false | Show documentation |
 
-### /zerg:worker
+### /mahabharatha:worker
 
 Internal worker protocol. Invoked by orchestrator.
 
@@ -373,7 +373,7 @@ Internal worker protocol. Invoked by orchestrator.
 
 ## Documentation & AI
 
-### /zerg:document
+### /mahabharatha:document
 
 Generate documentation for a single component.
 
@@ -386,7 +386,7 @@ Generate documentation for a single component.
 | `--tone` | string | `educational` | Documentation tone: `educational`, `reference`, `tutorial` |
 | `--update` | bool | false | Update in-place |
 
-### /zerg:estimate
+### /mahabharatha:estimate
 
 PERT effort estimation with post-execution comparison.
 
@@ -402,7 +402,7 @@ PERT effort estimation with post-execution comparison.
 | `--history` | bool | false | Show past estimates |
 | `--no-calibration` | bool | false | Skip bias application |
 
-### /zerg:explain
+### /mahabharatha:explain
 
 Educational code explanations with four depth layers.
 
@@ -414,7 +414,7 @@ Educational code explanations with four depth layers.
 | `--format` | string | text | Output: `text`, `md`, `json` |
 | `--no-diagrams` | bool | false | Skip Mermaid diagrams |
 
-### /zerg:index
+### /mahabharatha:index
 
 Generate complete documentation wiki.
 
@@ -425,7 +425,7 @@ Generate complete documentation wiki.
 | `--dry-run` | bool | false | Preview only |
 | `--output` | string | .gsd/wiki/ | Output directory |
 
-### /zerg:select-tool
+### /mahabharatha:select-tool
 
 Intelligent tool routing across MCP, native tools, and agents.
 

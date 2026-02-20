@@ -1,6 +1,6 @@
 # Getting Started
 
-This page explains the core concepts behind ZERG. Understanding these concepts will help you use the system effectively and debug issues when they arise.
+This page explains the core concepts behind MAHABHARATHA. Understanding these concepts will help you use the system effectively and debug issues when they arise.
 
 **Prerequisites:** You should be familiar with Claude Code, git branching, and basic terminal usage.
 
@@ -21,15 +21,15 @@ This page explains the core concepts behind ZERG. Understanding these concepts w
 
 ## Overview
 
-ZERG turns a feature request into parallel work by following a strict pipeline:
+MAHABHARATHA turns a feature request into parallel work by following a strict pipeline:
 
 | Stage | Command | Output |
 |-------|---------|--------|
-| 0. Brainstorm (optional) | `/zerg:brainstorm` (--socratic mode) | GitHub issues |
-| 1. Plan | `/zerg:plan <feature>` | `requirements.md` |
-| 2. Design | `/zerg:design` | `design.md` + `task-graph.json` |
-| 3. Rush | `/zerg:rush --workers=N` | Parallel worker sessions |
-| 4. Merge | `/zerg:merge` (or automatic) | Merged branches + quality gate results |
+| 0. Brainstorm (optional) | `/mahabharatha:brainstorm` (--socratic mode) | GitHub issues |
+| 1. Plan | `/mahabharatha:plan <feature>` | `requirements.md` |
+| 2. Design | `/mahabharatha:design` | `design.md` + `task-graph.json` |
+| 3. Kurukshetra | `/mahabharatha:kurukshetra --workers=N` | Parallel worker sessions |
+| 4. Merge | `/mahabharatha:merge` (or automatic) | Merged branches + quality gate results |
 
 Each stage produces artifacts that the next stage consumes. The artifacts live in `.gsd/specs/<feature>/` and serve as the single source of truth for all workers.
 
@@ -56,7 +56,7 @@ Level 1 (Foundation)     Level 2 (Core)         Level 3 (Integration)
 
 - All tasks within a level run simultaneously across workers.
 - All tasks at Level N must complete before any task at Level N+1 begins.
-- After each level completes, ZERG merges worker branches and runs quality gates.
+- After each level completes, MAHABHARATHA merges worker branches and runs quality gates.
 - If quality gates fail, execution stops until the issues are resolved.
 
 The design phase automatically assigns levels based on the dependency graph. Foundation tasks (types, interfaces, schemas) go in Level 1. Tasks that depend on foundation outputs go in Level 2, and so on.
@@ -90,8 +90,8 @@ Workers are stateless. They do not share conversation history with the orchestra
 
 ```
 .gsd/specs/<feature>/
-  requirements.md       <-- What to build (from /zerg:plan)
-  design.md             <-- How to build it (from /zerg:design)
+  requirements.md       <-- What to build (from /mahabharatha:plan)
+  design.md             <-- How to build it (from /mahabharatha:design)
   task-graph.json       <-- Task definitions, dependencies, file ownership
   worker-assignments.json  <-- Which worker gets which tasks
 ```
@@ -141,16 +141,16 @@ Good verification commands test behavior, not just syntax:
 
 ## The Task Ecosystem
 
-ZERG uses Claude Code's built-in Task system as the authoritative source of truth for all task state. Tasks persist in `~/.claude/tasks/` and survive session restarts.
+MAHABHARATHA uses Claude Code's built-in Task system as the authoritative source of truth for all task state. Tasks persist in `~/.claude/tasks/` and survive session restarts.
 
 **How tasks flow through the system:**
 
 ```
-/zerg:design creates tasks    -->  TaskCreate("[L1] Create types")
-/zerg:rush claims tasks       -->  TaskUpdate(status: "in_progress")
+/mahabharatha:design creates tasks    -->  TaskCreate("[L1] Create types")
+/mahabharatha:kurukshetra claims tasks       -->  TaskUpdate(status: "in_progress")
 Worker completes task         -->  TaskUpdate(status: "completed")
-/zerg:status reads tasks      -->  TaskList() to show progress
-/zerg:merge verifies tasks    -->  TaskList() to confirm level completion
+/mahabharatha:status reads tasks      -->  TaskList() to show progress
+/mahabharatha:merge verifies tasks    -->  TaskList() to confirm level completion
 ```
 
 All tasks use bracketed subject prefixes for discoverability:
@@ -163,13 +163,13 @@ All tasks use bracketed subject prefixes for discoverability:
 | `[Init]` | Initialization task |
 | `[Status]` | Status check task |
 
-State JSON files in `.zerg/state/` serve as a supplementary cache. If the Task system and state JSON disagree, the Task system wins.
+State JSON files in `.mahabharatha/state/` serve as a supplementary cache. If the Task system and state JSON disagree, the Task system wins.
 
 ---
 
 ## Context Engineering
 
-ZERG includes a context engineering system that reduces token usage across workers. This matters because each worker is a separate Claude Code session with its own context window.
+MAHABHARATHA includes a context engineering system that reduces token usage across workers. This matters because each worker is a separate Claude Code session with its own context window.
 
 ### Command Splitting
 
@@ -187,7 +187,7 @@ Workers use task-scoped context instead of loading full spec files, saving appro
 
 ### Configuration
 
-Context engineering is configured in `.zerg/config.yaml`:
+Context engineering is configured in `.mahabharatha/config.yaml`:
 
 ```yaml
 plugins:
@@ -203,14 +203,14 @@ plugins:
 
 ## Execution Modes
 
-ZERG supports two modes for launching workers.
+MAHABHARATHA supports two modes for launching workers.
 
 ### Subprocess Mode (Default)
 
 Workers run as local Claude Code processes. This is the simplest setup and requires no Docker installation.
 
 ```
-/zerg:rush --workers=5
+/mahabharatha:kurukshetra --workers=5
 ```
 
 ### Container Mode
@@ -218,7 +218,7 @@ Workers run as local Claude Code processes. This is the simplest setup and requi
 Workers run inside Docker containers. This provides isolation and reproducible environments.
 
 ```
-/zerg:rush --workers=5 --mode container
+/mahabharatha:kurukshetra --workers=5 --mode container
 ```
 
 Container mode requires Docker and supports two authentication methods:
@@ -232,6 +232,6 @@ Container mode requires Docker and supports two authentication methods:
 
 ## Next Steps
 
-- [[Installation]] -- Set up ZERG on your machine.
+- [[Installation]] -- Set up MAHABHARATHA on your machine.
 - [[Quick Start]] -- Run through the full workflow end to end.
 - [[Your First Feature]] -- Build something real.

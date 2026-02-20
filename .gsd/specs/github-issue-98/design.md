@@ -11,7 +11,7 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Modify the `/zerg:design` command instructions to auto-inject a mandatory wiring verification task into Level 5 (Quality) of every generated task graph. The wiring task runs `python -m zerg.validate_commands` followed by scoped pytest to verify all new modules have production callers and tests pass.
+Modify the `/mahabharatha:design` command instructions to auto-inject a mandatory wiring verification task into Level 5 (Quality) of every generated task graph. The wiring task runs `python -m mahabharatha.validate_commands` followed by scoped pytest to verify all new modules have production callers and tests pass.
 
 ### 1.2 Goals
 - Auto-inject wiring verification task into every task graph at L5
@@ -22,7 +22,7 @@ Modify the `/zerg:design` command instructions to auto-inject a mandatory wiring
 ### 1.3 Non-Goals
 - Full test suite execution (too slow)
 - AI-based code review
-- Security scanning (handled by `/zerg:analyze`)
+- Security scanning (handled by `/mahabharatha:analyze`)
 
 ---
 
@@ -32,7 +32,7 @@ Modify the `/zerg:design` command instructions to auto-inject a mandatory wiring
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│  /zerg:design   │────▶│  Task Graph     │────▶│  Workers        │
+│  /mahabharatha:design   │────▶│  Task Graph     │────▶│  Workers        │
 │  (design.core.md)     │  Generation     │     │  Execute Tasks  │
 └─────────────────┘     └─────────────────┘     └─────────────────┘
                                │
@@ -48,13 +48,13 @@ Modify the `/zerg:design` command instructions to auto-inject a mandatory wiring
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| Design Command | Prompt instructions to inject wiring task | `zerg/data/commands/design.core.md` |
+| Design Command | Prompt instructions to inject wiring task | `mahabharatha/data/commands/design.core.md` |
 | Wiring Task | Task definition template for L5 | (embedded in design.core.md) |
-| Test Scope Helper | Generate pytest path filter from task files | `zerg/test_scope.py` |
+| Test Scope Helper | Generate pytest path filter from task files | `mahabharatha/test_scope.py` |
 
 ### 2.3 Data Flow
 
-1. User runs `/zerg:design`
+1. User runs `/mahabharatha:design`
 2. Claude generates task-graph.json following design.core.md instructions
 3. **NEW**: Instructions mandate appending wiring verification task to L5
 4. Wiring task depends on all L4 tasks
@@ -80,10 +80,10 @@ The following task definition is injected into every task graph as the last task
   "files": {
     "create": [],
     "modify": [],
-    "read": ["zerg/**/*.py", "tests/**/*.py"]
+    "read": ["mahabharatha/**/*.py", "tests/**/*.py"]
   },
   "verification": {
-    "command": "python -m zerg.validate_commands && python -m pytest {test_paths} -x --timeout=60 -q",
+    "command": "python -m mahabharatha.validate_commands && python -m pytest {test_paths} -x --timeout=60 -q",
     "timeout_seconds": 120
   },
   "estimate_minutes": 5,
@@ -102,12 +102,12 @@ The wiring task verification command includes a pytest path filter built from:
 
 Example verification command:
 ```bash
-python -m zerg.validate_commands && python -m pytest tests/unit/test_new_module.py tests/integration/test_affected.py -x --timeout=60 -q
+python -m mahabharatha.validate_commands && python -m pytest tests/unit/test_new_module.py tests/integration/test_affected.py -x --timeout=60 -q
 ```
 
 ### 3.3 Test Scope Helper Module
 
-A new helper module `zerg/test_scope.py` provides programmatic test scope detection:
+A new helper module `mahabharatha/test_scope.py` provides programmatic test scope detection:
 
 ```python
 def get_scoped_test_paths(task_graph: TaskGraph) -> list[str]:
@@ -155,7 +155,7 @@ def find_affected_tests(modified_modules: list[str], tests_dir: Path) -> list[st
 2. **Inline generation**: Claude generates paths based on task files
    - Pros: No new code
    - Cons: Error-prone, verbose task definitions
-3. **Helper module**: `python -m zerg.test_scope` generates paths
+3. **Helper module**: `python -m mahabharatha.test_scope` generates paths
    - Pros: Reusable, testable, accurate
    - Cons: New module to maintain
 
@@ -163,7 +163,7 @@ def find_affected_tests(modified_modules: list[str], tests_dir: Path) -> list[st
 
 **Rationale**: Test scope detection requires AST analysis to find imports. A dedicated module is more reliable than inline prompt logic and can be unit tested.
 
-**Consequences**: We create `zerg/test_scope.py` with `get_scoped_test_paths()` function.
+**Consequences**: We create `mahabharatha/test_scope.py` with `get_scoped_test_paths()` function.
 
 ---
 
@@ -183,8 +183,8 @@ def find_affected_tests(modified_modules: list[str], tests_dir: Path) -> list[st
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/test_scope.py` | TASK-001 | create |
-| `zerg/data/commands/design.core.md` | TASK-002 | modify |
+| `mahabharatha/test_scope.py` | TASK-001 | create |
+| `mahabharatha/data/commands/design.core.md` | TASK-002 | modify |
 | `tests/unit/test_test_scope.py` | TASK-003 | create |
 | `tests/integration/test_design_wiring_injection.py` | TASK-004 | create |
 | `CHANGELOG.md` | TASK-005 | modify |
@@ -225,12 +225,12 @@ graph TD
 - Verify verification command format
 
 ### 7.3 Verification Commands
-- TASK-001: `python -c "from zerg.test_scope import get_scoped_test_paths"`
-- TASK-002: `grep -q "Run wiring verification" zerg/data/commands/design.core.md`
+- TASK-001: `python -c "from mahabharatha.test_scope import get_scoped_test_paths"`
+- TASK-002: `grep -q "Run wiring verification" mahabharatha/data/commands/design.core.md`
 - TASK-003: `pytest tests/unit/test_test_scope.py -v`
 - TASK-004: `pytest tests/integration/test_design_wiring_injection.py -v`
 - TASK-005: `grep -q "github-issue-98" CHANGELOG.md`
-- TASK-006: `python -m zerg.validate_commands && pytest tests/ -x --timeout=60 -q`
+- TASK-006: `python -m mahabharatha.validate_commands && pytest tests/ -x --timeout=60 -q`
 
 ---
 

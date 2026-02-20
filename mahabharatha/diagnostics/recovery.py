@@ -1,4 +1,4 @@
-"""Recovery planning and execution for ZERG debugging."""
+"""Recovery planning and execution for MAHABHARATHA debugging."""
 
 from __future__ import annotations
 
@@ -97,8 +97,8 @@ RECOVERY_TEMPLATES: dict[str, list[RecoveryStep]] = {
             reversible=True,
         ),
         RecoveryStep(
-            description="Restart the rush",
-            command="mahabharatha rush --resume",
+            description="Restart the kurukshetra",
+            command="mahabharatha kurukshetra --resume",
             risk="safe",
             reversible=True,
         ),

@@ -1,4 +1,4 @@
-"""Unit tests for ZERG schemas module.
+"""Unit tests for MAHABHARATHA schemas module.
 
 Test pattern: uses both `import mahabharatha.schemas` (for attribute/docstring access)
 and `from mahabharatha.schemas import X` (for direct symbol testing).

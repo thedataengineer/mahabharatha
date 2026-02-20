@@ -4,7 +4,7 @@
 - **Feature**: changelog-enforcement
 - **Status**: APPROVED
 - **Created**: 2026-02-02
-- **Author**: ZERG Design Mode
+- **Author**: MAHABHARATHA Design Mode
 
 ---
 
@@ -74,5 +74,5 @@ All tasks are independent — different files.
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/data/commands/design.core.md` | TASK-001 | modify |
-| `zerg/data/commands/git.details.md` | TASK-002 | modify |
+| `mahabharatha/data/commands/design.core.md` | TASK-001 | modify |
+| `mahabharatha/data/commands/git.details.md` | TASK-002 | modify |

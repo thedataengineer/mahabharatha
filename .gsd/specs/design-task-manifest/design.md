@@ -4,7 +4,7 @@
 
 ## Overview
 
-Add a manifest file (`design-tasks-manifest.json`) that `design.py` writes for every execution path. This manifest bridges the CLI (which cannot call Claude Task tools) with the rush orchestrator (which can register Claude Tasks).
+Add a manifest file (`design-tasks-manifest.json`) that `design.py` writes for every execution path. This manifest bridges the CLI (which cannot call Claude Task tools) with the kurukshetra orchestrator (which can register Claude Tasks).
 
 ## Architecture
 

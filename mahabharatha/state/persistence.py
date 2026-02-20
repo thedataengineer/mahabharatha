@@ -1,4 +1,4 @@
-"""Persistence layer for ZERG state — file I/O, locking, and serialization.
+"""Persistence layer for MAHABHARATHA state — file I/O, locking, and serialization.
 
 Handles all cross-process file locking (fcntl), atomic writes via temp files,
 backup creation, and JSON serialization. Submodules receive a PersistenceLayer

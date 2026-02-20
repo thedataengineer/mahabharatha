@@ -1,4 +1,4 @@
-"""Dependency checking for ZERG tasks.
+"""Dependency checking for MAHABHARATHA tasks.
 
 This module provides the DependencyChecker class that combines TaskParser
 and StateManager to verify task dependencies are complete before execution.

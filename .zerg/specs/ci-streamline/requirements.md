@@ -7,7 +7,7 @@
 
 ## Problem Statement
 
-The ZERG CI pipeline has 4 separate workflows triggering on PRs, producing 8 parallel jobs that compete for runners. Sequential gating (`smoke` -> `lint` -> `test`) adds ~30s overhead per gate. Command validation runs twice (own workflow + inside integration job). The smoke job runs 0 unique tests. This causes runner contention (observed as stuck `test(3)` on PR #153) and unnecessarily slow CI feedback.
+The MAHABHARATHA CI pipeline has 4 separate workflows triggering on PRs, producing 8 parallel jobs that compete for runners. Sequential gating (`smoke` -> `lint` -> `test`) adds ~30s overhead per gate. Command validation runs twice (own workflow + inside integration job). The smoke job runs 0 unique tests. This causes runner contention (observed as stuck `test(3)` on PR #153) and unnecessarily slow CI feedback.
 
 ## Functional Requirements
 
@@ -23,7 +23,7 @@ The ZERG CI pipeline has 4 separate workflows triggering on PRs, producing 8 par
 
 Single job replacing smoke + lint + changelog-check + command-validation:
 1. `ruff check .` + `ruff format --check .`
-2. `python -m zerg.validate_commands`
+2. `python -m mahabharatha.validate_commands`
 3. Inline changelog diff check (skip if `skip-changelog` label present)
    - Requires `fetch-depth: 0` for git diff
    - Uses `BASE_SHA`/`HEAD_SHA` from PR event context

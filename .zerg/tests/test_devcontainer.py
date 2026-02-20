@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 DevContainer generation and build."""
+"""Tests for MAHABHARATHA v2 DevContainer generation and build."""
 
 import sys
 import tempfile
@@ -15,7 +15,7 @@ class TestDevcontainerConfig:
         from devcontainer import DevcontainerConfig
 
         config = DevcontainerConfig()
-        assert config.name == "zerg-worker"
+        assert config.name == "mahabharatha-worker"
         assert config.python_version == "3.12"
         assert config.node_version == "20"
         assert config.install_claude is True
@@ -221,7 +221,7 @@ class TestDevcontainerBuilder:
         with tempfile.TemporaryDirectory() as tmpdir:
             builder = DevcontainerBuilder(Path(tmpdir))
             # Use a name that definitely doesn't exist
-            exists = builder.image_exists("zerg-nonexistent-test-image-12345")
+            exists = builder.image_exists("mahabharatha-nonexistent-test-image-12345")
             assert exists is False
 
     def test_build_without_dockerfile_fails(self):

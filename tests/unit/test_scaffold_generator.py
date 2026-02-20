@@ -379,7 +379,7 @@ Flags:
         # Create existing index
         index_path = docs_dir / "commands-quick.md"
         index_path.write_text(
-            """# ZERG Command Reference
+            """# MAHABHARATHA Command Reference
 
 ## Table of Contents
 

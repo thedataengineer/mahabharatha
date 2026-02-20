@@ -1,11 +1,11 @@
-# /zerg:estimate
+# /mahabharatha:estimate
 
 Full-lifecycle effort estimation with PERT confidence intervals, post-execution comparison, and historical calibration.
 
 ## Synopsis
 
 ```
-/zerg:estimate [<feature>] [--pre] [--post] [--calibrate]
+/mahabharatha:estimate [<feature>] [--pre] [--post] [--calibrate]
                            [--workers N]
                            [--format text|json|md]
                            [--verbose] [--history] [--no-calibration]
@@ -13,11 +13,11 @@ Full-lifecycle effort estimation with PERT confidence intervals, post-execution 
 
 ## Description
 
-The `estimate` command provides effort estimation at every stage of the ZERG workflow. It operates in three modes depending on the current state of the feature or the flags provided.
+The `estimate` command provides effort estimation at every stage of the MAHABHARATHA workflow. It operates in three modes depending on the current state of the feature or the flags provided.
 
 ### Pre-Execution Mode
 
-Before `/zerg:rush` has been run, `estimate` analyzes the task graph and produces time and cost projections:
+Before `/mahabharatha:kurukshetra` has been run, `estimate` analyzes the task graph and produces time and cost projections:
 
 1. **Task complexity scoring** — Reads `task-graph.json` and scores each task by file count, dependency depth, and description complexity.
 2. **PERT estimation** — Calculates optimistic, most likely, and pessimistic durations per task using weighted averages.
@@ -60,36 +60,36 @@ After tasks have completed, `estimate --post` compares actual execution data aga
 Estimate effort before launching workers:
 
 ```
-/zerg:estimate user-auth
+/mahabharatha:estimate user-auth
 ```
 
 Compare actual vs estimated after execution:
 
 ```
-/zerg:estimate user-auth --post
+/mahabharatha:estimate user-auth --post
 ```
 
 View per-task breakdown:
 
 ```
-/zerg:estimate --verbose
+/mahabharatha:estimate --verbose
 ```
 
 Calibrate based on all historical data:
 
 ```
-/zerg:estimate --calibrate
+/mahabharatha:estimate --calibrate
 ```
 
 Output as JSON for tooling:
 
 ```
-/zerg:estimate --format json
+/mahabharatha:estimate --format json
 ```
 
 ## Error Handling
 
-- If no task graph exists, the command reports an error and suggests running `/zerg:design` first.
+- If no task graph exists, the command reports an error and suggests running `/mahabharatha:design` first.
 - If `--post` is used before any tasks have completed, the command reports that no execution data is available.
 - If `--calibrate` finds no historical data, it reports that at least one completed feature is required.
 
@@ -99,6 +99,6 @@ This command creates a Claude Code Task with the subject prefix `[Estimate]` on 
 
 ## See Also
 
-- [[zerg-design]] -- Generates the task graph that estimate analyzes
-- [[zerg-rush]] -- Execute tasks that estimate projects
-- [[zerg-status]] -- Real-time progress during execution
+- [[mahabharatha-design]] -- Generates the task graph that estimate analyzes
+- [[mahabharatha-kurukshetra]] -- Execute tasks that estimate projects
+- [[mahabharatha-status]] -- Real-time progress during execution

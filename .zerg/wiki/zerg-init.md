@@ -1,22 +1,22 @@
-# /zerg:init
+# /mahabharatha:init
 
-Initialize ZERG for a project. Detects the project state and operates in one of two modes.
+Initialize MAHABHARATHA for a project. Detects the project state and operates in one of two modes.
 
 ## Synopsis
 
 ```
-/zerg:init [OPTIONS]
+/mahabharatha:init [OPTIONS]
 ```
 
 ## Description
 
-`/zerg:init` prepares a project for ZERG by creating the `.zerg/` directory structure, detecting languages and frameworks, and generating configuration files.
+`/mahabharatha:init` prepares a project for MAHABHARATHA by creating the `.mahabharatha/` directory structure, detecting languages and frameworks, and generating configuration files.
 
 The command operates in two modes depending on whether the current directory contains existing code:
 
 ### Inception Mode (Empty Directory)
 
-When run in an empty directory, ZERG launches an interactive wizard that:
+When run in an empty directory, MAHABHARATHA launches an interactive wizard that:
 
 1. Gathers project requirements through prompts (name, description, target platform, architecture style).
 2. Recommends and confirms a technology stack (language, framework, test framework).
@@ -34,14 +34,14 @@ Supported languages for scaffolding:
 
 ### Discovery Mode (Existing Project)
 
-When run in a directory with existing code, ZERG analyzes the project:
+When run in a directory with existing code, MAHABHARATHA analyzes the project:
 
 1. Detects languages by checking for `package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, and similar markers.
 2. Identifies frameworks (React, FastAPI, Express, Django, and others).
 3. Detects existing infrastructure (Docker, CI/CD, devcontainers).
-4. Generates `.zerg/`, `.devcontainer/`, and `.claude/` configuration directories.
+4. Generates `.mahabharatha/`, `.devcontainer/`, and `.claude/` configuration directories.
 
-For multi-language projects, ZERG generates a devcontainer configuration with appropriate runtime features for each detected language.
+For multi-language projects, MAHABHARATHA generates a devcontainer configuration with appropriate runtime features for each detected language.
 
 ## Options
 
@@ -57,29 +57,29 @@ For multi-language projects, ZERG generates a devcontainer configuration with ap
 ```bash
 # Initialize a new project from scratch (Inception Mode)
 mkdir my-api && cd my-api
-/zerg:init
+/mahabharatha:init
 
 # Initialize an existing project (Discovery Mode)
 cd my-existing-project
-/zerg:init
+/mahabharatha:init
 
 # Initialize with custom settings
-/zerg:init --workers 3 --security strict
+/mahabharatha:init --workers 3 --security strict
 
 # Skip security rules
-/zerg:init --no-security-rules
+/mahabharatha:init --no-security-rules
 
 # Build devcontainer image after init
-/zerg:init --with-containers
+/mahabharatha:init --with-containers
 ```
 
 ## Generated Structure
 
-After running `/zerg:init` on an existing project, the following directories are created:
+After running `/mahabharatha:init` on an existing project, the following directories are created:
 
 ```
 project/
-  .zerg/           # ZERG runtime state and configuration
+  .mahabharatha/           # MAHABHARATHA runtime state and configuration
   .devcontainer/   # Container configuration for workers
     mcp-servers/
   .claude/
@@ -110,5 +110,5 @@ my-api/
 
 ## See Also
 
-- [[zerg-plan]] -- Next step after initialization: capture feature requirements
-- [[zerg-Reference]] -- Full command index
+- [[mahabharatha-plan]] -- Next step after initialization: capture feature requirements
+- [[mahabharatha-Reference]] -- Full command index

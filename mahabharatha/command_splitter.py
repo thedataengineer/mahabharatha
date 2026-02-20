@@ -1,4 +1,4 @@
-"""ZERG command file splitter for context engineering."""
+"""MAHABHARATHA command file splitter for context engineering."""
 
 from __future__ import annotations
 

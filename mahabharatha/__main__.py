@@ -1,4 +1,4 @@
-"""ZERG CLI entry point for python -m mahabharatha."""
+"""MAHABHARATHA CLI entry point for python -m mahabharatha."""
 
 from mahabharatha.cli import cli
 

@@ -16,11 +16,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/_utils.py"],
-        "read": ["zerg/constants.py"]
+        "modify": ["mahabharatha/commands/_utils.py"],
+        "read": ["mahabharatha/constants.py"]
       },
       "verification": {
-        "command": "python -c \"from zerg.commands._utils import detect_feature, acquire_feature_lock, release_feature_lock, check_feature_lock; print('OK')\"",
+        "command": "python -c \"from mahabharatha.commands._utils import detect_feature, acquire_feature_lock, release_feature_lock, check_feature_lock; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -38,11 +38,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/protocol_state.py"],
-        "read": ["zerg/state/task_repo.py", "zerg/state/manager.py"]
+        "modify": ["mahabharatha/protocol_state.py"],
+        "read": ["mahabharatha/state/task_repo.py", "mahabharatha/state/manager.py"]
       },
       "verification": {
-        "command": "python -c \"import ast; tree = ast.parse(open('zerg/protocol_state.py').read()); print('OK')\"",
+        "command": "python -c \"import ast; tree = ast.parse(open('mahabharatha/protocol_state.py').read()); print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5,
@@ -61,17 +61,17 @@
       "files": {
         "create": [],
         "modify": [
-          "zerg/data/commands/design.md",
-          "zerg/data/commands/design.core.md",
-          "zerg/data/commands/merge.md",
-          "zerg/data/commands/merge.core.md",
-          "zerg/data/commands/status.md",
-          "zerg/data/commands/status.core.md"
+          "mahabharatha/data/commands/design.md",
+          "mahabharatha/data/commands/design.core.md",
+          "mahabharatha/data/commands/merge.md",
+          "mahabharatha/data/commands/merge.core.md",
+          "mahabharatha/data/commands/status.md",
+          "mahabharatha/data/commands/status.core.md"
         ],
         "read": []
       },
       "verification": {
-        "command": "grep -c 'ZERG_FEATURE' zerg/data/commands/design.md zerg/data/commands/design.core.md zerg/data/commands/merge.md zerg/data/commands/merge.core.md zerg/data/commands/status.md zerg/data/commands/status.core.md | grep -v ':0$' | wc -l | xargs test 6 -eq",
+        "command": "grep -c 'ZERG_FEATURE' mahabharatha/data/commands/design.md mahabharatha/data/commands/design.core.md mahabharatha/data/commands/merge.md mahabharatha/data/commands/merge.core.md mahabharatha/data/commands/status.md mahabharatha/data/commands/status.core.md | grep -v ':0$' | wc -l | xargs test 6 -eq",
         "timeout_seconds": 15
       },
       "estimate_minutes": 10,
@@ -82,31 +82,31 @@
     },
     {
       "id": "TASK-004",
-      "title": "Update rush, stop, cleanup, retry command pre-flights + lockfile check",
-      "description": "Update pre-flight FEATURE detection in 5 files: rush.md, rush.core.md, stop.md, cleanup.md, retry.md. Add lockfile check/warning to rush pre-flight. Add lock cleanup to cleanup.md.",
+      "title": "Update kurukshetra, stop, cleanup, retry command pre-flights + lockfile check",
+      "description": "Update pre-flight FEATURE detection in 5 files: kurukshetra.md, kurukshetra.core.md, stop.md, cleanup.md, retry.md. Add lockfile check/warning to kurukshetra pre-flight. Add lock cleanup to cleanup.md.",
       "phase": "propagation",
       "level": 2,
       "dependencies": ["TASK-001"],
       "files": {
         "create": [],
         "modify": [
-          "zerg/data/commands/rush.md",
-          "zerg/data/commands/rush.core.md",
-          "zerg/data/commands/stop.md",
-          "zerg/data/commands/cleanup.md",
-          "zerg/data/commands/retry.md"
+          "mahabharatha/data/commands/kurukshetra.md",
+          "mahabharatha/data/commands/kurukshetra.core.md",
+          "mahabharatha/data/commands/stop.md",
+          "mahabharatha/data/commands/cleanup.md",
+          "mahabharatha/data/commands/retry.md"
         ],
         "read": []
       },
       "verification": {
-        "command": "grep -c 'ZERG_FEATURE' zerg/data/commands/rush.md zerg/data/commands/rush.core.md zerg/data/commands/stop.md zerg/data/commands/cleanup.md zerg/data/commands/retry.md | grep -v ':0$' | wc -l | xargs test 5 -eq",
+        "command": "grep -c 'ZERG_FEATURE' mahabharatha/data/commands/kurukshetra.md mahabharatha/data/commands/kurukshetra.core.md mahabharatha/data/commands/stop.md mahabharatha/data/commands/cleanup.md mahabharatha/data/commands/retry.md | grep -v ':0$' | wc -l | xargs test 5 -eq",
         "timeout_seconds": 15
       },
       "estimate_minutes": 15,
       "skills_required": ["markdown"],
       "consumers": ["TASK-011"],
       "integration_test": null,
-      "context": "## Spec Context\nRC1 propagation + RC5 lockfile integration: Update pre-flights for rush/stop/cleanup/retry. Rush gets additional lockfile check: if .gsd/specs/{feature}/.lock exists and is recent, warn user. Cleanup gets lock cleanup: remove stale .lock files.\n\n## Dependencies\nTASK-001 creates lockfile helper functions in _utils.py. The markdown pre-flights reference the pattern but don't call Python directly — they instruct the LLM on behavior."
+      "context": "## Spec Context\nRC1 propagation + RC5 lockfile integration: Update pre-flights for kurukshetra/stop/cleanup/retry. Kurukshetra gets additional lockfile check: if .gsd/specs/{feature}/.lock exists and is recent, warn user. Cleanup gets lock cleanup: remove stale .lock files.\n\n## Dependencies\nTASK-001 creates lockfile helper functions in _utils.py. The markdown pre-flights reference the pattern but don't call Python directly — they instruct the LLM on behavior."
     },
     {
       "id": "TASK-005",
@@ -118,15 +118,15 @@
       "files": {
         "create": [],
         "modify": [
-          "zerg/data/commands/estimate.md",
-          "zerg/data/commands/estimate.core.md",
-          "zerg/data/commands/debug.md",
-          "zerg/data/commands/debug.core.md"
+          "mahabharatha/data/commands/estimate.md",
+          "mahabharatha/data/commands/estimate.core.md",
+          "mahabharatha/data/commands/debug.md",
+          "mahabharatha/data/commands/debug.core.md"
         ],
         "read": []
       },
       "verification": {
-        "command": "grep -c 'ZERG_FEATURE' zerg/data/commands/estimate.md zerg/data/commands/estimate.core.md zerg/data/commands/debug.md zerg/data/commands/debug.core.md | grep -v ':0$' | wc -l | xargs test 4 -eq",
+        "command": "grep -c 'ZERG_FEATURE' mahabharatha/data/commands/estimate.md mahabharatha/data/commands/estimate.core.md mahabharatha/data/commands/debug.md mahabharatha/data/commands/debug.core.md | grep -v ':0$' | wc -l | xargs test 4 -eq",
         "timeout_seconds": 15
       },
       "estimate_minutes": 10,
@@ -145,13 +145,13 @@
       "files": {
         "create": [],
         "modify": [
-          "zerg/data/commands/plan.md",
-          "zerg/data/commands/plan.core.md"
+          "mahabharatha/data/commands/plan.md",
+          "mahabharatha/data/commands/plan.core.md"
         ],
         "read": []
       },
       "verification": {
-        "command": "grep -c 'AskUserQuestion' zerg/data/commands/plan.core.md | xargs test 0 -lt && grep -c 'requirements are complete' zerg/data/commands/plan.core.md | xargs test 0 -lt",
+        "command": "grep -c 'AskUserQuestion' mahabharatha/data/commands/plan.core.md | xargs test 0 -lt && grep -c 'requirements are complete' mahabharatha/data/commands/plan.core.md | xargs test 0 -lt",
         "timeout_seconds": 15
       },
       "estimate_minutes": 15,
@@ -163,17 +163,17 @@
     {
       "id": "TASK-007",
       "title": "Scope git ship action to feature branches",
-      "description": "RC2: Update git.details.md ship action to scope commits to the active feature. Ship reads feature from env/file detection. If feature detected, scope PR to only include commits from zerg/{feature}/* branches. PR title: feat({feature}): {summary}. If no feature (non-ZERG workflow), ship unchanged.",
+      "description": "RC2: Update git.details.md ship action to scope commits to the active feature. Ship reads feature from env/file detection. If feature detected, scope PR to only include commits from mahabharatha/{feature}/* branches. PR title: feat({feature}): {summary}. If no feature (non-MAHABHARATHA workflow), ship unchanged.",
       "phase": "propagation",
       "level": 2,
       "dependencies": ["TASK-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/git.details.md"],
+        "modify": ["mahabharatha/data/commands/git.details.md"],
         "read": []
       },
       "verification": {
-        "command": "grep -c 'ZERG_FEATURE\\|feature.*branch\\|feat.*feature' zerg/data/commands/git.details.md | xargs test 0 -lt",
+        "command": "grep -c 'ZERG_FEATURE\\|feature.*branch\\|feat.*feature' mahabharatha/data/commands/git.details.md | xargs test 0 -lt",
         "timeout_seconds": 15
       },
       "estimate_minutes": 15,
@@ -192,7 +192,7 @@
       "files": {
         "create": ["tests/unit/test_lockfile.py"],
         "modify": ["tests/unit/test_commands_utils.py"],
-        "read": ["zerg/commands/_utils.py"]
+        "read": ["mahabharatha/commands/_utils.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_commands_utils.py tests/unit/test_lockfile.py -v --tb=short",
@@ -214,7 +214,7 @@
       "files": {
         "create": [],
         "modify": ["tests/integration/test_claim_enforcement.py"],
-        "read": ["zerg/protocol_state.py", "zerg/state/task_repo.py"]
+        "read": ["mahabharatha/protocol_state.py", "mahabharatha/state/task_repo.py"]
       },
       "verification": {
         "command": "python -m pytest tests/integration/test_claim_enforcement.py -v --tb=short",
@@ -236,7 +236,7 @@
       "files": {
         "create": ["tests/integration/test_concurrent_features.py"],
         "modify": [],
-        "read": ["zerg/commands/_utils.py"]
+        "read": ["mahabharatha/commands/_utils.py"]
       },
       "verification": {
         "command": "python -m pytest tests/integration/test_concurrent_features.py -v --tb=short",

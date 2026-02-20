@@ -16,11 +16,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/config.py"],
+        "modify": ["mahabharatha/config.py"],
         "read": [".gsd/specs/performance-core/requirements.md", ".gsd/specs/performance-core/design.md"]
       },
       "verification": {
-        "command": "python -c \"from zerg.config import ZergConfig; c1=ZergConfig.load(); c2=ZergConfig.load(); assert c1 is c2, 'Cache miss'; print('ZergConfig singleton verified')\"",
+        "command": "python -c \"from mahabharatha.config import ZergConfig; c1=ZergConfig.load(); c2=ZergConfig.load(); assert c1 is c2, 'Cache miss'; print('ZergConfig singleton verified')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
@@ -38,11 +38,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/log_aggregator.py"],
+        "modify": ["mahabharatha/log_aggregator.py"],
         "read": [".gsd/specs/performance-core/requirements.md", ".gsd/specs/performance-core/design.md"]
       },
       "verification": {
-        "command": "python -c \"from zerg.log_aggregator import LogAggregator; import tempfile, os; d=tempfile.mkdtemp(); la=LogAggregator(d); la.query(); la.query(); print('LogAggregator cache verified')\"",
+        "command": "python -c \"from mahabharatha.log_aggregator import LogAggregator; import tempfile, os; d=tempfile.mkdtemp(); la=LogAggregator(d); la.query(); la.query(); print('LogAggregator cache verified')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
@@ -60,11 +60,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/token_counter.py"],
+        "modify": ["mahabharatha/token_counter.py"],
         "read": [".gsd/specs/performance-core/requirements.md", ".gsd/specs/performance-core/design.md"]
       },
       "verification": {
-        "command": "python -c \"from zerg.token_counter import TokenCounter; tc=TokenCounter(); r1=tc.count('test text'); r2=tc.count('test text'); assert r2.source=='cache', f'Expected cache, got {r2.source}'; print('TokenCounter in-memory cache verified')\"",
+        "command": "python -c \"from mahabharatha.token_counter import TokenCounter; tc=TokenCounter(); r1=tc.count('test text'); r2=tc.count('test text'); assert r2.source=='cache', f'Expected cache, got {r2.source}'; print('TokenCounter in-memory cache verified')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
@@ -82,11 +82,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/repo_map.py"],
+        "modify": ["mahabharatha/repo_map.py"],
         "read": [".gsd/specs/performance-core/requirements.md", ".gsd/specs/performance-core/design.md"]
       },
       "verification": {
-        "command": "python -c \"from zerg.repo_map import build_map, invalidate_cache; import time; g1=build_map('.'); g2=build_map('.'); assert g1 is g2, 'TTL cache miss'; invalidate_cache(); g3=build_map('.'); assert g1 is not g3, 'invalidate_cache failed'; print('RepoMap TTL cache verified')\"",
+        "command": "python -c \"from mahabharatha.repo_map import build_map, invalidate_cache; import time; g1=build_map('.'); g2=build_map('.'); assert g1 is g2, 'TTL cache miss'; invalidate_cache(); g3=build_map('.'); assert g1 is not g3, 'invalidate_cache failed'; print('RepoMap TTL cache verified')\"",
         "timeout_seconds": 60
       },
       "estimate_minutes": 15,
@@ -104,11 +104,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/security_rules.py", "zerg/repo_map.py"],
+        "modify": ["mahabharatha/security_rules.py", "mahabharatha/repo_map.py"],
         "read": [".gsd/specs/performance-core/requirements.md", ".gsd/specs/performance-core/design.md"]
       },
       "verification": {
-        "command": "python -c \"from zerg.security_rules import detect_project_stack; from pathlib import Path; stack=detect_project_stack(Path('.')); print(f'Detected: {stack.languages}'); assert 'python' in stack.languages\"",
+        "command": "python -c \"from mahabharatha.security_rules import detect_project_stack; from pathlib import Path; stack=detect_project_stack(Path('.')); print(f'Detected: {stack.languages}'); assert 'python' in stack.languages\"",
         "timeout_seconds": 60
       },
       "estimate_minutes": 20,
@@ -127,7 +127,7 @@
       "files": {
         "create": ["tests/test_config_caching.py"],
         "modify": [],
-        "read": ["zerg/config.py", ".gsd/specs/performance-core/requirements.md"]
+        "read": ["mahabharatha/config.py", ".gsd/specs/performance-core/requirements.md"]
       },
       "verification": {
         "command": "pytest tests/test_config_caching.py -v",
@@ -149,7 +149,7 @@
       "files": {
         "create": ["tests/test_log_aggregator_caching.py"],
         "modify": [],
-        "read": ["zerg/log_aggregator.py", ".gsd/specs/performance-core/requirements.md"]
+        "read": ["mahabharatha/log_aggregator.py", ".gsd/specs/performance-core/requirements.md"]
       },
       "verification": {
         "command": "pytest tests/test_log_aggregator_caching.py -v",
@@ -171,7 +171,7 @@
       "files": {
         "create": ["tests/test_token_counter_memory.py"],
         "modify": [],
-        "read": ["zerg/token_counter.py", ".gsd/specs/performance-core/requirements.md"]
+        "read": ["mahabharatha/token_counter.py", ".gsd/specs/performance-core/requirements.md"]
       },
       "verification": {
         "command": "pytest tests/test_token_counter_memory.py -v",
@@ -193,7 +193,7 @@
       "files": {
         "create": ["tests/test_repo_map_caching.py"],
         "modify": [],
-        "read": ["zerg/repo_map.py", ".gsd/specs/performance-core/requirements.md"]
+        "read": ["mahabharatha/repo_map.py", ".gsd/specs/performance-core/requirements.md"]
       },
       "verification": {
         "command": "pytest tests/test_repo_map_caching.py -v",
@@ -215,7 +215,7 @@
       "files": {
         "create": ["tests/test_single_traversal.py"],
         "modify": [],
-        "read": ["zerg/security_rules.py", "zerg/repo_map.py", ".gsd/specs/performance-core/requirements.md"]
+        "read": ["mahabharatha/security_rules.py", "mahabharatha/repo_map.py", ".gsd/specs/performance-core/requirements.md"]
       },
       "verification": {
         "command": "pytest tests/test_single_traversal.py -v",
@@ -279,7 +279,7 @@
     "conflicts": [
       {
         "tasks": ["TASK-004", "TASK-005"],
-        "reason": "Both modify zerg/repo_map.py",
+        "reason": "Both modify mahabharatha/repo_map.py",
         "resolution": "TASK-004 modifies build_map() caching, TASK-005 modifies _collect_files() - different sections, can be merged"
       }
     ]

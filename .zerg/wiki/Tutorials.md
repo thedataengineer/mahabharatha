@@ -1,6 +1,6 @@
 # Tutorials
 
-Step-by-step guides for building features with ZERG. Each tutorial walks through a complete workflow from planning to merge.
+Step-by-step guides for building features with MAHABHARATHA. Each tutorial walks through a complete workflow from planning to merge.
 
 ## Prerequisites
 
@@ -8,8 +8,8 @@ Before starting any tutorial, confirm the following:
 
 - Claude Code is installed and authenticated
 - Docker is installed and running (required for container mode tutorials)
-- You have cloned the ZERG repository and can run `zerg --help`
-- You understand the basic ZERG lifecycle: **Brainstorm (optional) -> Plan -> Design -> Rush -> Merge**
+- You have cloned the MAHABHARATHA repository and can run `mahabharatha --help`
+- You understand the basic MAHABHARATHA lifecycle: **Brainstorm (optional) -> Plan -> Design -> Kurukshetra -> Merge**
 
 ## Available Tutorials
 
@@ -19,15 +19,15 @@ Before starting any tutorial, confirm the following:
 **Estimated time**: 30-45 minutes
 **Mode**: Subprocess (default)
 
-A complete walkthrough building a hypothetical "minerals store" e-commerce feature. Covers every phase of the ZERG workflow with realistic task-graph examples, file ownership matrices, and quality gate output. Start here if you are new to ZERG.
+A complete walkthrough building a hypothetical "minerals store" e-commerce feature. Covers every phase of the MAHABHARATHA workflow with realistic task-graph examples, file ownership matrices, and quality gate output. Start here if you are new to MAHABHARATHA.
 
 Topics covered:
 
-- Capturing requirements with `/zerg:plan`
-- Generating architecture and task graphs with `/zerg:design`
-- Launching parallel workers with `/zerg:rush`
-- Merging level results and running quality gates with `/zerg:merge`
-- Monitoring progress with `/zerg:status`
+- Capturing requirements with `/mahabharatha:plan`
+- Generating architecture and task graphs with `/mahabharatha:design`
+- Launching parallel workers with `/mahabharatha:kurukshetra`
+- Merging level results and running quality gates with `/mahabharatha:merge`
+- Monitoring progress with `/mahabharatha:status`
 
 ### [[Tutorial-Container-Mode]]
 
@@ -35,11 +35,11 @@ Topics covered:
 **Estimated time**: 45-60 minutes
 **Mode**: Container (`--mode container`)
 
-A guide to running ZERG workers inside Docker containers for isolated, reproducible execution. Covers Docker image setup, authentication methods (OAuth and API key), resource limits, volume mounts, and debugging failed containers.
+A guide to running MAHABHARATHA workers inside Docker containers for isolated, reproducible execution. Covers Docker image setup, authentication methods (OAuth and API key), resource limits, volume mounts, and debugging failed containers.
 
 Topics covered:
 
-- Building the `zerg-worker` Docker image
+- Building the `mahabharatha-worker` Docker image
 - Configuring container resource limits (CPU, memory)
 - OAuth authentication via `~/.claude` mount
 - API key authentication via `ANTHROPIC_API_KEY`
@@ -49,7 +49,7 @@ Topics covered:
 
 ## Concept Reference
 
-If you need a refresher on ZERG terminology before starting a tutorial:
+If you need a refresher on MAHABHARATHA terminology before starting a tutorial:
 
 | Concept | Description |
 |---------|-------------|
@@ -63,5 +63,5 @@ If you need a refresher on ZERG terminology before starting a tutorial:
 ## Further Reading
 
 - Project README: `CLAUDE.md` in the repository root
-- Configuration reference: `.zerg/config.yaml`
-- Command reference: `zerg/data/commands/zerg:*.md`
+- Configuration reference: `.mahabharatha/config.yaml`
+- Command reference: `mahabharatha/data/commands/mahabharatha:*.md`

@@ -1,4 +1,4 @@
-"""Persona and Theme models for ZERG.
+"""Persona and Theme models for MAHABHARATHA.
 
 Defines the roles, responsibilities, and personalities for workers.
 """

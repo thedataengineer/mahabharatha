@@ -1,30 +1,30 @@
 # Architecture
 
-> Understanding how ZERG builds software in parallel - a guided journey through the system.
+> Understanding how MAHABHARATHA builds software in parallel - a guided journey through the system.
 
 ---
 
 ## The Journey of a Feature
 
-When you type `/zerg:rush`, something remarkable happens behind the scenes. Your vague idea transforms into coordinated action as multiple AI workers spring to life, each tackling a piece of your feature simultaneously. But how does ZERG turn "I want user authentication" into working code across five parallel workers without chaos?
+When you type `/mahabharatha:kurukshetra`, something remarkable happens behind the scenes. Your vague idea transforms into coordinated action as multiple AI workers spring to life, each tackling a piece of your feature simultaneously. But how does MAHABHARATHA turn "I want user authentication" into working code across five parallel workers without chaos?
 
 This guide tells that story. We'll follow a feature from inception to completion, meeting each component along the way and understanding why it exists.
 
 ### The Factory Floor
 
-Think of ZERG like a modern factory floor. You (the user) arrive with a product idea. The factory doesn't immediately start stamping metal - first, engineers translate your idea into blueprints. Then production planners break the blueprints into work orders that different stations can execute simultaneously. Workers at individual stations build components. Quality control inspects each stage. Finally, everything comes together into a finished product.
+Think of MAHABHARATHA like a modern factory floor. You (the user) arrive with a product idea. The factory doesn't immediately start stamping metal - first, engineers translate your idea into blueprints. Then production planners break the blueprints into work orders that different stations can execute simultaneously. Workers at individual stations build components. Quality control inspects each stage. Finally, everything comes together into a finished product.
 
-ZERG works the same way:
+MAHABHARATHA works the same way:
 
-| Factory Analogy | ZERG Component | Purpose |
+| Factory Analogy | MAHABHARATHA Component | Purpose |
 |----------------|----------------|---------|
 | **Product Idea** | User requirements | What you want to build |
-| **Engineering** | `/zerg:plan` | Translate idea into specifications |
+| **Engineering** | `/mahabharatha:plan` | Translate idea into specifications |
 | **Blueprints** | `requirements.md` | The feature specification |
-| **Production Planning** | `/zerg:design` | Break work into parallel tasks |
+| **Production Planning** | `/mahabharatha:design` | Break work into parallel tasks |
 | **Work Orders** | `task-graph.json` | Atomic units of work |
 | **Factory Manager** | Orchestrator | Coordinates everything |
-| **Assembly Workers** | Zerglings | Claude Code instances writing code |
+| **Assembly Workers** | Warriors | Claude Code instances writing code |
 | **Workstations** | Git worktrees | Isolated work environments |
 | **Quality Control** | Quality gates | Lint, typecheck, test |
 | **Final Assembly** | Merge | Combine all work |
@@ -37,20 +37,20 @@ Now let's walk through each stage of this journey.
 
 ### What Is Planning?
 
-Planning is the conversation phase where ZERG helps you articulate what you want to build. Rather than accepting vague requirements and guessing wrong, ZERG asks probing questions until both you and the system have a shared understanding.
+Planning is the conversation phase where MAHABHARATHA helps you articulate what you want to build. Rather than accepting vague requirements and guessing wrong, MAHABHARATHA asks probing questions until both you and the system have a shared understanding.
 
 ### Why Does Planning Exist?
 
-The most expensive bugs are requirements bugs - building the wrong thing entirely. Imagine our factory spending weeks manufacturing the wrong product because the initial order was unclear. By investing time upfront in clarifying what you want, ZERG avoids the frustration of workers building features you didn't actually need.
+The most expensive bugs are requirements bugs - building the wrong thing entirely. Imagine our factory spending weeks manufacturing the wrong product because the initial order was unclear. By investing time upfront in clarifying what you want, MAHABHARATHA avoids the frustration of workers building features you didn't actually need.
 
 ### How the Story Flows
 
-When you run `/zerg:plan user-auth`, ZERG doesn't immediately start coding. Instead, it engages in Socratic discovery:
+When you run `/mahabharatha:plan user-auth`, MAHABHARATHA doesn't immediately start coding. Instead, it engages in Socratic discovery:
 
 ```
 You: "I want user authentication"
 
-ZERG: "Let me understand better:
+MAHABHARATHA: "Let me understand better:
   - What authentication methods? (password, OAuth, magic link?)
   - Should users be able to reset passwords?
   - Do you need role-based access control?
@@ -72,7 +72,7 @@ User Requirements -> [Socratic Discovery] -> requirements.md
 
 ### What Is Design?
 
-Design is where ZERG transforms "what to build" into "how to build it." The design phase analyzes your requirements, proposes an architecture, and breaks the work into atomic tasks that can be executed in parallel without stepping on each other.
+Design is where MAHABHARATHA transforms "what to build" into "how to build it." The design phase analyzes your requirements, proposes an architecture, and breaks the work into atomic tasks that can be executed in parallel without stepping on each other.
 
 ### Why Does Design Exist?
 
@@ -86,7 +86,7 @@ Design solves both problems through two key innovations:
 
 ### How the Story Flows
 
-Running `/zerg:design` produces two artifacts:
+Running `/mahabharatha:design` produces two artifacts:
 
 ```
 requirements.md -> [Architecture Analysis] -> task-graph.json + design.md
@@ -137,11 +137,11 @@ Tasks flow through dependency levels like an assembly line:
 
 ### What Is Orchestration?
 
-Orchestration is the execution phase - when workers actually write code. The orchestrator spawns multiple Claude Code instances (zerglings), each in its own isolated workspace, and coordinates their work through level-based execution.
+Orchestration is the execution phase - when workers actually write code. The orchestrator spawns multiple Claude Code instances (warriors), each in its own isolated workspace, and coordinates their work through level-based execution.
 
 ### Why Does Orchestration Exist This Way?
 
-Traditional development is sequential: one developer finishes, then another starts. ZERG flips this by running workers in parallel wherever possible. But parallelism needs coordination.
+Traditional development is sequential: one developer finishes, then another starts. MAHABHARATHA flips this by running workers in parallel wherever possible. But parallelism needs coordination.
 
 Think of the orchestrator as the factory manager. The manager doesn't build anything directly - they:
 - Assign work orders to workers
@@ -152,30 +152,30 @@ Think of the orchestrator as the factory manager. The manager doesn't build anyt
 
 ### How the Story Flows
 
-When you run `/zerg:rush`, here's what happens:
+When you run `/mahabharatha:kurukshetra`, here's what happens:
 
 ```
 [Orchestrator Start]
         |
         v
-[Load task-graph.json] -> [Assign tasks to zerglings]
+[Load task-graph.json] -> [Assign tasks to warriors]
         |
         v
 [Create git worktrees] - Each worker gets their own copy of the codebase
         |
         v
-[Spawn N zergling processes]
+[Spawn N warrior processes]
         |
         v
 +---------------------------------------------------------------------+
 |  FOR EACH LEVEL:                                                    |
-|    1. Zerglings execute tasks in PARALLEL                           |
+|    1. Warriors execute tasks in PARALLEL                           |
 |    2. Orchestrator polls until all level tasks complete             |
 |    3. MERGE PROTOCOL:                                               |
-|       - Merge all zergling branches -> staging branch               |
+|       - Merge all warrior branches -> staging branch               |
 |       - Run quality gates (lint, typecheck, test)                   |
 |       - Promote staging -> feature branch                           |
-|    4. Rebase zergling branches onto merged state                    |
+|    4. Rebase warrior branches onto merged state                    |
 |    5. Advance to next level                                         |
 +---------------------------------------------------------------------+
         |
@@ -191,26 +191,26 @@ Here's how all the layers connect visually:
 +---------------------------------------------------------------------+
 |                        Layer 1: Planning                             |
 |                 requirements.md + INFRASTRUCTURE.md                  |
-|                    (/zerg:plan, /zerg:brainstorm)                   |
+|                    (/mahabharatha:plan, /mahabharatha:brainstorm)                   |
 +---------------------------------------------------------------------+
                                 |
                                 v
 +---------------------------------------------------------------------+
 |                        Layer 2: Design                               |
 |                  design.md + task-graph.json                        |
-|                         (/zerg:design)                              |
+|                         (/mahabharatha:design)                              |
 +---------------------------------------------------------------------+
                                 |
                                 v
 +---------------------------------------------------------------------+
 |                     Layer 3: Orchestration                           |
-|    Zergling lifecycle - Level sync - Branch merging - Monitoring    |
-|                          (/zerg:rush)                               |
+|    Warrior lifecycle - Level sync - Branch merging - Monitoring    |
+|                          (/mahabharatha:kurukshetra)                               |
 +---------------------------------------------------------------------+
           |                     |                     |
           v                     v                     v
 +-------------+       +-------------+       +-------------+
-| Zergling 0  |       | Zergling 1  |       | Zergling N  |
+| Warrior 0  |       | Warrior 1  |       | Warrior N  |
 |  (worktree) |       |  (worktree) |       |  (worktree) |
 +-------------+       +-------------+       +-------------+
           |                     |                     |
@@ -220,42 +220,42 @@ Here's how all the layers connect visually:
 +---------------------------------------------------------------------+
 |                     Layer 4: Quality Gates                           |
 |             Lint - Type-check - Test - Merge to main                |
-|                        (/zerg:merge)                                |
+|                        (/mahabharatha:merge)                                |
 +---------------------------------------------------------------------+
 ```
 
 ---
 
-## Zerglings: The Individual Workers
+## Warriors: The Individual Workers
 
-### What Is a Zergling?
+### What Is a Warrior?
 
-A zergling is a single Claude Code worker instance - an AI that reads the spec files and writes code to complete its assigned tasks. The name comes from the idea of overwhelming a feature with many small, focused workers rather than one monolithic process.
+A warrior is a single Claude Code worker instance - an AI that reads the spec files and writes code to complete its assigned tasks. The name comes from the idea of overwhelming a feature with many small, focused workers rather than one monolithic process.
 
 ### Why Independent Execution?
 
-If zerglings shared state, a crash in one could corrupt data for all others. Shared conversation history would mean workers waiting for context windows to sync. Shared file systems would mean merge conflicts constantly.
+If warriors shared state, a crash in one could corrupt data for all others. Shared conversation history would mean workers waiting for context windows to sync. Shared file systems would mean merge conflicts constantly.
 
-By keeping zerglings fully isolated, ZERG achieves:
+By keeping warriors fully isolated, MAHABHARATHA achieves:
 - **Crash recovery**: Just restart the failed worker
 - **Horizontal scaling**: Add more workers without coordination overhead
 - **Deterministic behavior**: Same inputs always produce same outputs
 
 ### The Isolation Layers
 
-Each zergling operates in complete isolation through three layers:
+Each warrior operates in complete isolation through three layers:
 
 ```
 +---------------------------------------------------------------------+
-|                    ZERGLING ISOLATION LAYERS                         |
+|                    WARRIOR ISOLATION LAYERS                         |
 +---------------------------------------------------------------------+
-| 1. Git Worktree: .zerg-worktrees/{feature}-worker-{id}/             |
+| 1. Git Worktree: .mahabharatha-worktrees/{feature}-worker-{id}/             |
 |    - Independent file system                                        |
 |    - Separate git history                                           |
-|    - Own branch: zerg/{feature}/worker-{id}                         |
+|    - Own branch: mahabharatha/{feature}/worker-{id}                         |
 +---------------------------------------------------------------------+
 | 2. Process Isolation                                                |
-|    - Separate process per zergling                                  |
+|    - Separate process per warrior                                  |
 |    - Independent memory space                                       |
 |    - Communication via state files only                             |
 +---------------------------------------------------------------------+
@@ -274,7 +274,7 @@ Each zergling operates in complete isolation through three layers:
 
 ### The Worker Protocol
 
-Each zergling follows a strict protocol:
+Each warrior follows a strict protocol:
 
 1. **Claim**: Mark task `in_progress` via TaskUpdate
 2. **Load**: Read `requirements.md`, `design.md`, task context
@@ -298,7 +298,7 @@ Parallel development means multiple workers making changes simultaneously. Witho
 ### How Quality Gates Flow
 
 ```yaml
-# .zerg/config.yaml
+# .mahabharatha/config.yaml
 quality_gates:
   lint:
     command: "ruff check ."
@@ -346,13 +346,13 @@ Now let's trace how data flows from your initial idea to finished code. Understa
 User Requirements
        |
        v
-/zerg:plan --> requirements.md
+/mahabharatha:plan --> requirements.md
        |            |
        v            v
-/zerg:design --> design.md + task-graph.json
+/mahabharatha:design --> design.md + task-graph.json
        |                          |
        v                          v
-/zerg:rush --> Worker Assignments + State
+/mahabharatha:kurukshetra --> Worker Assignments + State
        |              |
        +------+-------+
               |
@@ -386,24 +386,24 @@ Where does everything live? Here's your map:
 | Requirements | `.gsd/specs/{feature}/requirements.md` | What to build |
 | Design | `.gsd/specs/{feature}/design.md` | How to build it |
 | Task Graph | `.gsd/specs/{feature}/task-graph.json` | Atomic work units |
-| State | `.zerg/state/{feature}.json` | Runtime state |
-| Worker Logs | `.zerg/logs/workers/worker-{id}.jsonl` | Structured events |
-| Task Artifacts | `.zerg/logs/tasks/{task-id}/` | Per-task outputs |
-| Worktrees | `.zerg-worktrees/{feature}-worker-{N}/` | Isolated filesystems |
+| State | `.mahabharatha/state/{feature}.json` | Runtime state |
+| Worker Logs | `.mahabharatha/logs/workers/worker-{id}.jsonl` | Structured events |
+| Task Artifacts | `.mahabharatha/logs/tasks/{task-id}/` | Per-task outputs |
+| Worktrees | `.mahabharatha-worktrees/{feature}-worker-{N}/` | Isolated filesystems |
 
 ### State Management
 
 Workers coordinate through two systems:
 
-**Claude Code Tasks** (authoritative): The Task system is the source of truth for task state. Workers claim tasks by calling TaskUpdate, and `/zerg:status` reads state via TaskList.
+**Claude Code Tasks** (authoritative): The Task system is the source of truth for task state. Workers claim tasks by calling TaskUpdate, and `/mahabharatha:status` reads state via TaskList.
 
 **State JSON** (supplementary): Fast local file with worker-level details like context usage and branch names. If Tasks and state JSON disagree, **Tasks win**.
 
 ```
-/zerg:design -> TaskCreate for each task --> Subject: "[L{level}] {title}"
+/mahabharatha:design -> TaskCreate for each task --> Subject: "[L{level}] {title}"
     |
     v
-/zerg:rush
+/mahabharatha:kurukshetra
     |
     v
 TaskUpdate (in_progress) --> Worker claims task
@@ -415,7 +415,7 @@ Worker executes
 TaskUpdate (completed/failed) --> Worker reports result
     |
     v
-/zerg:status
+/mahabharatha:status
     |
     v
 TaskList --> Read current state across all workers
@@ -427,12 +427,12 @@ TaskList --> Read current state across all workers
 
 ### Spec as Memory
 
-Zerglings do not share conversation context. They share specifications:
+Warriors do not share conversation context. They share specifications:
 - `requirements.md` - what to build
 - `design.md` - how to build it
 - `task-graph.json` - atomic work units
 
-This makes zerglings **stateless**. Any zergling can pick up any task. Crash recovery is trivial.
+This makes warriors **stateless**. Any warrior can pick up any task. Crash recovery is trivial.
 
 ### File Ownership
 
@@ -459,8 +459,8 @@ Benefits:
 Each worker operates in its own git worktree:
 
 ```
-.zerg-worktrees/{feature}/worker-0/  ->  branch: zerg/{feature}/worker-0
-.zerg-worktrees/{feature}/worker-1/  ->  branch: zerg/{feature}/worker-1
+.mahabharatha-worktrees/{feature}/worker-0/  ->  branch: mahabharatha/{feature}/worker-0
+.mahabharatha-worktrees/{feature}/worker-1/  ->  branch: mahabharatha/{feature}/worker-1
 ```
 
 Workers commit independently. No filesystem conflicts.
@@ -469,7 +469,7 @@ Workers commit independently. No filesystem conflicts.
 
 ## Module Reference
 
-ZERG comprises 80+ Python modules organized into functional groups. Here's how they connect to the journey we've traced.
+MAHABHARATHA comprises 80+ Python modules organized into functional groups. Here's how they connect to the journey we've traced.
 
 ### Core Orchestration
 
@@ -477,11 +477,11 @@ These modules implement the factory manager role:
 
 | Module | Path | Responsibility |
 |--------|------|----------------|
-| `orchestrator` | `zerg/orchestrator.py` | Fleet management, level transitions, merge triggers |
-| `levels` | `zerg/levels.py` | Level-based execution control, dependency enforcement |
-| `state` | `zerg/state.py` | Thread-safe file-based state persistence |
-| `worker_protocol` | `zerg/worker_protocol.py` | Zergling-side execution, Claude Code invocation |
-| `launcher` | `zerg/launcher.py` | Abstract worker spawning (subprocess/container/task) |
+| `orchestrator` | `mahabharatha/orchestrator.py` | Fleet management, level transitions, merge triggers |
+| `levels` | `mahabharatha/levels.py` | Level-based execution control, dependency enforcement |
+| `state` | `mahabharatha/state.py` | Thread-safe file-based state persistence |
+| `worker_protocol` | `mahabharatha/worker_protocol.py` | Warrior-side execution, Claude Code invocation |
+| `launcher` | `mahabharatha/launcher.py` | Abstract worker spawning (subprocess/container/task) |
 
 ### Task Management
 
@@ -489,10 +489,10 @@ These modules handle work order processing:
 
 | Module | Path | Responsibility |
 |--------|------|----------------|
-| `assign` | `zerg/assign.py` | Task-to-zergling assignment with load balancing |
-| `parser` | `zerg/parser.py` | Parse and validate task graphs |
-| `verify` | `zerg/verify.py` | Execute task verification commands |
-| `task_sync` | `zerg/task_sync.py` | Bridge between JSON state and Claude Tasks |
+| `assign` | `mahabharatha/assign.py` | Task-to-warrior assignment with load balancing |
+| `parser` | `mahabharatha/parser.py` | Parse and validate task graphs |
+| `verify` | `mahabharatha/verify.py` | Execute task verification commands |
+| `task_sync` | `mahabharatha/task_sync.py` | Bridge between JSON state and Claude Tasks |
 
 ### Git Operations
 
@@ -500,9 +500,9 @@ These modules manage the worktree infrastructure:
 
 | Module | Path | Responsibility |
 |--------|------|----------------|
-| `git_ops` | `zerg/git_ops.py` | Low-level git operations |
-| `worktree` | `zerg/worktree.py` | Git worktree management for zergling isolation |
-| `merge` | `zerg/merge.py` | Branch merging after each level |
+| `git_ops` | `mahabharatha/git_ops.py` | Low-level git operations |
+| `worktree` | `mahabharatha/worktree.py` | Git worktree management for warrior isolation |
+| `merge` | `mahabharatha/merge.py` | Branch merging after each level |
 
 ### Quality & Security
 
@@ -510,15 +510,15 @@ These modules implement the quality control department:
 
 | Module | Path | Responsibility |
 |--------|------|----------------|
-| `gates` | `zerg/gates.py` | Execute quality gates (lint, typecheck, test) |
-| `security` | `zerg/security.py` | Security validation, hook patterns |
-| `validation` | `zerg/validation.py` | Task graph and ID validation |
+| `gates` | `mahabharatha/gates.py` | Execute quality gates (lint, typecheck, test) |
+| `security` | `mahabharatha/security.py` | Security validation, hook patterns |
+| `validation` | `mahabharatha/validation.py` | Task graph and ID validation |
 
 ---
 
 ## Execution Modes
 
-ZERG supports three ways to run workers, like a factory that can use different types of machinery:
+MAHABHARATHA supports three ways to run workers, like a factory that can use different types of machinery:
 
 | Mode | How Workers Run | When To Use |
 |------|-----------------|-------------|

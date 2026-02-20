@@ -10,7 +10,7 @@
 
 ## 1. Problem Statement
 
-ZERG commands `/z:plan` and `/z:design` can execute redundantly when:
+MAHABHARATHA commands `/z:plan` and `/z:design` can execute redundantly when:
 - The objective has already been implemented in recent commits
 - An open PR already addresses the feature
 - Codebase already contains matching implementations
@@ -51,8 +51,8 @@ Proceed only if:
 
 | File | Change |
 |------|--------|
-| `zerg/data/commands/plan.core.md` | Add Phase 0: Validation before Phase 1 |
-| `zerg/data/commands/design.core.md` | Add Phase 0: Validation before Load Context |
+| `mahabharatha/data/commands/plan.core.md` | Add Phase 0: Validation before Phase 1 |
+| `mahabharatha/data/commands/design.core.md` | Add Phase 0: Validation before Load Context |
 
 ---
 
@@ -136,7 +136,7 @@ Before proceeding, validate this design is still needed:
      ```
    - For key function/class names mentioned:
      ```bash
-     grep -r "{identifier}" zerg/ tests/ --include="*.py" -l | head -5
+     grep -r "{identifier}" mahabharatha/ tests/ --include="*.py" -l | head -5
      ```
 
 5. **Validation Decision**

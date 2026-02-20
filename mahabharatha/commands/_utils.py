@@ -1,4 +1,4 @@
-"""Shared utilities for ZERG CLI commands."""
+"""Shared utilities for MAHABHARATHA CLI commands."""
 
 import os
 import re

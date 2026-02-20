@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 Template Engine."""
+"""Tests for MAHABHARATHA v2 Template Engine."""
 
 import sys
 from pathlib import Path

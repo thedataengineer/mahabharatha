@@ -16,7 +16,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/state.py"],
+        "modify": ["mahabharatha/state.py"],
         "read": ["tests/unit/test_state_extended.py"]
       },
       "acceptance_criteria": [
@@ -38,8 +38,8 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/verify.py"],
-        "read": ["tests/unit/test_verify.py", "zerg/command_executor.py"]
+        "modify": ["mahabharatha/verify.py"],
+        "read": ["tests/unit/test_verify.py", "mahabharatha/command_executor.py"]
       },
       "acceptance_criteria": [
         "test_verify_invalid_command passes",
@@ -60,7 +60,7 @@
       "files": {
         "create": [],
         "modify": ["tests/unit/test_worker_lifecycle.py"],
-        "read": ["zerg/worker_protocol.py"]
+        "read": ["mahabharatha/worker_protocol.py"]
       },
       "acceptance_criteria": [
         "test_start_sets_running_worker_state passes within 15s",

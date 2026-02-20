@@ -1,7 +1,7 @@
 # Requirements: Phase 3 — Post-Release Polish
 
 **Status**: APPROVED
-**Epic**: #179 (ZERG Public Release)
+**Epic**: #179 (MAHABHARATHA Public Release)
 **Issue**: #191
 **Feature**: phase-3-post-release-polish
 **Date**: 2026-02-07
@@ -25,7 +25,7 @@ v0.2.0 is live on PyPI. The repo needs post-release polish: sponsorship setup, r
 
 - Terminal demo recording (manual creative task)
 - Social preview image (manual creative task)
-- Docker Hub image (deferred — ZERG installs via pip)
+- Docker Hub image (deferred — MAHABHARATHA installs via pip)
 
 ## 3. Functional Requirements
 

@@ -1,7 +1,7 @@
-# Technical Design: Rush Performance Fix
+# Technical Design: Kurukshetra Performance Fix
 
 ## Metadata
-- **Feature**: rush-perf-fix
+- **Feature**: kurukshetra-perf-fix
 - **Status**: DRAFT
 - **Created**: 2026-02-04
 - **Author**: Claude Opus 4.5 via /z:design
@@ -11,13 +11,13 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Optimize ZERG rush performance by reducing Docker subprocess call overhead in the container monitoring loop. The primary fix adds status caching to `ContainerLauncher.monitor()` and increases the poll interval from 5s to 15s.
+Optimize MAHABHARATHA kurukshetra performance by reducing Docker subprocess call overhead in the container monitoring loop. The primary fix adds status caching to `ContainerLauncher.monitor()` and increases the poll interval from 5s to 15s.
 
 ### 1.2 Goals
 - Reduce Docker calls from 120+/min to ~20-30/min
 - Reduce monitoring overhead from 20% to <5% of poll time
 - Maintain existing functionality and security posture
-- Achieve 15-20% rush speedup
+- Achieve 15-20% kurukshetra speedup
 
 ### 1.3 Non-Goals
 - Complete monitoring architecture refactor
@@ -60,10 +60,10 @@ Optimize ZERG rush performance by reducing Docker subprocess call overhead in th
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| ContainerLauncher.monitor() | Check container status with caching | zerg/launcher.py |
-| SubprocessLauncher.monitor() | Check subprocess status with cached HB monitor | zerg/launcher.py |
-| Orchestrator._poll_interval | Control poll frequency | zerg/orchestrator.py |
-| WorkerHandle.health_check_at | Track last check timestamp | zerg/launcher.py (existing) |
+| ContainerLauncher.monitor() | Check container status with caching | mahabharatha/launcher.py |
+| SubprocessLauncher.monitor() | Check subprocess status with cached HB monitor | mahabharatha/launcher.py |
+| Orchestrator._poll_interval | Control poll frequency | mahabharatha/orchestrator.py |
+| WorkerHandle.health_check_at | Track last check timestamp | mahabharatha/launcher.py (existing) |
 
 ### 2.3 Data Flow
 
@@ -82,7 +82,7 @@ Optimize ZERG rush performance by reducing Docker subprocess call overhead in th
 ### 3.1 ContainerLauncher.monitor() Changes
 
 ```python
-# zerg/launcher.py - ContainerLauncher.monitor()
+# mahabharatha/launcher.py - ContainerLauncher.monitor()
 
 # Add at class level
 MONITOR_COOLDOWN_SECONDS = 10  # Skip docker calls if checked recently
@@ -110,7 +110,7 @@ def monitor(self, worker_id: int) -> WorkerStatus:
 ### 3.2 SubprocessLauncher Changes
 
 ```python
-# zerg/launcher.py - SubprocessLauncher
+# mahabharatha/launcher.py - SubprocessLauncher
 
 def __init__(self, config: LauncherConfig | None = None) -> None:
     super().__init__(config)
@@ -123,7 +123,7 @@ def __init__(self, config: LauncherConfig | None = None) -> None:
 def heartbeat_monitor(self) -> HeartbeatMonitor:
     """Lazy singleton for HeartbeatMonitor."""
     if self._heartbeat_monitor is None:
-        from zerg.heartbeat import HeartbeatMonitor
+        from mahabharatha.heartbeat import HeartbeatMonitor
         self._heartbeat_monitor = HeartbeatMonitor()
     return self._heartbeat_monitor
 
@@ -140,7 +140,7 @@ def monitor(self, worker_id: int) -> WorkerStatus:
 ### 3.3 Orchestrator Poll Interval
 
 ```python
-# zerg/orchestrator.py - Orchestrator.__init__()
+# mahabharatha/orchestrator.py - Orchestrator.__init__()
 
 # Change from:
 self._poll_interval = 5  # seconds
@@ -205,8 +205,8 @@ self._poll_interval = 15  # seconds (FR-2: reduced monitoring overhead)
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| zerg/launcher.py | TASK-001, TASK-002 | modify |
-| zerg/orchestrator.py | TASK-003 | modify |
+| mahabharatha/launcher.py | TASK-001, TASK-002 | modify |
+| mahabharatha/orchestrator.py | TASK-003 | modify |
 | tests/unit/test_launcher.py | TASK-004 | modify |
 | tests/integration/test_rush_performance.py | TASK-005 | modify |
 
@@ -241,7 +241,7 @@ graph TD
 - Test orchestrator poll interval is 15s
 
 ### 7.2 Integration Tests
-- Verify rush completes with reduced monitoring overhead
+- Verify kurukshetra completes with reduced monitoring overhead
 - Verify worker status transitions still work correctly
 
 ### 7.3 Verification Commands

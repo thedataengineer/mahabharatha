@@ -1,4 +1,4 @@
-"""Unit tests for ZERG dry-run simulator.
+"""Unit tests for MAHABHARATHA dry-run simulator.
 
 Tests cover all validation, analysis, and rendering paths in mahabharatha/dryrun.py.
 """
@@ -608,7 +608,7 @@ class TestRender:
         assert "Level 2" in captured.out
         assert "Worker Load Balance" in captured.out
         assert "Timeline Estimate" in captured.out
-        assert "ready to rush" in captured.out.lower()
+        assert "ready to kurukshetra" in captured.out.lower()
 
     def test_render_includes_preflight(
         self,

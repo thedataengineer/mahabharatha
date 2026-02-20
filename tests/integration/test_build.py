@@ -1,4 +1,4 @@
-"""Integration tests for ZERG build command."""
+"""Integration tests for MAHABHARATHA build command."""
 
 import tempfile
 from pathlib import Path
@@ -52,10 +52,10 @@ class TestBuildFunctional:
     """Functional tests for build command."""
 
     def test_build_displays_header(self) -> None:
-        """Test build shows ZERG Build header."""
+        """Test build shows MAHABHARATHA Build header."""
         runner = CliRunner()
         result = runner.invoke(cli, ["build", "--dry-run"])
-        assert "ZERG" in result.output or "Build" in result.output
+        assert "MAHABHARATHA" in result.output or "Build" in result.output
 
     def test_build_dry_run_mode(self) -> None:
         """Test build --dry-run shows what would be built."""

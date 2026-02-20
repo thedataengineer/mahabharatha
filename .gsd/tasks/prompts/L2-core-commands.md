@@ -1,4 +1,4 @@
-# L2-TASK-001: /zerg:init Command Update
+# L2-TASK-001: /mahabharatha:init Command Update
 
 ## Objective
 
@@ -8,21 +8,21 @@ Update init command to generate v2 directory structure and orchestrator configur
 
 **Depends on**: L0-TASK-002, L1-TASK-004
 
-The init command sets up a project for ZERG. This update adds v2 structure with schemas, templates, and proper config.
+The init command sets up a project for MAHABHARATHA. This update adds v2 structure with schemas, templates, and proper config.
 
 ## Files to Modify/Create
 
 ```
 .claude/commands/
-└── zerg:init.md          # MODIFY: Update prompt
+└── mahabharatha:init.md          # MODIFY: Update prompt
 
-.zerg/
+.mahabharatha/
 └── init_generator.py     # CREATE: Generation logic
 ```
 
 ## Implementation Requirements
 
-Update the `/zerg:init` command to:
+Update the `/mahabharatha:init` command to:
 
 1. **Detect Project Type**:
    - Language (Python, TypeScript, Rust, Go)
@@ -31,7 +31,7 @@ Update the `/zerg:init` command to:
 
 2. **Generate v2 Structure**:
 ```
-.zerg/
+.mahabharatha/
 ├── config.json           # Project configuration
 ├── schemas/              # JSON schemas
 ├── templates/            # Worker prompts
@@ -63,12 +63,12 @@ Update the `/zerg:init` command to:
 
 ```bash
 # In a test project directory
-/zerg:init
+/mahabharatha:init
 
 # Verify output
-ls -la .zerg/
-cat .zerg/config.json | python -m json.tool
-ls .zerg/templates/
+ls -la .mahabharatha/
+cat .mahabharatha/config.json | python -m json.tool
+ls .mahabharatha/templates/
 ```
 
 ## Definition of Done
@@ -80,39 +80,39 @@ ls .zerg/templates/
 
 ---
 
-# L2-TASK-002: /zerg:rush Command Update
+# L2-TASK-002: /mahabharatha:kurukshetra Command Update
 
 ## Objective
 
-Update rush command to use Python orchestrator instead of shell coordination.
+Update kurukshetra command to use Python orchestrator instead of shell coordination.
 
 ## Context
 
 **Depends on**: L0-TASK-001, L0-TASK-003, L1-TASK-001, L1-TASK-003
 
-Rush is the main execution command. This update integrates the Python orchestrator for proper level synchronization and worker management.
+Kurukshetra is the main execution command. This update integrates the Python orchestrator for proper level synchronization and worker management.
 
 ## Files to Modify/Create
 
 ```
 .claude/commands/
-└── zerg:rush.md          # MODIFY: Update prompt
+└── mahabharatha:kurukshetra.md          # MODIFY: Update prompt
 
-.zerg/
-└── rush.py               # CREATE: Rush command logic
+.mahabharatha/
+└── kurukshetra.py               # CREATE: Kurukshetra command logic
 ```
 
 ## Implementation Requirements
 
-### Rush Command Class
+### Kurukshetra Command Class
 
 ```python
 class RushCommand:
     """Execute task graph with orchestrator."""
-    
+
     def __init__(self):
         self.orchestrator = Orchestrator()
-    
+
     def execute(
         self,
         workers: int = 5,
@@ -120,19 +120,19 @@ class RushCommand:
         resume: bool = False
     ) -> ExecutionResult:
         """Execute the task graph."""
-        
+
         # Load or resume state
         if resume:
             state = ExecutionState.load()
         else:
             state = ExecutionState.create(self._get_feature_name())
-        
+
         # Load task graph
         graph = TaskGraph.from_file(self._get_graph_path())
-        
+
         if dry_run:
             return self._dry_run(graph)
-        
+
         # Execute with orchestrator
         return self.orchestrator.start(graph, workers)
 ```
@@ -142,7 +142,7 @@ class RushCommand:
 ```markdown
 ## Usage
 
-/zerg:rush [--workers N] [--dry-run] [--resume]
+/mahabharatha:kurukshetra [--workers N] [--dry-run] [--resume]
 
 ## Behavior
 
@@ -151,14 +151,14 @@ class RushCommand:
 3. Start orchestrator with N workers
 4. Execute levels sequentially with barriers
 5. Run quality gates between levels
-6. Report progress via /zerg:status
+6. Report progress via /mahabharatha:status
 ```
 
 ## Verification
 
 ```bash
-cd .zerg && python -c "
-from rush import RushCommand
+cd .mahabharatha && python -c "
+from kurukshetra import RushCommand
 
 rc = RushCommand()
 
@@ -166,20 +166,20 @@ rc = RushCommand()
 result = rc.execute(dry_run=True)
 assert result.validated
 
-print('OK: Rush command ready')
+print('OK: Kurukshetra command ready')
 "
 ```
 
 ## Definition of Done
 
-1. Rush invokes Python orchestrator
+1. Kurukshetra invokes Python orchestrator
 2. Level barriers enforced
 3. Progress reported to status
 4. Resume from checkpoint works
 
 ---
 
-# L2-TASK-003: /zerg:worker Command Update
+# L2-TASK-003: /mahabharatha:worker Command Update
 
 ## Objective
 
@@ -195,9 +195,9 @@ Workers must follow strict protocols: TDD for code tasks, verification before cl
 
 ```
 .claude/commands/
-└── zerg:worker.md        # MODIFY: Add protocols
+└── mahabharatha:worker.md        # MODIFY: Add protocols
 
-.zerg/
+.mahabharatha/
 └── worker_protocol.py    # CREATE: Protocol enforcement
 ```
 
@@ -208,7 +208,7 @@ Workers must follow strict protocols: TDD for code tasks, verification before cl
 ```python
 def enforce_tdd(spec: TaskSpec) -> TDDResult:
     """Enforce red-green-refactor cycle."""
-    
+
     # Step 1: Write test
     # Step 2: Run test - MUST FAIL
     # Step 3: Write implementation
@@ -221,10 +221,10 @@ def enforce_tdd(spec: TaskSpec) -> TDDResult:
 ```python
 def verify_before_completion(spec: TaskSpec) -> Verification:
     """THE IRON LAW: No completion without fresh verification."""
-    
+
     # Run verification command
     result = run_command(spec.verification.command)
-    
+
     # Parse output
     # Return evidence
 ```
@@ -240,7 +240,7 @@ Worker must NOT use:
 ## Verification
 
 ```bash
-# Manual test with /zerg:worker
+# Manual test with /mahabharatha:worker
 # Verify TDD steps in output
 # Verify verification command is run
 ```
@@ -253,7 +253,7 @@ Worker must NOT use:
 
 ---
 
-# L2-TASK-004: /zerg:status Command Update
+# L2-TASK-004: /mahabharatha:status Command Update
 
 ## Objective
 
@@ -269,16 +269,16 @@ Status provides real-time visibility into execution progress, worker states, and
 
 ```
 .claude/commands/
-└── zerg:status.md        # MODIFY: Dashboard format
+└── mahabharatha:status.md        # MODIFY: Dashboard format
 
-.zerg/
+.mahabharatha/
 └── status.py             # CREATE: Status rendering
 ```
 
 ## Dashboard Format
 
 ```
-ZERG Status - Project: my-feature
+MAHABHARATHA Status - Project: my-feature
 ═══════════════════════════════════════════════════════════════
 
 Progress: Level 2/5 | Tasks: 12/47 (25.5%) | Workers: 4/5 active
@@ -300,7 +300,7 @@ Elapsed: 8m 23s | Estimated: 24m remaining
 ## Verification
 
 ```bash
-cd .zerg && python -c "
+cd .mahabharatha && python -c "
 from status import StatusCommand
 
 sc = StatusCommand()
@@ -318,7 +318,7 @@ print(dashboard)
 
 ---
 
-# L2-TASK-005: /zerg:plan Command Update
+# L2-TASK-005: /mahabharatha:plan Command Update
 
 ## Objective
 
@@ -334,7 +334,7 @@ Socratic mode guides requirements gathering through three structured rounds of q
 
 ```
 .claude/commands/
-└── zerg:plan.md          # MODIFY: Add --socratic
+└── mahabharatha:plan.md          # MODIFY: Add --socratic
 ```
 
 ## Socratic Rounds
@@ -358,7 +358,7 @@ Socratic mode guides requirements gathering through three structured rounds of q
 
 ```bash
 # Manual test
-/zerg:plan my-feature --socratic --rounds 3
+/mahabharatha:plan my-feature --socratic --rounds 3
 # Verify three-round structure
 ```
 
@@ -370,7 +370,7 @@ Socratic mode guides requirements gathering through three structured rounds of q
 
 ---
 
-# L2-TASK-006: /zerg:design Command Update
+# L2-TASK-006: /mahabharatha:design Command Update
 
 ## Objective
 
@@ -386,7 +386,7 @@ Design produces the task graph that drives execution. v2 schema adds explicit fi
 
 ```
 .claude/commands/
-└── zerg:design.md        # MODIFY: v2 schema
+└── mahabharatha:design.md        # MODIFY: v2 schema
 ```
 
 ## Task Graph v2 Schema
@@ -418,12 +418,12 @@ Design produces the task graph that drives execution. v2 schema adds explicit fi
 ## Verification
 
 ```bash
-# After running /zerg:design
+# After running /mahabharatha:design
 python -c "
 import json
 from jsonschema import validate
 
-schema = json.load(open('.zerg/schemas/task-graph.schema.json'))
+schema = json.load(open('.mahabharatha/schemas/task-graph.schema.json'))
 graph = json.load(open('.gsd/specs/test/task-graph.json'))
 validate(graph, schema)
 print('OK: Valid v2 task graph')

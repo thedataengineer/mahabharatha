@@ -16,11 +16,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/command_executor.py"],
+        "modify": ["mahabharatha/command_executor.py"],
         "read": []
       },
       "verification": {
-        "command": "grep -E \"(python -c|python3 -c|npx)\" zerg/command_executor.py | grep -v \"#\" | wc -l | xargs test 0 -eq",
+        "command": "grep -E \"(python -c|python3 -c|npx)\" mahabharatha/command_executor.py | grep -v \"#\" | wc -l | xargs test 0 -eq",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -38,11 +38,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/command_executor.py"],
+        "modify": ["mahabharatha/command_executor.py"],
         "read": []
       },
       "verification": {
-        "command": "grep -n \"trust_commands.*deprecated\" zerg/command_executor.py | wc -l | xargs test 0 -lt",
+        "command": "grep -n \"trust_commands.*deprecated\" mahabharatha/command_executor.py | wc -l | xargs test 0 -lt",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5,
@@ -60,11 +60,11 @@
       "dependencies": ["TASK-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/diagnostics/hypothesis_engine.py"],
-        "read": ["zerg/command_executor.py"]
+        "modify": ["mahabharatha/diagnostics/hypothesis_engine.py"],
+        "read": ["mahabharatha/command_executor.py"]
       },
       "verification": {
-        "command": "grep -n \"shell=True\" zerg/diagnostics/hypothesis_engine.py | wc -l | xargs test 0 -eq && grep -n \"CommandExecutor\\|get_executor\" zerg/diagnostics/hypothesis_engine.py | wc -l | xargs test 0 -lt",
+        "command": "grep -n \"shell=True\" mahabharatha/diagnostics/hypothesis_engine.py | wc -l | xargs test 0 -eq && grep -n \"CommandExecutor\\|get_executor\" mahabharatha/diagnostics/hypothesis_engine.py | wc -l | xargs test 0 -lt",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
@@ -82,11 +82,11 @@
       "dependencies": ["TASK-001", "TASK-002"],
       "files": {
         "create": [],
-        "modify": ["zerg/step_executor.py"],
-        "read": ["zerg/command_executor.py"]
+        "modify": ["mahabharatha/step_executor.py"],
+        "read": ["mahabharatha/command_executor.py"]
       },
       "verification": {
-        "command": "grep -n \"shell=True\" zerg/step_executor.py | wc -l | xargs test 0 -eq && grep -n \"CommandExecutor\" zerg/step_executor.py | wc -l | xargs test 0 -lt",
+        "command": "grep -n \"shell=True\" mahabharatha/step_executor.py | wc -l | xargs test 0 -eq && grep -n \"CommandExecutor\" mahabharatha/step_executor.py | wc -l | xargs test 0 -lt",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
@@ -104,11 +104,11 @@
       "dependencies": ["TASK-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/diagnostics/recovery.py"],
-        "read": ["zerg/command_executor.py"]
+        "modify": ["mahabharatha/diagnostics/recovery.py"],
+        "read": ["mahabharatha/command_executor.py"]
       },
       "verification": {
-        "command": "grep -n \"shell=True\" zerg/diagnostics/recovery.py | wc -l | xargs test 0 -eq && grep -n \"shlex.quote\" zerg/diagnostics/recovery.py | wc -l | xargs test 0 -lt && grep -n \"CommandExecutor\\|get_executor\" zerg/diagnostics/recovery.py | wc -l | xargs test 0 -lt",
+        "command": "grep -n \"shell=True\" mahabharatha/diagnostics/recovery.py | wc -l | xargs test 0 -eq && grep -n \"shlex.quote\" mahabharatha/diagnostics/recovery.py | wc -l | xargs test 0 -lt && grep -n \"CommandExecutor\\|get_executor\" mahabharatha/diagnostics/recovery.py | wc -l | xargs test 0 -lt",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
@@ -126,11 +126,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/security.py"],
+        "modify": ["mahabharatha/security.py"],
         "read": []
       },
       "verification": {
-        "command": "grep -n \"followlinks=False\" zerg/security.py | wc -l | xargs test 0 -lt && grep -n \"is_relative_to\" zerg/security.py | wc -l | xargs test 0 -lt && grep -n \"symlink_violations\" zerg/security.py | wc -l | xargs test 0 -lt",
+        "command": "grep -n \"followlinks=False\" mahabharatha/security.py | wc -l | xargs test 0 -lt && grep -n \"is_relative_to\" mahabharatha/security.py | wc -l | xargs test 0 -lt && grep -n \"symlink_violations\" mahabharatha/security.py | wc -l | xargs test 0 -lt",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
@@ -149,7 +149,7 @@
       "files": {
         "create": ["tests/unit/test_command_executor_hardening.py"],
         "modify": [],
-        "read": ["zerg/command_executor.py"]
+        "read": ["mahabharatha/command_executor.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_command_executor_hardening.py -v",
@@ -171,7 +171,7 @@
       "files": {
         "create": ["tests/unit/test_security_path_traversal.py"],
         "modify": [],
-        "read": ["zerg/security.py"]
+        "read": ["mahabharatha/security.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_security_path_traversal.py -v",
@@ -194,9 +194,9 @@
         "create": ["tests/integration/test_diagnostics_secure_execution.py"],
         "modify": [],
         "read": [
-          "zerg/diagnostics/hypothesis_engine.py",
-          "zerg/step_executor.py",
-          "zerg/diagnostics/recovery.py"
+          "mahabharatha/diagnostics/hypothesis_engine.py",
+          "mahabharatha/step_executor.py",
+          "mahabharatha/diagnostics/recovery.py"
         ]
       },
       "verification": {
@@ -222,7 +222,7 @@
         "read": [".gsd/specs/security-hardening/requirements.md"]
       },
       "verification": {
-        "command": "pytest tests/ -v && bandit -r zerg/ -ll",
+        "command": "pytest tests/ -v && bandit -r mahabharatha/ -ll",
         "timeout_seconds": 300
       },
       "estimate_minutes": 15,
@@ -276,7 +276,7 @@
     "conflicts": [
       {
         "tasks": ["TASK-001", "TASK-002"],
-        "reason": "Both modify zerg/command_executor.py",
+        "reason": "Both modify mahabharatha/command_executor.py",
         "resolution": "Execute sequentially within Level 1"
       }
     ]

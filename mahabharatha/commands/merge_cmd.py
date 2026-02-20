@@ -1,4 +1,4 @@
-"""ZERG merge command - trigger merge gate execution."""
+"""MAHABHARATHA merge command - trigger merge gate execution."""
 
 from typing import Any
 
@@ -61,7 +61,7 @@ def merge_cmd(
         if not target:
             target = "main"
 
-        console.print(f"\n[bold cyan]ZERG Merge[/bold cyan] - {feature}\n")
+        console.print(f"\n[bold cyan]MAHABHARATHA Merge[/bold cyan] - {feature}\n")
 
         # Load state and config
         state = StateManager(feature)

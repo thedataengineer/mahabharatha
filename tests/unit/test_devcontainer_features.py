@@ -1,4 +1,4 @@
-"""Unit tests for ZERG devcontainer features module."""
+"""Unit tests for MAHABHARATHA devcontainer features module."""
 
 from mahabharatha.devcontainer_features import (
     CUSTOM_INSTALL_COMMANDS,
@@ -113,7 +113,7 @@ class TestDevcontainerSpec:
         """Test default spec values."""
         spec = DevcontainerSpec()
 
-        assert spec.name == "ZERG Worker"
+        assert spec.name == "MAHABHARATHA Worker"
         assert spec.base_image == DEFAULT_BASE_IMAGE
         assert spec.features == {}
         assert spec.post_create_commands == []

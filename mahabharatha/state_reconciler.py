@@ -1,4 +1,4 @@
-"""State reconciliation for ZERG orchestrator.
+"""State reconciliation for MAHABHARATHA orchestrator.
 
 Detects and resolves state inconsistencies between workers and orchestrator,
 ensuring accurate level completion tracking and task state consistency.

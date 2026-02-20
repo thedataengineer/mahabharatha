@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 Status Command."""
+"""Tests for MAHABHARATHA v2 Status Command."""
 
 import json
 import sys
@@ -224,7 +224,7 @@ class TestStatusCommand:
         )
         sc = StatusCommand()
         output = sc.format_dashboard(db)
-        assert "ZERG Status" in output
+        assert "MAHABHARATHA Status" in output
         assert "my-feature" in output
 
     def test_format_dashboard_has_progress(self):

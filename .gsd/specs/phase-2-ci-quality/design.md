@@ -5,7 +5,7 @@
 - **Status**: DRAFT
 - **Created**: 2026-02-07
 - **Author**: Factory Design Mode
-- **Parent Epic**: #179 (ZERG Public Release)
+- **Parent Epic**: #179 (MAHABHARATHA Public Release)
 - **Issues**: #189, #190
 
 ---
@@ -93,7 +93,7 @@ No runtime data flow — all components are CI/CD configuration:
 ### 3.2 CI Enhancement (`.github/workflows/ci.yml`)
 
 Changes to existing file:
-1. **quality job**: Add `mypy zerg/` step after lint check
+1. **quality job**: Add `mypy mahabharatha/` step after lint check
 2. **test job**: Expand matrix from `[1, 2]` shards to `python-version: ['3.12', '3.13']` × `shard: [1, 2]` (4 combinations)
 3. All other jobs (quality, smoke, audit) stay on Python 3.12
 
@@ -104,7 +104,7 @@ Changes to existing file:
 * @rocklambros
 
 # Core orchestrator
-/zerg/ @rocklambros
+/mahabharatha/ @rocklambros
 
 # CI/CD
 /.github/ @rocklambros

@@ -1,4 +1,4 @@
-"""Event emitter for ZERG live streaming.
+"""Event emitter for MAHABHARATHA live streaming.
 
 This module provides the EventEmitter class for JSONL-based event
 streaming between orchestrator and status monitors.

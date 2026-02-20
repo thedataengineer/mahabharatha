@@ -1,4 +1,4 @@
-"""Tests for ZERG state management level and event tracking.
+"""Tests for MAHABHARATHA state management level and event tracking.
 
 Covers:
 - Level status transitions (set_level_status)

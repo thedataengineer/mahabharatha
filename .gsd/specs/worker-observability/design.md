@@ -4,17 +4,17 @@
 - **Feature**: worker-observability
 - **Status**: APPROVED
 - **Created**: 2026-02-02
-- **Author**: ZERG Design Mode
+- **Author**: MAHABHARATHA Design Mode
 
 ---
 
 ## 1. Overview
 
 ### 1.1 Summary
-Close remaining gaps on issues #27 (worker health) and #30 (repo map), then build the token usage metrics subsystem (#24). PR #95 delivered heartbeat, escalation, verification tiers, and repo map modules. This feature wires them into `/zerg:status` display, adds incremental repo map indexing, and creates token counting/tracking/aggregation with an optional Anthropic SDK integration.
+Close remaining gaps on issues #27 (worker health) and #30 (repo map), then build the token usage metrics subsystem (#24). PR #95 delivered heartbeat, escalation, verification tiers, and repo map modules. This feature wires them into `/mahabharatha:status` display, adds incremental repo map indexing, and creates token counting/tracking/aggregation with an optional Anthropic SDK integration.
 
 ### 1.2 Goals
-- Per-worker HEALTH, REPO MAP, and TOKEN USAGE dashboard sections in `/zerg:status`
+- Per-worker HEALTH, REPO MAP, and TOKEN USAGE dashboard sections in `/mahabharatha:status`
 - Token counting with optional Anthropic SDK (off by default, heuristic fallback)
 - Incremental repo map re-indexing (hash-based staleness)
 - Close issues #27, #30, #24
@@ -60,20 +60,20 @@ Close remaining gaps on issues #27 (worker health) and #30 (repo map), then buil
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| TokenMetricsConfig | Config for token counting mode, cache, heuristic | `zerg/config.py` |
-| TokenCounter | Count tokens via API or heuristic, with caching | `zerg/token_counter.py` |
-| TokenTracker | Per-worker token state files | `zerg/token_tracker.py` |
-| TokenAggregator | Aggregate across workers, calculate savings | `zerg/token_aggregator.py` |
-| IncrementalIndex | Hash-based repo map re-indexing | `zerg/repo_map.py` |
-| StatusFormatter | ASCII table formatting for all dashboard sections | `zerg/status_formatter.py` |
+| TokenMetricsConfig | Config for token counting mode, cache, heuristic | `mahabharatha/config.py` |
+| TokenCounter | Count tokens via API or heuristic, with caching | `mahabharatha/token_counter.py` |
+| TokenTracker | Per-worker token state files | `mahabharatha/token_tracker.py` |
+| TokenAggregator | Aggregate across workers, calculate savings | `mahabharatha/token_aggregator.py` |
+| IncrementalIndex | Hash-based repo map re-indexing | `mahabharatha/repo_map.py` |
+| StatusFormatter | ASCII table formatting for all dashboard sections | `mahabharatha/status_formatter.py` |
 
 ### 2.3 Data Flow
 1. Context plugin builds worker context (command template + task context + repo map + security rules)
 2. TokenCounter estimates token count (API with cache or heuristic)
-3. TokenTracker writes per-task breakdown to `.zerg/state/tokens-{worker_id}.json`
+3. TokenTracker writes per-task breakdown to `.mahabharatha/state/tokens-{worker_id}.json`
 4. TokenAggregator reads all worker files, computes totals and savings
 5. StatusFormatter reads heartbeat, escalation, repo map index, and token data
-6. `/zerg:status` displays formatted sections
+6. `/mahabharatha:status` displays formatted sections
 
 ---
 
@@ -92,17 +92,17 @@ Close remaining gaps on issues #27 (worker health) and #30 (repo map), then buil
 
 ### 3.2 Optional Dependency
 
-**Context**: Adding anthropic as a hard dependency would require API keys for basic ZERG usage.
+**Context**: Adding anthropic as a hard dependency would require API keys for basic MAHABHARATHA usage.
 
-**Decision**: `pip install zerg[metrics]` optional extra. Lazy `try: import anthropic` pattern.
+**Decision**: `pip install mahabharatha[metrics]` optional extra. Lazy `try: import anthropic` pattern.
 
-**Rationale**: Core ZERG must work without API keys. Token counting is a bonus.
+**Rationale**: Core MAHABHARATHA must work without API keys. Token counting is a bonus.
 
 ### 3.3 Status Formatter as Separate Module
 
 **Context**: status.core.md is a command template (markdown), not Python code.
 
-**Decision**: Create `zerg/status_formatter.py` with pure functions that format data into ASCII tables. The status command template references these formatters.
+**Decision**: Create `mahabharatha/status_formatter.py` with pure functions that format data into ASCII tables. The status command template references these formatters.
 
 **Rationale**: Testable Python code. Reusable across CLI and slash command.
 
@@ -126,14 +126,14 @@ Close remaining gaps on issues #27 (worker health) and #30 (repo map), then buil
 |------|---------|-----------|
 | `pyproject.toml` | TASK-001 | modify |
 | `requirements.txt` | TASK-001 | modify |
-| `zerg/config.py` | TASK-001 | modify |
-| `zerg/repo_map.py` | TASK-002 | modify |
-| `zerg/token_counter.py` | TASK-003 | create |
-| `zerg/token_tracker.py` | TASK-004 | create |
-| `zerg/token_aggregator.py` | TASK-005 | create |
-| `zerg/status_formatter.py` | TASK-006 | create (TASK-007 extends) |
-| `zerg/data/commands/status.core.md` | TASK-006 | modify (TASK-007 extends) |
-| `zerg/context_plugin.py` | TASK-008 | modify |
+| `mahabharatha/config.py` | TASK-001 | modify |
+| `mahabharatha/repo_map.py` | TASK-002 | modify |
+| `mahabharatha/token_counter.py` | TASK-003 | create |
+| `mahabharatha/token_tracker.py` | TASK-004 | create |
+| `mahabharatha/token_aggregator.py` | TASK-005 | create |
+| `mahabharatha/status_formatter.py` | TASK-006 | create (TASK-007 extends) |
+| `mahabharatha/data/commands/status.core.md` | TASK-006 | modify (TASK-007 extends) |
+| `mahabharatha/context_plugin.py` | TASK-008 | modify |
 | `docs/configuration.md` | TASK-008 | modify |
 | `tests/unit/test_token_counter.py` | TASK-009 | create |
 | `tests/unit/test_token_tracker.py` | TASK-009 | create |
@@ -151,10 +151,10 @@ Close remaining gaps on issues #27 (worker health) and #30 (repo map), then buil
 |------|---------|-------------|-----------------|
 | TASK-001 | TokenMetricsConfig in config.py | TASK-003, TASK-008 | tests/integration/test_token_metrics_wiring.py |
 | TASK-002 | IncrementalIndex in repo_map.py | TASK-007 | tests/integration/test_repo_map_incremental_wiring.py |
-| TASK-003 | zerg/token_counter.py | TASK-004 | tests/integration/test_token_metrics_wiring.py |
-| TASK-004 | zerg/token_tracker.py | TASK-005, TASK-008 | tests/integration/test_token_metrics_wiring.py |
-| TASK-005 | zerg/token_aggregator.py | TASK-007 | tests/integration/test_token_metrics_wiring.py |
-| TASK-006 | zerg/status_formatter.py | TASK-007 | tests/unit/test_status_formatter.py |
+| TASK-003 | mahabharatha/token_counter.py | TASK-004 | tests/integration/test_token_metrics_wiring.py |
+| TASK-004 | mahabharatha/token_tracker.py | TASK-005, TASK-008 | tests/integration/test_token_metrics_wiring.py |
+| TASK-005 | mahabharatha/token_aggregator.py | TASK-007 | tests/integration/test_token_metrics_wiring.py |
+| TASK-006 | mahabharatha/status_formatter.py | TASK-007 | tests/unit/test_status_formatter.py |
 | TASK-007 | — (extends status_formatter) | leaf | — |
 | TASK-008 | — (wiring only) | leaf | — |
 | TASK-009 | test files | leaf | — |
@@ -207,4 +207,4 @@ graph TD
 ### 6.3 Verification Commands
 - `pytest tests/unit/ -v`
 - `pytest tests/integration/ -v`
-- `python -m zerg.validate_commands`
+- `python -m mahabharatha.validate_commands`

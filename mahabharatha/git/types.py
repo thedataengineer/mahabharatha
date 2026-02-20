@@ -1,4 +1,4 @@
-"""Shared data types for ZERG git operations."""
+"""Shared data types for MAHABHARATHA git operations."""
 
 from dataclasses import dataclass, field
 from enum import StrEnum

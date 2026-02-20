@@ -75,7 +75,7 @@ class SubprocessLauncher(WorkerLauncher):
             SpawnResult with handle or error
         """
         try:
-            # Build environment with ZERG-specific vars (always allowed)
+            # Build environment with MAHABHARATHA-specific vars (always allowed)
             # Use current directory as main repo path (workers run in worktrees)
             repo_path = Path.cwd().resolve()
             worker_env = os.environ.copy()
@@ -359,7 +359,7 @@ class SubprocessLauncher(WorkerLauncher):
             SpawnResult with handle or error
         """
         try:
-            # Build environment with ZERG-specific vars
+            # Build environment with MAHABHARATHA-specific vars
             repo_path = Path.cwd().resolve()
             worker_env = os.environ.copy()
             log_dir = repo_path / LOGS_WORKERS_DIR.rsplit("/", 1)[0]

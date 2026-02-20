@@ -1,4 +1,4 @@
-"""Integration tests for ZERG debug command."""
+"""Integration tests for MAHABHARATHA debug command."""
 
 import tempfile
 from pathlib import Path
@@ -63,10 +63,10 @@ class TestDebugFunctional:
     """Functional tests for debug command."""
 
     def test_debug_displays_header(self) -> None:
-        """Test debug shows ZERG Debug header."""
+        """Test debug shows MAHABHARATHA Debug header."""
         runner = CliRunner()
         result = runner.invoke(cli, ["debug", "--error", "Test error"])
-        assert "ZERG" in result.output or "Debug" in result.output
+        assert "MAHABHARATHA" in result.output or "Debug" in result.output
 
     @pytest.mark.parametrize(
         "error_msg",

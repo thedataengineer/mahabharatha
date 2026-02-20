@@ -1,4 +1,4 @@
-"""ZERG v2 Template Engine - Handlebars-style template rendering."""
+"""MAHABHARATHA v2 Template Engine - Handlebars-style template rendering."""
 
 import re
 from pathlib import Path
@@ -8,13 +8,13 @@ from typing import Any
 class TemplateEngine:
     """Handlebars-style template rendering for worker prompts."""
 
-    TEMPLATE_DIR = Path(".zerg/templates")
+    TEMPLATE_DIR = Path(".mahabharatha/templates")
 
     def __init__(self, template_dir: Path | None = None):
         """Initialize template engine.
 
         Args:
-            template_dir: Directory containing templates. Defaults to .zerg/templates
+            template_dir: Directory containing templates. Defaults to .mahabharatha/templates
         """
         self.template_dir = template_dir or self.TEMPLATE_DIR
         self._cache: dict[str, str] = {}

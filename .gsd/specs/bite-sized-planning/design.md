@@ -12,7 +12,7 @@
 
 ### 1.1 Summary
 
-Add step-level granularity to ZERG task planning. Each task can contain ordered steps following TDD methodology. Workers execute steps strictly in sequence with exit-code verification. Includes auto-detection of project formatters to ensure clean commits.
+Add step-level granularity to MAHABHARATHA task planning. Each task can contain ordered steps following TDD methodology. Workers execute steps strictly in sequence with exit-code verification. Includes auto-detection of project formatters to ensure clean commits.
 
 ### 1.2 Goals
 
@@ -36,7 +36,7 @@ Add step-level granularity to ZERG task planning. Each task can contain ordered 
 
 ```
 ┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│  /zerg:design   │────▶│  StepGenerator   │────▶│ task-graph.json │
+│  /mahabharatha:design   │────▶│  StepGenerator   │────▶│ task-graph.json │
 │  --detail high  │     │  + ASTAnalyzer   │     │ (with steps[])  │
 └─────────────────┘     └──────────────────┘     └─────────────────┘
                                 │
@@ -52,7 +52,7 @@ Add step-level granularity to ZERG task planning. Each task can contain ordered 
 └─────────────────┘     └──────────────────┘     └─────────────────┘
 
 ┌─────────────────┐     ┌──────────────────┐
-│  /zerg:status   │────▶│ StepProgressUI   │
+│  /mahabharatha:status   │────▶│ StepProgressUI   │
 │                 │     │ [✅✅🔄⏳⏳]     │
 └─────────────────┘     └──────────────────┘
 ```
@@ -61,17 +61,17 @@ Add step-level granularity to ZERG task planning. Each task can contain ordered 
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| StepGenerator | Generate TDD steps for tasks | `zerg/step_generator.py` |
-| ASTAnalyzer | Extract codebase patterns for snippets | `zerg/ast_analyzer.py` |
-| FormatterDetector | Detect project formatters from config | `zerg/formatter_detector.py` |
-| StepExecutor | Execute steps with exit-code verification | `zerg/step_executor.py` |
-| AdaptiveDetail | Track familiarity/success for detail adjustment | `zerg/adaptive_detail.py` |
-| StepProgressUI | Render step progress in status | `zerg/commands/status.py` |
-| PlanningConfig | Config model for planning options | `zerg/config.py` |
+| StepGenerator | Generate TDD steps for tasks | `mahabharatha/step_generator.py` |
+| ASTAnalyzer | Extract codebase patterns for snippets | `mahabharatha/ast_analyzer.py` |
+| FormatterDetector | Detect project formatters from config | `mahabharatha/formatter_detector.py` |
+| StepExecutor | Execute steps with exit-code verification | `mahabharatha/step_executor.py` |
+| AdaptiveDetail | Track familiarity/success for detail adjustment | `mahabharatha/adaptive_detail.py` |
+| StepProgressUI | Render step progress in status | `mahabharatha/commands/status.py` |
+| PlanningConfig | Config model for planning options | `mahabharatha/config.py` |
 
 ### 2.3 Data Flow
 
-1. User runs `/zerg:design --detail high`
+1. User runs `/mahabharatha:design --detail high`
 2. `StepGenerator` loads task-graph template
 3. For each task:
    - `ASTAnalyzer` extracts patterns from related files
@@ -80,7 +80,7 @@ Add step-level granularity to ZERG task planning. Each task can contain ordered 
 4. Output: task-graph.json with `steps[]` per task
 5. Worker loads task, `StepExecutor` runs each step
 6. Heartbeat updates with current step number
-7. `/zerg:status` renders step progress visually
+7. `/mahabharatha:status` renders step progress visually
 
 ---
 
@@ -305,16 +305,16 @@ class StepExecutor:
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/step_generator.py` | BITE-L2-001 | create |
-| `zerg/ast_analyzer.py` | BITE-L2-002 | create |
-| `zerg/formatter_detector.py` | BITE-L1-001 | create |
-| `zerg/adaptive_detail.py` | BITE-L2-003 | create |
-| `zerg/step_executor.py` | BITE-L2-004 | create |
-| `zerg/config.py` | BITE-L1-002 | modify |
-| `zerg/schemas/task_graph.json` | BITE-L1-003 | modify |
-| `zerg/commands/design.py` | BITE-L3-001 | modify |
-| `zerg/commands/status.py` | BITE-L3-002 | modify |
-| `zerg/data/commands/worker.core.md` | BITE-L3-003 | modify |
+| `mahabharatha/step_generator.py` | BITE-L2-001 | create |
+| `mahabharatha/ast_analyzer.py` | BITE-L2-002 | create |
+| `mahabharatha/formatter_detector.py` | BITE-L1-001 | create |
+| `mahabharatha/adaptive_detail.py` | BITE-L2-003 | create |
+| `mahabharatha/step_executor.py` | BITE-L2-004 | create |
+| `mahabharatha/config.py` | BITE-L1-002 | modify |
+| `mahabharatha/schemas/task_graph.json` | BITE-L1-003 | modify |
+| `mahabharatha/commands/design.py` | BITE-L3-001 | modify |
+| `mahabharatha/commands/status.py` | BITE-L3-002 | modify |
+| `mahabharatha/data/commands/worker.core.md` | BITE-L3-003 | modify |
 | `tests/unit/test_step_generator.py` | BITE-L4-001 | create |
 | `tests/unit/test_formatter_detector.py` | BITE-L4-001 | create |
 | `tests/integration/test_step_execution.py` | BITE-L4-002 | create |
@@ -366,7 +366,7 @@ BITE-L2-004 (StepExecutor)     ────────────────�
 
 ### 7.2 Integration Tests
 
-- End-to-end: design → rush → worker step execution
+- End-to-end: design → kurukshetra → worker step execution
 - Formatter integration: pre-commit hooks pass
 - Status UI: step progress rendering
 

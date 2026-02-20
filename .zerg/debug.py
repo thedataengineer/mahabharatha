@@ -1,4 +1,4 @@
-"""ZERG v2 Debug Command - Systematic debugging with root cause analysis."""
+"""MAHABHARATHA v2 Debug Command - Systematic debugging with root cause analysis."""
 
 import json
 import re

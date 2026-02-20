@@ -1,4 +1,4 @@
-"""Tests for ZERG state reconciler module.
+"""Tests for MAHABHARATHA state reconciler module.
 
 Covers reconciliation logic, level parsing from task IDs,
 inconsistency detection and fixes.

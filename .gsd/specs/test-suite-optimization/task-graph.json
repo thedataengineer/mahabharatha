@@ -32,24 +32,24 @@
     {
       "id": "TASK-002",
       "title": "Update quality gate configuration",
-      "description": "Add smoke gate to .zerg/config.yaml with 60s timeout. Reduce test gate timeout from 600s to 180s. Add -m 'not slow' to test gate command.",
+      "description": "Add smoke gate to .mahabharatha/config.yaml with 60s timeout. Reduce test gate timeout from 600s to 180s. Add -m 'not slow' to test gate command.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": [".zerg/config.yaml"],
+        "modify": [".mahabharatha/config.yaml"],
         "read": []
       },
       "verification": {
-        "command": "python -c \"import yaml; c=yaml.safe_load(open('.zerg/config.yaml')); gates=[g['name'] for g in c['quality_gates']]; assert 'smoke' in gates, 'smoke gate missing'; print('Gates OK:', gates)\"",
+        "command": "python -c \"import yaml; c=yaml.safe_load(open('.mahabharatha/config.yaml')); gates=[g['name'] for g in c['quality_gates']]; assert 'smoke' in gates, 'smoke gate missing'; print('Gates OK:', gates)\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
-      "skills_required": ["yaml", "zerg"],
+      "skills_required": ["yaml", "mahabharatha"],
       "consumers": ["TASK-007"],
       "integration_test": null,
-      "context": "## Spec Context\nUpdate quality gates:\n- Add smoke gate (60s timeout)\n- Reduce test gate timeout to 180s (was 600s)\n- Add -m 'not slow' to fast test command\n\n## Target Config\n```yaml\nquality_gates:\n  - name: lint\n    command: ruff check .\n    required: true\n    timeout: 300\n  - name: smoke\n    command: pytest -m smoke -x --timeout=5 -q\n    required: true\n    timeout: 60\n  - name: test\n    command: pytest tests/unit -m \"not slow\" -x --timeout=15 -q\n    required: true\n    timeout: 180\n  - name: typecheck\n    command: mypy zerg/ --ignore-missing-imports\n    required: false\n    timeout: 180\n  - name: security\n    command: ruff check . --select S\n    required: false\n    timeout: 60\n```\n\n## Security (YAML)\n- Use yaml.safe_load() for verification\n- No shell injection vectors"
+      "context": "## Spec Context\nUpdate quality gates:\n- Add smoke gate (60s timeout)\n- Reduce test gate timeout to 180s (was 600s)\n- Add -m 'not slow' to fast test command\n\n## Target Config\n```yaml\nquality_gates:\n  - name: lint\n    command: ruff check .\n    required: true\n    timeout: 300\n  - name: smoke\n    command: pytest -m smoke -x --timeout=5 -q\n    required: true\n    timeout: 60\n  - name: test\n    command: pytest tests/unit -m \"not slow\" -x --timeout=15 -q\n    required: true\n    timeout: 180\n  - name: typecheck\n    command: mypy mahabharatha/ --ignore-missing-imports\n    required: false\n    timeout: 180\n  - name: security\n    command: ruff check . --select S\n    required: false\n    timeout: 60\n```\n\n## Security (YAML)\n- Use yaml.safe_load() for verification\n- No shell injection vectors"
     },
     {
       "id": "TASK-003",
@@ -179,7 +179,7 @@
       "skills_required": ["testing"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nFinal verification that optimization goals are met.\n\n## Success Criteria\n1. Smoke tests complete in < 30 seconds\n2. All tests pass (no regressions)\n3. Coverage remains >= 80%\n\n## Verification Commands\n```bash\n# Smoke tier timing\ntime pytest -m smoke -x --timeout=5 -q\n\n# Fast tier timing\ntime pytest tests/unit -m \"not slow\" -x --timeout=15 -q\n\n# Full regression\npytest tests/unit --tb=short\n\n# Coverage check\npytest tests/unit --cov=zerg --cov-fail-under=80 -q\n```\n\n## Expected Results\n- Smoke: < 30s\n- Fast: < 90s\n- Full: < 5 min\n- Coverage: >= 80%"
+      "context": "## Spec Context\nFinal verification that optimization goals are met.\n\n## Success Criteria\n1. Smoke tests complete in < 30 seconds\n2. All tests pass (no regressions)\n3. Coverage remains >= 80%\n\n## Verification Commands\n```bash\n# Smoke tier timing\ntime pytest -m smoke -x --timeout=5 -q\n\n# Fast tier timing\ntime pytest tests/unit -m \"not slow\" -x --timeout=15 -q\n\n# Full regression\npytest tests/unit --tb=short\n\n# Coverage check\npytest tests/unit --cov=mahabharatha --cov-fail-under=80 -q\n```\n\n## Expected Results\n- Smoke: < 30s\n- Fast: < 90s\n- Full: < 5 min\n- Coverage: >= 80%"
     }
   ],
 

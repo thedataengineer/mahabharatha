@@ -1,6 +1,6 @@
 # Infrastructure Requirements
 
-## Project: ZERG
+## Project: MAHABHARATHA
 ## Generated: 2026-01-25
 
 ---
@@ -71,7 +71,7 @@
 
 ## Parallelization Notes
 
-- **Max workers**: 5 (configurable in .zerg/config.yaml)
+- **Max workers**: 5 (configurable in .mahabharatha/config.yaml)
 - **Bottleneck**: Task graph width at each level
 - **Isolation**: Git worktrees per worker, no filesystem conflicts
 - **Coordination**: Claude Code native Tasks + level synchronization

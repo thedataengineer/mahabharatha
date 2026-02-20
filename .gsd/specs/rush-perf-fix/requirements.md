@@ -1,20 +1,20 @@
-# Requirements: Rush Performance Fix
+# Requirements: Kurukshetra Performance Fix
 
 ## Metadata
-- **Feature**: rush-perf-fix
+- **Feature**: kurukshetra-perf-fix
 - **Status**: APPROVED
 - **Created**: 2026-02-04
-- **Source**: Debug investigation of slow rush execution
+- **Source**: Debug investigation of slow kurukshetra execution
 
 ---
 
 ## Problem Statement
 
-ZERG rush execution is PAINFULLY slow due to excessive Docker subprocess calls in the container monitoring loop. The poll loop runs every 5 seconds and executes `docker inspect` + `docker exec` for EVERY worker, causing 120+ Docker calls per minute.
+MAHABHARATHA kurukshetra execution is PAINFULLY slow due to excessive Docker subprocess calls in the container monitoring loop. The poll loop runs every 5 seconds and executes `docker inspect` + `docker exec` for EVERY worker, causing 120+ Docker calls per minute.
 
 ### Root Cause (from `/z:debug --deep`)
 
-**Location**: `zerg/launcher.py:1457-1527` (`ContainerLauncher.monitor()`)
+**Location**: `mahabharatha/launcher.py:1457-1527` (`ContainerLauncher.monitor()`)
 
 **Impact with 5 workers**:
 - Normal case: 5 × (inspect + exec) = 10 calls × ~100ms = 1000ms per poll
@@ -36,7 +36,7 @@ Add a cooldown to `ContainerLauncher.monitor()` to skip Docker calls if status w
 ### FR-2: Increase Poll Interval
 Change orchestrator poll interval from 5 seconds to 15 seconds.
 
-- Modify `self._poll_interval` in `zerg/orchestrator.py`
+- Modify `self._poll_interval` in `mahabharatha/orchestrator.py`
 - Worker state changes are infrequent; 15s is sufficient
 - Keep 5s available as config option for debugging
 
@@ -70,7 +70,7 @@ Cache HeartbeatMonitor instance in SubprocessLauncher instead of creating new on
 ### NFR-3: Performance
 - Reduce Docker calls from 120+/min to ~20-30/min
 - Reduce monitoring overhead from 20% to <5% of poll time
-- Expected rush speedup: 15-20%
+- Expected kurukshetra speedup: 15-20%
 
 ---
 
@@ -84,7 +84,7 @@ pytest tests/unit/test_launcher.py -v
 pytest tests/integration/ -v -k "launcher or orchestrator"
 
 # Performance verification (manual)
-# Run rush with 5 workers, observe docker calls via:
+# Run kurukshetra with 5 workers, observe docker calls via:
 # docker events --filter type=container --since 1m | grep inspect
 ```
 

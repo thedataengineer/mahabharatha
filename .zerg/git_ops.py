@@ -1,4 +1,4 @@
-"""ZERG v2 Git Operations - Intelligent git commands with finish workflow."""
+"""MAHABHARATHA v2 Git Operations - Intelligent git commands with finish workflow."""
 
 import json
 import subprocess

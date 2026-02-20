@@ -1,4 +1,4 @@
-"""Tests for ZERG FormatterDetector module."""
+"""Tests for MAHABHARATHA FormatterDetector module."""
 
 import json
 

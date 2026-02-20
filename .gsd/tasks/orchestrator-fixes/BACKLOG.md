@@ -13,12 +13,12 @@
 ### Schema Issues (Discovered in DC-012)
 | Issue | Location | Impact |
 |-------|----------|--------|
-| Dual schema conflict | `.zerg/schemas/` vs `zerg/schemas/` | Validation inconsistency |
-| Level 0 allowed | `.zerg/schemas/task-graph.schema.json:21` | 0-indexed vs 1-indexed confusion |
+| Dual schema conflict | `.mahabharatha/schemas/` vs `mahabharatha/schemas/` | Validation inconsistency |
+| Level 0 allowed | `.mahabharatha/schemas/task-graph.schema.json:21` | 0-indexed vs 1-indexed confusion |
 | Files structure mismatch | Schema 1 requires all, Schema 2 optional | Unpredictable validation |
 | ID pattern inconsistency | Strict vs relaxed patterns | Task ID validation failures |
 
-### Orchestrator Issues (Discovered in rush execution)
+### Orchestrator Issues (Discovered in kurukshetra execution)
 | Issue | Severity | Location | Impact |
 |-------|----------|----------|--------|
 | Worker deletion + restart race | CRITICAL | `orchestrator.py:579,701` | Workers lost, state corruption |
@@ -65,13 +65,13 @@
 
 | ID | Task | Files Owned | Deps | Status | Verification |
 |----|------|-------------|------|--------|--------------|
-| **OFX-005** ⭐ | Consolidate schema | `zerg/schemas/task_graph.json`, `.zerg/task_graph.py` | OFX-001 | ✅ Complete | Old schema archived |
-| **OFX-006** | Update validation | `zerg/validation.py` | OFX-001 | ✅ Complete | Level >= 1 enforced |
-| **OFX-007** ⭐ | Fix orchestrator | `zerg/orchestrator.py` | OFX-002 | ✅ Complete | Poll loop fixed, init wait added |
-| **OFX-008** | Fix launcher sync | `zerg/launcher.py` | OFX-003 | ✅ Complete | sync_state() added |
+| **OFX-005** ⭐ | Consolidate schema | `mahabharatha/schemas/task_graph.json`, `.mahabharatha/task_graph.py` | OFX-001 | ✅ Complete | Old schema archived |
+| **OFX-006** | Update validation | `mahabharatha/validation.py` | OFX-001 | ✅ Complete | Level >= 1 enforced |
+| **OFX-007** ⭐ | Fix orchestrator | `mahabharatha/orchestrator.py` | OFX-002 | ✅ Complete | Poll loop fixed, init wait added |
+| **OFX-008** | Fix launcher sync | `mahabharatha/launcher.py` | OFX-003 | ✅ Complete | sync_state() added |
 
 **Implementation Details:**
-- OFX-005: Single schema, archive old to `.zerg/schemas/archived/`, add to .gitignore, level >= 1
+- OFX-005: Single schema, archive old to `.mahabharatha/schemas/archived/`, add to .gitignore, level >= 1
 - OFX-006: Level check, files validation, better errors
 - OFX-007: Termination race, poll loop, worktree cleanup, spawn handling, WorkerTracker (top-level class), init wait (600s timeout)
 - OFX-008: sync_state() method, state reconciliation
@@ -82,8 +82,8 @@
 
 | ID | Task | Files Owned | Deps | Status | Verification |
 |----|------|-------------|------|--------|--------------|
-| **OFX-009** ⭐ | Parser integration | `zerg/parser.py` | OFX-005,OFX-006 | ✅ Complete | Uses validation correctly |
-| **OFX-010** | Design command | `zerg/commands/design.py` | OFX-005,OFX-006 | ✅ Complete | Generates level >= 1 |
+| **OFX-009** ⭐ | Parser integration | `mahabharatha/parser.py` | OFX-005,OFX-006 | ✅ Complete | Uses validation correctly |
+| **OFX-010** | Design command | `mahabharatha/commands/design.py` | OFX-005,OFX-006 | ✅ Complete | Generates level >= 1 |
 
 ---
 
@@ -91,7 +91,7 @@
 
 | ID | Task | Files Owned | Deps | Status | Verification |
 |----|------|-------------|------|--------|--------------|
-| **OFX-011** | Skill docs | `zerg:rush.md`, `zerg:design.md` | OFX-010 | ✅ Complete | Already shows level >= 1 |
+| **OFX-011** | Skill docs | `mahabharatha:kurukshetra.md`, `mahabharatha:design.md` | OFX-010 | ✅ Complete | Already shows level >= 1 |
 
 ---
 
@@ -134,17 +134,17 @@ Total Critical Path: ~115 minutes (2 hours)
 | `tests/unit/test_worker_lifecycle.py` | OFX-002 | Create | ⬜ |
 | `tests/unit/test_state_sync.py` | OFX-003 | Create | ⬜ |
 | `tests/integration/test_orchestrator_fixes.py` | OFX-004 | Create | ⬜ |
-| `zerg/schemas/task_graph.json` | OFX-005 | Modify | ⬜ |
-| `.zerg/schemas/archived/task-graph.schema.json` | OFX-005 | Create (archive) | ⬜ |
-| `.zerg/task_graph.py` | OFX-005 | Modify | ⬜ |
+| `mahabharatha/schemas/task_graph.json` | OFX-005 | Modify | ⬜ |
+| `.mahabharatha/schemas/archived/task-graph.schema.json` | OFX-005 | Create (archive) | ⬜ |
+| `.mahabharatha/task_graph.py` | OFX-005 | Modify | ⬜ |
 | `.gitignore` | OFX-005 | Modify | ⬜ |
-| `zerg/validation.py` | OFX-006 | Modify | ⬜ |
-| `zerg/orchestrator.py` | OFX-007 | Modify | ⬜ |
-| `zerg/launcher.py` | OFX-008 | Modify | ⬜ |
-| `zerg/parser.py` | OFX-009 | Modify | ⬜ |
-| `zerg/commands/design.py` | OFX-010 | Modify | ⬜ |
-| `.claude/commands/zerg:rush.md` | OFX-011 | Modify | ⬜ |
-| `.claude/commands/zerg:design.md` | OFX-011 | Modify | ⬜ |
+| `mahabharatha/validation.py` | OFX-006 | Modify | ⬜ |
+| `mahabharatha/orchestrator.py` | OFX-007 | Modify | ⬜ |
+| `mahabharatha/launcher.py` | OFX-008 | Modify | ⬜ |
+| `mahabharatha/parser.py` | OFX-009 | Modify | ⬜ |
+| `mahabharatha/commands/design.py` | OFX-010 | Modify | ⬜ |
+| `.claude/commands/mahabharatha:kurukshetra.md` | OFX-011 | Modify | ⬜ |
+| `.claude/commands/mahabharatha:design.md` | OFX-011 | Modify | ⬜ |
 | `tests/integration/test_full_rush_cycle.py` | OFX-012 | Create | ⬜ |
 
 ---
@@ -204,10 +204,10 @@ Level 5:   ▼
 
 ```bash
 # Validate task graph
-python -c "from zerg.validation import *; import json; d=json.load(open('.gsd/specs/orchestrator-fixes/task-graph.json')); print(validate_task_graph(d)); print(validate_dependencies(d)); print(validate_file_ownership(d))"
+python -c "from mahabharatha.validation import *; import json; d=json.load(open('.gsd/specs/orchestrator-fixes/task-graph.json')); print(validate_task_graph(d)); print(validate_dependencies(d)); print(validate_file_ownership(d))"
 
 # Dry-run
-zerg rush --feature orchestrator-fixes --dry-run --mode subprocess
+mahabharatha kurukshetra --feature orchestrator-fixes --dry-run --mode subprocess
 
 # Run all new tests
 pytest tests/unit/test_schema_validation.py tests/unit/test_worker_lifecycle.py tests/unit/test_state_sync.py tests/integration/test_orchestrator_fixes.py tests/integration/test_full_rush_cycle.py -v
@@ -218,14 +218,14 @@ pytest tests/ -v --tb=short
 
 ---
 
-## ZERG Rush Execution
+## MAHABHARATHA Kurukshetra Execution
 
 ```bash
 # Execute with 4 workers
-zerg rush --feature orchestrator-fixes --workers 4 --mode subprocess
+mahabharatha kurukshetra --feature orchestrator-fixes --workers 4 --mode subprocess
 
 # Monitor progress
-zerg status --feature orchestrator-fixes
+mahabharatha status --feature orchestrator-fixes
 ```
 
 ---
@@ -234,7 +234,7 @@ zerg status --feature orchestrator-fixes
 
 | Question | Decision | Rationale |
 |----------|----------|-----------|
-| Archive or delete old schema? | **Archive** to `.zerg/schemas/archived/` + .gitignore | Preserves history, prevents accidental use |
+| Archive or delete old schema? | **Archive** to `.mahabharatha/schemas/archived/` + .gitignore | Preserves history, prevents accidental use |
 | WorkerTracker class location? | **Top-level class** in orchestrator.py | Easy testing, no import complexity, logical grouping |
 | Initialization wait timeout? | **600 seconds** (10 min) | Allows slow container builds, configurable |
 

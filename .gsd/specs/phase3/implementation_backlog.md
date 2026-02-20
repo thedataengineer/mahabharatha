@@ -1,18 +1,18 @@
-# ZERG Implementation Task Backlog
+# MAHABHARATHA Implementation Task Backlog
 
 **Phase**: 3 - Implementation Planning
 **Date**: January 25, 2026
 **Status**: COMPLETE
-**Methodology**: ZERG self-application (manual execution)
+**Methodology**: MAHABHARATHA self-application (manual execution)
 **Completed**: January 31, 2026
 
 ---
 
 ## Executive Summary
 
-This backlog contained 42 atomic tasks to build ZERG from the Phase 2 architecture specification. All 42 tasks are now complete. Implementation exceeded the original specification — the codebase includes additional components not in Phase 3 scope (worker_metrics, task_sync, context_engineering plugin, harness, TUI dashboard).
+This backlog contained 42 atomic tasks to build MAHABHARATHA from the Phase 2 architecture specification. All 42 tasks are now complete. Implementation exceeded the original specification — the codebase includes additional components not in Phase 3 scope (worker_metrics, task_sync, context_engineering plugin, harness, TUI dashboard).
 
-**Critical Path**: ZERG-L1-001 → ZERG-L1-003 → ZERG-L2-001 → ZERG-L2-004 → ZERG-L3-001 → ZERG-L3-004 → ZERG-L4-004 → ZERG-L5-003
+**Critical Path**: MAHABHARATHA-L1-001 → MAHABHARATHA-L1-003 → MAHABHARATHA-L2-001 → MAHABHARATHA-L2-004 → MAHABHARATHA-L3-001 → MAHABHARATHA-L3-004 → MAHABHARATHA-L4-004 → MAHABHARATHA-L5-003
 
 ---
 
@@ -35,91 +35,91 @@ This backlog contained 42 atomic tasks to build ZERG from the Phase 2 architectu
 
 *Types, schemas, configuration, and package structure. No dependencies.*
 
-### ZERG-L1-001: Python Package Structure ⭐ CRITICAL PATH
+### MAHABHARATHA-L1-001: Python Package Structure ⭐ CRITICAL PATH
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Create Python package skeleton with proper module layout |
-| **Files Create** | `zerg/__init__.py`, `zerg/py.typed`, `pyproject.toml`, `requirements.txt` |
-| **Verification** | `python -c "import zerg; print(zerg.__version__)"` |
+| **Files Create** | `mahabharatha/__init__.py`, `mahabharatha/py.typed`, `pyproject.toml`, `requirements.txt` |
+| **Verification** | `python -c "import mahabharatha; print(mahabharatha.__version__)"` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L1-002: Type Definitions
+### MAHABHARATHA-L1-002: Type Definitions
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Define TypedDict and dataclass types for all domain objects |
-| **Files Create** | `zerg/types.py` |
-| **Verification** | `python -c "from zerg.types import TaskGraph, WorkerState, LevelStatus"` |
+| **Files Create** | `mahabharatha/types.py` |
+| **Verification** | `python -c "from mahabharatha.types import TaskGraph, WorkerState, LevelStatus"` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L1-003: Configuration Schema ⭐ CRITICAL PATH
+### MAHABHARATHA-L1-003: Configuration Schema ⭐ CRITICAL PATH
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Config loader with Pydantic validation, defaults from config.yaml |
-| **Files Create** | `zerg/config.py` |
-| **Verification** | `python -c "from zerg.config import ZergConfig; c = ZergConfig.load(); print(c.workers.max_concurrent)"` |
+| **Files Create** | `mahabharatha/config.py` |
+| **Verification** | `python -c "from mahabharatha.config import ZergConfig; c = ZergConfig.load(); print(c.workers.max_concurrent)"` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L1-004: Constants and Enums
+### MAHABHARATHA-L1-004: Constants and Enums
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Define level names, task statuses, gate results, error codes |
-| **Files Create** | `zerg/constants.py` |
-| **Verification** | `python -c "from zerg.constants import Level, TaskStatus, GateResult"` |
+| **Files Create** | `mahabharatha/constants.py` |
+| **Verification** | `python -c "from mahabharatha.constants import Level, TaskStatus, GateResult"` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L1-005: Logging Setup
+### MAHABHARATHA-L1-005: Logging Setup
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Structured JSON logging with worker ID context, file rotation |
-| **Files Create** | `zerg/logging.py` |
-| **Verification** | `python -c "from zerg.logging import get_logger; log = get_logger('test'); log.info('works')"` |
+| **Files Create** | `mahabharatha/logging.py` |
+| **Verification** | `python -c "from mahabharatha.logging import get_logger; log = get_logger('test'); log.info('works')"` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L1-006: Exception Hierarchy
+### MAHABHARATHA-L1-006: Exception Hierarchy
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Define ZergError base and specific exceptions for each failure mode |
-| **Files Create** | `zerg/exceptions.py` |
-| **Verification** | `python -c "from zerg.exceptions import ZergError, TaskVerificationFailed, MergeConflict"` |
+| **Files Create** | `mahabharatha/exceptions.py` |
+| **Verification** | `python -c "from mahabharatha.exceptions import ZergError, TaskVerificationFailed, MergeConflict"` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L1-007: Task Graph Schema Validator
+### MAHABHARATHA-L1-007: Task Graph Schema Validator
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | JSON Schema for task-graph.json with validation functions |
-| **Files Create** | `zerg/schemas/task_graph.json`, `zerg/schemas/__init__.py`, `zerg/validation.py` |
-| **Verification** | `python -c "from zerg.validation import validate_task_graph"` |
+| **Files Create** | `mahabharatha/schemas/task_graph.json`, `mahabharatha/schemas/__init__.py`, `mahabharatha/validation.py` |
+| **Verification** | `python -c "from mahabharatha.validation import validate_task_graph"` |
 | **Status** | DONE |
-| **Notes** | Schema in `zerg/schemas/`, validation in `zerg/validation.py` |
+| **Notes** | Schema in `mahabharatha/schemas/`, validation in `mahabharatha/validation.py` |
 
 ---
 
-### ZERG-L1-008: CLI Entry Point Skeleton
+### MAHABHARATHA-L1-008: CLI Entry Point Skeleton
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Click-based CLI with subcommand structure |
-| **Files Create** | `zerg/cli.py` |
-| **Verification** | `python -m zerg --help` |
+| **Files Create** | `mahabharatha/cli.py` |
+| **Verification** | `python -m mahabharatha --help` |
 | **Status** | DONE |
 
 ---
@@ -128,114 +128,114 @@ This backlog contained 42 atomic tasks to build ZERG from the Phase 2 architectu
 
 *Business logic components. Depend on Level 1 foundation.*
 
-### ZERG-L2-001: Worktree Manager ⭐ CRITICAL PATH
+### MAHABHARATHA-L2-001: Worktree Manager ⭐ CRITICAL PATH
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Git worktree create/delete/list, branch management, path resolution |
-| **Files Create** | `zerg/worktree.py` |
-| **Verification** | `python -c "from zerg.worktree import WorktreeManager"` |
+| **Files Create** | `mahabharatha/worktree.py` |
+| **Verification** | `python -c "from mahabharatha.worktree import WorktreeManager"` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L2-002: Port Allocator
+### MAHABHARATHA-L2-002: Port Allocator
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Random port selection in ephemeral range, collision detection, tracking |
-| **Files Create** | `zerg/ports.py` |
-| **Verification** | `python -c "from zerg.ports import PortAllocator"` |
+| **Files Create** | `mahabharatha/ports.py` |
+| **Verification** | `python -c "from mahabharatha.ports import PortAllocator"` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L2-003: Task Parser
+### MAHABHARATHA-L2-003: Task Parser
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Load task-graph.json, parse into domain objects, validate dependencies |
-| **Files Create** | `zerg/parser.py` |
-| **Verification** | `python -c "from zerg.parser import TaskParser"` |
+| **Files Create** | `mahabharatha/parser.py` |
+| **Verification** | `python -c "from mahabharatha.parser import TaskParser"` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L2-004: Level Controller ⭐ CRITICAL PATH
+### MAHABHARATHA-L2-004: Level Controller ⭐ CRITICAL PATH
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Track level completion, block N+1 until N done, emit level events |
-| **Files Create** | `zerg/levels.py` |
-| **Verification** | `python -c "from zerg.levels import LevelController"` |
+| **Files Create** | `mahabharatha/levels.py` |
+| **Verification** | `python -c "from mahabharatha.levels import LevelController"` |
 | **Status** | DONE |
 | **Notes** | Includes `is_level_complete()` (success-only) and `is_level_resolved()` (all-terminal) split. Fixed in commit 2451f86. |
 
 ---
 
-### ZERG-L2-005: State Manager (Claude Tasks Integration)
+### MAHABHARATHA-L2-005: State Manager (Claude Tasks Integration)
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Adapter for Claude Native Tasks API, state persistence, polling |
-| **Files Create** | `zerg/state.py` |
-| **Verification** | `python -c "from zerg.state import StateManager"` |
+| **Files Create** | `mahabharatha/state.py` |
+| **Verification** | `python -c "from mahabharatha.state import StateManager"` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L2-006: Quality Gate Runner
+### MAHABHARATHA-L2-006: Quality Gate Runner
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Execute gate commands, capture output, determine pass/fail, timeout handling |
-| **Files Create** | `zerg/gates.py` |
-| **Verification** | `python -c "from zerg.gates import GateRunner"` |
+| **Files Create** | `mahabharatha/gates.py` |
+| **Verification** | `python -c "from mahabharatha.gates import GateRunner"` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L2-007: Verification Executor
+### MAHABHARATHA-L2-007: Verification Executor
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Run task verification commands, handle timeouts, capture results |
-| **Files Create** | `zerg/verify.py` |
-| **Verification** | `python -c "from zerg.verify import VerificationExecutor"` |
+| **Files Create** | `mahabharatha/verify.py` |
+| **Verification** | `python -c "from mahabharatha.verify import VerificationExecutor"` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L2-008: Worker Assignment Calculator
+### MAHABHARATHA-L2-008: Worker Assignment Calculator
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Distribute tasks to workers, balance by level, respect file ownership |
-| **Files Create** | `zerg/assign.py` |
-| **Verification** | `python -c "from zerg.assign import WorkerAssignment"` |
+| **Files Create** | `mahabharatha/assign.py` |
+| **Verification** | `python -c "from mahabharatha.assign import WorkerAssignment"` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L2-009: Container Manager
+### MAHABHARATHA-L2-009: Container Manager
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Docker/devcontainer lifecycle: build, start, stop, health check |
-| **Files Create** | `zerg/containers.py` |
-| **Verification** | `python -c "from zerg.containers import ContainerManager"` |
+| **Files Create** | `mahabharatha/containers.py` |
+| **Verification** | `python -c "from mahabharatha.containers import ContainerManager"` |
 | **Status** | DONE |
-| **Notes** | Integrated into `zerg/launcher.py` as `ContainerLauncher` class |
+| **Notes** | Integrated into `mahabharatha/launcher.py` as `ContainerLauncher` class |
 
 ---
 
-### ZERG-L2-010: Git Operations
+### MAHABHARATHA-L2-010: Git Operations
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Branch create/delete, merge, rebase, conflict detection, staging branch |
-| **Files Create** | `zerg/git_ops.py` |
-| **Verification** | `python -c "from zerg.git_ops import GitOps"` |
+| **Files Create** | `mahabharatha/git_ops.py` |
+| **Verification** | `python -c "from mahabharatha.git_ops import GitOps"` |
 | **Status** | DONE |
 
 ---
@@ -244,103 +244,103 @@ This backlog contained 42 atomic tasks to build ZERG from the Phase 2 architectu
 
 *Wire components together into working subsystems. Depend on Level 2.*
 
-### ZERG-L3-001: Orchestrator Core ⭐ CRITICAL PATH
+### MAHABHARATHA-L3-001: Orchestrator Core ⭐ CRITICAL PATH
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Main event loop: worker lifecycle, level transitions, status polling |
-| **Files Create** | `zerg/orchestrator.py` |
-| **Verification** | `python -c "from zerg.orchestrator import Orchestrator"` |
+| **Files Create** | `mahabharatha/orchestrator.py` |
+| **Verification** | `python -c "from mahabharatha.orchestrator import Orchestrator"` |
 | **Status** | DONE |
 | **Notes** | ~1500 lines. Uses `is_level_resolved()` for advancement. Includes level_coordinator delegation. |
 
 ---
 
-### ZERG-L3-002: Merge Gate Integration
+### MAHABHARATHA-L3-002: Merge Gate Integration
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Combine git ops + quality gates + level controller for merge workflow |
-| **Files Create** | `zerg/merge.py` |
-| **Verification** | `python -c "from zerg.merge import MergeCoordinator"` |
+| **Files Create** | `mahabharatha/merge.py` |
+| **Verification** | `python -c "from mahabharatha.merge import MergeCoordinator"` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L3-003: Worker Protocol Handler
+### MAHABHARATHA-L3-003: Worker Protocol Handler
 
 | Attribute | Value |
 |-----------|-------|
 | **Description** | Worker startup sequence, task claiming, completion reporting, exit handling |
-| **Files Create** | `zerg/worker_protocol.py` |
-| **Verification** | `python -c "from zerg.worker_protocol import WorkerProtocol"` |
+| **Files Create** | `mahabharatha/worker_protocol.py` |
+| **Verification** | `python -c "from mahabharatha.worker_protocol import WorkerProtocol"` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L3-004: Rush Command Implementation ⭐ CRITICAL PATH
+### MAHABHARATHA-L3-004: Kurukshetra Command Implementation ⭐ CRITICAL PATH
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | Full /zerg rush flow: parse graph, assign workers, launch containers, monitor |
-| **Files Create** | `zerg/commands/rush.py` |
-| **Verification** | `python -m zerg rush --help` |
+| **Description** | Full /mahabharatha kurukshetra flow: parse graph, assign workers, launch containers, monitor |
+| **Files Create** | `mahabharatha/commands/kurukshetra.py` |
+| **Verification** | `python -m mahabharatha kurukshetra --help` |
 | **Status** | DONE |
 | **Notes** | Supports subprocess, container, and task modes |
 
 ---
 
-### ZERG-L3-005: Status Command Implementation
+### MAHABHARATHA-L3-005: Status Command Implementation
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | /zerg status output: progress bars, worker table, event log |
-| **Files Create** | `zerg/commands/status.py` |
-| **Verification** | `python -m zerg status --help` |
+| **Description** | /mahabharatha status output: progress bars, worker table, event log |
+| **Files Create** | `mahabharatha/commands/status.py` |
+| **Verification** | `python -m mahabharatha status --help` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L3-006: Stop Command Implementation
+### MAHABHARATHA-L3-006: Stop Command Implementation
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | /zerg stop flow: graceful shutdown, checkpoint, container cleanup |
-| **Files Create** | `zerg/commands/stop.py` |
-| **Verification** | `python -m zerg stop --help` |
+| **Description** | /mahabharatha stop flow: graceful shutdown, checkpoint, container cleanup |
+| **Files Create** | `mahabharatha/commands/stop.py` |
+| **Verification** | `python -m mahabharatha stop --help` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L3-007: Retry Command Implementation
+### MAHABHARATHA-L3-007: Retry Command Implementation
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | /zerg retry flow: reset task state, re-queue for execution |
-| **Files Create** | `zerg/commands/retry.py` |
-| **Verification** | `python -m zerg retry --help` |
+| **Description** | /mahabharatha retry flow: reset task state, re-queue for execution |
+| **Files Create** | `mahabharatha/commands/retry.py` |
+| **Verification** | `python -m mahabharatha retry --help` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L3-008: Logs Command Implementation
+### MAHABHARATHA-L3-008: Logs Command Implementation
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | /zerg logs: stream worker logs, filtering, tail/follow modes |
-| **Files Create** | `zerg/commands/logs.py` |
-| **Verification** | `python -m zerg logs --help` |
+| **Description** | /mahabharatha logs: stream worker logs, filtering, tail/follow modes |
+| **Files Create** | `mahabharatha/commands/logs.py` |
+| **Verification** | `python -m mahabharatha logs --help` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L3-009: Cleanup Command Implementation
+### MAHABHARATHA-L3-009: Cleanup Command Implementation
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | /zerg cleanup: remove worktrees, branches, logs, containers |
-| **Files Create** | `zerg/commands/cleanup.py` |
-| **Verification** | `python -m zerg cleanup --help` |
+| **Description** | /mahabharatha cleanup: remove worktrees, branches, logs, containers |
+| **Files Create** | `mahabharatha/commands/cleanup.py` |
+| **Verification** | `python -m mahabharatha cleanup --help` |
 | **Status** | DONE |
 
 ---
@@ -349,104 +349,104 @@ This backlog contained 42 atomic tasks to build ZERG from the Phase 2 architectu
 
 *Slash command prompt refinement and integration. Depend on Level 3.*
 
-**Note**: Command files relocated from `.claude/commands/` to `zerg/data/commands/` during implementation. All 19 command files exist at the new path.
+**Note**: Command files relocated from `.claude/commands/` to `mahabharatha/data/commands/` during implementation. All 19 command files exist at the new path.
 
-### ZERG-L4-001: Init Command Refinement
+### MAHABHARATHA-L4-001: Init Command Refinement
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | Update /zerg init prompt with detection logic, generate config |
-| **Files** | `zerg/data/commands/zerg:init.md` |
+| **Description** | Update /mahabharatha init prompt with detection logic, generate config |
+| **Files** | `mahabharatha/data/commands/mahabharatha:init.md` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L4-002: Plan Command Refinement
+### MAHABHARATHA-L4-002: Plan Command Refinement
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | Update /zerg plan prompt with requirements template, approval flow |
-| **Files** | `zerg/data/commands/zerg:plan.md`, `zerg:plan.core.md` |
+| **Description** | Update /mahabharatha plan prompt with requirements template, approval flow |
+| **Files** | `mahabharatha/data/commands/mahabharatha:plan.md`, `mahabharatha:plan.core.md` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L4-003: Design Command Refinement
+### MAHABHARATHA-L4-003: Design Command Refinement
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | Update /zerg design prompt with task graph generation, validation |
-| **Files** | `zerg/data/commands/zerg:design.md`, `zerg:design.core.md` |
+| **Description** | Update /mahabharatha design prompt with task graph generation, validation |
+| **Files** | `mahabharatha/data/commands/mahabharatha:design.md`, `mahabharatha:design.core.md` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L4-004: Rush Command Prompt Update ⭐ CRITICAL PATH
+### MAHABHARATHA-L4-004: Kurukshetra Command Prompt Update ⭐ CRITICAL PATH
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | Sync /zerg rush prompt with Python implementation, add examples |
-| **Files** | `zerg/data/commands/zerg:rush.md`, `zerg:rush.core.md` |
+| **Description** | Sync /mahabharatha kurukshetra prompt with Python implementation, add examples |
+| **Files** | `mahabharatha/data/commands/mahabharatha:kurukshetra.md`, `mahabharatha:kurukshetra.core.md` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L4-005: Status Command Prompt Update
+### MAHABHARATHA-L4-005: Status Command Prompt Update
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | Sync /zerg status prompt with Python implementation |
-| **Files** | `zerg/data/commands/zerg:status.md`, `zerg:status.core.md` |
+| **Description** | Sync /mahabharatha status prompt with Python implementation |
+| **Files** | `mahabharatha/data/commands/mahabharatha:status.md`, `mahabharatha:status.core.md` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L4-006: Worker Command Refinement
+### MAHABHARATHA-L4-006: Worker Command Refinement
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | Update /zerg worker prompt with protocol, context handling, exit codes |
-| **Files** | `zerg/data/commands/zerg:worker.md`, `zerg:worker.core.md` |
+| **Description** | Update /mahabharatha worker prompt with protocol, context handling, exit codes |
+| **Files** | `mahabharatha/data/commands/mahabharatha:worker.md`, `mahabharatha:worker.core.md` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L4-007: Merge Command Creation
+### MAHABHARATHA-L4-007: Merge Command Creation
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | Create /zerg merge prompt for manual gate triggering |
-| **Files** | `zerg/data/commands/zerg:merge.md`, `zerg:merge.core.md` |
+| **Description** | Create /mahabharatha merge prompt for manual gate triggering |
+| **Files** | `mahabharatha/data/commands/mahabharatha:merge.md`, `mahabharatha:merge.core.md` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L4-008: Logs Command Prompt Creation
+### MAHABHARATHA-L4-008: Logs Command Prompt Creation
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | Create /zerg logs prompt with filtering, streaming examples |
-| **Files** | `zerg/data/commands/zerg:logs.md` |
+| **Description** | Create /mahabharatha logs prompt with filtering, streaming examples |
+| **Files** | `mahabharatha/data/commands/mahabharatha:logs.md` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L4-009: Stop Command Prompt Creation
+### MAHABHARATHA-L4-009: Stop Command Prompt Creation
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | Create /zerg stop prompt with graceful/force options |
-| **Files** | `zerg/data/commands/zerg:stop.md` |
+| **Description** | Create /mahabharatha stop prompt with graceful/force options |
+| **Files** | `mahabharatha/data/commands/mahabharatha:stop.md` |
 | **Status** | DONE |
 
 ---
 
-### ZERG-L4-010: Cleanup Command Prompt Creation
+### MAHABHARATHA-L4-010: Cleanup Command Prompt Creation
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | Create /zerg cleanup prompt with options documentation |
-| **Files** | `zerg/data/commands/zerg:cleanup.md` |
+| **Description** | Create /mahabharatha cleanup prompt with options documentation |
+| **Files** | `mahabharatha/data/commands/mahabharatha:cleanup.md` |
 | **Status** | DONE |
 
 ---
@@ -455,7 +455,7 @@ This backlog contained 42 atomic tasks to build ZERG from the Phase 2 architectu
 
 *Testing, security, and documentation. Depend on Level 4.*
 
-### ZERG-L5-001: Unit Tests Foundation
+### MAHABHARATHA-L5-001: Unit Tests Foundation
 
 | Attribute | Value |
 |-----------|-------|
@@ -467,7 +467,7 @@ This backlog contained 42 atomic tasks to build ZERG from the Phase 2 architectu
 
 ---
 
-### ZERG-L5-002: Core Component Tests
+### MAHABHARATHA-L5-002: Core Component Tests
 
 | Attribute | Value |
 |-----------|-------|
@@ -478,11 +478,11 @@ This backlog contained 42 atomic tasks to build ZERG from the Phase 2 architectu
 
 ---
 
-### ZERG-L5-003: Integration Tests ⭐ CRITICAL PATH
+### MAHABHARATHA-L5-003: Integration Tests ⭐ CRITICAL PATH
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | End-to-end tests: rush with mock containers, level progression, merge flow |
+| **Description** | End-to-end tests: kurukshetra with mock containers, level progression, merge flow |
 | **Files** | `tests/integration/`, `tests/e2e/` |
 | **Verification** | `pytest tests/integration/ tests/e2e/ -v` |
 | **Status** | DONE |
@@ -490,7 +490,7 @@ This backlog contained 42 atomic tasks to build ZERG from the Phase 2 architectu
 
 ---
 
-### ZERG-L5-004: Security Hooks
+### MAHABHARATHA-L5-004: Security Hooks
 
 | Attribute | Value |
 |-----------|-------|
@@ -501,7 +501,7 @@ This backlog contained 42 atomic tasks to build ZERG from the Phase 2 architectu
 
 ---
 
-### ZERG-L5-005: Documentation Update
+### MAHABHARATHA-L5-005: Documentation Update
 
 | Attribute | Value |
 |-----------|-------|
@@ -514,9 +514,9 @@ This backlog contained 42 atomic tasks to build ZERG from the Phase 2 architectu
 ## Completion Checklist
 
 ### Level 1 Complete When:
-- [x] `python -c "import zerg"` succeeds
-- [x] `python -m zerg --help` shows commands
-- [x] Config loads from `.zerg/config.yaml`
+- [x] `python -c "import mahabharatha"` succeeds
+- [x] `python -m mahabharatha --help` shows commands
+- [x] Config loads from `.mahabharatha/config.yaml`
 - [x] All types importable
 
 ### Level 2 Complete When:
@@ -527,8 +527,8 @@ This backlog contained 42 atomic tasks to build ZERG from the Phase 2 architectu
 
 ### Level 3 Complete When:
 - [x] Orchestrator event loop runs
-- [x] `/zerg rush` launches workers (dry-run)
-- [x] `/zerg status` shows progress
+- [x] `/mahabharatha kurukshetra` launches workers (dry-run)
+- [x] `/mahabharatha status` shows progress
 - [x] Merge gate executes quality checks
 
 ### Level 4 Complete When:
@@ -547,17 +547,17 @@ This backlog contained 42 atomic tasks to build ZERG from the Phase 2 architectu
 ## Implementation Notes
 
 ### File Location Change
-Command files were relocated from `.claude/commands/zerg:*.md` to `zerg/data/commands/zerg:*.md` during implementation. The `zerg/data/` package serves command files programmatically.
+Command files were relocated from `.claude/commands/mahabharatha:*.md` to `mahabharatha/data/commands/mahabharatha:*.md` during implementation. The `mahabharatha/data/` package serves command files programmatically.
 
 ### Beyond Phase 3 Scope
 The implementation includes components not in the original 42-task backlog:
-- `zerg/worker_metrics.py` — Worker performance metrics collection
-- `zerg/task_sync.py` — TaskSyncBridge for Claude Task system coordination
-- `zerg/level_coordinator.py` — Level completion delegation from orchestrator
-- `zerg/context_engineering/` — Context engineering plugin (command splitting, task-scoped context)
+- `mahabharatha/worker_metrics.py` — Worker performance metrics collection
+- `mahabharatha/task_sync.py` — TaskSyncBridge for Claude Task system coordination
+- `mahabharatha/level_coordinator.py` — Level completion delegation from orchestrator
+- `mahabharatha/context_engineering/` — Context engineering plugin (command splitting, task-scoped context)
 - `tests/e2e/harness.py` — E2E test harness for mock pipeline execution
-- `zerg/dashboard.py` — TUI dashboard for live monitoring
-- `zerg/worker_main.py` — Worker entry point and subprocess management
+- `mahabharatha/dashboard.py` — TUI dashboard for live monitoring
+- `mahabharatha/worker_main.py` — Worker entry point and subprocess management
 
 ### Key Bug Fixes (Post-Implementation)
 - **Commit 2451f86**: Fixed `is_level_complete` vs `is_level_resolved` semantics, mock worker task ID mismatch, MetricsCollector patch location

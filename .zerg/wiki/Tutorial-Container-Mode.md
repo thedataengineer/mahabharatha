@@ -1,6 +1,6 @@
 # Tutorial: Container Mode
 
-This tutorial covers running ZERG workers inside Docker containers. Container mode provides isolated, reproducible execution environments where each worker runs in its own container with controlled resources, network access, and filesystem mounts.
+This tutorial covers running MAHABHARATHA workers inside Docker containers. Container mode provides isolated, reproducible execution environments where each worker runs in its own container with controlled resources, network access, and filesystem mounts.
 
 Use container mode when you want:
 
@@ -39,16 +39,16 @@ docker info > /dev/null 2>&1 && echo "Docker is running" || echo "Docker is NOT 
 docker run --rm hello-world
 ```
 
-You also need a completed design phase. Container mode is a launch option for `/zerg:rush`, not a separate workflow. Complete `/zerg:plan` and `/zerg:design` first. See [[Tutorial-Minerals-Store]] for a full walkthrough of those phases.
+You also need a completed design phase. Container mode is a launch option for `/mahabharatha:kurukshetra`, not a separate workflow. Complete `/mahabharatha:plan` and `/mahabharatha:design` first. See [[Tutorial-Minerals-Store]] for a full walkthrough of those phases.
 
 ---
 
 ## Building the Worker Image
 
-ZERG workers run inside a Docker image named `zerg-worker` by default. Build it from the project root:
+MAHABHARATHA workers run inside a Docker image named `mahabharatha-worker` by default. Build it from the project root:
 
 ```bash
-docker build -t zerg-worker -f .devcontainer/Dockerfile .
+docker build -t mahabharatha-worker -f .devcontainer/Dockerfile .
 ```
 
 The image should include:
@@ -62,14 +62,14 @@ The image should include:
 Verify the image exists:
 
 ```bash
-docker images zerg-worker
+docker images mahabharatha-worker
 ```
 
 Expected output:
 
 ```
 REPOSITORY    TAG       IMAGE ID       CREATED        SIZE
-zerg-worker   latest    a1b2c3d4e5f6   2 hours ago    1.2GB
+mahabharatha-worker   latest    a1b2c3d4e5f6   2 hours ago    1.2GB
 ```
 
 If you are using a custom image name, pass it to the launcher via configuration (see the Configuration section below).
@@ -78,10 +78,10 @@ If you are using a custom image name, pass it to the launcher via configuration 
 
 ## Configuration
 
-Container mode is controlled through `.zerg/config.yaml`. The relevant settings are under the `workers` and `resources` sections:
+Container mode is controlled through `.mahabharatha/config.yaml`. The relevant settings are under the `workers` and `resources` sections:
 
 ```yaml
-# .zerg/config.yaml
+# .mahabharatha/config.yaml
 
 workers:
   max_concurrent: 5
@@ -111,20 +111,20 @@ Key settings:
 You can also activate container mode per-run without changing config:
 
 ```
-/zerg:rush --workers=3 --mode container
+/mahabharatha:kurukshetra --workers=3 --mode container
 ```
 
 ---
 
 ## Authentication
 
-Container workers need to authenticate with the Claude API. ZERG supports two methods.
+Container workers need to authenticate with the Claude API. MAHABHARATHA supports two methods.
 
 ### Method 1: OAuth (Claude Pro/Team Accounts)
 
 OAuth authentication works by mounting your local `~/.claude` directory into the container. This is the default method when the directory exists on the host.
 
-ZERG handles this automatically. When `ContainerLauncher` detects `~/.claude` on the host, it adds these volume mounts:
+MAHABHARATHA handles this automatically. When `ContainerLauncher` detects `~/.claude` on the host, it adds these volume mounts:
 
 ```
 -v ~/.claude:/home/worker/.claude
@@ -162,10 +162,10 @@ Or place it in a `.env` file in the project root:
 ANTHROPIC_API_KEY=sk-ant-api03-your-key-here
 ```
 
-ZERG reads the key from either source. The `ContainerLauncher` checks `os.environ` first, then falls back to parsing `.env`:
+MAHABHARATHA reads the key from either source. The `ContainerLauncher` checks `os.environ` first, then falls back to parsing `.env`:
 
 ```python
-# From zerg/launcher.py (simplified)
+# From mahabharatha/launcher.py (simplified)
 api_key = os.environ.get("ANTHROPIC_API_KEY")
 if not api_key:
     env_file = Path(".env")
@@ -196,10 +196,10 @@ The key is passed as `-e ANTHROPIC_API_KEY=...` to `docker run`. It is not baked
 With configuration and authentication in place, launch workers:
 
 ```
-/zerg:rush --workers=3 --mode container
+/mahabharatha:kurukshetra --workers=3 --mode container
 ```
 
-ZERG performs these steps:
+MAHABHARATHA performs these steps:
 
 1. Builds git worktrees for each worker (same as subprocess mode)
 2. Removes any existing containers with matching names
@@ -211,24 +211,24 @@ ZERG performs these steps:
 Container output during launch:
 
 ```
-Container mode: using image zerg-worker
-Launching Worker 0: zerg-worker-0 (memory=4g, cpus=2.0)
-Launching Worker 1: zerg-worker-1 (memory=4g, cpus=2.0)
-Launching Worker 2: zerg-worker-2 (memory=4g, cpus=2.0)
+Container mode: using image mahabharatha-worker
+Launching Worker 0: mahabharatha-worker-0 (memory=4g, cpus=2.0)
+Launching Worker 1: mahabharatha-worker-1 (memory=4g, cpus=2.0)
+Launching Worker 2: mahabharatha-worker-2 (memory=4g, cpus=2.0)
 All containers running. Orchestrator started.
 ```
 
 Verify containers are running:
 
 ```bash
-docker ps --filter "name=zerg-worker" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+docker ps --filter "name=mahabharatha-worker" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 ```
 
 ```
 NAMES            STATUS          PORTS
-zerg-worker-0    Up 2 minutes
-zerg-worker-1    Up 2 minutes
-zerg-worker-2    Up 2 minutes
+mahabharatha-worker-0    Up 2 minutes
+mahabharatha-worker-1    Up 2 minutes
+mahabharatha-worker-2    Up 2 minutes
 ```
 
 ---
@@ -240,7 +240,7 @@ Each container receives several volume mounts to function correctly. Understandi
 ### Workspace Mount
 
 ```
--v /path/to/.zerg-worktrees/feature/worker-0:/workspace
+-v /path/to/.mahabharatha-worktrees/feature/worker-0:/workspace
 ```
 
 The worker's git worktree is mounted at `/workspace` inside the container. This is the container's working directory. All file creation and modification happens here.
@@ -248,14 +248,14 @@ The worker's git worktree is mounted at `/workspace` inside the container. This 
 ### State Directory Mount
 
 ```
--v /path/to/repo/.zerg/state:/workspace/.zerg/state
+-v /path/to/repo/.mahabharatha/state:/workspace/.mahabharatha/state
 ```
 
 The shared state directory is mounted from the main repository. This allows the orchestrator (running on the host) and workers (running in containers) to read and write the same state files. The state file tracks task status, worker assignments, and level completion.
 
 ### Git Mounts
 
-Git worktrees require access to the main repository's `.git` directory for object storage and refs. ZERG mounts two paths:
+Git worktrees require access to the main repository's `.git` directory for object storage and refs. MAHABHARATHA mounts two paths:
 
 ```
 -v /path/to/repo/.git:/repo/.git
@@ -284,8 +284,8 @@ See the Authentication section above.
 
 | Host Path | Container Path | Purpose |
 |-----------|---------------|---------|
-| `.zerg-worktrees/{feature}/worker-N` | `/workspace` | Worker's git worktree |
-| `{repo}/.zerg/state` | `/workspace/.zerg/state` | Shared task state |
+| `.mahabharatha-worktrees/{feature}/worker-N` | `/workspace` | Worker's git worktree |
+| `{repo}/.mahabharatha/state` | `/workspace/.mahabharatha/state` | Shared task state |
 | `{repo}/.git` | `/repo/.git` | Git object store |
 | `{repo}/.git/worktrees/worker-N` | `/workspace/.git-worktree` | Worktree metadata |
 | `~/.claude` | `/home/worker/.claude` | OAuth credentials |
@@ -343,9 +343,9 @@ Add overhead for the orchestrator and host OS. A machine with 32GB RAM and 12 co
 To override limits for a specific run without changing config:
 
 ```bash
-# In .zerg/config.yaml, set defaults
+# In .mahabharatha/config.yaml, set defaults
 # Then override at launch time via environment
-ZERG_CONTAINER_MEMORY=8g ZERG_CONTAINER_CPUS=4.0 /zerg:rush --workers=2 --mode container
+ZERG_CONTAINER_MEMORY=8g ZERG_CONTAINER_CPUS=4.0 /mahabharatha:kurukshetra --workers=2 --mode container
 ```
 
 ---
@@ -358,19 +358,19 @@ When a worker fails inside a container, you need to inspect the container state.
 
 ```bash
 # Stream logs from a specific worker
-docker logs zerg-worker-0
+docker logs mahabharatha-worker-0
 
 # Follow logs in real time
-docker logs -f zerg-worker-0
+docker logs -f mahabharatha-worker-0
 
 # Show last 50 lines
-docker logs --tail 50 zerg-worker-0
+docker logs --tail 50 mahabharatha-worker-0
 ```
 
 ### Execute a Shell Inside a Running Container
 
 ```bash
-docker exec -it zerg-worker-0 bash
+docker exec -it mahabharatha-worker-0 bash
 ```
 
 Once inside, inspect the workspace:
@@ -385,7 +385,7 @@ git status
 git log --oneline -5
 
 # Check environment variables
-env | grep ZERG
+env | grep MAHABHARATHA
 
 # Look at the spec files
 cat .gsd/specs/minerals-store/task-graph.json | python3 -m json.tool
@@ -400,17 +400,17 @@ If the container has exited, you can still read its filesystem:
 
 ```bash
 # Check exit code
-docker inspect zerg-worker-0 --format '{{.State.ExitCode}}'
+docker inspect mahabharatha-worker-0 --format '{{.State.ExitCode}}'
 
 # Check OOM status
-docker inspect zerg-worker-0 --format '{{.State.OOMKilled}}'
+docker inspect mahabharatha-worker-0 --format '{{.State.OOMKilled}}'
 
 # Copy logs out of the container
-docker cp zerg-worker-0:/workspace/.zerg/logs/. ./debug-logs/
+docker cp mahabharatha-worker-0:/workspace/.mahabharatha/logs/. ./debug-logs/
 
 # Start the stopped container for inspection
-docker start zerg-worker-0
-docker exec -it zerg-worker-0 bash
+docker start mahabharatha-worker-0
+docker exec -it mahabharatha-worker-0 bash
 ```
 
 ### Worker Exit Codes
@@ -423,7 +423,7 @@ The exit code tells you why the worker stopped:
 | 1 | Unrecoverable error | Check `docker logs` for stack trace |
 | 2 | Context limit reached (70%) | Orchestrator restarts automatically |
 | 3 | All remaining tasks blocked | Check task dependencies and failures |
-| 130 | Received stop signal | Normal shutdown via `/zerg:stop` |
+| 130 | Received stop signal | Normal shutdown via `/mahabharatha:stop` |
 | 137 | Killed by Docker (OOM) | Increase `container_memory_limit` |
 
 ### Reading Worker-Specific Logs
@@ -432,7 +432,7 @@ Worker logs are written to the shared state directory:
 
 ```bash
 # Host-side log access
-cat .zerg/logs/workers/worker-0.stdout.log
+cat .mahabharatha/logs/workers/worker-0.stdout.log
 
 # Progress log (all workers write to this)
 cat .gsd/specs/minerals-store/progress.md
@@ -443,15 +443,15 @@ cat .gsd/specs/minerals-store/progress.md
 Monitor real-time resource consumption:
 
 ```bash
-# All ZERG containers
-docker stats --filter "name=zerg-worker" --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}"
+# All MAHABHARATHA containers
+docker stats --filter "name=mahabharatha-worker" --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}"
 ```
 
 ```
 NAME             CPU %   MEM USAGE / LIMIT   MEM %
-zerg-worker-0    45.2%   1.8GiB / 4GiB       45.0%
-zerg-worker-1    38.7%   2.1GiB / 4GiB       52.5%
-zerg-worker-2    12.3%   0.9GiB / 4GiB       22.5%
+mahabharatha-worker-0    45.2%   1.8GiB / 4GiB       45.0%
+mahabharatha-worker-1    38.7%   2.1GiB / 4GiB       52.5%
+mahabharatha-worker-2    12.3%   0.9GiB / 4GiB       22.5%
 ```
 
 ---
@@ -467,10 +467,10 @@ zerg-worker-2    12.3%   0.9GiB / 4GiB       22.5%
 docker info
 
 # Check image exists
-docker images zerg-worker
+docker images mahabharatha-worker
 
 # Rebuild if missing
-docker build -t zerg-worker -f .devcontainer/Dockerfile .
+docker build -t mahabharatha-worker -f .devcontainer/Dockerfile .
 ```
 
 ### "Container failed to become ready"
@@ -479,10 +479,10 @@ docker build -t zerg-worker -f .devcontainer/Dockerfile .
 
 ```bash
 # Check container status
-docker ps -a --filter "name=zerg-worker-0"
+docker ps -a --filter "name=mahabharatha-worker-0"
 
 # Check container logs for startup errors
-docker logs zerg-worker-0
+docker logs mahabharatha-worker-0
 ```
 
 ### "Worker process failed to start"
@@ -491,12 +491,12 @@ docker logs zerg-worker-0
 
 ```bash
 # Check if the entry script exists in the worktree
-ls -la ../.zerg-worktrees/minerals-store/worker-0/.zerg/worker_entry.sh
+ls -la ../.mahabharatha-worktrees/minerals-store/worker-0/.mahabharatha/worker_entry.sh
 
 # Exec into the container and run the entry script manually
-docker exec -it zerg-worker-0 bash
-cat /workspace/.zerg/worker_entry.sh
-bash /workspace/.zerg/worker_entry.sh
+docker exec -it mahabharatha-worker-0 bash
+cat /workspace/.mahabharatha/worker_entry.sh
+bash /workspace/.mahabharatha/worker_entry.sh
 ```
 
 ### OOM Killed (Exit Code 137)
@@ -505,11 +505,11 @@ bash /workspace/.zerg/worker_entry.sh
 
 ```bash
 # Confirm OOM
-docker inspect zerg-worker-0 --format '{{.State.OOMKilled}}'
+docker inspect mahabharatha-worker-0 --format '{{.State.OOMKilled}}'
 # Expected: true
 ```
 
-**Fix**: Increase the memory limit in `.zerg/config.yaml`:
+**Fix**: Increase the memory limit in `.mahabharatha/config.yaml`:
 
 ```yaml
 resources:
@@ -527,7 +527,7 @@ For OAuth:
 ls -la ~/.claude/
 
 # Check that the mount is present in the container
-docker exec zerg-worker-0 ls -la /home/worker/.claude/
+docker exec mahabharatha-worker-0 ls -la /home/worker/.claude/
 ```
 
 For API key:
@@ -537,7 +537,7 @@ For API key:
 echo $ANTHROPIC_API_KEY | head -c 20
 
 # Check it reached the container
-docker exec zerg-worker-0 env | grep ANTHROPIC_API_KEY
+docker exec mahabharatha-worker-0 env | grep ANTHROPIC_API_KEY
 ```
 
 ### Git Errors Inside Container
@@ -546,17 +546,17 @@ docker exec zerg-worker-0 env | grep ANTHROPIC_API_KEY
 
 ```bash
 # Check the git worktree configuration inside the container
-docker exec zerg-worker-0 cat /workspace/.git
+docker exec mahabharatha-worker-0 cat /workspace/.git
 # Should point to the worktree metadata
 
 # Verify the main .git is accessible
-docker exec zerg-worker-0 ls /repo/.git/HEAD
+docker exec mahabharatha-worker-0 ls /repo/.git/HEAD
 ```
 
 If the `.git` file in `/workspace` has a stale path, the entry script should fix it. Check:
 
 ```bash
-docker exec zerg-worker-0 env | grep ZERG_GIT
+docker exec mahabharatha-worker-0 env | grep ZERG_GIT
 # Should show:
 # ZERG_GIT_WORKTREE_DIR=/workspace/.git-worktree
 # ZERG_GIT_MAIN_DIR=/repo/.git
@@ -567,31 +567,31 @@ docker exec zerg-worker-0 env | grep ZERG_GIT
 If a previous run left containers behind:
 
 ```bash
-# Stop and remove all ZERG worker containers
-docker rm -f $(docker ps -aq --filter "name=zerg-worker")
+# Stop and remove all MAHABHARATHA worker containers
+docker rm -f $(docker ps -aq --filter "name=mahabharatha-worker")
 
 # Remove worktrees
-rm -rf ../.zerg-worktrees/minerals-store/
+rm -rf ../.mahabharatha-worktrees/minerals-store/
 ```
 
 Or use the built-in cleanup:
 
 ```
-/zerg:cleanup minerals-store
+/mahabharatha:cleanup minerals-store
 ```
 
 ---
 
 ## Summary
 
-Container mode provides isolated execution for ZERG workers with enforced resource limits and reproducible environments. The key points:
+Container mode provides isolated execution for MAHABHARATHA workers with enforced resource limits and reproducible environments. The key points:
 
 - Set `launcher_type: container` in config or pass `--mode container` at launch
-- Build the `zerg-worker` Docker image before first use
+- Build the `mahabharatha-worker` Docker image before first use
 - Authentication works via OAuth (`~/.claude` mount) or API key (`ANTHROPIC_API_KEY` env var)
 - Each container receives volume mounts for the workspace, git metadata, shared state, and OAuth credentials
 - Resource limits (memory, CPU) are enforced by Docker and configurable per-project
 - Debug failed containers with `docker logs`, `docker exec`, and `docker inspect`
 - Worker exit codes (0, 1, 2, 3, 137) tell you exactly why a worker stopped
 
-Previous tutorial: [[Tutorial-Minerals-Store]] for the full ZERG workflow walkthrough.
+Previous tutorial: [[Tutorial-Minerals-Store]] for the full MAHABHARATHA workflow walkthrough.

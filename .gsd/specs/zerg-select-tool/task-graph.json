@@ -1,5 +1,5 @@
 {
-  "feature": "zerg-select-tool",
+  "feature": "mahabharatha-select-tool",
   "version": "2.0",
   "generated": "2026-01-31T23:30:00Z",
   "total_tasks": 4,
@@ -10,15 +10,15 @@
   "tasks": [
     {
       "id": "SELECT-L1-001",
-      "title": "Create zerg:select-tool.core.md",
+      "title": "Create mahabharatha:select-tool.core.md",
       "description": "Create the core command file with split marker, flags (task description, --domain, --format, --verbose, --no-agents, --no-mcp), pre-flight (task description parsing, domain auto-detection), scoring workflow overview (5 axes, composite formula, tier mapping), output format template, task tracking (TaskCreate/TaskUpdate), and completion criteria. Under 150 lines.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/data/commands/zerg:select-tool.core.md"],
+        "create": ["mahabharatha/data/commands/mahabharatha:select-tool.core.md"],
         "modify": [],
-        "read": ["zerg/data/commands/zerg:explain.core.md", "zerg/data/commands/zerg:estimate.core.md"]
+        "read": ["mahabharatha/data/commands/mahabharatha:explain.core.md", "mahabharatha/data/commands/mahabharatha:estimate.core.md"]
       },
       "acceptance_criteria": [
         "File exists with <!-- SPLIT: core --> marker",
@@ -30,7 +30,7 @@
         "Under 150 lines"
       ],
       "verification": {
-        "command": "test -f zerg/data/commands/zerg:select-tool.core.md && grep -q TaskCreate zerg/data/commands/zerg:select-tool.core.md && grep -q 'SPLIT' zerg/data/commands/zerg:select-tool.core.md && grep -q 'composite' zerg/data/commands/zerg:select-tool.core.md",
+        "command": "test -f mahabharatha/data/commands/mahabharatha:select-tool.core.md && grep -q TaskCreate mahabharatha/data/commands/mahabharatha:select-tool.core.md && grep -q 'SPLIT' mahabharatha/data/commands/mahabharatha:select-tool.core.md && grep -q 'composite' mahabharatha/data/commands/mahabharatha:select-tool.core.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -38,15 +38,15 @@
     },
     {
       "id": "SELECT-L1-002",
-      "title": "Create zerg:select-tool.details.md",
-      "description": "Create the details reference file with: MCP server capability matrix (Context7, Sequential, Magic, Morphllm, Serena, Playwright), native tool matrix (Read/Glob/Grep, Edit/Write, WebSearch/WebFetch), Task agent subtype guide (9 agents with score ranges), scoring formulas per axis with keyword triggers, composite calculation with tier mapping table, config schema extension for .zerg/config.yaml, fallback chain definitions, verbose output format, 3+ worked examples, edge cases. Under 300 lines.",
+      "title": "Create mahabharatha:select-tool.details.md",
+      "description": "Create the details reference file with: MCP server capability matrix (Context7, Sequential, Magic, Morphllm, Serena, Playwright), native tool matrix (Read/Glob/Grep, Edit/Write, WebSearch/WebFetch), Task agent subtype guide (9 agents with score ranges), scoring formulas per axis with keyword triggers, composite calculation with tier mapping table, config schema extension for .mahabharatha/config.yaml, fallback chain definitions, verbose output format, 3+ worked examples, edge cases. Under 300 lines.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/data/commands/zerg:select-tool.details.md"],
+        "create": ["mahabharatha/data/commands/mahabharatha:select-tool.details.md"],
         "modify": [],
-        "read": ["zerg/data/commands/zerg:explain.details.md", "zerg/data/commands/zerg:estimate.details.md"]
+        "read": ["mahabharatha/data/commands/mahabharatha:explain.details.md", "mahabharatha/data/commands/mahabharatha:estimate.details.md"]
       },
       "acceptance_criteria": [
         "File exists with <!-- SPLIT: details --> marker",
@@ -61,7 +61,7 @@
         "Under 300 lines"
       ],
       "verification": {
-        "command": "test -f zerg/data/commands/zerg:select-tool.details.md && grep -c 'Context7\\|Sequential\\|Playwright\\|Magic\\|Morphllm\\|Serena' zerg/data/commands/zerg:select-tool.details.md && grep -q 'composite' zerg/data/commands/zerg:select-tool.details.md",
+        "command": "test -f mahabharatha/data/commands/mahabharatha:select-tool.details.md && grep -c 'Context7\\|Sequential\\|Playwright\\|Magic\\|Morphllm\\|Serena' mahabharatha/data/commands/mahabharatha:select-tool.details.md && grep -q 'composite' mahabharatha/data/commands/mahabharatha:select-tool.details.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
@@ -69,23 +69,23 @@
     },
     {
       "id": "SELECT-L2-001",
-      "title": "Create zerg:select-tool.md parent + update backlog",
-      "description": "Create the parent command file (copy of core content for backward compatibility, with SPLIT marker referencing core and details). Update claudedocs/backlog.md to mark zerg:select-tool as DONE.",
+      "title": "Create mahabharatha:select-tool.md parent + update backlog",
+      "description": "Create the parent command file (copy of core content for backward compatibility, with SPLIT marker referencing core and details). Update claudedocs/backlog.md to mark mahabharatha:select-tool as DONE.",
       "phase": "integration",
       "level": 2,
       "dependencies": ["SELECT-L1-001", "SELECT-L1-002"],
       "files": {
-        "create": ["zerg/data/commands/zerg:select-tool.md"],
+        "create": ["mahabharatha/data/commands/mahabharatha:select-tool.md"],
         "modify": ["claudedocs/backlog.md"],
-        "read": ["zerg/data/commands/zerg:select-tool.core.md"]
+        "read": ["mahabharatha/data/commands/mahabharatha:select-tool.core.md"]
       },
       "acceptance_criteria": [
         "Parent file exists with content matching core",
         "Parent has SPLIT marker referencing core and details files",
-        "claudedocs/backlog.md shows zerg:select-tool as DONE"
+        "claudedocs/backlog.md shows mahabharatha:select-tool as DONE"
       ],
       "verification": {
-        "command": "test -f zerg/data/commands/zerg:select-tool.md && grep -q 'SPLIT' zerg/data/commands/zerg:select-tool.md && grep 'select-tool' claudedocs/backlog.md | grep -q 'DONE'",
+        "command": "test -f mahabharatha/data/commands/mahabharatha:select-tool.md && grep -q 'SPLIT' mahabharatha/data/commands/mahabharatha:select-tool.md && grep 'select-tool' claudedocs/backlog.md | grep -q 'DONE'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5,
@@ -101,7 +101,7 @@
       "files": {
         "create": [],
         "modify": [],
-        "read": ["zerg/data/commands/zerg:select-tool.md", "zerg/data/commands/zerg:select-tool.core.md", "zerg/data/commands/zerg:select-tool.details.md", "claudedocs/backlog.md"]
+        "read": ["mahabharatha/data/commands/mahabharatha:select-tool.md", "mahabharatha/data/commands/mahabharatha:select-tool.core.md", "mahabharatha/data/commands/mahabharatha:select-tool.details.md", "claudedocs/backlog.md"]
       },
       "acceptance_criteria": [
         "All 3 select-tool command files exist",
@@ -111,7 +111,7 @@
         "Existing tests pass"
       ],
       "verification": {
-        "command": "ls zerg/data/commands/zerg:select-tool.md zerg/data/commands/zerg:select-tool.core.md zerg/data/commands/zerg:select-tool.details.md && python -m pytest tests/ -x -q --ignore=tests/test_doc_engine.py 2>&1 | tail -5",
+        "command": "ls mahabharatha/data/commands/mahabharatha:select-tool.md mahabharatha/data/commands/mahabharatha:select-tool.core.md mahabharatha/data/commands/mahabharatha:select-tool.details.md && python -m pytest tests/ -x -q --ignore=tests/test_doc_engine.py 2>&1 | tail -5",
         "timeout_seconds": 600
       },
       "estimate_minutes": 5,

@@ -1,6 +1,6 @@
 # Resilience Architecture
 
-ZERG's resilience system provides automatic recovery from transient failures, maintains state consistency between orchestrator and workers, and prevents task starvation during container mode execution.
+MAHABHARATHA's resilience system provides automatic recovery from transient failures, maintains state consistency between orchestrator and workers, and prevents task starvation during container mode execution.
 
 ---
 
@@ -15,47 +15,47 @@ The resilience system addresses several failure modes observed during multi-work
 5. **Container mount issues** — task-graph.json inaccessible inside containers
 6. **No task reassignment** — Crashed worker's task never gets reassigned
 
-The resilience system is **enabled by default** and requires no explicit flags. All behavior is configurable via `.zerg/config.yaml`.
+The resilience system is **enabled by default** and requires no explicit flags. All behavior is configurable via `.mahabharatha/config.yaml`.
 
 ---
 
 ## Architecture Diagram
 
-```
-┌───────────────────────────────────────────────────────────────────────┐
-│                           Orchestrator                                 │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────────┐   │
-│  │ TaskRetryMgr    │  │ StateSyncSvc    │  │ LevelController     │   │
-│  │ +check_stale()  │  │ +reconcile()    │  │ +is_level_complete()│   │
-│  │ +timeout_tasks()│  │ +periodic_check()│  │                     │   │
-│  └────────┬────────┘  └────────┬────────┘  └─────────────────────┘   │
-│           │                    │                                      │
-│           │                    │                                      │
-│  ┌────────▼────────────────────▼────────────────────────────────┐    │
-│  │                    StateReconciler                            │    │
-│  │  - reconcile_periodic()         - parse_level_from_task_id()  │    │
-│  │  - reconcile_level_transition()                               │    │
-│  └──────────────────────────────────────────────────────────────┘    │
-│                              │                                        │
-│  ┌───────────────────────────▼──────────────────────────────────┐    │
-│  │                        Launcher                               │    │
-│  │  SubprocessLauncher / ContainerLauncher                       │    │
-│  │  +spawn_with_retry()        +handle_worker_exit()             │    │
-│  └──────────────────────────────────────────────────────────────┘    │
-└───────────────────────────────────────────────────────────────────────┘
-         │              │              │              │
-         ▼              ▼              ▼              ▼
-    ┌─────────┐   ┌─────────┐   ┌─────────┐   ┌─────────┐
-    │Worker 0 │   │Worker 1 │   │Worker 2 │   │Worker N │
-    │ heartbeat│   │ heartbeat│   │ heartbeat│   │ heartbeat│
-    └─────────┘   └─────────┘   └─────────┘   └─────────┘
-         │              │              │              │
-         └──────────────┴──────────────┴──────────────┘
-                              │
-                    ┌─────────▼─────────┐
-                    │ .zerg/monitor.log │
-                    │ (resilience events)│
-                    └───────────────────┘
+```mermaid
+graph TD
+    subgraph Orchestrator
+        TRM["TaskRetryMgr<br/>+check_stale()<br/>+timeout_tasks()"]
+        SSS["StateSyncSvc<br/>+reconcile()<br/>+periodic_check()"]
+        LC["LevelController<br/>+is_level_complete()"]
+        SR["StateReconciler<br/>- reconcile_periodic()<br/>- reconcile_level_transition()<br/>- parse_level_from_task_id()"]
+
+        TRM --> SR
+        SSS --> SR
+    end
+
+    subgraph Launcher
+        SPL["SubprocessLauncher / ContainerLauncher<br/>+spawn_with_retry()<br/>+handle_worker_exit()"]
+    end
+
+    SR --> SPL
+
+    SPL --> W0["Warrior 0<br/>heartbeat"]
+    SPL --> W1["Warrior 1<br/>heartbeat"]
+    SPL --> W2["Warrior 2<br/>heartbeat"]
+    SPL --> WN["Warrior N<br/>heartbeat"]
+
+    W0 -.-> Monitor[".mahabharatha/monitor.log<br/>(resilience events)"]
+    W1 -.-> Monitor
+    W2 -.-> Monitor
+    WN -.-> Monitor
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 ---
@@ -64,7 +64,7 @@ The resilience system is **enabled by default** and requires no explicit flags. 
 
 ### ResilienceConfig
 
-**Location:** `zerg/config.py`
+**Location:** `mahabharatha/config.py`
 
 Configuration fields for resilience tuning. All settings have sensible defaults.
 
@@ -93,7 +93,7 @@ class WorkersConfig(BaseModel):
 
 ### SpawnRetry
 
-**Location:** `zerg/launcher.py`
+**Location:** `mahabharatha/launcher.py`
 
 Retry logic with exponential backoff for worker spawn operations.
 
@@ -121,7 +121,7 @@ def spawn_with_retry(
 
 ### TaskRetryManager (Stale Task Watchdog)
 
-**Location:** `zerg/task_retry_manager.py`
+**Location:** `mahabharatha/task_retry_manager.py`
 
 Detects and fails tasks stuck in `in_progress` beyond configurable timeout.
 
@@ -143,7 +143,7 @@ def check_stale_tasks(self, timeout_seconds: int = 600) -> list[str]:
 
 ### HeartbeatMonitor (Enhanced Heartbeat)
 
-**Location:** `zerg/heartbeat.py`
+**Location:** `mahabharatha/heartbeat.py`
 
 Enhanced heartbeat system with progress tracking and config-driven stale detection.
 
@@ -162,11 +162,11 @@ Enhanced heartbeat system with progress tracking and config-driven stale detecti
 - Workers emit heartbeat every 30s (configurable)
 - Orchestrator marks worker stale if no heartbeat for 2 minutes (configurable)
 - Stale workers trigger task reassignment
-- Heartbeat files written atomically to `.zerg/state/heartbeat-{worker_id}.json`
+- Heartbeat files written atomically to `.mahabharatha/state/heartbeat-{worker_id}.json`
 
 ### StateReconciler
 
-**Location:** `zerg/state_reconciler.py`
+**Location:** `mahabharatha/state_reconciler.py`
 
 Detects and fixes state inconsistencies between orchestrator and workers.
 
@@ -190,7 +190,7 @@ class StateReconciler:
 
 ### LevelController
 
-**Location:** `zerg/levels.py`
+**Location:** `mahabharatha/levels.py`
 
 Fixed `is_level_complete()` to verify actual task states.
 
@@ -208,9 +208,9 @@ def is_level_complete(self, level: int) -> bool:
 
 ### MonitorLogWriter
 
-**Location:** `zerg/log_writer.py`
+**Location:** `mahabharatha/log_writer.py`
 
-Structured resilience event logging to `.zerg/monitor.log`.
+Structured resilience event logging to `.mahabharatha/monitor.log`.
 
 **Log Format:**
 ```json
@@ -237,123 +237,109 @@ Structured resilience event logging to `.zerg/monitor.log`.
 
 ### Spawn Flow
 
-```
-orchestrator._spawn_worker()
-    │
-    ▼
-launcher.spawn_with_retry()
-    │
-    ├──> Attempt 1: _start_container() ──> FAIL
-    │         │
-    │         ▼
-    │    Log retry, backoff 2s
-    │
-    ├──> Attempt 2: _start_container() ──> FAIL
-    │         │
-    │         ▼
-    │    Log retry, backoff 4s
-    │
-    └──> Attempt 3: _start_container() ──> SUCCESS
-              │
-              ▼
-         Return SpawnResult
+```mermaid
+graph TD
+    Orch["orchestrator._spawn_worker()"] --> Launch["launcher.spawn_with_retry()"]
+    Launch --> A1["Attempt 1: _start_container() -> FAIL"]
+    A1 --> Log1["Log retry, backoff 2s"]
+    Log1 --> A2["Attempt 2: _start_container() -> FAIL"]
+    A2 --> Log2["Log retry, backoff 4s"]
+    Log2 --> A3["Attempt 3: _start_container() -> SUCCESS"]
+    A3 --> Ret["Return SpawnResult"]
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 ### Heartbeat Flow
 
-```
-Worker writes heartbeat (every 30s)
-    │
-    ▼
-.zerg/state/heartbeat-{worker_id}.json
-    │
-    ▼
-HeartbeatMonitor.check_stale()
-    │
-    ├──> Last heartbeat < 120s ago ──> OK
-    │
-    └──> Last heartbeat > 120s ago ──> Mark STALLED
-                                            │
-                                            ▼
-                                       Trigger task reassignment
+```mermaid
+graph TD
+    Worker["Warrior writes heartbeat (every 30s)"] --> State[".mahabharatha/state/heartbeat-{worker_id}.json"]
+    State --> Check["HeartbeatMonitor.check_stale()"]
+    Check -- "< 120s ago" --> OK["OK"]
+    Check -- "> 120s ago" --> Stalled["Mark STALLED"]
+    Stalled --> Reassign["Trigger task reassignment"]
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 ### Task Timeout Flow
 
-```
-TaskRetryManager.check_stale_tasks()
-    │
-    ▼
-Find tasks in_progress > 600s
-    │
-    ▼
-Mark task FAILED (reason: timeout)
-    │
-    ▼
-Requeue for retry
-    │
-    ▼
-Log timeout event
+```mermaid
+graph TD
+    TRM["TaskRetryManager.check_stale_tasks()"] --> Find["Find tasks in_progress > 600s"]
+    Find --> Mark["Mark task FAILED (reason: timeout)"]
+    Mark --> Requeue["Requeue for retry"]
+    Requeue --> Log["Log timeout event"]
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 ### State Reconciliation Flow
 
-```
-Periodic timer (every 60s) OR Level transition
-    │
-    ▼
-StateReconciler.reconcile_*()
-    │
-    ├──> Check tasks in_progress with dead workers
-    │         │
-    │         ▼
-    │    Mark failed, requeue
-    │
-    ├──> Check level marked done with incomplete tasks
-    │         │
-    │         ▼
-    │    Recalculate level status
-    │
-    └──> Check tasks with level=None
-              │
-              ▼
-         Parse level from ID pattern
+```mermaid
+graph TD
+    Trigger["Periodic timer (every 60s) OR Level transition"] --> SR["StateReconciler.reconcile_*()"]
+    SR --> Dead["Check tasks in_progress with dead warriors"]
+    Dead --> Mark["Mark failed, requeue"]
+    SR --> Level["Check level marked done with incomplete tasks"]
+    Level --> Recalc["Recalculate level status"]
+    SR --> LevelNone["Check tasks with level=None"]
+    LevelNone --> Parse["Parse level from ID pattern"]
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 ### Crash Recovery Flow
 
-```
-Worker exit detected
-    │
-    ▼
-handle_worker_exit()
-    │
-    ├──> Had in_progress task?
-    │         │
-    │         YES
-    │         │
-    │         ▼
-    │    Mark task FAILED (reason: worker_crash)
-    │         │
-    │         ▼
-    │    Do NOT increment retry count
-    │         │
-    │         ▼
-    │    Reassign to healthy worker
-    │
-    └──> Check if below target worker count
-              │
-              YES
-              │
-              ▼
-         Auto-respawn replacement
+```mermaid
+graph TD
+    Detect["Warrior exit detected"] --> Handle["handle_worker_exit()"]
+    Handle --> InProg{"Had in_progress task?"}
+    InProg -- "YES" --> Mark["Mark task FAILED (reason: worker_crash)"]
+    Mark --> NoInc["Do NOT increment retry count"]
+    NoInc --> Reassign["Reassign to healthy warrior"]
+    Handle --> Target{"Below target warrior count?"}
+    Target -- "YES" --> Respawn["Auto-respawn replacement"]
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 ---
 
 ## Configuration Reference
 
-Add these settings to `.zerg/config.yaml`:
+Add these settings to `.mahabharatha/config.yaml`:
 
 ```yaml
 resilience:
@@ -385,16 +371,16 @@ workers:
 ### Tasks Stuck in Progress
 
 **Symptoms:**
-- Rush stalled at high percentage (e.g., 95%)
+- Kurukshetra stalled at high percentage (e.g., 95%)
 - `/z:status` shows tasks in `in_progress` for extended periods
 
 **Diagnosis:**
 ```bash
 # Check monitor.log for timeout events
-grep "task_timeout" .zerg/monitor.log
+grep "task_timeout" .mahabharatha/monitor.log
 
 # Check stale threshold
-grep "task_stale_timeout_seconds" .zerg/config.yaml
+grep "task_stale_timeout_seconds" .mahabharatha/config.yaml
 ```
 
 **Resolution:**
@@ -419,7 +405,7 @@ grep "task_stale_timeout_seconds" .zerg/config.yaml
 **Diagnosis:**
 ```bash
 # Check monitor.log for spawn retries
-grep "worker_spawn" .zerg/monitor.log
+grep "worker_spawn" .mahabharatha/monitor.log
 
 # Check Docker status
 docker ps
@@ -428,7 +414,7 @@ docker info
 
 **Resolution:**
 1. Verify Docker daemon is running
-2. Check image availability: `docker images | grep zerg-worker`
+2. Check image availability: `docker images | grep mahabharatha-worker`
 3. Increase retry attempts:
    ```yaml
    workers:
@@ -446,10 +432,10 @@ docker info
 **Diagnosis:**
 ```bash
 # Check reconciliation events
-grep "state_reconcile" .zerg/monitor.log
+grep "state_reconcile" .mahabharatha/monitor.log
 
 # Check level status
-grep "level_check" .zerg/monitor.log
+grep "level_check" .mahabharatha/monitor.log
 ```
 
 **Resolution:**
@@ -460,23 +446,23 @@ grep "level_check" .zerg/monitor.log
 
 ### How to Read monitor.log
 
-The monitor log at `.zerg/monitor.log` contains structured JSON events:
+The monitor log at `.mahabharatha/monitor.log` contains structured JSON events:
 
 ```bash
 # View recent events
-tail -50 .zerg/monitor.log | jq .
+tail -50 .mahabharatha/monitor.log | jq .
 
 # Filter by event type
-grep '"event":"task_timeout"' .zerg/monitor.log | jq .
+grep '"event":"task_timeout"' .mahabharatha/monitor.log | jq .
 
 # Filter by worker
-grep '"worker_id":"W0"' .zerg/monitor.log | jq .
+grep '"worker_id":"W0"' .mahabharatha/monitor.log | jq .
 
 # Get all errors
-grep '"level":"ERROR"' .zerg/monitor.log | jq .
+grep '"level":"ERROR"' .mahabharatha/monitor.log | jq .
 
 # Timeline of specific task
-grep '"task_id":"RES-L2-001"' .zerg/monitor.log | jq .
+grep '"task_id":"RES-L2-001"' .mahabharatha/monitor.log | jq .
 ```
 
 **Common Event Patterns:**
@@ -519,7 +505,7 @@ When a worker crashes, its task's retry count is **not** incremented. This disti
 
 ### Monitor Log Location
 
-Resilience events are written to a dedicated `.zerg/monitor.log` file, separate from worker JSONL files.
+Resilience events are written to a dedicated `.mahabharatha/monitor.log` file, separate from worker JSONL files.
 
 **Rationale:** Resilience events are orchestrator-level concerns, not worker-level. A dedicated log makes debugging easier and supports automated analysis tools.
 
@@ -536,6 +522,6 @@ Resilience events are written to a dedicated `.zerg/monitor.log` file, separate 
 
 ## Related Documentation
 
-- [Configuration Reference](./configuration.md) — All ZERG config options
+- [Configuration Reference](./configuration.md) — All MAHABHARATHA config options
 - [Container Mode](./Container-Mode.md) — Container execution details
 - [Commands Reference](../commands.md) — Full command documentation

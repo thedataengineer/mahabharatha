@@ -1,16 +1,16 @@
 # Contributing
 
-Welcome to ZERG. This guide explains not just how to contribute, but why our processes exist. Understanding the philosophy behind our conventions will help you make contributions that strengthen the project.
+Welcome to MAHABHARATHA. This guide explains not just how to contribute, but why our processes exist. Understanding the philosophy behind our conventions will help you make contributions that strengthen the project.
 
 ---
 
 ## Project Philosophy
 
-Before diving into the mechanics of contributing, it helps to understand what ZERG values and why.
+Before diving into the mechanics of contributing, it helps to understand what MAHABHARATHA values and why.
 
 ### Parallel-First Thinking
 
-ZERG exists to coordinate many Claude Code instances working simultaneously. This shapes everything we build:
+MAHABHARATHA exists to coordinate many Claude Code instances working simultaneously. This shapes everything we build:
 
 - **Why file ownership matters**: When five workers edit the same file, merge conflicts explode. Our task system assigns exclusive file ownership because parallel execution demands clear boundaries.
 - **Why specs are the source of truth**: Workers don't share conversation history. The spec file is their shared memory—without it, parallel execution falls apart.
@@ -18,7 +18,7 @@ ZERG exists to coordinate many Claude Code instances working simultaneously. Thi
 
 ### Spec-Driven Development
 
-Traditional projects communicate through conversation. ZERG can't—workers are stateless Claude instances. This led to spec-driven development:
+Traditional projects communicate through conversation. MAHABHARATHA can't—workers are stateless Claude instances. This led to spec-driven development:
 
 - **The spec captures everything**: Requirements, architecture, task graph, file ownership. Workers read the spec; they don't ask questions.
 - **Human approval gates**: Before design becomes tasks, humans review. This is our checkpoint against misaligned execution.
@@ -26,10 +26,10 @@ Traditional projects communicate through conversation. ZERG can't—workers are 
 
 ### Crash-Safe, Restartable Execution
 
-Workers fail. Networks drop. Containers timeout. ZERG assumes failure:
+Workers fail. Networks drop. Containers timeout. MAHABHARATHA assumes failure:
 
 - **Idempotent tasks**: Running a task twice produces the same result. Workers can be interrupted and restarted.
-- **Checkpoint state**: `.zerg/state/` captures progress. Resume picks up where we left off.
+- **Checkpoint state**: `.mahabharatha/state/` captures progress. Resume picks up where we left off.
 - **Verification commands**: Every task has a pass/fail check. No subjective "looks good"—either the test passes or it doesn't.
 
 ### Clear Task Boundaries
@@ -46,23 +46,23 @@ These values shape our contribution guidelines. When you understand the "why," t
 
 ## Mental Model for Contributors
 
-### How ZERG is Structured
+### How MAHABHARATHA is Structured
 
 ```
-zerg/
+mahabharatha/
 ├── data/commands/    # Slash command definitions (the "brain")
 ├── launcher.py       # Worker spawning (subprocess/Docker)
 ├── task_graph.py     # Dependency management
 ├── state.py          # Progress tracking
 └── ...
 
-.zerg/
+.mahabharatha/
 ├── specs/            # Feature specifications (human-reviewed)
 ├── state/            # Runtime state (crash-safe recovery)
 └── config.yaml       # Project settings
 ```
 
-**Commands define behavior**: When you run `/zerg:rush`, Claude reads `zerg/data/commands/rush.md`. That file tells Claude what to do. Changing behavior means changing command files.
+**Commands define behavior**: When you run `/mahabharatha:kurukshetra`, Claude reads `mahabharatha/data/commands/kurukshetra.md`. That file tells Claude what to do. Changing behavior means changing command files.
 
 **Python code enables commands**: The Python modules handle mechanics—spawning workers, tracking state, managing dependencies. Commands orchestrate; Python executes.
 
@@ -73,9 +73,9 @@ zerg/
 | New CLI flag | `cli.py` + relevant command `.md` | Flag parsing in Python, behavior in command |
 | Worker behavior | `worker.md` (and `.core.md`/`.details.md`) | Workers read these instructions |
 | State tracking | `state.py` | Must maintain crash-safe guarantees |
-| New slash command | `zerg/data/commands/<name>.md` | Plus registration in command loader |
+| New slash command | `mahabharatha/data/commands/<name>.md` | Plus registration in command loader |
 
-### What Makes a Good ZERG Contribution
+### What Makes a Good MAHABHARATHA Contribution
 
 **Good contributions understand the parallel context**: If your change introduces shared mutable state between workers, it will break. If your change requires conversation history, it won't work.
 
@@ -91,7 +91,7 @@ zerg/
 
 | Requirement | Version | Why This Version |
 |-------------|---------|------------------|
-| Python | 3.12+ | ZERG uses `py312` features; we don't maintain backward compatibility because it simplifies the codebase |
+| Python | 3.12+ | MAHABHARATHA uses `py312` features; we don't maintain backward compatibility because it simplifies the codebase |
 | Git | Latest | Worktree support is used internally—older Git versions may have bugs |
 | Docker | Latest | Optional, but required for `--mode container` (isolated worker execution) |
 
@@ -99,8 +99,8 @@ zerg/
 
 ```bash
 # Clone the repository
-git clone https://github.com/rocklambros/zerg.git
-cd zerg
+git clone https://github.com/rocklambros/mahabharatha.git
+cd mahabharatha
 
 # Create and activate virtual environment
 python -m venv .venv
@@ -126,14 +126,14 @@ This installs:
 | IDE | Setup |
 |-----|-------|
 | **VS Code** | Install Python extension, enable Ruff extension, set interpreter to `.venv/bin/python` |
-| **PyCharm** | Mark `zerg/` as Sources Root, configure Python 3.12 interpreter, enable Ruff plugin |
+| **PyCharm** | Mark `mahabharatha/` as Sources Root, configure Python 3.12 interpreter, enable Ruff plugin |
 | **Vim/Neovim** | Use `pyright` or `pylsp` for LSP, configure `ruff` as linter/formatter |
 
 ---
 
 ## Code Style
 
-ZERG enforces consistent style through pre-commit hooks and CI. This isn't about aesthetics—it's about reducing cognitive load during code review and eliminating style debates.
+MAHABHARATHA enforces consistent style through pre-commit hooks and CI. This isn't about aesthetics—it's about reducing cognitive load during code review and eliminating style debates.
 
 ### Pre-commit Hooks (Required)
 
@@ -162,7 +162,7 @@ Configuration in `pyproject.toml`:
 | Target | `py312` | We use modern Python features |
 | Line length | 120 | 80 is too cramped for modern monitors; 120 balances readability with density |
 | Selected rules | `E`, `F`, `I`, `UP` | Error, pyflakes, isort, pyupgrade—catches real bugs without excessive pedantry |
-| Exclusions | `.zerg/`, `tests/fixtures/` | Generated/fixture files shouldn't trigger violations |
+| Exclusions | `.mahabharatha/`, `tests/fixtures/` | Generated/fixture files shouldn't trigger violations |
 
 ```bash
 # Run linting
@@ -185,7 +185,7 @@ ruff format .
 Mypy runs in **strict mode**. All function signatures require type annotations.
 
 ```bash
-mypy zerg/
+mypy mahabharatha/
 ```
 
 **Why type every function?** When you see `def process_task(task: Task) -> Result`, you know exactly what goes in and comes out. Without types, you're guessing from context—and in a codebase where workers are stateless, that context might not exist.
@@ -195,16 +195,16 @@ mypy zerg/
 Run all style checks at once:
 
 ```bash
-ruff check . && ruff format --check . && mypy zerg/
+ruff check . && ruff format --check . && mypy mahabharatha/
 ```
 
 ---
 
 ## Test Requirements
 
-### Why Testing Matters More in ZERG
+### Why Testing Matters More in MAHABHARATHA
 
-In most projects, bugs surface during development. In ZERG, bugs might surface when the fifth worker hits an edge case at 2 AM during an unattended rush. Tests are our first line of defense against parallel chaos.
+In most projects, bugs surface during development. In MAHABHARATHA, bugs might surface when the fifth worker hits an edge case at 2 AM during an unattended kurukshetra. Tests are our first line of defense against parallel chaos.
 
 ### Running Tests
 
@@ -213,7 +213,7 @@ In most projects, bugs surface during development. In ZERG, bugs might surface w
 pytest
 
 # With coverage report
-pytest --cov=zerg
+pytest --cov=mahabharatha
 
 # Verbose output
 pytest -v
@@ -221,7 +221,7 @@ pytest -v
 
 ### Coverage Threshold
 
-ZERG maintains a **97% coverage threshold**. All new code must include tests.
+MAHABHARATHA maintains a **97% coverage threshold**. All new code must include tests.
 
 **Why 97%?** High coverage ensures most code paths are exercised. The 3% buffer accounts for defensive error handlers and platform-specific branches that are genuinely hard to test. But "hard to test" shouldn't be an excuse—if coverage drops, investigate.
 
@@ -254,7 +254,7 @@ pytest -m "not docker and not e2e and not real_e2e"
 
 1. **Every new module must have unit tests** — Proves the module works in isolation
 2. **Every new module must have at least one integration test with a production caller** — Proves the module works with its actual consumers (not just in isolation)
-3. **Test files mirror source structure**: `zerg/foo.py` -> `tests/unit/test_foo.py`
+3. **Test files mirror source structure**: `mahabharatha/foo.py` -> `tests/unit/test_foo.py`
 4. **Use fixtures from `tests/conftest.py` where available** — Consistency and reduced boilerplate
 
 **Why require integration tests?** A module can pass all unit tests but fail in production because it's called differently than tests expected. Integration tests catch this by testing the actual call sites.
@@ -321,7 +321,7 @@ To skip the check (rare), apply the `skip-changelog` label to your PR. Use this 
 All PRs must pass:
 - `ruff check` — Linting
 - `ruff format --check` — Formatting
-- `mypy zerg/` — Type checking
+- `mypy mahabharatha/` — Type checking
 - `pytest` — Test suite
 
 **Why require all checks?** Each check catches a different class of problem. Passing tests but failing types means you have a latent bug. Passing types but failing lint means you might be using deprecated patterns.
@@ -348,7 +348,7 @@ All PRs require review before merge. Tag maintainers if urgent.
 
 ### Why Conventional Commits?
 
-ZERG uses [Conventional Commits](https://www.conventionalcommits.org/) because they enable:
+MAHABHARATHA uses [Conventional Commits](https://www.conventionalcommits.org/) because they enable:
 
 1. **Automatic changelog generation** — Tools can categorize commits into Added/Fixed/Changed
 2. **Semantic versioning** — `feat:` triggers minor bump, `fix:` triggers patch
@@ -415,7 +415,7 @@ Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>"
 
 ### Module Structure Philosophy
 
-Every new Python module in `zerg/` must:
+Every new Python module in `mahabharatha/` must:
 
 1. **Have a production caller** — At least one other production file must import it
 2. **Have unit tests** — In `tests/unit/test_<module>.py`
@@ -438,14 +438,14 @@ During design phase, the `consumers` field in task specifications tracks who cal
 Run the validation script to check for orphaned modules:
 
 ```bash
-python -m zerg.validate_commands
+python -m mahabharatha.validate_commands
 ```
 
 This runs in CI and pre-commit.
 
 ### Command Files
 
-Commands in `zerg/data/commands/` have special requirements:
+Commands in `mahabharatha/data/commands/` have special requirements:
 
 1. **Task ecosystem integration** — All commands must include TaskCreate/TaskUpdate calls
 2. **Command splitting** — Commands >300 lines should be split into `.core.md` and `.details.md`
@@ -470,10 +470,10 @@ Include:
 - Expected vs. actual behavior
 - Python version (`python --version`)
 - OS and version
-- ZERG version (check `pyproject.toml`)
-- Relevant logs (`.zerg/logs/`)
+- MAHABHARATHA version (check `pyproject.toml`)
+- Relevant logs (`.mahabharatha/logs/`)
 
-**Why these details?** They let maintainers reproduce your bug. "It doesn't work" isn't actionable. "On Python 3.12.1, macOS 14.2, running `/zerg:rush` with 5 workers fails with error X after Y minutes" is.
+**Why these details?** They let maintainers reproduce your bug. "It doesn't work" isn't actionable. "On Python 3.12.1, macOS 14.2, running `/mahabharatha:kurukshetra` with 5 workers fails with error X after Y minutes" is.
 
 ### Feature Requests
 
@@ -494,12 +494,12 @@ Do **not** open public issues. See [Security](Security) for private reporting in
 - [Architecture](Architecture) — System design and module reference
 - [Command-Reference](Command-Reference) — All 26 commands with usage examples
 - [Context-Engineering](Context-Engineering) — Token optimization techniques
-- [CLAUDE.md](https://github.com/rocklambros/zerg/blob/main/CLAUDE.md) — Anti-drift rules and Task ecosystem details
+- [CLAUDE.md](https://github.com/rocklambros/mahabharatha/blob/main/CLAUDE.md) — Anti-drift rules and Task ecosystem details
 
 ---
 
 ## License
 
-By contributing to ZERG, you agree that your contributions will be licensed under the [MIT License](https://github.com/rocklambros/zerg/blob/main/LICENSE).
+By contributing to MAHABHARATHA, you agree that your contributions will be licensed under the [MIT License](https://github.com/rocklambros/mahabharatha/blob/main/LICENSE).
 
-**Why MIT?** It's simple, permissive, and widely understood. Contributors know their code can be used commercially. Users know they can use ZERG without legal complexity.
+**Why MIT?** It's simple, permissive, and widely understood. Contributors know their code can be used commercially. Users know they can use MAHABHARATHA without legal complexity.

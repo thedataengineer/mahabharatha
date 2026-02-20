@@ -27,7 +27,7 @@
       "files": {
         "create": ["tests/integration/test_container_detection.py"],
         "modify": [],
-        "read": ["zerg/security_rules.py"]
+        "read": ["mahabharatha/security_rules.py"]
       },
       "verification": {
         "command": "pytest tests/integration/test_container_detection.py -v",
@@ -43,7 +43,7 @@
       "files": {
         "create": ["tests/integration/test_container_devcontainer.py"],
         "modify": [],
-        "read": ["zerg/devcontainer_features.py"]
+        "read": ["mahabharatha/devcontainer_features.py"]
       },
       "verification": {
         "command": "pytest tests/integration/test_container_devcontainer.py -v",
@@ -59,7 +59,7 @@
       "files": {
         "create": ["tests/integration/test_container_launcher_checks.py"],
         "modify": [],
-        "read": ["zerg/launcher.py"]
+        "read": ["mahabharatha/launcher.py"]
       },
       "verification": {
         "command": "pytest tests/integration/test_container_launcher_checks.py -v",
@@ -75,7 +75,7 @@
       "files": {
         "create": ["tests/integration/test_container_orchestrator.py"],
         "modify": [],
-        "read": ["zerg/orchestrator.py"]
+        "read": ["mahabharatha/orchestrator.py"]
       },
       "verification": {
         "command": "pytest tests/integration/test_container_orchestrator.py -v",
@@ -91,7 +91,7 @@
       "files": {
         "create": ["tests/integration/test_container_init_cmd.py"],
         "modify": [],
-        "read": ["zerg/commands/init.py", "zerg/cli.py"]
+        "read": ["mahabharatha/commands/init.py", "mahabharatha/cli.py"]
       },
       "verification": {
         "command": "pytest tests/integration/test_container_init_cmd.py -v",
@@ -107,7 +107,7 @@
       "files": {
         "create": ["tests/integration/test_container_rush_cmd.py"],
         "modify": [],
-        "read": ["zerg/commands/rush.py", "zerg/cli.py"]
+        "read": ["mahabharatha/commands/kurukshetra.py", "mahabharatha/cli.py"]
       },
       "verification": {
         "command": "pytest tests/integration/test_container_rush_cmd.py -v",
@@ -117,13 +117,13 @@
     {
       "id": "DC12-008",
       "title": "TestEndToEndFlow (1 test)",
-      "description": "Implement test_full_init_to_dry_run covering complete flow from project creation through rush --dry-run",
+      "description": "Implement test_full_init_to_dry_run covering complete flow from project creation through kurukshetra --dry-run",
       "level": 4,
       "dependencies": ["DC12-006", "DC12-007"],
       "files": {
         "create": ["tests/integration/test_container_e2e.py"],
         "modify": [],
-        "read": ["zerg/cli.py"]
+        "read": ["mahabharatha/cli.py"]
       },
       "verification": {
         "command": "pytest tests/integration/test_container_e2e.py -v",

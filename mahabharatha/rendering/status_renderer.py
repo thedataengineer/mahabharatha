@@ -269,7 +269,7 @@ class DashboardRenderer:
         """Render header with feature name and elapsed time."""
         elapsed = format_elapsed(self.start_time)
         header_text = Text()
-        header_text.append("ZERG Dashboard: ", style="bold cyan")
+        header_text.append("MAHABHARATHA Dashboard: ", style="bold cyan")
         header_text.append(self.feature, style="bold white")
         header_text.append(" " * 10)
         source_label = "Tasks" if self.data_source == "tasks" else "State"
@@ -1121,7 +1121,7 @@ def show_status(
 
     # Header
     c.print()
-    c.print(Panel(f"[bold cyan]ZERG Status: {feature}[/bold cyan]"))
+    c.print(Panel(f"[bold cyan]MAHABHARATHA Status: {feature}[/bold cyan]"))
     c.print()
 
     # Get task stats
@@ -1216,7 +1216,7 @@ def build_status_output(state: StateManager, feature: str, level_filter: int | N
     lines.append("")
     lines.append("[dim]Press Ctrl+C to stop watching[/dim]")
 
-    return Panel("\n".join(lines), title=f"[bold]ZERG: {feature}[/bold]")
+    return Panel("\n".join(lines), title=f"[bold]MAHABHARATHA: {feature}[/bold]")
 
 
 def show_json_status(

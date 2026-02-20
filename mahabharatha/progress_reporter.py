@@ -1,4 +1,4 @@
-"""Structured progress reporting for ZERG workers."""
+"""Structured progress reporting for MAHABHARATHA workers."""
 
 from __future__ import annotations
 

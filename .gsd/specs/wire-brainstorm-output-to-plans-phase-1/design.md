@@ -162,10 +162,10 @@ Update Phase 4 AskUserQuestion to include `--issue {top-issue-number}` in the su
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| zerg/data/commands/plan.md | TASK-001 | modify |
-| zerg/data/commands/plan.core.md | TASK-002 | modify |
-| zerg/data/commands/brainstorm.md | TASK-003 | modify |
-| zerg/data/commands/brainstorm.core.md | TASK-004 | modify |
+| mahabharatha/data/commands/plan.md | TASK-001 | modify |
+| mahabharatha/data/commands/plan.core.md | TASK-002 | modify |
+| mahabharatha/data/commands/brainstorm.md | TASK-003 | modify |
+| mahabharatha/data/commands/brainstorm.core.md | TASK-004 | modify |
 | CHANGELOG.md | TASK-005 | modify |
 
 ### 5.3 Dependency Graph

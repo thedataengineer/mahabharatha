@@ -1,4 +1,4 @@
-"""Unit tests for ZERG merge command module.
+"""Unit tests for MAHABHARATHA merge command module.
 
 Thinned from 36 tests to cover unique code paths:
 - detect_feature (no dir, single file)

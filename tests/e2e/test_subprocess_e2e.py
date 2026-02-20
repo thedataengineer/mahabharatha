@@ -1,4 +1,4 @@
-"""End-to-end tests for ZERG subprocess mode (TC-015).
+"""End-to-end tests for MAHABHARATHA subprocess mode (TC-015).
 
 Tests the complete workflow of subprocess-based worker execution.
 """

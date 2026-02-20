@@ -9,7 +9,7 @@
 
 ## Level 2: README Sections
 - [x] L2-001: Installation & Quick Start
-- [x] L2-002: Workflow Commands reference (init, plan, design, rush)
+- [x] L2-002: Workflow Commands reference (init, plan, design, kurukshetra)
 - [x] L2-003: Monitoring Commands reference (status, stop, logs)
 - [x] L2-004: Task Commands reference (retry, merge, cleanup)
 - [x] L2-005: Quality Commands reference (test, build, analyze, review, debug, refactor)
@@ -17,9 +17,9 @@
 
 ## Level 3: Tutorial
 - [x] L3-001: Part 1 - Project Setup & Devcontainer
-- [x] L3-002: Part 2 - Planning with /zerg:plan
-- [x] L3-003: Part 3 - Architecture with /zerg:design
-- [x] L3-004: Part 4 - Parallel Execution with /zerg:rush
+- [x] L3-002: Part 2 - Planning with /mahabharatha:plan
+- [x] L3-003: Part 3 - Architecture with /mahabharatha:design
+- [x] L3-004: Part 4 - Parallel Execution with /mahabharatha:kurukshetra
 - [x] L3-005: Part 5 - Monitoring & Troubleshooting
 - [x] L3-006: Part 6 - Quality Gates & Merge
 
@@ -37,7 +37,7 @@
 ## Command Coverage
 
 All 18 commands documented:
-- Workflow: init, plan, design, rush
+- Workflow: init, plan, design, kurukshetra
 - Monitoring: status, stop, logs
 - Task: retry, merge, cleanup
 - Quality: test, build, analyze, review, debug, refactor

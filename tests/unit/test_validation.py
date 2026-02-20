@@ -1,4 +1,4 @@
-"""Unit tests for ZERG validation module.
+"""Unit tests for MAHABHARATHA validation module.
 
 Thinned: collapsed permutation tests into parametrized tests.
 Keeps 1 happy-path + 1 error-path per validation category.

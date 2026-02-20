@@ -1,4 +1,4 @@
-# ZERG Architecture Synthesis
+# MAHABHARATHA Architecture Synthesis
 
 **Phase**: 2 - Architecture Design
 **Date**: January 25, 2026
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-ZERG is a parallel execution orchestration layer for Claude Code. It transforms spec-driven feature development into dependency-ordered waves of isolated workers. Claude Native Tasks provides state persistence and coordination primitives. ZERG adds five capabilities Tasks lacks: level-based synchronization, git worktree isolation, exclusive file ownership, merge gates, and task decomposition.
+MAHABHARATHA is a parallel execution orchestration layer for Claude Code. It transforms spec-driven feature development into dependency-ordered waves of isolated workers. Claude Native Tasks provides state persistence and coordination primitives. MAHABHARATHA adds five capabilities Tasks lacks: level-based synchronization, git worktree isolation, exclusive file ownership, merge gates, and task decomposition.
 
 This document specifies the complete plugin architecture for Claude marketplace deployment.
 
@@ -22,10 +22,10 @@ This document specifies the complete plugin architecture for Claude marketplace 
 ```mermaid
 flowchart TB
     subgraph User["User Interface"]
-        CLI["/zerg Commands"]
+        CLI["/mahabharatha Commands"]
     end
 
-    subgraph Orchestration["ZERG Orchestration Layer"]
+    subgraph Orchestration["MAHABHARATHA Orchestration Layer"]
         ORC["Orchestrator"]
         DEC["Task Decomposer"]
         LEV["Level Controller"]
@@ -67,17 +67,17 @@ flowchart TB
     ORC --> LEV
     ORC --> MRG
     ORC --> WRK
-    
+
     DEC --> TSK
     LEV --> STA
     MRG --> COO
-    
+
     ORC --> W1 & W2 & W3
-    
+
     W1 --> DC1 --> WT1 --> B1
     W2 --> DC2 --> WT2 --> B2
     W3 --> DC3 --> WT3 --> B3
-    
+
     B1 & B2 & B3 --> STG
     STG --> BASE
     MRG --> STG
@@ -96,16 +96,16 @@ sequenceDiagram
     participant M as Merge Gate
     participant G as Git
 
-    U->>O: /zerg rush
+    U->>O: /mahabharatha kurukshetra
     O->>D: decompose(spec)
     D->>T: create_tasks(tasks[])
     D->>O: task_graph
-    
+
     loop Each Level
         O->>L: start_level(n)
         L->>T: get_tasks(level=n)
         L->>W: assign_tasks()
-        
+
         par Worker Execution
             W->>G: checkout worktree
             W->>T: claim_task()
@@ -113,12 +113,12 @@ sequenceDiagram
             W->>T: complete_task()
             W->>G: commit changes
         end
-        
+
         L->>T: poll_completion()
         L->>M: run_gates()
         M->>G: merge branches
         M->>O: gate_result
-        
+
         alt Gate Passed
             O->>G: update base
             O->>W: rebase worktrees
@@ -126,7 +126,7 @@ sequenceDiagram
             O->>U: alert failure
         end
     end
-    
+
     O->>U: feature complete
 ```
 
@@ -134,10 +134,10 @@ sequenceDiagram
 
 | Component | Responsibility | Source Pattern |
 |-----------|---------------|----------------|
-| **Orchestrator** | Fleet lifecycle, level transitions, status reporting | ZERG original |
+| **Orchestrator** | Fleet lifecycle, level transitions, status reporting | MAHABHARATHA original |
 | **Task Decomposer** | Parse spec → task graph with levels and file assignments | superpowers writing-plans |
-| **Level Controller** | Block level N+1 until N complete, poll task status | ZERG original |
-| **Merge Gate** | Quality verification, branch merging, conflict detection | ZERG original |
+| **Level Controller** | Block level N+1 until N complete, poll task status | MAHABHARATHA original |
+| **Merge Gate** | Quality verification, branch merging, conflict detection | MAHABHARATHA original |
 | **Worktree Manager** | Create/delete worktrees, branch management | packnplay |
 | **Security Monitor** | Pre/post hook validation, audit logging | nova-protector |
 
@@ -149,20 +149,20 @@ sequenceDiagram
 
 | Command | Purpose | Phase |
 |---------|---------|-------|
-| `/zerg init` | Initialize project for ZERG | Setup |
-| `/zerg plan` | Capture requirements interactively | Planning |
-| `/zerg design` | Generate architecture and task graph | Design |
-| `/zerg rush` | Launch parallel execution | Execution |
-| `/zerg status` | Show progress across all workers | Monitoring |
-| `/zerg logs` | Stream worker logs | Monitoring |
-| `/zerg stop` | Halt execution gracefully | Control |
-| `/zerg retry` | Retry failed/blocked tasks | Recovery |
-| `/zerg merge` | Force merge gate execution | Control |
-| `/zerg cleanup` | Remove worktrees and branches | Maintenance |
+| `/mahabharatha init` | Initialize project for MAHABHARATHA | Setup |
+| `/mahabharatha plan` | Capture requirements interactively | Planning |
+| `/mahabharatha design` | Generate architecture and task graph | Design |
+| `/mahabharatha kurukshetra` | Launch parallel execution | Execution |
+| `/mahabharatha status` | Show progress across all workers | Monitoring |
+| `/mahabharatha logs` | Stream worker logs | Monitoring |
+| `/mahabharatha stop` | Halt execution gracefully | Control |
+| `/mahabharatha retry` | Retry failed/blocked tasks | Recovery |
+| `/mahabharatha merge` | Force merge gate execution | Control |
+| `/mahabharatha cleanup` | Remove worktrees and branches | Maintenance |
 
-### 2.2 Command: /zerg init
+### 2.2 Command: /mahabharatha init
 
-**Purpose**: Initialize ZERG infrastructure for a project
+**Purpose**: Initialize MAHABHARATHA infrastructure for a project
 
 **Flags**:
 | Flag | Type | Default | Description |
@@ -174,14 +174,14 @@ sequenceDiagram
 **Behavior**:
 1. Detect project type (language, framework, package manager)
 2. Generate `.devcontainer/` configuration
-3. Generate `.zerg/config.yaml`
+3. Generate `.mahabharatha/config.yaml`
 4. Generate `.gsd/PROJECT.md` and `INFRASTRUCTURE.md`
-5. Create `.claude/commands/` directory with ZERG commands
+5. Create `.claude/commands/` directory with MAHABHARATHA commands
 
 **Output Files**:
 ```
-.zerg/
-├── config.yaml              # ZERG configuration
+.mahabharatha/
+├── config.yaml              # MAHABHARATHA configuration
 ├── security-rules.yaml      # Security constraints
 └── orchestrator.py          # Fleet manager (generated)
 
@@ -202,7 +202,7 @@ sequenceDiagram
 
 ---
 
-### 2.3 Command: /zerg plan [feature-name]
+### 2.3 Command: /mahabharatha plan [feature-name]
 
 **Purpose**: Capture complete requirements for a feature
 
@@ -231,7 +231,7 @@ sequenceDiagram
 
 ---
 
-### 2.4 Command: /zerg design
+### 2.4 Command: /mahabharatha design
 
 **Purpose**: Generate technical architecture and task graph
 
@@ -264,7 +264,7 @@ sequenceDiagram
 **Task Graph Schema**:
 ```json
 {
-  "$schema": "https://zerg.dev/schemas/task-graph-v1.json",
+  "$schema": "https://mahabharatha.dev/schemas/task-graph-v1.json",
   "feature": "string",
   "version": "1.0",
   "generated": "ISO8601",
@@ -299,7 +299,7 @@ sequenceDiagram
 
 ---
 
-### 2.5 Command: /zerg rush [workers]
+### 2.5 Command: /mahabharatha kurukshetra [workers]
 
 **Purpose**: Launch parallel worker execution
 
@@ -315,8 +315,8 @@ sequenceDiagram
 **Behavior**:
 1. Validate task graph exists and is approved
 2. Calculate optimal worker count (min of requested, max_parallelization)
-3. Create worker branches: `zerg/{feature}/worker-{N}`
-4. Create worktrees: `.zerg-worktrees/{feature}/worker-{N}/`
+3. Create worker branches: `mahabharatha/{feature}/worker-{N}`
+4. Create worktrees: `.mahabharatha-worktrees/{feature}/worker-{N}/`
 5. Generate worker assignments (balanced by level)
 6. Register tasks in Claude Native Tasks
 7. Allocate ports (49152-65535 range)
@@ -329,7 +329,7 @@ sequenceDiagram
 ├── worker-assignments.json  # Task→worker mapping
 └── execution-log.jsonl      # Execution events
 
-.zerg-worktrees/{feature}/
+.mahabharatha-worktrees/{feature}/
 ├── worker-0/                # Worktree for worker 0
 ├── worker-1/                # Worktree for worker 1
 └── worker-N/                # Worktree for worker N
@@ -339,7 +339,7 @@ sequenceDiagram
 
 ---
 
-### 2.6 Command: /zerg status
+### 2.6 Command: /mahabharatha status
 
 **Purpose**: Display execution progress
 
@@ -353,7 +353,7 @@ sequenceDiagram
 **Output Format**:
 ```
 ═══════════════════════════════════════════════════════════════
-                    ZERG STATUS: {feature}
+                    MAHABHARATHA STATUS: {feature}
 ═══════════════════════════════════════════════════════════════
 
 Progress: ████████████░░░░░░░░ 60% (12/20 tasks)
@@ -392,7 +392,7 @@ Recent Events:
 
 ---
 
-### 2.7 Command: /zerg logs [worker]
+### 2.7 Command: /mahabharatha logs [worker]
 
 **Purpose**: Stream logs from workers
 
@@ -406,7 +406,7 @@ Recent Events:
 
 ---
 
-### 2.8 Command: /zerg stop [worker]
+### 2.8 Command: /mahabharatha stop [worker]
 
 **Purpose**: Halt execution gracefully
 
@@ -426,7 +426,7 @@ Recent Events:
 
 ---
 
-### 2.9 Command: /zerg retry [task-id]
+### 2.9 Command: /mahabharatha retry [task-id]
 
 **Purpose**: Retry failed or blocked tasks
 
@@ -439,7 +439,7 @@ Recent Events:
 
 ---
 
-### 2.10 Command: /zerg merge
+### 2.10 Command: /mahabharatha merge
 
 **Purpose**: Manually trigger merge gate
 
@@ -452,9 +452,9 @@ Recent Events:
 
 ---
 
-### 2.11 Command: /zerg cleanup
+### 2.11 Command: /mahabharatha cleanup
 
-**Purpose**: Remove ZERG artifacts
+**Purpose**: Remove MAHABHARATHA artifacts
 
 **Flags**:
 | Flag | Type | Default | Description |
@@ -466,7 +466,7 @@ Recent Events:
 
 **Behavior**:
 1. Stop any running workers
-2. Remove worktrees (`.zerg-worktrees/`)
+2. Remove worktrees (`.mahabharatha-worktrees/`)
 3. Remove worker branches (unless `--keep-branches`)
 4. Clear execution logs
 5. Optionally remove specs
@@ -481,22 +481,22 @@ Recent Events:
 flowchart TB
     subgraph Host["Host System"]
         REPO["Project Repository"]
-        ZERG["ZERG Orchestrator"]
+        MAHABHARATHA["MAHABHARATHA Orchestrator"]
     end
 
-    subgraph Docker["Docker Network: zerg-net"]
+    subgraph Docker["Docker Network: mahabharatha-net"]
         subgraph DC0["Devcontainer: worker-0"]
             CC0["Claude Code Instance"]
             FS0["Filesystem (worktree-0)"]
             MCP0["MCP Servers"]
         end
-        
+
         subgraph DC1["Devcontainer: worker-1"]
             CC1["Claude Code Instance"]
             FS1["Filesystem (worktree-1)"]
             MCP1["MCP Servers"]
         end
-        
+
         subgraph Services["Shared Services"]
             DB["Database (if needed)"]
             CACHE["Cache (if needed)"]
@@ -515,7 +515,7 @@ flowchart TB
     V_TASKS --> DC0 & DC1
     V_WT0 --> DC0
     V_WT1 --> DC1
-    ZERG --> Docker
+    MAHABHARATHA --> Docker
 ```
 
 ### 3.2 Devcontainer Configuration
@@ -523,7 +523,7 @@ flowchart TB
 **`.devcontainer/devcontainer.json`**:
 ```json
 {
-  "name": "zerg-worker-${localEnv:ZERG_WORKER_ID}",
+  "name": "mahabharatha-worker-${localEnv:ZERG_WORKER_ID}",
   "build": {
     "dockerfile": "Dockerfile",
     "context": "..",
@@ -539,12 +539,12 @@ flowchart TB
       "consistency": "cached"
     },
     {
-      "source": "zerg-tasks-${localEnv:ZERG_FEATURE}",
+      "source": "mahabharatha-tasks-${localEnv:ZERG_FEATURE}",
       "target": "/root/.claude/tasks",
       "type": "volume"
     },
     {
-      "source": "${localWorkspaceFolder}/.zerg-worktrees/${localEnv:ZERG_FEATURE}/worker-${localEnv:ZERG_WORKER_ID}",
+      "source": "${localWorkspaceFolder}/.mahabharatha-worktrees/${localEnv:ZERG_FEATURE}/worker-${localEnv:ZERG_WORKER_ID}",
       "target": "/workspace",
       "type": "bind"
     }
@@ -557,8 +557,8 @@ flowchart TB
   },
   "runArgs": [
     "--init",
-    "--network=zerg-net",
-    "--name=zerg-worker-${localEnv:ZERG_WORKER_ID}",
+    "--network=mahabharatha-net",
+    "--name=mahabharatha-worker-${localEnv:ZERG_WORKER_ID}",
     "--security-opt=no-new-privileges:true",
     "--read-only",
     "--tmpfs=/tmp:rw,noexec,nosuid,size=1g"
@@ -574,9 +574,9 @@ FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 ARG WORKER_ID=0
 
 # Security: Non-root user
-RUN useradd -m -s /bin/bash zerg && \
-    mkdir -p /home/zerg/.claude && \
-    chown -R zerg:zerg /home/zerg
+RUN useradd -m -s /bin/bash mahabharatha && \
+    mkdir -p /home/mahabharatha/.claude && \
+    chown -R mahabharatha:mahabharatha /home/mahabharatha
 
 # Runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -597,10 +597,10 @@ RUN npm install -g \
 RUN apt-get purge -y wget && \
     apt-get autoremove -y
 
-USER zerg
+USER mahabharatha
 WORKDIR /workspace
 
-LABEL zerg.worker.id="${WORKER_ID}"
+LABEL mahabharatha.worker.id="${WORKER_ID}"
 ```
 
 **`.devcontainer/docker-compose.yaml`**:
@@ -622,10 +622,10 @@ services:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
     volumes:
       - ../.gsd:/workspace/.gsd:ro
-      - zerg-tasks:/home/zerg/.claude/tasks
-      - ../.zerg-worktrees/${ZERG_FEATURE}/worker-${ZERG_WORKER_ID:-0}:/workspace
+      - mahabharatha-tasks:/home/mahabharatha/.claude/tasks
+      - ../.mahabharatha-worktrees/${ZERG_FEATURE}/worker-${ZERG_WORKER_ID:-0}:/workspace
     networks:
-      - zerg-net
+      - mahabharatha-net
     security_opt:
       - no-new-privileges:true
     read_only: true
@@ -638,12 +638,12 @@ services:
           memory: 4G
 
 volumes:
-  zerg-tasks:
-    name: zerg-tasks-${ZERG_FEATURE}
+  mahabharatha-tasks:
+    name: mahabharatha-tasks-${ZERG_FEATURE}
 
 networks:
-  zerg-net:
-    name: zerg-${ZERG_FEATURE}-net
+  mahabharatha-net:
+    name: mahabharatha-${ZERG_FEATURE}-net
 ```
 
 ### 3.3 Worktree Management
@@ -653,19 +653,19 @@ networks:
 create_worktree() {
     local feature=$1
     local worker_id=$2
-    local branch="zerg/${feature}/worker-${worker_id}"
-    local path=".zerg-worktrees/${feature}/worker-${worker_id}"
-    
+    local branch="mahabharatha/${feature}/worker-${worker_id}"
+    local path=".mahabharatha-worktrees/${feature}/worker-${worker_id}"
+
     # Create branch if needed
     git branch "${branch}" 2>/dev/null || true
-    
+
     # Create worktree
     git worktree add "${path}" "${branch}" 2>/dev/null || {
         # If exists, remove and recreate
         git worktree remove "${path}" --force 2>/dev/null
         git worktree add "${path}" "${branch}"
     }
-    
+
     echo "${path}"
 }
 ```
@@ -674,18 +674,18 @@ create_worktree() {
 ```bash
 cleanup_worktrees() {
     local feature=$1
-    
+
     # Remove all worktrees for feature
     git worktree list --porcelain | \
         grep "worktree.*${feature}" | \
         cut -d' ' -f2 | \
         xargs -I{} git worktree remove {} --force
-    
+
     # Remove branches
-    git branch -D $(git branch | grep "zerg/${feature}/") 2>/dev/null || true
-    
+    git branch -D $(git branch | grep "mahabharatha/${feature}/") 2>/dev/null || true
+
     # Remove directory
-    rm -rf ".zerg-worktrees/${feature}"
+    rm -rf ".mahabharatha-worktrees/${feature}"
 }
 ```
 
@@ -695,32 +695,32 @@ cleanup_worktrees() {
 
 ### 4.1 Claude Native Tasks Integration
 
-ZERG uses Claude Native Tasks as the persistence layer. Tasks are registered with metadata that ZERG interprets.
+MAHABHARATHA uses Claude Native Tasks as the persistence layer. Tasks are registered with metadata that MAHABHARATHA interprets.
 
 **Task Metadata Schema**:
 ```typescript
 interface ZergTaskMetadata {
-  // ZERG-specific fields stored in task description/metadata
+  // MAHABHARATHA-specific fields stored in task description/metadata
   zerg_version: "1.0";
   feature: string;
   task_id: string;           // "TASK-001"
   level: number;             // 1-5
   dependencies: string[];    // ["TASK-001", "TASK-002"]
   assigned_worker: number;   // Worker ID or -1 if unassigned
-  
+
   files: {
     create: string[];
     modify: string[];
     read: string[];
   };
-  
+
   verification: {
     command: string;
     timeout_seconds: number;
     last_result?: "pass" | "fail";
     last_run?: string;       // ISO8601
   };
-  
+
   execution: {
     started_at?: string;     // ISO8601
     completed_at?: string;   // ISO8601
@@ -732,7 +732,7 @@ interface ZergTaskMetadata {
 
 ### 4.2 Orchestrator State
 
-Persisted to `.zerg/state/{feature}.json`:
+Persisted to `.mahabharatha/state/{feature}.json`:
 ```json
 {
   "feature": "user-auth",
@@ -783,14 +783,14 @@ def check_context_threshold(worker):
     if worker.context_usage > 0.70:
         # Commit any in-progress work
         worker.commit_wip()
-        
+
         # Update task status
         task.metadata.execution.paused_at = now()
         task.metadata.execution.pause_reason = "context_threshold"
-        
+
         # Exit cleanly
         worker.exit(code=0)
-        
+
         # Orchestrator will detect exit and restart
 ```
 
@@ -808,19 +808,19 @@ flowchart LR
         G3["Unit Tests"]
         G4["Security Scan"]
     end
-    
+
     subgraph Merge["Merge Process"]
         M1["Conflict Detection"]
         M2["Branch Merge"]
         M3["Post-Merge Tests"]
     end
-    
+
     subgraph Post["Post-Merge Gates"]
         G5["Integration Tests"]
         G6["Build Verification"]
         G7["Coverage Check"]
     end
-    
+
     Pre --> M1
     M1 -->|No Conflicts| M2
     M1 -->|Conflicts| FAIL[Block & Alert]
@@ -849,7 +849,7 @@ flowchart LR
 | BuildCheck | Build succeeds | Block, identify breaking change |
 | IntegrationTests | Integration tests pass | Block, alert |
 
-**Configuration** (`.zerg/config.yaml`):
+**Configuration** (`.mahabharatha/config.yaml`):
 ```yaml
 quality_gates:
   level_transition:
@@ -857,34 +857,34 @@ quality_gates:
       command: npm run lint
       timeout: 120
       required: true
-      
+
     - name: typecheck
       command: npm run typecheck
       timeout: 180
       required: true
-      
+
     - name: unit_tests
       command: npm test
       timeout: 300
       required: true
       coverage_threshold: 80
-      
+
     - name: security
       command: npm audit --audit-level=high
       timeout: 60
       required: false  # Warning only
-      
+
   merge:
     - name: build
       command: npm run build
       timeout: 300
       required: true
-      
+
     - name: integration
       command: npm run test:integration
       timeout: 600
       required: true
-      
+
   final:
     - name: e2e
       command: npm run test:e2e
@@ -911,7 +911,7 @@ review_gates:
   spec_compliance:
     enabled: true
     auto: true  # Use Claude to verify
-    
+
   code_quality:
     enabled: true
     auto: true
@@ -934,20 +934,20 @@ flowchart TB
         S2["File Ownership Validation"]
         S3["Dependency Audit"]
     end
-    
+
     subgraph Runtime["Runtime Security"]
         S4["Container Isolation"]
         S5["Read-Only Filesystem"]
         S6["Network Restrictions"]
         S7["Pre-Hook Validation"]
     end
-    
+
     subgraph Audit["Audit & Monitoring"]
         S8["Execution Logging"]
         S9["Commit Validation"]
         S10["Security Alerts"]
     end
-    
+
     Design --> Runtime --> Audit
 ```
 
@@ -958,27 +958,27 @@ flowchart TB
 security:
   container:
     # Run as non-root
-    user: zerg
-    
+    user: mahabharatha
+
     # Read-only root filesystem
     read_only: true
     tmpfs:
       - /tmp:rw,noexec,nosuid,size=1g
-    
+
     # No privilege escalation
     security_opt:
       - no-new-privileges:true
-    
+
     # Resource limits
     resources:
       limits:
         cpus: '2'
         memory: 4G
         pids: 100
-    
+
     # Network isolation
-    network_mode: zerg-net  # Internal network only
-    
+    network_mode: mahabharatha-net  # Internal network only
+
     # Mount restrictions
     volumes:
       - type: bind
@@ -993,10 +993,10 @@ security:
 
 ### 6.3 Pre-Commit Hooks
 
-**`.zerg/hooks/pre-commit`**:
+**`.mahabharatha/hooks/pre-commit`**:
 ```bash
 #!/bin/bash
-# ZERG Security Pre-Commit Hook
+# MAHABHARATHA Security Pre-Commit Hook
 
 set -e
 
@@ -1022,7 +1022,7 @@ fi
 
 # 3. Validate commit message format
 COMMIT_MSG=$(cat "$1" 2>/dev/null || echo "")
-if echo "$COMMIT_MSG" | grep -iE '(claude|anthropic|zerg|worker)' > /dev/null; then
+if echo "$COMMIT_MSG" | grep -iE '(claude|anthropic|mahabharatha|worker)' > /dev/null; then
     echo "WARNING: Commit message references tooling"
     echo "Commit messages should describe changes, not how they were made"
 fi
@@ -1033,7 +1033,7 @@ if git diff --cached --name-only | grep -E '\.json$' > /dev/null; then
     for json in $(git diff --cached --name-only | grep -E '\.json$'); do
         if jq -e '.["$schema"]' "$json" > /dev/null 2>&1; then
             SCHEMA=$(jq -r '.["$schema"]' "$json")
-            if echo "$SCHEMA" | grep -vE '^https?://(json-schema\.org|zerg\.dev)' > /dev/null; then
+            if echo "$SCHEMA" | grep -vE '^https?://(json-schema\.org|mahabharatha\.dev)' > /dev/null; then
                 echo "WARNING: Suspicious schema URL in $json: $SCHEMA"
             fi
         fi
@@ -1076,7 +1076,7 @@ Integrate claude-secure-coding-rules hierarchy:
 
 ### 6.5 Audit Logging
 
-**Execution Log Format** (`.zerg/logs/execution.jsonl`):
+**Execution Log Format** (`.mahabharatha/logs/execution.jsonl`):
 ```json
 {"ts":"2026-01-25T10:00:00Z","event":"rush_start","feature":"user-auth","workers":5}
 {"ts":"2026-01-25T10:00:01Z","event":"worker_start","worker":0,"container":"abc123"}
@@ -1098,107 +1098,107 @@ Integrate claude-secure-coding-rules hierarchy:
 ```json
 {
   "$schema": "https://claude.ai/schemas/plugin-v1.json",
-  "name": "zerg",
+  "name": "mahabharatha",
   "version": "1.0.0",
   "description": "Parallel feature development orchestration for Claude Code",
   "author": {
-    "name": "ZERG Team",
-    "url": "https://github.com/zerg-dev/zerg"
+    "name": "MAHABHARATHA Team",
+    "url": "https://github.com/mahabharatha-dev/mahabharatha"
   },
   "license": "MIT",
-  "repository": "https://github.com/zerg-dev/zerg",
+  "repository": "https://github.com/mahabharatha-dev/mahabharatha",
   "keywords": ["parallel", "orchestration", "devcontainer", "workflow"],
-  
+
   "claude_code": {
     "min_version": "1.0.0",
     "features_required": ["tasks", "slash_commands", "mcp"]
   },
-  
+
   "commands": [
     {
-      "name": "zerg init",
-      "file": ".claude/commands/zerg:init.md",
-      "description": "Initialize ZERG for project"
+      "name": "mahabharatha init",
+      "file": ".claude/commands/mahabharatha:init.md",
+      "description": "Initialize MAHABHARATHA for project"
     },
     {
-      "name": "zerg plan",
-      "file": ".claude/commands/zerg:plan.md",
+      "name": "mahabharatha plan",
+      "file": ".claude/commands/mahabharatha:plan.md",
       "description": "Capture feature requirements"
     },
     {
-      "name": "zerg design",
-      "file": ".claude/commands/zerg:design.md",
+      "name": "mahabharatha design",
+      "file": ".claude/commands/mahabharatha:design.md",
       "description": "Generate architecture and task graph"
     },
     {
-      "name": "zerg rush",
-      "file": ".claude/commands/zerg:rush.md",
+      "name": "mahabharatha kurukshetra",
+      "file": ".claude/commands/mahabharatha:kurukshetra.md",
       "description": "Launch parallel workers"
     },
     {
-      "name": "zerg status",
-      "file": ".claude/commands/zerg:status.md",
+      "name": "mahabharatha status",
+      "file": ".claude/commands/mahabharatha:status.md",
       "description": "Show execution progress"
     },
     {
-      "name": "zerg logs",
-      "file": ".claude/commands/zerg:logs.md",
+      "name": "mahabharatha logs",
+      "file": ".claude/commands/mahabharatha:logs.md",
       "description": "Stream worker logs"
     },
     {
-      "name": "zerg stop",
-      "file": ".claude/commands/zerg:stop.md",
+      "name": "mahabharatha stop",
+      "file": ".claude/commands/mahabharatha:stop.md",
       "description": "Stop workers gracefully"
     },
     {
-      "name": "zerg retry",
-      "file": ".claude/commands/zerg:retry.md",
+      "name": "mahabharatha retry",
+      "file": ".claude/commands/mahabharatha:retry.md",
       "description": "Retry failed tasks"
     },
     {
-      "name": "zerg merge",
-      "file": ".claude/commands/zerg:merge.md",
+      "name": "mahabharatha merge",
+      "file": ".claude/commands/mahabharatha:merge.md",
       "description": "Trigger merge gate"
     },
     {
-      "name": "zerg cleanup",
-      "file": ".claude/commands/zerg:cleanup.md",
-      "description": "Remove ZERG artifacts"
+      "name": "mahabharatha cleanup",
+      "file": ".claude/commands/mahabharatha:cleanup.md",
+      "description": "Remove MAHABHARATHA artifacts"
     }
   ],
-  
+
   "mcp_servers": [
     {
-      "name": "zerg-orchestrator",
+      "name": "mahabharatha-orchestrator",
       "command": "python3",
-      "args": [".zerg/mcp-server.py"],
-      "description": "ZERG orchestration MCP server"
+      "args": [".mahabharatha/mcp-server.py"],
+      "description": "MAHABHARATHA orchestration MCP server"
     }
   ],
-  
+
   "files": {
     "include": [
-      ".claude/commands/zerg:*.md",
-      ".zerg/**",
+      ".claude/commands/mahabharatha:*.md",
+      ".mahabharatha/**",
       ".devcontainer/**"
     ],
     "exclude": [
-      ".zerg-worktrees/**",
-      ".zerg/logs/**"
+      ".mahabharatha-worktrees/**",
+      ".mahabharatha/logs/**"
     ]
   },
-  
+
   "install": {
     "pre_install": [],
     "post_install": [
       "npm install",
-      "chmod +x .zerg/hooks/*"
+      "chmod +x .mahabharatha/hooks/*"
     ]
   },
-  
+
   "configuration": {
-    "schema": ".zerg/config.schema.json",
-    "defaults": ".zerg/config.defaults.yaml"
+    "schema": ".mahabharatha/config.schema.json",
+    "defaults": ".mahabharatha/config.defaults.yaml"
   }
 }
 ```
@@ -1206,25 +1206,25 @@ Integrate claude-secure-coding-rules hierarchy:
 ### 7.2 Installation Structure
 
 ```
-zerg/
+mahabharatha/
 ├── plugin.json                    # Marketplace manifest
 ├── README.md                      # Documentation
 ├── LICENSE                        # MIT License
 │
 ├── .claude/
 │   └── commands/
-│       ├── zerg:init.md
-│       ├── zerg:plan.md
-│       ├── zerg:design.md
-│       ├── zerg:rush.md
-│       ├── zerg:status.md
-│       ├── zerg:logs.md
-│       ├── zerg:stop.md
-│       ├── zerg:retry.md
-│       ├── zerg:merge.md
-│       └── zerg:cleanup.md
+│       ├── mahabharatha:init.md
+│       ├── mahabharatha:plan.md
+│       ├── mahabharatha:design.md
+│       ├── mahabharatha:kurukshetra.md
+│       ├── mahabharatha:status.md
+│       ├── mahabharatha:logs.md
+│       ├── mahabharatha:stop.md
+│       ├── mahabharatha:retry.md
+│       ├── mahabharatha:merge.md
+│       └── mahabharatha:cleanup.md
 │
-├── .zerg/
+├── .mahabharatha/
 │   ├── config.yaml                # Default configuration
 │   ├── config.schema.json         # Config validation schema
 │   ├── orchestrator.py            # Main orchestrator
@@ -1259,22 +1259,22 @@ zerg/
 ```mermaid
 flowchart TD
     START["Analyze Task Graph"] --> TASKS{{"Total Tasks?"}}
-    
+
     TASKS -->|"1-5"| W1["1-2 Workers"]
     TASKS -->|"6-15"| W2["3-5 Workers"]
     TASKS -->|"16-30"| W3["5-8 Workers"]
     TASKS -->|"31+"| W4["8-10 Workers"]
-    
+
     W1 & W2 & W3 & W4 --> PARALLEL{{"Max Parallelization<br/>at widest level?"}}
-    
+
     PARALLEL -->|"< Workers"| REDUCE["Reduce to max parallel"]
     PARALLEL -->|">= Workers"| KEEP["Keep worker count"]
-    
+
     REDUCE & KEEP --> RESOURCES{{"Available Resources?"}}
-    
+
     RESOURCES -->|"Limited"| SCALE_DOWN["Scale down 20%"]
     RESOURCES -->|"Adequate"| FINAL["Final worker count"]
-    
+
     SCALE_DOWN --> FINAL
 ```
 
@@ -1283,12 +1283,12 @@ flowchart TD
 ```python
 def calculate_optimal_workers(task_graph, available_resources):
     total_tasks = len(task_graph.tasks)
-    
+
     # Find widest level
     max_parallel = max(
         len(tasks) for tasks in task_graph.levels.values()
     )
-    
+
     # Base calculation
     if total_tasks <= 5:
         base_workers = 2
@@ -1298,17 +1298,17 @@ def calculate_optimal_workers(task_graph, available_resources):
         base_workers = 8
     else:
         base_workers = 10
-    
+
     # Cap at max parallelization
     workers = min(base_workers, max_parallel)
-    
+
     # Resource adjustment
     if available_resources.memory_gb < workers * 4:
         workers = available_resources.memory_gb // 4
-    
+
     if available_resources.cpu_cores < workers * 2:
         workers = available_resources.cpu_cores // 2
-    
+
     return max(1, workers)
 ```
 
@@ -1363,7 +1363,7 @@ Beyond 8 workers: only for exceptionally wide task graphs
 
 **Status**: Accepted
 
-**Context**: ZERG needs persistent state across sessions and workers. Options: (1) Custom JSON file sync, (2) SQLite database, (3) Claude Native Tasks.
+**Context**: MAHABHARATHA needs persistent state across sessions and workers. Options: (1) Custom JSON file sync, (2) SQLite database, (3) Claude Native Tasks.
 
 **Decision**: Use Claude Native Tasks.
 
@@ -1431,7 +1431,7 @@ Beyond 8 workers: only for exceptionally wide task graphs
 
 ## Appendix B: Configuration Schema
 
-**`.zerg/config.schema.json`**:
+**`.mahabharatha/config.schema.json`**:
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",

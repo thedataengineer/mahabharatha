@@ -1,4 +1,4 @@
-# ZERG v2 Implementation Progress
+# MAHABHARATHA v2 Implementation Progress
 
 **Started**: January 25, 2026
 **Updated**: January 27, 2026
@@ -35,7 +35,7 @@
 
 ### L2 Core Commands
 - ✅ L2-TASK-001: Init Generator (2026-01-25) - commit 412a49d
-- ✅ L2-TASK-002: Rush Command (2026-01-25) - commit 38cd644
+- ✅ L2-TASK-002: Kurukshetra Command (2026-01-25) - commit 38cd644
 - ✅ L2-TASK-003: Worker Runner (2026-01-25) - commit 986f844
 - ✅ L2-TASK-004: Status Command (2026-01-25) - commit a86671e
 - ✅ L2-TASK-005: Plan Command --socratic (2026-01-25) - commit 012f5dd
@@ -51,28 +51,28 @@
 - ✅ L3-TASK-007: Troubleshoot Command (2026-01-25) - commit 8c2d02d
 
 ### L4 Advanced Commands
-- ✅ L4-TASK-001: Logs Aggregator (2026-01-25) - zerg/commands/logs.py
-- ✅ L4-TASK-002: Cleanup Command (2026-01-25) - zerg/commands/cleanup.py
-- ✅ L4-TASK-003: Stop Command (2026-01-25) - zerg/commands/stop.py
-- ✅ L4-TASK-004: Merge Strategy (2026-01-25) - zerg/commands/merge_cmd.py
-- ✅ L4-TASK-005: Retry Command (2026-01-25) - zerg/commands/retry.py
-- ✅ L4-TASK-006: Security Rules (2026-01-25) - zerg/commands/security_rules_cmd.py
+- ✅ L4-TASK-001: Logs Aggregator (2026-01-25) - mahabharatha/commands/logs.py
+- ✅ L4-TASK-002: Cleanup Command (2026-01-25) - mahabharatha/commands/cleanup.py
+- ✅ L4-TASK-003: Stop Command (2026-01-25) - mahabharatha/commands/stop.py
+- ✅ L4-TASK-004: Merge Strategy (2026-01-25) - mahabharatha/commands/merge_cmd.py
+- ✅ L4-TASK-005: Retry Command (2026-01-25) - mahabharatha/commands/retry.py
+- ✅ L4-TASK-006: Security Rules (2026-01-25) - mahabharatha/commands/security_rules_cmd.py
 
 ### L5 Meta Commands
-- ✅ L5-TASK-001: Plan Command (2026-01-26) - zerg/commands/plan.py
-- ✅ L5-TASK-002: Design Command (2026-01-26) - zerg/commands/design.py
-- ✅ L5-TASK-003: Dynamic Devcontainer (2026-01-25) - zerg/devcontainer_features.py
-- ✅ L5-TASK-004: Container Execution Mode (2026-01-25) - zerg/launcher.py
+- ✅ L5-TASK-001: Plan Command (2026-01-26) - mahabharatha/commands/plan.py
+- ✅ L5-TASK-002: Design Command (2026-01-26) - mahabharatha/commands/design.py
+- ✅ L5-TASK-003: Dynamic Devcontainer (2026-01-25) - mahabharatha/devcontainer_features.py
+- ✅ L5-TASK-004: Container Execution Mode (2026-01-25) - mahabharatha/launcher.py
 
 ---
 
 ## Implementation Complete
 
-All 32 core tasks are now implemented. The ZERG system includes:
+All 32 core tasks are now implemented. The MAHABHARATHA system includes:
 
 - **Core Infrastructure**: Orchestrator, state persistence, task graph parsing
 - **Worker Management**: Worktrees, port allocation, container launching
-- **CLI Commands**: init, rush, status, plan, design, logs, cleanup, stop, merge, retry
+- **CLI Commands**: init, kurukshetra, status, plan, design, logs, cleanup, stop, merge, retry
 - **Quality Tools**: Two-stage quality gates, security rules integration
 - **Container Support**: Dynamic devcontainer generation, multi-language support
 
@@ -90,7 +90,7 @@ All 32 core tasks are now implemented. The ZERG system includes:
 
 ## Notes
 
-- All commands implemented in `zerg/commands/`
+- All commands implemented in `mahabharatha/commands/`
 - Container mode supports subprocess and Docker execution
 - Security rules integration with TikiTribe/claude-secure-coding-rules
 - Task graph schema v2.0 with file ownership validation

@@ -1,4 +1,4 @@
-"""Tests for ZERG pre-commit hooks.
+"""Tests for MAHABHARATHA pre-commit hooks.
 
 Tests are organized by check category:
 - TestSecrets: Advanced secrets detection
@@ -8,7 +8,7 @@ Tests are organized by check category:
 - TestRuffLint: Ruff integration
 - TestDebugger: Debugger statement detection
 - TestMergeMarkers: Merge conflict marker detection
-- TestZergBranch: ZERG branch naming validation
+- TestZergBranch: MAHABHARATHA branch naming validation
 - TestNoPrint: Print statement detection
 """
 
@@ -56,7 +56,7 @@ PATTERNS = {
     "localhost": re.compile(r"(localhost|127\.0\.0\.1|0\.0\.0\.0):[0-9]+"),
 }
 
-# ZERG branch naming pattern
+# MAHABHARATHA branch naming pattern
 ZERG_BRANCH_PATTERN = re.compile(r"^mahabharatha/[a-z0-9-]+/worker-[0-9]+$")
 
 
@@ -111,7 +111,7 @@ class TestHooksBase:
 
     @staticmethod
     def check_branch_name(branch: str) -> bool:
-        """Check if branch name follows ZERG convention.
+        """Check if branch name follows MAHABHARATHA convention.
 
         Args:
             branch: Branch name to check
@@ -257,15 +257,15 @@ class TestMergeMarkers(TestHooksBase):
 
 
 # =============================================================================
-# ZERG-Specific Tests
+# MAHABHARATHA-Specific Tests
 # =============================================================================
 
 
 class TestZergBranch(TestHooksBase):
-    """Tests for ZERG branch naming validation."""
+    """Tests for MAHABHARATHA branch naming validation."""
 
     def test_valid_branch_names(self) -> None:
-        """Valid ZERG branch names should pass."""
+        """Valid MAHABHARATHA branch names should pass."""
         valid_branches = [
             "mahabharatha/auth-feature/worker-1",
             "mahabharatha/user-auth/worker-5",

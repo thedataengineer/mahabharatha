@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 State Persistence."""
+"""Tests for MAHABHARATHA v2 State Persistence."""
 
 import json
 import sys

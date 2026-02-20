@@ -1,4 +1,4 @@
-"""ZERG v2 Worker Runner - TDD protocol enforcement and verification."""
+"""MAHABHARATHA v2 Worker Runner - TDD protocol enforcement and verification."""
 
 import os
 import re
@@ -12,7 +12,7 @@ from typing import Any
 
 # Import secure command executor
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from zerg.command_executor import CommandExecutor, CommandValidationError
+from mahabharatha.command_executor import CommandExecutor, CommandValidationError
 
 
 @dataclass

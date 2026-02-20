@@ -14,11 +14,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/design.core.md"],
+        "modify": ["mahabharatha/data/commands/design.core.md"],
         "read": []
       },
       "verification": {
-        "command": "grep -q 'CHANGELOG' zerg/data/commands/design.core.md && echo PASS",
+        "command": "grep -q 'CHANGELOG' mahabharatha/data/commands/design.core.md && echo PASS",
         "timeout_seconds": 10
       },
       "estimate_minutes": 5
@@ -32,11 +32,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/git.details.md"],
+        "modify": ["mahabharatha/data/commands/git.details.md"],
         "read": []
       },
       "verification": {
-        "command": "grep -q 'CHANGELOG' zerg/data/commands/git.details.md && grep -q 'AskUserQuestion' zerg/data/commands/git.details.md && echo PASS",
+        "command": "grep -q 'CHANGELOG' mahabharatha/data/commands/git.details.md && grep -q 'AskUserQuestion' mahabharatha/data/commands/git.details.md && echo PASS",
         "timeout_seconds": 10
       },
       "estimate_minutes": 5

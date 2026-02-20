@@ -1,4 +1,4 @@
-"""ZERG test command - test execution with coverage analysis."""
+"""MAHABHARATHA test command - test execution with coverage analysis."""
 
 import time
 from dataclasses import dataclass, field
@@ -537,7 +537,7 @@ def test_cmd(
         mahabharatha test --dry-run
     """
     try:
-        console.print("\n[bold cyan]ZERG Test[/bold cyan]\n")
+        console.print("\n[bold cyan]MAHABHARATHA Test[/bold cyan]\n")
 
         test_path = path or "."
 

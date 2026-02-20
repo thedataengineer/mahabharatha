@@ -1,4 +1,4 @@
-"""Rule injection for ZERG worker task context."""
+"""Rule injection for MAHABHARATHA worker task context."""
 
 from __future__ import annotations
 

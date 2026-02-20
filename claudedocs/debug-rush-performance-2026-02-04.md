@@ -1,13 +1,13 @@
-# ZERG Rush Performance Debug Report
+# MAHABHARATHA Kurukshetra Performance Debug Report
 
 **Date**: 2026-02-04
 **Feature**: github-issues-batch
-**Symptom**: "PAINFULLY slow" rush execution
+**Symptom**: "PAINFULLY slow" kurukshetra execution
 **Classification**: INFRASTRUCTURE (Quality Gate Architecture)
 
 ## Executive Summary
 
-The ZERG rush was slow because **merge gates bypass the caching layer**. Each merge retry re-runs ALL quality gates from scratch. A single level took ~6 minutes to merge when actual gate execution should take ~30s with caching.
+The MAHABHARATHA kurukshetra was slow because **merge gates bypass the caching layer**. Each merge retry re-runs ALL quality gates from scratch. A single level took ~6 minutes to merge when actual gate execution should take ~30s with caching.
 
 ## Root Cause
 
@@ -34,14 +34,14 @@ From `github-issues-batch` state JSON:
 |--------|----------|
 | Gate runs for Level 1 | 6+ (should be 1-2 with caching) |
 | Time wasted on retries | ~4 minutes (65% overhead) |
-| Rush restarts | 3 (due to gate failures) |
+| Kurukshetra restarts | 3 (due to gate failures) |
 
 ## Solution
 
 ### Primary Fix: Wire GatePipeline to MergeCoordinator
 
 ```python
-# zerg/merge.py - Accept GatePipeline in __init__
+# mahabharatha/merge.py - Accept GatePipeline in __init__
 def __init__(self, ..., gate_pipeline=None):
     self._gate_pipeline = gate_pipeline
 
@@ -56,7 +56,7 @@ if self._gate_pipeline:
 | Metric | Before | After | Improvement |
 |--------|--------|-------|-------------|
 | Level merge time | ~6 min | ~30s | 12x faster |
-| Total rush (6 tasks) | ~26 min | ~8 min | 3x faster |
+| Total kurukshetra (6 tasks) | ~26 min | ~8 min | 3x faster |
 | Gate runs per level | 6+ | 1-2 | 80% reduction |
 
 ## Secondary Recommendations
@@ -67,12 +67,12 @@ if self._gate_pipeline:
 
 ## Files Involved
 
-- `zerg/merge.py` - MergeCoordinator (needs GatePipeline)
-- `zerg/orchestrator.py` - Owns GatePipeline instance
-- `zerg/level_coordinator.py` - Contains GatePipeline class
-- `.zerg/config.yaml` - Gate configuration
+- `mahabharatha/merge.py` - MergeCoordinator (needs GatePipeline)
+- `mahabharatha/orchestrator.py` - Owns GatePipeline instance
+- `mahabharatha/level_coordinator.py` - Contains GatePipeline class
+- `.mahabharatha/config.yaml` - Gate configuration
 
 ## Related Issues
 
-- #118: rush performance optimization (recent PR)
+- #118: kurukshetra performance optimization (recent PR)
 - Existing plan: `radiant-greeting-waterfall.md` (test tiering)

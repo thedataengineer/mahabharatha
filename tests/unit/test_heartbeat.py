@@ -1,4 +1,4 @@
-"""Tests for ZERG heartbeat module."""
+"""Tests for MAHABHARATHA heartbeat module."""
 
 import json
 from datetime import UTC, datetime, timedelta

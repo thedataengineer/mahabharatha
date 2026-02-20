@@ -4,11 +4,11 @@
 
 ## Objective
 
-Add `ContainerLauncher` class to `zerg/launcher.py` that implements the `WorkerLauncher` interface using Docker CLI commands.
+Add `ContainerLauncher` class to `mahabharatha/launcher.py` that implements the `WorkerLauncher` interface using Docker CLI commands.
 
 ## Files Owned
 
-- `zerg/launcher.py` (modify)
+- `mahabharatha/launcher.py` (modify)
 
 ## Implementation
 
@@ -30,7 +30,7 @@ class ContainerLauncher(WorkerLauncher):
         """
         super().__init__(config)
         self._container_ids: dict[int, str] = {}
-        self._image_name = "zerg-worker"
+        self._image_name = "mahabharatha-worker"
 
     def spawn(
         self,
@@ -57,7 +57,7 @@ class ContainerLauncher(WorkerLauncher):
             if not isinstance(worker_id, int) or worker_id < 0:
                 raise ValueError(f"Invalid worker_id: {worker_id}")
 
-            container_name = f"zerg-worker-{worker_id}"
+            container_name = f"mahabharatha-worker-{worker_id}"
 
             # Build environment
             container_env = {
@@ -90,7 +90,7 @@ class ContainerLauncher(WorkerLauncher):
                 cmd.extend(["-e", f"{key}={value}"])
 
             # Add network
-            cmd.extend(["--network", "zerg-internal"])
+            cmd.extend(["--network", "mahabharatha-internal"])
 
             # Add image and command (keep alive)
             cmd.extend([self._image_name, "tail", "-f", "/dev/null"])
@@ -278,7 +278,7 @@ class ContainerLauncher(WorkerLauncher):
             return False
 
     @staticmethod
-    def image_exists(image_name: str = "zerg-worker") -> bool:
+    def image_exists(image_name: str = "mahabharatha-worker") -> bool:
         """Check if the worker image exists."""
         try:
             result = subprocess.run(
@@ -295,7 +295,7 @@ class ContainerLauncher(WorkerLauncher):
 
 ```bash
 python -c "
-from zerg.launcher import ContainerLauncher, WorkerLauncher, LauncherType
+from mahabharatha.launcher import ContainerLauncher, WorkerLauncher, LauncherType
 print(f'Inherits: {ContainerLauncher.__bases__}')
 print(f'Methods: spawn, monitor, terminate, get_output')
 print(f'LauncherType.CONTAINER: {LauncherType.CONTAINER.value}')
@@ -313,4 +313,4 @@ print(f'Docker available: {cl.docker_available()}')
 - [ ] get_output() returns docker logs
 - [ ] docker_available() static method works
 - [ ] image_exists() static method works
-- [ ] No ruff errors: `ruff check zerg/launcher.py`
+- [ ] No ruff errors: `ruff check mahabharatha/launcher.py`

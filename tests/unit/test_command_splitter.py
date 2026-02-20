@@ -1,4 +1,4 @@
-"""Tests for ZERG command splitter module."""
+"""Tests for MAHABHARATHA command splitter module."""
 
 from pathlib import Path
 

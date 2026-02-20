@@ -1,4 +1,4 @@
-"""Unit tests for ZERG build command — thinned Phase 4/5."""
+"""Unit tests for MAHABHARATHA build command — thinned Phase 4/5."""
 
 import json
 from pathlib import Path

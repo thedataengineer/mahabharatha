@@ -11,13 +11,13 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Create a `zerg/git/` package with 7 engine modules that extend `/zerg:git` from 6 to 11 actions. Each engine is a standalone module with its own types, config section, and test file. The existing `GitOps` class is decomposed into `GitRunner` (base) + `GitOps` (operations), with a backward-compatible shim at the original import path. A unified `GitConfig` Pydantic model adds per-project configuration to `.zerg/config.yaml`.
+Create a `mahabharatha/git/` package with 7 engine modules that extend `/mahabharatha:git` from 6 to 11 actions. Each engine is a standalone module with its own types, config section, and test file. The existing `GitOps` class is decomposed into `GitRunner` (base) + `GitOps` (operations), with a backward-compatible shim at the original import path. A unified `GitConfig` Pydantic model adds per-project configuration to `.mahabharatha/config.yaml`.
 
 ### 1.2 Goals
 - 11 git actions: commit, branch, merge, sync, history, finish, pr, release, review, rescue, bisect
-- Backward-compatible migration of `zerg/git_ops.py` → `zerg/git/`
+- Backward-compatible migration of `mahabharatha/git_ops.py` → `mahabharatha/git/`
 - Per-project configuration with sensible defaults
-- Exclusive file ownership for ZERG rush parallelization
+- Exclusive file ownership for MAHABHARATHA kurukshetra parallelization
 - >80% test coverage per engine
 
 ### 1.3 Non-Goals
@@ -33,10 +33,10 @@ Create a `zerg/git/` package with 7 engine modules that extend `/zerg:git` from 
 ### 2.1 High-Level Design
 
 ```
-zerg/git_ops.py (shim)
+mahabharatha/git_ops.py (shim)
     │
     ▼
-zerg/git/
+mahabharatha/git/
 ├── __init__.py          ◄── Re-exports GitOps, BranchInfo, all engines
 ├── base.py              ◄── GitRunner: _run(), _validate_repo(), current_branch()
 ├── ops.py               ◄── GitOps(GitRunner): branch, merge, commit, push, fetch
@@ -51,8 +51,8 @@ zerg/git/
 ├── prereview.py         ◄── ContextPreparer, DomainFilter, ReviewReporter
 └── bisect_engine.py     ◄── CommitRanker, SemanticTester, BisectRunner
 
-zerg/commands/git_cmd.py ◄── Thin router: action → engine.run()
-zerg/config.py           ◄── ZergConfig.git: GitConfig (added field)
+mahabharatha/commands/git_cmd.py ◄── Thin router: action → engine.run()
+mahabharatha/config.py           ◄── ZergConfig.git: GitConfig (added field)
 ```
 
 ### 2.2 Component Breakdown
@@ -75,7 +75,7 @@ zerg/config.py           ◄── ZergConfig.git: GitConfig (added field)
 ### 2.3 Data Flow
 
 ```
-User invokes: zerg git --action <ACTION> [flags]
+User invokes: mahabharatha git --action <ACTION> [flags]
     │
     ▼
 git_cmd.py: parse flags → load GitConfig → instantiate GitRunner
@@ -92,7 +92,7 @@ Engine.run(runner, config, flags)
     └── bisect_engine: symptom → rank commits → run bisect → report
     │
     ▼
-Output: Rich console output + optional file artifacts (.zerg/*)
+Output: Rich console output + optional file artifacts (.mahabharatha/*)
 ```
 
 ---
@@ -178,7 +178,7 @@ class GitReleaseConfig(BaseModel):
 
 class GitRescueConfig(BaseModel):
     auto_snapshot: bool = True
-    ops_log: str = ".zerg/git-ops.log"
+    ops_log: str = ".mahabharatha/git-ops.log"
     max_snapshots: int = Field(default=20, ge=1, le=100)
 
 class GitReviewConfig(BaseModel):
@@ -191,13 +191,13 @@ class GitConfig(BaseModel):
     release: GitReleaseConfig = Field(default_factory=GitReleaseConfig)
     rescue: GitRescueConfig = Field(default_factory=GitRescueConfig)
     review: GitReviewConfig = Field(default_factory=GitReviewConfig)
-    context_mode: str = Field(default="auto", pattern="^(solo|team|swarm|auto)$")
+    context_mode: str = Field(default="auto", pattern="^(solo|team|akshauhini|auto)$")
 
 def detect_context(runner: "GitRunner") -> str:
-    """Detect solo/team/swarm context.
+    """Detect solo/team/akshauhini context.
     solo = no remote configured
     team = remote exists
-    swarm = .zerg/state/ directory exists
+    akshauhini = .mahabharatha/state/ directory exists
     """
 ```
 
@@ -227,7 +227,7 @@ The prereview engine is a **context assembler**, not an analyzer. It:
 2. Filters security rules by file extension (.py → Python rules, .js → JS rules)
 3. Extracts only the changed hunks (not full files)
 4. Assembles a minimal, scoped context document
-5. Outputs structured markdown to `.zerg/review-reports/`
+5. Outputs structured markdown to `.mahabharatha/review-reports/`
 
 The Claude Code AI assistant then reads the report and performs the actual analysis. This avoids separate API calls and leverages the AI's existing context window.
 
@@ -236,9 +236,9 @@ The Claude Code AI assistant then reads the report and performs the actual analy
 ## 4. Key Decisions
 
 ### 4.1 Facade Migration (not Rewrite)
-**Context**: Need to move GitOps into zerg/git/ package.
+**Context**: Need to move GitOps into mahabharatha/git/ package.
 **Decision**: Move code → leave shim at original path.
-**Rationale**: 4 existing consumers import from `zerg.git_ops`. Shim preserves backward compat with zero consumer changes.
+**Rationale**: 4 existing consumers import from `mahabharatha.git_ops`. Shim preserves backward compat with zero consumer changes.
 
 ### 4.2 Context Assembler Pattern for Pre-Review
 **Context**: Pre-review could use heuristics, LLM API, or Claude Code context.
@@ -252,7 +252,7 @@ The Claude Code AI assistant then reads the report and performs the actual analy
 
 ### 4.4 Config over Convention
 **Context**: AI aggression level could be hardcoded or configurable.
-**Decision**: Per-project config in `.zerg/config.yaml` with defaults.
+**Decision**: Per-project config in `.mahabharatha/config.yaml` with defaults.
 **Rationale**: Different projects have different trust levels. Open source: suggest mode. Personal: auto mode. Team: confirm mode.
 
 ---
@@ -272,34 +272,34 @@ The Claude Code AI assistant then reads the report and performs the actual analy
 
 | File | Task | Issue | Operation |
 |------|------|-------|-----------|
-| `zerg/git/__init__.py` | TASK-001 | #49 | create |
-| `zerg/git/types.py` | TASK-001 | #49 | create |
-| `zerg/git/config.py` | TASK-001 | #49 | create |
-| `zerg/git/base.py` | TASK-001 | #49 | create |
-| `zerg/git/ops.py` | TASK-001 | #49 | create |
-| `zerg/git_ops.py` | TASK-001 | #49 | modify (shim) |
-| `zerg/config.py` | TASK-001 | #49 | modify (add GitConfig) |
+| `mahabharatha/git/__init__.py` | TASK-001 | #49 | create |
+| `mahabharatha/git/types.py` | TASK-001 | #49 | create |
+| `mahabharatha/git/config.py` | TASK-001 | #49 | create |
+| `mahabharatha/git/base.py` | TASK-001 | #49 | create |
+| `mahabharatha/git/ops.py` | TASK-001 | #49 | create |
+| `mahabharatha/git_ops.py` | TASK-001 | #49 | modify (shim) |
+| `mahabharatha/config.py` | TASK-001 | #49 | modify (add GitConfig) |
 | `tests/unit/test_git_base.py` | TASK-001 | #49 | create |
 | `tests/unit/test_git_config.py` | TASK-001 | #49 | create |
 | `tests/unit/test_git_types.py` | TASK-001 | #49 | create |
-| `zerg/git/commit_engine.py` | TASK-002 | #42 | create |
+| `mahabharatha/git/commit_engine.py` | TASK-002 | #42 | create |
 | `tests/unit/test_git_commit_engine.py` | TASK-002 | #42 | create |
-| `zerg/git/rescue.py` | TASK-003 | #46 | create |
+| `mahabharatha/git/rescue.py` | TASK-003 | #46 | create |
 | `tests/unit/test_git_rescue.py` | TASK-003 | #46 | create |
-| `zerg/git/pr_engine.py` | TASK-004 | #43 | create |
+| `mahabharatha/git/pr_engine.py` | TASK-004 | #43 | create |
 | `tests/unit/test_git_pr_engine.py` | TASK-004 | #43 | create |
-| `zerg/git/release_engine.py` | TASK-005 | #44 | create |
+| `mahabharatha/git/release_engine.py` | TASK-005 | #44 | create |
 | `tests/unit/test_git_release_engine.py` | TASK-005 | #44 | create |
-| `zerg/git/history_engine.py` | TASK-006 | #47 | create |
+| `mahabharatha/git/history_engine.py` | TASK-006 | #47 | create |
 | `tests/unit/test_git_history_engine.py` | TASK-006 | #47 | create |
-| `zerg/git/prereview.py` | TASK-007 | #48 | create |
+| `mahabharatha/git/prereview.py` | TASK-007 | #48 | create |
 | `tests/unit/test_git_prereview.py` | TASK-007 | #48 | create |
-| `zerg/git/bisect_engine.py` | TASK-008 | #45 | create |
+| `mahabharatha/git/bisect_engine.py` | TASK-008 | #45 | create |
 | `tests/unit/test_git_bisect_engine.py` | TASK-008 | #45 | create |
-| `zerg/commands/git_cmd.py` | TASK-009 | #50 | modify |
-| `zerg/data/commands/git.md` | TASK-009 | #50 | modify |
-| `zerg/data/commands/git.core.md` | TASK-009 | #50 | create |
-| `zerg/data/commands/git.details.md` | TASK-009 | #50 | create |
+| `mahabharatha/commands/git_cmd.py` | TASK-009 | #50 | modify |
+| `mahabharatha/data/commands/git.md` | TASK-009 | #50 | modify |
+| `mahabharatha/data/commands/git.core.md` | TASK-009 | #50 | create |
+| `mahabharatha/data/commands/git.details.md` | TASK-009 | #50 | create |
 
 ### 5.3 Dependency Graph
 
@@ -323,9 +323,9 @@ TASK-002..008 ──► TASK-009 (#50 Integration)
 | Risk | Probability | Impact | Mitigation |
 |------|-------------|--------|------------|
 | Shim breaks existing imports | Low | High | Test all 4 consumers in TASK-001 verification |
-| Command file split fails validation | Low | Medium | Run `python -m zerg.validate_commands` in TASK-009 |
+| Command file split fails validation | Low | Medium | Run `python -m mahabharatha.validate_commands` in TASK-009 |
 | `gh` CLI not available | Medium | Low | Graceful degradation: save PR/release artifacts locally |
-| File ownership conflict during rush | Low | High | Matrix validated in task-graph.json; no shared files |
+| File ownership conflict during kurukshetra | Low | High | Matrix validated in task-graph.json; no shared files |
 | Pre-review context too large | Medium | Medium | Budget cap of 4000 tokens per domain; truncate hunks |
 
 ---
@@ -357,9 +357,9 @@ Each engine has a dedicated test file using:
 All listed in task-graph.json. Global verification:
 ```bash
 pytest tests/unit/test_git_*.py -x -v
-python -c "from zerg.git_ops import GitOps, BranchInfo"
-python -m zerg.validate_commands
-python -m zerg git --help
+python -c "from mahabharatha.git_ops import GitOps, BranchInfo"
+python -m mahabharatha.validate_commands
+python -m mahabharatha git --help
 ```
 
 ---

@@ -1,6 +1,6 @@
 # Context Engineering Internals
 
-This page documents the implementation of the ZERG context engineering system. For a conceptual overview, see [[Context Engineering]].
+This page documents the implementation of the MAHABHARATHA context engineering system. For a conceptual overview, see [[Context Engineering]].
 
 ---
 
@@ -10,11 +10,11 @@ The context engineering system is implemented across four modules:
 
 | Module | File | Responsibility |
 |--------|------|----------------|
-| Context Plugin | `zerg/context_plugin.py` | Orchestrates context building for each task |
-| Command Splitter | `zerg/command_splitter.py` | Splits large command files into core + details |
-| Security Rules | `zerg/security_rules.py` | Filters and summarizes security rules by file type |
-| Spec Loader | `zerg/spec_loader.py` | Loads and scopes feature specs to task keywords |
-| Context Tracker | `zerg/context_tracker.py` | Heuristic token counting and threshold monitoring |
+| Context Plugin | `mahabharatha/context_plugin.py` | Orchestrates context building for each task |
+| Command Splitter | `mahabharatha/command_splitter.py` | Splits large command files into core + details |
+| Security Rules | `mahabharatha/security_rules.py` | Filters and summarizes security rules by file type |
+| Spec Loader | `mahabharatha/spec_loader.py` | Loads and scopes feature specs to task keywords |
+| Context Tracker | `mahabharatha/context_tracker.py` | Heuristic token counting and threshold monitoring |
 
 The `ContextEngineeringPlugin` class in `context_plugin.py` is the main entry point. It implements the `ContextPlugin` abstract base class from the [[Plugin API Reference]] and is registered with the `PluginRegistry` at startup.
 
@@ -38,7 +38,7 @@ Worker receives scoped context string
 
 ### Splitting Algorithm
 
-The `CommandSplitter` class in `zerg/command_splitter.py` handles file analysis and splitting.
+The `CommandSplitter` class in `mahabharatha/command_splitter.py` handles file analysis and splitting.
 
 **Eligibility.** Only command files with 300 or more lines are candidates for splitting. Files below this threshold are left as-is because the token savings would not justify the complexity.
 
@@ -103,7 +103,7 @@ The remaining 20% is reserved as buffer for formatting overhead.
 
 ### Security Rule Filtering
 
-**Module:** `zerg/security_rules.py`, function `filter_rules_for_files()`
+**Module:** `mahabharatha/security_rules.py`, function `filter_rules_for_files()`
 
 Given a list of file paths from the task, the filter:
 
@@ -116,7 +116,7 @@ Given a list of file paths from the task, the filter:
 
 ### Security Rule Summarization
 
-**Module:** `zerg/security_rules.py`, function `summarize_rules()`
+**Module:** `mahabharatha/security_rules.py`, function `summarize_rules()`
 
 Full security rule files are too large for task context. The summarizer:
 
@@ -134,7 +134,7 @@ The result is a markdown summary that captures rule names, severity levels, and 
 
 ### Spec Scoping
 
-**Module:** `zerg/spec_loader.py`, class `SpecLoader`
+**Module:** `mahabharatha/spec_loader.py`, class `SpecLoader`
 
 The `format_task_context()` method extracts spec sections relevant to a specific task:
 
@@ -167,7 +167,7 @@ If `fallback_to_full` is `false`, the exception propagates to the caller.
 
 ## Context Tracker
 
-**Module:** `zerg/context_tracker.py`
+**Module:** `mahabharatha/context_tracker.py`
 
 The `ContextTracker` class monitors estimated token usage within a worker session and signals when to checkpoint.
 

@@ -1,4 +1,4 @@
-"""ZERG v2 Worktree Manager - Git worktree management for worker isolation."""
+"""MAHABHARATHA v2 Worktree Manager - Git worktree management for worker isolation."""
 
 import subprocess
 from dataclasses import dataclass
@@ -38,8 +38,8 @@ class LevelMergeResult:
 class WorktreeManager:
     """Manages git worktrees for worker isolation."""
 
-    WORKTREE_DIR = ".zerg/worktrees"
-    BRANCH_PREFIX = "zerg"
+    WORKTREE_DIR = ".mahabharatha/worktrees"
+    BRANCH_PREFIX = "mahabharatha"
 
     def __init__(self, repo_root: Path | None = None):
         """Initialize worktree manager.
@@ -54,8 +54,8 @@ class WorktreeManager:
         """Create worktree for worker.
 
         Creates:
-        - Branch: zerg/worker-{worker_id}
-        - Worktree: .zerg/worktrees/worker-{worker_id}
+        - Branch: mahabharatha/worker-{worker_id}
+        - Worktree: .mahabharatha/worktrees/worker-{worker_id}
 
         Args:
             worker_id: Unique identifier for the worker

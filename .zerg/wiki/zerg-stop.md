@@ -1,16 +1,16 @@
-# /zerg:stop
+# /mahabharatha:stop
 
-Stop ZERG workers gracefully or forcefully.
+Stop MAHABHARATHA workers gracefully or forcefully.
 
 ## Synopsis
 
 ```
-/zerg:stop [OPTIONS]
+/mahabharatha:stop [OPTIONS]
 ```
 
 ## Description
 
-`/zerg:stop` halts running ZERG workers. By default it performs a graceful shutdown that allows workers to checkpoint their progress. With `--force`, it terminates workers immediately.
+`/mahabharatha:stop` halts running MAHABHARATHA workers. By default it performs a graceful shutdown that allows workers to checkpoint their progress. With `--force`, it terminates workers immediately.
 
 ### Graceful Stop (Default)
 
@@ -18,7 +18,7 @@ Stop ZERG workers gracefully or forcefully.
 2. Workers create a WIP (work-in-progress) commit with their current changes.
 3. Workers update state with checkpoint information.
 4. Containers stop cleanly.
-5. State is preserved for later resume with `/zerg:rush --resume`.
+5. State is preserved for later resume with `/mahabharatha:kurukshetra --resume`.
 
 In-progress tasks are annotated with `PAUSED` in the Claude Code Task system.
 
@@ -36,7 +36,7 @@ In-progress tasks are annotated with `FORCE STOPPED` in the Claude Code Task sys
 When stopped gracefully, each worker creates a commit with this format:
 
 ```
-WIP: ZERG [worker-<id>] checkpoint during <task_id>
+WIP: MAHABHARATHA [worker-<id>] checkpoint during <task_id>
 
 Status: <percentage>% complete
 Files modified:
@@ -70,47 +70,47 @@ Context-Usage: <percentage>%
 
 ```bash
 # Graceful stop of all workers
-/zerg:stop
+/mahabharatha:stop
 
 # Force stop all workers immediately
-/zerg:stop --force
+/mahabharatha:stop --force
 
 # Stop only worker 2
-/zerg:stop --worker 2
+/mahabharatha:stop --worker 2
 
 # Force stop a specific worker
-/zerg:stop --worker 3 --force
+/mahabharatha:stop --worker 3 --force
 
 # Graceful stop with extended timeout
-/zerg:stop --timeout 60
+/mahabharatha:stop --timeout 60
 
 # Quick timeout
-/zerg:stop --timeout 10
+/mahabharatha:stop --timeout 10
 ```
 
 ## Recovery After Stop
 
 ```bash
 # Resume execution from checkpoint
-/zerg:rush --resume
+/mahabharatha:kurukshetra --resume
 
 # Resume with a different worker count
-/zerg:rush --resume --workers 3
+/mahabharatha:kurukshetra --resume --workers 3
 
 # Check what was in progress
-/zerg:status
+/mahabharatha:status
 
 # View errors before resuming
-/zerg:logs --level error
+/mahabharatha:logs --level error
 
 # Retry failed tasks
-/zerg:retry --all-failed
+/mahabharatha:retry --all-failed
 ```
 
 ## See Also
 
-- [[zerg-rush]] -- Resume execution after stopping
-- [[zerg-status]] -- Check state after stop
-- [[zerg-retry]] -- Re-run tasks that failed during stop
-- [[zerg-logs]] -- Inspect worker logs for issues
-- [[zerg-Reference]] -- Full command index
+- [[mahabharatha-kurukshetra]] -- Resume execution after stopping
+- [[mahabharatha-status]] -- Check state after stop
+- [[mahabharatha-retry]] -- Re-run tasks that failed during stop
+- [[mahabharatha-logs]] -- Inspect worker logs for issues
+- [[mahabharatha-Reference]] -- Full command index

@@ -32,7 +32,7 @@
     {
       "id": "TASK-002",
       "title": "Create CODEOWNERS file",
-      "description": "Create CODEOWNERS file at repo root. Default owner: @rocklambros for all files (*). Specific paths: /zerg/ for core orchestrator, /.github/ for CI/CD, /docs/ for documentation. Follow GitHub CODEOWNERS syntax.",
+      "description": "Create CODEOWNERS file at repo root. Default owner: @rocklambros for all files (*). Specific paths: /mahabharatha/ for core orchestrator, /.github/ for CI/CD, /docs/ for documentation. Follow GitHub CODEOWNERS syntax.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
@@ -76,7 +76,7 @@
     {
       "id": "TASK-004",
       "title": "Update pyproject.toml with Python 3.13 classifier and docs deps",
-      "description": "Modify pyproject.toml: (1) Add 'Programming Language :: Python :: 3.13' to classifiers list. (2) Add docs optional dependency group: docs = ['mkdocs>=1.6', 'mkdocs-material>=9.5']. (3) Update 'all' extras to include docs: all = ['zerg-ai[dev]', 'zerg-ai[metrics]', 'zerg-ai[performance]', 'zerg-ai[docs]']. Do NOT change any other settings.",
+      "description": "Modify pyproject.toml: (1) Add 'Programming Language :: Python :: 3.13' to classifiers list. (2) Add docs optional dependency group: docs = ['mkdocs>=1.6', 'mkdocs-material>=9.5']. (3) Update 'all' extras to include docs: all = ['mahabharatha-ai[dev]', 'mahabharatha-ai[metrics]', 'mahabharatha-ai[performance]', 'mahabharatha-ai[docs]']. Do NOT change any other settings.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
@@ -98,7 +98,7 @@
     {
       "id": "TASK-005",
       "title": "Add mypy to CI and expand Python test matrix",
-      "description": "Modify .github/workflows/ci.yml: (1) Add 'mypy zerg/' step to quality job after lint check and before validate commands. (2) Expand test job matrix to include python-version: ['3.12', '3.13'] alongside existing shard: [1, 2], producing 4 test jobs. Update setup-python to use matrix.python-version. Keep quality, smoke, and audit jobs on Python 3.12. Must not break existing 5 required checks (quality, smoke, test (1), test (2), audit). Note: test job names will change to 'test (3.12, 1)', 'test (3.12, 2)', 'test (3.13, 1)', 'test (3.13, 2)' — this requires updating branch protection required checks.",
+      "description": "Modify .github/workflows/ci.yml: (1) Add 'mypy mahabharatha/' step to quality job after lint check and before validate commands. (2) Expand test job matrix to include python-version: ['3.12', '3.13'] alongside existing shard: [1, 2], producing 4 test jobs. Update setup-python to use matrix.python-version. Keep quality, smoke, and audit jobs on Python 3.12. Must not break existing 5 required checks (quality, smoke, test (1), test (2), audit). Note: test job names will change to 'test (3.12, 1)', 'test (3.12, 2)', 'test (3.13, 1)', 'test (3.13, 2)' — this requires updating branch protection required checks.",
       "phase": "integration",
       "level": 2,
       "dependencies": ["TASK-004"],
@@ -142,7 +142,7 @@
     {
       "id": "TASK-007",
       "title": "Update README with Discussions link and coverage badge",
-      "description": "Modify README.md: (1) Add coverage badge after the CI badge in the badges section: shields.io badge pointing to codecov or a static badge. Use a static 50% badge for now since no coverage service is integrated: https://img.shields.io/badge/coverage-50%25-yellow. (2) Add a Discussions link row to the Documentation table: '| [Discussions](https://github.com/rocklambros/zerg/discussions) | Questions, ideas, and community chat |'. Keep all existing content unchanged.",
+      "description": "Modify README.md: (1) Add coverage badge after the CI badge in the badges section: shields.io badge pointing to codecov or a static badge. Use a static 50% badge for now since no coverage service is integrated: https://img.shields.io/badge/coverage-50%25-yellow. (2) Add a Discussions link row to the Documentation table: '| [Discussions](https://github.com/rocklambros/mahabharatha/discussions) | Questions, ideas, and community chat |'. Keep all existing content unchanged.",
       "phase": "integration",
       "level": 2,
       "dependencies": [],

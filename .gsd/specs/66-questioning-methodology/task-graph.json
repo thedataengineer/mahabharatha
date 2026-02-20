@@ -15,16 +15,16 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/brainstorm.core.md"],
-        "read": ["zerg/data/commands/brainstorm.details.md"]
+        "modify": ["mahabharatha/data/commands/brainstorm.core.md"],
+        "read": ["mahabharatha/data/commands/brainstorm.details.md"]
       },
       "verification": {
-        "command": "test $(wc -l < zerg/data/commands/brainstorm.core.md) -le 300 && grep -q 'socratic' zerg/data/commands/brainstorm.core.md && grep -q 'TaskCreate' zerg/data/commands/brainstorm.core.md && grep -q 'YAGNI' zerg/data/commands/brainstorm.core.md && echo PASS || echo FAIL",
+        "command": "test $(wc -l < mahabharatha/data/commands/brainstorm.core.md) -le 300 && grep -q 'socratic' mahabharatha/data/commands/brainstorm.core.md && grep -q 'TaskCreate' mahabharatha/data/commands/brainstorm.core.md && grep -q 'YAGNI' mahabharatha/data/commands/brainstorm.core.md && echo PASS || echo FAIL",
         "timeout_seconds": 30
       },
       "estimate_minutes": 30,
       "skills_required": ["markdown", "prompt-engineering"],
-      "context": "## Spec Context\nThis task modifies the behavioral flow of /zerg:brainstorm. The core.md file is what Claude Code interprets as slash command instructions. It must contain TaskCreate/TaskUpdate calls for the Claude Task ecosystem. The --socratic flag is opt-in; batch mode (default) must remain unchanged. Trade-offs, validation, and YAGNI gate run in BOTH modes.\n\n## Dependencies\nNone — this is a Level 1 foundation task.\n\n## Constraints\n- File must stay ≤ 300 lines (currently 180)\n- Must preserve <!-- SPLIT: core, parent: brainstorm.md --> header on line 1\n- Must preserve TaskCreate/TaskUpdate section (lines 55-74)\n- Must preserve Pre-Flight bash block (lines 15-51)\n- Phase 1 Research section unchanged (lines 79-90)\n- Phase 4 Handoff section unchanged (lines 133-138)"
+      "context": "## Spec Context\nThis task modifies the behavioral flow of /mahabharatha:brainstorm. The core.md file is what Claude Code interprets as slash command instructions. It must contain TaskCreate/TaskUpdate calls for the Claude Task ecosystem. The --socratic flag is opt-in; batch mode (default) must remain unchanged. Trade-offs, validation, and YAGNI gate run in BOTH modes.\n\n## Dependencies\nNone — this is a Level 1 foundation task.\n\n## Constraints\n- File must stay ≤ 300 lines (currently 180)\n- Must preserve <!-- SPLIT: core, parent: brainstorm.md --> header on line 1\n- Must preserve TaskCreate/TaskUpdate section (lines 55-74)\n- Must preserve Pre-Flight bash block (lines 15-51)\n- Phase 1 Research section unchanged (lines 79-90)\n- Phase 4 Handoff section unchanged (lines 133-138)"
     },
     {
       "id": "TASK-002",
@@ -44,7 +44,7 @@
       },
       "estimate_minutes": 25,
       "skills_required": ["markdown", "domain-knowledge"],
-      "context": "## Spec Context\nThese question trees power the --socratic mode of /zerg:brainstorm. When a user runs /zerg:brainstorm user-auth --socratic, domain detection matches 'auth' keyword to the Auth tree, and the system asks Q1 from that tree. Based on the user's answer (option a/b/c), it follows the branch to Q2a/Q2b/Q2c. If user picks 'Other', the LLM generates a dynamic follow-up.\n\nThe trees are written to an intermediate file here and will be appended to brainstorm.details.md by TASK-005.\n\n## Quality Standards\n- Questions should be genuinely useful for requirements discovery\n- Options should cover the most common 3-4 choices plus Other\n- Descriptions should highlight the key trade-off or implication of each choice\n- Trees should converge (depth 3-5), not branch infinitely"
+      "context": "## Spec Context\nThese question trees power the --socratic mode of /mahabharatha:brainstorm. When a user runs /mahabharatha:brainstorm user-auth --socratic, domain detection matches 'auth' keyword to the Auth tree, and the system asks Q1 from that tree. Based on the user's answer (option a/b/c), it follows the branch to Q2a/Q2b/Q2c. If user picks 'Other', the LLM generates a dynamic follow-up.\n\nThe trees are written to an intermediate file here and will be appended to brainstorm.details.md by TASK-005.\n\n## Quality Standards\n- Questions should be genuinely useful for requirements discovery\n- Options should cover the most common 3-4 choices plus Other\n- Descriptions should highlight the key trade-off or implication of each choice\n- Trees should converge (depth 3-5), not branch infinitely"
     },
     {
       "id": "TASK-003",
@@ -56,7 +56,7 @@
       "files": {
         "create": [".gsd/specs/66-questioning-methodology/new-templates.md"],
         "modify": [],
-        "read": ["zerg/data/commands/brainstorm.details.md"]
+        "read": ["mahabharatha/data/commands/brainstorm.details.md"]
       },
       "verification": {
         "command": "test -f .gsd/specs/66-questioning-methodology/new-templates.md && grep -q 'Saturation' .gsd/specs/66-questioning-methodology/new-templates.md && grep -q 'YAGNI' .gsd/specs/66-questioning-methodology/new-templates.md && grep -q 'Trade-off' .gsd/specs/66-questioning-methodology/new-templates.md && echo PASS || echo FAIL",
@@ -88,20 +88,20 @@
     {
       "id": "TASK-005",
       "title": "Assemble brainstorm.details.md with new content",
-      "description": "Append question trees (from TASK-002) and new templates (from TASK-003) into zerg/data/commands/brainstorm.details.md. Insert trees after line 159 with section header. Insert templates after trees. Update transcript template. Do NOT modify existing Research, Round 1/2/3, Issue Template, or Output Schema sections.",
+      "description": "Append question trees (from TASK-002) and new templates (from TASK-003) into mahabharatha/data/commands/brainstorm.details.md. Insert trees after line 159 with section header. Insert templates after trees. Update transcript template. Do NOT modify existing Research, Round 1/2/3, Issue Template, or Output Schema sections.",
       "phase": "assembly",
       "level": 2,
       "dependencies": ["TASK-002", "TASK-003"],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/brainstorm.details.md"],
+        "modify": ["mahabharatha/data/commands/brainstorm.details.md"],
         "read": [
           ".gsd/specs/66-questioning-methodology/question-trees.md",
           ".gsd/specs/66-questioning-methodology/new-templates.md"
         ]
       },
       "verification": {
-        "command": "grep -q 'Socratic Question Trees' zerg/data/commands/brainstorm.details.md && grep -q 'Saturation Detection' zerg/data/commands/brainstorm.details.md && grep -q 'YAGNI Gate' zerg/data/commands/brainstorm.details.md && echo PASS || echo FAIL",
+        "command": "grep -q 'Socratic Question Trees' mahabharatha/data/commands/brainstorm.details.md && grep -q 'Saturation Detection' mahabharatha/data/commands/brainstorm.details.md && grep -q 'YAGNI Gate' mahabharatha/data/commands/brainstorm.details.md && echo PASS || echo FAIL",
         "timeout_seconds": 15
       },
       "estimate_minutes": 15,
@@ -116,11 +116,11 @@
       "dependencies": ["TASK-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/brainstorm.md"],
-        "read": ["zerg/data/commands/brainstorm.core.md"]
+        "modify": ["mahabharatha/data/commands/brainstorm.md"],
+        "read": ["mahabharatha/data/commands/brainstorm.core.md"]
       },
       "verification": {
-        "command": "diff <(tail -n +2 zerg/data/commands/brainstorm.core.md) <(tail -n +1 zerg/data/commands/brainstorm.md) && echo PASS || echo FAIL",
+        "command": "diff <(tail -n +2 mahabharatha/data/commands/brainstorm.core.md) <(tail -n +1 mahabharatha/data/commands/brainstorm.md) && echo PASS || echo FAIL",
         "timeout_seconds": 10
       },
       "estimate_minutes": 5,
@@ -136,7 +136,7 @@
       "files": {
         "create": [],
         "modify": ["docs/commands.md"],
-        "read": ["zerg/data/commands/brainstorm.core.md"]
+        "read": ["mahabharatha/data/commands/brainstorm.core.md"]
       },
       "verification": {
         "command": "grep -q 'socratic' docs/commands.md && grep -q 'YAGNI' docs/commands.md && echo PASS || echo FAIL",
@@ -148,17 +148,17 @@
     {
       "id": "TASK-009",
       "title": "Update wiki Command-brainstorm.md",
-      "description": "Update .zerg/wiki/Command-brainstorm.md (full page rewrite ~100 lines): Add --socratic flag to options table. Expand workflow phases to include Socratic Discovery, Trade-off Exploration, Design Validation, YAGNI Gate. Add domain question trees section (6 domains). Add --socratic usage examples. Update completion criteria. Mention saturation detection.",
+      "description": "Update .mahabharatha/wiki/Command-brainstorm.md (full page rewrite ~100 lines): Add --socratic flag to options table. Expand workflow phases to include Socratic Discovery, Trade-off Exploration, Design Validation, YAGNI Gate. Add domain question trees section (6 domains). Add --socratic usage examples. Update completion criteria. Mention saturation detection.",
       "phase": "documentation",
       "level": 2,
       "dependencies": ["TASK-001"],
       "files": {
         "create": [],
-        "modify": [".zerg/wiki/Command-brainstorm.md"],
-        "read": ["zerg/data/commands/brainstorm.core.md"]
+        "modify": [".mahabharatha/wiki/Command-brainstorm.md"],
+        "read": ["mahabharatha/data/commands/brainstorm.core.md"]
       },
       "verification": {
-        "command": "grep -q 'socratic' .zerg/wiki/Command-brainstorm.md && grep -q 'YAGNI' .zerg/wiki/Command-brainstorm.md && echo PASS || echo FAIL",
+        "command": "grep -q 'socratic' .mahabharatha/wiki/Command-brainstorm.md && grep -q 'YAGNI' .mahabharatha/wiki/Command-brainstorm.md && echo PASS || echo FAIL",
         "timeout_seconds": 10
       },
       "estimate_minutes": 15,
@@ -167,17 +167,17 @@
     {
       "id": "TASK-010",
       "title": "Update wiki Command-Reference.md index",
-      "description": "Update .zerg/wiki/Command-Reference.md: Update command index table entry for brainstorm to mention --socratic mode. Update description in categories section.",
+      "description": "Update .mahabharatha/wiki/Command-Reference.md: Update command index table entry for brainstorm to mention --socratic mode. Update description in categories section.",
       "phase": "documentation",
       "level": 2,
       "dependencies": ["TASK-001"],
       "files": {
         "create": [],
-        "modify": [".zerg/wiki/Command-Reference.md"],
+        "modify": [".mahabharatha/wiki/Command-Reference.md"],
         "read": []
       },
       "verification": {
-        "command": "grep -q 'socratic' .zerg/wiki/Command-Reference.md && echo PASS || echo FAIL",
+        "command": "grep -q 'socratic' .mahabharatha/wiki/Command-Reference.md && echo PASS || echo FAIL",
         "timeout_seconds": 10
       },
       "estimate_minutes": 5,
@@ -205,17 +205,17 @@
     {
       "id": "TASK-012",
       "title": "Update wiki Quick-Start.md brainstorm section",
-      "description": "Update .zerg/wiki/Quick-Start.md brainstorm section (lines ~60-77): Add --socratic to command example. Mention single-question mode with structured options. Briefly describe enhanced pipeline.",
+      "description": "Update .mahabharatha/wiki/Quick-Start.md brainstorm section (lines ~60-77): Add --socratic to command example. Mention single-question mode with structured options. Briefly describe enhanced pipeline.",
       "phase": "documentation",
       "level": 2,
       "dependencies": ["TASK-001"],
       "files": {
         "create": [],
-        "modify": [".zerg/wiki/Quick-Start.md"],
+        "modify": [".mahabharatha/wiki/Quick-Start.md"],
         "read": []
       },
       "verification": {
-        "command": "grep -q 'socratic' .zerg/wiki/Quick-Start.md && echo PASS || echo FAIL",
+        "command": "grep -q 'socratic' .mahabharatha/wiki/Quick-Start.md && echo PASS || echo FAIL",
         "timeout_seconds": 10
       },
       "estimate_minutes": 5,
@@ -224,17 +224,17 @@
     {
       "id": "TASK-013",
       "title": "Update wiki Getting-Started.md brainstorm entry",
-      "description": "Update .zerg/wiki/Getting-Started.md brainstorm entry (line ~28): Update overview table to mention --socratic mode. Keep brief.",
+      "description": "Update .mahabharatha/wiki/Getting-Started.md brainstorm entry (line ~28): Update overview table to mention --socratic mode. Keep brief.",
       "phase": "documentation",
       "level": 2,
       "dependencies": ["TASK-001"],
       "files": {
         "create": [],
-        "modify": [".zerg/wiki/Getting-Started.md"],
+        "modify": [".mahabharatha/wiki/Getting-Started.md"],
         "read": []
       },
       "verification": {
-        "command": "grep -q 'socratic' .zerg/wiki/Getting-Started.md && echo PASS || echo FAIL",
+        "command": "grep -q 'socratic' .mahabharatha/wiki/Getting-Started.md && echo PASS || echo FAIL",
         "timeout_seconds": 10
       },
       "estimate_minutes": 5,
@@ -243,7 +243,7 @@
     {
       "id": "TASK-007",
       "title": "Validate all constraints and run drift checks",
-      "description": "Run all validation checks:\n1. python -m zerg.validate_commands — must pass\n2. wc -l core.md ≤ 300\n3. diff core.md vs brainstorm.md — must match\n4. grep TaskCreate/TaskUpdate in core.md ≥ 2\n5. grep --socratic in all doc files\n6. grep 6 domain trees in details.md\n7. Verify batch mode sections preserved\n8. Clean up intermediate files (question-trees.md, new-templates.md)\n\nIf any check fails, fix and re-verify.",
+      "description": "Run all validation checks:\n1. python -m mahabharatha.validate_commands — must pass\n2. wc -l core.md ≤ 300\n3. diff core.md vs brainstorm.md — must match\n4. grep TaskCreate/TaskUpdate in core.md ≥ 2\n5. grep --socratic in all doc files\n6. grep 6 domain trees in details.md\n7. Verify batch mode sections preserved\n8. Clean up intermediate files (question-trees.md, new-templates.md)\n\nIf any check fails, fix and re-verify.",
       "phase": "validation",
       "level": 3,
       "dependencies": ["TASK-004", "TASK-005", "TASK-006", "TASK-008", "TASK-009", "TASK-010", "TASK-011", "TASK-012", "TASK-013"],
@@ -251,20 +251,20 @@
         "create": [],
         "modify": [],
         "read": [
-          "zerg/data/commands/brainstorm.core.md",
-          "zerg/data/commands/brainstorm.details.md",
-          "zerg/data/commands/brainstorm.md",
+          "mahabharatha/data/commands/brainstorm.core.md",
+          "mahabharatha/data/commands/brainstorm.details.md",
+          "mahabharatha/data/commands/brainstorm.md",
           "CHANGELOG.md",
           "README.md",
           "docs/commands.md",
-          ".zerg/wiki/Command-brainstorm.md",
-          ".zerg/wiki/Command-Reference.md",
-          ".zerg/wiki/Quick-Start.md",
-          ".zerg/wiki/Getting-Started.md"
+          ".mahabharatha/wiki/Command-brainstorm.md",
+          ".mahabharatha/wiki/Command-Reference.md",
+          ".mahabharatha/wiki/Quick-Start.md",
+          ".mahabharatha/wiki/Getting-Started.md"
         ]
       },
       "verification": {
-        "command": "python -m zerg.validate_commands && test $(wc -l < zerg/data/commands/brainstorm.core.md) -le 300 && diff <(tail -n +2 zerg/data/commands/brainstorm.core.md) <(tail -n +1 zerg/data/commands/brainstorm.md) > /dev/null && for f in README.md docs/commands.md .zerg/wiki/Command-brainstorm.md .zerg/wiki/Command-Reference.md .zerg/wiki/Quick-Start.md .zerg/wiki/Getting-Started.md; do grep -q 'socratic' \"$f\" || { echo \"FAIL: $f missing socratic\"; exit 1; }; done && echo ALL_PASS || echo SOME_FAILED",
+        "command": "python -m mahabharatha.validate_commands && test $(wc -l < mahabharatha/data/commands/brainstorm.core.md) -le 300 && diff <(tail -n +2 mahabharatha/data/commands/brainstorm.core.md) <(tail -n +1 mahabharatha/data/commands/brainstorm.md) > /dev/null && for f in README.md docs/commands.md .mahabharatha/wiki/Command-brainstorm.md .mahabharatha/wiki/Command-Reference.md .mahabharatha/wiki/Quick-Start.md .mahabharatha/wiki/Getting-Started.md; do grep -q 'socratic' \"$f\" || { echo \"FAIL: $f missing socratic\"; exit 1; }; done && echo ALL_PASS || echo SOME_FAILED",
         "timeout_seconds": 60
       },
       "estimate_minutes": 10,

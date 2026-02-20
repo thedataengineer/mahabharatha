@@ -10,17 +10,17 @@
     {
       "id": "TASK-001",
       "title": "Create test scope helper module",
-      "description": "Create zerg/test_scope.py with functions to detect test scope from task graph. Includes get_scoped_test_paths() to extract new test files from files.create lists and find_affected_tests() to identify tests importing modified modules.",
+      "description": "Create mahabharatha/test_scope.py with functions to detect test scope from task graph. Includes get_scoped_test_paths() to extract new test files from files.create lists and find_affected_tests() to identify tests importing modified modules.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/test_scope.py"],
+        "create": ["mahabharatha/test_scope.py"],
         "modify": [],
-        "read": ["zerg/parser.py", "zerg/types.py"]
+        "read": ["mahabharatha/parser.py", "mahabharatha/types.py"]
       },
       "verification": {
-        "command": "python -c \"from zerg.test_scope import get_scoped_test_paths, find_affected_tests\"",
+        "command": "python -c \"from mahabharatha.test_scope import get_scoped_test_paths, find_affected_tests\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -32,36 +32,36 @@
     {
       "id": "TASK-002",
       "title": "Add wiring task injection to design.core.md",
-      "description": "Modify zerg/data/commands/design.core.md Phase 3 to inject mandatory wiring verification task into L5 of every generated task graph. Add explicit instructions with task template and dependency wiring.",
+      "description": "Modify mahabharatha/data/commands/design.core.md Phase 3 to inject mandatory wiring verification task into L5 of every generated task graph. Add explicit instructions with task template and dependency wiring.",
       "phase": "core",
       "level": 2,
       "dependencies": ["TASK-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/design.core.md"],
+        "modify": ["mahabharatha/data/commands/design.core.md"],
         "read": [".gsd/specs/github-issue-98/requirements.md"]
       },
       "verification": {
-        "command": "grep -q 'Run wiring verification' zerg/data/commands/design.core.md && grep -q 'python -m zerg.validate_commands' zerg/data/commands/design.core.md",
+        "command": "grep -q 'Run wiring verification' mahabharatha/data/commands/design.core.md && grep -q 'python -m mahabharatha.validate_commands' mahabharatha/data/commands/design.core.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
       "skills_required": ["markdown"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nFR-1: Auto-inject wiring task into task graphs - When /zerg:design generates task-graph.json, automatically append wiring verification task to L5. Task must depend on all L4 tasks.\n\nFR-2: Verification command scope - Run python -m zerg.validate_commands for structural checks. Run pytest with --timeout=60 and -x flags.\n\n## Dependencies\nTASK-001 creates zerg/test_scope.py with get_scoped_test_paths() function for building pytest path filter."
+      "context": "## Spec Context\nFR-1: Auto-inject wiring task into task graphs - When /mahabharatha:design generates task-graph.json, automatically append wiring verification task to L5. Task must depend on all L4 tasks.\n\nFR-2: Verification command scope - Run python -m mahabharatha.validate_commands for structural checks. Run pytest with --timeout=60 and -x flags.\n\n## Dependencies\nTASK-001 creates mahabharatha/test_scope.py with get_scoped_test_paths() function for building pytest path filter."
     },
     {
       "id": "TASK-003",
       "title": "Create unit tests for test_scope module",
-      "description": "Create comprehensive unit tests for zerg/test_scope.py. Test get_scoped_test_paths() with various task graph configurations. Test find_affected_tests() with mock file contents.",
+      "description": "Create comprehensive unit tests for mahabharatha/test_scope.py. Test get_scoped_test_paths() with various task graph configurations. Test find_affected_tests() with mock file contents.",
       "phase": "testing",
       "level": 3,
       "dependencies": ["TASK-001"],
       "files": {
         "create": ["tests/unit/test_test_scope.py"],
         "modify": [],
-        "read": ["zerg/test_scope.py"]
+        "read": ["mahabharatha/test_scope.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_test_scope.py -v --timeout=60",
@@ -71,19 +71,19 @@
       "skills_required": ["python", "pytest"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nNFR-2: Reliability - No flaky behavior, deterministic checks only.\n\n## Security Rules (Python)\n- Use tmp_path fixture for file operations\n- No hardcoded paths\n\n## Dependencies\nTASK-001 creates zerg/test_scope.py with the functions to test."
+      "context": "## Spec Context\nNFR-2: Reliability - No flaky behavior, deterministic checks only.\n\n## Security Rules (Python)\n- Use tmp_path fixture for file operations\n- No hardcoded paths\n\n## Dependencies\nTASK-001 creates mahabharatha/test_scope.py with the functions to test."
     },
     {
       "id": "TASK-004",
       "title": "Create integration tests for wiring injection",
-      "description": "Create integration tests verifying that /zerg:design task graphs include wiring verification task in L5. Test that wiring task dependencies include all L4 tasks. Test verification command format.",
+      "description": "Create integration tests verifying that /mahabharatha:design task graphs include wiring verification task in L5. Test that wiring task dependencies include all L4 tasks. Test verification command format.",
       "phase": "testing",
       "level": 3,
       "dependencies": ["TASK-002"],
       "files": {
         "create": ["tests/integration/test_design_wiring_injection.py"],
         "modify": [],
-        "read": ["zerg/data/commands/design.core.md", "zerg/parser.py"]
+        "read": ["mahabharatha/data/commands/design.core.md", "mahabharatha/parser.py"]
       },
       "verification": {
         "command": "python -m pytest tests/integration/test_design_wiring_injection.py -v --timeout=60",
@@ -93,7 +93,7 @@
       "skills_required": ["python", "pytest"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nAcceptance Criteria: /zerg:design generates task graphs with wiring verification task in L5. Wiring task runs validate_commands successfully. Task fails if any module lacks production callers.\n\n## Dependencies\nTASK-002 modifies design.core.md with wiring task injection instructions."
+      "context": "## Spec Context\nAcceptance Criteria: /mahabharatha:design generates task graphs with wiring verification task in L5. Wiring task runs validate_commands successfully. Task fails if any module lacks production callers.\n\n## Dependencies\nTASK-002 modifies design.core.md with wiring task injection instructions."
     },
     {
       "id": "TASK-005",
@@ -127,10 +127,10 @@
       "files": {
         "create": [],
         "modify": [],
-        "read": ["zerg/**/*.py", "tests/**/*.py"]
+        "read": ["mahabharatha/**/*.py", "tests/**/*.py"]
       },
       "verification": {
-        "command": "python -m zerg.validate_commands && python -m pytest tests/unit/test_test_scope.py tests/integration/test_design_wiring_injection.py -x --timeout=60 -q",
+        "command": "python -m mahabharatha.validate_commands && python -m pytest tests/unit/test_test_scope.py tests/integration/test_design_wiring_injection.py -x --timeout=60 -q",
         "timeout_seconds": 120
       },
       "estimate_minutes": 5,

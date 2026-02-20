@@ -1,4 +1,4 @@
-"""ZERG debug command - systematic debugging with root cause analysis."""
+"""MAHABHARATHA debug command - systematic debugging with root cause analysis."""
 
 from __future__ import annotations
 
@@ -409,7 +409,7 @@ class DebugCommand:
         Args:
             error: Error message to analyze
             stack_trace: Stack trace content
-            feature: ZERG feature to investigate
+            feature: MAHABHARATHA feature to investigate
             worker_id: Specific worker ID to investigate
             deep: Run system-level diagnostics
             auto_fix: Generate and execute recovery plan
@@ -440,7 +440,7 @@ class DebugCommand:
             parsed_error=parsed,
         )
 
-        # Deep diagnostics: ZERG state introspection
+        # Deep diagnostics: MAHABHARATHA state introspection
         if feature:
             result = self._run_mahabharatha_diagnostics(result, feature, worker_id)
 
@@ -553,7 +553,7 @@ class DebugCommand:
         feature: str,
         worker_id: int | None = None,
     ) -> DiagnosticResult:
-        """Run ZERG state introspection and log analysis."""
+        """Run MAHABHARATHA state introspection and log analysis."""
         from mahabharatha.diagnostics.log_analyzer import LogAnalyzer
         from mahabharatha.diagnostics.state_introspector import ZergStateIntrospector
 
@@ -576,9 +576,9 @@ class DebugCommand:
 
             if result.log_patterns:
                 result.evidence.append(f"{len(result.log_patterns)} error pattern(s) in logs")
-        except Exception as e:  # noqa: BLE001 — intentional: ZERG state introspection is best-effort
-            logger.warning(f"ZERG diagnostics failed: {e}")
-            result.evidence.append(f"ZERG diagnostics error: {e}")
+        except Exception as e:  # noqa: BLE001 — intentional: MAHABHARATHA state introspection is best-effort
+            logger.warning(f"MAHABHARATHA diagnostics failed: {e}")
+            result.evidence.append(f"MAHABHARATHA diagnostics error: {e}")
 
         return result
 
@@ -708,12 +708,12 @@ class DebugCommand:
         return "\n".join(lines)
 
     def _format_mahabharatha_health_text(self, result: DiagnosticResult) -> list[str]:
-        """Format ZERG health section for text output."""
+        """Format MAHABHARATHA health section for text output."""
         lines: list[str] = []
         if result.mahabharatha_health is not None:
             health = result.mahabharatha_health
             if self.config.verbose:
-                lines.append("ZERG Health:")
+                lines.append("MAHABHARATHA Health:")
                 lines.append(f"  Feature: {health.feature}")
                 lines.append(f"  Total Tasks: {health.total_tasks}")
                 if health.task_summary:
@@ -726,7 +726,7 @@ class DebugCommand:
                 lines.append("")
             else:
                 failed = len(health.failed_tasks) if health.failed_tasks else 0
-                summary = f"ZERG: {health.feature} — {health.total_tasks} tasks"
+                summary = f"MAHABHARATHA: {health.feature} — {health.total_tasks} tasks"
                 if failed:
                     summary += f", {failed} failed"
                 lines.append(summary)
@@ -872,7 +872,7 @@ def _write_markdown_report(
 ) -> None:
     """Write a full markdown report to the given path."""
     lines: list[str] = [
-        "# ZERG Diagnostic Report",
+        "# MAHABHARATHA Diagnostic Report",
         "",
         f"**Symptom:** {result.symptom}",
         "",
@@ -983,7 +983,7 @@ def _resolve_inputs(
         console.print("[yellow]No error provided[/yellow]")
         console.print("Use --error to specify an error message")
         console.print("Use --stacktrace to provide a stack trace file")
-        console.print("Use --feature to investigate a ZERG feature")
+        console.print("Use --feature to investigate a MAHABHARATHA feature")
         raise SystemExit(0)
 
     # Auto-detect feature if not provided but deep/auto-fix requested
@@ -1105,12 +1105,12 @@ def _display_enhanced_sections(result: DiagnosticResult) -> None:
 
 
 def _display_health_sections(result: DiagnosticResult, verbose: bool) -> None:
-    """Display ZERG health, system health, environment, and evidence sections."""
-    # ZERG health
+    """Display MAHABHARATHA health, system health, environment, and evidence sections."""
+    # MAHABHARATHA health
     if result.mahabharatha_health is not None:
         health = result.mahabharatha_health
         if verbose:
-            console.print(Panel("[bold]ZERG State[/bold]", style="cyan"))
+            console.print(Panel("[bold]MAHABHARATHA State[/bold]", style="cyan"))
             console.print(f"  Feature: {health.feature}")
             console.print(f"  Tasks: {health.total_tasks}")
             if health.task_summary:
@@ -1123,7 +1123,7 @@ def _display_health_sections(result: DiagnosticResult, verbose: bool) -> None:
             console.print()
         else:
             failed = len(health.failed_tasks) if health.failed_tasks else 0
-            summary = f"ZERG: {health.feature} — {health.total_tasks} tasks"
+            summary = f"MAHABHARATHA: {health.feature} — {health.total_tasks} tasks"
             if failed:
                 summary += f", {failed} failed"
             console.print(f"  [dim]{summary}[/dim]")
@@ -1255,7 +1255,7 @@ def _display_rich_output(
 @click.option("--verbose", "-v", is_flag=True, help="Verbose output")
 @click.option("--output", "-o", help="Output file for diagnostic report")
 @click.option("--json", "json_output", is_flag=True, help="Output as JSON")
-@click.option("--feature", "-f", help="ZERG feature to investigate")
+@click.option("--feature", "-f", help="MAHABHARATHA feature to investigate")
 @click.option("--worker", "-w", type=int, help="Specific worker ID to investigate")
 @click.option("--deep", is_flag=True, help="Run system-level diagnostics")
 @click.option("--auto-fix", is_flag=True, help="Generate and execute recovery plan")
@@ -1287,7 +1287,7 @@ def debug(
     4. Root Cause: Determine actual cause with confidence score
 
     Deep diagnostics (with --feature or --deep):
-    5. ZERG state introspection and log analysis
+    5. MAHABHARATHA state introspection and log analysis
     6. System health checks (git, disk, docker, ports)
     7. Recovery planning with executable steps
 
@@ -1314,7 +1314,7 @@ def debug(
         mahabharatha debug --error "KeyError" --report diag.md
     """
     try:
-        console.print("\n[bold cyan]ZERG Debug[/bold cyan]\n")
+        console.print("\n[bold cyan]MAHABHARATHA Debug[/bold cyan]\n")
 
         # Resolve and validate inputs
         error_message, stack_trace_content, feature = _resolve_inputs(

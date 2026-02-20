@@ -10,24 +10,24 @@
     {
       "id": "PA-L1-001",
       "title": "Create performance types and package init",
-      "description": "Create zerg/performance/__init__.py with public exports (initially empty, populated after all modules exist) and zerg/performance/types.py with all data models: Severity enum (CRITICAL/HIGH/MEDIUM/LOW/INFO with weights 25/10/5/2/0), PerformanceFactor dataclass (id, category, factor, description, cli_tools, security_note), PerformanceFinding dataclass (factor_id, factor_name, category, severity, message, file, line, tool, rule_id, suggestion), ToolStatus dataclass (name, available, version, factors_covered), CategoryScore dataclass (category, score Optional[float], findings, factors_checked, factors_total), DetectedStack dataclass (languages, frameworks, has_docker, has_kubernetes), PerformanceReport dataclass (overall_score, categories, tool_statuses, findings, factors_checked, factors_total, detected_stack, to_dict() method, top_issues(limit) method).",
+      "description": "Create mahabharatha/performance/__init__.py with public exports (initially empty, populated after all modules exist) and mahabharatha/performance/types.py with all data models: Severity enum (CRITICAL/HIGH/MEDIUM/LOW/INFO with weights 25/10/5/2/0), PerformanceFactor dataclass (id, category, factor, description, cli_tools, security_note), PerformanceFinding dataclass (factor_id, factor_name, category, severity, message, file, line, tool, rule_id, suggestion), ToolStatus dataclass (name, available, version, factors_covered), CategoryScore dataclass (category, score Optional[float], findings, factors_checked, factors_total), DetectedStack dataclass (languages, frameworks, has_docker, has_kubernetes), PerformanceReport dataclass (overall_score, categories, tool_statuses, findings, factors_checked, factors_total, detected_stack, to_dict() method, top_issues(limit) method).",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/performance/__init__.py", "zerg/performance/types.py"],
+        "create": ["mahabharatha/performance/__init__.py", "mahabharatha/performance/types.py"],
         "modify": [],
-        "read": ["zerg/diagnostics/types.py"]
+        "read": ["mahabharatha/diagnostics/types.py"]
       },
       "acceptance_criteria": [
-        "zerg/performance/types.py defines Severity, PerformanceFactor, PerformanceFinding, ToolStatus, CategoryScore, DetectedStack, PerformanceReport",
+        "mahabharatha/performance/types.py defines Severity, PerformanceFactor, PerformanceFinding, ToolStatus, CategoryScore, DetectedStack, PerformanceReport",
         "All dataclasses have to_dict() or are simple enough for dataclasses.asdict()",
         "PerformanceReport.top_issues() returns sorted findings by severity",
         "ruff check passes on both files",
-        "python -c 'from zerg.performance.types import PerformanceReport' succeeds"
+        "python -c 'from mahabharatha.performance.types import PerformanceReport' succeeds"
       ],
       "verification": {
-        "command": "cd /Users/klambros/PycharmProjects/ZERG && ruff check zerg/performance/types.py zerg/performance/__init__.py && python -c 'from zerg.performance.types import PerformanceReport, Severity, PerformanceFinding, DetectedStack; print(\"OK\")'",
+        "command": "cd /Users/klambros/PycharmProjects/MAHABHARATHA && ruff check mahabharatha/performance/types.py mahabharatha/performance/__init__.py && python -c 'from mahabharatha.performance.types import PerformanceReport, Severity, PerformanceFinding, DetectedStack; print(\"OK\")'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10
@@ -35,24 +35,24 @@
     {
       "id": "PA-L1-002",
       "title": "Create factor catalog loader",
-      "description": "1. Copy claudedocs/performance_evaluation_factors.json to zerg/performance/data/factors.json as package data. 2. Create zerg/performance/catalog.py with FactorCatalog class: load() classmethod reads factors.json via importlib.resources, returns list[PerformanceFactor]. filter_static_only() removes factors whose cli_tools contain only runtime tools (perf, perf stat, async-profiler, cachegrind, strace, ltrace, tcpdump, wrk, ab, k6, etc.). get_tool_factor_mapping() returns dict[str, list[int]] mapping tool_name to factor IDs. get_factors_by_category() returns dict[str, list[PerformanceFactor]]. STATIC_TOOLS constant listing the 11 supported tools.",
+      "description": "1. Copy claudedocs/performance_evaluation_factors.json to mahabharatha/performance/data/factors.json as package data. 2. Create mahabharatha/performance/catalog.py with FactorCatalog class: load() classmethod reads factors.json via importlib.resources, returns list[PerformanceFactor]. filter_static_only() removes factors whose cli_tools contain only runtime tools (perf, perf stat, async-profiler, cachegrind, strace, ltrace, tcpdump, wrk, ab, k6, etc.). get_tool_factor_mapping() returns dict[str, list[int]] mapping tool_name to factor IDs. get_factors_by_category() returns dict[str, list[PerformanceFactor]]. STATIC_TOOLS constant listing the 11 supported tools.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/performance/data/factors.json", "zerg/performance/catalog.py"],
+        "create": ["mahabharatha/performance/data/factors.json", "mahabharatha/performance/catalog.py"],
         "modify": [],
         "read": ["claudedocs/performance_evaluation_factors.json"]
       },
       "acceptance_criteria": [
-        "zerg/performance/data/factors.json is a valid copy of the factor catalog",
+        "mahabharatha/performance/data/factors.json is a valid copy of the factor catalog",
         "FactorCatalog.load() returns list of PerformanceFactor objects",
         "filter_static_only() removes runtime-only factors",
         "get_tool_factor_mapping() returns correct tool-to-factor-id mapping",
         "ruff check passes"
       ],
       "verification": {
-        "command": "cd /Users/klambros/PycharmProjects/ZERG && ruff check zerg/performance/catalog.py && python -c \"from zerg.performance.catalog import FactorCatalog; c = FactorCatalog.load(); print(f'Loaded {len(c.factors)} factors, {len(c.filter_static_only())} static'); print('OK')\"",
+        "command": "cd /Users/klambros/PycharmProjects/MAHABHARATHA && ruff check mahabharatha/performance/catalog.py && python -c \"from mahabharatha.performance.catalog import FactorCatalog; c = FactorCatalog.load(); print(f'Loaded {len(c.factors)} factors, {len(c.filter_static_only())} static'); print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10
@@ -60,12 +60,12 @@
     {
       "id": "PA-L1-003",
       "title": "Create stack detector",
-      "description": "Create zerg/performance/stack_detector.py with detect_stack(project_path: str) -> DetectedStack function. Detection logic: 1. Languages: scan for *.py, *.js, *.ts, *.go, *.rs, *.java, *.rb, *.php file extensions. 2. Frameworks: check for package.json (node/react/vue/angular), requirements.txt/pyproject.toml/setup.py (python frameworks via content inspection), go.mod, Cargo.toml, pom.xml/build.gradle. 3. Infrastructure: Dockerfile/docker-compose.yml sets has_docker=True, any k8s manifest (deployment.yaml, service.yaml, etc.) or helmfile sets has_kubernetes=True. Return DetectedStack with languages: list[str], frameworks: list[str], has_docker: bool, has_kubernetes: bool.",
+      "description": "Create mahabharatha/performance/stack_detector.py with detect_stack(project_path: str) -> DetectedStack function. Detection logic: 1. Languages: scan for *.py, *.js, *.ts, *.go, *.rs, *.java, *.rb, *.php file extensions. 2. Frameworks: check for package.json (node/react/vue/angular), requirements.txt/pyproject.toml/setup.py (python frameworks via content inspection), go.mod, Cargo.toml, pom.xml/build.gradle. 3. Infrastructure: Dockerfile/docker-compose.yml sets has_docker=True, any k8s manifest (deployment.yaml, service.yaml, etc.) or helmfile sets has_kubernetes=True. Return DetectedStack with languages: list[str], frameworks: list[str], has_docker: bool, has_kubernetes: bool.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/performance/stack_detector.py"],
+        "create": ["mahabharatha/performance/stack_detector.py"],
         "modify": [],
         "read": []
       },
@@ -76,7 +76,7 @@
         "ruff check passes"
       ],
       "verification": {
-        "command": "cd /Users/klambros/PycharmProjects/ZERG && ruff check zerg/performance/stack_detector.py && python -c \"from zerg.performance.stack_detector import detect_stack; s = detect_stack('.'); print(f'Languages: {s.languages}, Docker: {s.has_docker}'); print('OK')\"",
+        "command": "cd /Users/klambros/PycharmProjects/MAHABHARATHA && ruff check mahabharatha/performance/stack_detector.py && python -c \"from mahabharatha.performance.stack_detector import detect_stack; s = detect_stack('.'); print(f'Languages: {s.languages}, Docker: {s.has_docker}'); print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 8
@@ -84,12 +84,12 @@
     {
       "id": "PA-L1-004",
       "title": "Create tool registry",
-      "description": "Create zerg/performance/tool_registry.py with ToolRegistry class. TOOL_SPECS dict maps tool name to ToolSpec(check_cmd, version_flag, install_hint). All 11 tools: semgrep, radon, lizard, vulture, jscpd, deptry, pipdeptree, dive, hadolint, trivy, cloc. check_availability() method: uses shutil.which() for fast binary detection, runs version command for version string, returns list[ToolStatus]. Uses ThreadPoolExecutor(max_workers=8) for parallel checks. get_available() returns list of available tool names. print_advisory(console, missing) prints Rich panel showing missing tools and what factors they'd cover.",
+      "description": "Create mahabharatha/performance/tool_registry.py with ToolRegistry class. TOOL_SPECS dict maps tool name to ToolSpec(check_cmd, version_flag, install_hint). All 11 tools: semgrep, radon, lizard, vulture, jscpd, deptry, pipdeptree, dive, hadolint, trivy, cloc. check_availability() method: uses shutil.which() for fast binary detection, runs version command for version string, returns list[ToolStatus]. Uses ThreadPoolExecutor(max_workers=8) for parallel checks. get_available() returns list of available tool names. print_advisory(console, missing) prints Rich panel showing missing tools and what factors they'd cover.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/performance/tool_registry.py"],
+        "create": ["mahabharatha/performance/tool_registry.py"],
         "modify": [],
         "read": []
       },
@@ -101,7 +101,7 @@
         "ruff check passes"
       ],
       "verification": {
-        "command": "cd /Users/klambros/PycharmProjects/ZERG && ruff check zerg/performance/tool_registry.py && python -c \"from zerg.performance.tool_registry import ToolRegistry; r = ToolRegistry(); statuses = r.check_availability(); print(f'Checked {len(statuses)} tools'); print('OK')\"",
+        "command": "cd /Users/klambros/PycharmProjects/MAHABHARATHA && ruff check mahabharatha/performance/tool_registry.py && python -c \"from mahabharatha.performance.tool_registry import ToolRegistry; r = ToolRegistry(); statuses = r.check_availability(); print(f'Checked {len(statuses)} tools'); print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10
@@ -109,14 +109,14 @@
     {
       "id": "PA-L2-001",
       "title": "Create base adapter and semgrep adapter",
-      "description": "Create zerg/performance/adapters/__init__.py with imports of all adapter classes. Create zerg/performance/adapters/base.py with BaseToolAdapter ABC: name (str), tool_name (str), factors_covered (list[int]) properties. Abstract run(files, project_path, stack) -> list[PerformanceFinding]. is_applicable(stack) -> bool (default True). Create zerg/performance/adapters/semgrep_adapter.py: SemgrepAdapter maps detected stack to semgrep registry configs (p/python, p/javascript, p/typescript, p/golang, p/dockerfile, p/performance). Runs semgrep --json --config=<configs> on project. Parses JSON output, maps rule IDs to factor IDs via RULE_FACTOR_MAP dict. Returns PerformanceFinding per match with severity mapped from semgrep severity.",
+      "description": "Create mahabharatha/performance/adapters/__init__.py with imports of all adapter classes. Create mahabharatha/performance/adapters/base.py with BaseToolAdapter ABC: name (str), tool_name (str), factors_covered (list[int]) properties. Abstract run(files, project_path, stack) -> list[PerformanceFinding]. is_applicable(stack) -> bool (default True). Create mahabharatha/performance/adapters/semgrep_adapter.py: SemgrepAdapter maps detected stack to semgrep registry configs (p/python, p/javascript, p/typescript, p/golang, p/dockerfile, p/performance). Runs semgrep --json --config=<configs> on project. Parses JSON output, maps rule IDs to factor IDs via RULE_FACTOR_MAP dict. Returns PerformanceFinding per match with severity mapped from semgrep severity.",
       "phase": "core",
       "level": 2,
       "dependencies": ["PA-L1-001", "PA-L1-002"],
       "files": {
-        "create": ["zerg/performance/adapters/__init__.py", "zerg/performance/adapters/base.py", "zerg/performance/adapters/semgrep_adapter.py"],
+        "create": ["mahabharatha/performance/adapters/__init__.py", "mahabharatha/performance/adapters/base.py", "mahabharatha/performance/adapters/semgrep_adapter.py"],
         "modify": [],
-        "read": ["zerg/performance/types.py", "zerg/command_executor.py"]
+        "read": ["mahabharatha/performance/types.py", "mahabharatha/command_executor.py"]
       },
       "acceptance_criteria": [
         "BaseToolAdapter ABC defines run(), is_applicable(), name, tool_name, factors_covered",
@@ -125,7 +125,7 @@
         "ruff check passes on all three files"
       ],
       "verification": {
-        "command": "cd /Users/klambros/PycharmProjects/ZERG && ruff check zerg/performance/adapters/base.py zerg/performance/adapters/semgrep_adapter.py zerg/performance/adapters/__init__.py && python -c \"from zerg.performance.adapters.base import BaseToolAdapter; from zerg.performance.adapters.semgrep_adapter import SemgrepAdapter; print('OK')\"",
+        "command": "cd /Users/klambros/PycharmProjects/MAHABHARATHA && ruff check mahabharatha/performance/adapters/base.py mahabharatha/performance/adapters/semgrep_adapter.py mahabharatha/performance/adapters/__init__.py && python -c \"from mahabharatha.performance.adapters.base import BaseToolAdapter; from mahabharatha.performance.adapters.semgrep_adapter import SemgrepAdapter; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15
@@ -138,9 +138,9 @@
       "level": 2,
       "dependencies": ["PA-L1-001", "PA-L1-002"],
       "files": {
-        "create": ["zerg/performance/adapters/radon_adapter.py", "zerg/performance/adapters/lizard_adapter.py", "zerg/performance/adapters/vulture_adapter.py"],
+        "create": ["mahabharatha/performance/adapters/radon_adapter.py", "mahabharatha/performance/adapters/lizard_adapter.py", "mahabharatha/performance/adapters/vulture_adapter.py"],
         "modify": [],
-        "read": ["zerg/performance/adapters/base.py", "zerg/performance/types.py"]
+        "read": ["mahabharatha/performance/adapters/base.py", "mahabharatha/performance/types.py"]
       },
       "acceptance_criteria": [
         "RadonAdapter parses radon cc/mi JSON output",
@@ -150,7 +150,7 @@
         "ruff check passes"
       ],
       "verification": {
-        "command": "cd /Users/klambros/PycharmProjects/ZERG && ruff check zerg/performance/adapters/radon_adapter.py zerg/performance/adapters/lizard_adapter.py zerg/performance/adapters/vulture_adapter.py && python -c \"from zerg.performance.adapters.radon_adapter import RadonAdapter; from zerg.performance.adapters.lizard_adapter import LizardAdapter; from zerg.performance.adapters.vulture_adapter import VultureAdapter; print('OK')\"",
+        "command": "cd /Users/klambros/PycharmProjects/MAHABHARATHA && ruff check mahabharatha/performance/adapters/radon_adapter.py mahabharatha/performance/adapters/lizard_adapter.py mahabharatha/performance/adapters/vulture_adapter.py && python -c \"from mahabharatha.performance.adapters.radon_adapter import RadonAdapter; from mahabharatha.performance.adapters.lizard_adapter import LizardAdapter; from mahabharatha.performance.adapters.vulture_adapter import VultureAdapter; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15
@@ -163,9 +163,9 @@
       "level": 2,
       "dependencies": ["PA-L1-001", "PA-L1-002"],
       "files": {
-        "create": ["zerg/performance/adapters/jscpd_adapter.py", "zerg/performance/adapters/deptry_adapter.py", "zerg/performance/adapters/pipdeptree_adapter.py", "zerg/performance/adapters/cloc_adapter.py"],
+        "create": ["mahabharatha/performance/adapters/jscpd_adapter.py", "mahabharatha/performance/adapters/deptry_adapter.py", "mahabharatha/performance/adapters/pipdeptree_adapter.py", "mahabharatha/performance/adapters/cloc_adapter.py"],
         "modify": [],
-        "read": ["zerg/performance/adapters/base.py", "zerg/performance/types.py"]
+        "read": ["mahabharatha/performance/adapters/base.py", "mahabharatha/performance/types.py"]
       },
       "acceptance_criteria": [
         "JscpdAdapter parses jscpd JSON output for duplicates",
@@ -175,7 +175,7 @@
         "ruff check passes"
       ],
       "verification": {
-        "command": "cd /Users/klambros/PycharmProjects/ZERG && ruff check zerg/performance/adapters/jscpd_adapter.py zerg/performance/adapters/deptry_adapter.py zerg/performance/adapters/pipdeptree_adapter.py zerg/performance/adapters/cloc_adapter.py && python -c \"from zerg.performance.adapters.jscpd_adapter import JscpdAdapter; from zerg.performance.adapters.cloc_adapter import ClocAdapter; print('OK')\"",
+        "command": "cd /Users/klambros/PycharmProjects/MAHABHARATHA && ruff check mahabharatha/performance/adapters/jscpd_adapter.py mahabharatha/performance/adapters/deptry_adapter.py mahabharatha/performance/adapters/pipdeptree_adapter.py mahabharatha/performance/adapters/cloc_adapter.py && python -c \"from mahabharatha.performance.adapters.jscpd_adapter import JscpdAdapter; from mahabharatha.performance.adapters.cloc_adapter import ClocAdapter; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15
@@ -188,9 +188,9 @@
       "level": 2,
       "dependencies": ["PA-L1-001", "PA-L1-002"],
       "files": {
-        "create": ["zerg/performance/adapters/dive_adapter.py", "zerg/performance/adapters/hadolint_adapter.py", "zerg/performance/adapters/trivy_adapter.py"],
+        "create": ["mahabharatha/performance/adapters/dive_adapter.py", "mahabharatha/performance/adapters/hadolint_adapter.py", "mahabharatha/performance/adapters/trivy_adapter.py"],
         "modify": [],
-        "read": ["zerg/performance/adapters/base.py", "zerg/performance/types.py"]
+        "read": ["mahabharatha/performance/adapters/base.py", "mahabharatha/performance/types.py"]
       },
       "acceptance_criteria": [
         "DiveAdapter analyzes Docker image layers",
@@ -200,7 +200,7 @@
         "ruff check passes"
       ],
       "verification": {
-        "command": "cd /Users/klambros/PycharmProjects/ZERG && ruff check zerg/performance/adapters/dive_adapter.py zerg/performance/adapters/hadolint_adapter.py zerg/performance/adapters/trivy_adapter.py && python -c \"from zerg.performance.adapters.dive_adapter import DiveAdapter; from zerg.performance.adapters.trivy_adapter import TrivyAdapter; print('OK')\"",
+        "command": "cd /Users/klambros/PycharmProjects/MAHABHARATHA && ruff check mahabharatha/performance/adapters/dive_adapter.py mahabharatha/performance/adapters/hadolint_adapter.py mahabharatha/performance/adapters/trivy_adapter.py && python -c \"from mahabharatha.performance.adapters.dive_adapter import DiveAdapter; from mahabharatha.performance.adapters.trivy_adapter import TrivyAdapter; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 12
@@ -208,14 +208,14 @@
     {
       "id": "PA-L3-001",
       "title": "Create performance aggregator",
-      "description": "Create zerg/performance/aggregator.py with PerformanceAuditor class. __init__(project_path) creates FactorCatalog, ToolRegistry, detects stack. run(files) method: 1. Check tool availability (parallel). 2. Filter catalog to static-only factors. 3. Select applicable adapters based on stack + available tools. 4. Run adapters in parallel via ThreadPoolExecutor. 5. Aggregate findings by category. 6. Compute per-category scores: score = max(0, 100 - (penalty / max(1, factors_checked)) * 10). Severity weights: CRITICAL=25, HIGH=10, MEDIUM=5, LOW=2, INFO=0. Categories with no tools get score=None. 7. Compute overall score as weighted average. 8. Return PerformanceReport.",
+      "description": "Create mahabharatha/performance/aggregator.py with PerformanceAuditor class. __init__(project_path) creates FactorCatalog, ToolRegistry, detects stack. run(files) method: 1. Check tool availability (parallel). 2. Filter catalog to static-only factors. 3. Select applicable adapters based on stack + available tools. 4. Run adapters in parallel via ThreadPoolExecutor. 5. Aggregate findings by category. 6. Compute per-category scores: score = max(0, 100 - (penalty / max(1, factors_checked)) * 10). Severity weights: CRITICAL=25, HIGH=10, MEDIUM=5, LOW=2, INFO=0. Categories with no tools get score=None. 7. Compute overall score as weighted average. 8. Return PerformanceReport.",
       "phase": "integration",
       "level": 3,
       "dependencies": ["PA-L2-001", "PA-L2-002", "PA-L2-003", "PA-L2-004"],
       "files": {
-        "create": ["zerg/performance/aggregator.py"],
+        "create": ["mahabharatha/performance/aggregator.py"],
         "modify": [],
-        "read": ["zerg/performance/types.py", "zerg/performance/catalog.py", "zerg/performance/stack_detector.py", "zerg/performance/tool_registry.py", "zerg/performance/adapters/base.py"]
+        "read": ["mahabharatha/performance/types.py", "mahabharatha/performance/catalog.py", "mahabharatha/performance/stack_detector.py", "mahabharatha/performance/tool_registry.py", "mahabharatha/performance/adapters/base.py"]
       },
       "acceptance_criteria": [
         "PerformanceAuditor.run() returns PerformanceReport",
@@ -226,7 +226,7 @@
         "ruff check passes"
       ],
       "verification": {
-        "command": "cd /Users/klambros/PycharmProjects/ZERG && ruff check zerg/performance/aggregator.py && python -c \"from zerg.performance.aggregator import PerformanceAuditor; a = PerformanceAuditor('.'); r = a.run([]); print(f'Score: {r.overall_score}, Checked: {r.factors_checked}/{r.factors_total}'); print('OK')\"",
+        "command": "cd /Users/klambros/PycharmProjects/MAHABHARATHA && ruff check mahabharatha/performance/aggregator.py && python -c \"from mahabharatha.performance.aggregator import PerformanceAuditor; a = PerformanceAuditor('.'); r = a.run([]); print(f'Score: {r.overall_score}, Checked: {r.factors_checked}/{r.factors_total}'); print('OK')\"",
         "timeout_seconds": 60
       },
       "estimate_minutes": 15
@@ -234,14 +234,14 @@
     {
       "id": "PA-L3-002",
       "title": "Create performance formatters",
-      "description": "Create zerg/performance/formatters.py with 4 formatter functions: 1. format_rich(report, console): Rich tables grouped by category with color-coded scores (green >80, yellow >60, red <=60), expandable findings per category, tool availability summary panel, overall score gauge. 2. format_json(report) -> str: Full PerformanceReport.to_dict() as indented JSON. 3. format_sarif(report) -> str: SARIF 2.1.0 with driver name 'zerg-performance', rules from factors, results from findings with locations. 4. format_markdown(report) -> str: H2 per category, findings table, summary section with overall score and tool coverage.",
+      "description": "Create mahabharatha/performance/formatters.py with 4 formatter functions: 1. format_rich(report, console): Rich tables grouped by category with color-coded scores (green >80, yellow >60, red <=60), expandable findings per category, tool availability summary panel, overall score gauge. 2. format_json(report) -> str: Full PerformanceReport.to_dict() as indented JSON. 3. format_sarif(report) -> str: SARIF 2.1.0 with driver name 'mahabharatha-performance', rules from factors, results from findings with locations. 4. format_markdown(report) -> str: H2 per category, findings table, summary section with overall score and tool coverage.",
       "phase": "integration",
       "level": 3,
       "dependencies": ["PA-L2-001", "PA-L2-002", "PA-L2-003", "PA-L2-004"],
       "files": {
-        "create": ["zerg/performance/formatters.py"],
+        "create": ["mahabharatha/performance/formatters.py"],
         "modify": [],
-        "read": ["zerg/performance/types.py", "zerg/commands/analyze.py"]
+        "read": ["mahabharatha/performance/types.py", "mahabharatha/commands/analyze.py"]
       },
       "acceptance_criteria": [
         "format_rich() produces Rich console output with category tables",
@@ -251,7 +251,7 @@
         "ruff check passes"
       ],
       "verification": {
-        "command": "cd /Users/klambros/PycharmProjects/ZERG && ruff check zerg/performance/formatters.py && python -c \"from zerg.performance.formatters import format_json, format_sarif, format_markdown; print('OK')\"",
+        "command": "cd /Users/klambros/PycharmProjects/MAHABHARATHA && ruff check mahabharatha/performance/formatters.py && python -c \"from mahabharatha.performance.formatters import format_json, format_sarif, format_markdown; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 12
@@ -259,14 +259,14 @@
     {
       "id": "PA-L4-001",
       "title": "Integrate performance into analyze CLI",
-      "description": "Modify zerg/commands/analyze.py: 1. Add PERFORMANCE = 'performance' to CheckType enum. 2. Add PerformanceChecker(BaseChecker) bridge class: check(files) imports PerformanceAuditor lazily, runs audit, converts PerformanceReport to AnalysisResult (passed = score >= 70, score = overall_score, issues = top_issues(20)). Store full report as self._last_report for formatter access. 3. Register 'performance': PerformanceChecker() in AnalyzeCommand.__init__ checkers dict. 4. Update --check choices to include 'performance'. 5. In AnalyzeCommand.run(), when 'all' in checks, use list(self.checkers.keys()) but EXCLUDE 'performance'. 6. Add --performance boolean flag to CLI function. If set, override check='performance'. 7. Add 'markdown' to --format choices. 8. In CLI output section, when check=='performance', use perf-specific formatters from zerg.performance.formatters instead of generic table. 9. Update __init__.py exports in zerg/performance/ to include all public classes.",
+      "description": "Modify mahabharatha/commands/analyze.py: 1. Add PERFORMANCE = 'performance' to CheckType enum. 2. Add PerformanceChecker(BaseChecker) bridge class: check(files) imports PerformanceAuditor lazily, runs audit, converts PerformanceReport to AnalysisResult (passed = score >= 70, score = overall_score, issues = top_issues(20)). Store full report as self._last_report for formatter access. 3. Register 'performance': PerformanceChecker() in AnalyzeCommand.__init__ checkers dict. 4. Update --check choices to include 'performance'. 5. In AnalyzeCommand.run(), when 'all' in checks, use list(self.checkers.keys()) but EXCLUDE 'performance'. 6. Add --performance boolean flag to CLI function. If set, override check='performance'. 7. Add 'markdown' to --format choices. 8. In CLI output section, when check=='performance', use perf-specific formatters from mahabharatha.performance.formatters instead of generic table. 9. Update __init__.py exports in mahabharatha/performance/ to include all public classes.",
       "phase": "integration",
       "level": 4,
       "dependencies": ["PA-L3-001", "PA-L3-002"],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/analyze.py", "zerg/performance/__init__.py"],
-        "read": ["zerg/performance/aggregator.py", "zerg/performance/formatters.py", "zerg/performance/types.py"]
+        "modify": ["mahabharatha/commands/analyze.py", "mahabharatha/performance/__init__.py"],
+        "read": ["mahabharatha/performance/aggregator.py", "mahabharatha/performance/formatters.py", "mahabharatha/performance/types.py"]
       },
       "acceptance_criteria": [
         "CheckType.PERFORMANCE exists",
@@ -276,11 +276,11 @@
         "--check all does NOT include performance",
         "--format markdown works",
         "Performance-specific formatters used for Rich/JSON/SARIF/Markdown output",
-        "zerg/performance/__init__.py exports all public classes",
+        "mahabharatha/performance/__init__.py exports all public classes",
         "ruff check passes"
       ],
       "verification": {
-        "command": "cd /Users/klambros/PycharmProjects/ZERG && ruff check zerg/commands/analyze.py zerg/performance/__init__.py && python -c \"from zerg.commands.analyze import CheckType, PerformanceChecker; assert hasattr(CheckType, 'PERFORMANCE'); print('OK')\"",
+        "command": "cd /Users/klambros/PycharmProjects/MAHABHARATHA && ruff check mahabharatha/commands/analyze.py mahabharatha/performance/__init__.py && python -c \"from mahabharatha.commands.analyze import CheckType, PerformanceChecker; assert hasattr(CheckType, 'PERFORMANCE'); print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 12
@@ -295,7 +295,7 @@
       "files": {
         "create": ["tests/unit/test_performance_types.py", "tests/unit/test_performance_catalog.py", "tests/unit/test_performance_stack.py", "tests/unit/test_performance_registry.py"],
         "modify": [],
-        "read": ["zerg/performance/types.py", "zerg/performance/catalog.py", "zerg/performance/stack_detector.py", "zerg/performance/tool_registry.py"]
+        "read": ["mahabharatha/performance/types.py", "mahabharatha/performance/catalog.py", "mahabharatha/performance/stack_detector.py", "mahabharatha/performance/tool_registry.py"]
       },
       "acceptance_criteria": [
         "All tests pass with pytest",
@@ -305,7 +305,7 @@
         "ruff check passes"
       ],
       "verification": {
-        "command": "cd /Users/klambros/PycharmProjects/ZERG && ruff check tests/unit/test_performance_types.py tests/unit/test_performance_catalog.py tests/unit/test_performance_stack.py tests/unit/test_performance_registry.py && python -m pytest tests/unit/test_performance_types.py tests/unit/test_performance_catalog.py tests/unit/test_performance_stack.py tests/unit/test_performance_registry.py -x -q 2>&1 | tail -5",
+        "command": "cd /Users/klambros/PycharmProjects/MAHABHARATHA && ruff check tests/unit/test_performance_types.py tests/unit/test_performance_catalog.py tests/unit/test_performance_stack.py tests/unit/test_performance_registry.py && python -m pytest tests/unit/test_performance_types.py tests/unit/test_performance_catalog.py tests/unit/test_performance_stack.py tests/unit/test_performance_registry.py -x -q 2>&1 | tail -5",
         "timeout_seconds": 60
       },
       "estimate_minutes": 15
@@ -320,7 +320,7 @@
       "files": {
         "create": ["tests/unit/test_performance_adapters.py", "tests/unit/test_performance_aggregator.py", "tests/unit/test_performance_formatters.py"],
         "modify": [],
-        "read": ["zerg/performance/adapters/", "zerg/performance/aggregator.py", "zerg/performance/formatters.py"]
+        "read": ["mahabharatha/performance/adapters/", "mahabharatha/performance/aggregator.py", "mahabharatha/performance/formatters.py"]
       },
       "acceptance_criteria": [
         "All tests pass with pytest",
@@ -331,7 +331,7 @@
         "ruff check passes"
       ],
       "verification": {
-        "command": "cd /Users/klambros/PycharmProjects/ZERG && ruff check tests/unit/test_performance_adapters.py tests/unit/test_performance_aggregator.py tests/unit/test_performance_formatters.py && python -m pytest tests/unit/test_performance_adapters.py tests/unit/test_performance_aggregator.py tests/unit/test_performance_formatters.py -x -q 2>&1 | tail -5",
+        "command": "cd /Users/klambros/PycharmProjects/MAHABHARATHA && ruff check tests/unit/test_performance_adapters.py tests/unit/test_performance_aggregator.py tests/unit/test_performance_formatters.py && python -m pytest tests/unit/test_performance_adapters.py tests/unit/test_performance_aggregator.py tests/unit/test_performance_formatters.py -x -q 2>&1 | tail -5",
         "timeout_seconds": 60
       },
       "estimate_minutes": 15

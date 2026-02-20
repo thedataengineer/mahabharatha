@@ -53,7 +53,7 @@
       "skills_required": ["github-actions", "yaml"],
       "consumers": ["TASK-003"],
       "integration_test": null,
-      "context": "## Spec Context\nCreate single ci.yml replacing 3 workflows. Jobs: quality (lint+validate+changelog), test (2 shards, needs: quality), audit (no deps). Triggers must include labeled/unlabeled for skip-changelog detection. Quality job: fetch-depth 0, ruff check + format, validate_commands, inline changelog diff. Test job: pytest tests/ -m 'not slow' --splits 2 --group N with git config. Audit: pip-audit --desc.\n\n## Current Workflows (to absorb)\n- pytest.yml: smoke→lint→test(4 shards)+integration+audit\n- changelog-check.yml: git diff for CHANGELOG.md, skip-changelog label\n- command-validation.yml: python -m zerg.validate_commands\n\n## Dependencies\nNone — foundation task. TASK-003 depends on this."
+      "context": "## Spec Context\nCreate single ci.yml replacing 3 workflows. Jobs: quality (lint+validate+changelog), test (2 shards, needs: quality), audit (no deps). Triggers must include labeled/unlabeled for skip-changelog detection. Quality job: fetch-depth 0, ruff check + format, validate_commands, inline changelog diff. Test job: pytest tests/ -m 'not slow' --splits 2 --group N with git config. Audit: pip-audit --desc.\n\n## Current Workflows (to absorb)\n- pytest.yml: smoke→lint→test(4 shards)+integration+audit\n- changelog-check.yml: git diff for CHANGELOG.md, skip-changelog label\n- command-validation.yml: python -m mahabharatha.validate_commands\n\n## Dependencies\nNone — foundation task. TASK-003 depends on this."
     },
     {
       "id": "TASK-003",

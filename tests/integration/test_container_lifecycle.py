@@ -1,4 +1,4 @@
-"""Integration tests for ZERG container lifecycle (TC-013).
+"""Integration tests for MAHABHARATHA container lifecycle (TC-013).
 
 Tests ContainerLauncher spawn, monitor, terminate cycle.
 """

@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 Orchestrator."""
+"""Tests for MAHABHARATHA v2 Orchestrator."""
 
 import json
 import subprocess
@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-# Add .zerg to path for imports
+# Add .mahabharatha to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from orchestrator import MergeConflictError, Orchestrator
@@ -187,7 +187,7 @@ class TestOrchestratorWorktreeIntegration:
 
         assert worker.worktree is not None
         assert worker.worktree.path.exists()
-        assert worker.worktree.branch == "zerg/worker-w1"
+        assert worker.worktree.branch == "mahabharatha/worker-w1"
         assert worker.current_task == "TASK-001"
 
     def test_complete_level_with_no_workers(self):

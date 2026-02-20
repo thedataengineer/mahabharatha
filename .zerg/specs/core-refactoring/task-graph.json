@@ -16,8 +16,8 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/launcher.py"],
-        "read": ["zerg/retry_backoff.py"]
+        "modify": ["mahabharatha/launcher.py"],
+        "read": ["mahabharatha/retry_backoff.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_launcher.py tests/unit/test_launcher_process.py -x -q --timeout=60",
@@ -38,7 +38,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/launcher.py"],
+        "modify": ["mahabharatha/launcher.py"],
         "read": []
       },
       "verification": {
@@ -60,7 +60,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/launcher.py"],
+        "modify": ["mahabharatha/launcher.py"],
         "read": []
       },
       "verification": {
@@ -82,7 +82,7 @@
       "dependencies": ["TASK-001", "TASK-002", "TASK-003"],
       "files": {
         "create": [],
-        "modify": ["zerg/orchestrator.py"],
+        "modify": ["mahabharatha/orchestrator.py"],
         "read": []
       },
       "verification": {
@@ -104,7 +104,7 @@
       "dependencies": ["TASK-004"],
       "files": {
         "create": [],
-        "modify": ["zerg/orchestrator.py"],
+        "modify": ["mahabharatha/orchestrator.py"],
         "read": []
       },
       "verification": {
@@ -126,7 +126,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/worker_protocol.py"],
+        "modify": ["mahabharatha/worker_protocol.py"],
         "read": []
       },
       "verification": {
@@ -148,7 +148,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/level_coordinator.py"],
+        "modify": ["mahabharatha/level_coordinator.py"],
         "read": []
       },
       "verification": {
@@ -171,7 +171,7 @@
       "files": {
         "create": ["tests/unit/test_dedup_unified.py"],
         "modify": [],
-        "read": ["zerg/launcher.py", "zerg/orchestrator.py", "zerg/worker_protocol.py"]
+        "read": ["mahabharatha/launcher.py", "mahabharatha/orchestrator.py", "mahabharatha/worker_protocol.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_dedup_unified.py -x -q --timeout=60",
@@ -195,7 +195,7 @@
         "read": []
       },
       "verification": {
-        "command": "python -m pytest tests/ -x -q --timeout=120 && python -m zerg.validate_commands && ruff check zerg/",
+        "command": "python -m pytest tests/ -x -q --timeout=120 && python -m mahabharatha.validate_commands && ruff check mahabharatha/",
         "timeout_seconds": 300
       },
       "estimate_minutes": 25,
@@ -211,12 +211,12 @@
       "level": 4,
       "dependencies": ["TASK-009"],
       "files": {
-        "create": ["zerg/launcher_types.py"],
+        "create": ["mahabharatha/launcher_types.py"],
         "modify": [],
-        "read": ["zerg/launcher.py", "zerg/types.py"]
+        "read": ["mahabharatha/launcher.py", "mahabharatha/types.py"]
       },
       "verification": {
-        "command": "python -c 'from zerg.launcher_types import LauncherType, LauncherConfig, SpawnResult' && ruff check zerg/launcher_types.py",
+        "command": "python -c 'from mahabharatha.launcher_types import LauncherType, LauncherConfig, SpawnResult' && ruff check mahabharatha/launcher_types.py",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -232,12 +232,12 @@
       "level": 4,
       "dependencies": ["TASK-009"],
       "files": {
-        "create": ["zerg/env_validator.py"],
+        "create": ["mahabharatha/env_validator.py"],
         "modify": [],
-        "read": ["zerg/launcher.py"]
+        "read": ["mahabharatha/launcher.py"]
       },
       "verification": {
-        "command": "python -c 'from zerg.env_validator import validate_env_vars, ALLOWED_ENV_VARS, DANGEROUS_ENV_VARS' && ruff check zerg/env_validator.py",
+        "command": "python -c 'from mahabharatha.env_validator import validate_env_vars, ALLOWED_ENV_VARS, DANGEROUS_ENV_VARS' && ruff check mahabharatha/env_validator.py",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -253,12 +253,12 @@
       "level": 4,
       "dependencies": ["TASK-009"],
       "files": {
-        "create": ["zerg/protocol_types.py"],
+        "create": ["mahabharatha/protocol_types.py"],
         "modify": [],
-        "read": ["zerg/worker_protocol.py"]
+        "read": ["mahabharatha/worker_protocol.py"]
       },
       "verification": {
-        "command": "python -c 'from zerg.protocol_types import ClaudeInvocationResult, WorkerContext' && ruff check zerg/protocol_types.py",
+        "command": "python -c 'from mahabharatha.protocol_types import ClaudeInvocationResult, WorkerContext' && ruff check mahabharatha/protocol_types.py",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -269,17 +269,17 @@
     {
       "id": "TASK-012",
       "title": "Create launchers/__init__.py with factory and re-exports",
-      "description": "Create zerg/launchers/ package. __init__.py re-exports: WorkerLauncher, SubprocessLauncher, ContainerLauncher, LauncherConfig, LauncherType, SpawnResult from sub-modules. Include get_plugin_launcher() factory. Imports from launcher_types, base, subprocess_launcher, container_launcher.",
+      "description": "Create mahabharatha/launchers/ package. __init__.py re-exports: WorkerLauncher, SubprocessLauncher, ContainerLauncher, LauncherConfig, LauncherType, SpawnResult from sub-modules. Include get_plugin_launcher() factory. Imports from launcher_types, base, subprocess_launcher, container_launcher.",
       "phase": "split-core",
       "level": 5,
       "dependencies": ["TASK-010"],
       "files": {
-        "create": ["zerg/launchers/__init__.py"],
+        "create": ["mahabharatha/launchers/__init__.py"],
         "modify": [],
-        "read": ["zerg/launcher.py"]
+        "read": ["mahabharatha/launcher.py"]
       },
       "verification": {
-        "command": "python -c 'from zerg.launchers import WorkerLauncher, SubprocessLauncher, ContainerLauncher, LauncherConfig, SpawnResult, LauncherType'",
+        "command": "python -c 'from mahabharatha.launchers import WorkerLauncher, SubprocessLauncher, ContainerLauncher, LauncherConfig, SpawnResult, LauncherType'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -295,12 +295,12 @@
       "level": 5,
       "dependencies": ["TASK-010", "TASK-011"],
       "files": {
-        "create": ["zerg/launchers/base.py"],
+        "create": ["mahabharatha/launchers/base.py"],
         "modify": [],
-        "read": ["zerg/launcher.py", "zerg/launcher_types.py"]
+        "read": ["mahabharatha/launcher.py", "mahabharatha/launcher_types.py"]
       },
       "verification": {
-        "command": "python -c 'from zerg.launchers.base import WorkerLauncher' && ruff check zerg/launchers/base.py",
+        "command": "python -c 'from mahabharatha.launchers.base import WorkerLauncher' && ruff check mahabharatha/launchers/base.py",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
@@ -316,12 +316,12 @@
       "level": 5,
       "dependencies": ["TASK-013"],
       "files": {
-        "create": ["zerg/launchers/subprocess_launcher.py"],
+        "create": ["mahabharatha/launchers/subprocess_launcher.py"],
         "modify": [],
-        "read": ["zerg/launcher.py"]
+        "read": ["mahabharatha/launcher.py"]
       },
       "verification": {
-        "command": "python -c 'from zerg.launchers.subprocess_launcher import SubprocessLauncher' && ruff check zerg/launchers/subprocess_launcher.py",
+        "command": "python -c 'from mahabharatha.launchers.subprocess_launcher import SubprocessLauncher' && ruff check mahabharatha/launchers/subprocess_launcher.py",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
@@ -337,12 +337,12 @@
       "level": 5,
       "dependencies": ["TASK-013", "TASK-011"],
       "files": {
-        "create": ["zerg/launchers/container_launcher.py"],
+        "create": ["mahabharatha/launchers/container_launcher.py"],
         "modify": [],
-        "read": ["zerg/launcher.py", "zerg/env_validator.py"]
+        "read": ["mahabharatha/launcher.py", "mahabharatha/env_validator.py"]
       },
       "verification": {
-        "command": "python -c 'from zerg.launchers.container_launcher import ContainerLauncher' && ruff check zerg/launchers/container_launcher.py",
+        "command": "python -c 'from mahabharatha.launchers.container_launcher import ContainerLauncher' && ruff check mahabharatha/launchers/container_launcher.py",
         "timeout_seconds": 30
       },
       "estimate_minutes": 30,
@@ -358,12 +358,12 @@
       "level": 5,
       "dependencies": ["TASK-017"],
       "files": {
-        "create": ["zerg/protocol_handler.py"],
+        "create": ["mahabharatha/protocol_handler.py"],
         "modify": [],
-        "read": ["zerg/worker_protocol.py", "zerg/protocol_types.py"]
+        "read": ["mahabharatha/worker_protocol.py", "mahabharatha/protocol_types.py"]
       },
       "verification": {
-        "command": "python -c 'from zerg.protocol_handler import ProtocolHandler' && ruff check zerg/protocol_handler.py",
+        "command": "python -c 'from mahabharatha.protocol_handler import ProtocolHandler' && ruff check mahabharatha/protocol_handler.py",
         "timeout_seconds": 30
       },
       "estimate_minutes": 30,
@@ -379,12 +379,12 @@
       "level": 5,
       "dependencies": ["TASK-017", "TASK-018"],
       "files": {
-        "create": ["zerg/protocol_state.py"],
+        "create": ["mahabharatha/protocol_state.py"],
         "modify": [],
-        "read": ["zerg/worker_protocol.py", "zerg/protocol_handler.py"]
+        "read": ["mahabharatha/worker_protocol.py", "mahabharatha/protocol_handler.py"]
       },
       "verification": {
-        "command": "python -c 'from zerg.protocol_state import WorkerProtocol, run_worker' && ruff check zerg/protocol_state.py",
+        "command": "python -c 'from mahabharatha.protocol_state import WorkerProtocol, run_worker' && ruff check mahabharatha/protocol_state.py",
         "timeout_seconds": 30
       },
       "estimate_minutes": 30,
@@ -395,17 +395,17 @@
     {
       "id": "TASK-016",
       "title": "Replace launcher.py with launchers package redirect",
-      "description": "Delete the content of zerg/launcher.py and replace with re-exports from zerg.launchers for backward compatibility during transition OR delete entirely. Update zerg/__init__.py if it references launcher. Verify all production code imports from zerg.launchers now. Per requirements: clean break, no re-exports — so delete launcher.py entirely after TASK-022 updates imports.",
+      "description": "Delete the content of mahabharatha/launcher.py and replace with re-exports from mahabharatha.launchers for backward compatibility during transition OR delete entirely. Update mahabharatha/__init__.py if it references launcher. Verify all production code imports from mahabharatha.launchers now. Per requirements: clean break, no re-exports — so delete launcher.py entirely after TASK-022 updates imports.",
       "phase": "split-integration",
       "level": 6,
       "dependencies": ["TASK-012", "TASK-014", "TASK-015"],
       "files": {
         "create": [],
-        "modify": ["zerg/launcher.py"],
+        "modify": ["mahabharatha/launcher.py"],
         "read": []
       },
       "verification": {
-        "command": "python -c 'from zerg.launchers import WorkerLauncher, SubprocessLauncher, ContainerLauncher'",
+        "command": "python -c 'from mahabharatha.launchers import WorkerLauncher, SubprocessLauncher, ContainerLauncher'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -416,17 +416,17 @@
     {
       "id": "TASK-020",
       "title": "Replace worker_protocol.py with protocol module redirect",
-      "description": "Delete zerg/worker_protocol.py content and replace with minimal re-exports from protocol_state and protocol_handler for transition OR delete entirely. Per requirements: clean break. Delete after TASK-022 updates imports. Update worker_main.py to import from protocol_state.",
+      "description": "Delete mahabharatha/worker_protocol.py content and replace with minimal re-exports from protocol_state and protocol_handler for transition OR delete entirely. Per requirements: clean break. Delete after TASK-022 updates imports. Update worker_main.py to import from protocol_state.",
       "phase": "split-integration",
       "level": 6,
       "dependencies": ["TASK-018", "TASK-019"],
       "files": {
         "create": [],
-        "modify": ["zerg/worker_protocol.py", "zerg/worker_main.py"],
+        "modify": ["mahabharatha/worker_protocol.py", "mahabharatha/worker_main.py"],
         "read": []
       },
       "verification": {
-        "command": "python -c 'from zerg.protocol_state import WorkerProtocol, run_worker'",
+        "command": "python -c 'from mahabharatha.protocol_state import WorkerProtocol, run_worker'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -443,11 +443,11 @@
       "dependencies": ["TASK-016"],
       "files": {
         "create": [],
-        "modify": ["zerg/orchestrator.py"],
+        "modify": ["mahabharatha/orchestrator.py"],
         "read": []
       },
       "verification": {
-        "command": "python -c 'from zerg.orchestrator import Orchestrator' && python -c 'import zerg.orchestrator; lines=len(open(zerg.orchestrator.__file__).readlines()); assert lines <= 600, f\"orchestrator.py is {lines} lines (max 600)\"'",
+        "command": "python -c 'from mahabharatha.orchestrator import Orchestrator' && python -c 'import mahabharatha.orchestrator; lines=len(open(mahabharatha.orchestrator.__file__).readlines()); assert lines <= 600, f\"orchestrator.py is {lines} lines (max 600)\"'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
@@ -458,26 +458,26 @@
     {
       "id": "TASK-022",
       "title": "Update all source imports for new module paths",
-      "description": "Update ALL imports across zerg/ source files: (1) from zerg.launcher import X → from zerg.launchers import X, (2) from zerg.launcher import LauncherType → from zerg.launcher_types import LauncherType (in config.py), (3) from zerg.worker_protocol import X → from zerg.protocol_state import X or zerg.protocol_handler import X. Files to update: orchestrator.py, worker_manager.py, launcher_configurator.py, config.py, worker_main.py, commands/rush.py, commands/merge_cmd.py, commands/retry.py. Then delete old launcher.py and worker_protocol.py.",
+      "description": "Update ALL imports across mahabharatha/ source files: (1) from mahabharatha.launcher import X → from mahabharatha.launchers import X, (2) from mahabharatha.launcher import LauncherType → from mahabharatha.launcher_types import LauncherType (in config.py), (3) from mahabharatha.worker_protocol import X → from mahabharatha.protocol_state import X or mahabharatha.protocol_handler import X. Files to update: orchestrator.py, worker_manager.py, launcher_configurator.py, config.py, worker_main.py, commands/kurukshetra.py, commands/merge_cmd.py, commands/retry.py. Then delete old launcher.py and worker_protocol.py.",
       "phase": "split-integration",
       "level": 6,
       "dependencies": ["TASK-016", "TASK-020", "TASK-021"],
       "files": {
         "create": [],
         "modify": [
-          "zerg/orchestrator.py",
-          "zerg/worker_manager.py",
-          "zerg/launcher_configurator.py",
-          "zerg/config.py",
-          "zerg/worker_main.py",
-          "zerg/commands/rush.py",
-          "zerg/commands/merge_cmd.py",
-          "zerg/commands/retry.py"
+          "mahabharatha/orchestrator.py",
+          "mahabharatha/worker_manager.py",
+          "mahabharatha/launcher_configurator.py",
+          "mahabharatha/config.py",
+          "mahabharatha/worker_main.py",
+          "mahabharatha/commands/kurukshetra.py",
+          "mahabharatha/commands/merge_cmd.py",
+          "mahabharatha/commands/retry.py"
         ],
         "read": []
       },
       "verification": {
-        "command": "python -m zerg.validate_commands && ruff check zerg/",
+        "command": "python -m mahabharatha.validate_commands && ruff check mahabharatha/",
         "timeout_seconds": 120
       },
       "estimate_minutes": 25,
@@ -527,7 +527,7 @@
         "read": []
       },
       "verification": {
-        "command": "python -m pytest tests/ -x -q --timeout=120 && python -m zerg.validate_commands && ruff check zerg/",
+        "command": "python -m pytest tests/ -x -q --timeout=120 && python -m mahabharatha.validate_commands && ruff check mahabharatha/",
         "timeout_seconds": 300
       },
       "estimate_minutes": 30,
@@ -538,17 +538,17 @@
     {
       "id": "TASK-024",
       "title": "Create worker_registry.py",
-      "description": "Create zerg/worker_registry.py with WorkerRegistry class. Thread-safe (RLock) worker state management. Methods: register, unregister, get, update_status, all, active, by_level, keys, items, __len__, __contains__. Import WorkerState from zerg.types, WorkerStatus from zerg.constants. ~150 lines.",
+      "description": "Create mahabharatha/worker_registry.py with WorkerRegistry class. Thread-safe (RLock) worker state management. Methods: register, unregister, get, update_status, all, active, by_level, keys, items, __len__, __contains__. Import WorkerState from mahabharatha.types, WorkerStatus from mahabharatha.constants. ~150 lines.",
       "phase": "registry-foundation",
       "level": 8,
       "dependencies": ["TASK-023"],
       "files": {
-        "create": ["zerg/worker_registry.py"],
+        "create": ["mahabharatha/worker_registry.py"],
         "modify": [],
-        "read": ["zerg/types.py", "zerg/constants.py"]
+        "read": ["mahabharatha/types.py", "mahabharatha/constants.py"]
       },
       "verification": {
-        "command": "python -c 'from zerg.worker_registry import WorkerRegistry; r = WorkerRegistry(); assert len(r) == 0' && ruff check zerg/worker_registry.py",
+        "command": "python -c 'from mahabharatha.worker_registry import WorkerRegistry; r = WorkerRegistry(); assert len(r) == 0' && ruff check mahabharatha/worker_registry.py",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
@@ -565,8 +565,8 @@
       "dependencies": ["TASK-024"],
       "files": {
         "create": [],
-        "modify": ["zerg/orchestrator.py"],
-        "read": ["zerg/worker_registry.py"]
+        "modify": ["mahabharatha/orchestrator.py"],
+        "read": ["mahabharatha/worker_registry.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_orchestrator.py tests/unit/test_orchestrator_workers.py -x -q --timeout=60",
@@ -586,8 +586,8 @@
       "dependencies": ["TASK-024"],
       "files": {
         "create": [],
-        "modify": ["zerg/worker_manager.py"],
-        "read": ["zerg/worker_registry.py"]
+        "modify": ["mahabharatha/worker_manager.py"],
+        "read": ["mahabharatha/worker_registry.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_worker_manager_component.py -x -q --timeout=60",
@@ -607,8 +607,8 @@
       "dependencies": ["TASK-024"],
       "files": {
         "create": [],
-        "modify": ["zerg/level_coordinator.py"],
-        "read": ["zerg/worker_registry.py"]
+        "modify": ["mahabharatha/level_coordinator.py"],
+        "read": ["mahabharatha/worker_registry.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_level_coordinator.py -x -q --timeout=60",
@@ -628,8 +628,8 @@
       "dependencies": ["TASK-024"],
       "files": {
         "create": [],
-        "modify": ["zerg/launcher_configurator.py"],
-        "read": ["zerg/worker_registry.py"]
+        "modify": ["mahabharatha/launcher_configurator.py"],
+        "read": ["mahabharatha/worker_registry.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_launcher_configurator.py -x -q --timeout=60",
@@ -650,7 +650,7 @@
       "files": {
         "create": ["tests/unit/test_worker_registry.py"],
         "modify": [],
-        "read": ["zerg/worker_registry.py"]
+        "read": ["mahabharatha/worker_registry.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_worker_registry.py -x -q --timeout=60",
@@ -674,7 +674,7 @@
         "read": []
       },
       "verification": {
-        "command": "python -m pytest tests/ -x -q --timeout=120 && python -m zerg.validate_commands && ruff check zerg/",
+        "command": "python -m pytest tests/ -x -q --timeout=120 && python -m mahabharatha.validate_commands && ruff check mahabharatha/",
         "timeout_seconds": 300
       },
       "estimate_minutes": 20,
@@ -771,17 +771,17 @@
     "conflicts": [
       {
         "tasks": ["TASK-001", "TASK-002", "TASK-003"],
-        "file": "zerg/launcher.py",
+        "file": "mahabharatha/launcher.py",
         "resolution": "Different method ranges — can parallel if careful. Sequential recommended."
       },
       {
         "tasks": ["TASK-004", "TASK-005"],
-        "file": "zerg/orchestrator.py",
+        "file": "mahabharatha/orchestrator.py",
         "resolution": "TASK-005 depends on TASK-004 (sequential)."
       },
       {
         "tasks": ["TASK-016", "TASK-021", "TASK-022"],
-        "file": "zerg/orchestrator.py",
+        "file": "mahabharatha/orchestrator.py",
         "resolution": "Sequential within level 6."
       }
     ]

@@ -19,7 +19,7 @@ Systematic remediation of 7 open quality-debt issues across 8 phases: security f
 - Fix critical fail-open security bug in SecurityChecker
 - Reduce `except Exception` from 168 to <80 with proper logging/narrowing
 - Consolidate 28 rglob calls via shared `fs_utils.collect_files()` utility
-- Decompose 1010-line StateManager into `zerg/state/` package (9 modules)
+- Decompose 1010-line StateManager into `mahabharatha/state/` package (9 modules)
 - Introduce 8+ TypedDicts, reduce `dict[str, Any]` by 50%+
 - Separate rendering from business logic in dryrun.py and status.py
 - Add orjson optional dependency with stdlib fallback
@@ -30,7 +30,7 @@ Systematic remediation of 7 open quality-debt issues across 8 phases: security f
 - Test additions beyond what's needed for new modules
 - Performance benchmarking
 - Mypy strict enforcement on test files
-- Refactoring files outside zerg/ production code
+- Refactoring files outside mahabharatha/ production code
 
 ---
 
@@ -56,13 +56,13 @@ Phase 7 (P3)
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| SecurityChecker fix | Fail-closed on exception | `zerg/commands/analyze.py` |
-| Exception hygiene | Logging, narrowing, re-raise | ~30 files across zerg/ |
-| fs_utils | Single-pass file traversal | `zerg/fs_utils.py` (new) |
-| state/ package | Decomposed StateManager | `zerg/state/` (9 new files) |
-| TypedDicts | Structured dict types | `zerg/types.py` + 10 files |
-| rendering/ package | CLI rendering layer | `zerg/rendering/` (4 new files) |
-| json_utils | orjson/stdlib abstraction | `zerg/json_utils.py` (new) |
+| SecurityChecker fix | Fail-closed on exception | `mahabharatha/commands/analyze.py` |
+| Exception hygiene | Logging, narrowing, re-raise | ~30 files across mahabharatha/ |
+| fs_utils | Single-pass file traversal | `mahabharatha/fs_utils.py` (new) |
+| state/ package | Decomposed StateManager | `mahabharatha/state/` (9 new files) |
+| TypedDicts | Structured dict types | `mahabharatha/types.py` + 10 files |
+| rendering/ package | CLI rendering layer | `mahabharatha/rendering/` (4 new files) |
+| json_utils | orjson/stdlib abstraction | `mahabharatha/json_utils.py` (new) |
 | Lint hardening | BLE001, mypy config | `pyproject.toml` |
 
 ### 2.3 Data Flow
@@ -99,7 +99,7 @@ except Exception as e:
 ### 3.2 fs_utils API (Phase 2)
 
 ```python
-# zerg/fs_utils.py
+# mahabharatha/fs_utils.py
 def collect_files(
     root: Path,
     extensions: set[str] | None = None,
@@ -111,11 +111,11 @@ def collect_files(
 ### 3.3 StateManager Facade (Phase 3)
 
 ```python
-# zerg/state/__init__.py
-from zerg.state.manager import StateManager
+# mahabharatha/state/__init__.py
+from mahabharatha.state.manager import StateManager
 __all__ = ["StateManager"]
 
-# zerg/state/manager.py
+# mahabharatha/state/manager.py
 class StateManager:
     """Thin facade delegating to specialized repositories."""
     def __init__(self, feature: str, state_dir: str | Path | None = None):
@@ -127,7 +127,7 @@ class StateManager:
 ### 3.4 json_utils API (Phase 7)
 
 ```python
-# zerg/json_utils.py
+# mahabharatha/json_utils.py
 try:
     import orjson
     def loads(data): return orjson.loads(data)
@@ -152,7 +152,7 @@ except ImportError:
 
 **Decision**: Facade pattern
 
-**Rationale**: Zero API changes for callers. `from zerg.state import StateManager` continues working via `__init__.py` re-export. Risk is minimized.
+**Rationale**: Zero API changes for callers. `from mahabharatha.state import StateManager` continues working via `__init__.py` re-export. Risk is minimized.
 
 ### 4.2 orjson: Required vs Optional
 
@@ -160,7 +160,7 @@ except ImportError:
 
 **Decision**: Optional dependency in `[project.optional-dependencies]` with stdlib fallback.
 
-**Rationale**: ZERG runs in containers and local envs. Optional keeps install simple; users can opt into performance.
+**Rationale**: MAHABHARATHA runs in containers and local envs. Optional keeps install simple; users can opt into performance.
 
 ### 4.3 Exception Handler Strategy
 
@@ -175,7 +175,7 @@ except ImportError:
 
 **Context**: dryrun.py (671 lines, 11 render methods) and status.py (1315 lines, ~15 render functions).
 
-**Decision**: Extract render functions into `zerg/rendering/` package. Business logic stays in original files.
+**Decision**: Extract render functions into `mahabharatha/rendering/` package. Business logic stays in original files.
 
 **Rationale**: Clean SRP separation. No Rich imports in business logic modules.
 
@@ -199,23 +199,23 @@ except ImportError:
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/commands/analyze.py` | TASK-001 | modify |
+| `mahabharatha/commands/analyze.py` | TASK-001 | modify |
 | ~15 files (HIGH handlers batch 1) | TASK-002 | modify |
 | ~15 files (HIGH handlers batch 2) | TASK-003 | modify |
 | `pyproject.toml` | TASK-003 | modify |
-| `zerg/fs_utils.py` | TASK-004 | create |
+| `mahabharatha/fs_utils.py` | TASK-004 | create |
 | 5 rglob modules | TASK-005 | modify |
-| `zerg/state/` package (7 files) | TASK-006 | create |
-| `zerg/state/manager.py` | TASK-007 | create |
+| `mahabharatha/state/` package (7 files) | TASK-006 | create |
+| `mahabharatha/state/manager.py` | TASK-007 | create |
 | 15 production importers | TASK-008 | modify |
 | 15 test importers | TASK-009 | modify |
-| `zerg/types.py` + 5 modules | TASK-010 | modify |
+| `mahabharatha/types.py` + 5 modules | TASK-010 | modify |
 | 5 more TypedDict modules | TASK-011 | modify |
-| `zerg/rendering/` (4 files) | TASK-012 | create |
-| `zerg/dryrun.py` + `zerg/commands/status.py` | TASK-013 | modify |
+| `mahabharatha/rendering/` (4 files) | TASK-012 | create |
+| `mahabharatha/dryrun.py` + `mahabharatha/commands/status.py` | TASK-013 | modify |
 | ~20 files (MEDIUM handlers critical path) | TASK-014 | modify |
 | ~20 files (MEDIUM handlers narrow/annotate) | TASK-015 | modify |
-| `zerg/json_utils.py` | TASK-016 | create |
+| `mahabharatha/json_utils.py` | TASK-016 | create |
 | ~50 files json migration | TASK-017 | modify |
 | 5 easy type:ignore fixes | TASK-018 | modify |
 | 7 medium type:ignore + mypy config | TASK-019 | modify |
@@ -275,14 +275,14 @@ graph TD
 - json_utils: serialization/deserialization across modules
 
 ### 7.3 Verification Commands
-- Phase 1: `pytest tests/ -k "analyze" --timeout=30 && ruff check zerg/ --select BLE001`
-- Phase 2: `python -c "from zerg.fs_utils import collect_files" && pytest tests/ --timeout=120 -q`
+- Phase 1: `pytest tests/ -k "analyze" --timeout=30 && ruff check mahabharatha/ --select BLE001`
+- Phase 2: `python -c "from mahabharatha.fs_utils import collect_files" && pytest tests/ --timeout=120 -q`
 - Phase 3: `pytest tests/unit/test_state*.py tests/integration/test_state*.py --timeout=60`
-- Phase 4: `mypy zerg/ --strict 2>&1 | tail -5`
+- Phase 4: `mypy mahabharatha/ --strict 2>&1 | tail -5`
 - Phase 5: `pytest tests/ -k "dryrun or status" --timeout=60`
-- Phase 6: `ruff check zerg/ --select BLE001`
-- Phase 7: `python -c "from zerg.json_utils import loads, dumps" && pytest tests/ --timeout=120 -q`
-- Phase 8: `mypy zerg/ --strict && python -m zerg.validate_commands`
+- Phase 6: `ruff check mahabharatha/ --select BLE001`
+- Phase 7: `python -c "from mahabharatha.json_utils import loads, dumps" && pytest tests/ --timeout=120 -q`
+- Phase 8: `mypy mahabharatha/ --strict && python -m mahabharatha.validate_commands`
 
 ---
 
@@ -311,11 +311,11 @@ graph TD
 
 | Task | Creates | Consumed By | Integration Test |
 |------|---------|-------------|-----------------|
-| TASK-004 | `zerg/fs_utils.py` | TASK-005 | via TASK-005 verification |
-| TASK-006 | `zerg/state/*.py` (7 files) | TASK-007 | `tests/integration/test_state_integration.py` |
-| TASK-007 | `zerg/state/manager.py` | TASK-008 | `tests/integration/test_state_integration.py` |
-| TASK-012 | `zerg/rendering/*.py` (4 files) | TASK-013 | via TASK-013 verification |
-| TASK-016 | `zerg/json_utils.py` | TASK-017 | via TASK-017 verification |
+| TASK-004 | `mahabharatha/fs_utils.py` | TASK-005 | via TASK-005 verification |
+| TASK-006 | `mahabharatha/state/*.py` (7 files) | TASK-007 | `tests/integration/test_state_integration.py` |
+| TASK-007 | `mahabharatha/state/manager.py` | TASK-008 | `tests/integration/test_state_integration.py` |
+| TASK-012 | `mahabharatha/rendering/*.py` (4 files) | TASK-013 | via TASK-013 verification |
+| TASK-016 | `mahabharatha/json_utils.py` | TASK-017 | via TASK-017 verification |
 
 ---
 

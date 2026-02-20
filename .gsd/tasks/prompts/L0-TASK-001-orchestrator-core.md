@@ -6,16 +6,16 @@ Implement the central orchestrator that manages worker fleet lifecycle, task dis
 
 ## Context
 
-This is a **root task** with no dependencies. The orchestrator is the heart of ZERG, coordinating parallel worker execution across git worktrees.
+This is a **root task** with no dependencies. The orchestrator is the heart of MAHABHARATHA, coordinating parallel worker execution across git worktrees.
 
 Read these files first:
 - `ARCHITECTURE.md` - Overall system design
-- `.zerg/config.yaml` - Current configuration schema
+- `.mahabharatha/config.yaml` - Current configuration schema
 
 ## Files to Create
 
 ```
-.zerg/
+.mahabharatha/
 ├── __init__.py           # Package init with version
 └── orchestrator.py       # Main orchestrator class
 ```
@@ -27,16 +27,16 @@ Read these files first:
 ```python
 class Orchestrator:
     """Manages worker fleet lifecycle and task distribution."""
-    
-    def __init__(self, config_path: str = ".zerg/config.yaml"):
+
+    def __init__(self, config_path: str = ".mahabharatha/config.yaml"):
         """Load configuration and initialize state."""
-        
+
     def start(self, task_graph_path: str, workers: int = 5) -> None:
         """Begin execution with specified worker count."""
-        
+
     def stop(self, force: bool = False) -> None:
         """Graceful or forced shutdown."""
-        
+
     def get_status(self) -> dict:
         """Return current execution state."""
 ```
@@ -61,18 +61,18 @@ spawn_worker(worker_id) → assign_task(worker_id, task) → monitor_health() �
 def execute_level(self, level: int) -> LevelResult:
     """Execute all tasks at a level, wait for completion."""
     tasks = self.task_graph.get_level_tasks(level)
-    
+
     # Assign tasks to available workers
     for task in tasks:
         worker = self.get_available_worker()
         self.assign_task(worker, task)
-    
+
     # Wait for all tasks to complete
     self.wait_for_level_completion(level)
-    
+
     # Run quality gates between levels
     self.run_quality_gates(level)
-    
+
     return LevelResult(...)
 ```
 
@@ -90,7 +90,7 @@ def execute_level(self, level: int) -> LevelResult:
 Run this command to verify implementation:
 
 ```bash
-cd .zerg && python -c "
+cd .mahabharatha && python -c "
 from orchestrator import Orchestrator
 o = Orchestrator()
 assert hasattr(o, 'start')
@@ -102,7 +102,7 @@ print('OK: Orchestrator instantiates correctly')
 
 ## Test Cases
 
-Create `.zerg/tests/test_orchestrator.py`:
+Create `.mahabharatha/tests/test_orchestrator.py`:
 
 ```python
 import pytest
@@ -126,13 +126,13 @@ def test_graceful_shutdown():
 ## Notes
 
 - Use `subprocess` for worker processes initially (containers come in L1-TASK-003)
-- Store state in `.zerg/state.json` (L0-TASK-002 will formalize schema)
-- Log to `.zerg/logs/orchestrator.log`
+- Store state in `.mahabharatha/state.json` (L0-TASK-002 will formalize schema)
+- Log to `.mahabharatha/logs/orchestrator.log`
 - Respect `max_workers` from config.yaml
 
 ## Definition of Done
 
 1. All acceptance criteria checked
 2. Verification command passes
-3. Unit tests pass: `pytest .zerg/tests/test_orchestrator.py`
-4. No linting errors: `ruff check .zerg/orchestrator.py`
+3. Unit tests pass: `pytest .mahabharatha/tests/test_orchestrator.py`
+4. No linting errors: `ruff check .mahabharatha/orchestrator.py`

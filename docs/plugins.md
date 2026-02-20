@@ -1,12 +1,12 @@
-# ZERG Plugin System
+# MAHABHARATHA Plugin System
 
-Extend ZERG with custom quality gates, lifecycle hooks, and worker launchers.
+Extend MAHABHARATHA with custom quality gates, lifecycle hooks, and worker launchers.
 
 ---
 
 ## Overview
 
-The ZERG plugin system provides three extension points:
+The MAHABHARATHA plugin system provides three extension points:
 
 1. **Quality Gate Plugins** — Custom validation after merges (lint, security scans, benchmarks)
 2. **Lifecycle Hook Plugins** — React to events (task starts/completes, level finishes, merges)
@@ -20,7 +20,7 @@ All plugins are **additive only** — they cannot mutate orchestrator state, onl
 
 ### Simple: YAML Hooks
 
-Add shell commands triggered by lifecycle events in `.zerg/config.yaml`:
+Add shell commands triggered by lifecycle events in `.mahabharatha/config.yaml`:
 
 ```yaml
 plugins:
@@ -57,9 +57,9 @@ For complex logic, authentication, or API calls, create Python plugin classes:
 
 ```python
 # my_zerg_plugins/gates.py
-from zerg.plugins import QualityGatePlugin, GateContext
-from zerg.types import GateRunResult
-from zerg.constants import GateResult
+from mahabharatha.plugins import QualityGatePlugin, GateContext
+from mahabharatha.types import GateRunResult
+from mahabharatha.constants import GateResult
 
 class SonarQubeGate(QualityGatePlugin):
     @property
@@ -80,7 +80,7 @@ class SonarQubeGate(QualityGatePlugin):
 Register in `pyproject.toml`:
 
 ```toml
-[project.entry-points."zerg.plugins"]
+[project.entry-points."mahabharatha.plugins"]
 sonarqube = "my_zerg_plugins.gates:SonarQubeGate"
 ```
 
@@ -88,7 +88,7 @@ Install and run:
 
 ```bash
 pip install -e .
-/zerg:rush  # Plugins auto-discovered via entry points
+/mahabharatha:kurukshetra  # Plugins auto-discovered via entry points
 ```
 
 ---
@@ -100,9 +100,9 @@ pip install -e .
 Validates code quality after each level merge. Runs sequentially after built-in gates.
 
 ```python
-from zerg.plugins import QualityGatePlugin, GateContext
-from zerg.types import GateRunResult
-from zerg.constants import GateResult
+from mahabharatha.plugins import QualityGatePlugin, GateContext
+from mahabharatha.types import GateRunResult
+from mahabharatha.constants import GateResult
 
 class MyCustomGate(QualityGatePlugin):
     @property
@@ -129,10 +129,10 @@ class MyCustomGate(QualityGatePlugin):
 
 ### LifecycleHookPlugin
 
-Observes ZERG lifecycle events without blocking execution.
+Observes MAHABHARATHA lifecycle events without blocking execution.
 
 ```python
-from zerg.plugins import LifecycleHookPlugin, LifecycleEvent
+from mahabharatha.plugins import LifecycleHookPlugin, LifecycleEvent
 
 class MyNotificationHook(LifecycleHookPlugin):
     @property
@@ -159,7 +159,7 @@ class MyNotificationHook(LifecycleHookPlugin):
 | `merge_complete` | Level branches merged | `level`, `branch_count`, `conflicts` |
 | `worker_spawned` | New worker starts | `worker_id`, `port`, `mode` |
 | `quality_gate_run` | Gate executes | `gate_name`, `result`, `level` |
-| `rush_started` | `/zerg:rush` begins | `feature`, `workers`, `config` |
+| `rush_started` | `/mahabharatha:kurukshetra` begins | `feature`, `workers`, `config` |
 | `rush_finished` | All levels complete | `feature`, `total_time`, `tasks_completed` |
 
 ### LauncherPlugin
@@ -167,8 +167,8 @@ class MyNotificationHook(LifecycleHookPlugin):
 Provides custom worker execution environments beyond `subprocess` and `container`.
 
 ```python
-from zerg.plugins import LauncherPlugin
-from zerg.launcher import WorkerLauncher
+from mahabharatha.plugins import LauncherPlugin
+from mahabharatha.launcher import WorkerLauncher
 
 class K8sLauncherPlugin(LauncherPlugin):
     @property
@@ -226,13 +226,13 @@ plugins:
 Register plugin classes in your package's `pyproject.toml`:
 
 ```toml
-[project.entry-points."zerg.plugins"]
+[project.entry-points."mahabharatha.plugins"]
 sonarqube = "my_zerg_plugins.gates:SonarQubeGate"
 k8s-launcher = "my_zerg_plugins.launchers:K8sLauncherPlugin"
 slack-hooks = "my_zerg_plugins.hooks:SlackNotificationHook"
 ```
 
-Discovery happens automatically via `PluginRegistry.load_entry_points("zerg.plugins")` on orchestrator startup.
+Discovery happens automatically via `PluginRegistry.load_entry_points("mahabharatha.plugins")` on orchestrator startup.
 
 ---
 
@@ -279,7 +279,7 @@ plugins:
 
 **Python** (for OAuth, custom formatting):
 ```python
-from zerg.plugins import LifecycleHookPlugin, LifecycleEvent
+from mahabharatha.plugins import LifecycleHookPlugin, LifecycleEvent
 from slack_sdk import WebClient
 
 class SlackNotifier(LifecycleHookPlugin):
@@ -293,7 +293,7 @@ class SlackNotifier(LifecycleHookPlugin):
     def on_event(self, event: LifecycleEvent) -> None:
         if event.event_type == "level_complete":
             self.client.chat_postMessage(
-                channel="#zerg-builds",
+                channel="#mahabharatha-builds",
                 text=f"Level {event.data['level']} completed",
             )
 ```
@@ -301,9 +301,9 @@ class SlackNotifier(LifecycleHookPlugin):
 ### Security Gate (Trivy)
 
 ```python
-from zerg.plugins import QualityGatePlugin, GateContext
-from zerg.types import GateRunResult
-from zerg.constants import GateResult
+from mahabharatha.plugins import QualityGatePlugin, GateContext
+from mahabharatha.types import GateRunResult
+from mahabharatha.constants import GateResult
 import subprocess
 
 class TrivyScanGate(QualityGatePlugin):
@@ -329,8 +329,8 @@ class TrivyScanGate(QualityGatePlugin):
 ### Kubernetes Launcher
 
 ```python
-from zerg.plugins import LauncherPlugin
-from zerg.launcher import WorkerLauncher
+from mahabharatha.plugins import LauncherPlugin
+from mahabharatha.launcher import WorkerLauncher
 from kubernetes import client, config
 
 class K8sLauncher(WorkerLauncher):
@@ -341,7 +341,7 @@ class K8sLauncher(WorkerLauncher):
 
     def launch(self, worker_id: str, task_id: str) -> dict:
         pod = client.V1Pod(
-            metadata=client.V1ObjectMeta(name=f"zerg-{worker_id}"),
+            metadata=client.V1ObjectMeta(name=f"mahabharatha-{worker_id}"),
             spec=client.V1PodSpec(
                 containers=[client.V1Container(
                     name="worker",
@@ -350,8 +350,8 @@ class K8sLauncher(WorkerLauncher):
                 )]
             )
         )
-        self.api.create_namespaced_pod(namespace="zerg", body=pod)
-        return {"pod_name": f"zerg-{worker_id}"}
+        self.api.create_namespaced_pod(namespace="mahabharatha", body=pod)
+        return {"pod_name": f"mahabharatha-{worker_id}"}
 
     def wait(self, launch_info: dict) -> int:
         # Poll pod status...
@@ -359,7 +359,7 @@ class K8sLauncher(WorkerLauncher):
 
     def cleanup(self, launch_info: dict) -> None:
         self.api.delete_namespaced_pod(
-            name=launch_info["pod_name"], namespace="zerg"
+            name=launch_info["pod_name"], namespace="mahabharatha"
         )
 
 class K8sLauncherPlugin(LauncherPlugin):
@@ -402,7 +402,7 @@ class K8sLauncherPlugin(LauncherPlugin):
 
 | Problem | Symptoms | Fix |
 |---------|----------|-----|
-| Plugin not loading | Not discovered on startup | Check entry point group: `[project.entry-points."zerg.plugins"]`, reinstall with `pip install -e .` |
+| Plugin not loading | Not discovered on startup | Check entry point group: `[project.entry-points."mahabharatha.plugins"]`, reinstall with `pip install -e .` |
 | Hook exceptions | Exception in logs | Check timeout, verify command exists (`which <cmd>`), check permissions |
 | Gate reports ERROR | `ERROR` instead of `PASS`/`FAIL` | Test gate command manually, check `GateRunResult` return value |
 | Launcher ignored | Falls back to subprocess | Check launcher name matches config, verify `create_launcher()` returns `WorkerLauncher` |
@@ -411,8 +411,8 @@ class K8sLauncherPlugin(LauncherPlugin):
 
 ## Code References
 
-- **Plugin ABCs**: `zerg/plugins.py`
-- **Plugin Registry**: `zerg/plugins.py`
-- **Config Models**: `zerg/plugin_config.py`
-- **Lifecycle Events**: `zerg/constants.py`
+- **Plugin ABCs**: `mahabharatha/plugins.py`
+- **Plugin Registry**: `mahabharatha/plugins.py`
+- **Config Models**: `mahabharatha/plugin_config.py`
+- **Lifecycle Events**: `mahabharatha/constants.py`
 - **Integration Tests**: `tests/integration/test_plugin_lifecycle.py`

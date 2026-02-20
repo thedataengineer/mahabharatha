@@ -10,8 +10,8 @@ services:
         PYTHON_VERSION: ${PYTHON_VERSION:-3.12}
     volumes:
       - ..:/workspace:cached
-      - zerg-claude-tasks:/root/.claude/tasks
-      - zerg-claude-config:/root/.claude
+      - mahabharatha-claude-tasks:/root/.claude/tasks
+      - mahabharatha-claude-config:/root/.claude
     environment:
       - CLAUDE_CODE_TASK_LIST_ID=${ZERG_FEATURE:-default}
       - ZERG_WORKER_ID=${ZERG_WORKER_ID:-0}
@@ -53,7 +53,7 @@ services:
       - with-redis
 
   # Worker service template (used by ContainerLauncher)
-  zerg-worker:
+  mahabharatha-worker:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
@@ -66,7 +66,7 @@ services:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
     working_dir: /workspace
     networks:
-      - zerg-internal
+      - mahabharatha-internal
     deploy:
       resources:
         limits:
@@ -76,10 +76,10 @@ services:
       - worker
 
 volumes:
-  zerg-claude-tasks:
-    name: zerg-claude-tasks-${ZERG_FEATURE:-default}
-  zerg-claude-config:
-    name: zerg-claude-config
+  mahabharatha-claude-tasks:
+    name: mahabharatha-claude-tasks-${ZERG_FEATURE:-default}
+  mahabharatha-claude-config:
+    name: mahabharatha-claude-config
   postgres-data:
     name: factory-postgres-${ZERG_FEATURE:-default}
 
@@ -87,6 +87,6 @@ networks:
   factory-network:
     driver: bridge
     name: factory-network-${ZERG_FEATURE:-default}
-  zerg-internal:
+  mahabharatha-internal:
     driver: bridge
     internal: true

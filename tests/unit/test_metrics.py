@@ -1,4 +1,4 @@
-"""Unit tests for ZERG metrics collection and computation."""
+"""Unit tests for MAHABHARATHA metrics collection and computation."""
 
 from __future__ import annotations
 

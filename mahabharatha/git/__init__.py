@@ -1,4 +1,4 @@
-"""ZERG git package -- structured git operations.
+"""MAHABHARATHA git package -- structured git operations.
 
 Re-exports core classes for convenient access:
     from mahabharatha.git import GitOps, GitRunner, BranchInfo

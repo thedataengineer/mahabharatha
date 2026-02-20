@@ -1,11 +1,11 @@
-# /zerg:select-tool
+# /mahabharatha:select-tool
 
 Intelligent tool routing across MCP servers, native tools, and Task agent subtypes.
 
 ## Synopsis
 
 ```
-/zerg:select-tool <task description> [--domain ui|backend|infra|docs|test|security|perf]
+/mahabharatha:select-tool <task description> [--domain ui|backend|infra|docs|test|security|perf]
                                      [--format text|json|md]
                                      [--verbose]
                                      [--no-agents]
@@ -54,31 +54,31 @@ Based on the composite score, the command recommends tools from three categories
 Get tool recommendations for a task:
 
 ```
-/zerg:select-tool "refactor the authentication module across 12 files"
+/mahabharatha:select-tool "refactor the authentication module across 12 files"
 ```
 
 Force a specific domain:
 
 ```
-/zerg:select-tool "optimize the query layer" --domain perf
+/mahabharatha:select-tool "optimize the query layer" --domain perf
 ```
 
 See detailed scoring:
 
 ```
-/zerg:select-tool "add a responsive navbar with accessibility" --verbose
+/mahabharatha:select-tool "add a responsive navbar with accessibility" --verbose
 ```
 
 Exclude MCP servers from recommendations:
 
 ```
-/zerg:select-tool "fix the login bug" --no-mcp
+/mahabharatha:select-tool "fix the login bug" --no-mcp
 ```
 
 Output as JSON for automation:
 
 ```
-/zerg:select-tool "migrate database schema" --format json
+/mahabharatha:select-tool "migrate database schema" --format json
 ```
 
 ## Error Handling
@@ -93,6 +93,6 @@ This command creates a Claude Code Task with the subject prefix `[Select-Tool]` 
 
 ## See Also
 
-- [[zerg-plugins]] -- Plugin system that extends available tools
-- [[zerg-debug]] -- Deep diagnostics that select-tool may recommend
-- [[zerg-analyze]] -- Analysis tools that select-tool routes to
+- [[mahabharatha-plugins]] -- Plugin system that extends available tools
+- [[mahabharatha-debug]] -- Deep diagnostics that select-tool may recommend
+- [[mahabharatha-analyze]] -- Analysis tools that select-tool routes to

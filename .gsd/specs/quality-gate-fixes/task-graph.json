@@ -10,68 +10,68 @@
     {
       "id": "TASK-001",
       "title": "Document lazy import pattern in verify.py",
-      "description": "Add comments to lines 297 and 320 in zerg/verify.py documenting the lazy import pattern used to avoid circular dependency with verification_gates.",
+      "description": "Add comments to lines 297 and 320 in mahabharatha/verify.py documenting the lazy import pattern used to avoid circular dependency with verification_gates.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/verify.py"],
-        "read": ["zerg/verification_gates.py"]
+        "modify": ["mahabharatha/verify.py"],
+        "read": ["mahabharatha/verification_gates.py"]
       },
       "verification": {
-        "command": "python -c \"from zerg.verify import VerificationExecutor\"",
+        "command": "python -c \"from mahabharatha.verify import VerificationExecutor\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5,
       "skills_required": ["python"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Task Context\n\nAdd documentation comments to lazy imports in verify.py at lines 297 and 320.\n\n## Pattern\n```python\ndef store_artifact(self, ...):\n    # Lazy import to avoid circular dependency with verification_gates\n    from zerg.verification_gates import ArtifactStore\n```\n\n## Why\nThe verify ↔ verification_gates cycle is mitigated by lazy imports inside methods. Document this for future maintainers."
+      "context": "## Task Context\n\nAdd documentation comments to lazy imports in verify.py at lines 297 and 320.\n\n## Pattern\n```python\ndef store_artifact(self, ...):\n    # Lazy import to avoid circular dependency with verification_gates\n    from mahabharatha.verification_gates import ArtifactStore\n```\n\n## Why\nThe verify ↔ verification_gates cycle is mitigated by lazy imports inside methods. Document this for future maintainers."
     },
     {
       "id": "TASK-002",
       "title": "Add __all__ to config.py",
-      "description": "Add explicit __all__ definition to zerg/config.py listing all public configuration classes.",
+      "description": "Add explicit __all__ definition to mahabharatha/config.py listing all public configuration classes.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/config.py"],
+        "modify": ["mahabharatha/config.py"],
         "read": []
       },
       "verification": {
-        "command": "python -c \"from zerg.config import ZergConfig; print('__all__' in dir(__import__('zerg.config')))\"",
+        "command": "python -c \"from mahabharatha.config import ZergConfig; print('__all__' in dir(__import__('mahabharatha.config')))\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
       "skills_required": ["python"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Task Context\n\nAdd __all__ to zerg/config.py to declare public exports:\n\n```python\n__all__ = [\n    \"ZergConfig\",\n    \"ProjectConfig\",\n    \"WorkersConfig\",\n    \"PortsConfig\",\n    \"QualityGate\",\n    \"ResourcesConfig\",\n    \"LoggingConfig\",\n    \"SecurityConfig\",\n    \"ResilienceConfig\",\n    \"EfficiencyConfig\",\n    \"RulesConfig\",\n    \"CircuitBreakerConfig\",\n    \"BackpressureConfig\",\n    \"ErrorRecoveryConfig\",\n    \"LoopConfig\",\n    \"VerificationConfig\",\n    \"ModeConfig\",\n    \"MCPRoutingConfig\",\n    \"TDDConfig\",\n    \"HeartbeatConfig\",\n    \"EscalationConfig\",\n    \"VerificationTiersConfig\",\n    \"RepoMapConfig\",\n    \"TokenMetricsConfig\",\n    \"PlanningConfig\",\n    \"RushConfig\",\n]\n```\n\n## Why\nClarifies the public API for the config module. Place after imports, before first class definition."
+      "context": "## Task Context\n\nAdd __all__ to mahabharatha/config.py to declare public exports:\n\n```python\n__all__ = [\n    \"ZergConfig\",\n    \"ProjectConfig\",\n    \"WorkersConfig\",\n    \"PortsConfig\",\n    \"QualityGate\",\n    \"ResourcesConfig\",\n    \"LoggingConfig\",\n    \"SecurityConfig\",\n    \"ResilienceConfig\",\n    \"EfficiencyConfig\",\n    \"RulesConfig\",\n    \"CircuitBreakerConfig\",\n    \"BackpressureConfig\",\n    \"ErrorRecoveryConfig\",\n    \"LoopConfig\",\n    \"VerificationConfig\",\n    \"ModeConfig\",\n    \"MCPRoutingConfig\",\n    \"TDDConfig\",\n    \"HeartbeatConfig\",\n    \"EscalationConfig\",\n    \"VerificationTiersConfig\",\n    \"RepoMapConfig\",\n    \"TokenMetricsConfig\",\n    \"PlanningConfig\",\n    \"RushConfig\",\n]\n```\n\n## Why\nClarifies the public API for the config module. Place after imports, before first class definition."
     },
     {
       "id": "TASK-003",
       "title": "Add __all__ to types.py",
-      "description": "Add explicit __all__ definition to zerg/types.py listing all public type definitions.",
+      "description": "Add explicit __all__ definition to mahabharatha/types.py listing all public type definitions.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/types.py"],
+        "modify": ["mahabharatha/types.py"],
         "read": []
       },
       "verification": {
-        "command": "python -c \"from zerg.types import Task; print('__all__' in dir(__import__('zerg.types')))\"",
+        "command": "python -c \"from mahabharatha.types import Task; print('__all__' in dir(__import__('mahabharatha.types')))\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
       "skills_required": ["python"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Task Context\n\nAdd __all__ to zerg/types.py to declare public exports:\n\n```python\n__all__ = [\n    # Task types\n    \"FileSpec\",\n    \"VerificationSpec\",\n    \"VerificationResult\",\n    \"TaskExecution\",\n    \"Task\",\n    \"LevelSpec\",\n    \"TaskGraph\",\n    # Worker types\n    \"WorkerState\",\n    # Level types\n    \"LevelStatus\",\n    # Gate types\n    \"GateConfig\",\n    \"GateRunResult\",\n    # Merge types\n    \"MergeResult\",\n    # Orchestrator types\n    \"LevelCompleteResult\",\n    \"ExecutionEvent\",\n    \"OrchestratorState\",\n    # Assignment types\n    \"WorkerAssignmentEntry\",\n    \"WorkerAssignments\",\n    # Metrics types (note: WorkerMetrics is defined in both types.py and worker_metrics.py)\n    \"TaskMetrics\",\n    \"LevelMetrics\",\n    \"FeatureMetrics\",\n]\n```\n\n## Why\nClarifies the public API for the types module. Place after imports, before first class definition."
+      "context": "## Task Context\n\nAdd __all__ to mahabharatha/types.py to declare public exports:\n\n```python\n__all__ = [\n    # Task types\n    \"FileSpec\",\n    \"VerificationSpec\",\n    \"VerificationResult\",\n    \"TaskExecution\",\n    \"Task\",\n    \"LevelSpec\",\n    \"TaskGraph\",\n    # Worker types\n    \"WorkerState\",\n    # Level types\n    \"LevelStatus\",\n    # Gate types\n    \"GateConfig\",\n    \"GateRunResult\",\n    # Merge types\n    \"MergeResult\",\n    # Orchestrator types\n    \"LevelCompleteResult\",\n    \"ExecutionEvent\",\n    \"OrchestratorState\",\n    # Assignment types\n    \"WorkerAssignmentEntry\",\n    \"WorkerAssignments\",\n    # Metrics types (note: WorkerMetrics is defined in both types.py and worker_metrics.py)\n    \"TaskMetrics\",\n    \"LevelMetrics\",\n    \"FeatureMetrics\",\n]\n```\n\n## Why\nClarifies the public API for the types module. Place after imports, before first class definition."
     },
     {
       "id": "TASK-004",
@@ -83,17 +83,17 @@
       "files": {
         "create": [],
         "modify": [],
-        "read": ["zerg/verify.py", "zerg/config.py", "zerg/types.py"]
+        "read": ["mahabharatha/verify.py", "mahabharatha/config.py", "mahabharatha/types.py"]
       },
       "verification": {
-        "command": "python -c \"from zerg.commands.debug import DebugCommand; from zerg.verify import VerificationExecutor; from zerg.dryrun import DryRunSimulator; print('All imports successful')\" && python -m zerg.validate_commands",
+        "command": "python -c \"from mahabharatha.commands.debug import DebugCommand; from mahabharatha.verify import VerificationExecutor; from mahabharatha.dryrun import DryRunSimulator; print('All imports successful')\" && python -m mahabharatha.validate_commands",
         "timeout_seconds": 120
       },
       "estimate_minutes": 10,
       "skills_required": ["python", "testing"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Task Context\n\nFinal verification task. Run:\n1. Import tests for all three circular import chains\n2. validate_commands drift check\n\n## Acceptance Criteria\n- `python -c \"from zerg.commands.debug import DebugCommand\"` succeeds\n- `python -c \"from zerg.verify import VerificationExecutor\"` succeeds  \n- `python -c \"from zerg.dryrun import DryRunSimulator\"` succeeds\n- `python -m zerg.validate_commands` passes"
+      "context": "## Task Context\n\nFinal verification task. Run:\n1. Import tests for all three circular import chains\n2. validate_commands drift check\n\n## Acceptance Criteria\n- `python -c \"from mahabharatha.commands.debug import DebugCommand\"` succeeds\n- `python -c \"from mahabharatha.verify import VerificationExecutor\"` succeeds  \n- `python -c \"from mahabharatha.dryrun import DryRunSimulator\"` succeeds\n- `python -m mahabharatha.validate_commands` passes"
     }
   ],
 

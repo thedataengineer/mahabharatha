@@ -1,4 +1,4 @@
-"""Rendering package for ZERG CLI output.
+"""Rendering package for MAHABHARATHA CLI output.
 
 Provides shared rendering utilities, and renderer classes for
 dry-run and status displays.  Public API re-exported here for

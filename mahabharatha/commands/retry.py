@@ -1,4 +1,4 @@
-"""ZERG retry command - retry failed or blocked tasks."""
+"""MAHABHARATHA retry command - retry failed or blocked tasks."""
 
 import click
 from rich.console import Console
@@ -55,7 +55,7 @@ def retry(
             console.print("Specify a feature with [cyan]--feature[/cyan]")
             raise SystemExit(1)
 
-        console.print(f"\n[bold cyan]ZERG Retry[/bold cyan] - {feature}\n")
+        console.print(f"\n[bold cyan]MAHABHARATHA Retry[/bold cyan] - {feature}\n")
 
         # Load state
         state = StateManager(feature)

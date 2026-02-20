@@ -1,4 +1,4 @@
-"""Tool registry for the ZERG performance analysis system.
+"""Tool registry for the MAHABHARATHA performance analysis system.
 
 Manages discovery and availability checking of external CLI tools
 used by the performance analysis adapters.

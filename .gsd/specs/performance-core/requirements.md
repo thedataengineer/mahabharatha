@@ -10,7 +10,7 @@
 
 ## Problem Statement
 
-ZERG orchestration suffers from significant I/O overhead due to:
+MAHABHARATHA orchestration suffers from significant I/O overhead due to:
 1. **Config loading**: `ZergConfig.load()` reads disk on every call (14+ callsites)
 2. **Log aggregation**: `LogAggregator._read_all_entries()` reads ALL log files per query
 3. **Directory traversal**: Multiple `rglob()` calls traverse directory tree repeatedly
@@ -30,7 +30,7 @@ ZERG orchestration suffers from significant I/O overhead due to:
 
 ### FR-1: ZergConfig Singleton with mtime Invalidation
 
-**Affected file**: `zerg/config.py`
+**Affected file**: `mahabharatha/config.py`
 
 Add caching to `ZergConfig.load()`:
 - Use class-level `_cached_instance` and `_cache_mtime` variables
@@ -48,7 +48,7 @@ def load(cls, config_path: str | Path | None = None, force_reload: bool = False)
 
 ### FR-2: LogAggregator Per-File Caching
 
-**Affected file**: `zerg/log_aggregator.py`
+**Affected file**: `mahabharatha/log_aggregator.py`
 
 Add per-file caching to `_read_all_entries()`:
 - Track mtime per JSONL file
@@ -62,8 +62,8 @@ Add per-file caching to `_read_all_entries()`:
 ### FR-3: Single-Pass Directory Traversal
 
 **Affected files**:
-- `zerg/security_rules.py` (`detect_project_stack()`)
-- `zerg/repo_map.py` (`_collect_files()`)
+- `mahabharatha/security_rules.py` (`detect_project_stack()`)
+- `mahabharatha/repo_map.py` (`_collect_files()`)
 
 Replace multiple `rglob()` calls with single traversal:
 - Use `rglob("*")` once, classify files in memory
@@ -73,7 +73,7 @@ Replace multiple `rglob()` calls with single traversal:
 
 ### FR-4: TokenCounter In-Memory Cache
 
-**Affected file**: `zerg/token_counter.py`
+**Affected file**: `mahabharatha/token_counter.py`
 
 Replace file-based cache with in-memory:
 - Load JSON file once on init
@@ -85,7 +85,7 @@ Replace file-based cache with in-memory:
 
 ### FR-5: RepoMap TTL-Based Caching
 
-**Affected file**: `zerg/repo_map.py`
+**Affected file**: `mahabharatha/repo_map.py`
 
 Add map-level caching to `build_map()`:
 - Cache complete `SymbolGraph` result
@@ -204,4 +204,4 @@ All changes must be backward compatible:
 ## Notes
 
 - All caches should be documented in CLAUDE.md under a "Performance" section
-- Consider exposing cache stats via `/zerg:status` in future iteration
+- Consider exposing cache stats via `/mahabharatha:status` in future iteration

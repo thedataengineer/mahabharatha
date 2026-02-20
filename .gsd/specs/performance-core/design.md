@@ -5,7 +5,7 @@
 - **Status**: DRAFT
 - **Created**: 2026-02-05
 - **Issues**: #133, #134, #144
-- **Author**: ZERG Design Mode
+- **Author**: MAHABHARATHA Design Mode
 
 ---
 
@@ -13,7 +13,7 @@
 
 ### 1.1 Summary
 
-This feature adds caching layers to ZERG's four most I/O-intensive subsystems: ZergConfig loading, LogAggregator file reads, TokenCounter lookups, and RepoMap AST parsing. Each cache uses mtime or TTL invalidation, thread-safe access via `threading.Lock`, and bounded memory via LRU eviction where appropriate.
+This feature adds caching layers to MAHABHARATHA's four most I/O-intensive subsystems: ZergConfig loading, LogAggregator file reads, TokenCounter lookups, and RepoMap AST parsing. Each cache uses mtime or TTL invalidation, thread-safe access via `threading.Lock`, and bounded memory via LRU eviction where appropriate.
 
 ### 1.2 Goals
 
@@ -39,7 +39,7 @@ This feature adds caching layers to ZERG's four most I/O-intensive subsystems: Z
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                      ZERG Orchestrator                          │
+│                      MAHABHARATHA Orchestrator                          │
 └─────────────────────────────────────────────────────────────────┘
          │                    │                    │
          ▼                    ▼                    ▼
@@ -53,7 +53,7 @@ This feature adds caching layers to ZERG's four most I/O-intensive subsystems: Z
 └────────┬────────┘  └────────┬────────┘  └────────┬────────┘
          │                    │                    │
          ▼                    ▼                    ▼
-    .zerg/config.yaml    .zerg/logs/*.jsonl    zerg/**/*.py
+    .mahabharatha/config.yaml    .mahabharatha/logs/*.jsonl    mahabharatha/**/*.py
 ```
 
 ```
@@ -81,11 +81,11 @@ This feature adds caching layers to ZERG's four most I/O-intensive subsystems: Z
 
 | Component | Responsibility | Files |
 |-----------|----------------|-------|
-| ZergConfig Singleton | Cache config with mtime invalidation | `zerg/config.py` |
-| LogAggregator Cache | Per-file mtime cache with LRU | `zerg/log_aggregator.py` |
-| TokenCounter Memory | In-memory cache with LRU, file persist | `zerg/token_counter.py` |
-| RepoMap TTL Cache | 30s TTL cache for SymbolGraph | `zerg/repo_map.py` |
-| Single-Pass Traversal | Collect-then-filter pattern | `zerg/security_rules.py`, `zerg/repo_map.py` |
+| ZergConfig Singleton | Cache config with mtime invalidation | `mahabharatha/config.py` |
+| LogAggregator Cache | Per-file mtime cache with LRU | `mahabharatha/log_aggregator.py` |
+| TokenCounter Memory | In-memory cache with LRU, file persist | `mahabharatha/token_counter.py` |
+| RepoMap TTL Cache | 30s TTL cache for SymbolGraph | `mahabharatha/repo_map.py` |
+| Single-Pass Traversal | Collect-then-filter pattern | `mahabharatha/security_rules.py`, `mahabharatha/repo_map.py` |
 
 ### 2.3 Data Flow
 
@@ -116,7 +116,7 @@ build_map() → check _cache_time vs now - TTL → hit: return cached | miss: bu
 ### 3.1 ZergConfig Singleton (FR-1)
 
 ```python
-# zerg/config.py additions
+# mahabharatha/config.py additions
 
 class ZergConfig(BaseModel):
     # Class-level cache
@@ -130,13 +130,13 @@ class ZergConfig(BaseModel):
         """Load configuration with mtime-based caching.
 
         Args:
-            config_path: Path to config file. Defaults to .zerg/config.yaml
+            config_path: Path to config file. Defaults to .mahabharatha/config.yaml
             force_reload: Bypass cache and force reload from disk
 
         Returns:
             ZergConfig instance (cached if valid)
         """
-        config_path = Path(".zerg/config.yaml") if config_path is None else Path(config_path)
+        config_path = Path(".mahabharatha/config.yaml") if config_path is None else Path(config_path)
 
         with cls._cache_lock:
             # Check cache validity
@@ -183,7 +183,7 @@ class ZergConfig(BaseModel):
 ### 3.2 LogAggregator Per-File Cache (FR-2)
 
 ```python
-# zerg/log_aggregator.py additions
+# mahabharatha/log_aggregator.py additions
 
 from collections import OrderedDict
 import threading
@@ -247,7 +247,7 @@ class LogAggregator:
 ### 3.3 TokenCounter In-Memory Cache (FR-4)
 
 ```python
-# zerg/token_counter.py refactored
+# mahabharatha/token_counter.py refactored
 
 from collections import OrderedDict
 import threading
@@ -347,7 +347,7 @@ class TokenCounter:
 ### 3.4 RepoMap TTL Cache (FR-5)
 
 ```python
-# zerg/repo_map.py additions
+# mahabharatha/repo_map.py additions
 
 import threading
 import time
@@ -419,7 +419,7 @@ def _build_map_impl(root: Path, languages: list[str]) -> SymbolGraph:
 ### 3.5 Single-Pass Directory Traversal (FR-3)
 
 ```python
-# zerg/security_rules.py - detect_project_stack() refactored
+# mahabharatha/security_rules.py - detect_project_stack() refactored
 
 def detect_project_stack(project_path: Path) -> ProjectStack:
     """Detect technology stack with single-pass directory traversal."""
@@ -455,7 +455,7 @@ def detect_project_stack(project_path: Path) -> ProjectStack:
 ```
 
 ```python
-# zerg/repo_map.py - _collect_files() refactored
+# mahabharatha/repo_map.py - _collect_files() refactored
 
 def _collect_files(root: Path, languages: list[str]) -> list[Path]:
     """Collect source files with single-pass traversal."""
@@ -551,11 +551,11 @@ def _collect_files(root: Path, languages: list[str]) -> list[Path]:
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| zerg/config.py | TASK-001 | modify |
-| zerg/log_aggregator.py | TASK-002 | modify |
-| zerg/token_counter.py | TASK-003 | modify |
-| zerg/repo_map.py | TASK-004 | modify |
-| zerg/security_rules.py | TASK-005 | modify |
+| mahabharatha/config.py | TASK-001 | modify |
+| mahabharatha/log_aggregator.py | TASK-002 | modify |
+| mahabharatha/token_counter.py | TASK-003 | modify |
+| mahabharatha/repo_map.py | TASK-004 | modify |
+| mahabharatha/security_rules.py | TASK-005 | modify |
 | tests/test_config_caching.py | TASK-006 | create |
 | tests/test_log_aggregator_caching.py | TASK-007 | create |
 | tests/test_token_counter_memory.py | TASK-008 | create |
@@ -610,11 +610,11 @@ graph TD
 
 | Task | Command |
 |------|---------|
-| TASK-001 | `python -c "from zerg.config import ZergConfig; c1=ZergConfig.load(); c2=ZergConfig.load(); assert c1 is c2"` |
-| TASK-002 | `python -c "from zerg.log_aggregator import LogAggregator; la=LogAggregator('.zerg/logs'); la.query(); la.query()"` |
-| TASK-003 | `python -c "from zerg.token_counter import TokenCounter; tc=TokenCounter(); tc.count('test'); tc.count('test')"` |
-| TASK-004 | `python -c "from zerg.repo_map import build_map, invalidate_cache; build_map('.'); invalidate_cache()"` |
-| TASK-005 | `python -c "from zerg.security_rules import detect_project_stack; from pathlib import Path; detect_project_stack(Path('.'))"` |
+| TASK-001 | `python -c "from mahabharatha.config import ZergConfig; c1=ZergConfig.load(); c2=ZergConfig.load(); assert c1 is c2"` |
+| TASK-002 | `python -c "from mahabharatha.log_aggregator import LogAggregator; la=LogAggregator('.mahabharatha/logs'); la.query(); la.query()"` |
+| TASK-003 | `python -c "from mahabharatha.token_counter import TokenCounter; tc=TokenCounter(); tc.count('test'); tc.count('test')"` |
+| TASK-004 | `python -c "from mahabharatha.repo_map import build_map, invalidate_cache; build_map('.'); invalidate_cache()"` |
+| TASK-005 | `python -c "from mahabharatha.security_rules import detect_project_stack; from pathlib import Path; detect_project_stack(Path('.'))"` |
 | TASK-006 to TASK-010 | `pytest tests/test_*_caching.py tests/test_*_memory.py tests/test_single_traversal.py -v` |
 | TASK-011 | `make lint && make typecheck && pytest tests/ -v` |
 

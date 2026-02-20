@@ -1,4 +1,4 @@
-"""Quality gate execution for ZERG."""
+"""Quality gate execution for MAHABHARATHA."""
 
 import time
 from pathlib import Path
@@ -25,7 +25,7 @@ class GateRunner:
         """Initialize gate runner.
 
         Args:
-            config: ZERG configuration (loads default if not provided)
+            config: MAHABHARATHA configuration (loads default if not provided)
             plugin_registry: Optional plugin registry for plugin gates
         """
         self.config = config or ZergConfig.load()

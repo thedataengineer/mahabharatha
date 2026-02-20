@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 Task Graph."""
+"""Tests for MAHABHARATHA v2 Task Graph."""
 
 import json
 import sys

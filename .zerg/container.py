@@ -1,4 +1,4 @@
-"""ZERG v2 Container Launcher - Docker container management for worker isolation."""
+"""MAHABHARATHA v2 Container Launcher - Docker container management for worker isolation."""
 
 from dataclasses import dataclass
 from datetime import datetime
@@ -25,7 +25,7 @@ class ContainerConfig:
     ports: list[int]
     memory_limit: str = "4g"
     cpu_limit: float = 2.0
-    network: str = "zerg-internal"
+    network: str = "mahabharatha-internal"
 
 
 @dataclass
@@ -91,7 +91,7 @@ class ContainerLauncher:
         Returns:
             Tuple of (success, image_name or error)
         """
-        image_name = f"zerg-worker-{language}"
+        image_name = f"mahabharatha-worker-{language}"
         builder = DevcontainerBuilder(self.project_path)
 
         # Check if image exists
@@ -130,7 +130,7 @@ class ContainerLauncher:
         container = self.client.containers.run(
             config.image,
             detach=True,
-            name=f"zerg-worker-{worker_id}",
+            name=f"mahabharatha-worker-{worker_id}",
             environment=env,
             ports=port_bindings,
             volumes=volumes,
@@ -214,10 +214,10 @@ class ContainerLauncher:
     def _ensure_network(self) -> None:
         """Ensure internal network exists."""
         try:
-            self.client.networks.get("zerg-internal")
+            self.client.networks.get("mahabharatha-internal")
         except docker.errors.NotFound:
             self.client.networks.create(
-                "zerg-internal",
+                "mahabharatha-internal",
                 driver="bridge",
                 internal=True,  # No external access
             )

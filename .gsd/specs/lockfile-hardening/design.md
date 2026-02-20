@@ -11,7 +11,7 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Harden the advisory lockfile functions in `zerg/commands/_utils.py` against five edge-case vulnerabilities found during code review: TOCTOU race in lock creation, missing ownership check on release, unprotected `.read_text()` calls, path traversal via feature name, and unbounded PID/timestamp parsing. All fixes are localized to one source file plus two test files.
+Harden the advisory lockfile functions in `mahabharatha/commands/_utils.py` against five edge-case vulnerabilities found during code review: TOCTOU race in lock creation, missing ownership check on release, unprotected `.read_text()` calls, path traversal via feature name, and unbounded PID/timestamp parsing. All fixes are localized to one source file plus two test files.
 
 ### 1.2 Goals
 - Eliminate TOCTOU race in `acquire_feature_lock()` via atomic file creation
@@ -34,7 +34,7 @@ Harden the advisory lockfile functions in `zerg/commands/_utils.py` against five
 
 ```
 ┌──────────────────────────────────────────┐
-│          zerg/commands/_utils.py          │
+│          mahabharatha/commands/_utils.py          │
 │                                          │
 │  _validate_feature_name(feature)  ← NEW  │
 │  _safe_read_text(path)            ← NEW  │
@@ -193,7 +193,7 @@ def _parse_lock_content(content: str) -> tuple[int, float] | None:
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/commands/_utils.py` | TASK-001 | modify |
+| `mahabharatha/commands/_utils.py` | TASK-001 | modify |
 | `tests/unit/test_lockfile.py` | TASK-002 | modify |
 | `tests/unit/test_commands_utils.py` | TASK-003 | modify |
 | `CHANGELOG.md` | TASK-004 | modify |

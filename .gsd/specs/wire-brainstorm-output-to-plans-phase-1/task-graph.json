@@ -10,17 +10,17 @@
     {
       "id": "TASK-001",
       "title": "Add --issue flag and issue loading to plan.md",
-      "description": "Modify plan.md to support --issue N / #N flag for loading GitHub issue context into the planning workflow.\n\nChanges required:\n\n1. **Flags section** (after --skip-validation line): Add:\n   `- \\`--issue N\\` or \\`#N\\`: Load a GitHub issue as brainstorm context for requirements seeding`\n\n2. **Pre-Flight section** (after the echo .started line, before the closing ```): Add issue extraction:\n   ```bash\n   # Extract issue number from --issue N or #N shorthand\n   ISSUE_NUM=\"\"\n   if [[ \"$ARGUMENTS\" =~ --issue[[:space:]]+([0-9]+) ]]; then\n     ISSUE_NUM=\"${BASH_REMATCH[1]}\"\n   elif [[ \"$ARGUMENTS\" =~ \\#([0-9]+) ]]; then\n     ISSUE_NUM=\"${BASH_REMATCH[1]}\"\n   fi\n   ```\n\n3. **Phase 1: Context Gathering** (add as new step 0, before existing step 1): Add:\n   ```\n   0. **Check for issue context** — If `--issue N` or `#N` was provided in arguments:\n      - Run `gh issue view $ISSUE_NUM` to read the issue\n      - Parse title, body, labels, and acceptance criteria\n      - Store as issue context for Phase 2\n      - Output: \"Found GitHub issue #N: '{title}'. Loading brainstorm context from issue body...\"\n      - If `--issue` not provided, skip this step (backward compatible)\n   ```\n\n4. **Phase 2: Requirements Elicitation** (add advisory paragraph after the bullet list): Add:\n   ```\n   > **Issue Context Advisory**: When issue context was loaded in Phase 1, acknowledge what the issue already captured (scope, acceptance criteria, priority, proposed solution). Present a summary: \"Issue #N already covers: [list]. Asking about gaps only.\" Then focus elicitation on areas the issue didn't cover or where plan needs deeper specificity. Use judgment about what's already answered vs. what needs more detail.\n   ```\n\n5. **Help section** (add --issue to flags list): Add:\n   `  --issue N             Load GitHub issue N as brainstorm context`\n\n6. **Usage line in Help** — update to:\n   `/zerg:plan — Capture complete requirements for a feature.`\n   (already correct, just verify)",
+      "description": "Modify plan.md to support --issue N / #N flag for loading GitHub issue context into the planning workflow.\n\nChanges required:\n\n1. **Flags section** (after --skip-validation line): Add:\n   `- \\`--issue N\\` or \\`#N\\`: Load a GitHub issue as brainstorm context for requirements seeding`\n\n2. **Pre-Flight section** (after the echo .started line, before the closing ```): Add issue extraction:\n   ```bash\n   # Extract issue number from --issue N or #N shorthand\n   ISSUE_NUM=\"\"\n   if [[ \"$ARGUMENTS\" =~ --issue[[:space:]]+([0-9]+) ]]; then\n     ISSUE_NUM=\"${BASH_REMATCH[1]}\"\n   elif [[ \"$ARGUMENTS\" =~ \\#([0-9]+) ]]; then\n     ISSUE_NUM=\"${BASH_REMATCH[1]}\"\n   fi\n   ```\n\n3. **Phase 1: Context Gathering** (add as new step 0, before existing step 1): Add:\n   ```\n   0. **Check for issue context** — If `--issue N` or `#N` was provided in arguments:\n      - Run `gh issue view $ISSUE_NUM` to read the issue\n      - Parse title, body, labels, and acceptance criteria\n      - Store as issue context for Phase 2\n      - Output: \"Found GitHub issue #N: '{title}'. Loading brainstorm context from issue body...\"\n      - If `--issue` not provided, skip this step (backward compatible)\n   ```\n\n4. **Phase 2: Requirements Elicitation** (add advisory paragraph after the bullet list): Add:\n   ```\n   > **Issue Context Advisory**: When issue context was loaded in Phase 1, acknowledge what the issue already captured (scope, acceptance criteria, priority, proposed solution). Present a summary: \"Issue #N already covers: [list]. Asking about gaps only.\" Then focus elicitation on areas the issue didn't cover or where plan needs deeper specificity. Use judgment about what's already answered vs. what needs more detail.\n   ```\n\n5. **Help section** (add --issue to flags list): Add:\n   `  --issue N             Load GitHub issue N as brainstorm context`\n\n6. **Usage line in Help** — update to:\n   `/mahabharatha:plan — Capture complete requirements for a feature.`\n   (already correct, just verify)",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/plan.md"],
+        "modify": ["mahabharatha/data/commands/plan.md"],
         "read": [".gsd/specs/wire-brainstorm-output-to-plans-phase-1/requirements.md"]
       },
       "verification": {
-        "command": "grep -q '\\-\\-issue' zerg/data/commands/plan.md && grep -q 'ISSUE_NUM' zerg/data/commands/plan.md && grep -q 'Check for issue context' zerg/data/commands/plan.md && grep -q 'Issue Context Advisory' zerg/data/commands/plan.md && echo 'PASS' || echo 'FAIL'",
+        "command": "grep -q '\\-\\-issue' mahabharatha/data/commands/plan.md && grep -q 'ISSUE_NUM' mahabharatha/data/commands/plan.md && grep -q 'Check for issue context' mahabharatha/data/commands/plan.md && grep -q 'Issue Context Advisory' mahabharatha/data/commands/plan.md && echo 'PASS' || echo 'FAIL'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -38,11 +38,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/plan.core.md"],
+        "modify": ["mahabharatha/data/commands/plan.core.md"],
         "read": [".gsd/specs/wire-brainstorm-output-to-plans-phase-1/requirements.md"]
       },
       "verification": {
-        "command": "grep -q '\\-\\-issue' zerg/data/commands/plan.core.md && grep -q 'ISSUE_NUM' zerg/data/commands/plan.core.md && grep -q 'Check for issue context' zerg/data/commands/plan.core.md && grep -q 'Issue Context Advisory' zerg/data/commands/plan.core.md && echo 'PASS' || echo 'FAIL'",
+        "command": "grep -q '\\-\\-issue' mahabharatha/data/commands/plan.core.md && grep -q 'ISSUE_NUM' mahabharatha/data/commands/plan.core.md && grep -q 'Check for issue context' mahabharatha/data/commands/plan.core.md && grep -q 'Issue Context Advisory' mahabharatha/data/commands/plan.core.md && echo 'PASS' || echo 'FAIL'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -60,11 +60,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/brainstorm.md"],
+        "modify": ["mahabharatha/data/commands/brainstorm.md"],
         "read": [".gsd/specs/wire-brainstorm-output-to-plans-phase-1/requirements.md"]
       },
       "verification": {
-        "command": "grep -q '\\-\\-issue {top-issue-number}' zerg/data/commands/brainstorm.md && echo 'PASS' || echo 'FAIL'",
+        "command": "grep -q '\\-\\-issue {top-issue-number}' mahabharatha/data/commands/brainstorm.md && echo 'PASS' || echo 'FAIL'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5,
@@ -82,11 +82,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/brainstorm.core.md"],
+        "modify": ["mahabharatha/data/commands/brainstorm.core.md"],
         "read": [".gsd/specs/wire-brainstorm-output-to-plans-phase-1/requirements.md"]
       },
       "verification": {
-        "command": "grep -q '\\-\\-issue {top-issue-number}' zerg/data/commands/brainstorm.core.md && echo 'PASS' || echo 'FAIL'",
+        "command": "grep -q '\\-\\-issue {top-issue-number}' mahabharatha/data/commands/brainstorm.core.md && echo 'PASS' || echo 'FAIL'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5,

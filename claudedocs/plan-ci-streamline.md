@@ -10,25 +10,32 @@
 
 ## Target Architecture
 
-```
-Single workflow: ci.yml
-Trigger: push(main), PR
+```mermaid
+graph TD
+    subgraph "Single workflow: ci.yml"
+        Trigger{"Trigger: push(main), PR"}
 
-                 ┌─────────────┐
-                 │   quality    │  lint + validate + changelog (~20s)
-                 └──────┬──────┘
-                        │
-              ┌─────────┴─────────┐
-              │                   │
-        ┌─────┴─────┐     ┌──────┴──────┐
-        │   tests   │     │    audit    │
-        │ unit+integ│     │  pip-audit  │
-        │ (2 shards)│     └─────────────┘
-        └───────────┘
+        Quality["quality: lint + validate + changelog (~20s)"]
+
+        Tests["tests: unit+integ (2 shards)"]
+        Audit["audit: pip-audit"]
+
+        Trigger --> Quality
+        Quality --> Tests
+        Quality --> Audit
+    end
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
+```
 
 Total jobs: 4 (quality + 2 test shards + audit)
 Previous:   8 (smoke + lint + 4 unit shards + integration + audit + changelog + validate)
-```
 
 ## Changes
 
@@ -42,7 +49,7 @@ Previous:   8 (smoke + lint + 4 unit shards + integration + audit + changelog + 
 
 Single job runs sequentially:
 1. `ruff check .` + `ruff format --check .`
-2. `python -m zerg.validate_commands`
+2. `python -m mahabharatha.validate_commands`
 3. Changelog diff check (inline, skip if `skip-changelog` label present)
 
 Estimated: ~20s total (one runner startup instead of four)

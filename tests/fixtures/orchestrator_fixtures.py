@@ -591,7 +591,7 @@ def devcontainer_setup(tmp_path: Path) -> Path:
     devcontainer_dir.mkdir(parents=True)
 
     devcontainer_json = {
-        "name": "ZERG Worker",
+        "name": "MAHABHARATHA Worker",
         "image": "mahabharatha-worker:latest",
         "features": {},
         "mounts": [],

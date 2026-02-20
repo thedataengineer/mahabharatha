@@ -1,4 +1,4 @@
-"""ZERG review command - two-stage code review workflow."""
+"""MAHABHARATHA review command - two-stage code review workflow."""
 
 from dataclasses import dataclass
 from enum import Enum
@@ -497,7 +497,7 @@ def review(
         mahabharatha review --output review.md
     """
     try:
-        console.print("\n[bold cyan]ZERG Review[/bold cyan]\n")
+        console.print("\n[bold cyan]MAHABHARATHA Review[/bold cyan]\n")
         console.print(f"Mode: [cyan]{mode}[/cyan]")
 
         if no_security:

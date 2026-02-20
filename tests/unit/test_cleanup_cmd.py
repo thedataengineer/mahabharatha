@@ -1,4 +1,4 @@
-"""Unit tests for ZERG cleanup command - thinned per TSR2-L3-002."""
+"""Unit tests for MAHABHARATHA cleanup command - thinned per TSR2-L3-002."""
 
 import os
 from pathlib import Path

@@ -25,11 +25,11 @@ def mock_config():
     config = MagicMock(spec=ZergConfig)
     config.merge_timeout_seconds = 10
     config.merge_max_retries = 2
-    # Set rush config for immediate merge behavior (tests expect this)
+    # Set kurukshetra config for immediate merge behavior (tests expect this)
     rush_config = MagicMock()
     rush_config.defer_merge_to_ship = False
     rush_config.gates_at_ship_only = False
-    config.rush = rush_config
+    config.kurukshetra = rush_config
     return config
 
 
@@ -219,7 +219,7 @@ class TestHandleLevelComplete:
 
     def test_defer_merge_to_ship(self, mock_deps):
         """handle_level_complete defers merge when defer_merge_to_ship is True."""
-        mock_deps["config"].rush.defer_merge_to_ship = True
+        mock_deps["config"].kurukshetra.defer_merge_to_ship = True
         callback = MagicMock()
         mock_deps["on_level_complete_callbacks"].append(callback)
 
@@ -456,7 +456,7 @@ class TestMergeLevel:
 
     def test_skip_gates_when_configured(self, mock_deps):
         """merge_level passes skip_gates=True when gates_at_ship_only is set."""
-        mock_deps["config"].rush.gates_at_ship_only = True
+        mock_deps["config"].kurukshetra.gates_at_ship_only = True
         _add_worker(mock_deps)
 
         merge_result = MergeFlowResult(

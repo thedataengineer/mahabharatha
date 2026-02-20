@@ -1,4 +1,4 @@
-"""Unit tests for resilience configuration fields in ZERG config module.
+"""Unit tests for resilience configuration fields in MAHABHARATHA config module.
 
 Tests for FR-1 (spawn retry), FR-2 (task timeout), FR-3 (heartbeat),
 and FR-6 (auto-respawn) configuration options.

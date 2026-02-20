@@ -5,7 +5,7 @@
 - **Status**: APPROVED
 - **Created**: 2026-02-07T16:20:00
 - **Author**: Factory Plan Mode
-- **Parent Epic**: #179 (ZERG Public Release)
+- **Parent Epic**: #179 (MAHABHARATHA Public Release)
 - **Issues**: #185, #186, #187, #188
 
 ---
@@ -13,7 +13,7 @@
 ## 1. Problem Statement
 
 ### 1.1 Background
-ZERG is preparing for public release as `zerg-ai` on PyPI. Phase 0 (blockers) is complete — distribution renamed, CHANGELOG frozen, TestPyPI validated, GitHub environments and branch protection configured. The repo is currently private.
+MAHABHARATHA is preparing for public release as `mahabharatha-ai` on PyPI. Phase 0 (blockers) is complete — distribution renamed, CHANGELOG frozen, TestPyPI validated, GitHub environments and branch protection configured. The repo is currently private.
 
 ### 1.2 Problem
 The repo lacks standard open-source community infrastructure: issue templates, PR template, Code of Conduct, Dependabot config, README badges, and GitHub topics. Without these, contributors see an incomplete project and have no structured way to report bugs or submit PRs.
@@ -33,7 +33,7 @@ Without Phase 1:
 
 ### 2.1 Primary Users
 - Open-source contributors who want to file issues or submit PRs
-- Developers evaluating ZERG from the GitHub repo page
+- Developers evaluating MAHABHARATHA from the GitHub repo page
 
 ### 2.2 Secondary Users
 - Maintainer (rocklambros) — benefits from structured issue reports and consistent PRs
@@ -78,7 +78,7 @@ Without Phase 1:
 
 ### 3.4 Business Rules
 - Issue templates use YAML format (renders as forms in GitHub UI)
-- Bug report requires: description, repro steps, ZERG version
+- Bug report requires: description, repro steps, MAHABHARATHA version
 - Feature request requires: problem statement, proposed solution
 - PR template checklist references existing CI requirements
 - CoC enforcement contact: use GitHub Security Advisories (no personal email)

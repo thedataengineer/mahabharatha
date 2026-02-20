@@ -1,4 +1,4 @@
-"""ZERG v2 Init Generator - Project initialization and configuration."""
+"""MAHABHARATHA v2 Init Generator - Project initialization and configuration."""
 
 import json
 import shutil
@@ -175,7 +175,7 @@ class ProjectDetector:
 
 @dataclass
 class ConfigGenerator:
-    """Generates config.json for ZERG v2."""
+    """Generates config.json for MAHABHARATHA v2."""
 
     project_path: Path
     project_info: ProjectInfo
@@ -209,7 +209,7 @@ class ConfigGenerator:
 
 
 class InitGenerator:
-    """Generates ZERG v2 directory structure."""
+    """Generates MAHABHARATHA v2 directory structure."""
 
     # Path to source templates/schemas (relative to this file)
     SOURCE_DIR = Path(__file__).parent
@@ -221,10 +221,10 @@ class InitGenerator:
             project_path: Path to project root
         """
         self.project_path = project_path
-        self.zerg_dir = project_path / ".zerg"
+        self.zerg_dir = project_path / ".mahabharatha"
 
     def generate(self, generate_devcontainer: bool = True) -> None:
-        """Generate ZERG v2 structure.
+        """Generate MAHABHARATHA v2 structure.
 
         Args:
             generate_devcontainer: Whether to generate devcontainer files
@@ -250,7 +250,7 @@ class InitGenerator:
             self._generate_devcontainer(info)
 
     def _create_directories(self) -> None:
-        """Create ZERG directory structure."""
+        """Create MAHABHARATHA directory structure."""
         dirs = [
             self.zerg_dir,
             self.zerg_dir / "schemas",
@@ -293,8 +293,8 @@ class InitGenerator:
             info: Detected project information
         """
         config = DevcontainerConfig(
-            name=f"zerg-worker-{self.project_path.name}",
-            image_name=f"zerg-worker-{info.language}",
+            name=f"mahabharatha-worker-{self.project_path.name}",
+            image_name=f"mahabharatha-worker-{info.language}",
         )
         generator = DevcontainerGenerator(self.project_path, config)
         generator.generate(

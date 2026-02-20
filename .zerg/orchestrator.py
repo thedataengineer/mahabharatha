@@ -1,4 +1,4 @@
-"""ZERG v2 Orchestrator - Central coordination for parallel worker execution."""
+"""MAHABHARATHA v2 Orchestrator - Central coordination for parallel worker execution."""
 
 import contextlib
 import json
@@ -72,19 +72,19 @@ class Orchestrator:
     enforcing level-based task ordering and quality gates.
     """
 
-    def __init__(self, config_path: str = ".zerg/config.yaml", feature: str = "default"):
+    def __init__(self, config_path: str = ".mahabharatha/config.yaml", feature: str = "default"):
         """Load configuration and initialize state.
 
         Args:
-            config_path: Path to ZERG configuration file
+            config_path: Path to MAHABHARATHA configuration file
             feature: Feature name for state isolation
         """
         self._config_path = Path(config_path)
         self._config = self._load_config()
         self._state = OrchestratorState.IDLE
         self._feature = feature
-        self._state_path = f".zerg/state/{feature}.json"
-        self._log_path = Path(self._config.get("logging", {}).get("directory", ".zerg/logs"))
+        self._state_path = f".mahabharatha/state/{feature}.json"
+        self._log_path = Path(self._config.get("logging", {}).get("directory", ".mahabharatha/logs"))
 
         # Worker management
         self._workers: dict[int, WorkerInfo] = {}
@@ -125,7 +125,7 @@ class Orchestrator:
             "quality_gates": [],
             "logging": {
                 "level": "info",
-                "directory": ".zerg/logs",
+                "directory": ".mahabharatha/logs",
             },
         }
 
@@ -519,7 +519,7 @@ class Orchestrator:
         levels = self._get_level_numbers()
         total_tasks = len(self._task_graph.get("tasks", []))
 
-        print("\n=== ZERG Execution Plan ===")
+        print("\n=== MAHABHARATHA Execution Plan ===")
         print(f"Workers: {workers}")
         print(f"Total Tasks: {total_tasks}")
         print(f"Levels: {len(levels)}")
@@ -542,10 +542,10 @@ class Orchestrator:
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="ZERG v2 Orchestrator")
+    parser = argparse.ArgumentParser(description="MAHABHARATHA v2 Orchestrator")
     parser.add_argument("--feature", required=True, help="Feature name")
     parser.add_argument("--workers", type=int, default=5, help="Number of workers")
-    parser.add_argument("--config", default=".zerg/config.yaml", help="Config file path")
+    parser.add_argument("--config", default=".mahabharatha/config.yaml", help="Config file path")
     parser.add_argument("--task-graph", required=True, help="Path to task-graph.json")
     parser.add_argument("--assignments", help="Path to worker-assignments.json")
     parser.add_argument("--resume", action="store_true", help="Resume from checkpoint")

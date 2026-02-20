@@ -1,4 +1,4 @@
-"""Git hook management for ZERG.
+"""Git hook management for MAHABHARATHA.
 
 Migrated from mahabharatha/security.py — contains hook install/uninstall functions.
 """
@@ -13,7 +13,7 @@ logger = get_logger("security")
 
 
 def install_hooks(repo_path: str | Path = ".") -> bool:
-    """Install ZERG git hooks to the repository.
+    """Install MAHABHARATHA git hooks to the repository.
 
     Args:
         repo_path: Path to repository
@@ -30,7 +30,7 @@ def install_hooks(repo_path: str | Path = ".") -> bool:
         return False
 
     if not mahabharatha_hooks_dir.exists():
-        logger.warning(f"ZERG hooks directory not found: {mahabharatha_hooks_dir}")
+        logger.warning(f"MAHABHARATHA hooks directory not found: {mahabharatha_hooks_dir}")
         return False
 
     installed = 0
@@ -59,7 +59,7 @@ def install_hooks(repo_path: str | Path = ".") -> bool:
 
 
 def uninstall_hooks(repo_path: str | Path = ".") -> bool:
-    """Uninstall ZERG git hooks from the repository.
+    """Uninstall MAHABHARATHA git hooks from the repository.
 
     Args:
         repo_path: Path to repository

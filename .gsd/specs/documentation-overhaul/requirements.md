@@ -39,9 +39,9 @@ Create comprehensive GitHub wiki with these pages:
 |------|---------|
 | Home | Overview, quick start, links to other pages |
 | Command-Reference | All commands grouped by workflow phase, alphabetical within groups |
-| Configuration | .zerg/config.yaml, environment variables, tuning |
+| Configuration | .mahabharatha/config.yaml, environment variables, tuning |
 | Architecture | System design, module reference, execution model |
-| Tutorial | Minerals-store walkthrough with all ZERG features |
+| Tutorial | Minerals-store walkthrough with all MAHABHARATHA features |
 | Plugins | Quality gates, lifecycle hooks, custom launchers |
 | Security | Security rules integration, vulnerability reporting |
 | Context-Engineering | Token optimization, command splitting, task context |
@@ -63,31 +63,31 @@ For each of the 26 commands, document:
 
 Commands grouped by workflow phase, alphabetical within each group:
 
-**Core Workflow**: /zerg:brainstorm, /zerg:design, /zerg:init, /zerg:plan, /zerg:rush
+**Core Workflow**: /mahabharatha:brainstorm, /mahabharatha:design, /mahabharatha:init, /mahabharatha:plan, /mahabharatha:kurukshetra
 
-**Monitoring & Control**: /zerg:cleanup, /zerg:logs, /zerg:merge, /zerg:retry, /zerg:status, /zerg:stop
+**Monitoring & Control**: /mahabharatha:cleanup, /mahabharatha:logs, /mahabharatha:merge, /mahabharatha:retry, /mahabharatha:status, /mahabharatha:stop
 
-**Quality & Analysis**: /zerg:analyze, /zerg:build, /zerg:refactor, /zerg:review, /zerg:security, /zerg:test
+**Quality & Analysis**: /mahabharatha:analyze, /mahabharatha:build, /mahabharatha:refactor, /mahabharatha:review, /mahabharatha:security, /mahabharatha:test
 
-**Utilities**: /zerg:create-command, /zerg:debug, /zerg:git, /zerg:plugins, /zerg:worker
+**Utilities**: /mahabharatha:create-command, /mahabharatha:debug, /mahabharatha:git, /mahabharatha:plugins, /mahabharatha:worker
 
-**Documentation & AI**: /zerg:document, /zerg:estimate, /zerg:explain, /zerg:index, /zerg:select-tool
+**Documentation & AI**: /mahabharatha:document, /mahabharatha:estimate, /mahabharatha:explain, /mahabharatha:index, /mahabharatha:select-tool
 
 ### FR-3: Tutorial-Focused README
 
 Restructure README.md as a tutorial:
 
-1. **Quick Overview** (what ZERG does, 1 paragraph)
+1. **Quick Overview** (what MAHABHARATHA does, 1 paragraph)
 2. **Installation** (step-by-step with prerequisites)
-3. **Tutorial: Your First ZERG Project** (using minerals-store)
-   - Step 1: `/zerg:init` — Initialize project
-   - Step 2: `/zerg:brainstorm` — Discover requirements
-   - Step 3: `/zerg:plan` — Capture requirements
-   - Step 4: `/zerg:design` — Create architecture
-   - Step 5: `/zerg:rush` — Execute in parallel
-   - Step 6: `/zerg:status`, `/zerg:logs` — Monitor
-   - Step 7: `/zerg:review`, `/zerg:test` — Quality checks
-   - Step 8: `/zerg:git --action ship` — Ship it
+3. **Tutorial: Your First MAHABHARATHA Project** (using minerals-store)
+   - Step 1: `/mahabharatha:init` — Initialize project
+   - Step 2: `/mahabharatha:brainstorm` — Discover requirements
+   - Step 3: `/mahabharatha:plan` — Capture requirements
+   - Step 4: `/mahabharatha:design` — Create architecture
+   - Step 5: `/mahabharatha:kurukshetra` — Execute in parallel
+   - Step 6: `/mahabharatha:status`, `/mahabharatha:logs` — Monitor
+   - Step 7: `/mahabharatha:review`, `/mahabharatha:test` — Quality checks
+   - Step 8: `/mahabharatha:git --action ship` — Ship it
 4. **Command Quick Reference** (table linking to wiki)
 5. **Configuration** (brief, links to wiki)
 6. **Links to Full Documentation** (wiki, ARCHITECTURE.md)
@@ -102,21 +102,21 @@ Audit and update ARCHITECTURE.md:
 4. Remove references to deprecated code
 5. Cross-reference with current source files
 
-### FR-5: Documentation Generation via /zerg:document --deep
+### FR-5: Documentation Generation via /mahabharatha:document --deep
 
-Use `/zerg:document --deep` to generate initial documentation:
+Use `/mahabharatha:document --deep` to generate initial documentation:
 
 1. Run on each major subsystem
 2. Review and enhance with examples
-3. Ensure all slash commands use `/zerg:` format (never "Command-init")
+3. Ensure all slash commands use `/mahabharatha:` format (never "Command-init")
 4. Verify flag descriptions match source files
 
 ## Non-Functional Requirements
 
 ### NFR-1: Consistency
 
-- All commands referenced as `/zerg:command` (with shortcut `/z:command`)
-- Never use "Command-init" or "zerg-init" format
+- All commands referenced as `/mahabharatha:command` (with shortcut `/z:command`)
+- Never use "Command-init" or "mahabharatha-init" format
 - Consistent flag formatting: `--flag VALUE` with type and default
 
 ### NFR-2: Completeness
@@ -145,7 +145,7 @@ Use `/zerg:document --deep` to generate initial documentation:
 2. Restructure README.md as tutorial
 3. Exhaustive command reference
 4. ARCHITECTURE.md audit
-5. Use `/zerg:document --deep` for generation
+5. Use `/mahabharatha:document --deep` for generation
 
 ### Out of Scope
 
@@ -160,14 +160,14 @@ Use `/zerg:document --deep` to generate initial documentation:
 2. **Commands Documented**: All 26 commands have exhaustive documentation with flags and examples
 3. **Tutorial Works**: New user can follow README tutorial end-to-end
 4. **Architecture Current**: ARCHITECTURE.md reflects current code (spot-checked against 5 key modules)
-5. **Format Consistent**: All command references use `/zerg:` format
+5. **Format Consistent**: All command references use `/mahabharatha:` format
 
 ## Implementation Approach
 
-### Phase 1: Audit (using /zerg:document --deep)
+### Phase 1: Audit (using /mahabharatha:document --deep)
 
-1. Run `/zerg:document --deep` on zerg/data/commands/
-2. Run `/zerg:document --deep` on zerg/ (core modules)
+1. Run `/mahabharatha:document --deep` on mahabharatha/data/commands/
+2. Run `/mahabharatha:document --deep` on mahabharatha/ (core modules)
 3. Compare generated docs against current docs/
 4. Identify gaps
 

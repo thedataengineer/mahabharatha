@@ -12,17 +12,17 @@
     {
       "id": "TASK-001",
       "title": "Fix circular imports and deep import chains (#106)",
-      "description": "Resolve 3 circular imports and 5 deep import chains in zerg/ module. Use lazy imports or restructure modules to break cycles. IMPORTANT: Run 'ruff format .' and 'ruff check --fix .' before staging any changes.",
+      "description": "Resolve 3 circular imports and 5 deep import chains in mahabharatha/ module. Use lazy imports or restructure modules to break cycles. IMPORTANT: Run 'ruff format .' and 'ruff check --fix .' before staging any changes.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/__init__.py", "zerg/orchestrator.py", "zerg/launcher.py"],
-        "read": ["zerg/"]
+        "modify": ["mahabharatha/__init__.py", "mahabharatha/orchestrator.py", "mahabharatha/launcher.py"],
+        "read": ["mahabharatha/"]
       },
       "verification": {
-        "command": "ruff format . && ruff check . && python -c 'import zerg; print(\"imports ok\")'",
+        "command": "ruff format . && ruff check . && python -c 'import mahabharatha; print(\"imports ok\")'",
         "timeout_seconds": 120
       },
       "estimate_minutes": 15,
@@ -33,17 +33,17 @@
     {
       "id": "TASK-002",
       "title": "Add Task prefixes to command files (#105)",
-      "description": "Audit command files in zerg/data/commands/ and ensure TaskCreate/TaskUpdate calls have [Bracketed] subject prefixes. IMPORTANT: Run 'ruff format .' before staging.",
+      "description": "Audit command files in mahabharatha/data/commands/ and ensure TaskCreate/TaskUpdate calls have [Bracketed] subject prefixes. IMPORTANT: Run 'ruff format .' before staging.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/analyze.md", "zerg/data/commands/build.md", "zerg/data/commands/cleanup.md", "zerg/data/commands/test.md"],
-        "read": ["zerg/data/commands/_template.md"]
+        "modify": ["mahabharatha/data/commands/analyze.md", "mahabharatha/data/commands/build.md", "mahabharatha/data/commands/cleanup.md", "mahabharatha/data/commands/test.md"],
+        "read": ["mahabharatha/data/commands/_template.md"]
       },
       "verification": {
-        "command": "python -m zerg.validate_commands 2>&1 | grep -q 'validated' || python -m zerg.validate_commands",
+        "command": "python -m mahabharatha.validate_commands 2>&1 | grep -q 'validated' || python -m mahabharatha.validate_commands",
         "timeout_seconds": 60
       },
       "estimate_minutes": 10,
@@ -54,17 +54,17 @@
     {
       "id": "TASK-003",
       "title": "Fix task state inconsistency (#111)",
-      "description": "Ensure tasks cannot transition from 'complete' to 'failed'. Add state machine validation in state.py. IMPORTANT: Run 'ruff format zerg/' and 'ruff check --fix zerg/' before staging.",
+      "description": "Ensure tasks cannot transition from 'complete' to 'failed'. Add state machine validation in state.py. IMPORTANT: Run 'ruff format mahabharatha/' and 'ruff check --fix mahabharatha/' before staging.",
       "phase": "core",
       "level": 2,
       "dependencies": ["TASK-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/state.py"],
-        "read": ["zerg/types.py"]
+        "modify": ["mahabharatha/state.py"],
+        "read": ["mahabharatha/types.py"]
       },
       "verification": {
-        "command": "ruff format zerg/state.py && ruff check zerg/state.py && python -m pytest tests/unit/test_state.py -v --timeout=30",
+        "command": "ruff format mahabharatha/state.py && ruff check mahabharatha/state.py && python -m pytest tests/unit/test_state.py -v --timeout=30",
         "timeout_seconds": 120
       },
       "estimate_minutes": 15,
@@ -75,17 +75,17 @@
     {
       "id": "TASK-004",
       "title": "Fix level order violations (#110)",
-      "description": "Ensure tasks complete in level order. Add level validation in level_coordinator.py. IMPORTANT: Run 'ruff format zerg/' before staging.",
+      "description": "Ensure tasks complete in level order. Add level validation in level_coordinator.py. IMPORTANT: Run 'ruff format mahabharatha/' before staging.",
       "phase": "core",
       "level": 2,
       "dependencies": ["TASK-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/level_coordinator.py"],
-        "read": ["zerg/orchestrator.py"]
+        "modify": ["mahabharatha/level_coordinator.py"],
+        "read": ["mahabharatha/orchestrator.py"]
       },
       "verification": {
-        "command": "ruff format zerg/level_coordinator.py && ruff check zerg/level_coordinator.py && python -m pytest tests/unit/test_level_coordinator.py -v --timeout=30",
+        "command": "ruff format mahabharatha/level_coordinator.py && ruff check mahabharatha/level_coordinator.py && python -m pytest tests/unit/test_level_coordinator.py -v --timeout=30",
         "timeout_seconds": 120
       },
       "estimate_minutes": 15,
@@ -96,17 +96,17 @@
     {
       "id": "TASK-005",
       "title": "Fix worker pause behavior (#108)",
-      "description": "Workers should stop executing when orchestrator pauses on gate failure. Add pause check in worker protocol. IMPORTANT: Run 'ruff format zerg/' before staging.",
+      "description": "Workers should stop executing when orchestrator pauses on gate failure. Add pause check in worker protocol. IMPORTANT: Run 'ruff format mahabharatha/' before staging.",
       "phase": "integration",
       "level": 3,
       "dependencies": ["TASK-003", "TASK-004"],
       "files": {
         "create": [],
-        "modify": ["zerg/worker_protocol.py"],
-        "read": ["zerg/state.py", "zerg/level_coordinator.py"]
+        "modify": ["mahabharatha/worker_protocol.py"],
+        "read": ["mahabharatha/state.py", "mahabharatha/level_coordinator.py"]
       },
       "verification": {
-        "command": "ruff format zerg/worker_protocol.py && ruff check zerg/worker_protocol.py && python -m pytest tests/unit/test_worker_protocol.py -v --timeout=30",
+        "command": "ruff format mahabharatha/worker_protocol.py && ruff check mahabharatha/worker_protocol.py && python -m pytest tests/unit/test_worker_protocol.py -v --timeout=30",
         "timeout_seconds": 120
       },
       "estimate_minutes": 15,
@@ -117,17 +117,17 @@
     {
       "id": "TASK-006",
       "title": "Add worker timeout handling (#109)",
-      "description": "Add timeout watchdog for Claude API calls in workers to prevent indefinite hangs. IMPORTANT: Run 'ruff format zerg/' before staging.",
+      "description": "Add timeout watchdog for Claude API calls in workers to prevent indefinite hangs. IMPORTANT: Run 'ruff format mahabharatha/' before staging.",
       "phase": "integration",
       "level": 3,
       "dependencies": ["TASK-003", "TASK-004"],
       "files": {
         "create": [],
-        "modify": ["zerg/launcher.py"],
-        "read": ["zerg/worker_protocol.py"]
+        "modify": ["mahabharatha/launcher.py"],
+        "read": ["mahabharatha/worker_protocol.py"]
       },
       "verification": {
-        "command": "ruff format zerg/launcher.py && ruff check zerg/launcher.py && python -m pytest tests/unit/test_launcher.py -v -k timeout --timeout=30",
+        "command": "ruff format mahabharatha/launcher.py && ruff check mahabharatha/launcher.py && python -m pytest tests/unit/test_launcher.py -v -k timeout --timeout=30",
         "timeout_seconds": 120
       },
       "estimate_minutes": 15,

@@ -1,6 +1,6 @@
 # Architecture: Module Reference
 
-This page provides a complete reference of all Python modules in the `zerg/` package. Modules are organized by functional area.
+This page provides a complete reference of all Python modules in the `mahabharatha/` package. Modules are organized by functional area.
 
 ## Core Modules
 
@@ -8,11 +8,11 @@ This page provides a complete reference of all Python modules in the `zerg/` pac
 |--------|---------|------------------------|
 | `cli.py` | Click-based command-line interface. Registers all subcommands. | `cli` (click.Group) |
 | `__init__.py` | Package initialization. Exports version and key constants. | `__version__` |
-| `__main__.py` | Entry point for `python -m zerg`. | -- |
+| `__main__.py` | Entry point for `python -m mahabharatha`. | -- |
 | `constants.py` | Enumerations and constants used across the codebase. | `Level`, `TaskStatus`, `WorkerStatus`, `GateResult`, `MergeStatus` |
 | `types.py` | TypedDict and dataclass definitions for structured data. | `Task`, `TaskGraph`, `FileSpec`, `VerificationSpec`, `WorkerState`, `FeatureMetrics` |
-| `exceptions.py` | Exception hierarchy for all ZERG error types. | `ZergError`, `StateError`, `GitError`, `MergeConflictError`, `ValidationError`, `GateFailureError` |
-| `config.py` | Pydantic-based configuration loaded from `.zerg/config.yaml`. | `ZergConfig`, `WorkersConfig`, `ProjectConfig`, `QualityGate`, `RulesConfig`, `EfficiencyConfig`, `LoopConfig`, `VerificationConfig`, `ModeConfig`, `MCPRoutingConfig`, `TDDConfig`, `ErrorRecoveryConfig` |
+| `exceptions.py` | Exception hierarchy for all MAHABHARATHA error types. | `ZergError`, `StateError`, `GitError`, `MergeConflictError`, `ValidationError`, `GateFailureError` |
+| `config.py` | Pydantic-based configuration loaded from `.mahabharatha/config.yaml`. | `ZergConfig`, `WorkersConfig`, `ProjectConfig`, `QualityGate`, `RulesConfig`, `EfficiencyConfig`, `LoopConfig`, `VerificationConfig`, `ModeConfig`, `MCPRoutingConfig`, `TDDConfig`, `ErrorRecoveryConfig` |
 | `logging.py` | Structured JSON logging with worker context support. | `get_logger()` |
 
 ## Orchestration Modules
@@ -77,7 +77,7 @@ This page provides a complete reference of all Python modules in the `zerg/` pac
 | `security.py` | Security utilities: secret detection patterns, file permission checks. | Secret pattern matching |
 | `security_rules.py` | Fetches and integrates secure coding rules based on detected project languages. | Rule fetching and filtering |
 | `risk_scoring.py` | Per-task risk assessment, critical path identification, and overall risk grading. | Risk scoring functions |
-| `preflight.py` | Pre-flight checks before rush: Docker, auth, ports, disk space, git worktree support. | `CheckResult` |
+| `preflight.py` | Pre-flight checks before kurukshetra: Docker, auth, ports, disk space, git worktree support. | `CheckResult` |
 
 ## Cross-Cutting Capability Modules
 
@@ -91,7 +91,7 @@ This page provides a complete reference of all Python modules in the `zerg/` pac
 | `verification_gates.py` | Verification pipeline with artifact storage and staleness detection. Re-runs gates older than configurable threshold. | `GatePipeline`, `VerificationConfig`, `GateArtifact` |
 | `loops.py` | Convergence-based iterative improvement cycles. Stops on plateau or regression with optional rollback. | `LoopController`, `IterationResult`, `LoopConfig` |
 | `tdd.py` | TDD enforcement protocol. Validates red-green-refactor order and detects anti-patterns (mock-heavy, no-assertions). | `TDDProtocol`, `TestFirstValidator`, `TDDConfig` |
-| `rules/` | Engineering rules framework. Loads YAML rules from `.zerg/rules/`, filters by file extension, injects into worker context. | `RuleLoader`, `RuleValidator`, `RuleInjector`, `RulesConfig` |
+| `rules/` | Engineering rules framework. Loads YAML rules from `.mahabharatha/rules/`, filters by file extension, injects into worker context. | `RuleLoader`, `RuleValidator`, `RuleInjector`, `RulesConfig` |
 
 ## Plugin and Extension Modules
 
@@ -106,7 +106,7 @@ This page provides a complete reference of all Python modules in the `zerg/` pac
 
 | Module | Purpose | Key Classes / Functions |
 |--------|---------|------------------------|
-| `dryrun.py` | Dry-run simulation. Validates everything a real rush would, shows timeline estimates and worker balance. | `DryRunResult`, `LevelTimeline` |
+| `dryrun.py` | Dry-run simulation. Validates everything a real kurukshetra would, shows timeline estimates and worker balance. | `DryRunResult`, `LevelTimeline` |
 | `whatif.py` | What-if analysis comparing different worker counts and execution modes. | What-if comparison engine |
 | `metrics.py` | Metrics computation for workers and tasks: durations, throughput, success rates. | Metrics aggregation |
 | `render_utils.py` | Shared Rich rendering components for status and dry-run displays. | Rendering helpers |
@@ -127,34 +127,34 @@ This page provides a complete reference of all Python modules in the `zerg/` pac
 | `retry_backoff.py` | Backoff delay calculation for task retries (exponential, linear, jitter). | `RetryBackoffCalculator` |
 | `backlog.py` | Generates markdown backlog files from task graph data. | Backlog generation |
 
-## Command Modules (`zerg/commands/`)
+## Command Modules (`mahabharatha/commands/`)
 
-Each file in `zerg/commands/` implements a Click subcommand registered in `cli.py`.
+Each file in `mahabharatha/commands/` implements a Click subcommand registered in `cli.py`.
 
 | Module | Command | Purpose |
 |--------|---------|---------|
-| `init.py` | `zerg init` | Initialize ZERG infrastructure in a project |
-| `plan.py` | `zerg plan` | Capture feature requirements |
-| `design.py` | `zerg design` | Generate architecture and task graph |
-| `rush.py` | `zerg rush` | Launch parallel worker execution |
-| `status.py` | `zerg status` | Monitor execution progress |
-| `merge_cmd.py` | `zerg merge` | Trigger manual merge operations |
-| `stop.py` | `zerg stop` | Stop running workers |
-| `retry.py` | `zerg retry` | Retry failed tasks |
-| `logs.py` | `zerg logs` | View aggregated worker logs |
-| `cleanup.py` | `zerg cleanup` | Remove worktrees and state files |
-| `build.py` | `zerg build` | Build project artifacts |
-| `test_cmd.py` | `zerg test` | Run project tests |
-| `review.py` | `zerg review` | Code review utilities |
-| `analyze.py` | `zerg analyze` | Codebase analysis |
-| `refactor.py` | `zerg refactor` | Refactoring operations |
-| `debug.py` | `zerg debug` | Debugging utilities |
-| `document.py` | `zerg document` | Documentation generation |
-| `wiki.py` | `zerg wiki` | Wiki management |
-| `git_cmd.py` | `zerg git` | Git helper operations |
-| `tdd.py` | `zerg tdd` | TDD enforcement commands (status, reset) |
-| `security_rules_cmd.py` | `zerg security-rules` | Security rule management |
-| `install_commands.py` | `zerg install-commands` | Install slash commands |
+| `init.py` | `mahabharatha init` | Initialize MAHABHARATHA infrastructure in a project |
+| `plan.py` | `mahabharatha plan` | Capture feature requirements |
+| `design.py` | `mahabharatha design` | Generate architecture and task graph |
+| `kurukshetra.py` | `mahabharatha kurukshetra` | Launch parallel worker execution |
+| `status.py` | `mahabharatha status` | Monitor execution progress |
+| `merge_cmd.py` | `mahabharatha merge` | Trigger manual merge operations |
+| `stop.py` | `mahabharatha stop` | Stop running workers |
+| `retry.py` | `mahabharatha retry` | Retry failed tasks |
+| `logs.py` | `mahabharatha logs` | View aggregated worker logs |
+| `cleanup.py` | `mahabharatha cleanup` | Remove worktrees and state files |
+| `build.py` | `mahabharatha build` | Build project artifacts |
+| `test_cmd.py` | `mahabharatha test` | Run project tests |
+| `review.py` | `mahabharatha review` | Code review utilities |
+| `analyze.py` | `mahabharatha analyze` | Codebase analysis |
+| `refactor.py` | `mahabharatha refactor` | Refactoring operations |
+| `debug.py` | `mahabharatha debug` | Debugging utilities |
+| `document.py` | `mahabharatha document` | Documentation generation |
+| `wiki.py` | `mahabharatha wiki` | Wiki management |
+| `git_cmd.py` | `mahabharatha git` | Git helper operations |
+| `tdd.py` | `mahabharatha tdd` | TDD enforcement commands (status, reset) |
+| `security_rules_cmd.py` | `mahabharatha security-rules` | Security rule management |
+| `install_commands.py` | `mahabharatha install-commands` | Install slash commands |
 
 ## Related Pages
 

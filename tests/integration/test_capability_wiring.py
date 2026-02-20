@@ -1,4 +1,4 @@
-"""Integration tests for capability wiring: rush -> Orchestrator -> WorkerManager -> launcher.
+"""Integration tests for capability wiring: kurukshetra -> Orchestrator -> WorkerManager -> launcher.
 
 Verifies the full chain from ResolvedCapabilities through Orchestrator construction,
 WorkerManager env injection, and ContextEngineeringPlugin section builders.

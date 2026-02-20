@@ -1,4 +1,4 @@
-"""Mock objects for ZERG testing."""
+"""Mock objects for MAHABHARATHA testing."""
 
 from tests.mocks.mock_state import (
     MockEvent,

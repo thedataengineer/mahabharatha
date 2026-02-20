@@ -1,4 +1,4 @@
-"""Unit tests for ZERG token efficiency module — thinned to essentials."""
+"""Unit tests for MAHABHARATHA token efficiency module — thinned to essentials."""
 
 from __future__ import annotations
 

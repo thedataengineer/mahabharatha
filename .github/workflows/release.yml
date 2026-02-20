@@ -7,7 +7,7 @@
 #   1. Register package on PyPI and TestPyPI
 #   2. On each, add a trusted publisher:
 #      - Owner: <github-org-or-user>
-#      - Repository: ZERG
+#      - Repository: MAHABHARATHA
 #      - Workflow: release.yml
 #      - Environment: "pypi" or "testpypi" respectively
 #   3. In GitHub repo Settings > Environments, create:

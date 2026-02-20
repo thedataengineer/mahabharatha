@@ -1,4 +1,4 @@
-"""ZERG v2 Status Command - Dashboard rendering and progress tracking."""
+"""MAHABHARATHA v2 Status Command - Dashboard rendering and progress tracking."""
 
 import json
 from dataclasses import dataclass
@@ -182,7 +182,7 @@ class StatusCommand:
         lines = []
 
         # Header
-        lines.append(f"ZERG Status - Project: {dashboard.feature_name}")
+        lines.append(f"MAHABHARATHA Status - Project: {dashboard.feature_name}")
         lines.append("═" * 60)
         lines.append("")
 

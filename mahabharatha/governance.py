@@ -1,4 +1,4 @@
-"""Governance and Peer Monitoring Service for ZERG.
+"""Governance and Peer Monitoring Service for MAHABHARATHA.
 
 Handles pulse checks, peer-monitoring logic, and automated task reassignment
 for stalled workers.

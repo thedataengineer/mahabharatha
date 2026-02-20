@@ -6,7 +6,7 @@
 
 ## Goal
 
-Transform `/zerg:troubleshoot` into a world-class software code troubleshooter with:
+Transform `/mahabharatha:troubleshoot` into a world-class software code troubleshooter with:
 - Deep multi-language error analysis with semantic understanding
 - Automated log correlation across workers with timeline reconstruction
 - Hypothesis testing with executable verification commands
@@ -35,7 +35,7 @@ Transform `/zerg:troubleshoot` into a world-class software code troubleshooter w
 - Automated hypothesis testing with executable commands
 - Hypothesis chaining (if A confirmed, test B)
 - Confidence scoring with evidence tracking
-- Knowledge base of common ZERG failure patterns
+- Knowledge base of common MAHABHARATHA failure patterns
 
 ### FR-4: Code-Aware Recovery
 - Context-aware fix suggestions based on error location
@@ -56,11 +56,11 @@ Transform `/zerg:troubleshoot` into a world-class software code troubleshooter w
 - Progressive disclosure (summary → detail → deep dive)
 - Session persistence for multi-step investigations
 - Report generation (markdown, JSON, HTML)
-- Integration with `/zerg:retry` for seamless recovery
+- Integration with `/mahabharatha:retry` for seamless recovery
 
 ## Non-Functional Requirements
 
 - All new modules must have ≥90% test coverage
 - No new external dependencies beyond stdlib + existing deps (click, rich)
-- Backward-compatible with existing `zerg troubleshoot` CLI interface
+- Backward-compatible with existing `mahabharatha troubleshoot` CLI interface
 - Each diagnostic phase must complete within 30 seconds

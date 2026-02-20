@@ -1,4 +1,4 @@
-"""Bayesian hypothesis ranking and testing engine for ZERG diagnostics."""
+"""Bayesian hypothesis ranking and testing engine for MAHABHARATHA diagnostics."""
 
 from __future__ import annotations
 

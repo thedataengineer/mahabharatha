@@ -24,7 +24,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from zerg.launcher import ContainerLauncher, LauncherConfig
+from mahabharatha.launcher import ContainerLauncher, LauncherConfig
 
 
 class TestContainerLauncher:

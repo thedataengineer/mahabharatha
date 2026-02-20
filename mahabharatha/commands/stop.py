@@ -1,4 +1,4 @@
-"""ZERG stop command - stop execution gracefully or forcefully."""
+"""MAHABHARATHA stop command - stop execution gracefully or forcefully."""
 
 import time
 from typing import Any
@@ -53,7 +53,7 @@ def stop(
             console.print("Specify a feature with [cyan]--feature[/cyan]")
             raise SystemExit(1)
 
-        console.print(f"\n[bold cyan]ZERG Stop[/bold cyan] - {feature}\n")
+        console.print(f"\n[bold cyan]MAHABHARATHA Stop[/bold cyan] - {feature}\n")
 
         # Load state
         state = StateManager(feature)

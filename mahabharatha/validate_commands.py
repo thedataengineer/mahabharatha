@@ -1,4 +1,4 @@
-"""ZERG command file validation for context engineering and Task ecosystem integrity.
+"""MAHABHARATHA command file validation for context engineering and Task ecosystem integrity.
 
 Codifies the drift detection checklist from CLAUDE.md to ensure all command
 files maintain proper Task ecosystem integration and context engineering
@@ -927,7 +927,7 @@ class DocGenerator:
         if not self.index_path.exists():
             # Create minimal index if it doesn't exist
             self.index_path.parent.mkdir(parents=True, exist_ok=True)
-            self.index_path.write_text("# ZERG Command Reference\n\n## Table of Contents\n\n")
+            self.index_path.write_text("# MAHABHARATHA Command Reference\n\n## Table of Contents\n\n")
 
         content = self.index_path.read_text()
 
@@ -1105,7 +1105,8 @@ def validate_wiring_only(strict_general: bool = False) -> tuple[bool, list[str]]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Validate ZERG command files for Task ecosystem integrity and context engineering compliance."
+        description="Validate MAHABHARATHA command files for Task ecosystem integrity "
+        "and context engineering compliance."
     )
     parser.add_argument(
         "--auto-split",

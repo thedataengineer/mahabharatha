@@ -1,7 +1,7 @@
-"""Risk scoring for ZERG task graphs.
+"""Risk scoring for MAHABHARATHA task graphs.
 
 Assesses per-task risk, identifies critical paths, and computes
-an overall risk grade for a planned rush execution.
+an overall risk grade for a planned kurukshetra execution.
 """
 
 from __future__ import annotations
@@ -49,7 +49,7 @@ class RiskReport:
 
 
 class RiskScorer:
-    """Compute risk scores for a ZERG task graph."""
+    """Compute risk scores for a MAHABHARATHA task graph."""
 
     def __init__(self, task_data: dict[str, Any], worker_count: int = 5) -> None:
         self.task_data = task_data

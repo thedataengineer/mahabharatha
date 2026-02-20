@@ -13,7 +13,7 @@ The task graph defines work breakdown: tasks, dependencies, file ownership, and 
 ## Files to Create
 
 ```
-.zerg/
+.mahabharatha/
 ├── task_graph.py                 # TaskGraph class
 └── schemas/
     └── task-graph.schema.json    # Task graph schema
@@ -46,24 +46,24 @@ class TaskFiles:
 
 class TaskGraph:
     """Manages task dependencies and execution order."""
-    
+
     def __init__(self, tasks: list[Task]):
         self.tasks = {t.id: t for t in tasks}
         self._build_dag()
-    
+
     @classmethod
     def from_file(cls, path: str) -> "TaskGraph":
         """Load and validate task graph from JSON."""
-        
+
     def get_level_tasks(self, level: int) -> list[Task]:
         """Get all tasks at specified level."""
-        
+
     def get_ready_tasks(self, completed: set[str]) -> list[Task]:
         """Get tasks whose dependencies are satisfied."""
-        
+
     def validate_file_ownership(self) -> list[str]:
         """Check for file ownership conflicts. Return errors."""
-        
+
     @property
     def level_count(self) -> int:
         """Total number of levels in graph."""
@@ -77,7 +77,7 @@ def _build_dag(self) -> None:
     # Detect circular dependencies
     # Compute topological order
     # Assign levels based on dependency depth
-    
+
 def _detect_cycles(self) -> list[list[str]]:
     """Return list of cycles if any exist."""
     # Use DFS with color marking
@@ -91,7 +91,7 @@ def validate_file_ownership(self) -> list[str]:
     """Ensure no two tasks modify the same file."""
     errors = []
     file_owners: dict[str, str] = {}
-    
+
     for task in self.tasks.values():
         for f in task.files.create + task.files.modify:
             if f in file_owners:
@@ -99,7 +99,7 @@ def validate_file_ownership(self) -> list[str]:
                     f"File '{f}' owned by both {file_owners[f]} and {task.id}"
                 )
             file_owners[f] = task.id
-    
+
     return errors
 ```
 
@@ -115,7 +115,7 @@ def validate_file_ownership(self) -> list[str]:
 ## Verification
 
 ```bash
-cd .zerg && python -c "
+cd .mahabharatha && python -c "
 from task_graph import TaskGraph
 
 # Create test fixture
@@ -132,7 +132,7 @@ test_graph = {
             'verification': {'command': 'python -c \"import types\"'}
         },
         {
-            'id': 'TASK-002', 
+            'id': 'TASK-002',
             'title': 'Use types',
             'level': 1,
             'dependencies': ['TASK-001'],
@@ -220,7 +220,7 @@ print(f'OK: TaskGraph works, {g.level_count} levels')
 ## Test Cases
 
 ```python
-# .zerg/tests/test_task_graph.py
+# .mahabharatha/tests/test_task_graph.py
 import pytest
 from task_graph import TaskGraph, Task
 
@@ -248,6 +248,6 @@ def test_get_ready_tasks():
 
 1. All acceptance criteria checked
 2. Verification command passes
-3. Unit tests pass: `pytest .zerg/tests/test_task_graph.py`
+3. Unit tests pass: `pytest .mahabharatha/tests/test_task_graph.py`
 4. Circular dependency detection works
 5. File ownership validation catches conflicts

@@ -341,7 +341,7 @@ class TestSidebarGenerator:
 
     def test_generate_defaults(self, sidebar: SidebarGenerator) -> None:
         result = sidebar.generate()
-        assert "## ZERG Wiki" in result
+        assert "## MAHABHARATHA Wiki" in result
         assert "**Home**" in result
         assert "Getting Started" in result
 

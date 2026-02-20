@@ -22,7 +22,7 @@ from pathlib import Path
 
 import pytest
 
-from zerg.security_rules import detect_project_stack
+from mahabharatha.security_rules import detect_project_stack
 
 
 class TestMultiLanguageDetection:

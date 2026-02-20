@@ -1,7 +1,7 @@
 """Git rescue system -- triple-layer undo/recovery.
 
 Provides snapshot creation, operation logging, and recovery mechanisms
-for safe undo of git operations performed by ZERG workers.
+for safe undo of git operations performed by MAHABHARATHA workers.
 """
 
 from __future__ import annotations

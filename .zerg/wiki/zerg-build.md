@@ -1,11 +1,11 @@
-# /zerg:build
+# /mahabharatha:build
 
 Build orchestration with automatic build system detection and error recovery.
 
 ## Synopsis
 
 ```
-/zerg:build [--target all]
+/mahabharatha:build [--target all]
             [--mode dev|staging|prod]
             [--clean]
             [--watch]
@@ -16,7 +16,7 @@ Build orchestration with automatic build system detection and error recovery.
 
 The `build` command orchestrates project builds with intelligent auto-detection of the build system in use. It inspects the project root for known manifest files and selects the appropriate build toolchain automatically.
 
-When a build fails, ZERG classifies the error and attempts recovery actions such as installing missing dependencies, suggesting type error fixes, reducing parallelism for resource exhaustion, or retrying with exponential backoff on network timeouts.
+When a build fails, MAHABHARATHA classifies the error and attempts recovery actions such as installing missing dependencies, suggesting type error fixes, reducing parallelism for resource exhaustion, or retrying with exponential backoff on network timeouts.
 
 ### Supported Build Systems
 
@@ -53,25 +53,25 @@ When a build fails, ZERG classifies the error and attempts recovery actions such
 Build the project using auto-detected defaults:
 
 ```
-/zerg:build
+/mahabharatha:build
 ```
 
 Run a production build:
 
 ```
-/zerg:build --mode prod
+/mahabharatha:build --mode prod
 ```
 
 Perform a clean build to eliminate stale artifacts:
 
 ```
-/zerg:build --clean
+/mahabharatha:build --clean
 ```
 
 Enable watch mode for iterative development:
 
 ```
-/zerg:build --watch
+/mahabharatha:build --watch
 ```
 
 ## Exit Codes
@@ -88,6 +88,6 @@ This command creates a Claude Code Task with the subject prefix `[Build]` on inv
 
 ## See Also
 
-- [[zerg-test]] -- Run tests after a successful build
-- [[zerg-analyze]] -- Static analysis and quality checks
-- [[zerg-review]] -- Code review workflow
+- [[mahabharatha-test]] -- Run tests after a successful build
+- [[mahabharatha-analyze]] -- Static analysis and quality checks
+- [[mahabharatha-review]] -- Code review workflow

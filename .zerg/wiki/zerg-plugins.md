@@ -1,31 +1,31 @@
-# /zerg:plugins
+# /mahabharatha:plugins
 
-Extend ZERG with custom quality gates, lifecycle hooks, and worker launchers.
+Extend MAHABHARATHA with custom quality gates, lifecycle hooks, and worker launchers.
 
 ## Synopsis
 
-This command covers the ZERG plugin system configuration and management. Plugins are configured in `.zerg/config.yaml`.
+This command covers the MAHABHARATHA plugin system configuration and management. Plugins are configured in `.mahabharatha/config.yaml`.
 
 ## Description
 
-The ZERG plugin system provides three extension points for customizing the build and orchestration pipeline. All plugins are additive only -- they cannot mutate orchestrator state, only observe and react. Plugin failures never crash the orchestrator; they are logged and execution continues.
+The MAHABHARATHA plugin system provides three extension points for customizing the build and orchestration pipeline. All plugins are additive only -- they cannot mutate orchestrator state, only observe and react. Plugin failures never crash the orchestrator; they are logged and execution continues.
 
 ### Plugin Types
 
 **QualityGatePlugin** -- Custom validation that runs after each level merge, following the built-in gates (lint, build, test). Quality gates can be configured as required (blocking merge on failure) or optional.
 
-**LifecycleHookPlugin** -- Observes ZERG lifecycle events without blocking execution. Useful for notifications, metrics collection, and external system integration.
+**LifecycleHookPlugin** -- Observes MAHABHARATHA lifecycle events without blocking execution. Useful for notifications, metrics collection, and external system integration.
 
 **LauncherPlugin** -- Provides custom worker execution environments beyond the built-in `subprocess` and `container` modes (e.g., Kubernetes, SSH clusters, cloud VMs).
 
 ### Quality Gate Plugin
 
-Subclass `QualityGatePlugin` from `zerg/plugins.py` and implement the `name` property and `run` method:
+Subclass `QualityGatePlugin` from `mahabharatha/plugins.py` and implement the `name` property and `run` method:
 
 ```python
-from zerg.plugins import QualityGatePlugin, GateContext
-from zerg.types import GateRunResult
-from zerg.constants import GateResult
+from mahabharatha.plugins import QualityGatePlugin, GateContext
+from mahabharatha.types import GateRunResult
+from mahabharatha.constants import GateResult
 
 class MyCustomGate(QualityGatePlugin):
     @property
@@ -57,7 +57,7 @@ Security constraints:
 Subclass `LifecycleHookPlugin` and implement the `name` property and `on_event` method:
 
 ```python
-from zerg.plugins import LifecycleHookPlugin, LifecycleEvent
+from mahabharatha.plugins import LifecycleHookPlugin, LifecycleEvent
 
 class SlackNotifier(LifecycleHookPlugin):
     @property
@@ -80,7 +80,7 @@ Available lifecycle events:
 | `merge_complete` | Level branches merged | `level`, `branch_count`, `conflicts` |
 | `worker_spawned` | New worker starts | `worker_id`, `port`, `mode` |
 | `quality_gate_run` | Gate executes | `gate_name`, `result`, `level` |
-| `rush_started` | `/zerg:rush` begins | `feature`, `workers`, `config` |
+| `rush_started` | `/mahabharatha:kurukshetra` begins | `feature`, `workers`, `config` |
 | `rush_finished` | All levels complete | `feature`, `total_time`, `tasks_completed` |
 
 Security constraints:
@@ -94,8 +94,8 @@ Security constraints:
 Subclass `LauncherPlugin` and implement `create_launcher` to return a `WorkerLauncher` instance:
 
 ```python
-from zerg.plugins import LauncherPlugin
-from zerg.launcher import WorkerLauncher
+from mahabharatha.plugins import LauncherPlugin
+from mahabharatha.launcher import WorkerLauncher
 
 class K8sLauncherPlugin(LauncherPlugin):
     @property
@@ -110,7 +110,7 @@ The returned launcher must implement `launch()`, `wait()`, and `cleanup()`.
 
 ## Options
 
-Plugins are configured in `.zerg/config.yaml`, not via command-line flags.
+Plugins are configured in `.mahabharatha/config.yaml`, not via command-line flags.
 
 ### YAML Hooks (Simple)
 
@@ -158,11 +158,11 @@ plugins:
 
 ### Python Entry Points (Advanced)
 
-For complex plugins with custom logic, authentication, or API calls, use Python entry points. See `zerg:plugins.details.md` for full examples and registration instructions.
+For complex plugins with custom logic, authentication, or API calls, use Python entry points. See `mahabharatha:plugins.details.md` for full examples and registration instructions.
 
 ## Examples
 
-Enable plugins with a custom hook and gate in `.zerg/config.yaml`:
+Enable plugins with a custom hook and gate in `.mahabharatha/config.yaml`:
 
 ```yaml
 plugins:
@@ -189,11 +189,11 @@ Plugin management operations create Claude Code Tasks with the subject prefix `[
 | `[Hook]` | Lifecycle hook invocation |
 | `[Launcher]` | Custom launcher execution |
 
-State is tracked in both the Task system (authoritative) and `.zerg/state/plugins.json` (supplementary). If they disagree, the Task system wins.
+State is tracked in both the Task system (authoritative) and `.mahabharatha/state/plugins.json` (supplementary). If they disagree, the Task system wins.
 
 ## See Also
 
-- [[zerg-worker]] -- Worker execution that triggers lifecycle events
-- [[zerg-debug]] -- Diagnose plugin failures
-- [[zerg-security]] -- Security scanning as a built-in quality gate
-- [[zerg-analyze]] -- Analysis checks that can complement custom gates
+- [[mahabharatha-worker]] -- Worker execution that triggers lifecycle events
+- [[mahabharatha-debug]] -- Diagnose plugin failures
+- [[mahabharatha-security]] -- Security scanning as a built-in quality gate
+- [[mahabharatha-analyze]] -- Analysis checks that can complement custom gates

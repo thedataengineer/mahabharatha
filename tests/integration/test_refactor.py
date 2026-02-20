@@ -1,4 +1,4 @@
-"""Integration tests for ZERG refactor command."""
+"""Integration tests for MAHABHARATHA refactor command."""
 
 import tempfile
 from pathlib import Path
@@ -41,10 +41,10 @@ class TestRefactorFunctional:
     """Functional tests for refactor command."""
 
     def test_refactor_displays_header(self) -> None:
-        """Test refactor shows ZERG Refactor header."""
+        """Test refactor shows MAHABHARATHA Refactor header."""
         runner = CliRunner()
         result = runner.invoke(cli, ["refactor", "--dry-run"])
-        assert "ZERG" in result.output or "Refactor" in result.output
+        assert "MAHABHARATHA" in result.output or "Refactor" in result.output
 
     def test_refactor_dry_run_no_changes(self) -> None:
         """Test refactor --dry-run doesn't modify files."""

@@ -1,4 +1,4 @@
-"""ZERG v2 Explain Command - Code and concept explanation with audience targeting."""
+"""MAHABHARATHA v2 Explain Command - Code and concept explanation with audience targeting."""
 
 import json
 from dataclasses import dataclass, field

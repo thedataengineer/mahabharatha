@@ -1,7 +1,7 @@
-# Technical Design: zerg-select-tool
+# Technical Design: mahabharatha-select-tool
 
 ## Metadata
-- **Feature**: zerg-select-tool
+- **Feature**: mahabharatha-select-tool
 - **Status**: APPROVED
 - **Created**: 2026-01-31
 - **Author**: Factory Design Mode
@@ -11,7 +11,7 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Create `/zerg:select-tool` as a split command (core + details + parent) that provides intelligent tool routing across MCP servers, native Claude tools, and Task agent subtypes. Multi-dimensional complexity scoring (5 axes) produces ranked recommendations with fallbacks. Tool capability database loaded from `.zerg/config.yaml` with hardcoded defaults as fallback.
+Create `/mahabharatha:select-tool` as a split command (core + details + parent) that provides intelligent tool routing across MCP servers, native Claude tools, and Task agent subtypes. Multi-dimensional complexity scoring (5 axes) produces ranked recommendations with fallbacks. Tool capability database loaded from `.mahabharatha/config.yaml` with hardcoded defaults as fallback.
 
 ### 1.2 Goals
 - Multi-dimensional scoring: file_count, analysis_depth, domain, parallelism, interactivity
@@ -32,7 +32,7 @@ Create `/zerg:select-tool` as a split command (core + details + parent) that pro
 ### 2.1 High-Level Design
 
 ```
-User invokes /zerg:select-tool [task description]
+User invokes /mahabharatha:select-tool [task description]
         │
         ▼
 ┌─────────────────┐
@@ -59,9 +59,9 @@ User invokes /zerg:select-tool [task description]
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| Core command | Flags, pre-flight, scoring workflow, output format, task tracking | `zerg:select-tool.core.md` |
-| Details reference | Tool matrix, scoring formulas, agent guide, config schema, examples | `zerg:select-tool.details.md` |
-| Parent command | Backward-compat entry point (= core) | `zerg:select-tool.md` |
+| Core command | Flags, pre-flight, scoring workflow, output format, task tracking | `mahabharatha:select-tool.core.md` |
+| Details reference | Tool matrix, scoring formulas, agent guide, config schema, examples | `mahabharatha:select-tool.details.md` |
+| Parent command | Backward-compat entry point (= core) | `mahabharatha:select-tool.md` |
 
 ### 2.3 Data Flow
 1. User provides task description + optional flags
@@ -83,11 +83,11 @@ User invokes /zerg:select-tool [task description]
 ### 3.2 Command-File Only
 **Context**: Could create Python scoring module or use command-file.
 **Decision**: Command-file only, Claude applies scoring natively.
-**Rationale**: Follows zerg:explain/estimate pattern. No new code to maintain. Claude can evaluate the scoring matrix from markdown instructions.
+**Rationale**: Follows mahabharatha:explain/estimate pattern. No new code to maintain. Claude can evaluate the scoring matrix from markdown instructions.
 
 ### 3.3 Config With Hardcoded Fallback
 **Context**: Could require config, hardcode everything, or use config with fallback.
-**Decision**: Load from `.zerg/config.yaml` if available, fall back to hardcoded defaults.
+**Decision**: Load from `.mahabharatha/config.yaml` if available, fall back to hardcoded defaults.
 **Rationale**: Works out-of-box without config. Config allows customization for projects with specific MCP setups.
 
 ---
@@ -106,9 +106,9 @@ User invokes /zerg:select-tool [task description]
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/data/commands/zerg:select-tool.core.md` | SELECT-L1-001 | create |
-| `zerg/data/commands/zerg:select-tool.details.md` | SELECT-L1-002 | create |
-| `zerg/data/commands/zerg:select-tool.md` | SELECT-L2-001 | create |
+| `mahabharatha/data/commands/mahabharatha:select-tool.core.md` | SELECT-L1-001 | create |
+| `mahabharatha/data/commands/mahabharatha:select-tool.details.md` | SELECT-L1-002 | create |
+| `mahabharatha/data/commands/mahabharatha:select-tool.md` | SELECT-L2-001 | create |
 | `claudedocs/backlog.md` | SELECT-L2-001 | modify |
 
 ### 4.3 Dependency Graph

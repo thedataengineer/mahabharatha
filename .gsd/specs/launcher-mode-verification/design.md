@@ -7,11 +7,11 @@
 
 ## 1. Overview
 
-Enhance rush output to show human-friendly launcher mode and worker count at start and in completion summary.
+Enhance kurukshetra output to show human-friendly launcher mode and worker count at start and in completion summary.
 
 ## 2. Changes
 
-### 2.1 `zerg/commands/rush.py` (~lines 159-160, 188-196)
+### 2.1 `mahabharatha/commands/kurukshetra.py` (~lines 159-160, 188-196)
 
 **Start output** — replace:
 ```python
@@ -40,7 +40,7 @@ Update any assertions that check for the old "Launcher:" output format.
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| zerg/commands/rush.py | TASK-001 | modify |
+| mahabharatha/commands/kurukshetra.py | TASK-001 | modify |
 | tests/unit/test_rush_cmd.py | TASK-002 | modify |
 
 ## 4. Verification

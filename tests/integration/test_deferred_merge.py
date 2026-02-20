@@ -24,14 +24,14 @@ class TestDeferMergeToShip:
     def config_with_deferred_merge(self) -> ZergConfig:
         """Create config with deferred merge enabled."""
         config = ZergConfig()
-        config.rush = RushConfig(defer_merge_to_ship=True, gates_at_ship_only=True)
+        config.kurukshetra = RushConfig(defer_merge_to_ship=True, gates_at_ship_only=True)
         return config
 
     @pytest.fixture
     def config_without_deferred_merge(self) -> ZergConfig:
         """Create config with deferred merge disabled."""
         config = ZergConfig()
-        config.rush = RushConfig(defer_merge_to_ship=False, gates_at_ship_only=False)
+        config.kurukshetra = RushConfig(defer_merge_to_ship=False, gates_at_ship_only=False)
         return config
 
     @pytest.fixture
@@ -165,14 +165,14 @@ class TestGatesAtShipOnly:
     def config_gates_at_ship(self) -> ZergConfig:
         """Create config with gates only at ship time."""
         config = ZergConfig()
-        config.rush = RushConfig(defer_merge_to_ship=False, gates_at_ship_only=True)
+        config.kurukshetra = RushConfig(defer_merge_to_ship=False, gates_at_ship_only=True)
         return config
 
     @pytest.fixture
     def config_gates_every_level(self) -> ZergConfig:
         """Create config with gates at every level."""
         config = ZergConfig()
-        config.rush = RushConfig(defer_merge_to_ship=False, gates_at_ship_only=False)
+        config.kurukshetra = RushConfig(defer_merge_to_ship=False, gates_at_ship_only=False)
         return config
 
     @pytest.fixture
@@ -305,11 +305,11 @@ class TestShipIntegration:
     def test_ship_merges_all_pending_levels(self, tmp_path: Path, monkeypatch) -> None:
         """Ship command should merge all levels marked as pending."""
         # This is a higher-level integration test
-        # We verify that the git ship command handles ZERG branches correctly
+        # We verify that the git ship command handles MAHABHARATHA branches correctly
 
         from mahabharatha.commands.git_cmd import _detect_mahabharatha_feature
 
-        # Test ZERG branch detection
+        # Test MAHABHARATHA branch detection
         assert _detect_mahabharatha_feature("mahabharatha/my-feature/staging") == "my-feature"
         assert _detect_mahabharatha_feature("mahabharatha/auth-system/worker-0") == "auth-system"
         assert _detect_mahabharatha_feature("main") is None

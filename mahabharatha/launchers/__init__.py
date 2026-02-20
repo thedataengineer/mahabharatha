@@ -1,4 +1,4 @@
-"""ZERG launchers package.
+"""MAHABHARATHA launchers package.
 
 Re-exports launcher types, ABC, and concrete implementations.
 Provides a factory function for plugin-based launcher discovery.

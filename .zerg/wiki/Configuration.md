@@ -1,6 +1,6 @@
 # Configuration Reference
 
-ZERG is configured through `.zerg/config.yaml` at the project root. This page documents every configuration option, its default value, and usage examples.
+MAHABHARATHA is configured through `.mahabharatha/config.yaml` at the project root. This page documents every configuration option, its default value, and usage examples.
 
 For performance tuning guidance, see [[Tuning Guide]]. For plugin configuration, see [[Plugin System]].
 
@@ -10,13 +10,13 @@ For performance tuning guidance, see [[Tuning Guide]]. For plugin configuration,
 
 ```
 your-project/
-  .zerg/
+  .mahabharatha/
     config.yaml       <-- Primary configuration file
-    state/            <-- Runtime state (managed by ZERG)
+    state/            <-- Runtime state (managed by MAHABHARATHA)
     logs/             <-- Worker and orchestrator logs
 ```
 
-ZERG reads `.zerg/config.yaml` on every command invocation. Changes take effect on the next command run -- no restart is required.
+MAHABHARATHA reads `.mahabharatha/config.yaml` on every command invocation. Changes take effect on the next command run -- no restart is required.
 
 ---
 
@@ -115,7 +115,7 @@ quality_gates:
     timeout: 600
 
   - name: coverage
-    command: pytest tests/unit/ --cov=zerg --cov-fail-under=80 -q --timeout=30
+    command: pytest tests/unit/ --cov=mahabharatha --cov-fail-under=80 -q --timeout=30
     required: false
     timeout: 600
     coverage_threshold: 80
@@ -173,13 +173,13 @@ Log output configuration.
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `level` | string | `"info"` | Log level: debug, info, warning, error |
-| `directory` | string | `".zerg/logs"` | Directory for log files |
+| `directory` | string | `".mahabharatha/logs"` | Directory for log files |
 | `retain_days` | int | `7` | Days to keep log files before cleanup |
 
 ```yaml
 logging:
   level: info
-  directory: .zerg/logs
+  directory: .mahabharatha/logs
   retain_days: 7
 ```
 
@@ -305,14 +305,14 @@ Verification gate pipeline settings.
 | `require_before_completion` | bool | `true` | Require verification before marking done |
 | `staleness_threshold_seconds` | int | `300` | Re-run if older than this (10-3600) |
 | `store_artifacts` | bool | `true` | Store verification results |
-| `artifact_dir` | string | `".zerg/artifacts"` | Artifact storage path |
+| `artifact_dir` | string | `".mahabharatha/artifacts"` | Artifact storage path |
 
 ```yaml
 verification:
   require_before_completion: true
   staleness_threshold_seconds: 300
   store_artifacts: true
-  artifact_dir: ".zerg/artifacts"
+  artifact_dir: ".mahabharatha/artifacts"
 ```
 
 ### behavioral_modes
@@ -457,7 +457,7 @@ resources:
 
 logging:
   level: info
-  directory: .zerg/logs
+  directory: .mahabharatha/logs
   retain_days: 7
 
 security:
@@ -500,7 +500,7 @@ verification:
   require_before_completion: true
   staleness_threshold_seconds: 300
   store_artifacts: true
-  artifact_dir: ".zerg/artifacts"
+  artifact_dir: ".mahabharatha/artifacts"
 
 behavioral_modes:
   auto_detect: true
@@ -557,7 +557,7 @@ Workers recognize specific environment variables for cross-session coordination.
 | `ZERG_COMPACT_MODE` | Compact output mode (true/false) |
 | `ZERG_MCP_HINT` | Recommended MCP servers for the task |
 | `ZERG_SPEC_DIR` | Path to feature spec files |
-| `ZERG_STATE_DIR` | Path to ZERG state directory |
+| `ZERG_STATE_DIR` | Path to MAHABHARATHA state directory |
 | `ZERG_REPO_PATH` | Path to the main repository |
 | `ANTHROPIC_API_KEY` | API key for container mode authentication |
 
@@ -566,5 +566,5 @@ Workers recognize specific environment variables for cross-session coordination.
 ## See Also
 
 - [[Tuning Guide]] -- When and how to adjust these values
-- [[Plugin System]] -- Extending ZERG with custom gates, hooks, and launchers
+- [[Plugin System]] -- Extending MAHABHARATHA with custom gates, hooks, and launchers
 - [[Context Engineering]] -- Token optimization configuration

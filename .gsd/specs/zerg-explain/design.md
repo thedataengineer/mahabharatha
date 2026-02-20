@@ -1,7 +1,7 @@
-# Technical Design: zerg-explain
+# Technical Design: mahabharatha-explain
 
 ## Metadata
-- **Feature**: zerg-explain
+- **Feature**: mahabharatha-explain
 - **Status**: APPROVED
 - **Created**: 2026-01-31
 - **Author**: Factory Design Mode
@@ -11,7 +11,7 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Create `/zerg:explain` as a split command (core + details + parent) that produces 4-layer educational code explanations. Leverages existing `zerg/doc_engine/` extractors (SymbolExtractor, DependencyMapper, ComponentDetector, MermaidGenerator) via `python -c` snippets for structured AST data. All 4 layers always displayed. Optional `--save` writes markdown to `claudedocs/explanations/`.
+Create `/mahabharatha:explain` as a split command (core + details + parent) that produces 4-layer educational code explanations. Leverages existing `mahabharatha/doc_engine/` extractors (SymbolExtractor, DependencyMapper, ComponentDetector, MermaidGenerator) via `python -c` snippets for structured AST data. All 4 layers always displayed. Optional `--save` writes markdown to `claudedocs/explanations/`.
 
 ### 1.2 Goals
 - 4-layer explanations: Summary, Logic Flow, Implementation Details, Design Decisions
@@ -32,7 +32,7 @@ Create `/zerg:explain` as a split command (core + details + parent) that produce
 ### 2.1 High-Level Design
 
 ```
-User invokes /zerg:explain target
+User invokes /mahabharatha:explain target
         │
         ▼
 ┌─────────────────┐
@@ -61,9 +61,9 @@ User invokes /zerg:explain target
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| Core command | Flags, pre-flight, workflow, task tracking | `zerg:explain.core.md` |
-| Details reference | Templates, snippets, schemas, edge cases | `zerg:explain.details.md` |
-| Parent command | Backward-compat entry point (= core) | `zerg:explain.md` |
+| Core command | Flags, pre-flight, workflow, task tracking | `mahabharatha:explain.core.md` |
+| Details reference | Templates, snippets, schemas, edge cases | `mahabharatha:explain.details.md` |
+| Parent command | Backward-compat entry point (= core) | `mahabharatha:explain.md` |
 
 ### 2.3 Data Flow
 1. User provides target (file path, function ref, module)
@@ -83,9 +83,9 @@ User invokes /zerg:explain target
 **Rationale**: User preference. Avoids repeated invocations. Each layer is distinct enough to scan independently.
 
 ### 3.2 Command-File Only
-**Context**: Could create new Python module or use existing `.zerg/explain.py`.
+**Context**: Could create new Python module or use existing `.mahabharatha/explain.py`.
 **Decision**: Command-file only, reusing doc_engine via `python -c`.
-**Rationale**: Follows zerg:estimate pattern. doc_engine already has all needed extractors. No new code to maintain.
+**Rationale**: Follows mahabharatha:estimate pattern. doc_engine already has all needed extractors. No new code to maintain.
 
 ### 3.3 Code Patterns for Design Decisions (L4)
 **Context**: Could use git history, comments/docstrings, or code patterns.
@@ -108,9 +108,9 @@ User invokes /zerg:explain target
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/data/commands/zerg:explain.core.md` | EXPLAIN-L1-001 | create |
-| `zerg/data/commands/zerg:explain.details.md` | EXPLAIN-L1-002 | create |
-| `zerg/data/commands/zerg:explain.md` | EXPLAIN-L2-001 | create |
+| `mahabharatha/data/commands/mahabharatha:explain.core.md` | EXPLAIN-L1-001 | create |
+| `mahabharatha/data/commands/mahabharatha:explain.details.md` | EXPLAIN-L1-002 | create |
+| `mahabharatha/data/commands/mahabharatha:explain.md` | EXPLAIN-L2-001 | create |
 | `claudedocs/backlog.md` | EXPLAIN-L2-001 | modify |
 
 ### 4.3 Dependency Graph

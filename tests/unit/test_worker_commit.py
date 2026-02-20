@@ -115,7 +115,7 @@ class TestWorkerCommitIntegration:
         git.simulate_changes()
 
         head_before = git.current_commit()
-        commit_msg = "ZERG [0]: Test Task\n\nTask-ID: TASK-001"
+        commit_msg = "MAHABHARATHA [0]: Test Task\n\nTask-ID: TASK-001"
         git.commit(commit_msg, add_all=True)
         head_after = git.current_commit()
 

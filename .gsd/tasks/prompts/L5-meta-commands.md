@@ -1,4 +1,4 @@
-# L5-TASK-001: /zerg:explain Command
+# L5-TASK-001: /mahabharatha:explain Command
 
 ## Objective
 
@@ -14,9 +14,9 @@ Explain provides context-aware explanations of code or concepts, using the proje
 
 ```
 .claude/commands/
-└── zerg:explain.md
+└── mahabharatha:explain.md
 
-.zerg/
+.mahabharatha/
 └── explain.py
 ```
 
@@ -24,21 +24,21 @@ Explain provides context-aware explanations of code or concepts, using the proje
 
 ### Code
 ```bash
-/zerg:explain --target src/auth/middleware.ts
+/mahabharatha:explain --target src/auth/middleware.ts
               [--audience beginner|intermediate|expert]
               [--depth summary|detailed|comprehensive]
 ```
 
 ### Function
 ```bash
-/zerg:explain --target src/auth/middleware.ts:authenticate
+/mahabharatha:explain --target src/auth/middleware.ts:authenticate
               [--include-callers]
               [--include-callees]
 ```
 
 ### Concept
 ```bash
-/zerg:explain --concept "JWT authentication"
+/mahabharatha:explain --concept "JWT authentication"
               [--examples]
               [--tradeoffs]
 ```
@@ -81,7 +81,7 @@ flowchart LR
 
 ---
 
-# L5-TASK-002: /zerg:research Command
+# L5-TASK-002: /mahabharatha:research Command
 
 ## Objective
 
@@ -97,9 +97,9 @@ Research fetches external information to inform development decisions, using MCP
 
 ```
 .claude/commands/
-└── zerg:research.md
+└── mahabharatha:research.md
 
-.zerg/
+.mahabharatha/
 └── research.py
 ```
 
@@ -113,7 +113,7 @@ Research fetches external information to inform development decisions, using MCP
 ## Usage
 
 ```bash
-/zerg:research "How to implement OAuth2 PKCE flow"
+/mahabharatha:research "How to implement OAuth2 PKCE flow"
                [--sources docs,web,code]
                [--depth quick|standard|deep]
                [--save research/oauth.md]
@@ -155,7 +155,7 @@ PKCE (Proof Key for Code Exchange) prevents authorization code interception...
 
 ---
 
-# L5-TASK-003: /zerg:estimate Command
+# L5-TASK-003: /mahabharatha:estimate Command
 
 ## Objective
 
@@ -171,9 +171,9 @@ Estimate analyzes task graphs and historical data to project completion time and
 
 ```
 .claude/commands/
-└── zerg:estimate.md
+└── mahabharatha:estimate.md
 
-.zerg/
+.mahabharatha/
 └── estimate.py
 ```
 
@@ -188,7 +188,7 @@ Estimate analyzes task graphs and historical data to project completion time and
 ## Usage
 
 ```bash
-/zerg:estimate [--graph path/to/task-graph.json]
+/mahabharatha:estimate [--graph path/to/task-graph.json]
                [--workers 5]
                [--confidence 80]
                [--include-cost]
@@ -225,7 +225,7 @@ Estimate analyzes task graphs and historical data to project completion time and
 
 ---
 
-# L5-TASK-004: /zerg:spawn Command
+# L5-TASK-004: /mahabharatha:spawn Command
 
 ## Objective
 
@@ -233,7 +233,7 @@ Implement meta-orchestration with adaptive task decomposition.
 
 ## Context
 
-**Depends on**: L2-TASK-002 (Rush), L2-TASK-006 (Design)
+**Depends on**: L2-TASK-002 (Kurukshetra), L2-TASK-006 (Design)
 
 Spawn is the highest-level command: give it a goal, and it plans, designs, and executes automatically.
 
@@ -241,9 +241,9 @@ Spawn is the highest-level command: give it a goal, and it plans, designs, and e
 
 ```
 .claude/commands/
-└── zerg:spawn.md
+└── mahabharatha:spawn.md
 
-.zerg/
+.mahabharatha/
 └── spawn.py
 ```
 
@@ -266,7 +266,7 @@ Spawn is the highest-level command: give it a goal, and it plans, designs, and e
 ## Usage
 
 ```bash
-/zerg:spawn "Add OAuth2 authentication with Google and GitHub providers"
+/mahabharatha:spawn "Add OAuth2 authentication with Google and GitHub providers"
             [--strategy balanced]
             [--max-depth 3]
             [--validate-only]
@@ -310,21 +310,21 @@ Estimated: 3-4 sessions with 5 workers
 def spawn(goal: str, strategy: str = "balanced") -> SpawnResult:
     # 1. Analyze goal
     analysis = analyze_goal(goal)
-    
+
     # 2. Decompose into sub-goals
     sub_goals = decompose(analysis, max_depth=3)
-    
+
     # 3. Generate task graph for each sub-goal
     task_graphs = [design_tasks(sg) for sg in sub_goals]
-    
+
     # 4. Merge and order
     combined = merge_task_graphs(task_graphs)
-    
+
     # 5. Validate
     errors = combined.validate()
     if errors:
         return SpawnResult(success=False, errors=errors)
-    
+
     # 6. Execute (unless validate-only)
     return orchestrator.start(combined)
 ```

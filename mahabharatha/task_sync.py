@@ -1,6 +1,6 @@
-"""Task sync bridge for ZERG Claude Tasks integration.
+"""Task sync bridge for MAHABHARATHA Claude Tasks integration.
 
-Bridges ZERG's JSON state with Claude Tasks API for orchestrator-level visibility.
+Bridges MAHABHARATHA's JSON state with Claude Tasks API for orchestrator-level visibility.
 Workers remain subprocess-isolated using JSON state; this provides a one-way sync
 from JSON state to Claude Tasks for the orchestrator.
 """
@@ -25,7 +25,7 @@ def load_design_manifest(spec_dir: Path) -> list[dict[str, Any]] | None:
     """Load the design tasks manifest written by design.py.
 
     The manifest bridges the CLI (which cannot call Claude Task tools) with
-    the rush orchestrator (which registers Claude Tasks). design.py writes
+    the kurukshetra orchestrator (which registers Claude Tasks). design.py writes
     this file for every execution path so the orchestrator can pick it up.
 
     Args:
@@ -81,13 +81,13 @@ class ClaudeTask:
 
 
 class TaskSyncBridge:
-    """Bridge between ZERG JSON state and Claude Tasks API.
+    """Bridge between MAHABHARATHA JSON state and Claude Tasks API.
 
-    Provides one-way sync from ZERG state to Claude Tasks for orchestrator visibility.
+    Provides one-way sync from MAHABHARATHA state to Claude Tasks for orchestrator visibility.
     Workers continue to use JSON state directly (subprocess isolation).
     """
 
-    # Map ZERG TaskStatus to Claude Task status
+    # Map MAHABHARATHA TaskStatus to Claude Task status
     STATUS_MAP = {
         TaskStatus.TODO.value: "pending",
         TaskStatus.PENDING.value: "pending",
@@ -126,7 +126,7 @@ class TaskSyncBridge:
 
         Tasks can originate from the task graph JSON or from the design
         manifest (see :func:`load_design_manifest`).  The manifest is the
-        standard handoff mechanism between ``design.py`` and the rush
+        standard handoff mechanism between ``design.py`` and the kurukshetra
         orchestrator.
 
         Args:
@@ -196,9 +196,9 @@ class TaskSyncBridge:
         return self.create_level_tasks(level, new_tasks)
 
     def sync_state(self, state: dict[str, Any] | None = None) -> int:
-        """Sync ZERG state to Claude Tasks.
+        """Sync MAHABHARATHA state to Claude Tasks.
 
-        Updates Claude Task statuses based on current ZERG state.
+        Updates Claude Task statuses based on current MAHABHARATHA state.
 
         Args:
             state: Optional state dict (loads from StateManager if not provided)

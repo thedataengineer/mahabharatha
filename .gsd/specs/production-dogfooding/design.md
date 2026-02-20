@@ -7,7 +7,7 @@ Two deliverables built across 4 levels (20 tasks):
 1. **E2E Test Harness** — MockWorker + E2EHarness for CI-safe and real-mode pipeline testing
 2. **Plugin System** — ABCs, registry, config models, integration into orchestrator/worker/gates/launcher
 
-ZERG dogfoods itself: the plugin system is built by ZERG executing a 20-task graph.
+MAHABHARATHA dogfoods itself: the plugin system is built by MAHABHARATHA executing a 20-task graph.
 
 ## Architecture
 
@@ -43,18 +43,18 @@ Level 1 (foundation)     Level 2 (core)            Level 3 (integration)      Le
 
 | Component | File | Purpose |
 |-----------|------|---------|
-| QualityGatePlugin | `zerg/plugins.py` | ABC: `run(ctx: GateContext) -> GateRunResult` |
-| LifecycleHookPlugin | `zerg/plugins.py` | ABC: `on_event(event: LifecycleEvent) -> None` |
-| LauncherPlugin | `zerg/plugins.py` | ABC: `create_launcher(config) -> WorkerLauncher` |
-| PluginRegistry | `zerg/plugins.py` | Register/emit/run hooks, gates, launchers |
-| LifecycleEvent | `zerg/plugins.py` | Dataclass: event_type, data dict, timestamp |
-| GateContext | `zerg/plugins.py` | Dataclass: feature, level, cwd, config |
-| Config models | `zerg/plugin_config.py` | Pydantic: HookConfig, PluginGateConfig, PluginsConfig |
-| PluginHookEvent | `zerg/constants.py` | Enum: 8 lifecycle event types (already exists) |
+| QualityGatePlugin | `mahabharatha/plugins.py` | ABC: `run(ctx: GateContext) -> GateRunResult` |
+| LifecycleHookPlugin | `mahabharatha/plugins.py` | ABC: `on_event(event: LifecycleEvent) -> None` |
+| LauncherPlugin | `mahabharatha/plugins.py` | ABC: `create_launcher(config) -> WorkerLauncher` |
+| PluginRegistry | `mahabharatha/plugins.py` | Register/emit/run hooks, gates, launchers |
+| LifecycleEvent | `mahabharatha/plugins.py` | Dataclass: event_type, data dict, timestamp |
+| GateContext | `mahabharatha/plugins.py` | Dataclass: feature, level, cwd, config |
+| Config models | `mahabharatha/plugin_config.py` | Pydantic: HookConfig, PluginGateConfig, PluginsConfig |
+| PluginHookEvent | `mahabharatha/constants.py` | Enum: 8 lifecycle event types (already exists) |
 
 **Plugin loading**:
 1. YAML config → `PluginRegistry.load_yaml_hooks(hooks_config)` → shell command hooks
-2. Entry points → `PluginRegistry.load_entry_points('zerg.plugins')` → Python plugins
+2. Entry points → `PluginRegistry.load_entry_points('mahabharatha.plugins')` → Python plugins
 
 **Event flow**:
 ```
@@ -70,7 +70,7 @@ GateRunner.run_all_gates()    → emit(QUALITY_GATE_RUN) + run_plugin_gates()
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
 | Security model | Read-only state views + timeouts | Plugins cannot mutate orchestrator state; timeout prevents hangs |
-| Hook exceptions | Per-hook try/except, never crash | Faulty plugin must not halt rush |
+| Hook exceptions | Per-hook try/except, never crash | Faulty plugin must not halt kurukshetra |
 | Plugin discovery | YAML + entry_points | Simple hooks via config, complex plugins via Python packages |
 | Gate integration | Plugin gates run after config gates | Preserves existing gate ordering, plugins are additive |
 | Launcher plugins | Checked before builtin fallback | `subprocess`/`container` always available as fallback |
@@ -83,9 +83,9 @@ GateRunner.run_all_gates()    → emit(QUALITY_GATE_RUN) + run_plugin_gates()
 |---------|---------|----------|
 | DF-L1-001 | `tests/e2e/mock_worker.py` | — |
 | DF-L1-002 | `tests/e2e/harness.py` | — |
-| DF-L1-003 | `zerg/plugins.py` | — |
-| DF-L1-004 | `zerg/plugin_config.py` | — |
-| DF-L1-005 | — | `zerg/constants.py` |
+| DF-L1-003 | `mahabharatha/plugins.py` | — |
+| DF-L1-004 | `mahabharatha/plugin_config.py` | — |
+| DF-L1-005 | — | `mahabharatha/constants.py` |
 
 ### Level 2 — Core (5 tasks, parallel)
 | Task ID | Creates | Modifies |
@@ -94,15 +94,15 @@ GateRunner.run_all_gates()    → emit(QUALITY_GATE_RUN) + run_plugin_gates()
 | DF-L2-002 | `tests/e2e/test_full_pipeline.py` | — |
 | DF-L2-003 | `tests/unit/test_plugins.py` | — |
 | DF-L2-004 | `tests/unit/test_plugin_config.py` | — |
-| DF-L2-005 | — | `zerg/config.py` |
+| DF-L2-005 | — | `mahabharatha/config.py` |
 
 ### Level 3 — Integration (5 tasks, parallel)
 | Task ID | Creates | Modifies |
 |---------|---------|----------|
-| DF-L3-001 | — | `zerg/orchestrator.py` |
-| DF-L3-002 | — | `zerg/worker_protocol.py` |
-| DF-L3-003 | — | `zerg/gates.py` |
-| DF-L3-004 | — | `zerg/launcher.py` |
+| DF-L3-001 | — | `mahabharatha/orchestrator.py` |
+| DF-L3-002 | — | `mahabharatha/worker_protocol.py` |
+| DF-L3-003 | — | `mahabharatha/gates.py` |
+| DF-L3-004 | — | `mahabharatha/launcher.py` |
 | DF-L3-005 | `tests/e2e/test_real_execution.py` | — |
 
 ### Level 4 — Testing (5 tasks, parallel)
@@ -111,7 +111,7 @@ GateRunner.run_all_gates()    → emit(QUALITY_GATE_RUN) + run_plugin_gates()
 | DF-L4-001 | `tests/integration/test_plugin_lifecycle.py` | — |
 | DF-L4-002 | `tests/e2e/test_dogfood_plugin.py` | — |
 | DF-L4-003 | — | `pyproject.toml` |
-| DF-L4-004 | `zerg/data/commands/zerg:plugins.md` | — |
+| DF-L4-004 | `mahabharatha/data/commands/mahabharatha:plugins.md` | — |
 | DF-L4-005 | `claudedocs/dogfood-bugs.md` | — |
 
 **No file conflicts within any level.** Each task owns distinct files.

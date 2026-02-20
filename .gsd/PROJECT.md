@@ -1,4 +1,4 @@
-# Project: ZERG
+# Project: MAHABHARATHA
 
 ## Overview
 Parallel Claude Code execution system that coordinates multiple worker instances to build features concurrently using spec-driven development.
@@ -13,7 +13,7 @@ Parallel Claude Code execution system that coordinates multiple worker instances
 ```
 .
 ├── .claude/
-│   ├── commands/           # Slash commands (init, plan, design, rush, status)
+│   ├── commands/           # Slash commands (init, plan, design, kurukshetra, status)
 │   └── agents/             # Agent definitions
 ├── .devcontainer/
 │   ├── devcontainer.json   # Container definition
@@ -26,11 +26,11 @@ Parallel Claude Code execution system that coordinates multiple worker instances
 │   ├── specs/              # Feature specifications
 │   ├── PROJECT.md          # This file
 │   └── INFRASTRUCTURE.md   # Infrastructure requirements
-├── .zerg/
-│   ├── config.yaml         # ZERG configuration
+├── .mahabharatha/
+│   ├── config.yaml         # MAHABHARATHA configuration
 │   ├── orchestrator.py     # Fleet manager (to be created)
 │   └── logs/               # Worker logs
-├── zerg/                   # Python orchestrator package (to be created)
+├── mahabharatha/                   # Python orchestrator package (to be created)
 ├── ARCHITECTURE.md         # System design
 ├── CLAUDE.md               # Project instructions
 └── README.md               # User documentation
@@ -40,11 +40,11 @@ Parallel Claude Code execution system that coordinates multiple worker instances
 - `/init` - Initialize factory infrastructure
 - `/plan {feature}` - Capture requirements
 - `/design` - Create architecture and task breakdown
-- `/rush [--workers=N]` - Launch parallel execution
+- `/kurukshetra [--workers=N]` - Launch parallel execution
 - `/status` - Monitor progress
 
 ## Configuration
-Edit `.zerg/config.yaml` to customize:
+Edit `.mahabharatha/config.yaml` to customize:
 - Worker limits and timeouts
 - Quality gate commands
 - MCP server availability

@@ -1,4 +1,4 @@
-"""ZERG v2 Spawn Command - Meta-orchestration with adaptive task decomposition."""
+"""MAHABHARATHA v2 Spawn Command - Meta-orchestration with adaptive task decomposition."""
 
 import json
 from dataclasses import dataclass, field

@@ -1,4 +1,4 @@
-"""Unit tests for ZERG what-if analysis engine."""
+"""Unit tests for MAHABHARATHA what-if analysis engine."""
 
 from __future__ import annotations
 

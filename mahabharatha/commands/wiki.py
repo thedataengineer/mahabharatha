@@ -1,4 +1,4 @@
-"""ZERG wiki command - generate complete documentation wiki."""
+"""MAHABHARATHA wiki command - generate complete documentation wiki."""
 
 from pathlib import Path
 
@@ -45,7 +45,7 @@ def wiki(
     dry_run: bool,
     output: str,
 ) -> None:
-    """Generate a complete documentation wiki for the ZERG project.
+    """Generate a complete documentation wiki for the MAHABHARATHA project.
 
     Scans the project, generates markdown pages for all components,
     and optionally pushes to the GitHub Wiki.
@@ -69,7 +69,7 @@ def wiki(
     from mahabharatha.doc_engine.sidebar import SidebarGenerator
 
     try:
-        console.print("\n[bold cyan]ZERG Wiki Generator[/bold cyan]\n")
+        console.print("\n[bold cyan]MAHABHARATHA Wiki Generator[/bold cyan]\n")
 
         output_dir = Path(output)
         mode = "full" if full else "incremental"

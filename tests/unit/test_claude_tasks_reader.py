@@ -55,14 +55,14 @@ class TestFindFeatureTaskList:
         assert result is None
 
     def test_prefers_feature_match(self, tmp_path):
-        # Dir with ZERG tasks but no feature match
+        # Dir with MAHABHARATHA tasks but no feature match
         unrelated = tmp_path / "uuid-unrelated"
         unrelated.mkdir()
         _write_task(unrelated, 1, "[L1] Task A", description="Feature: other-feature")
         _write_task(unrelated, 2, "[L1] Task B", description="Feature: other-feature")
         _write_task(unrelated, 3, "[L2] Task C", description="Feature: other-feature")
 
-        # Dir with ZERG tasks AND feature match
+        # Dir with MAHABHARATHA tasks AND feature match
         matching = tmp_path / "uuid-matching"
         matching.mkdir()
         _write_task(matching, 1, "[L1] Task X", description="Feature: my-feature")
@@ -77,7 +77,7 @@ class TestFindFeatureTaskList:
         assert result == matching
 
     def test_fallback_to_any_mahabharatha_tasks(self, tmp_path):
-        """Falls back to any ZERG task list when no feature match."""
+        """Falls back to any MAHABHARATHA task list when no feature match."""
         task_list = tmp_path / "uuid-abc"
         task_list.mkdir()
         _write_task(task_list, 1, "[L1] Task A")

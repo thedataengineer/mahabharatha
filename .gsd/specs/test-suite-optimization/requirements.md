@@ -6,11 +6,11 @@
 
 ## Problem Statement
 
-The ZERG test suite has grown to 7,634 tests (128K LOC) for 55K LOC of production code — a 2.3:1 ratio that significantly exceeds industry norms (1:1 to 1.5:1). This causes:
+The MAHABHARATHA test suite has grown to 7,634 tests (128K LOC) for 55K LOC of production code — a 2.3:1 ratio that significantly exceeds industry norms (1:1 to 1.5:1). This causes:
 
 1. **CI time**: 8-10 minutes per run, target is < 2 minutes
 2. **Local dev feedback**: Too slow for rapid iteration
-3. **Zerg rush bottleneck**: Gates take too long, slowing parallel worker coordination
+3. **Mahabharatha kurukshetra bottleneck**: Gates take too long, slowing parallel worker coordination
 
 ### Root Causes Identified
 
@@ -80,7 +80,7 @@ tests/e2e/test_launcher_e2e.py
 
 ### FR-4: Gate Configuration Optimization
 
-Update `.zerg/config.yaml` quality gates:
+Update `.mahabharatha/config.yaml` quality gates:
 
 ```yaml
 quality_gates:
@@ -167,7 +167,7 @@ Update `.github/workflows/pytest.yml`:
 ### Phase 1: Quick Wins (1-2 hours)
 1. Add smoke markers to 5 critical test files
 2. Update pyproject.toml with new markers
-3. Update .zerg/config.yaml gates
+3. Update .mahabharatha/config.yaml gates
 4. Add pytest-xdist dependency
 5. Update CI workflow with smoke job
 
@@ -199,4 +199,4 @@ None — all questions resolved through Socratic dialogue.
 ## Approval
 
 - [ ] Requirements reviewed and approved
-- [ ] Ready for /zerg:design phase
+- [ ] Ready for /mahabharatha:design phase

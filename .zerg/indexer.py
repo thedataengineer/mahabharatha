@@ -1,4 +1,4 @@
-"""ZERG v2 Index Command - Project knowledge base generation."""
+"""MAHABHARATHA v2 Index Command - Project knowledge base generation."""
 
 import json
 from dataclasses import dataclass, field

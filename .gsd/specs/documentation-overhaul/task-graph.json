@@ -20,7 +20,7 @@
         "read": ["README.md", ".gsd/specs/documentation-overhaul/requirements.md"]
       },
       "verification": {
-        "command": "test -f .gsd/wiki/Home.md && grep -q 'Command-Reference' .gsd/wiki/Home.md && grep -q '/zerg:' .gsd/wiki/Home.md",
+        "command": "test -f .gsd/wiki/Home.md && grep -q 'Command-Reference' .gsd/wiki/Home.md && grep -q '/mahabharatha:' .gsd/wiki/Home.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
@@ -28,12 +28,12 @@
       "acceptance_criteria": [
         "Home.md exists in .gsd/wiki/",
         "Links to all 10 other wiki pages",
-        "Uses /zerg: format for all commands",
+        "Uses /mahabharatha: format for all commands",
         "Quick start section present"
       ],
       "consumers": ["TASK-015", "TASK-016"],
       "integration_test": null,
-      "context": "## Spec Context\nFR-1: Wiki Population - Home page with overview, quick start, links to other pages.\n\n## NFR\n- All commands referenced as /zerg:command\n- Never use 'Command-init' format"
+      "context": "## Spec Context\nFR-1: Wiki Population - Home page with overview, quick start, links to other pages.\n\n## NFR\n- All commands referenced as /mahabharatha:command\n- Never use 'Command-init' format"
     },
     {
       "id": "TASK-002",
@@ -45,10 +45,10 @@
       "files": {
         "create": [".gsd/wiki/Command-Reference.md"],
         "modify": [],
-        "read": ["docs/commands.md", "zerg/data/commands/init.md", "zerg/data/commands/plan.md", "zerg/data/commands/design.md", "zerg/data/commands/rush.md", "zerg/data/commands/brainstorm.md", "zerg/data/commands/status.md", "zerg/data/commands/git.md"]
+        "read": ["docs/commands.md", "mahabharatha/data/commands/init.md", "mahabharatha/data/commands/plan.md", "mahabharatha/data/commands/design.md", "mahabharatha/data/commands/kurukshetra.md", "mahabharatha/data/commands/brainstorm.md", "mahabharatha/data/commands/status.md", "mahabharatha/data/commands/git.md"]
       },
       "verification": {
-        "command": "test -f .gsd/wiki/Command-Reference.md && grep -c '/zerg:' .gsd/wiki/Command-Reference.md | xargs test 26 -le",
+        "command": "test -f .gsd/wiki/Command-Reference.md && grep -c '/mahabharatha:' .gsd/wiki/Command-Reference.md | xargs test 26 -le",
         "timeout_seconds": 30
       },
       "estimate_minutes": 45,
@@ -62,19 +62,19 @@
       ],
       "consumers": ["TASK-012", "TASK-015", "TASK-016"],
       "integration_test": null,
-      "context": "## Spec Context\nFR-2: Exhaustive Command Documentation. For each of 26 commands: synopsis, usage, description, flags table, 3-5 examples, related commands, notes.\n\nCommand groups:\n- Core Workflow: brainstorm, design, init, plan, rush\n- Monitoring: cleanup, logs, merge, retry, status, stop\n- Quality: analyze, build, refactor, review, security, test\n- Utilities: create-command, debug, git, plugins, worker\n- Docs & AI: document, estimate, explain, index, select-tool"
+      "context": "## Spec Context\nFR-2: Exhaustive Command Documentation. For each of 26 commands: synopsis, usage, description, flags table, 3-5 examples, related commands, notes.\n\nCommand groups:\n- Core Workflow: brainstorm, design, init, plan, kurukshetra\n- Monitoring: cleanup, logs, merge, retry, status, stop\n- Quality: analyze, build, refactor, review, security, test\n- Utilities: create-command, debug, git, plugins, worker\n- Docs & AI: document, estimate, explain, index, select-tool"
     },
     {
       "id": "TASK-003",
       "title": "Create Wiki Configuration page",
-      "description": "Create Configuration.md wiki page covering: .zerg/config.yaml structure, all configuration sections (workers, quality_gates, plugins, resilience, etc.), environment variables, tuning recommendations. Extract from docs/configuration.md and enhance.",
+      "description": "Create Configuration.md wiki page covering: .mahabharatha/config.yaml structure, all configuration sections (workers, quality_gates, plugins, resilience, etc.), environment variables, tuning recommendations. Extract from docs/configuration.md and enhance.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [".gsd/wiki/Configuration.md"],
         "modify": [],
-        "read": ["docs/configuration.md", ".zerg/config.yaml"]
+        "read": ["docs/configuration.md", ".mahabharatha/config.yaml"]
       },
       "verification": {
         "command": "test -f .gsd/wiki/Configuration.md && grep -q 'config.yaml' .gsd/wiki/Configuration.md",
@@ -90,7 +90,7 @@
       ],
       "consumers": ["TASK-015", "TASK-016"],
       "integration_test": null,
-      "context": "## Spec Context\nFR-1: Wiki Configuration page with .zerg/config.yaml, environment variables, tuning."
+      "context": "## Spec Context\nFR-1: Wiki Configuration page with .mahabharatha/config.yaml, environment variables, tuning."
     },
     {
       "id": "TASK-004",
@@ -123,7 +123,7 @@
     {
       "id": "TASK-005",
       "title": "Create Wiki Tutorial page",
-      "description": "Create Tutorial.md wiki page with comprehensive minerals-store walkthrough. Cover all ZERG phases: init, brainstorm, plan, design, rush, status, logs, review, test, git ship. Include devcontainers, security rules, quality gates. Step-by-step with command examples.",
+      "description": "Create Tutorial.md wiki page with comprehensive minerals-store walkthrough. Cover all MAHABHARATHA phases: init, brainstorm, plan, design, kurukshetra, status, logs, review, test, git ship. Include devcontainers, security rules, quality gates. Step-by-step with command examples.",
       "phase": "core",
       "level": 2,
       "dependencies": ["TASK-002"],
@@ -133,21 +133,21 @@
         "read": ["docs/tutorial-minerals-store.md", "README.md"]
       },
       "verification": {
-        "command": "test -f .gsd/wiki/Tutorial.md && grep -q '/zerg:init' .gsd/wiki/Tutorial.md && grep -q '/zerg:rush' .gsd/wiki/Tutorial.md",
+        "command": "test -f .gsd/wiki/Tutorial.md && grep -q '/mahabharatha:init' .gsd/wiki/Tutorial.md && grep -q '/mahabharatha:kurukshetra' .gsd/wiki/Tutorial.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 30,
       "skills_required": ["markdown", "documentation"],
       "acceptance_criteria": [
         "Complete minerals-store walkthrough",
-        "All ZERG phases covered",
+        "All MAHABHARATHA phases covered",
         "Devcontainer usage shown",
         "Security rules mentioned",
         "Quality gates explained"
       ],
       "consumers": ["TASK-013", "TASK-015", "TASK-016"],
       "integration_test": null,
-      "context": "## Spec Context\nFR-1: Wiki Tutorial page - minerals-store walkthrough with all ZERG features from brainstorming -> planning -> design -> implementation and everything in between."
+      "context": "## Spec Context\nFR-1: Wiki Tutorial page - minerals-store walkthrough with all MAHABHARATHA features from brainstorming -> planning -> design -> implementation and everything in between."
     },
     {
       "id": "TASK-006",
@@ -159,7 +159,7 @@
       "files": {
         "create": [".gsd/wiki/Plugins.md"],
         "modify": [],
-        "read": ["docs/plugins.md", "zerg/data/commands/plugins.md"]
+        "read": ["docs/plugins.md", "mahabharatha/data/commands/plugins.md"]
       },
       "verification": {
         "command": "test -f .gsd/wiki/Plugins.md && grep -q 'QualityGatePlugin' .gsd/wiki/Plugins.md",
@@ -187,7 +187,7 @@
       "files": {
         "create": [".gsd/wiki/Security.md"],
         "modify": [],
-        "read": ["CLAUDE.md", "zerg/data/commands/security.md", ".claude/rules/security/_core/owasp-2025.md"]
+        "read": ["CLAUDE.md", "mahabharatha/data/commands/security.md", ".claude/rules/security/_core/owasp-2025.md"]
       },
       "verification": {
         "command": "test -f .gsd/wiki/Security.md && grep -q 'OWASP' .gsd/wiki/Security.md",
@@ -199,7 +199,7 @@
         "Security rules integration explained",
         "OWASP Top 10 2025 covered",
         "Pre-commit hooks documented",
-        "zerg security-rules CLI commands"
+        "mahabharatha security-rules CLI commands"
       ],
       "consumers": ["TASK-015", "TASK-016"],
       "integration_test": null,
@@ -208,7 +208,7 @@
     {
       "id": "TASK-008",
       "title": "Create Wiki Context-Engineering page",
-      "description": "Create Context-Engineering.md wiki page covering token optimization: command splitting (.core.md/.details.md), security rule filtering by extension, task-scoped context, token budget. Include monitoring via /zerg:status.",
+      "description": "Create Context-Engineering.md wiki page covering token optimization: command splitting (.core.md/.details.md), security rule filtering by extension, task-scoped context, token budget. Include monitoring via /mahabharatha:status.",
       "phase": "extended",
       "level": 3,
       "dependencies": ["TASK-004"],
@@ -236,24 +236,24 @@
     {
       "id": "TASK-009",
       "title": "Create Wiki Troubleshooting page",
-      "description": "Create Troubleshooting.md wiki page with common issues and solutions: workers not starting, tasks failing, merge conflicts, state corruption, recovery procedures. Include /zerg:debug usage and diagnostic commands.",
+      "description": "Create Troubleshooting.md wiki page with common issues and solutions: workers not starting, tasks failing, merge conflicts, state corruption, recovery procedures. Include /mahabharatha:debug usage and diagnostic commands.",
       "phase": "extended",
       "level": 3,
       "dependencies": ["TASK-005"],
       "files": {
         "create": [".gsd/wiki/Troubleshooting.md"],
         "modify": [],
-        "read": ["README.md", "zerg/data/commands/debug.md", "zerg/data/commands/retry.md"]
+        "read": ["README.md", "mahabharatha/data/commands/debug.md", "mahabharatha/data/commands/retry.md"]
       },
       "verification": {
-        "command": "test -f .gsd/wiki/Troubleshooting.md && grep -q '/zerg:debug' .gsd/wiki/Troubleshooting.md",
+        "command": "test -f .gsd/wiki/Troubleshooting.md && grep -q '/mahabharatha:debug' .gsd/wiki/Troubleshooting.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
       "skills_required": ["markdown", "documentation"],
       "acceptance_criteria": [
         "Common issues listed",
-        "/zerg:debug usage covered",
+        "/mahabharatha:debug usage covered",
         "Recovery procedures documented",
         "Diagnostic commands included"
       ],
@@ -330,7 +330,7 @@
         "read": [".gsd/wiki/Command-Reference.md"]
       },
       "verification": {
-        "command": "grep -c '/zerg:' docs/commands.md | xargs test 26 -le",
+        "command": "grep -c '/mahabharatha:' docs/commands.md | xargs test 26 -le",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
@@ -348,7 +348,7 @@
     {
       "id": "TASK-013",
       "title": "Restructure README.md as tutorial",
-      "description": "Restructure README.md to be tutorial-focused: 1) Quick Overview (1 para), 2) Installation (step-by-step), 3) Tutorial: Your First ZERG Project (minerals-store walkthrough), 4) Command Quick Reference (table linking to wiki), 5) Configuration (brief, link to wiki), 6) Links to Full Documentation.",
+      "description": "Restructure README.md to be tutorial-focused: 1) Quick Overview (1 para), 2) Installation (step-by-step), 3) Tutorial: Your First MAHABHARATHA Project (minerals-store walkthrough), 4) Command Quick Reference (table linking to wiki), 5) Configuration (brief, link to wiki), 6) Links to Full Documentation.",
       "phase": "sync",
       "level": 4,
       "dependencies": ["TASK-005", "TASK-008", "TASK-009", "TASK-010", "TASK-011"],
@@ -358,7 +358,7 @@
         "read": [".gsd/wiki/Home.md", ".gsd/wiki/Tutorial.md", ".gsd/specs/documentation-overhaul/requirements.md"]
       },
       "verification": {
-        "command": "grep -q 'Tutorial' README.md && grep -q 'Step 1' README.md && grep -q '/zerg:init' README.md",
+        "command": "grep -q 'Tutorial' README.md && grep -q 'Step 1' README.md && grep -q '/mahabharatha:init' README.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 30,
@@ -368,11 +368,11 @@
         "Step-by-step guide",
         "Command quick reference table",
         "Links to wiki for details",
-        "All /zerg: format"
+        "All /mahabharatha: format"
       ],
       "consumers": ["TASK-016"],
       "integration_test": null,
-      "context": "## Spec Context\nFR-3: Tutorial-Focused README. Sections: Quick Overview, Installation, Tutorial (minerals-store), Command Quick Reference, Configuration, Links.\n\nTutorial steps:\n1. /zerg:init\n2. /zerg:brainstorm\n3. /zerg:plan\n4. /zerg:design\n5. /zerg:rush\n6. /zerg:status, /zerg:logs\n7. /zerg:review, /zerg:test\n8. /zerg:git --action ship"
+      "context": "## Spec Context\nFR-3: Tutorial-Focused README. Sections: Quick Overview, Installation, Tutorial (minerals-store), Command Quick Reference, Configuration, Links.\n\nTutorial steps:\n1. /mahabharatha:init\n2. /mahabharatha:brainstorm\n3. /mahabharatha:plan\n4. /mahabharatha:design\n5. /mahabharatha:kurukshetra\n6. /mahabharatha:status, /mahabharatha:logs\n7. /mahabharatha:review, /mahabharatha:test\n8. /mahabharatha:git --action ship"
     },
     {
       "id": "TASK-014",
@@ -384,7 +384,7 @@
       "files": {
         "create": [],
         "modify": ["ARCHITECTURE.md"],
-        "read": [".gsd/wiki/Architecture.md", "zerg/orchestrator.py", "zerg/launcher.py", "zerg/worker_protocol.py"]
+        "read": [".gsd/wiki/Architecture.md", "mahabharatha/orchestrator.py", "mahabharatha/launcher.py", "mahabharatha/worker_protocol.py"]
       },
       "verification": {
         "command": "grep -q 'Context Engineering' ARCHITECTURE.md && grep -q 'Resilience' ARCHITECTURE.md",
@@ -434,7 +434,7 @@
     {
       "id": "TASK-016",
       "title": "Validate all documentation and cross-links",
-      "description": "Final validation pass: check all wiki page cross-links work, verify /zerg: format consistency, spot-check 5 commands for flag accuracy, ensure no 'Command-init' format, verify tutorials can be followed.",
+      "description": "Final validation pass: check all wiki page cross-links work, verify /mahabharatha: format consistency, spot-check 5 commands for flag accuracy, ensure no 'Command-init' format, verify tutorials can be followed.",
       "phase": "quality",
       "level": 5,
       "dependencies": ["TASK-012", "TASK-013", "TASK-014", "TASK-015"],
@@ -451,14 +451,14 @@
       "skills_required": ["documentation", "quality-assurance"],
       "acceptance_criteria": [
         "All wiki cross-links valid",
-        "All /zerg: format used",
+        "All /mahabharatha: format used",
         "No 'Command-init' format",
         "5 commands spot-checked for flag accuracy",
         "Tutorial steps verified"
       ],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nAcceptance Criteria validation:\n1. Wiki Complete: All 10+ wiki pages exist\n2. Commands Documented: All 26 commands exhaustive\n3. Tutorial Works: End-to-end followable\n4. Architecture Current: Spot-checked against 5 key modules\n5. Format Consistent: All /zerg: format"
+      "context": "## Spec Context\nAcceptance Criteria validation:\n1. Wiki Complete: All 10+ wiki pages exist\n2. Commands Documented: All 26 commands exhaustive\n3. Tutorial Works: End-to-end followable\n4. Architecture Current: Spot-checked against 5 key modules\n5. Format Consistent: All /mahabharatha: format"
     }
   ],
 

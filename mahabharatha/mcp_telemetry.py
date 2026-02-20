@@ -1,4 +1,4 @@
-"""MCP routing telemetry for ZERG."""
+"""MCP routing telemetry for MAHABHARATHA."""
 
 from __future__ import annotations
 

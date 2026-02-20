@@ -1,4 +1,4 @@
-"""ZERG rush command - launch parallel execution."""
+"""MAHABHARATHA kurukshetra command - launch parallel execution."""
 
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ from mahabharatha.parser import TaskParser
 from mahabharatha.validation import load_and_validate_task_graph
 
 console = Console()
-logger = get_logger("rush")
+logger = get_logger("kurukshetra")
 
 
 @click.command()
@@ -50,7 +50,7 @@ logger = get_logger("rush")
 )
 @click.option("--verbose", "-v", is_flag=True, help="Verbose output")
 @click.pass_context
-def rush(
+def kurukshetra(
     ctx: click.Context,
     workers: int,
     feature: str | None,
@@ -72,17 +72,17 @@ def rush(
 
     Examples:
 
-        mahabharatha rush --workers 5
+        mahabharatha kurukshetra --workers 5
 
-        mahabharatha rush --feature user-auth --dry-run
+        mahabharatha kurukshetra --feature user-auth --dry-run
 
-        mahabharatha rush --resume --workers 3
+        mahabharatha kurukshetra --resume --workers 3
 
-        mahabharatha rush --mode container --workers 5
+        mahabharatha kurukshetra --mode container --workers 5
 
-        mahabharatha rush --dry-run --what-if
+        mahabharatha kurukshetra --dry-run --what-if
 
-        mahabharatha rush --dry-run --risk
+        mahabharatha kurukshetra --dry-run --risk
     """
     # Setup logging
     if verbose:
@@ -108,7 +108,7 @@ def rush(
             parser.parse(task_graph_path)
             feature = parser.feature_name
 
-        console.print(f"\n[bold cyan]ZERG Rush[/bold cyan] - {feature}\n")
+        console.print(f"\n[bold cyan]MAHABHARATHA Kurukshetra[/bold cyan] - {feature}\n")
 
         # Print task list ID for coordination visibility
         import os
@@ -126,7 +126,7 @@ def rush(
         # Show summary
         show_summary(task_data, workers, mode)
 
-        # Pre-flight checks (always run before rush or dry-run)
+        # Pre-flight checks (always run before kurukshetra or dry-run)
         if not _run_preflight(config, mode, workers):
             raise SystemExit(1)
 
@@ -177,7 +177,7 @@ def rush(
             cli_flags=ctx.obj,
             config=config,
             task_graph=task_data,
-            command="rush",
+            command="kurukshetra",
         )
 
         # Create orchestrator and start
@@ -239,7 +239,7 @@ def rush(
 
 
 def _run_preflight(config: ZergConfig, mode: str, workers: int) -> bool:
-    """Run pre-flight checks before rush. Returns True if passed."""
+    """Run pre-flight checks before kurukshetra. Returns True if passed."""
     from mahabharatha.preflight import PreflightChecker
 
     with console.status("Running pre-flight checks..."):

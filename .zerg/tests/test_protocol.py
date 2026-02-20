@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 Worker Protocol."""
+"""Tests for MAHABHARATHA v2 Worker Protocol."""
 
 import sys
 from datetime import datetime

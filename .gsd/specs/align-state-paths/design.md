@@ -4,23 +4,23 @@
 - **Feature**: align-state-paths
 - **Status**: DRAFT
 - **Created**: 2026-01-31
-- **Author**: ZERG Design Mode
+- **Author**: MAHABHARATHA Design Mode
 
 ---
 
 ## 1. Overview
 
 ### 1.1 Summary
-Align both orchestrators (v2 `.zerg/orchestrator.py` and CLI `zerg/orchestrator.py`) to write state to `.zerg/state/{feature}.json`. Currently the v2 orchestrator writes to `.zerg/state.json` (flat), causing `zerg status` to miss v2 state entirely. Also add a `__main__` entrypoint to the v2 orchestrator and ensure CLI orchestrator persists state immediately after `load()`.
+Align both orchestrators (v2 `.mahabharatha/orchestrator.py` and CLI `mahabharatha/orchestrator.py`) to write state to `.mahabharatha/state/{feature}.json`. Currently the v2 orchestrator writes to `.mahabharatha/state.json` (flat), causing `mahabharatha status` to miss v2 state entirely. Also add a `__main__` entrypoint to the v2 orchestrator and ensure CLI orchestrator persists state immediately after `load()`.
 
 ### 1.2 Goals
-- Both orchestrators write to `.zerg/state/{feature}.json`
-- `zerg status` can read state from either orchestrator
-- v2 orchestrator is callable via `python3 .zerg/orchestrator.py --feature X`
+- Both orchestrators write to `.mahabharatha/state/{feature}.json`
+- `mahabharatha status` can read state from either orchestrator
+- v2 orchestrator is callable via `python3 .mahabharatha/orchestrator.py --feature X`
 
 ### 1.3 Non-Goals
 - Rewriting the orchestrator architecture
-- Migrating existing `.zerg/state.json` files
+- Migrating existing `.mahabharatha/state.json` files
 - Changing the state file schema
 
 ---
@@ -29,22 +29,22 @@ Align both orchestrators (v2 `.zerg/orchestrator.py` and CLI `zerg/orchestrator.
 
 ```
                     +----------------------+
-                    |  /zerg:rush (slash)   |
-                    |  zerg rush  (CLI)     |
+                    |  /mahabharatha:kurukshetra (slash)   |
+                    |  mahabharatha kurukshetra  (CLI)     |
                     +-------+--------------+
                             |
               +-------------+-------------+
               v                           v
-   .zerg/orchestrator.py          zerg/orchestrator.py
+   .mahabharatha/orchestrator.py          mahabharatha/orchestrator.py
    (v2, script mode)              (CLI, library mode)
               |                           |
               |  +---------------------+  |
-              +->|  .zerg/state/       |<-+
+              +->|  .mahabharatha/state/       |<-+
                  |  {feature}.json     |   <-- ALIGNED
                  +---------+-----------+
                            |
                            v
-                    zerg status --dashboard
+                    mahabharatha status --dashboard
 ```
 
 ---
@@ -53,28 +53,28 @@ Align both orchestrators (v2 `.zerg/orchestrator.py` and CLI `zerg/orchestrator.
 
 ### 3.1 TASK-001: v2 orchestrator state path alignment
 
-**File**: `.zerg/orchestrator.py`
+**File**: `.mahabharatha/orchestrator.py`
 
 Changes to `__init__`:
 - Add `feature` parameter (default: `"default"`)
-- Change `_state_path` from `.zerg/state.json` to `.zerg/state/{feature}.json`
+- Change `_state_path` from `.mahabharatha/state.json` to `.mahabharatha/state/{feature}.json`
 
 Add `if __name__ == "__main__":` block with argparse:
 - `--feature` (required)
 - `--workers` (default: 5)
-- `--config` (default: `.zerg/config.yaml`)
+- `--config` (default: `.mahabharatha/config.yaml`)
 - `--task-graph` (required)
 - `--assignments` (optional)
 
 ### 3.2 TASK-002: CLI orchestrator early state persist
 
-**File**: `zerg/orchestrator.py`
+**File**: `mahabharatha/orchestrator.py`
 
-Add `self.state.save()` immediately after `self.state.load()` in `start()` method (line ~418). This ensures the state file exists on disk before any work begins, so `zerg status` always finds it.
+Add `self.state.save()` immediately after `self.state.load()` in `start()` method (line ~418). This ensures the state file exists on disk before any work begins, so `mahabharatha status` always finds it.
 
 ### 3.3 TASK-003: Slash command feature passthrough
 
-**File**: `zerg/data/commands/zerg:rush.core.md`
+**File**: `mahabharatha/data/commands/mahabharatha:kurukshetra.core.md`
 
 The slash command already passes `--feature "$FEATURE"` to the v2 orchestrator. Needs addition of `--task-graph` arg to match the new `__main__` entrypoint.
 
@@ -88,7 +88,7 @@ The slash command already passes `--feature "$FEATURE"` to the v2 orchestrator. 
 
 **Options**:
 1. Make `--feature` required everywhere: Breaking change for any direct callers.
-2. Default to `"default"`: Backward compatible, state goes to `.zerg/state/default.json`.
+2. Default to `"default"`: Backward compatible, state goes to `.mahabharatha/state/default.json`.
 
 **Decision**: Option 2 - default parameter `feature="default"`.
 
@@ -109,9 +109,9 @@ The slash command already passes `--feature "$FEATURE"` to the v2 orchestrator. 
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `.zerg/orchestrator.py` | TASK-001 | modify |
-| `zerg/orchestrator.py` | TASK-002 | modify |
-| `zerg/data/commands/zerg:rush.core.md` | TASK-003 | modify |
+| `.mahabharatha/orchestrator.py` | TASK-001 | modify |
+| `mahabharatha/orchestrator.py` | TASK-002 | modify |
+| `mahabharatha/data/commands/mahabharatha:kurukshetra.core.md` | TASK-003 | modify |
 
 ### 5.3 Dependency Graph
 
@@ -128,7 +128,7 @@ TASK-002 (CLI early persist)  (independent)
 | Risk | Probability | Impact | Mitigation |
 |------|-------------|--------|------------|
 | v2 orchestrator callers pass no feature | Low | Low | Default param `feature="default"` |
-| Existing `.zerg/state.json` orphaned | Low | None | Old file can be deleted manually |
+| Existing `.mahabharatha/state.json` orphaned | Low | None | Old file can be deleted manually |
 | `__main__` block missing task-graph path | Med | Med | Add `--task-graph` arg to argparse |
 
 ---
@@ -136,13 +136,13 @@ TASK-002 (CLI early persist)  (independent)
 ## 7. Testing Strategy
 
 ### 7.1 Unit Tests
-- v2 orchestrator: `python -m pytest .zerg/tests/test_orchestrator.py -x -q`
+- v2 orchestrator: `python -m pytest .mahabharatha/tests/test_orchestrator.py -x -q`
 - CLI orchestrator: `python -m pytest tests/unit/test_orchestrator.py tests/unit/test_orchestrator_recovery.py -x -q`
 
 ### 7.2 Verification
 ```bash
 python -m pytest tests/ -x -q
-python -m pytest .zerg/tests/test_orchestrator.py -x -q
+python -m pytest .mahabharatha/tests/test_orchestrator.py -x -q
 ```
 
 ---

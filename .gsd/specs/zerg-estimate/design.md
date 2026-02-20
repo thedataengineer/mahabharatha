@@ -1,7 +1,7 @@
-# Technical Design: zerg-estimate
+# Technical Design: mahabharatha-estimate
 
 ## Metadata
-- **Feature**: zerg-estimate
+- **Feature**: mahabharatha-estimate
 - **Status**: DRAFT
 - **Created**: 2026-01-31
 
@@ -10,7 +10,7 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Create `/zerg:estimate` — a split command (core + details) providing full-lifecycle effort estimation: pre-execution PERT with risk weighting, post-execution comparison, historical calibration, and API cost projection. No new Python modules — leverages existing `risk_scoring.py`, `whatif.py`, `metrics.py`, and `.zerg/estimate.py` via `python -c` inline execution.
+Create `/mahabharatha:estimate` — a split command (core + details) providing full-lifecycle effort estimation: pre-execution PERT with risk weighting, post-execution comparison, historical calibration, and API cost projection. No new Python modules — leverages existing `risk_scoring.py`, `whatif.py`, `metrics.py`, and `.mahabharatha/estimate.py` via `python -c` inline execution.
 
 ### 1.2 Goals
 - Pre-execution: PERT estimates with confidence intervals (P50/P80/P95) per task, level, feature
@@ -20,7 +20,7 @@ Create `/zerg:estimate` — a split command (core + details) providing full-life
 
 ### 1.3 Non-Goals
 - New Python module or CLI entry point
-- Real-time tracking during execution (use `/zerg:status`)
+- Real-time tracking during execution (use `/mahabharatha:status`)
 - Worker assignment optimization (use `WhatIfEngine` directly)
 
 ---
@@ -36,7 +36,7 @@ risk_scoring.py ──┘         │
                             ▼
                      Output (text/json/md)
 
-.zerg/state/*.json ──┐
+.mahabharatha/state/*.json ──┐
                      ├──▶ Post-Compare ──▶ append to history JSON
 metrics.py ──────────┘         │
 pre-estimate.json ─────────────┘
@@ -53,9 +53,9 @@ pre-estimate.json ─────────────┘
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| Core command | Flags, auto-detect, workflow orchestration, task tracking | `zerg:estimate.core.md` |
-| Details reference | PERT math, output templates, calibration algo, JSON schemas | `zerg:estimate.details.md` |
-| Parent file | Backward compat (= core content) | `zerg:estimate.md` |
+| Core command | Flags, auto-detect, workflow orchestration, task tracking | `mahabharatha:estimate.core.md` |
+| Details reference | PERT math, output templates, calibration algo, JSON schemas | `mahabharatha:estimate.details.md` |
+| Parent file | Backward compat (= core content) | `mahabharatha:estimate.md` |
 | History store | Per-feature pre/post snapshots | `.gsd/estimates/{feature}-estimate.json` |
 | Calibration store | Aggregated bias factors | `.gsd/estimates/calibration.json` |
 
@@ -65,7 +65,7 @@ pre-estimate.json ─────────────┘
 
 ### Decision: Command-file only (no new Python)
 
-**Context**: Could create a new `zerg/estimate_cmd.py` module, but existing classes already provide all computation.
+**Context**: Could create a new `mahabharatha/estimate_cmd.py` module, but existing classes already provide all computation.
 
 **Decision**: Pure markdown command files that instruct Claude to run `python -c` with existing modules.
 
@@ -73,7 +73,7 @@ pre-estimate.json ─────────────┘
 
 ### Decision: PERT + risk weighting over simple multipliers
 
-**Context**: `.zerg/estimate.py` uses fixed multipliers (1.0x/1.7x/2.7x). PERT with risk weighting produces more nuanced estimates.
+**Context**: `.mahabharatha/estimate.py` uses fixed multipliers (1.0x/1.7x/2.7x). PERT with risk weighting produces more nuanced estimates.
 
 **Decision**: PERT formula `(O+4M+P)/6` with risk-derived O/P bounds.
 
@@ -103,9 +103,9 @@ pre-estimate.json ─────────────┘
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/data/commands/zerg:estimate.core.md` | TASK-L1-001 | create |
-| `zerg/data/commands/zerg:estimate.details.md` | TASK-L1-002 | create |
-| `zerg/data/commands/zerg:estimate.md` | TASK-L2-001 | create |
+| `mahabharatha/data/commands/mahabharatha:estimate.core.md` | TASK-L1-001 | create |
+| `mahabharatha/data/commands/mahabharatha:estimate.details.md` | TASK-L1-002 | create |
+| `mahabharatha/data/commands/mahabharatha:estimate.md` | TASK-L2-001 | create |
 | `claudedocs/backlog.md` | TASK-L2-001 | modify |
 
 ---
@@ -123,11 +123,11 @@ pre-estimate.json ─────────────┘
 ## 6. Testing Strategy
 
 ### Verification Commands
-- All 3 files exist: `ls zerg/data/commands/zerg:estimate{,.core,.details}.md`
-- Task tracking present: `grep -c "TaskCreate\|TaskUpdate" zerg/data/commands/zerg:estimate*.md`
-- Split markers: `grep "SPLIT" zerg/data/commands/zerg:estimate.{core,details}.md`
-- PERT formula: `grep "PERT\|optimistic\|pessimistic" zerg/data/commands/zerg:estimate.details.md`
-- Drift detection: `grep -rL "TaskCreate\|TaskUpdate\|TaskList\|TaskGet" zerg/data/commands/zerg:*.md` returns empty
+- All 3 files exist: `ls mahabharatha/data/commands/mahabharatha:estimate{,.core,.details}.md`
+- Task tracking present: `grep -c "TaskCreate\|TaskUpdate" mahabharatha/data/commands/mahabharatha:estimate*.md`
+- Split markers: `grep "SPLIT" mahabharatha/data/commands/mahabharatha:estimate.{core,details}.md`
+- PERT formula: `grep "PERT\|optimistic\|pessimistic" mahabharatha/data/commands/mahabharatha:estimate.details.md`
+- Drift detection: `grep -rL "TaskCreate\|TaskUpdate\|TaskList\|TaskGet" mahabharatha/data/commands/mahabharatha:*.md` returns empty
 - Backlog updated: `grep "DONE" claudedocs/backlog.md | grep estimate`
 - Existing tests pass: `python -m pytest tests/ -x -q`
 

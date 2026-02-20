@@ -4,14 +4,14 @@
 - **Feature**: multi-epic-isolation
 - **Status**: DRAFT
 - **Created**: 2026-02-11
-- **Author**: ZERG Design Mode
+- **Author**: MAHABHARATHA Design Mode
 
 ---
 
 ## 1. Overview
 
 ### 1.1 Summary
-Fix 6 root causes that prevent ZERG from safely running two independent epics in parallel across terminal sessions. The primary fix replaces the global `.current-feature` singleton with a `ZERG_FEATURE` environment variable as the primary feature detection source, adds level-aware task claiming, restructures the plan approval gate, scopes git ship to feature branches, adds advisory lockfiles, and auto-scopes task lists.
+Fix 6 root causes that prevent MAHABHARATHA from safely running two independent epics in parallel across terminal sessions. The primary fix replaces the global `.current-feature` singleton with a `ZERG_FEATURE` environment variable as the primary feature detection source, adds level-aware task claiming, restructures the plan approval gate, scopes git ship to feature branches, adds advisory lockfiles, and auto-scopes task lists.
 
 ### 1.2 Goals
 - Two terminals can run independent epics without cross-stomping
@@ -56,12 +56,12 @@ Terminal 1                          Terminal 2
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| Feature Detector | Resolve active feature from env/file/state | `zerg/commands/_utils.py` |
-| Level Enforcer | Prevent workers claiming above current level | `zerg/protocol_state.py` |
-| Lockfile Manager | Advisory lock per feature during rush | `zerg/commands/_utils.py` |
+| Feature Detector | Resolve active feature from env/file/state | `mahabharatha/commands/_utils.py` |
+| Level Enforcer | Prevent workers claiming above current level | `mahabharatha/protocol_state.py` |
+| Lockfile Manager | Advisory lock per feature during kurukshetra | `mahabharatha/commands/_utils.py` |
 | Plan Approval Gate | Structured stop after approval | `plan.core.md`, `plan.md` |
 | Ship Scoper | Limit git ship to feature branches | `git.details.md` |
-| Pre-flight Pattern | Env-aware feature detection in 15 commands | `zerg/data/commands/*.md` |
+| Pre-flight Pattern | Env-aware feature detection in 15 commands | `mahabharatha/data/commands/*.md` |
 
 ### 2.3 Data Flow
 
@@ -69,7 +69,7 @@ Terminal 1                          Terminal 2
 1. `ZERG_FEATURE` env var (process-scoped, terminal-isolated)
 2. `--feature` CLI flag (explicit override, already supported in some commands)
 3. `.gsd/.current-feature` file (backward compat fallback)
-4. `.zerg/state/*.json` (most recent, last resort)
+4. `.mahabharatha/state/*.json` (most recent, last resort)
 
 **Task Claiming (updated):**
 1. Worker calls `claim_next_task_async()`
@@ -78,8 +78,8 @@ Terminal 1                          Terminal 2
 4. `claim_task()` verifies `task.level <= current_level` before claiming
 
 **Advisory Lockfile:**
-1. `/z:rush` creates `.gsd/specs/{feature}/.lock` with `{pid}:{timestamp}`
-2. Another `/z:rush` checks `.lock`, warns if recent (< 2hr), asks user to confirm
+1. `/z:kurukshetra` creates `.gsd/specs/{feature}/.lock` with `{pid}:{timestamp}`
+2. Another `/z:kurukshetra` checks `.lock`, warns if recent (< 2hr), asks user to confirm
 3. `/z:cleanup` removes stale locks
 
 ---
@@ -89,21 +89,21 @@ Terminal 1                          Terminal 2
 ### 3.1 detect_feature() — Updated Priority Chain
 
 ```python
-# zerg/commands/_utils.py
+# mahabharatha/commands/_utils.py
 def detect_feature() -> str | None:
     """Detect active feature from project state.
 
     Priority order:
     1. ZERG_FEATURE env var (terminal-session-scoped)
-    2. .gsd/.current-feature (explicit user intent from /zerg:plan)
-    3. .zerg/state/*.json (most recently modified state file)
+    2. .gsd/.current-feature (explicit user intent from /mahabharatha:plan)
+    3. .mahabharatha/state/*.json (most recently modified state file)
     """
     # Primary: env var (terminal-scoped, multi-epic safe)
     env_feature = os.environ.get("ZERG_FEATURE", "").strip()
     if env_feature:
         return env_feature
 
-    # Secondary: explicit feature set by /zerg:plan
+    # Secondary: explicit feature set by /mahabharatha:plan
     current_feature = Path(GSD_DIR) / ".current-feature"
     if current_feature.exists():
         name = current_feature.read_text().strip()
@@ -124,7 +124,7 @@ def detect_feature() -> str | None:
 ### 3.2 Advisory Lockfile Functions
 
 ```python
-# zerg/commands/_utils.py (new functions)
+# mahabharatha/commands/_utils.py (new functions)
 import os
 import time
 
@@ -176,7 +176,7 @@ def check_feature_lock(feature: str, gsd_dir: str = ".gsd") -> dict | None:
 ### 3.3 Level-Aware Claiming Fix
 
 ```python
-# zerg/protocol_state.py — claim_next_task_async(), line ~371
+# mahabharatha/protocol_state.py — claim_next_task_async(), line ~371
 # BEFORE:
 if self.state.claim_task(
     task_id,
@@ -237,9 +237,9 @@ Move ⛔ PLANNING COMPLETE banner to execute BEFORE any tool calls after approva
 
 In `git.details.md`, the ship action pipeline step 1 (Commit) adds feature-scoping:
 - Read active feature via `detect_feature()` pattern
-- If feature detected, scope commit scan to `zerg/{feature}/*` branches
+- If feature detected, scope commit scan to `mahabharatha/{feature}/*` branches
 - PR title format: `feat({feature}): {summary}`
-- If no feature (non-ZERG workflow), ship works unchanged
+- If no feature (non-MAHABHARATHA workflow), ship works unchanged
 
 ---
 
@@ -297,26 +297,26 @@ In `git.details.md`, the ship action pipeline step 1 (Commit) adds feature-scopi
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/commands/_utils.py` | TASK-001 | modify |
-| `zerg/protocol_state.py` | TASK-002 | modify |
-| `zerg/data/commands/design.md` | TASK-003 | modify |
-| `zerg/data/commands/design.core.md` | TASK-003 | modify |
-| `zerg/data/commands/merge.md` | TASK-003 | modify |
-| `zerg/data/commands/merge.core.md` | TASK-003 | modify |
-| `zerg/data/commands/status.md` | TASK-003 | modify |
-| `zerg/data/commands/status.core.md` | TASK-003 | modify |
-| `zerg/data/commands/rush.md` | TASK-004 | modify |
-| `zerg/data/commands/rush.core.md` | TASK-004 | modify |
-| `zerg/data/commands/stop.md` | TASK-004 | modify |
-| `zerg/data/commands/cleanup.md` | TASK-004 | modify |
-| `zerg/data/commands/retry.md` | TASK-004 | modify |
-| `zerg/data/commands/estimate.md` | TASK-005 | modify |
-| `zerg/data/commands/estimate.core.md` | TASK-005 | modify |
-| `zerg/data/commands/debug.md` | TASK-005 | modify |
-| `zerg/data/commands/debug.core.md` | TASK-005 | modify |
-| `zerg/data/commands/plan.md` | TASK-006 | modify |
-| `zerg/data/commands/plan.core.md` | TASK-006 | modify |
-| `zerg/data/commands/git.details.md` | TASK-007 | modify |
+| `mahabharatha/commands/_utils.py` | TASK-001 | modify |
+| `mahabharatha/protocol_state.py` | TASK-002 | modify |
+| `mahabharatha/data/commands/design.md` | TASK-003 | modify |
+| `mahabharatha/data/commands/design.core.md` | TASK-003 | modify |
+| `mahabharatha/data/commands/merge.md` | TASK-003 | modify |
+| `mahabharatha/data/commands/merge.core.md` | TASK-003 | modify |
+| `mahabharatha/data/commands/status.md` | TASK-003 | modify |
+| `mahabharatha/data/commands/status.core.md` | TASK-003 | modify |
+| `mahabharatha/data/commands/kurukshetra.md` | TASK-004 | modify |
+| `mahabharatha/data/commands/kurukshetra.core.md` | TASK-004 | modify |
+| `mahabharatha/data/commands/stop.md` | TASK-004 | modify |
+| `mahabharatha/data/commands/cleanup.md` | TASK-004 | modify |
+| `mahabharatha/data/commands/retry.md` | TASK-004 | modify |
+| `mahabharatha/data/commands/estimate.md` | TASK-005 | modify |
+| `mahabharatha/data/commands/estimate.core.md` | TASK-005 | modify |
+| `mahabharatha/data/commands/debug.md` | TASK-005 | modify |
+| `mahabharatha/data/commands/debug.core.md` | TASK-005 | modify |
+| `mahabharatha/data/commands/plan.md` | TASK-006 | modify |
+| `mahabharatha/data/commands/plan.core.md` | TASK-006 | modify |
+| `mahabharatha/data/commands/git.details.md` | TASK-007 | modify |
 | `tests/unit/test_commands_utils.py` | TASK-008 | modify |
 | `tests/unit/test_lockfile.py` | TASK-008 | create |
 | `tests/integration/test_claim_enforcement.py` | TASK-009 | modify |
@@ -329,7 +329,7 @@ In `git.details.md`, the ship action pipeline step 1 (Commit) adds feature-scopi
 ```mermaid
 graph TD
     T001["TASK-001: detect_feature + lockfile"] --> T003["TASK-003: design/merge/status pre-flights"]
-    T001 --> T004["TASK-004: rush/stop/cleanup/retry pre-flights"]
+    T001 --> T004["TASK-004: kurukshetra/stop/cleanup/retry pre-flights"]
     T001 --> T005["TASK-005: estimate/debug pre-flights"]
     T001 --> T006["TASK-006: plan approval gate"]
     T001 --> T007["TASK-007: git ship scoping"]
@@ -378,8 +378,8 @@ graph TD
 - `pytest tests/unit/test_lockfile.py -v`
 - `pytest tests/integration/test_claim_enforcement.py -v`
 - `pytest tests/integration/test_concurrent_features.py -v`
-- `python -m zerg.validate_commands`
-- `grep -c 'ZERG_FEATURE' zerg/data/commands/*.md` (expect 15+ matches)
+- `python -m mahabharatha.validate_commands`
+- `grep -c 'ZERG_FEATURE' mahabharatha/data/commands/*.md` (expect 15+ matches)
 
 ---
 

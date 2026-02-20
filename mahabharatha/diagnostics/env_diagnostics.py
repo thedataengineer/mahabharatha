@@ -333,12 +333,12 @@ class ResourceDiagnostics:
 
 
 class ConfigValidator:
-    """Validate ZERG configuration files."""
+    """Validate MAHABHARATHA configuration files."""
 
     EXPECTED_KEYS = {"workers", "timeouts", "quality_gates", "mcp_servers"}
 
     def validate(self, config_path: Path = Path(".mahabharatha/config.yaml")) -> list[str]:
-        """Validate ZERG config file. Returns list of issues (empty = valid)."""
+        """Validate MAHABHARATHA config file. Returns list of issues (empty = valid)."""
         issues: list[str] = []
 
         if not config_path.exists():

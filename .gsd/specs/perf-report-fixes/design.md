@@ -25,7 +25,7 @@ No new components. All changes are modifications to existing files.
 | Test code | Remove unused imports | 6 test files |
 | Vulture adapter | Exclude test dirs | `vulture_adapter.py` |
 | jscpd adapter | Add ignore patterns | `jscpd_adapter.py` |
-| Git hygiene | Delete legacy scripts, gitignore htmlcov | `.gitignore`, `.zerg/*.py` |
+| Git hygiene | Delete legacy scripts, gitignore htmlcov | `.gitignore`, `.mahabharatha/*.py` |
 
 ## 3. Key Decisions
 
@@ -45,7 +45,7 @@ No new components. All changes are modifications to existing files.
 |------|-------------|-------|
 | PRF-L1-001 | Fix Dockerfile lint/security | `.devcontainer/Dockerfile` |
 | PRF-L1-002 | Remove unused vars/imports | `design.py` + 6 test files |
-| PRF-L1-003 | Delete legacy .zerg scripts | 5 `.zerg/*.py` files |
+| PRF-L1-003 | Delete legacy .mahabharatha scripts | 5 `.mahabharatha/*.py` files |
 | PRF-L1-004 | gitignore + remove htmlcov | `.gitignore`, `htmlcov/` |
 | PRF-L1-005 | Configure vulture to exclude tests | `vulture_adapter.py` |
 
@@ -53,8 +53,8 @@ No new components. All changes are modifications to existing files.
 | Task | Description | Files |
 |------|-------------|-------|
 | PRF-L2-001 | Configure jscpd ignore patterns | `jscpd_adapter.py` |
-| PRF-L2-002 | Refactor debug.py long functions | `zerg/commands/debug.py` |
-| PRF-L2-003 | Refactor backlog.py long function | `zerg/backlog.py` |
+| PRF-L2-002 | Refactor debug.py long functions | `mahabharatha/commands/debug.py` |
+| PRF-L2-003 | Refactor backlog.py long function | `mahabharatha/backlog.py` |
 
 ### Level 3 — Verification (1 task, depends on L2)
 | Task | Description | Files |
@@ -66,24 +66,24 @@ No new components. All changes are modifications to existing files.
 | File | Task | Operation |
 |------|------|-----------|
 | `.devcontainer/Dockerfile` | PRF-L1-001 | modify |
-| `zerg/commands/design.py` | PRF-L1-002 | modify |
+| `mahabharatha/commands/design.py` | PRF-L1-002 | modify |
 | `tests/integration/test_orchestrator_fixes.py` | PRF-L1-002 | modify |
 | `tests/unit/test_build_cmd.py` | PRF-L1-002 | modify |
 | `tests/unit/test_log_aggregator.py` | PRF-L1-002 | modify |
 | `tests/unit/test_orchestrator_timeout.py` | PRF-L1-002 | modify |
 | `tests/unit/test_state_sync.py` | PRF-L1-002 | modify |
 | `tests/unit/test_worker_protocol.py` | PRF-L1-002 | modify |
-| `.zerg/analyze.py` | PRF-L1-003 | delete |
-| `.zerg/build.py` | PRF-L1-003 | delete |
-| `.zerg/refactor.py` | PRF-L1-003 | delete |
-| `.zerg/review.py` | PRF-L1-003 | delete |
-| `.zerg/test_runner.py` | PRF-L1-003 | delete |
+| `.mahabharatha/analyze.py` | PRF-L1-003 | delete |
+| `.mahabharatha/build.py` | PRF-L1-003 | delete |
+| `.mahabharatha/refactor.py` | PRF-L1-003 | delete |
+| `.mahabharatha/review.py` | PRF-L1-003 | delete |
+| `.mahabharatha/test_runner.py` | PRF-L1-003 | delete |
 | `.gitignore` | PRF-L1-004 | modify |
 | `htmlcov/` | PRF-L1-004 | git rm |
-| `zerg/performance/adapters/vulture_adapter.py` | PRF-L1-005 | modify |
-| `zerg/performance/adapters/jscpd_adapter.py` | PRF-L2-001 | modify |
-| `zerg/commands/debug.py` | PRF-L2-002 | modify |
-| `zerg/backlog.py` | PRF-L2-003 | modify |
+| `mahabharatha/performance/adapters/vulture_adapter.py` | PRF-L1-005 | modify |
+| `mahabharatha/performance/adapters/jscpd_adapter.py` | PRF-L2-001 | modify |
+| `mahabharatha/commands/debug.py` | PRF-L2-002 | modify |
+| `mahabharatha/backlog.py` | PRF-L2-003 | modify |
 
 ## 6. Parallel Execution Notes
 

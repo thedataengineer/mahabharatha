@@ -30,17 +30,17 @@
     {
       "id": "TASK-002",
       "title": "Add validate_module_wiring() to validate_commands.py",
-      "description": "Add a new validation function that scans zerg/ for .py modules with zero production imports (test-only imports don't count). Allowlist: __init__.py, __main__.py, conftest.py, files with 'if __name__'. Add to validate_all() as a new check. Default to warning mode. Add --strict-wiring CLI flag for fail mode.",
+      "description": "Add a new validation function that scans mahabharatha/ for .py modules with zero production imports (test-only imports don't count). Allowlist: __init__.py, __main__.py, conftest.py, files with 'if __name__'. Add to validate_all() as a new check. Default to warning mode. Add --strict-wiring CLI flag for fail mode.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/validate_commands.py"],
+        "modify": ["mahabharatha/validate_commands.py"],
         "read": []
       },
       "verification": {
-        "command": "python -c \"from zerg.validate_commands import validate_module_wiring; print('import ok')\"",
+        "command": "python -c \"from mahabharatha.validate_commands import validate_module_wiring; print('import ok')\"",
         "timeout_seconds": 30
       },
       "consumers": ["TASK-005", "TASK-007"],
@@ -57,11 +57,11 @@
       "dependencies": ["TASK-002"],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/design.md", "zerg/data/commands/design.core.md"],
+        "modify": ["mahabharatha/data/commands/design.md", "mahabharatha/data/commands/design.core.md"],
         "read": []
       },
       "verification": {
-        "command": "grep -q 'consumers' zerg/data/commands/design.md && grep -q 'integration_test' zerg/data/commands/design.md",
+        "command": "grep -q 'consumers' mahabharatha/data/commands/design.md && grep -q 'integration_test' mahabharatha/data/commands/design.md",
         "timeout_seconds": 10
       },
       "consumers": [],
@@ -78,11 +78,11 @@
       "dependencies": ["TASK-002"],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/worker.core.md"],
-        "read": ["zerg/data/commands/worker.details.md"]
+        "modify": ["mahabharatha/data/commands/worker.core.md"],
+        "read": ["mahabharatha/data/commands/worker.details.md"]
       },
       "verification": {
-        "command": "grep -q 'integration_test\\|integration_verification\\|Integration Verification' zerg/data/commands/worker.core.md",
+        "command": "grep -q 'integration_test\\|integration_verification\\|Integration Verification' mahabharatha/data/commands/worker.core.md",
         "timeout_seconds": 10
       },
       "consumers": [],
@@ -99,11 +99,11 @@
       "dependencies": ["TASK-003", "TASK-004"],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/merge.core.md"],
+        "modify": ["mahabharatha/data/commands/merge.core.md"],
         "read": []
       },
       "verification": {
-        "command": "grep -q 'Wiring Verification\\|wiring' zerg/data/commands/merge.core.md",
+        "command": "grep -q 'Wiring Verification\\|wiring' mahabharatha/data/commands/merge.core.md",
         "timeout_seconds": 10
       },
       "consumers": [],
@@ -135,14 +135,14 @@
     {
       "id": "TASK-007",
       "title": "Write unit and integration tests for wiring enforcement",
-      "description": "Add tests for validate_module_wiring(): (1) Unit tests in test_validate_commands.py — module with production imports passes, module with only test imports warns, allowlisted files exempt. (2) Integration test in test_wiring_enforcement.py — end-to-end test running validate_module_wiring() against actual zerg/ package, verifying it detects known orphaned modules. Also validate the task-graph schema changes parse correctly.",
+      "description": "Add tests for validate_module_wiring(): (1) Unit tests in test_validate_commands.py — module with production imports passes, module with only test imports warns, allowlisted files exempt. (2) Integration test in test_wiring_enforcement.py — end-to-end test running validate_module_wiring() against actual mahabharatha/ package, verifying it detects known orphaned modules. Also validate the task-graph schema changes parse correctly.",
       "phase": "testing",
       "level": 4,
       "dependencies": ["TASK-005", "TASK-006"],
       "files": {
         "create": ["tests/integration/test_wiring_enforcement.py"],
         "modify": ["tests/unit/test_validate_commands.py"],
-        "read": ["zerg/validate_commands.py"]
+        "read": ["mahabharatha/validate_commands.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_validate_commands.py tests/integration/test_wiring_enforcement.py -v --tb=short",

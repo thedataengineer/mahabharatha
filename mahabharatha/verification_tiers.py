@@ -1,4 +1,4 @@
-"""Three-tier verification executor for ZERG tasks."""
+"""Three-tier verification executor for MAHABHARATHA tasks."""
 
 from __future__ import annotations
 

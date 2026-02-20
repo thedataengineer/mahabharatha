@@ -1,4 +1,4 @@
-"""Iterative improvement loop controller for ZERG."""
+"""Iterative improvement loop controller for MAHABHARATHA."""
 
 from __future__ import annotations
 

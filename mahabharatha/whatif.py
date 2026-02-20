@@ -1,7 +1,7 @@
-"""What-if analysis engine for ZERG rush planning.
+"""What-if analysis engine for MAHABHARATHA kurukshetra planning.
 
 Compares different worker counts and execution modes to help
-choose optimal rush configuration.
+choose optimal kurukshetra configuration.
 """
 
 from __future__ import annotations
@@ -44,7 +44,7 @@ class WhatIfReport:
 
 
 class WhatIfEngine:
-    """Compare different rush configurations."""
+    """Compare different kurukshetra configurations."""
 
     # Overhead multipliers per mode
     MODE_OVERHEAD = {

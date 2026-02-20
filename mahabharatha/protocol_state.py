@@ -1,4 +1,4 @@
-"""Worker protocol state machine for ZERG workers.
+"""Worker protocol state machine for MAHABHARATHA workers.
 
 Extracted from worker_protocol.py. Manages the worker lifecycle state machine:
 task claiming, readiness signalling, completion/failure reporting, checkpointing,
@@ -41,7 +41,7 @@ __all__ = ["WorkerProtocol", "run_worker", "WorkerContext"]
 
 
 class WorkerProtocol:
-    """Protocol state machine for ZERG workers.
+    """Protocol state machine for MAHABHARATHA workers.
 
     Implements the worker-side protocol for:
     - Task claiming and execution
@@ -66,7 +66,7 @@ class WorkerProtocol:
         Args:
             worker_id: Worker ID (from env if not provided)
             feature: Feature name (from env if not provided)
-            config: ZERG configuration
+            config: MAHABHARATHA configuration
             task_graph_path: Path to task graph JSON (from env if not provided)
             plugin_registry: Optional plugin registry for lifecycle hooks
         """
@@ -511,7 +511,7 @@ class WorkerProtocol:
         if self.git.has_changes():
             task_ref = self.current_task["id"] if self.current_task else "no-task"
             self.git.commit(
-                f"WIP: ZERG [{self.worker_id}] checkpoint during {task_ref}",
+                f"WIP: MAHABHARATHA [{self.worker_id}] checkpoint during {task_ref}",
                 add_all=True,
             )
 

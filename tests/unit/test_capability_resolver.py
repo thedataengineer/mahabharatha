@@ -131,7 +131,7 @@ class TestCapabilityResolverResolve:
 
     def test_resolve_loop_off(self, resolver, default_config):
         """CLI loop=False disables improvement loops."""
-        rc = resolver.resolve(cli_flags={"loop": False}, config=default_config, command="rush")
+        rc = resolver.resolve(cli_flags={"loop": False}, config=default_config, command="kurukshetra")
         assert rc.loop_enabled is False
 
     def test_resolve_iterations_override(self, resolver, default_config):

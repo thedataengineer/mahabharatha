@@ -49,12 +49,12 @@ Fix 8 GitHub issues covering quality gate improvements (#104-107) and orchestrat
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| StateManager | State persistence, validation, level/status filtering | `zerg/state.py` |
-| WorkerProtocol | Task claiming with pause/level awareness | `zerg/worker_protocol.py` |
-| WorkerMain | Entry point with timeout watchdog | `zerg/worker_main.py` |
-| CrossFileChecker | Dead code detection | `zerg/commands/analyze.py`, `zerg/ast_cache.py` |
-| ImportChainChecker | Import depth analysis | `zerg/commands/analyze.py` |
-| Command files | Task ecosystem conventions | `zerg/data/commands/*.md` |
+| StateManager | State persistence, validation, level/status filtering | `mahabharatha/state.py` |
+| WorkerProtocol | Task claiming with pause/level awareness | `mahabharatha/worker_protocol.py` |
+| WorkerMain | Entry point with timeout watchdog | `mahabharatha/worker_main.py` |
+| CrossFileChecker | Dead code detection | `mahabharatha/commands/analyze.py`, `mahabharatha/ast_cache.py` |
+| ImportChainChecker | Import depth analysis | `mahabharatha/commands/analyze.py` |
+| Command files | Task ecosystem conventions | `mahabharatha/data/commands/*.md` |
 
 ### 2.3 Data Flow
 
@@ -69,7 +69,7 @@ Fix 8 GitHub issues covering quality gate improvements (#104-107) and orchestrat
 ### 3.1 State Machine Validation (#111)
 
 ```python
-# zerg/state.py - VALID_TRANSITIONS constant
+# mahabharatha/state.py - VALID_TRANSITIONS constant
 VALID_TRANSITIONS: dict[str, set[str]] = {
     "pending": {"claimed", "in_progress", "failed"},
     "claimed": {"in_progress", "pending", "failed"},
@@ -88,7 +88,7 @@ if current_status and status_str not in VALID_TRANSITIONS.get(current_status, se
 ### 3.2 Level-Filtered Task Query (#110)
 
 ```python
-# zerg/state.py - new method
+# mahabharatha/state.py - new method
 def get_tasks_by_status_and_level(
     self, status: TaskStatus | str, level: int
 ) -> list[str]:
@@ -104,7 +104,7 @@ def get_tasks_by_status_and_level(
 ### 3.3 Pause Check in Task Claiming (#108)
 
 ```python
-# zerg/worker_protocol.py - claim_next_task() modification
+# mahabharatha/worker_protocol.py - claim_next_task() modification
 def claim_next_task(self, ...) -> Task | None:
     while True:
         self.state.load()
@@ -126,7 +126,7 @@ def claim_next_task(self, ...) -> Task | None:
 ### 3.4 Worker Timeout Watchdog (#109)
 
 ```python
-# zerg/worker_main.py - add signal handler and watchdog
+# mahabharatha/worker_main.py - add signal handler and watchdog
 import signal
 import threading
 
@@ -145,7 +145,7 @@ def setup_timeout_watchdog(timeout_seconds: int = 3600) -> threading.Timer:
 ### 3.5 CrossFileChecker Improvements (#107)
 
 ```python
-# zerg/ast_cache.py - enhanced collect_imports to track same-module usage
+# mahabharatha/ast_cache.py - enhanced collect_imports to track same-module usage
 def collect_same_module_usage(tree: ast.Module) -> set[str]:
     """Collect names used within the same module (function calls, attribute access)."""
     used: set[str] = set()
@@ -156,7 +156,7 @@ def collect_same_module_usage(tree: ast.Module) -> set[str]:
             used.add(node.attr)
     return used
 
-# zerg/commands/analyze.py - CrossFileChecker modifications
+# mahabharatha/commands/analyze.py - CrossFileChecker modifications
 # 1. Skip TYPE_CHECKING imports
 # 2. Include same-module usage in "imported" set
 # 3. Skip exception classes (usually caught, not imported)
@@ -165,7 +165,7 @@ def collect_same_module_usage(tree: ast.Module) -> set[str]:
 ### 3.6 ImportChainChecker TYPE_CHECKING Fix (#106)
 
 ```python
-# zerg/commands/analyze.py - skip TYPE_CHECKING block imports
+# mahabharatha/commands/analyze.py - skip TYPE_CHECKING block imports
 def _is_under_type_checking(node: ast.AST, tree: ast.Module) -> bool:
     """Check if import is inside 'if TYPE_CHECKING:' block."""
     for if_node in ast.walk(tree):
@@ -230,12 +230,12 @@ def _is_under_type_checking(node: ast.AST, tree: ast.Module) -> bool:
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/state.py` | TASK-002, TASK-003 | modify |
-| `zerg/worker_protocol.py` | TASK-005, TASK-006 | modify |
-| `zerg/worker_main.py` | TASK-008 | modify |
-| `zerg/commands/analyze.py` | TASK-009, TASK-011 | modify |
-| `zerg/ast_cache.py` | TASK-009 | modify |
-| `zerg/data/commands/*.md` | TASK-007 | modify (17 files) |
+| `mahabharatha/state.py` | TASK-002, TASK-003 | modify |
+| `mahabharatha/worker_protocol.py` | TASK-005, TASK-006 | modify |
+| `mahabharatha/worker_main.py` | TASK-008 | modify |
+| `mahabharatha/commands/analyze.py` | TASK-009, TASK-011 | modify |
+| `mahabharatha/ast_cache.py` | TASK-009 | modify |
+| `mahabharatha/data/commands/*.md` | TASK-007 | modify (17 files) |
 | `CHANGELOG.md` | TASK-012 | modify |
 
 ### 5.3 Dependency Graph
@@ -285,18 +285,18 @@ graph TD
 ### 7.3 Verification Commands
 ```bash
 # Foundation
-python -c "from zerg.state import StateManager; print('OK')"
+python -c "from mahabharatha.state import StateManager; print('OK')"
 ruff check .
 
 # Core
-python -c "from zerg.worker_protocol import WorkerProtocol; print('OK')"
+python -c "from mahabharatha.worker_protocol import WorkerProtocol; print('OK')"
 
 # Integration
 pytest tests/unit/test_state*.py -x -q
 pytest tests/unit/test_worker*.py -x -q
 
 # Quality
-python -m zerg.validate_commands
+python -m mahabharatha.validate_commands
 pytest tests/integration -x -q --ignore=tests/integration/test_container_e2e_live.py
 ```
 

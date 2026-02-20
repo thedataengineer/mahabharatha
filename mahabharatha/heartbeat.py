@@ -1,4 +1,4 @@
-"""Heartbeat-based worker health monitoring for ZERG."""
+"""Heartbeat-based worker health monitoring for MAHABHARATHA."""
 
 from __future__ import annotations
 

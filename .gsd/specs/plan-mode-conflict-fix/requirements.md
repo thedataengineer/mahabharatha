@@ -4,14 +4,14 @@
 - **Feature**: plan-mode-conflict-fix
 - **Status**: APPROVED
 - **Created**: 2026-02-12
-- **Author**: ZERG Plan Mode
+- **Author**: MAHABHARATHA Plan Mode
 
 ---
 
 ## 1. Problem Statement
 
 ### 1.1 Background
-ZERG's `/z:plan` command instructs Claude to "Press Shift+Tab twice" to enter Claude Code plan mode. Claude Code plan mode restricts tools to read-only (no Write, Edit, Bash). The command then requires Write (requirements.md) and Bash (mkdir) — which are blocked.
+MAHABHARATHA's `/z:plan` command instructs Claude to "Press Shift+Tab twice" to enter Claude Code plan mode. Claude Code plan mode restricts tools to read-only (no Write, Edit, Bash). The command then requires Write (requirements.md) and Bash (mkdir) — which are blocked.
 
 ### 1.2 Problem
 Two failure modes:
@@ -29,7 +29,7 @@ Two failure modes:
 ## 2. Users
 
 ### 2.1 Primary Users
-ZERG users running `/z:plan` and `/z:brainstorm` in Claude Code
+MAHABHARATHA users running `/z:plan` and `/z:brainstorm` in Claude Code
 
 ### 2.2 User Stories
 - As a user, I want `/z:plan` to automatically enter plan mode for analysis, then exit to write spec files, so that I get deep reasoning AND proper file outputs
@@ -65,14 +65,14 @@ ZERG users running `/z:plan` and `/z:brainstorm` in Claude Code
 
 ### 4.2 Out of Scope
 - Changes to Claude Code's plan mode behavior (platform-level)
-- Changes to other ZERG commands (design, rush, etc.)
+- Changes to other MAHABHARATHA commands (design, kurukshetra, etc.)
 - Changes to plan.details.md or brainstorm.details.md (reference material only)
 
 ### 4.3 Files to Modify
-1. `zerg/data/commands/plan.md`
-2. `zerg/data/commands/plan.core.md`
-3. `zerg/data/commands/brainstorm.md`
-4. `zerg/data/commands/brainstorm.core.md`
+1. `mahabharatha/data/commands/plan.md`
+2. `mahabharatha/data/commands/plan.core.md`
+3. `mahabharatha/data/commands/brainstorm.md`
+4. `mahabharatha/data/commands/brainstorm.core.md`
 
 ---
 

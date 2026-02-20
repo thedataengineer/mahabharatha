@@ -1,4 +1,4 @@
-"""Worker task assignment for ZERG."""
+"""Worker task assignment for MAHABHARATHA."""
 
 from collections import defaultdict
 from typing import Any

@@ -12,7 +12,7 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Enhance `/zerg:brainstorm` with 5 features: `--socratic` single-question mode with adaptive domain-specific question trees, dedicated trade-off exploration round, 4-checkpoint incremental design validation, and binary YAGNI gate. All changes are markdown command file edits — no Python code modifications. The architecture uses the existing core/details split pattern to keep behavioral flow in core.md (≤300 lines) and all templates/trees in details.md (unlimited).
+Enhance `/mahabharatha:brainstorm` with 5 features: `--socratic` single-question mode with adaptive domain-specific question trees, dedicated trade-off exploration round, 4-checkpoint incremental design validation, and binary YAGNI gate. All changes are markdown command file edits — no Python code modifications. The architecture uses the existing core/details split pattern to keep behavioral flow in core.md (≤300 lines) and all templates/trees in details.md (unlimited).
 
 ### 1.2 Goals
 - Single-question mode via `--socratic` flag with structured AskUserQuestion options
@@ -205,7 +205,7 @@ Domains: Auth (session/JWT/OAuth), API (REST/GraphQL/versioning), Data Pipeline 
 ### 4.2 All logic in markdown, no Python
 **Context**: Question trees could live in Python (testable) or YAML config (customizable) or markdown (context-efficient).
 **Decision**: All in brainstorm.details.md.
-**Rationale**: Minimizes context usage per ZERG's context engineering methodology. No new files to manage. Workers load details.md only when needed.
+**Rationale**: Minimizes context usage per MAHABHARATHA's context engineering methodology. No new files to manage. Workers load details.md only when needed.
 
 ### 4.3 6 domain trees at launch
 **Context**: Could start with 3 trees or ship all 6.
@@ -228,12 +228,12 @@ Domains: Auth (session/JWT/OAuth), API (REST/GraphQL/versioning), Data Pipeline 
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/data/commands/brainstorm.core.md` | TASK-001 | modify |
+| `mahabharatha/data/commands/brainstorm.core.md` | TASK-001 | modify |
 | `.gsd/specs/66-questioning-methodology/question-trees.md` | TASK-002 | create |
 | `.gsd/specs/66-questioning-methodology/new-templates.md` | TASK-003 | create |
 | `CHANGELOG.md` | TASK-004 | modify |
-| `zerg/data/commands/brainstorm.details.md` | TASK-005 | modify |
-| `zerg/data/commands/brainstorm.md` | TASK-006 | modify |
+| `mahabharatha/data/commands/brainstorm.details.md` | TASK-005 | modify |
+| `mahabharatha/data/commands/brainstorm.md` | TASK-006 | modify |
 | (no file — validation only) | TASK-007 | read-only |
 
 ### 5.3 Dependency Graph
@@ -268,18 +268,18 @@ L3:           T7 (validate)
 
 ### 7.1 Automated Verification (TASK-007)
 ```bash
-python -m zerg.validate_commands                                    # Drift checks pass
-wc -l zerg/data/commands/brainstorm.core.md                        # ≤ 300 lines
-diff zerg/data/commands/brainstorm.core.md zerg/data/commands/brainstorm.md  # Identical
-grep -c "socratic" zerg/data/commands/brainstorm.core.md           # ≥ 3 references
-grep -c "TaskCreate\|TaskUpdate" zerg/data/commands/brainstorm.core.md  # ≥ 2 markers
-grep -c "YAGNI" zerg/data/commands/brainstorm.details.md           # ≥ 1 reference
-grep -c "Saturation" zerg/data/commands/brainstorm.details.md      # ≥ 1 reference
+python -m mahabharatha.validate_commands                                    # Drift checks pass
+wc -l mahabharatha/data/commands/brainstorm.core.md                        # ≤ 300 lines
+diff mahabharatha/data/commands/brainstorm.core.md mahabharatha/data/commands/brainstorm.md  # Identical
+grep -c "socratic" mahabharatha/data/commands/brainstorm.core.md           # ≥ 3 references
+grep -c "TaskCreate\|TaskUpdate" mahabharatha/data/commands/brainstorm.core.md  # ≥ 2 markers
+grep -c "YAGNI" mahabharatha/data/commands/brainstorm.details.md           # ≥ 1 reference
+grep -c "Saturation" mahabharatha/data/commands/brainstorm.details.md      # ≥ 1 reference
 ```
 
 ### 7.2 Manual Validation
-- Run `/zerg:brainstorm test-domain --socratic` — expect single questions with options
-- Run `/zerg:brainstorm test-domain` — expect unchanged batch behavior
+- Run `/mahabharatha:brainstorm test-domain --socratic` — expect single questions with options
+- Run `/mahabharatha:brainstorm test-domain` — expect unchanged batch behavior
 - Verify question trees load for recognized domains (auth, api keywords)
 
 ---
@@ -298,4 +298,4 @@ Tasks T2 and T3 write to intermediate files in `.gsd/specs/` to avoid file owner
 
 ## 9. Approval
 
-Status: **DRAFT** — Awaiting user approval before `/zerg:rush`.
+Status: **DRAFT** — Awaiting user approval before `/mahabharatha:kurukshetra`.

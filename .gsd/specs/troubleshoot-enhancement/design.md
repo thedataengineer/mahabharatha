@@ -10,10 +10,10 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Enhance the ZERG troubleshoot system from basic regex error parsing to a world-class diagnostic engine with multi-language error intelligence, cross-worker log correlation, Bayesian hypothesis ranking, code-aware recovery planning, deep environment diagnostics, and interactive resolution workflows.
+Enhance the MAHABHARATHA troubleshoot system from basic regex error parsing to a world-class diagnostic engine with multi-language error intelligence, cross-worker log correlation, Bayesian hypothesis ranking, code-aware recovery planning, deep environment diagnostics, and interactive resolution workflows.
 
 ### 1.2 Goals
-- Make `/zerg:troubleshoot` the most comprehensive code debugging tool available
+- Make `/mahabharatha:troubleshoot` the most comprehensive code debugging tool available
 - Provide actionable, evidence-backed root cause analysis
 - Automate the entire diagnostic workflow from symptom to resolution
 
@@ -57,19 +57,19 @@ Enhance the ZERG troubleshoot system from basic regex error parsing to a world-c
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| ErrorIntelEngine | Multi-language error parsing, fingerprinting, chain analysis | `zerg/diagnostics/error_intel.py` |
-| LogCorrelator | Timeline reconstruction, cross-worker correlation, temporal clustering | `zerg/diagnostics/log_correlator.py` |
-| HypothesisEngine | Bayesian scoring, evidence tracking, auto-testing, knowledge base | `zerg/diagnostics/hypothesis_engine.py` |
-| CodeAwareFixer | Dependency graph, git-aware recovery, context-aware fix suggestions | `zerg/diagnostics/code_fixer.py` |
-| EnvDiagnostics | Python env, Docker, network, resources, config validation | `zerg/diagnostics/env_diagnostics.py` |
-| InteractiveWizard | Guided troubleshooting, progressive disclosure, session persistence | `zerg/diagnostics/interactive.py` |
-| ReportGenerator | Markdown/JSON/HTML report generation | `zerg/diagnostics/report_generator.py` |
-| DiagnosticTypes | Shared types, enums, protocols | `zerg/diagnostics/types.py` |
-| TroubleshootCommand | Enhanced orchestrator integrating all engines | `zerg/commands/troubleshoot.py` (modify) |
+| ErrorIntelEngine | Multi-language error parsing, fingerprinting, chain analysis | `mahabharatha/diagnostics/error_intel.py` |
+| LogCorrelator | Timeline reconstruction, cross-worker correlation, temporal clustering | `mahabharatha/diagnostics/log_correlator.py` |
+| HypothesisEngine | Bayesian scoring, evidence tracking, auto-testing, knowledge base | `mahabharatha/diagnostics/hypothesis_engine.py` |
+| CodeAwareFixer | Dependency graph, git-aware recovery, context-aware fix suggestions | `mahabharatha/diagnostics/code_fixer.py` |
+| EnvDiagnostics | Python env, Docker, network, resources, config validation | `mahabharatha/diagnostics/env_diagnostics.py` |
+| InteractiveWizard | Guided troubleshooting, progressive disclosure, session persistence | `mahabharatha/diagnostics/interactive.py` |
+| ReportGenerator | Markdown/JSON/HTML report generation | `mahabharatha/diagnostics/report_generator.py` |
+| DiagnosticTypes | Shared types, enums, protocols | `mahabharatha/diagnostics/types.py` |
+| TroubleshootCommand | Enhanced orchestrator integrating all engines | `mahabharatha/commands/troubleshoot.py` (modify) |
 
 ### 2.3 Data Flow
 
-1. User invokes `zerg troubleshoot` with error/feature/flags
+1. User invokes `mahabharatha troubleshoot` with error/feature/flags
 2. ErrorIntelEngine parses and classifies the error across languages
 3. LogCorrelator builds timeline and finds cross-worker patterns
 4. HypothesisEngine generates ranked hypotheses with evidence
@@ -195,21 +195,21 @@ class ScoredHypothesis:
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/diagnostics/types.py` | TE-L1-001 | create |
-| `zerg/diagnostics/knowledge_base.py` | TE-L1-002 | create |
-| `zerg/diagnostics/error_intel.py` | TE-L2-001 | create |
-| `zerg/diagnostics/log_correlator.py` | TE-L2-002 | create |
-| `zerg/diagnostics/hypothesis_engine.py` | TE-L2-003 | create |
-| `zerg/diagnostics/code_fixer.py` | TE-L2-004 | create |
-| `zerg/diagnostics/env_diagnostics.py` | TE-L2-005 | create |
-| `zerg/commands/troubleshoot.py` | TE-L3-001 | modify |
-| `zerg/diagnostics/__init__.py` | TE-L3-002 | modify |
+| `mahabharatha/diagnostics/types.py` | TE-L1-001 | create |
+| `mahabharatha/diagnostics/knowledge_base.py` | TE-L1-002 | create |
+| `mahabharatha/diagnostics/error_intel.py` | TE-L2-001 | create |
+| `mahabharatha/diagnostics/log_correlator.py` | TE-L2-002 | create |
+| `mahabharatha/diagnostics/hypothesis_engine.py` | TE-L2-003 | create |
+| `mahabharatha/diagnostics/code_fixer.py` | TE-L2-004 | create |
+| `mahabharatha/diagnostics/env_diagnostics.py` | TE-L2-005 | create |
+| `mahabharatha/commands/troubleshoot.py` | TE-L3-001 | modify |
+| `mahabharatha/diagnostics/__init__.py` | TE-L3-002 | modify |
 | `tests/unit/test_diagnostics/test_types.py` | TE-L4-001 | create |
 | `tests/unit/test_diagnostics/test_error_intel.py` | TE-L4-002 | create |
 | `tests/unit/test_diagnostics/test_log_correlator.py` | TE-L4-003 | create |
 | `tests/unit/test_diagnostics/test_hypothesis_engine.py` | TE-L4-004 | create |
 | `tests/unit/test_diagnostics/test_code_fixer.py` | TE-L4-005 | create |
-| `zerg/data/commands/zerg:troubleshoot.md` | TE-L5-001 | modify |
+| `mahabharatha/data/commands/mahabharatha:troubleshoot.md` | TE-L5-001 | modify |
 
 ### Dependency Graph
 

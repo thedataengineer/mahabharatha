@@ -82,7 +82,7 @@ run: pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m "not slow" -v -
 
 To:
 ```yaml
-run: pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m "not slow and not docker" --cov=zerg --cov-fail-under=75 -v --tb=short --timeout=120 --splits 2 --group ${{ matrix.shard }}
+run: pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m "not slow and not docker" --cov=mahabharatha --cov-fail-under=75 -v --tb=short --timeout=120 --splits 2 --group ${{ matrix.shard }}
 ```
 
 ### 3.3 Thinning Rules (from requirements)
@@ -219,10 +219,10 @@ Level 3 (depends on ALL):
 
 ### 7.2 Final Verification (TASK-008)
 1. `pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m "not slow and not docker" --timeout=120`
-2. `pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m "not slow and not docker" --cov=zerg --cov-fail-under=75 --timeout=120`
+2. `pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m "not slow and not docker" --cov=mahabharatha --cov-fail-under=75 --timeout=120`
 3. `pytest -m smoke -x --timeout=5`
-4. `python -c "import zerg; print('OK')"`
-5. `python -m zerg.validate_commands`
+4. `python -c "import mahabharatha; print('OK')"`
+5. `python -m mahabharatha.validate_commands`
 6. Count total tests in range 3,200-3,500
 7. Regenerate `.test_durations`
 

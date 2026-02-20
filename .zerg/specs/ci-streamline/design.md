@@ -4,7 +4,7 @@
 - **Feature**: ci-streamline
 - **Status**: APPROVED
 - **Created**: 2026-02-05
-- **Source**: .zerg/specs/ci-streamline/requirements.md
+- **Source**: .mahabharatha/specs/ci-streamline/requirements.md
 
 ---
 
@@ -112,7 +112,7 @@ quality:
       run: ruff check . && ruff format --check .
 
     - name: Validate command files
-      run: python -m zerg.validate_commands
+      run: python -m mahabharatha.validate_commands
 
     - name: Check CHANGELOG.md updated
       if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'skip-changelog')

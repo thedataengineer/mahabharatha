@@ -1,4 +1,4 @@
-"""Integration tests for rush command mode flag."""
+"""Integration tests for kurukshetra command mode flag."""
 
 import pytest
 from click.testing import CliRunner
@@ -9,17 +9,17 @@ pytestmark = pytest.mark.docker
 
 
 class TestRushCommand:
-    """Test suite for rush command --mode option."""
+    """Test suite for kurukshetra command --mode option."""
 
     def test_rush_help_shows_mode_option(self) -> None:
-        """Rush command help shows --mode option with all choices.
+        """Kurukshetra command help shows --mode option with all choices.
 
-        Verifies that running 'mahabharatha rush --help' displays:
+        Verifies that running 'mahabharatha kurukshetra --help' displays:
         - The --mode or -m flag
         - All three mode choices: subprocess, container, auto
         """
         runner = CliRunner()
-        result = runner.invoke(cli, ["rush", "--help"])
+        result = runner.invoke(cli, ["kurukshetra", "--help"])
 
         assert result.exit_code == 0, f"Help command failed: {result.output}"
 

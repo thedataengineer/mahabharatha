@@ -1,20 +1,20 @@
-# /zerg:logs
+# /mahabharatha:logs
 
 Stream, filter, and aggregate worker logs for debugging and monitoring.
 
 ## Synopsis
 
 ```
-/zerg:logs [WORKER_ID] [OPTIONS]
+/mahabharatha:logs [WORKER_ID] [OPTIONS]
 ```
 
 ## Description
 
-`/zerg:logs` provides access to structured JSONL logs written by workers and the orchestrator. It supports filtering by worker, task, log level, execution phase, event type, and time range. Logs can be viewed in human-readable format or exported as raw JSON.
+`/mahabharatha:logs` provides access to structured JSONL logs written by workers and the orchestrator. It supports filtering by worker, task, log level, execution phase, event type, and time range. Logs can be viewed in human-readable format or exported as raw JSON.
 
 ### Log Format
 
-Workers write structured JSON lines to `.zerg/logs/workers/worker-<id>.jsonl`. Each entry contains:
+Workers write structured JSON lines to `.mahabharatha/logs/workers/worker-<id>.jsonl`. Each entry contains:
 
 | Field | Required | Description |
 |-------|----------|-------------|
@@ -95,57 +95,57 @@ Each task produces artifact files that can be viewed with `--artifacts`:
 
 ```bash
 # Show recent logs from all workers
-/zerg:logs
+/mahabharatha:logs
 
 # Show logs from worker 1
-/zerg:logs 1
+/mahabharatha:logs 1
 
 # Follow logs in real-time
-/zerg:logs --follow
+/mahabharatha:logs --follow
 
 # Show only errors
-/zerg:logs --level error
+/mahabharatha:logs --level error
 
 # Show more lines
-/zerg:logs --tail 200
+/mahabharatha:logs --tail 200
 
 # Aggregate all worker logs by timestamp
-/zerg:logs --aggregate
+/mahabharatha:logs --aggregate
 
 # Filter to a specific task
-/zerg:logs --task TASK-015
+/mahabharatha:logs --task TASK-015
 
 # Show task artifacts (Claude output, verification, git diff)
-/zerg:logs --artifacts TASK-015
+/mahabharatha:logs --artifacts TASK-015
 
 # Filter by phase and event
-/zerg:logs --aggregate --phase verify --event verification_failed
+/mahabharatha:logs --aggregate --phase verify --event verification_failed
 
 # Time range filtering
-/zerg:logs --aggregate --since 2026-01-28T10:00:00Z --until 2026-01-28T12:00:00Z
+/mahabharatha:logs --aggregate --since 2026-01-28T10:00:00Z --until 2026-01-28T12:00:00Z
 
 # Text search
-/zerg:logs --aggregate --search "failed"
+/mahabharatha:logs --aggregate --search "failed"
 
 # Export structured logs for external analysis
-/zerg:logs --aggregate --json > logs.jsonl
+/mahabharatha:logs --aggregate --json > logs.jsonl
 ```
 
 ## Log Locations
 
 | Log Type | Path |
 |----------|------|
-| Worker JSONL logs | `.zerg/logs/workers/worker-<id>.jsonl` |
-| Orchestrator log | `.zerg/logs/orchestrator.jsonl` |
-| Task execution log | `.zerg/logs/tasks/<TASK-ID>/execution.jsonl` |
-| Claude output | `.zerg/logs/tasks/<TASK-ID>/claude_output.txt` |
-| Verification output | `.zerg/logs/tasks/<TASK-ID>/verification_output.txt` |
-| Git diff | `.zerg/logs/tasks/<TASK-ID>/git_diff.patch` |
-| Legacy worker logs | `.zerg/logs/worker-<id>.log` |
+| Worker JSONL logs | `.mahabharatha/logs/workers/worker-<id>.jsonl` |
+| Orchestrator log | `.mahabharatha/logs/orchestrator.jsonl` |
+| Task execution log | `.mahabharatha/logs/tasks/<TASK-ID>/execution.jsonl` |
+| Claude output | `.mahabharatha/logs/tasks/<TASK-ID>/claude_output.txt` |
+| Verification output | `.mahabharatha/logs/tasks/<TASK-ID>/verification_output.txt` |
+| Git diff | `.mahabharatha/logs/tasks/<TASK-ID>/git_diff.patch` |
+| Legacy worker logs | `.mahabharatha/logs/worker-<id>.log` |
 
 ## See Also
 
-- [[zerg-status]] -- High-level progress overview
-- [[zerg-retry]] -- Re-run tasks identified through log inspection
-- [[zerg-cleanup]] -- Remove log files with `--keep-logs` option to preserve them
-- [[zerg-Reference]] -- Full command index
+- [[mahabharatha-status]] -- High-level progress overview
+- [[mahabharatha-retry]] -- Re-run tasks identified through log inspection
+- [[mahabharatha-cleanup]] -- Remove log files with `--keep-logs` option to preserve them
+- [[mahabharatha-Reference]] -- Full command index

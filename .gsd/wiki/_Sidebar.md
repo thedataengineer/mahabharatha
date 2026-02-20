@@ -1,4 +1,4 @@
-**ZERG Wiki**
+**MAHABHARATHA Wiki**
 
 **Getting Started**
 - [[Home]]

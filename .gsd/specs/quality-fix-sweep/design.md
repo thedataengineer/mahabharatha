@@ -13,8 +13,8 @@
 Fix all 182 mypy errors and 19 ruff lint violations. Work is partitioned by file ownership to enable maximum parallelization. Each task owns a disjoint set of files.
 
 ### 1.2 Goals
-- Zero mypy errors (`python -m mypy zerg/`)
-- Zero ruff errors (`python -m ruff check zerg/`)
+- Zero mypy errors (`python -m mypy mahabharatha/`)
+- Zero ruff errors (`python -m ruff check mahabharatha/`)
 - No behavioral changes — type fixes only
 - All existing tests continue to pass
 
@@ -61,7 +61,7 @@ Bulk annotation fixes across types.py, backlog.py, diagnostics, commands, and li
 | QFS-L1-002 | commands/stop.py |
 | QFS-L1-003 | commands/retry.py |
 | QFS-L1-004 | commands/merge_cmd.py, types.py (MergeFlowResult only) |
-| QFS-L1-005 | commands/rush.py |
+| QFS-L1-005 | commands/kurukshetra.py |
 | QFS-L1-006 | commands/review.py |
 | QFS-L1-007 | commands/plan.py |
 | QFS-L2-001 | state.py |
@@ -82,7 +82,7 @@ Bulk annotation fixes across types.py, backlog.py, diagnostics, commands, and li
 
 Each task verifies with: `python -m mypy {owned_files} --no-error-summary && python -m ruff check {owned_files}`
 
-Final gate: `python -m mypy zerg/ && python -m ruff check zerg/ && python -m pytest tests/unit/ -x -q`
+Final gate: `python -m mypy mahabharatha/ && python -m ruff check mahabharatha/ && python -m pytest tests/unit/ -x -q`
 
 ---
 

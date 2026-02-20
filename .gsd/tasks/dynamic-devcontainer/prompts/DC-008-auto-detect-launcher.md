@@ -5,26 +5,26 @@
 
 ## Objective
 
-Update `_create_launcher()` in `zerg/orchestrator.py` to auto-detect the appropriate launcher:
+Update `_create_launcher()` in `mahabharatha/orchestrator.py` to auto-detect the appropriate launcher:
 - Use ContainerLauncher if `.devcontainer/devcontainer.json` exists AND Docker image is built
 - Otherwise use SubprocessLauncher
 - Config override takes precedence
 
 ## Files Owned
 
-- `zerg/orchestrator.py` (modify)
+- `mahabharatha/orchestrator.py` (modify)
 
 ## Files to Read
 
-- `zerg/launcher.py` (ContainerLauncher.docker_available, image_exists)
-- `zerg/config.py` (WorkersConfig.launcher_type)
+- `mahabharatha/launcher.py` (ContainerLauncher.docker_available, image_exists)
+- `mahabharatha/config.py` (WorkersConfig.launcher_type)
 
 ## Implementation
 
 Update `_create_launcher()` method:
 
 ```python
-from zerg.launcher import ContainerLauncher, LauncherConfig, LauncherType, SubprocessLauncher, WorkerLauncher
+from mahabharatha.launcher import ContainerLauncher, LauncherConfig, LauncherType, SubprocessLauncher, WorkerLauncher
 
 
 def _create_launcher(self) -> WorkerLauncher:
@@ -85,9 +85,9 @@ def _auto_detect_launcher(self, config: LauncherConfig) -> WorkerLauncher:
         return SubprocessLauncher(config)
 
     # Check if image is built
-    if not ContainerLauncher.image_exists("zerg-worker"):
+    if not ContainerLauncher.image_exists("mahabharatha-worker"):
         logger.info("Devcontainer exists but image not built, using SubprocessLauncher")
-        logger.info("Run 'zerg init --with-containers' to build the image")
+        logger.info("Run 'mahabharatha init --with-containers' to build the image")
         config.launcher_type = LauncherType.SUBPROCESS
         return SubprocessLauncher(config)
 
@@ -125,8 +125,8 @@ def container_mode_available(self) -> tuple[bool, str]:
     if not ContainerLauncher.docker_available():
         return False, "Docker is not available or not running"
 
-    if not ContainerLauncher.image_exists("zerg-worker"):
-        return False, "Docker image 'zerg-worker' not built (run zerg init --with-containers)"
+    if not ContainerLauncher.image_exists("mahabharatha-worker"):
+        return False, "Docker image 'mahabharatha-worker' not built (run mahabharatha init --with-containers)"
 
     return True, "Container mode available"
 ```
@@ -135,9 +135,9 @@ def container_mode_available(self) -> tuple[bool, str]:
 
 ```bash
 python -c "
-from zerg.orchestrator import Orchestrator
-from zerg.config import ZergConfig
-from zerg.launcher import SubprocessLauncher, ContainerLauncher
+from mahabharatha.orchestrator import Orchestrator
+from mahabharatha.config import ZergConfig
+from mahabharatha.launcher import SubprocessLauncher, ContainerLauncher
 
 # Test with default config (should auto-detect)
 config = ZergConfig()
@@ -162,4 +162,4 @@ print(f'Reason: {reason}')
 - [ ] get_launcher_mode() returns current mode
 - [ ] container_mode_available() returns availability + reason
 - [ ] Proper logging for mode selection
-- [ ] No ruff errors: `ruff check zerg/orchestrator.py`
+- [ ] No ruff errors: `ruff check mahabharatha/orchestrator.py`

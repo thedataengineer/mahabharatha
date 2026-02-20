@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 Metrics Collector."""
+"""Tests for MAHABHARATHA v2 Metrics Collector."""
 
 import json
 import sys

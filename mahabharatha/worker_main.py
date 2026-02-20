@@ -1,4 +1,4 @@
-"""ZERG worker subprocess entrypoint.
+"""MAHABHARATHA worker subprocess entrypoint.
 
 This module provides the CLI entry point for worker subprocesses.
 It initializes the worker environment and starts the worker protocol.
@@ -18,7 +18,7 @@ def parse_args() -> argparse.Namespace:
     """
     parser = argparse.ArgumentParser(
         prog="mahabharatha.worker_main",
-        description="ZERG Worker Subprocess - Execute tasks in parallel",
+        description="MAHABHARATHA Worker Subprocess - Execute tasks in parallel",
     )
 
     parser.add_argument(
@@ -86,7 +86,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--version",
         action="version",
-        version="ZERG Worker 1.0.0",
+        version="MAHABHARATHA Worker 1.0.0",
     )
 
     return parser.parse_args()
@@ -103,7 +103,7 @@ def setup_environment(args: argparse.Namespace) -> dict[str, str]:
     """
     env = os.environ.copy()
 
-    # Set ZERG-specific environment
+    # Set MAHABHARATHA-specific environment
     env["ZERG_WORKER_ID"] = str(args.worker_id)
     env["ZERG_FEATURE"] = args.feature
     env["ZERG_WORKTREE"] = str(args.worktree.resolve())

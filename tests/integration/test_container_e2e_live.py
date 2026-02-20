@@ -2,7 +2,7 @@
 
 These tests require a real Docker daemon and are skipped when Docker
 is not available. All containers and images use a '-test' suffix to
-avoid interfering with real ZERG containers.
+avoid interfering with real MAHABHARATHA containers.
 """
 
 import json

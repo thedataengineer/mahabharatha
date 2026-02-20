@@ -27,8 +27,8 @@ Without fixes: commit messages with `<`, `>`, `&` render as `&amp;lt;` in PR bod
 ## 2. Users
 
 ### 2.1 Primary Users
-- ZERG maintainers creating PRs via `zerg git pr`
-- ZERG maintainers using `zerg git rewrite`
+- MAHABHARATHA maintainers creating PRs via `mahabharatha git pr`
+- MAHABHARATHA maintainers using `mahabharatha git rewrite`
 
 ### 2.2 User Stories
 - As a maintainer, I want PR bodies to render commit messages correctly so angle brackets and ampersands display properly
@@ -68,7 +68,7 @@ env["GIT_SEQUENCE_EDITOR"] = f"python3 {shlex.quote(script_path)}"
 Requires `import shlex` at top of file (or verify existing).
 
 **FR-004 (verification only):**
-- `gh api repos/rocklambros/zerg/code-scanning/alerts` confirms 0 open alerts for `cyclic-import` and `undefined-export` rules.
+- `gh api repos/rocklambros/mahabharatha/code-scanning/alerts` confirms 0 open alerts for `cyclic-import` and `undefined-export` rules.
 - No code changes needed. Document as verified in CHANGELOG.
 
 ### 3.2 Business Rules
@@ -126,7 +126,7 @@ Requires `import shlex` at top of file (or verify existing).
 - [ ] PR body renders `<Tag>` correctly (no double-encoding)
 - [ ] `shlex.quote()` wraps script_path at both locations
 - [ ] `python -m pytest tests/ --timeout=120` — green
-- [ ] `ruff check zerg/git/pr_engine.py zerg/git/history_engine.py` — clean
+- [ ] `ruff check mahabharatha/git/pr_engine.py mahabharatha/git/history_engine.py` — clean
 - [ ] CodeQL cyclic-import/undefined-export alerts confirmed at 0
 
 ---

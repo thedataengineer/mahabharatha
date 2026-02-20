@@ -13,7 +13,7 @@ Quality gates run after each level completes. Stage 1 catches requirements misse
 ## Files to Create
 
 ```
-.zerg/
+.mahabharatha/
 └── gates/
     ├── __init__.py           # Gate runner
     ├── spec_compliance.py    # Stage 1 checks
@@ -25,7 +25,7 @@ Quality gates run after each level completes. Stage 1 catches requirements misse
 ```python
 class SpecComplianceGate:
     """Stage 1: Verify implementation matches spec."""
-    
+
     def run(self, level: int, tasks: list[Task]) -> GateResult:
         checks = [
             self._check_requirements_met,
@@ -33,13 +33,13 @@ class SpecComplianceGate:
             self._check_file_ownership,
             self._check_dependencies_respected
         ]
-        
+
         failures = []
         for check in checks:
             result = check(level, tasks)
             if not result.passed:
                 failures.extend(result.issues)
-        
+
         return GateResult(
             stage=1,
             passed=len(failures) == 0,
@@ -52,7 +52,7 @@ class SpecComplianceGate:
 ```python
 class CodeQualityGate:
     """Stage 2: Verify code quality standards."""
-    
+
     def run(self, level: int, changed_files: list[str]) -> GateResult:
         checks = [
             self._run_linter,
@@ -66,7 +66,7 @@ class CodeQualityGate:
 ## Verification
 
 ```bash
-cd .zerg && python -c "
+cd .mahabharatha && python -c "
 from gates import run_spec_compliance, run_code_quality
 
 # Test gates exist and are callable
@@ -83,7 +83,7 @@ print('OK: Quality gates ready')
 
 ---
 
-# L3-TASK-002: /zerg:analyze Command
+# L3-TASK-002: /mahabharatha:analyze Command
 
 ## Objective
 
@@ -99,9 +99,9 @@ Analyze provides deep code quality insights beyond basic linting.
 
 ```
 .claude/commands/
-└── zerg:analyze.md
+└── mahabharatha:analyze.md
 
-.zerg/
+.mahabharatha/
 └── analyze.py
 ```
 
@@ -116,7 +116,7 @@ Analyze provides deep code quality insights beyond basic linting.
 ## Usage
 
 ```bash
-/zerg:analyze [--check lint|complexity|coverage|security|all]
+/mahabharatha:analyze [--check lint|complexity|coverage|security|all]
               [--format text|json|sarif]
               [--threshold complexity=10]
 ```
@@ -124,7 +124,7 @@ Analyze provides deep code quality insights beyond basic linting.
 ## Verification
 
 ```bash
-cd .zerg && python -c "
+cd .mahabharatha && python -c "
 from analyze import AnalyzeCommand
 ac = AnalyzeCommand()
 print(ac.supported_checks())
@@ -133,7 +133,7 @@ print(ac.supported_checks())
 
 ---
 
-# L3-TASK-003: /zerg:test Command
+# L3-TASK-003: /mahabharatha:test Command
 
 ## Objective
 
@@ -143,9 +143,9 @@ Implement test generation, execution, and coverage analysis.
 
 ```
 .claude/commands/
-└── zerg:test.md
+└── mahabharatha:test.md
 
-.zerg/
+.mahabharatha/
 └── test_runner.py
 ```
 
@@ -160,7 +160,7 @@ Implement test generation, execution, and coverage analysis.
 ## Usage
 
 ```bash
-/zerg:test [--generate]      # Generate test stubs
+/mahabharatha:test [--generate]      # Generate test stubs
            [--coverage]      # Report coverage
            [--watch]         # Watch mode
            [--parallel N]    # Parallel execution
@@ -168,7 +168,7 @@ Implement test generation, execution, and coverage analysis.
 
 ---
 
-# L3-TASK-004: /zerg:security Command
+# L3-TASK-004: /mahabharatha:security Command
 
 ## Objective
 
@@ -178,9 +178,9 @@ Implement security review, vulnerability scanning, and hardening.
 
 ```
 .claude/commands/
-└── zerg:security.md
+└── mahabharatha:security.md
 
-.zerg/
+.mahabharatha/
 └── security.py
 ```
 
@@ -195,14 +195,14 @@ Implement security review, vulnerability scanning, and hardening.
 ## Usage
 
 ```bash
-/zerg:security [--preset owasp|pci|hipaa]
+/mahabharatha:security [--preset owasp|pci|hipaa]
                [--autofix]
                [--format text|sarif]
 ```
 
 ---
 
-# L3-TASK-005: /zerg:refactor Command
+# L3-TASK-005: /mahabharatha:refactor Command
 
 ## Objective
 
@@ -212,9 +212,9 @@ Implement automated code improvement and cleanup.
 
 ```
 .claude/commands/
-└── zerg:refactor.md
+└── mahabharatha:refactor.md
 
-.zerg/
+.mahabharatha/
 └── refactor.py
 ```
 
@@ -229,14 +229,14 @@ Implement automated code improvement and cleanup.
 ## Usage
 
 ```bash
-/zerg:refactor [--transforms dead-code,simplify]
+/mahabharatha:refactor [--transforms dead-code,simplify]
                [--dry-run]
                [--interactive]
 ```
 
 ---
 
-# L3-TASK-006: /zerg:review Command
+# L3-TASK-006: /mahabharatha:review Command
 
 ## Objective
 
@@ -246,9 +246,9 @@ Implement two-stage code review workflow.
 
 ```
 .claude/commands/
-└── zerg:review.md
+└── mahabharatha:review.md
 
-.zerg/
+.mahabharatha/
 └── review.py
 ```
 
@@ -262,13 +262,13 @@ Implement two-stage code review workflow.
 ## Workflow
 
 ```
-/zerg:review --mode prepare  # Prepare changes for review
-/zerg:review --mode full     # Run both spec and quality checks
+/mahabharatha:review --mode prepare  # Prepare changes for review
+/mahabharatha:review --mode full     # Run both spec and quality checks
 ```
 
 ---
 
-# L3-TASK-007: /zerg:debug Command
+# L3-TASK-007: /mahabharatha:debug Command
 
 ## Objective
 
@@ -278,9 +278,9 @@ Implement systematic debugging with root cause analysis.
 
 ```
 .claude/commands/
-└── zerg:debug.md
+└── mahabharatha:debug.md
 
-.zerg/
+.mahabharatha/
 └── debug.py
 ```
 
@@ -301,7 +301,7 @@ Implement systematic debugging with root cause analysis.
 ## Usage
 
 ```bash
-/zerg:debug [--error "error message"]
+/mahabharatha:debug [--error "error message"]
                    [--stacktrace path/to/trace]
                    [--verbose]
 ```

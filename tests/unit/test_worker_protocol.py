@@ -1,4 +1,4 @@
-"""Unit tests for ZERG worker_protocol module.
+"""Unit tests for MAHABHARATHA worker_protocol module.
 
 Tests the WorkerProtocol class and related components for worker-side
 communication and task execution.

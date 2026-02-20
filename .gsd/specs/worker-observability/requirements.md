@@ -8,11 +8,11 @@
 
 ## Summary
 
-Close remaining gaps on worker intelligence (#27, #30) and build token usage metrics (#24). PR #95 delivered ~85-90% of #27/#30 code. This feature wires existing modules into `/zerg:status`, adds incremental repo map indexing, and builds the token metrics subsystem.
+Close remaining gaps on worker intelligence (#27, #30) and build token usage metrics (#24). PR #95 delivered ~85-90% of #27/#30 code. This feature wires existing modules into `/mahabharatha:status`, adds incremental repo map indexing, and builds the token metrics subsystem.
 
 ## Functional Requirements
 
-### FR-1: Wire health data into /zerg:status (closes #27)
+### FR-1: Wire health data into /mahabharatha:status (closes #27)
 - Per-worker HEALTH table: worker ID, status, current task, step, progress, restart count
 - Escalation summary: unresolved count, details
 - Data sources: heartbeat-{id}.json, escalations.json, progress-{id}.json
@@ -20,8 +20,8 @@ Close remaining gaps on worker intelligence (#27, #30) and build token usage met
 ### FR-2: Incremental repo map indexing (closes #30)
 - MD5 hash-based staleness detection per file
 - Selective re-parse only changed files
-- Persist index in .zerg/state/repo-index.json
-- Wire stats into /zerg:status REPO MAP section
+- Persist index in .mahabharatha/state/repo-index.json
+- Wire stats into /mahabharatha:status REPO MAP section
 
 ### FR-3: Token usage metrics (closes #24)
 - TokenCounter: optional Anthropic SDK API counting (OFF by default), heuristic fallback
@@ -32,7 +32,7 @@ Close remaining gaps on worker intelligence (#27, #30) and build token usage met
 
 ## Non-Functional Requirements
 
-- anthropic is an optional dependency (pip install zerg[metrics])
+- anthropic is an optional dependency (pip install mahabharatha[metrics])
 - All token counting errors caught silently, fall back to heuristic
 - Dashboard labels "(estimated)" vs "(exact)" to indicate counting mode
 - Atomic file writes for all state JSON (tempfile + rename pattern)

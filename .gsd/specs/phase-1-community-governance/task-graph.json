@@ -10,7 +10,7 @@
     {
       "id": "TASK-001",
       "title": "Create bug report issue template",
-      "description": "Create .github/ISSUE_TEMPLATE/bug_report.yml with YAML form fields: description (required), repro steps (required), expected behavior (required), actual behavior (required), ZERG version (required), Python version (required), OS (dropdown), logs (optional). Label: bug.",
+      "description": "Create .github/ISSUE_TEMPLATE/bug_report.yml with YAML form fields: description (required), repro steps (required), expected behavior (required), actual behavior (required), MAHABHARATHA version (required), Python version (required), OS (dropdown), logs (optional). Label: bug.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
@@ -27,7 +27,7 @@
       "skills_required": ["yaml", "github"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nFR-001: Bug report issue template (YAML form). Fields: description, repro steps, expected/actual, environment, logs. Must use YAML format for GitHub form rendering. Label: bug. ZERG version is required field.\n\n## Dependencies\nNone — standalone file creation."
+      "context": "## Spec Context\nFR-001: Bug report issue template (YAML form). Fields: description, repro steps, expected/actual, environment, logs. Must use YAML format for GitHub form rendering. Label: bug. MAHABHARATHA version is required field.\n\n## Dependencies\nNone — standalone file creation."
     },
     {
       "id": "TASK-002",
@@ -120,7 +120,7 @@
     {
       "id": "TASK-006",
       "title": "Create Code of Conduct",
-      "description": "Create CODE_OF_CONDUCT.md using Contributor Covenant v2.1. Enforcement contact: GitHub Security Advisories (https://github.com/rocklambros/zerg/security/advisories/new). No personal email.",
+      "description": "Create CODE_OF_CONDUCT.md using Contributor Covenant v2.1. Enforcement contact: GitHub Security Advisories (https://github.com/rocklambros/mahabharatha/security/advisories/new). No personal email.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
@@ -137,12 +137,12 @@
       "skills_required": ["markdown"],
       "consumers": ["TASK-009"],
       "integration_test": null,
-      "context": "## Spec Context\nFR-005: CODE_OF_CONDUCT.md. Must use Contributor Covenant v2.1. Per Q-002 resolution: enforcement contact is GitHub Security Advisories link, not personal email. URL: https://github.com/rocklambros/zerg/security/advisories/new\n\n## Dependencies\nNone — standalone file creation."
+      "context": "## Spec Context\nFR-005: CODE_OF_CONDUCT.md. Must use Contributor Covenant v2.1. Per Q-002 resolution: enforcement contact is GitHub Security Advisories link, not personal email. URL: https://github.com/rocklambros/mahabharatha/security/advisories/new\n\n## Dependencies\nNone — standalone file creation."
     },
     {
       "id": "TASK-007",
       "title": "Add README badges",
-      "description": "Add badge row to README.md after the logo block (after closing </p> tag, before the bold description). Badges: PyPI version (zerg-ai), Python versions (zerg-ai), License (rocklambros/zerg), CI status (rocklambros/zerg/ci.yml). Use shields.io URLs. Badges will show 'not found' while repo is private — that's expected.",
+      "description": "Add badge row to README.md after the logo block (after closing </p> tag, before the bold description). Badges: PyPI version (mahabharatha-ai), Python versions (mahabharatha-ai), License (rocklambros/mahabharatha), CI status (rocklambros/mahabharatha/ci.yml). Use shields.io URLs. Badges will show 'not found' while repo is private — that's expected.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
@@ -152,14 +152,14 @@
         "read": ["README.md"]
       },
       "verification": {
-        "command": "grep -q 'shields.io' README.md && grep -q 'zerg-ai' README.md && echo PASS",
+        "command": "grep -q 'shields.io' README.md && grep -q 'mahabharatha-ai' README.md && echo PASS",
         "timeout_seconds": 30
       },
       "estimate_minutes": 3,
       "skills_required": ["markdown"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nFR-009: README badges. PyPI version, Python version, License, CI status. Use shields.io. Package name on PyPI is 'zerg-ai'. Repo is rocklambros/zerg. CI workflow file is ci.yml. Insert after logo </p> tag, before the bold description paragraph.\n\n## Dependencies\nNone — modifies existing file independently."
+      "context": "## Spec Context\nFR-009: README badges. PyPI version, Python version, License, CI status. Use shields.io. Package name on PyPI is 'mahabharatha-ai'. Repo is rocklambros/mahabharatha. CI workflow file is ci.yml. Insert after logo </p> tag, before the bold description paragraph.\n\n## Dependencies\nNone — modifies existing file independently."
     },
     {
       "id": "TASK-008",
@@ -263,13 +263,13 @@
       {
         "id": "API-001",
         "title": "Enable secret scanning and push protection",
-        "command": "gh api repos/rocklambros/zerg -X PATCH -f security_and_analysis[secret_scanning][status]=enabled -f security_and_analysis[secret_scanning_push_protection][status]=enabled",
+        "command": "gh api repos/rocklambros/mahabharatha -X PATCH -f security_and_analysis[secret_scanning][status]=enabled -f security_and_analysis[secret_scanning_push_protection][status]=enabled",
         "issue": "#187"
       },
       {
         "id": "API-002",
         "title": "Set GitHub repository topics",
-        "command": "gh api repos/rocklambros/zerg/topics -X PUT -f names='[\"claude-code\",\"parallel-execution\",\"ai-coding\",\"cli\",\"python\",\"developer-tools\",\"automation\",\"code-generation\",\"llm\"]'",
+        "command": "gh api repos/rocklambros/mahabharatha/topics -X PUT -f names='[\"claude-code\",\"parallel-execution\",\"ai-coding\",\"cli\",\"python\",\"developer-tools\",\"automation\",\"code-generation\",\"llm\"]'",
         "issue": "#188"
       },
       {

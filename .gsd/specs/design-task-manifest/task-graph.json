@@ -11,13 +11,13 @@
     {
       "id": "DTM-L1-001",
       "title": "Add _build_design_manifest helper to design.py",
-      "description": "Add a helper function `_build_design_manifest(feature: str, task_data: dict) -> dict` to `zerg/commands/design.py`. It reads tasks from task_data['tasks'], builds a list of task entries with: subject `[L{level}] {title}`, description (task description + file ownership summary + verification command), active_form `Executing {title}`, and dependencies (list of task-graph IDs). Returns `{'feature': feature, 'generated': ISO timestamp, 'tasks': [...]}`. This function is a pure data transformer — no file I/O.",
+      "description": "Add a helper function `_build_design_manifest(feature: str, task_data: dict) -> dict` to `mahabharatha/commands/design.py`. It reads tasks from task_data['tasks'], builds a list of task entries with: subject `[L{level}] {title}`, description (task description + file ownership summary + verification command), active_form `Executing {title}`, and dependencies (list of task-graph IDs). Returns `{'feature': feature, 'generated': ISO timestamp, 'tasks': [...]}`. This function is a pure data transformer — no file I/O.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/design.py"],
+        "modify": ["mahabharatha/commands/design.py"],
         "read": []
       },
       "acceptance_criteria": [
@@ -27,7 +27,7 @@
         "Subject format is [L{level}] {title}"
       ],
       "verification": {
-        "command": "python -c \"from zerg.commands.design import _build_design_manifest; m = _build_design_manifest('test', {'tasks': [{'id': 'T1', 'title': 'Test', 'level': 1, 'description': 'desc', 'dependencies': [], 'files': {'create': ['a.py'], 'modify': [], 'read': []}, 'verification': {'command': 'echo ok'}}]}); assert m['feature'] == 'test'; assert len(m['tasks']) == 1; assert m['tasks'][0]['subject'] == '[L1] Test'; print('OK')\"",
+        "command": "python -c \"from mahabharatha.commands.design import _build_design_manifest; m = _build_design_manifest('test', {'tasks': [{'id': 'T1', 'title': 'Test', 'level': 1, 'description': 'desc', 'dependencies': [], 'files': {'create': ['a.py'], 'modify': [], 'read': []}, 'verification': {'command': 'echo ok'}}]}); assert m['feature'] == 'test'; assert len(m['tasks']) == 1; assert m['tasks'][0]['subject'] == '[L1] Test'; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10
@@ -35,13 +35,13 @@
     {
       "id": "DTM-L1-002",
       "title": "Add load_design_manifest to task_sync.py",
-      "description": "Add a function `load_design_manifest(spec_dir: Path) -> list[dict] | None` to `zerg/task_sync.py`. It reads `design-tasks-manifest.json` from the given spec_dir if the file exists, parses JSON, and returns the 'tasks' list. Returns None if the file doesn't exist. Also update the `create_level_tasks()` docstring to remove the 'not yet integrated' caveat — reference the manifest as the handoff mechanism.",
+      "description": "Add a function `load_design_manifest(spec_dir: Path) -> list[dict] | None` to `mahabharatha/task_sync.py`. It reads `design-tasks-manifest.json` from the given spec_dir if the file exists, parses JSON, and returns the 'tasks' list. Returns None if the file doesn't exist. Also update the `create_level_tasks()` docstring to remove the 'not yet integrated' caveat — reference the manifest as the handoff mechanism.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/task_sync.py"],
+        "modify": ["mahabharatha/task_sync.py"],
         "read": []
       },
       "acceptance_criteria": [
@@ -51,7 +51,7 @@
         "create_level_tasks docstring updated"
       ],
       "verification": {
-        "command": "python -c \"from zerg.task_sync import load_design_manifest; from pathlib import Path; result = load_design_manifest(Path('/nonexistent')); assert result is None; print('OK')\"",
+        "command": "python -c \"from mahabharatha.task_sync import load_design_manifest; from pathlib import Path; result = load_design_manifest(Path('/nonexistent')); assert result is None; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 8
@@ -59,13 +59,13 @@
     {
       "id": "DTM-L2-001",
       "title": "Wire manifest writing into all design.py execution paths",
-      "description": "In `zerg/commands/design.py`, call `_build_design_manifest()` and write the result to `{spec_dir}/design-tasks-manifest.json` in all three execution paths: (1) full generation path (after create_task_graph_template, around line 137), (2) --validate-only path (after validate_task_graph, around line 99), (3) --update-backlog path (after generate_backlog_markdown, around line 113). Each path loads the task graph data and writes the manifest. Print a success message for each path.",
+      "description": "In `mahabharatha/commands/design.py`, call `_build_design_manifest()` and write the result to `{spec_dir}/design-tasks-manifest.json` in all three execution paths: (1) full generation path (after create_task_graph_template, around line 137), (2) --validate-only path (after validate_task_graph, around line 99), (3) --update-backlog path (after generate_backlog_markdown, around line 113). Each path loads the task graph data and writes the manifest. Print a success message for each path.",
       "phase": "core",
       "level": 2,
       "dependencies": ["DTM-L1-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/design.py"],
+        "modify": ["mahabharatha/commands/design.py"],
         "read": []
       },
       "acceptance_criteria": [
@@ -75,7 +75,7 @@
         "Console prints success message for manifest in each path"
       ],
       "verification": {
-        "command": "python -m ruff check zerg/commands/design.py && python -m mypy zerg/commands/design.py",
+        "command": "python -m ruff check mahabharatha/commands/design.py && python -m mypy mahabharatha/commands/design.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 10
@@ -83,14 +83,14 @@
     {
       "id": "DTM-L2-002",
       "title": "Add manifest logging to level_coordinator.py",
-      "description": "In `zerg/level_coordinator.py`, in the `start_level()` method (around line 105), after creating ClaudeTask objects via `task_sync.create_level_tasks()`, add a call to `task_sync.load_design_manifest()` using the spec_dir derived from the feature name. Log at INFO level whether a design manifest was found and how many tasks it contains. This is informational only — does not change behavior.",
+      "description": "In `mahabharatha/level_coordinator.py`, in the `start_level()` method (around line 105), after creating ClaudeTask objects via `task_sync.create_level_tasks()`, add a call to `task_sync.load_design_manifest()` using the spec_dir derived from the feature name. Log at INFO level whether a design manifest was found and how many tasks it contains. This is informational only — does not change behavior.",
       "phase": "core",
       "level": 2,
       "dependencies": ["DTM-L1-002"],
       "files": {
         "create": [],
-        "modify": ["zerg/level_coordinator.py"],
-        "read": ["zerg/task_sync.py"]
+        "modify": ["mahabharatha/level_coordinator.py"],
+        "read": ["mahabharatha/task_sync.py"]
       },
       "acceptance_criteria": [
         "start_level logs manifest presence at INFO level",
@@ -99,7 +99,7 @@
         "No behavior change — informational logging only"
       ],
       "verification": {
-        "command": "python -m ruff check zerg/level_coordinator.py && python -m mypy zerg/level_coordinator.py",
+        "command": "python -m ruff check mahabharatha/level_coordinator.py && python -m mypy mahabharatha/level_coordinator.py",
         "timeout_seconds": 60
       },
       "estimate_minutes": 5
@@ -114,7 +114,7 @@
       "files": {
         "create": [],
         "modify": ["tests/unit/test_design_cmd.py"],
-        "read": ["zerg/commands/design.py"]
+        "read": ["mahabharatha/commands/design.py"]
       },
       "acceptance_criteria": [
         "TestDesignManifest class with 4 test methods",
@@ -138,7 +138,7 @@
       "files": {
         "create": [],
         "modify": ["tests/unit/test_task_sync.py"],
-        "read": ["zerg/task_sync.py"]
+        "read": ["mahabharatha/task_sync.py"]
       },
       "acceptance_criteria": [
         "TestDesignManifestLoading class with 2 test methods",

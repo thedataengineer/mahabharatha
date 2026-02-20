@@ -1,4 +1,4 @@
-"""ZERG v2 Purge Command - Artifact and worktree cleanup."""
+"""MAHABHARATHA v2 Purge Command - Artifact and worktree cleanup."""
 
 import contextlib
 import json
@@ -70,11 +70,11 @@ class PurgeManager:
     """Manage artifact cleanup."""
 
     TARGET_PATHS = {
-        PurgeTarget.WORKTREES: ".zerg/worktrees",
-        PurgeTarget.LOGS: ".zerg/logs",
-        PurgeTarget.CHECKPOINTS: ".zerg/checkpoints",
-        PurgeTarget.METRICS: ".zerg/metrics",
-        PurgeTarget.SESSIONS: ".zerg/sessions",
+        PurgeTarget.WORKTREES: ".mahabharatha/worktrees",
+        PurgeTarget.LOGS: ".mahabharatha/logs",
+        PurgeTarget.CHECKPOINTS: ".mahabharatha/checkpoints",
+        PurgeTarget.METRICS: ".mahabharatha/metrics",
+        PurgeTarget.SESSIONS: ".mahabharatha/sessions",
     }
 
     def __init__(self, base_path: str = "."):

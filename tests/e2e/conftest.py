@@ -1,4 +1,4 @@
-"""Pytest fixtures for ZERG E2E testing."""
+"""Pytest fixtures for MAHABHARATHA E2E testing."""
 
 from __future__ import annotations
 
@@ -129,7 +129,7 @@ def sample_e2e_task_graph() -> dict:
 
 @pytest.fixture
 def e2e_repo(tmp_path: Path) -> Path:
-    """Create a minimal git repository with ZERG directory structure.
+    """Create a minimal git repository with MAHABHARATHA directory structure.
 
     Initializes a git repo at tmp_path/e2e_repo with .mahabharatha/ and .gsd/
     directories and an initial commit.
@@ -144,9 +144,9 @@ def e2e_repo(tmp_path: Path) -> Path:
     (repo_path / ".gsd").mkdir()
 
     git_env = os.environ.copy()
-    git_env["GIT_AUTHOR_NAME"] = "ZERG Test"
+    git_env["GIT_AUTHOR_NAME"] = "MAHABHARATHA Test"
     git_env["GIT_AUTHOR_EMAIL"] = "test@mahabharatha.dev"
-    git_env["GIT_COMMITTER_NAME"] = "ZERG Test"
+    git_env["GIT_COMMITTER_NAME"] = "MAHABHARATHA Test"
     git_env["GIT_COMMITTER_EMAIL"] = "test@mahabharatha.dev"
 
     subprocess.run(
@@ -308,9 +308,9 @@ def tmp_worktree(tmp_path: Path) -> Path:
 
     # Initialise a git repo
     git_env = os.environ.copy()
-    git_env["GIT_AUTHOR_NAME"] = "ZERG Test"
+    git_env["GIT_AUTHOR_NAME"] = "MAHABHARATHA Test"
     git_env["GIT_AUTHOR_EMAIL"] = "test@mahabharatha.dev"
-    git_env["GIT_COMMITTER_NAME"] = "ZERG Test"
+    git_env["GIT_COMMITTER_NAME"] = "MAHABHARATHA Test"
     git_env["GIT_COMMITTER_EMAIL"] = "test@mahabharatha.dev"
 
     subprocess.run(["git", "init"], cwd=repo, capture_output=True, check=True)

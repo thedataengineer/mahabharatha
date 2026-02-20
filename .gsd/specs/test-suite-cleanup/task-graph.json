@@ -47,8 +47,8 @@
           "tests/unit/test_orchestrator_container_mode.py"
         ],
         "read": [
-          "zerg/orchestrator.py",
-          "zerg/worker_registry.py"
+          "mahabharatha/orchestrator.py",
+          "mahabharatha/worker_registry.py"
         ]
       },
       "verification": {
@@ -108,7 +108,7 @@
     {
       "id": "TASK-004",
       "title": "Regenerate .test_durations, update CHANGELOG, run full verification",
-      "description": "Regenerate .test_durations with correct paths after all file moves/deletes. Add CHANGELOG entry under [Unreleased]. Run full test suite verification: pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow' --timeout=120 -q. Run python -m zerg.validate_commands for structural checks.",
+      "description": "Regenerate .test_durations with correct paths after all file moves/deletes. Add CHANGELOG entry under [Unreleased]. Run full test suite verification: pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow' --timeout=120 -q. Run python -m mahabharatha.validate_commands for structural checks.",
       "phase": "quality",
       "level": 2,
       "dependencies": ["TASK-001", "TASK-002", "TASK-003"],
@@ -121,14 +121,14 @@
         "read": []
       },
       "verification": {
-        "command": "python -m pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow' --timeout=120 -q && python -m zerg.validate_commands",
+        "command": "python -m pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow' --timeout=120 -q && python -m mahabharatha.validate_commands",
         "timeout_seconds": 600
       },
       "estimate_minutes": 5,
       "skills_required": ["python", "testing"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Task Context\n1. Regenerate .test_durations:\n   pytest tests/unit tests/integration --store-durations -q\n2. Add CHANGELOG entry under [Unreleased] > Fixed:\n   'Fix 25 CI test failures: delete broken coverage-padding files, fix stale mock targets'\n   And under Changed:\n   'Consolidate all root-level test files into tests/unit/'\n3. Full verification:\n   pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow' --timeout=120 -q\n4. Structural check:\n   python -m zerg.validate_commands"
+      "context": "## Task Context\n1. Regenerate .test_durations:\n   pytest tests/unit tests/integration --store-durations -q\n2. Add CHANGELOG entry under [Unreleased] > Fixed:\n   'Fix 25 CI test failures: delete broken coverage-padding files, fix stale mock targets'\n   And under Changed:\n   'Consolidate all root-level test files into tests/unit/'\n3. Full verification:\n   pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow' --timeout=120 -q\n4. Structural check:\n   python -m mahabharatha.validate_commands"
     }
   ],
 

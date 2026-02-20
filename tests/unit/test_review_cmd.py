@@ -1,4 +1,4 @@
-"""Thinned unit tests for ZERG review command.
+"""Thinned unit tests for MAHABHARATHA review command.
 
 Reduced from 90 to ~25 tests by:
 - Enum: 5 per-value -> 1 all-values assertion

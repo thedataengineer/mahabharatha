@@ -1039,7 +1039,7 @@ class MockStateManager:
         now = datetime.now().isoformat()
 
         # Header
-        lines.append(f"# ZERG State: {self.feature}")
+        lines.append(f"# MAHABHARATHA State: {self.feature}")
         lines.append("")
 
         # Current phase info

@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://zerg.dev/schemas/task-graph-v1.json",
-  "title": "ZERG Task Graph",
-  "description": "Schema for ZERG task graph definition",
+  "$id": "https://mahabharatha.dev/schemas/task-graph-v1.json",
+  "title": "MAHABHARATHA Task Graph",
+  "description": "Schema for MAHABHARATHA task graph definition",
   "type": "object",
   "required": ["feature", "tasks"],
   "properties": {
@@ -70,7 +70,7 @@
         "id": {
           "type": "string",
           "pattern": "^[A-Z]+-L[0-9]+-[0-9]+$",
-          "description": "Task identifier (e.g., ZERG-L1-001)"
+          "description": "Task identifier (e.g., MAHABHARATHA-L1-001)"
         },
         "title": {
           "type": "string",

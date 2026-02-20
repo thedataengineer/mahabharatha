@@ -43,8 +43,8 @@ history_engine.py ──► Add shlex.quote() to 2 GIT_SEQUENCE_EDITOR assignmen
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| PR Engine | Generate PR bodies from commit data | `zerg/git/pr_engine.py` |
-| History Engine | Git rebase/rewrite operations | `zerg/git/history_engine.py` |
+| PR Engine | Generate PR bodies from commit data | `mahabharatha/git/pr_engine.py` |
+| History Engine | Git rebase/rewrite operations | `mahabharatha/git/history_engine.py` |
 | CHANGELOG | Release notes | `CHANGELOG.md` |
 
 ### 2.3 Data Flow
@@ -77,7 +77,7 @@ tempfile → script_path → f"python3 {shlex.quote(script_path)}" → GIT_SEQUE
 
 ### 3.1 FR-001: Remove parse-time sanitization
 
-**File**: `zerg/git/pr_engine.py`, line 198
+**File**: `mahabharatha/git/pr_engine.py`, line 198
 
 ```python
 # BEFORE:
@@ -91,7 +91,7 @@ The 4 output-boundary sanitization calls at lines 370, 381, 401, 411 remain unch
 
 ### 3.2 FR-002/FR-003: Add shlex.quote()
 
-**File**: `zerg/git/history_engine.py`, lines 573 and 664
+**File**: `mahabharatha/git/history_engine.py`, lines 573 and 664
 
 ```python
 # Add import at top of file:
@@ -110,7 +110,7 @@ env["GIT_SEQUENCE_EDITOR"] = f"python3 {shlex.quote(script_path)}"
 
 ### 3.3 FR-004: Verify CodeQL dismissals
 
-Run `gh api repos/rocklambros/zerg/code-scanning/alerts` and confirm 0 open alerts for `cyclic-import` and `undefined-export` rules. No code changes.
+Run `gh api repos/rocklambros/mahabharatha/code-scanning/alerts` and confirm 0 open alerts for `cyclic-import` and `undefined-export` rules. No code changes.
 
 ---
 
@@ -147,8 +147,8 @@ Run `gh api repos/rocklambros/zerg/code-scanning/alerts` and confirm 0 open aler
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/git/pr_engine.py` | TASK-001 | modify |
-| `zerg/git/history_engine.py` | TASK-002 | modify |
+| `mahabharatha/git/pr_engine.py` | TASK-001 | modify |
+| `mahabharatha/git/history_engine.py` | TASK-002 | modify |
 | `CHANGELOG.md` | TASK-004 | modify |
 
 ### 5.3 Dependency Graph
@@ -180,7 +180,7 @@ graph TD
 
 ### 7.2 Verification Commands
 - `python -m pytest tests/ --timeout=120` — all tests green
-- `ruff check zerg/git/pr_engine.py zerg/git/history_engine.py` — clean
+- `ruff check mahabharatha/git/pr_engine.py mahabharatha/git/history_engine.py` — clean
 
 ---
 

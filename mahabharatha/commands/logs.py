@@ -1,4 +1,4 @@
-"""ZERG logs command - stream worker logs."""
+"""MAHABHARATHA logs command - stream worker logs."""
 
 import json
 import subprocess
@@ -173,7 +173,7 @@ def logs(
             return
 
         if not json_output:
-            console.print(f"[bold cyan]ZERG Logs[/bold cyan] - {feature}\n")
+            console.print(f"[bold cyan]MAHABHARATHA Logs[/bold cyan] - {feature}\n")
 
         # Convert level to priority
         level_priority = get_level_priority(level)
@@ -229,7 +229,7 @@ def _show_aggregated_logs(
         return
 
     if not json_output:
-        console.print(f"[bold cyan]ZERG Aggregated Logs[/bold cyan] - {feature}\n")
+        console.print(f"[bold cyan]MAHABHARATHA Aggregated Logs[/bold cyan] - {feature}\n")
 
     for entry in entries:
         if json_output:

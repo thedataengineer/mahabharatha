@@ -1,5 +1,5 @@
 name: Feature Request
-description: Suggest a new feature for ZERG
+description: Suggest a new feature for MAHABHARATHA
 labels: ["enhancement"]
 body:
   - type: textarea

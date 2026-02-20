@@ -1,4 +1,4 @@
-# DC-012 Integration Tests - ZERG Task Backlog
+# DC-012 Integration Tests - MAHABHARATHA Task Backlog
 
 **Feature**: Container Flow Integration Tests
 **Status**: ✅ Complete (9/9)
@@ -122,7 +122,7 @@ def test_init_creates_multi_lang_devcontainer(tmp_path):
 **DC12-007 Details (TestRushCommand):**
 ```python
 def test_rush_help_shows_mode_option():
-    # runner.invoke(rush, ["--help"])
+    # runner.invoke(kurukshetra, ["--help"])
     # Assert "--mode" or "-m" in output
     # Assert "subprocess", "container", "auto" in output
 ```
@@ -143,7 +143,7 @@ def test_full_init_to_dry_run(tmp_path):
     # 2. Run init --detect
     # 3. Verify devcontainer.json created
     # 4. Create minimal task-graph.json
-    # 5. Run rush --mode auto --dry-run
+    # 5. Run kurukshetra --mode auto --dry-run
     # 6. Assert execution plan shows mode selection
 ```
 
@@ -200,7 +200,7 @@ DC12-002 ─┬─ DC12-003 ─┬─ DC12-004 ─┬─ DC12-005  (Level 1: Par
 | `ContainerLauncher` | 3 | Availability checks, graceful failure |
 | `Orchestrator` mode selection | 2 | Auto-detect, availability check |
 | `init` command | 1 | Multi-lang devcontainer creation |
-| `rush` command | 1 | Mode flag in help |
+| `kurukshetra` command | 1 | Mode flag in help |
 | End-to-end | 1 | Full flow verification |
 | **Total** | **13** | |
 
@@ -209,14 +209,14 @@ DC12-002 ─┬─ DC12-003 ─┬─ DC12-004 ─┬─ DC12-005  (Level 1: Par
 ## Execution Commands
 
 ```bash
-# Initialize ZERG for this feature
-zerg plan dc-012-tests
+# Initialize MAHABHARATHA for this feature
+mahabharatha plan dc-012-tests
 
 # Run with parallelization
-zerg rush --workers 4 --mode subprocess
+mahabharatha kurukshetra --workers 4 --mode subprocess
 
 # Monitor progress
-zerg status
+mahabharatha status
 
 # Run all container tests after completion
 pytest tests/integration/test_container_*.py -v --tb=short

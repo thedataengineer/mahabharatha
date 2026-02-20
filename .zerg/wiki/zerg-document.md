@@ -1,11 +1,11 @@
-# /zerg:document
+# /mahabharatha:document
 
 Generate documentation for a specific component, module, or command.
 
 ## Synopsis
 
 ```
-/zerg:document <target> [--type auto|module|command|config|api|types]
+/mahabharatha:document <target> [--type auto|module|command|config|api|types]
                         [--output PATH]
                         [--depth shallow|standard|deep]
                         [--update]
@@ -49,7 +49,7 @@ The `document` command generates structured documentation for a single target fi
 |------|-------------|
 | `auto` | Auto-detect from file structure. |
 | `module` | Python module documentation. |
-| `command` | ZERG command file documentation. |
+| `command` | MAHABHARATHA command file documentation. |
 | `config` | Configuration file documentation. |
 | `api` | API endpoint documentation. |
 | `types` | Type definitions documentation. |
@@ -59,25 +59,25 @@ The `document` command generates structured documentation for a single target fi
 Auto-detect and document a module:
 
 ```
-/zerg:document zerg/launcher.py
+/mahabharatha:document mahabharatha/launcher.py
 ```
 
 Document a command file with explicit type:
 
 ```
-/zerg:document zerg/data/commands/zerg:rush.md --type command
+/mahabharatha:document mahabharatha/data/commands/mahabharatha:kurukshetra.md --type command
 ```
 
 Generate deep documentation to a file:
 
 ```
-/zerg:document zerg/doc_engine/extractor.py --depth deep --output docs/extractor.md
+/mahabharatha:document mahabharatha/doc_engine/extractor.py --depth deep --output docs/extractor.md
 ```
 
 Update existing documentation in-place:
 
 ```
-/zerg:document zerg/launcher.py --output docs/launcher.md --update
+/mahabharatha:document mahabharatha/launcher.py --output docs/launcher.md --update
 ```
 
 ## Error Handling
@@ -92,6 +92,6 @@ This command creates a Claude Code Task with the subject prefix `[Document]` on 
 
 ## See Also
 
-- [[zerg-index]] -- Generate a complete project wiki using the same pipeline
-- [[zerg-analyze]] -- Static analysis that feeds into documentation quality
-- [[zerg-review]] -- Review generated documentation for accuracy
+- [[mahabharatha-index]] -- Generate a complete project wiki using the same pipeline
+- [[mahabharatha-analyze]] -- Static analysis that feeds into documentation quality
+- [[mahabharatha-review]] -- Review generated documentation for accuracy

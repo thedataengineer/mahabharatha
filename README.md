@@ -301,7 +301,7 @@ Mahabharatha: Creating task graph...
 
 Design matters because parallel execution requires careful planning. Each task declares exclusive file ownership — which files it creates, modifies, and reads. This prevents merge conflicts when multiple workers run simultaneously. Without this upfront design, workers would step on each other's changes.
 
-### Kurukshetra: Launching the Swarm
+### Kurukshetra: Launching the Akshauhini
 
 With the task graph ready, you can launch parallel workers. Each worker claims a task, executes it in an isolated git worktree, and reports results. The orchestrator manages task distribution and level progression.
 
@@ -568,7 +568,7 @@ plugins:
 
 | Concept | Description |
 |---------|-------------|
-| **Spec as Memory** | Zerglings read spec files, not conversation history. Stateless and restartable. |
+| **Spec as Memory** | Warriors read spec files, not conversation history. Stateless and restartable. |
 | **Exclusive File Ownership** | Each task owns specific files. No merge conflicts within a level. |
 | **Levels** | Tasks grouped by dependencies. Level N completes before Level N+1. |
 | **Verification Commands** | Every task has automated verification. Pass or fail, no subjectivity. |
@@ -614,7 +614,7 @@ Single-epic users do not need to change anything. The `Mahabharatha_FEATURE` env
 
 | Problem | Solution |
 |---------|----------|
-| Zerglings not starting | Check Docker (`docker info`), API key, port availability |
+| Warriors not starting | Check Docker (`docker info`), API key, port availability |
 | "No active feature" | Run `/mahabharatha:plan <feature>` first |
 | "Task graph not found" | Run `/mahabharatha:design` first |
 | Task stuck | `/mahabharatha:debug` to diagnose, `/mahabharatha:retry` to retry |

@@ -32,7 +32,7 @@ class WikiPublisher:
     without performing any git operations.
     """
 
-    COMMIT_MESSAGE = "docs: update wiki pages via ZERG doc engine"
+    COMMIT_MESSAGE = "docs: update wiki pages via MAHABHARATHA doc engine"
 
     def publish(
         self,

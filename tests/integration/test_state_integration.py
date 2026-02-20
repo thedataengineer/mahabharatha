@@ -415,7 +415,7 @@ class TestStateMdGeneration:
         content = state_md_path.read_text(encoding="utf-8")
 
         # Verify content
-        assert "# ZERG State: test-feature" in content
+        assert "# MAHABHARATHA State: test-feature" in content
         assert "**Level:** 2" in content
         assert "TASK-001" in content
         assert "complete" in content

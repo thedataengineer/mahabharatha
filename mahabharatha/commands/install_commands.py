@@ -1,4 +1,4 @@
-"""ZERG install-commands and uninstall-commands CLI commands."""
+"""MAHABHARATHA install-commands and uninstall-commands CLI commands."""
 
 from __future__ import annotations
 
@@ -44,7 +44,7 @@ def _get_source_dir() -> Path:
     if fallback.is_dir():
         return fallback
 
-    raise FileNotFoundError("Cannot locate ZERG command files. Ensure the package is installed correctly.")
+    raise FileNotFoundError("Cannot locate MAHABHARATHA command files. Ensure the package is installed correctly.")
 
 
 def _get_target_dir(target: str | None) -> Path:
@@ -180,7 +180,7 @@ def _remove_legacy(target_dir: Path) -> int:
 
 
 def _uninstall(target_dir: Path) -> int:
-    """Remove ZERG command files (subdirs + legacy root-level). Returns count removed."""
+    """Remove MAHABHARATHA command files (subdirs + legacy root-level). Returns count removed."""
     removed = 0
 
     # Remove subdirectories
@@ -222,7 +222,7 @@ def _uninstall(target_dir: Path) -> int:
     help="Overwrite existing files",
 )
 def install_commands(target: str | None, copy: bool, force: bool) -> None:
-    """Install ZERG slash commands globally for Claude Code.
+    """Install MAHABHARATHA slash commands globally for Claude Code.
 
     Creates symlinks (or copies with --copy) from the package's command
     files into ~/.claude/commands/mahabharatha/ and ~/.claude/commands/z/ so they
@@ -251,13 +251,14 @@ def install_commands(target: str | None, copy: bool, force: bool) -> None:
 
         if count == 0:
             console.print(
-                f"[green]All {total} ZERG commands already installed[/green] "
+                f"[green]All {total} MAHABHARATHA commands already installed[/green] "
                 f"({source_count} commands + {source_count} z: shortcuts) in {target_dir}"
             )
         else:
             method = "copied" if (copy or os.name == "nt") else "symlinked"
             console.print(
-                f"[green]Installed {count}/{total} ZERG commands[/green] ({method} to {target_dir}/{{mahabharatha,z}}/)"
+                f"[green]Installed {count}/{total} MAHABHARATHA commands[/green] "
+                f"({method} to {target_dir}/{{mahabharatha,z}}/)"
             )
     except Exception as e:  # noqa: BLE001 — intentional: CLI top-level catch-all; logs and exits gracefully
         console.print(f"[red]Error:[/red] {e}")
@@ -272,7 +273,7 @@ def install_commands(target: str | None, copy: bool, force: bool) -> None:
     help="Target directory (default: ~/.claude/commands/)",
 )
 def uninstall_commands(target: str | None) -> None:
-    """Remove ZERG slash commands from the global Claude Code directory.
+    """Remove MAHABHARATHA slash commands from the global Claude Code directory.
 
     Removes mahabharatha/ and z/ subdirectories and any legacy root-level
     mahabharatha:*.md / z:*.md files.
@@ -288,9 +289,9 @@ def uninstall_commands(target: str | None) -> None:
         count = _uninstall(target_dir)
 
         if count == 0:
-            console.print("[dim]No ZERG commands found to remove[/dim]")
+            console.print("[dim]No MAHABHARATHA commands found to remove[/dim]")
         else:
-            console.print(f"[green]Removed {count} ZERG commands[/green] from {target_dir}")
+            console.print(f"[green]Removed {count} MAHABHARATHA commands[/green] from {target_dir}")
     except Exception as e:  # noqa: BLE001 — intentional: CLI top-level catch-all; logs and exits gracefully
         console.print(f"[red]Error:[/red] {e}")
         raise SystemExit(1) from e
@@ -314,6 +315,6 @@ def auto_install_commands() -> None:
 
         count = _install(target_dir, source_dir)
         if count > 0:
-            console.print(f"  [green]\u2713[/green] Installed {count} ZERG slash commands globally")
+            console.print(f"  [green]\u2713[/green] Installed {count} MAHABHARATHA slash commands globally")
     except Exception as exc:  # noqa: BLE001 — intentional: best-effort auto-install; failure is non-critical
         logger.debug("Auto-install commands failed: %s", exc)

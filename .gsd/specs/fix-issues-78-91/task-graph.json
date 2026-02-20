@@ -16,11 +16,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/doc_engine/extractor.py"],
+        "modify": ["mahabharatha/doc_engine/extractor.py"],
         "read": []
       },
       "verification": {
-        "command": "python -c \"import ast; import zerg.doc_engine.extractor\" && pytest tests/unit/ -k extractor -v --tb=short",
+        "command": "python -c \"import ast; import mahabharatha.doc_engine.extractor\" && pytest tests/unit/ -k extractor -v --tb=short",
         "timeout_seconds": 60
       },
       "estimate_minutes": 5,
@@ -38,7 +38,7 @@
       "files": {
         "create": [],
         "modify": ["tests/unit/test_launcher_coverage.py"],
-        "read": ["zerg/launcher.py"]
+        "read": ["mahabharatha/launcher.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_launcher_coverage.py -v -W error::RuntimeWarning --tb=short",
@@ -58,7 +58,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/cli.py"],
+        "modify": ["mahabharatha/cli.py"],
         "read": []
       },
       "verification": {
@@ -79,7 +79,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/refactor.py", "zerg/commands/analyze.py"],
+        "modify": ["mahabharatha/commands/refactor.py", "mahabharatha/commands/analyze.py"],
         "read": []
       },
       "verification": {
@@ -163,8 +163,8 @@
       "dependencies": ["T-001", "T-002", "T-003", "T-004", "T-005"],
       "files": {
         "create": ["tests/unit/test_mcp_telemetry.py"],
-        "modify": ["zerg/mcp_router.py"],
-        "read": ["zerg/mcp_telemetry.py", "zerg/config.py"]
+        "modify": ["mahabharatha/mcp_router.py"],
+        "read": ["mahabharatha/mcp_telemetry.py", "mahabharatha/config.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_mcp_telemetry.py tests/unit/test_mcp_router.py -v --tb=short",
@@ -184,8 +184,8 @@
       "dependencies": ["T-006", "T-007", "T-008"],
       "files": {
         "create": [],
-        "modify": ["zerg/orchestrator.py"],
-        "read": ["zerg/verification_gates.py", "zerg/modes.py", "zerg/loops.py", "zerg/capability_resolver.py"]
+        "modify": ["mahabharatha/orchestrator.py"],
+        "read": ["mahabharatha/verification_gates.py", "mahabharatha/modes.py", "mahabharatha/loops.py", "mahabharatha/capability_resolver.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_orchestrator*.py tests/integration/ -k orchestrator -v --tb=short",
@@ -205,8 +205,8 @@
       "dependencies": ["T-006", "T-007", "T-008"],
       "files": {
         "create": [],
-        "modify": ["zerg/context_plugin.py"],
-        "read": ["zerg/efficiency.py"]
+        "modify": ["mahabharatha/context_plugin.py"],
+        "read": ["mahabharatha/efficiency.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_context_plugin*.py -v --tb=short",
@@ -230,7 +230,7 @@
         "read": []
       },
       "verification": {
-        "command": "python -m zerg.validate_commands && pytest tests/ -q --tb=short",
+        "command": "python -m mahabharatha.validate_commands && pytest tests/ -q --tb=short",
         "timeout_seconds": 600
       },
       "estimate_minutes": 10,
@@ -241,7 +241,7 @@
     {
       "id": "T-012",
       "title": "Push wiki + close issues",
-      "description": "Run zerg wiki --push to publish to GitHub Wiki. Close all resolved issues via gh CLI.",
+      "description": "Run mahabharatha wiki --push to publish to GitHub Wiki. Close all resolved issues via gh CLI.",
       "phase": "finalize",
       "level": 3,
       "dependencies": ["T-011"],

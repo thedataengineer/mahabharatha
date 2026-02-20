@@ -1,6 +1,6 @@
-# ZERG Configuration Guide
+# MAHABHARATHA Configuration Guide
 
-Complete reference for configuring ZERG — config files, environment variables, quality gates, logging, plugins, and tuning.
+Complete reference for configuring MAHABHARATHA — config files, environment variables, quality gates, logging, plugins, and tuning.
 
 ---
 
@@ -23,9 +23,9 @@ Complete reference for configuring ZERG — config files, environment variables,
 
 ## Configuration File
 
-Location: `.zerg/config.yaml`
+Location: `.mahabharatha/config.yaml`
 
-Created automatically by `zerg init`. All settings have sensible defaults.
+Created automatically by `mahabharatha init`. All settings have sensible defaults.
 
 ### Full Example
 
@@ -89,11 +89,11 @@ mcp_servers:
 
 ## Workers
 
-Control zergling behavior and resource allocation.
+Control warrior behavior and resource allocation.
 
 ```yaml
 workers:
-  default_count: 5        # Default workers for /zerg:rush
+  default_count: 5        # Default workers for /mahabharatha:kurukshetra
   max_count: 10           # Hard limit on concurrent workers
   context_threshold: 0.7  # Checkpoint at this context usage (0.0-1.0)
   timeout_seconds: 3600   # Max time per worker session
@@ -112,7 +112,7 @@ workers:
 
 | Workers | Best For |
 |---------|----------|
-| 1-2 | Small features, learning ZERG |
+| 1-2 | Small features, learning MAHABHARATHA |
 | 3-5 | Medium features, balanced throughput |
 | 6-10 | Large features, maximum parallelism |
 
@@ -170,7 +170,7 @@ Via Python entry points (complex logic): See [Plugin System](plugins.md).
 
 ## Pre-commit Hooks
 
-ZERG installs comprehensive pre-commit hooks at `.zerg/hooks/pre-commit`.
+MAHABHARATHA installs comprehensive pre-commit hooks at `.mahabharatha/hooks/pre-commit`.
 
 ```yaml
 hooks:
@@ -210,12 +210,12 @@ These patterns cause commits to be rejected:
 | Merge Markers | Unresolved conflict markers |
 | Large Files | Files over 5MB |
 
-### ZERG-Specific Checks (Warn Only)
+### MAHABHARATHA-Specific Checks (Warn Only)
 
 | Check | Validation |
 |-------|------------|
-| Branch Naming | `zerg/{feature}/worker-{N}` format |
-| Print Statements | `print` calls in `zerg/` directory |
+| Branch Naming | `mahabharatha/{feature}/worker-{N}` format |
+| Print Statements | `print` calls in `mahabharatha/` directory |
 | Hardcoded URLs | `localhost:PORT` outside tests |
 
 ### Exempt Paths
@@ -226,18 +226,18 @@ Tests and fixtures are exempt: `tests/`, `fixtures/`, `*_test.py`, `test_*.py`, 
 
 ## Logging
 
-ZERG uses structured JSONL logging with per-worker and per-task output.
+MAHABHARATHA uses structured JSONL logging with per-worker and per-task output.
 
 ### Log Locations
 
 | Type | Path | Format |
 |------|------|--------|
-| Worker logs | `.zerg/logs/workers/worker-{id}.jsonl` | Structured JSONL |
-| Orchestrator | `.zerg/logs/orchestrator.jsonl` | Structured JSONL |
-| Task execution | `.zerg/logs/tasks/{TASK-ID}/execution.jsonl` | Structured JSONL |
-| Claude output | `.zerg/logs/tasks/{TASK-ID}/claude_output.txt` | Plain text |
-| Verification | `.zerg/logs/tasks/{TASK-ID}/verification_output.txt` | Plain text |
-| Git diff | `.zerg/logs/tasks/{TASK-ID}/git_diff.patch` | Patch format |
+| Worker logs | `.mahabharatha/logs/workers/worker-{id}.jsonl` | Structured JSONL |
+| Orchestrator | `.mahabharatha/logs/orchestrator.jsonl` | Structured JSONL |
+| Task execution | `.mahabharatha/logs/tasks/{TASK-ID}/execution.jsonl` | Structured JSONL |
+| Claude output | `.mahabharatha/logs/tasks/{TASK-ID}/claude_output.txt` | Plain text |
+| Verification | `.mahabharatha/logs/tasks/{TASK-ID}/verification_output.txt` | Plain text |
+| Git diff | `.mahabharatha/logs/tasks/{TASK-ID}/git_diff.patch` | Patch format |
 
 ### JSONL Entry Format
 
@@ -262,7 +262,7 @@ Worker logs auto-rotate at 50 MB (renamed to `.jsonl.1`).
 
 ### Aggregation
 
-`LogAggregator` merges JSONL files by timestamp at query time. No pre-built aggregate file exists on disk. Use `zerg logs --aggregate` to query across all workers.
+`LogAggregator` merges JSONL files by timestamp at query time. No pre-built aggregate file exists on disk. Use `mahabharatha logs --aggregate` to query across all workers.
 
 ---
 
@@ -321,7 +321,7 @@ plugins:
 | `merge_complete` | Level branches merged |
 | `worker_spawned` | New worker starts |
 | `quality_gate_run` | Gate runs |
-| `rush_started` | `/zerg:rush` begins |
+| `rush_started` | `/mahabharatha:kurukshetra` begins |
 | `rush_finished` | All levels complete |
 
 ### Variable Substitution
@@ -341,7 +341,7 @@ security:
 
 ### Environment Variable Filtering
 
-ZERG controls which environment variables are passed to workers:
+MAHABHARATHA controls which environment variables are passed to workers:
 
 **Allowed**:
 - `ZERG_WORKER_ID`, `ZERG_FEATURE`, `ZERG_WORKTREE`
@@ -402,7 +402,7 @@ rules:
   inject_into_workers: true  # Inject relevant rules into worker context
 ```
 
-Rule files are YAML in `.zerg/rules/` (safety.yaml, quality.yaml, efficiency.yaml). Rules are filtered by file extension and injected into worker context at ~15% of the task context budget.
+Rule files are YAML in `.mahabharatha/rules/` (safety.yaml, quality.yaml, efficiency.yaml). Rules are filtered by file extension and injected into worker context at ~15% of the task context budget.
 
 ### Efficiency
 
@@ -430,7 +430,7 @@ verification:
   require_before_completion: true       # Require verification before marking done
   staleness_threshold_seconds: 300      # Re-run if older than this (10-3600)
   store_artifacts: true                 # Store verification results as JSON
-  artifact_dir: ".zerg/artifacts"       # Artifact storage directory
+  artifact_dir: ".mahabharatha/artifacts"       # Artifact storage directory
 ```
 
 ### Behavioral Modes
@@ -482,7 +482,7 @@ heartbeat:
   max_restarts: 2             # Auto-restarts before reassigning tasks (0-5)
 ```
 
-The orchestrator reads heartbeat files from `.zerg/state/heartbeat-{worker_id}.json`. When a worker's heartbeat is older than `stall_timeout_seconds`, the orchestrator marks it as `STALLED` and triggers auto-restart. After `max_restarts` consecutive stalls, the worker's tasks are reassigned to a fresh worker.
+The orchestrator reads heartbeat files from `.mahabharatha/state/heartbeat-{worker_id}.json`. When a worker's heartbeat is older than `stall_timeout_seconds`, the orchestrator marks it as `STALLED` and triggers auto-restart. After `max_restarts` consecutive stalls, the worker's tasks are reassigned to a fresh worker.
 
 ### Escalation Handling
 
@@ -492,7 +492,7 @@ escalation:
   poll_interval_seconds: 5     # How often orchestrator checks for escalations (1-60)
 ```
 
-Workers escalate ambiguous failures (unclear spec, missing dependency, unclear verification criteria) to `.zerg/state/escalations.json`. When `auto_interrupt` is enabled, the orchestrator prints escalation alerts to stderr.
+Workers escalate ambiguous failures (unclear spec, missing dependency, unclear verification criteria) to `.mahabharatha/state/escalations.json`. When `auto_interrupt` is enabled, the orchestrator prints escalation alerts to stderr.
 
 ### Three-Tier Verification
 
@@ -512,7 +512,7 @@ Workers execute verification in three tiers. Blocking tiers must pass for the ta
 
 ```yaml
 repo_map:
-  enabled: true                # Build symbol graph at rush start
+  enabled: true                # Build symbol graph at kurukshetra start
   languages:                   # Languages to extract symbols from
     - python
     - javascript
@@ -521,7 +521,7 @@ repo_map:
   context_budget_percent: 15   # % of task context budget for repo map (5-30)
 ```
 
-At rush start, ZERG builds a symbol graph using Python AST for `.py` files and regex extraction for `.js`/`.ts`/`.jsx`/`.tsx` files. The context plugin queries the graph per-task to inject relevant symbols (functions, classes, imports) into worker prompts, giving workers awareness of nearby code without reading full source files.
+At kurukshetra start, MAHABHARATHA builds a symbol graph using Python AST for `.py` files and regex extraction for `.js`/`.ts`/`.jsx`/`.tsx` files. The context plugin queries the graph per-task to inject relevant symbols (functions, classes, imports) into worker prompts, giving workers awareness of nearby code without reading full source files.
 
 ### Token Metrics
 
@@ -534,7 +534,7 @@ token_metrics:
   fallback_chars_per_token: 4.0    # Heuristic ratio when API counting is off (1.0-10.0)
 ```
 
-Each worker writes token usage to `.zerg/state/tokens-{worker_id}.json` with per-task breakdowns (command template, task context, repo map, security rules, spec excerpt). Use `/zerg:status` to view aggregate token consumption across workers. When `api_counting` is enabled, the Anthropic `count_tokens` API provides exact counts; otherwise a character-based heuristic (`len(text) / fallback_chars_per_token`) is used.
+Each worker writes token usage to `.mahabharatha/state/tokens-{worker_id}.json` with per-task breakdowns (command template, task context, repo map, security rules, spec excerpt). Use `/mahabharatha:status` to view aggregate token consumption across workers. When `api_counting` is enabled, the Anthropic `count_tokens` API provides exact counts; otherwise a character-based heuristic (`len(text) / fallback_chars_per_token`) is used.
 
 ### Error Recovery
 
@@ -560,7 +560,7 @@ error_recovery:
 |----------|-------------|
 | `ANTHROPIC_API_KEY` | Claude API key (for container/subprocess modes) |
 
-### ZERG-Specific (Set by Orchestrator)
+### MAHABHARATHA-Specific (Set by Orchestrator)
 
 | Variable | Description |
 |----------|-------------|
@@ -588,13 +588,13 @@ error_recovery:
 
 ```bash
 # 1. Initialize with container support
-zerg init --with-containers
+mahabharatha init --with-containers
 
 # 2. Build the devcontainer image
 devcontainer build --workspace-folder .
 
 # 3. Run with container mode
-zerg rush --mode container --workers 5
+mahabharatha kurukshetra --mode container --workers 5
 ```
 
 ### Authentication
@@ -612,14 +612,14 @@ The devcontainer is configured at `.devcontainer/devcontainer.json`:
 
 ```json
 {
-  "name": "project-zerg",
+  "name": "project-mahabharatha",
   "build": {
     "dockerfile": "Dockerfile",
     "context": ".."
   },
   "mounts": [
     "source=${localWorkspaceFolder},target=/workspace,type=bind",
-    "source=zerg-claude-tasks,target=/root/.claude/tasks,type=volume"
+    "source=mahabharatha-claude-tasks,target=/root/.claude/tasks,type=volume"
   ],
   "containerEnv": {
     "CLAUDE_CODE_TASK_LIST_ID": "${localEnv:ZERG_FEATURE}",
@@ -630,7 +630,7 @@ The devcontainer is configured at `.devcontainer/devcontainer.json`:
 
 ### Docker Network
 
-Container mode creates a `zerg-internal` Docker network for worker isolation. Workers communicate via state files mounted from the host.
+Container mode creates a `mahabharatha-internal` Docker network for worker isolation. Workers communicate via state files mounted from the host.
 
 ---
 
@@ -695,7 +695,7 @@ quality_gates:
 ## Directory Structure Reference
 
 ```
-.zerg/
+.mahabharatha/
 ├── config.yaml              # Main configuration file
 ├── hooks/
 │   └── pre-commit           # Pre-commit hook script

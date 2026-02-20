@@ -1,5 +1,5 @@
 {
-  "feature": "zerg-estimate",
+  "feature": "mahabharatha-estimate",
   "version": "2.0",
   "generated": "2026-01-31T00:00:00Z",
   "total_tasks": 4,
@@ -9,18 +9,18 @@
   "tasks": [
     {
       "id": "TASK-L1-001",
-      "title": "Create zerg:estimate.core.md",
-      "description": "Create the core command file with: split marker, flags (--pre/--post/--calibrate/--workers/--format/--verbose/--history), pre-flight (auto-detect feature and mode), workflow overview (3 modes: pre-estimate, post-compare, calibrate), task tracking lifecycle (TaskCreate/TaskUpdate), completion criteria. Follow zerg:debug.core.md pattern.",
+      "title": "Create mahabharatha:estimate.core.md",
+      "description": "Create the core command file with: split marker, flags (--pre/--post/--calibrate/--workers/--format/--verbose/--history), pre-flight (auto-detect feature and mode), workflow overview (3 modes: pre-estimate, post-compare, calibrate), task tracking lifecycle (TaskCreate/TaskUpdate), completion criteria. Follow mahabharatha:debug.core.md pattern.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/data/commands/zerg:estimate.core.md"],
+        "create": ["mahabharatha/data/commands/mahabharatha:estimate.core.md"],
         "modify": [],
-        "read": ["zerg/data/commands/zerg:debug.core.md", "zerg/data/commands/zerg:analyze.md"]
+        "read": ["mahabharatha/data/commands/mahabharatha:debug.core.md", "mahabharatha/data/commands/mahabharatha:analyze.md"]
       },
       "acceptance_criteria": [
-        "File contains <!-- SPLIT: core, parent: zerg:estimate.md --> marker",
+        "File contains <!-- SPLIT: core, parent: mahabharatha:estimate.md --> marker",
         "All flags documented: --pre, --post, --calibrate, --workers, --format, --verbose, --history",
         "Pre-flight with auto-detection logic",
         "Workflow overview referencing details file for full templates",
@@ -28,31 +28,31 @@
         "< 150 lines"
       ],
       "verification": {
-        "command": "test -f zerg/data/commands/zerg:estimate.core.md && grep -q 'SPLIT' zerg/data/commands/zerg:estimate.core.md && grep -q 'TaskCreate' zerg/data/commands/zerg:estimate.core.md && echo OK",
+        "command": "test -f mahabharatha/data/commands/mahabharatha:estimate.core.md && grep -q 'SPLIT' mahabharatha/data/commands/mahabharatha:estimate.core.md && grep -q 'TaskCreate' mahabharatha/data/commands/mahabharatha:estimate.core.md && echo OK",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20
     },
     {
       "id": "TASK-L1-002",
-      "title": "Create zerg:estimate.details.md",
-      "description": "Create the details reference file with: split marker, PERT formula with risk weighting (O/M/P derivation from risk_score, mean/stddev/P50/P80/P95), per-task output template, per-level output template, feature summary template, post-execution comparison table template, calibration algorithm (bias factor, per-grade breakdown, MAE), JSON schemas (history + calibration files), cost projection model (python -c snippets using .zerg/estimate.py ResourceEstimator), python -c snippets for RiskScorer and WhatIfEngine, edge cases (no task-graph, no state, no history).",
+      "title": "Create mahabharatha:estimate.details.md",
+      "description": "Create the details reference file with: split marker, PERT formula with risk weighting (O/M/P derivation from risk_score, mean/stddev/P50/P80/P95), per-task output template, per-level output template, feature summary template, post-execution comparison table template, calibration algorithm (bias factor, per-grade breakdown, MAE), JSON schemas (history + calibration files), cost projection model (python -c snippets using .mahabharatha/estimate.py ResourceEstimator), python -c snippets for RiskScorer and WhatIfEngine, edge cases (no task-graph, no state, no history).",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/data/commands/zerg:estimate.details.md"],
+        "create": ["mahabharatha/data/commands/mahabharatha:estimate.details.md"],
         "modify": [],
         "read": [
-          "zerg/data/commands/zerg:debug.details.md",
-          "zerg/risk_scoring.py",
-          "zerg/whatif.py",
-          "zerg/metrics.py",
-          ".zerg/estimate.py"
+          "mahabharatha/data/commands/mahabharatha:debug.details.md",
+          "mahabharatha/risk_scoring.py",
+          "mahabharatha/whatif.py",
+          "mahabharatha/metrics.py",
+          ".mahabharatha/estimate.py"
         ]
       },
       "acceptance_criteria": [
-        "File contains <!-- SPLIT: details, parent: zerg:estimate.md --> marker",
+        "File contains <!-- SPLIT: details, parent: mahabharatha:estimate.md --> marker",
         "PERT formula documented with O/M/P derivation from risk_score",
         "Confidence interval math: P50, P80, P95 with stddev multipliers",
         "Pre-execution output template with task/level/feature tables",
@@ -65,30 +65,30 @@
         "Edge case handling documented"
       ],
       "verification": {
-        "command": "test -f zerg/data/commands/zerg:estimate.details.md && grep -q 'PERT' zerg/data/commands/zerg:estimate.details.md && grep -q 'calibration' zerg/data/commands/zerg:estimate.details.md && grep -q 'schema' zerg/data/commands/zerg:estimate.details.md && echo OK",
+        "command": "test -f mahabharatha/data/commands/mahabharatha:estimate.details.md && grep -q 'PERT' mahabharatha/data/commands/mahabharatha:estimate.details.md && grep -q 'calibration' mahabharatha/data/commands/mahabharatha:estimate.details.md && grep -q 'schema' mahabharatha/data/commands/mahabharatha:estimate.details.md && echo OK",
         "timeout_seconds": 30
       },
       "estimate_minutes": 30
     },
     {
       "id": "TASK-L2-001",
-      "title": "Create parent zerg:estimate.md and update backlog",
-      "description": "Create zerg:estimate.md as parent file (copy of core content for backward compatibility, with SPLIT reference comment at bottom). Update claudedocs/backlog.md to mark zerg:estimate as DONE.",
+      "title": "Create parent mahabharatha:estimate.md and update backlog",
+      "description": "Create mahabharatha:estimate.md as parent file (copy of core content for backward compatibility, with SPLIT reference comment at bottom). Update claudedocs/backlog.md to mark mahabharatha:estimate as DONE.",
       "phase": "integration",
       "level": 2,
       "dependencies": ["TASK-L1-001"],
       "files": {
-        "create": ["zerg/data/commands/zerg:estimate.md"],
+        "create": ["mahabharatha/data/commands/mahabharatha:estimate.md"],
         "modify": ["claudedocs/backlog.md"],
-        "read": ["zerg/data/commands/zerg:estimate.core.md"]
+        "read": ["mahabharatha/data/commands/mahabharatha:estimate.core.md"]
       },
       "acceptance_criteria": [
         "Parent file content matches core file",
         "Parent file has SPLIT reference comment at bottom",
-        "claudedocs/backlog.md shows zerg:estimate as DONE"
+        "claudedocs/backlog.md shows mahabharatha:estimate as DONE"
       ],
       "verification": {
-        "command": "test -f zerg/data/commands/zerg:estimate.md && grep -q 'SPLIT' zerg/data/commands/zerg:estimate.md && grep 'estimate' claudedocs/backlog.md | grep -q 'DONE' && echo OK",
+        "command": "test -f mahabharatha/data/commands/mahabharatha:estimate.md && grep -q 'SPLIT' mahabharatha/data/commands/mahabharatha:estimate.md && grep 'estimate' claudedocs/backlog.md | grep -q 'DONE' && echo OK",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5
@@ -104,9 +104,9 @@
         "create": [],
         "modify": [],
         "read": [
-          "zerg/data/commands/zerg:estimate.md",
-          "zerg/data/commands/zerg:estimate.core.md",
-          "zerg/data/commands/zerg:estimate.details.md",
+          "mahabharatha/data/commands/mahabharatha:estimate.md",
+          "mahabharatha/data/commands/mahabharatha:estimate.core.md",
+          "mahabharatha/data/commands/mahabharatha:estimate.details.md",
           "claudedocs/backlog.md"
         ]
       },
@@ -119,7 +119,7 @@
         "Existing tests still pass"
       ],
       "verification": {
-        "command": "ls zerg/data/commands/zerg:estimate.md zerg/data/commands/zerg:estimate.core.md zerg/data/commands/zerg:estimate.details.md && grep -rL 'TaskCreate\\|TaskUpdate\\|TaskList\\|TaskGet' zerg/data/commands/zerg:*.md | wc -l | grep '^0$' && echo OK",
+        "command": "ls mahabharatha/data/commands/mahabharatha:estimate.md mahabharatha/data/commands/mahabharatha:estimate.core.md mahabharatha/data/commands/mahabharatha:estimate.details.md && grep -rL 'TaskCreate\\|TaskUpdate\\|TaskList\\|TaskGet' mahabharatha/data/commands/mahabharatha:*.md | wc -l | grep '^0$' && echo OK",
         "timeout_seconds": 120
       },
       "estimate_minutes": 5

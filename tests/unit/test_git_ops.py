@@ -1,4 +1,4 @@
-"""Tests for ZERG git_ops module."""
+"""Tests for MAHABHARATHA git_ops module."""
 
 from pathlib import Path
 from unittest.mock import MagicMock, patch

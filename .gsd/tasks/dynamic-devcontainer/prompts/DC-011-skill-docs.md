@@ -5,26 +5,26 @@
 
 ## Objective
 
-Update `zerg:init.md` and `zerg:rush.md` skill files to document:
+Update `mahabharatha:init.md` and `mahabharatha:kurukshetra.md` skill files to document:
 - Multi-language project detection
 - Container mode options
 - Examples of container-based execution
 
 ## Files Owned
 
-- `.claude/commands/zerg:init.md` (modify)
-- `.claude/commands/zerg:rush.md` (modify)
+- `.claude/commands/mahabharatha:init.md` (modify)
+- `.claude/commands/mahabharatha:kurukshetra.md` (modify)
 
 ## Implementation
 
-### 1. Update `.claude/commands/zerg:init.md`
+### 1. Update `.claude/commands/mahabharatha:init.md`
 
 Add section about multi-language detection:
 
 ```markdown
 ## Multi-Language Detection
 
-ZERG automatically detects all languages in your project:
+MAHABHARATHA automatically detects all languages in your project:
 
 - **Python**: pyproject.toml, requirements.txt, setup.py, *.py
 - **JavaScript/TypeScript**: package.json, tsconfig.json, *.js, *.ts
@@ -38,7 +38,7 @@ ZERG automatically detects all languages in your project:
 
 ### Multi-Language Devcontainer
 
-For projects with multiple languages, ZERG generates a devcontainer with multiple runtime features:
+For projects with multiple languages, MAHABHARATHA generates a devcontainer with multiple runtime features:
 
 ```json
 {
@@ -56,27 +56,27 @@ For projects with multiple languages, ZERG generates a devcontainer with multipl
 To build the devcontainer image during init:
 
 ```bash
-zerg init --with-containers
+mahabharatha init --with-containers
 ```
 
-This enables container mode for `zerg rush`.
+This enables container mode for `mahabharatha kurukshetra`.
 ```
 
-### 2. Update `.claude/commands/zerg:rush.md`
+### 2. Update `.claude/commands/mahabharatha:kurukshetra.md`
 
 Add section about execution modes:
 
 ```markdown
 ## Execution Modes
 
-ZERG supports three execution modes:
+MAHABHARATHA supports three execution modes:
 
 ### Subprocess Mode (Default)
 
 Workers run as local Python subprocesses:
 
 ```bash
-zerg rush --mode subprocess --workers 5
+mahabharatha kurukshetra --mode subprocess --workers 5
 ```
 
 - No Docker required
@@ -88,12 +88,12 @@ zerg rush --mode subprocess --workers 5
 Workers run in isolated Docker containers:
 
 ```bash
-zerg rush --mode container --workers 5
+mahabharatha kurukshetra --mode container --workers 5
 ```
 
 Requirements:
 - Docker installed and running
-- Devcontainer image built (`zerg init --with-containers`)
+- Devcontainer image built (`mahabharatha init --with-containers`)
 - ANTHROPIC_API_KEY in environment
 
 Benefits:
@@ -106,15 +106,15 @@ Benefits:
 Automatically selects the best mode:
 
 ```bash
-zerg rush --mode auto --workers 5
+mahabharatha kurukshetra --mode auto --workers 5
 # or simply:
-zerg rush --workers 5
+mahabharatha kurukshetra --workers 5
 ```
 
 Auto-detection logic:
 1. If `.devcontainer/devcontainer.json` exists AND
 2. Docker is available AND
-3. `zerg-worker` image is built
+3. `mahabharatha-worker` image is built
 → Uses container mode
 
 Otherwise → Uses subprocess mode
@@ -123,43 +123,43 @@ Otherwise → Uses subprocess mode
 
 ```bash
 # Quick local execution
-zerg rush --workers 3
+mahabharatha kurukshetra --workers 3
 
 # Force container mode
-zerg rush --mode container --workers 5
+mahabharatha kurukshetra --mode container --workers 5
 
 # Dry run to check mode selection
-zerg rush --dry-run
+mahabharatha kurukshetra --dry-run
 # Shows: "Auto-detected mode: container" or "subprocess"
 
 # Build containers first, then run
-zerg init --with-containers
-zerg rush --mode container --workers 5
+mahabharatha init --with-containers
+mahabharatha kurukshetra --mode container --workers 5
 ```
 ```
 
 ## Verification
 
 ```bash
-# Check zerg:init.md has multi-language docs
-grep -l 'Multi-Language' .claude/commands/zerg:init.md
+# Check mahabharatha:init.md has multi-language docs
+grep -l 'Multi-Language' .claude/commands/mahabharatha:init.md
 
-# Check zerg:rush.md has container mode docs
-grep -l 'Container Mode' .claude/commands/zerg:rush.md
-grep -l '\-\-mode' .claude/commands/zerg:rush.md
+# Check mahabharatha:kurukshetra.md has container mode docs
+grep -l 'Container Mode' .claude/commands/mahabharatha:kurukshetra.md
+grep -l '\-\-mode' .claude/commands/mahabharatha:kurukshetra.md
 
 # Count occurrences
 echo "Container mentions:"
-grep -c 'container' .claude/commands/zerg:*.md
+grep -c 'container' .claude/commands/mahabharatha:*.md
 ```
 
 ## Acceptance Criteria
 
-- [ ] zerg:init.md documents multi-language detection
-- [ ] zerg:init.md shows example multi-feature devcontainer.json
-- [ ] zerg:init.md documents --with-containers flag
-- [ ] zerg:rush.md documents subprocess, container, auto modes
-- [ ] zerg:rush.md shows --mode flag usage
-- [ ] zerg:rush.md explains auto-detection logic
+- [ ] mahabharatha:init.md documents multi-language detection
+- [ ] mahabharatha:init.md shows example multi-feature devcontainer.json
+- [ ] mahabharatha:init.md documents --with-containers flag
+- [ ] mahabharatha:kurukshetra.md documents subprocess, container, auto modes
+- [ ] mahabharatha:kurukshetra.md shows --mode flag usage
+- [ ] mahabharatha:kurukshetra.md explains auto-detection logic
 - [ ] Both files have usage examples
 - [ ] No broken markdown formatting

@@ -16,7 +16,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/analyze.py"],
+        "modify": ["mahabharatha/commands/analyze.py"],
         "read": []
       },
       "verification": {
@@ -32,17 +32,17 @@
     {
       "id": "TASK-002",
       "title": "Fix HIGH silent exception handlers batch 1",
-      "description": "Fix ~30 HIGH-severity silent exception handlers in batch 1 files. These catch Exception with no logging and no re-raise. For each: add logger.exception() or narrow exception type. Files: zerg/commands/cleanup.py (10), zerg/commands/debug.py (11), zerg/launchers/container_launcher.py (10), zerg/commands/logs.py (4).",
+      "description": "Fix ~30 HIGH-severity silent exception handlers in batch 1 files. These catch Exception with no logging and no re-raise. For each: add logger.exception() or narrow exception type. Files: mahabharatha/commands/cleanup.py (10), mahabharatha/commands/debug.py (11), mahabharatha/launchers/container_launcher.py (10), mahabharatha/commands/logs.py (4).",
       "phase": "security",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
         "modify": [
-          "zerg/commands/cleanup.py",
-          "zerg/commands/debug.py",
-          "zerg/launchers/container_launcher.py",
-          "zerg/commands/logs.py"
+          "mahabharatha/commands/cleanup.py",
+          "mahabharatha/commands/debug.py",
+          "mahabharatha/launchers/container_launcher.py",
+          "mahabharatha/commands/logs.py"
         ],
         "read": []
       },
@@ -58,24 +58,24 @@
     {
       "id": "TASK-003",
       "title": "Fix HIGH silent handlers batch 2 + enable BLE001",
-      "description": "Fix remaining ~25 HIGH-severity handlers in: zerg/context_plugin.py (8), zerg/token_counter.py (5), zerg/level_coordinator.py (5), zerg/commands/status.py (7), zerg/launchers/subprocess_launcher.py (4), zerg/worker_manager.py (5). Then enable BLE001 ruff rule in pyproject.toml by adding it to the select list.",
+      "description": "Fix remaining ~25 HIGH-severity handlers in: mahabharatha/context_plugin.py (8), mahabharatha/token_counter.py (5), mahabharatha/level_coordinator.py (5), mahabharatha/commands/status.py (7), mahabharatha/launchers/subprocess_launcher.py (4), mahabharatha/worker_manager.py (5). Then enable BLE001 ruff rule in pyproject.toml by adding it to the select list.",
       "phase": "security",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
         "modify": [
-          "zerg/context_plugin.py",
-          "zerg/token_counter.py",
-          "zerg/level_coordinator.py",
-          "zerg/launchers/subprocess_launcher.py",
-          "zerg/worker_manager.py",
+          "mahabharatha/context_plugin.py",
+          "mahabharatha/token_counter.py",
+          "mahabharatha/level_coordinator.py",
+          "mahabharatha/launchers/subprocess_launcher.py",
+          "mahabharatha/worker_manager.py",
           "pyproject.toml"
         ],
         "read": []
       },
       "verification": {
-        "command": "ruff check zerg/ --select BLE001 2>&1 | tail -5 && python -m pytest tests/unit/test_context_plugin.py tests/unit/test_token_counter.py tests/unit/test_level_coordinator.py tests/unit/test_worker_manager_component.py -x --timeout=60 -q",
+        "command": "ruff check mahabharatha/ --select BLE001 2>&1 | tail -5 && python -m pytest tests/unit/test_context_plugin.py tests/unit/test_token_counter.py tests/unit/test_level_coordinator.py tests/unit/test_worker_manager_component.py -x --timeout=60 -q",
         "timeout_seconds": 120
       },
       "estimate_minutes": 45,
@@ -86,17 +86,17 @@
     {
       "id": "TASK-004",
       "title": "Create fs_utils.py single-pass traversal utility",
-      "description": "Create zerg/fs_utils.py with collect_files(root, extensions, exclude_dirs) that does a single rglob('*') traversal and returns files grouped by extension as dict[str, list[Path]]. Include DEFAULT_EXCLUDES set with node_modules, __pycache__, venv, .venv, dist, build, .git, .zerg.",
+      "description": "Create mahabharatha/fs_utils.py with collect_files(root, extensions, exclude_dirs) that does a single rglob('*') traversal and returns files grouped by extension as dict[str, list[Path]]. Include DEFAULT_EXCLUDES set with node_modules, __pycache__, venv, .venv, dist, build, .git, .mahabharatha.",
       "phase": "optimization",
       "level": 2,
       "dependencies": [],
       "files": {
-        "create": ["zerg/fs_utils.py"],
+        "create": ["mahabharatha/fs_utils.py"],
         "modify": [],
-        "read": ["zerg/repo_map.py", "zerg/performance/stack_detector.py"]
+        "read": ["mahabharatha/repo_map.py", "mahabharatha/performance/stack_detector.py"]
       },
       "verification": {
-        "command": "python -c \"from zerg.fs_utils import collect_files; print('OK')\"",
+        "command": "python -c \"from mahabharatha.fs_utils import collect_files; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
@@ -114,12 +114,12 @@
       "files": {
         "create": [],
         "modify": [
-          "zerg/performance/stack_detector.py",
-          "zerg/performance/adapters/hadolint_adapter.py",
-          "zerg/performance/adapters/dive_adapter.py",
-          "zerg/repo_map.py"
+          "mahabharatha/performance/stack_detector.py",
+          "mahabharatha/performance/adapters/hadolint_adapter.py",
+          "mahabharatha/performance/adapters/dive_adapter.py",
+          "mahabharatha/repo_map.py"
         ],
-        "read": ["zerg/fs_utils.py"]
+        "read": ["mahabharatha/fs_utils.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_performance_stack.py tests/unit/test_performance_adapters.py tests/unit/test_repo_map.py -x --timeout=60 -q",
@@ -133,27 +133,27 @@
     {
       "id": "TASK-006",
       "title": "Create state/ package submodules",
-      "description": "Create zerg/state/ package with 7 focused modules extracted from zerg/state.py (1010 lines). Modules: persistence.py (load/save/backup/lock — 7 methods), task_repo.py (get/set/claim/release — 5 methods), retry_repo.py (retry counts/schedules/cooldowns — 8 methods), worker_repo.py (worker registration/health — 6 methods), level_repo.py (level progression/merge status — 6 methods), execution.py (events/pause/errors — 6 methods), metrics_store.py (timing/counts — 4 methods), renderer.py (STATE.md generation — 2 methods). Each submodule receives a reference to PersistenceLayer for data access.",
+      "description": "Create mahabharatha/state/ package with 7 focused modules extracted from mahabharatha/state.py (1010 lines). Modules: persistence.py (load/save/backup/lock — 7 methods), task_repo.py (get/set/claim/release — 5 methods), retry_repo.py (retry counts/schedules/cooldowns — 8 methods), worker_repo.py (worker registration/health — 6 methods), level_repo.py (level progression/merge status — 6 methods), execution.py (events/pause/errors — 6 methods), metrics_store.py (timing/counts — 4 methods), renderer.py (STATE.md generation — 2 methods). Each submodule receives a reference to PersistenceLayer for data access.",
       "phase": "decomposition",
       "level": 3,
       "dependencies": [],
       "files": {
         "create": [
-          "zerg/state/__init__.py",
-          "zerg/state/persistence.py",
-          "zerg/state/task_repo.py",
-          "zerg/state/retry_repo.py",
-          "zerg/state/worker_repo.py",
-          "zerg/state/level_repo.py",
-          "zerg/state/execution.py",
-          "zerg/state/metrics_store.py",
-          "zerg/state/renderer.py"
+          "mahabharatha/state/__init__.py",
+          "mahabharatha/state/persistence.py",
+          "mahabharatha/state/task_repo.py",
+          "mahabharatha/state/retry_repo.py",
+          "mahabharatha/state/worker_repo.py",
+          "mahabharatha/state/level_repo.py",
+          "mahabharatha/state/execution.py",
+          "mahabharatha/state/metrics_store.py",
+          "mahabharatha/state/renderer.py"
         ],
         "modify": [],
-        "read": ["zerg/state.py"]
+        "read": ["mahabharatha/state.py"]
       },
       "verification": {
-        "command": "python -c \"from zerg.state.persistence import PersistenceLayer; from zerg.state.task_repo import TaskStateRepo; from zerg.state.retry_repo import RetryRepo; from zerg.state.worker_repo import WorkerStateRepo; from zerg.state.level_repo import LevelStateRepo; from zerg.state.execution import ExecutionLog; from zerg.state.metrics_store import MetricsStore; from zerg.state.renderer import StateRenderer; print('All submodules importable')\"",
+        "command": "python -c \"from mahabharatha.state.persistence import PersistenceLayer; from mahabharatha.state.task_repo import TaskStateRepo; from mahabharatha.state.retry_repo import RetryRepo; from mahabharatha.state.worker_repo import WorkerStateRepo; from mahabharatha.state.level_repo import LevelStateRepo; from mahabharatha.state.execution import ExecutionLog; from mahabharatha.state.metrics_store import MetricsStore; from mahabharatha.state.renderer import StateRenderer; print('All submodules importable')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 60,
@@ -164,17 +164,17 @@
     {
       "id": "TASK-007",
       "title": "Create StateManager facade in manager.py",
-      "description": "Create zerg/state/manager.py with thin StateManager facade that delegates to the 7 submodules. Must preserve exact same public API as current state.py StateManager (47 public methods). Update zerg/state/__init__.py to re-export StateManager. Then delete zerg/state.py (the old monolith file).",
+      "description": "Create mahabharatha/state/manager.py with thin StateManager facade that delegates to the 7 submodules. Must preserve exact same public API as current state.py StateManager (47 public methods). Update mahabharatha/state/__init__.py to re-export StateManager. Then delete mahabharatha/state.py (the old monolith file).",
       "phase": "decomposition",
       "level": 3,
       "dependencies": ["TASK-006"],
       "files": {
-        "create": ["zerg/state/manager.py"],
-        "modify": ["zerg/state/__init__.py"],
-        "read": ["zerg/state.py"]
+        "create": ["mahabharatha/state/manager.py"],
+        "modify": ["mahabharatha/state/__init__.py"],
+        "read": ["mahabharatha/state.py"]
       },
       "verification": {
-        "command": "python -c \"from zerg.state import StateManager; sm = StateManager('test'); print('Facade works')\" && python -m pytest tests/unit/test_state.py -x --timeout=30 -q",
+        "command": "python -c \"from mahabharatha.state import StateManager; sm = StateManager('test'); print('Facade works')\" && python -m pytest tests/unit/test_state.py -x --timeout=30 -q",
         "timeout_seconds": 60
       },
       "estimate_minutes": 45,
@@ -185,32 +185,32 @@
     {
       "id": "TASK-008",
       "title": "Update 15 production importers for state/ package",
-      "description": "Update all production files that import from zerg.state to use the new package. Since zerg/state/__init__.py re-exports StateManager, most imports should work unchanged. Verify each: state_reconciler.py, protocol_state.py, level_coordinator.py, dependency_checker.py, protocol_handler.py, metrics.py, worker_manager.py, orchestrator.py, task_sync.py, task_retry_manager.py, state_sync_service.py, commands/status.py, commands/stop.py, commands/retry.py, commands/merge_cmd.py. Delete the old zerg/state.py file after verifying all imports work.",
+      "description": "Update all production files that import from mahabharatha.state to use the new package. Since mahabharatha/state/__init__.py re-exports StateManager, most imports should work unchanged. Verify each: state_reconciler.py, protocol_state.py, level_coordinator.py, dependency_checker.py, protocol_handler.py, metrics.py, worker_manager.py, orchestrator.py, task_sync.py, task_retry_manager.py, state_sync_service.py, commands/status.py, commands/stop.py, commands/retry.py, commands/merge_cmd.py. Delete the old mahabharatha/state.py file after verifying all imports work.",
       "phase": "decomposition",
       "level": 3,
       "dependencies": ["TASK-007"],
       "files": {
         "create": [],
         "modify": [
-          "zerg/state_reconciler.py",
-          "zerg/protocol_state.py",
-          "zerg/level_coordinator.py",
-          "zerg/dependency_checker.py",
-          "zerg/protocol_handler.py",
-          "zerg/metrics.py",
-          "zerg/worker_manager.py",
-          "zerg/orchestrator.py",
-          "zerg/task_sync.py",
-          "zerg/task_retry_manager.py",
-          "zerg/state_sync_service.py",
-          "zerg/commands/stop.py",
-          "zerg/commands/retry.py",
-          "zerg/commands/merge_cmd.py"
+          "mahabharatha/state_reconciler.py",
+          "mahabharatha/protocol_state.py",
+          "mahabharatha/level_coordinator.py",
+          "mahabharatha/dependency_checker.py",
+          "mahabharatha/protocol_handler.py",
+          "mahabharatha/metrics.py",
+          "mahabharatha/worker_manager.py",
+          "mahabharatha/orchestrator.py",
+          "mahabharatha/task_sync.py",
+          "mahabharatha/task_retry_manager.py",
+          "mahabharatha/state_sync_service.py",
+          "mahabharatha/commands/stop.py",
+          "mahabharatha/commands/retry.py",
+          "mahabharatha/commands/merge_cmd.py"
         ],
-        "read": ["zerg/state/__init__.py"]
+        "read": ["mahabharatha/state/__init__.py"]
       },
       "verification": {
-        "command": "python -c \"from zerg.state import StateManager; from zerg.orchestrator import Orchestrator; from zerg.worker_manager import WorkerManager; print('Production imports OK')\" && python -m pytest tests/unit/test_state.py tests/unit/test_orchestrator.py -x --timeout=60 -q",
+        "command": "python -c \"from mahabharatha.state import StateManager; from mahabharatha.orchestrator import Orchestrator; from mahabharatha.worker_manager import WorkerManager; print('Production imports OK')\" && python -m pytest tests/unit/test_state.py tests/unit/test_orchestrator.py -x --timeout=60 -q",
         "timeout_seconds": 120
       },
       "estimate_minutes": 30,
@@ -221,7 +221,7 @@
     {
       "id": "TASK-009",
       "title": "Update 15 test importers for state/ package",
-      "description": "Update all test files that import from zerg.state: test_state_integration.py, test_worker_manager_component.py, test_state_tasks.py, test_state_persistence.py, test_state_levels.py, test_state.py, test_metrics.py, test_status_cmd.py, test_retry_cmd.py, test_claim_enforcement.py, test_metrics_integration.py, test_deferred_merge.py, test_level_coordinator.py, test_task_sync.py, test_task_retry_manager.py. Also update mock_state.py in tests/mocks/.",
+      "description": "Update all test files that import from mahabharatha.state: test_state_integration.py, test_worker_manager_component.py, test_state_tasks.py, test_state_persistence.py, test_state_levels.py, test_state.py, test_metrics.py, test_status_cmd.py, test_retry_cmd.py, test_claim_enforcement.py, test_metrics_integration.py, test_deferred_merge.py, test_level_coordinator.py, test_task_sync.py, test_task_retry_manager.py. Also update mock_state.py in tests/mocks/.",
       "phase": "decomposition",
       "level": 3,
       "dependencies": ["TASK-008"],
@@ -245,7 +245,7 @@
           "tests/unit/test_task_retry_manager.py",
           "tests/mocks/mock_state.py"
         ],
-        "read": ["zerg/state/__init__.py"]
+        "read": ["mahabharatha/state/__init__.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_state*.py tests/integration/test_state*.py tests/unit/test_metrics.py tests/integration/test_metrics_integration.py -x --timeout=120 -q",
@@ -259,22 +259,22 @@
     {
       "id": "TASK-010",
       "title": "Define core TypedDicts and apply to top offenders batch 1",
-      "description": "Add 4 new TypedDicts to zerg/types.py: BacklogItemDict, DiagnosticResultDict, GraphNodeDict, StateDict. Apply to top offender files: zerg/backlog.py (~20 dict[str,Any] → BacklogItemDict), zerg/diagnostics/env_diagnostics.py (~19 → DiagnosticResultDict), zerg/graph_validation.py (~11 → GraphNodeDict), zerg/state/ modules (~11 → StateDict).",
+      "description": "Add 4 new TypedDicts to mahabharatha/types.py: BacklogItemDict, DiagnosticResultDict, GraphNodeDict, StateDict. Apply to top offender files: mahabharatha/backlog.py (~20 dict[str,Any] → BacklogItemDict), mahabharatha/diagnostics/env_diagnostics.py (~19 → DiagnosticResultDict), mahabharatha/graph_validation.py (~11 → GraphNodeDict), mahabharatha/state/ modules (~11 → StateDict).",
       "phase": "typing",
       "level": 4,
       "dependencies": ["TASK-009"],
       "files": {
         "create": [],
         "modify": [
-          "zerg/types.py",
-          "zerg/backlog.py",
-          "zerg/diagnostics/env_diagnostics.py",
-          "zerg/graph_validation.py"
+          "mahabharatha/types.py",
+          "mahabharatha/backlog.py",
+          "mahabharatha/diagnostics/env_diagnostics.py",
+          "mahabharatha/graph_validation.py"
         ],
         "read": []
       },
       "verification": {
-        "command": "python -c \"from zerg.types import BacklogItemDict, DiagnosticResultDict, GraphNodeDict, StateDict; print('TypedDicts defined')\" && python -m pytest tests/unit/test_types.py tests/unit/test_graph_validation.py tests/unit/test_backlog.py -x --timeout=60 -q",
+        "command": "python -c \"from mahabharatha.types import BacklogItemDict, DiagnosticResultDict, GraphNodeDict, StateDict; print('TypedDicts defined')\" && python -m pytest tests/unit/test_types.py tests/unit/test_graph_validation.py tests/unit/test_backlog.py -x --timeout=60 -q",
         "timeout_seconds": 120
       },
       "estimate_minutes": 40,
@@ -285,22 +285,22 @@
     {
       "id": "TASK-011",
       "title": "Define remaining TypedDicts and apply batch 2",
-      "description": "Add 4 more TypedDicts to zerg/types.py: WorkerMetricsDict, StatusFormatterDict, TaskSyncDict, PRDataDict. Apply to: zerg/worker_metrics.py (~7), zerg/status_formatter.py (~8), zerg/task_sync.py (~8), zerg/git/pr_engine.py (~8). Also narrow dict[str,Any] in zerg/exceptions.py context field where appropriate.",
+      "description": "Add 4 more TypedDicts to mahabharatha/types.py: WorkerMetricsDict, StatusFormatterDict, TaskSyncDict, PRDataDict. Apply to: mahabharatha/worker_metrics.py (~7), mahabharatha/status_formatter.py (~8), mahabharatha/task_sync.py (~8), mahabharatha/git/pr_engine.py (~8). Also narrow dict[str,Any] in mahabharatha/exceptions.py context field where appropriate.",
       "phase": "typing",
       "level": 4,
       "dependencies": ["TASK-010"],
       "files": {
         "create": [],
         "modify": [
-          "zerg/worker_metrics.py",
-          "zerg/status_formatter.py",
-          "zerg/git/pr_engine.py",
-          "zerg/exceptions.py"
+          "mahabharatha/worker_metrics.py",
+          "mahabharatha/status_formatter.py",
+          "mahabharatha/git/pr_engine.py",
+          "mahabharatha/exceptions.py"
         ],
-        "read": ["zerg/types.py"]
+        "read": ["mahabharatha/types.py"]
       },
       "verification": {
-        "command": "python -c \"from zerg.types import WorkerMetricsDict, StatusFormatterDict, TaskSyncDict, PRDataDict; print('OK')\" && python -m pytest tests/unit/test_worker_metrics.py tests/unit/test_status_formatter.py tests/unit/test_task_sync.py tests/unit/test_git_pr_engine.py tests/unit/test_exceptions.py -x --timeout=60 -q",
+        "command": "python -c \"from mahabharatha.types import WorkerMetricsDict, StatusFormatterDict, TaskSyncDict, PRDataDict; print('OK')\" && python -m pytest tests/unit/test_worker_metrics.py tests/unit/test_status_formatter.py tests/unit/test_task_sync.py tests/unit/test_git_pr_engine.py tests/unit/test_exceptions.py -x --timeout=60 -q",
         "timeout_seconds": 120
       },
       "estimate_minutes": 35,
@@ -311,22 +311,22 @@
     {
       "id": "TASK-012",
       "title": "Create rendering/ package with shared utilities",
-      "description": "Create zerg/rendering/ package: __init__.py, shared.py (move content from zerg/render_utils.py — render_gantt_chart and other utilities), dryrun_renderer.py (empty shell with DryRunRenderer class stub), status_renderer.py (empty shell with StatusRenderer class and standalone render function stubs). Delete zerg/render_utils.py after moving content to shared.py. Update imports in zerg/dryrun.py from render_utils to rendering.shared.",
+      "description": "Create mahabharatha/rendering/ package: __init__.py, shared.py (move content from mahabharatha/render_utils.py — render_gantt_chart and other utilities), dryrun_renderer.py (empty shell with DryRunRenderer class stub), status_renderer.py (empty shell with StatusRenderer class and standalone render function stubs). Delete mahabharatha/render_utils.py after moving content to shared.py. Update imports in mahabharatha/dryrun.py from render_utils to rendering.shared.",
       "phase": "rendering",
       "level": 4,
       "dependencies": ["TASK-009"],
       "files": {
         "create": [
-          "zerg/rendering/__init__.py",
-          "zerg/rendering/shared.py",
-          "zerg/rendering/dryrun_renderer.py",
-          "zerg/rendering/status_renderer.py"
+          "mahabharatha/rendering/__init__.py",
+          "mahabharatha/rendering/shared.py",
+          "mahabharatha/rendering/dryrun_renderer.py",
+          "mahabharatha/rendering/status_renderer.py"
         ],
-        "modify": ["zerg/render_utils.py"],
+        "modify": ["mahabharatha/render_utils.py"],
         "read": []
       },
       "verification": {
-        "command": "python -c \"from zerg.rendering.shared import render_gantt_chart; print('Rendering package OK')\"",
+        "command": "python -c \"from mahabharatha.rendering.shared import render_gantt_chart; print('Rendering package OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 25,
@@ -337,19 +337,19 @@
     {
       "id": "TASK-013",
       "title": "Extract render methods from dryrun.py and status.py",
-      "description": "Move 11 _render_* methods from DryRunSimulator into zerg/rendering/dryrun_renderer.py as DryRunRenderer class. DryRunSimulator.run() becomes: analyze → renderer.render(report). Move DashboardRenderer class and ~10 standalone render functions (show_level_status, show_worker_status, show_recent_events, show_tasks_view, show_workers_view, show_commits_view, etc.) from status.py into zerg/rendering/status_renderer.py. Keep data collection logic in status.py.",
+      "description": "Move 11 _render_* methods from DryRunSimulator into mahabharatha/rendering/dryrun_renderer.py as DryRunRenderer class. DryRunSimulator.run() becomes: analyze → renderer.render(report). Move DashboardRenderer class and ~10 standalone render functions (show_level_status, show_worker_status, show_recent_events, show_tasks_view, show_workers_view, show_commits_view, etc.) from status.py into mahabharatha/rendering/status_renderer.py. Keep data collection logic in status.py.",
       "phase": "rendering",
       "level": 4,
       "dependencies": ["TASK-012"],
       "files": {
         "create": [],
         "modify": [
-          "zerg/dryrun.py",
-          "zerg/commands/status.py",
-          "zerg/rendering/dryrun_renderer.py",
-          "zerg/rendering/status_renderer.py"
+          "mahabharatha/dryrun.py",
+          "mahabharatha/commands/status.py",
+          "mahabharatha/rendering/dryrun_renderer.py",
+          "mahabharatha/rendering/status_renderer.py"
         ],
-        "read": ["zerg/rendering/shared.py"]
+        "read": ["mahabharatha/rendering/shared.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_dryrun.py tests/unit/test_status_cmd.py -x --timeout=60 -q",
@@ -363,18 +363,18 @@
     {
       "id": "TASK-014",
       "title": "Fix MEDIUM exception handlers — critical path re-raise",
-      "description": "Address MEDIUM-severity handlers in critical paths that should re-raise or fail explicitly: zerg/merge.py (2 handlers — merge failures must propagate), zerg/gates.py (quality gate failures must propagate), zerg/verify.py (verification failures must propagate), zerg/state/ persistence.py (persistence failures must propagate), zerg/orchestrator.py (critical coordination failures). Also handle: zerg/protocol_handler.py (3), zerg/event_emitter.py (1), zerg/step_executor.py (1).",
+      "description": "Address MEDIUM-severity handlers in critical paths that should re-raise or fail explicitly: mahabharatha/merge.py (2 handlers — merge failures must propagate), mahabharatha/gates.py (quality gate failures must propagate), mahabharatha/verify.py (verification failures must propagate), mahabharatha/state/ persistence.py (persistence failures must propagate), mahabharatha/orchestrator.py (critical coordination failures). Also handle: mahabharatha/protocol_handler.py (3), mahabharatha/event_emitter.py (1), mahabharatha/step_executor.py (1).",
       "phase": "exceptions",
       "level": 5,
       "dependencies": ["TASK-001", "TASK-002"],
       "files": {
         "create": [],
         "modify": [
-          "zerg/merge.py",
-          "zerg/gates.py",
-          "zerg/verify.py",
-          "zerg/event_emitter.py",
-          "zerg/step_executor.py"
+          "mahabharatha/merge.py",
+          "mahabharatha/gates.py",
+          "mahabharatha/verify.py",
+          "mahabharatha/event_emitter.py",
+          "mahabharatha/step_executor.py"
         ],
         "read": []
       },
@@ -390,36 +390,36 @@
     {
       "id": "TASK-015",
       "title": "Narrow MEDIUM handlers + annotate intentional swallows",
-      "description": "For remaining MEDIUM handlers: (1) Narrow exception types where failure mode is known — json.JSONDecodeError for JSON parsing, FileNotFoundError/OSError for file ops, subprocess.SubprocessError for commands, KeyError/ValueError for data validation. Files: zerg/plugins.py (4), zerg/rules/loader.py (2), zerg/rules/validator.py (1), zerg/rules/injector.py (1), zerg/spec_loader.py (2), zerg/formatter_detector.py (3), zerg/git/bisect_engine.py (3), zerg/git/history_engine.py (3), zerg/git/pr_engine.py (3), zerg/git/release_engine.py (4), zerg/git/config.py (1), zerg/adaptive_detail.py (1), zerg/inception.py (1), zerg/security_rules.py (1), zerg/token_aggregator.py (3), zerg/token_tracker.py (3), zerg/loops.py (1), zerg/state_reconciler.py (2). (2) Add noqa: BLE001 comments with justification for intentional swallows (e.g., plugin loading, non-critical diagnostics).",
+      "description": "For remaining MEDIUM handlers: (1) Narrow exception types where failure mode is known — json.JSONDecodeError for JSON parsing, FileNotFoundError/OSError for file ops, subprocess.SubprocessError for commands, KeyError/ValueError for data validation. Files: mahabharatha/plugins.py (4), mahabharatha/rules/loader.py (2), mahabharatha/rules/validator.py (1), mahabharatha/rules/injector.py (1), mahabharatha/spec_loader.py (2), mahabharatha/formatter_detector.py (3), mahabharatha/git/bisect_engine.py (3), mahabharatha/git/history_engine.py (3), mahabharatha/git/pr_engine.py (3), mahabharatha/git/release_engine.py (4), mahabharatha/git/config.py (1), mahabharatha/adaptive_detail.py (1), mahabharatha/inception.py (1), mahabharatha/security_rules.py (1), mahabharatha/token_aggregator.py (3), mahabharatha/token_tracker.py (3), mahabharatha/loops.py (1), mahabharatha/state_reconciler.py (2). (2) Add noqa: BLE001 comments with justification for intentional swallows (e.g., plugin loading, non-critical diagnostics).",
       "phase": "exceptions",
       "level": 5,
       "dependencies": ["TASK-003"],
       "files": {
         "create": [],
         "modify": [
-          "zerg/plugins.py",
-          "zerg/rules/loader.py",
-          "zerg/rules/validator.py",
-          "zerg/rules/injector.py",
-          "zerg/spec_loader.py",
-          "zerg/formatter_detector.py",
-          "zerg/git/bisect_engine.py",
-          "zerg/git/history_engine.py",
-          "zerg/git/pr_engine.py",
-          "zerg/git/release_engine.py",
-          "zerg/git/config.py",
-          "zerg/adaptive_detail.py",
-          "zerg/inception.py",
-          "zerg/security_rules.py",
-          "zerg/token_aggregator.py",
-          "zerg/token_tracker.py",
-          "zerg/loops.py",
-          "zerg/state_reconciler.py"
+          "mahabharatha/plugins.py",
+          "mahabharatha/rules/loader.py",
+          "mahabharatha/rules/validator.py",
+          "mahabharatha/rules/injector.py",
+          "mahabharatha/spec_loader.py",
+          "mahabharatha/formatter_detector.py",
+          "mahabharatha/git/bisect_engine.py",
+          "mahabharatha/git/history_engine.py",
+          "mahabharatha/git/pr_engine.py",
+          "mahabharatha/git/release_engine.py",
+          "mahabharatha/git/config.py",
+          "mahabharatha/adaptive_detail.py",
+          "mahabharatha/inception.py",
+          "mahabharatha/security_rules.py",
+          "mahabharatha/token_aggregator.py",
+          "mahabharatha/token_tracker.py",
+          "mahabharatha/loops.py",
+          "mahabharatha/state_reconciler.py"
         ],
         "read": []
       },
       "verification": {
-        "command": "ruff check zerg/ --select BLE001 2>&1 | tail -5 && python -m pytest tests/unit/test_plugins.py tests/unit/test_rules_loader.py tests/unit/test_git_bisect_engine.py tests/unit/test_git_history_engine.py -x --timeout=60 -q",
+        "command": "ruff check mahabharatha/ --select BLE001 2>&1 | tail -5 && python -m pytest tests/unit/test_plugins.py tests/unit/test_rules_loader.py tests/unit/test_git_bisect_engine.py tests/unit/test_git_history_engine.py -x --timeout=60 -q",
         "timeout_seconds": 120
       },
       "estimate_minutes": 60,
@@ -430,17 +430,17 @@
     {
       "id": "TASK-016",
       "title": "Create json_utils.py with orjson/stdlib abstraction",
-      "description": "Create zerg/json_utils.py: try import orjson, define loads/dumps/load/dump. Fallback to stdlib json. dumps() always returns str (orjson returns bytes, so .decode()). Add orjson>=3.9.0 to [project.optional-dependencies] performance group in pyproject.toml. Add 'all' group that includes performance.",
+      "description": "Create mahabharatha/json_utils.py: try import orjson, define loads/dumps/load/dump. Fallback to stdlib json. dumps() always returns str (orjson returns bytes, so .decode()). Add orjson>=3.9.0 to [project.optional-dependencies] performance group in pyproject.toml. Add 'all' group that includes performance.",
       "phase": "orjson",
       "level": 6,
       "dependencies": ["TASK-009"],
       "files": {
-        "create": ["zerg/json_utils.py"],
+        "create": ["mahabharatha/json_utils.py"],
         "modify": [],
         "read": []
       },
       "verification": {
-        "command": "python -c \"from zerg.json_utils import loads, dumps, load, dump; assert dumps({'a': 1}) == '{\\\"a\\\": 1}' or True; print('json_utils OK')\"",
+        "command": "python -c \"from mahabharatha.json_utils import loads, dumps, load, dump; assert dumps({'a': 1}) == '{\\\"a\\\": 1}' or True; print('json_utils OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
@@ -451,51 +451,51 @@
     {
       "id": "TASK-017",
       "title": "Migrate json imports to json_utils across codebase",
-      "description": "Replace 'import json' + json.loads/json.dumps with 'from zerg.json_utils import loads, dumps' in all 36+ production files under zerg/ that use JSON. Priority hot-path modules first: state/persistence.py, log_aggregator.py, token_counter.py, parser.py, validation.py. Then batch-migrate remaining files. Do NOT migrate test files or files in .zerg/ legacy directory.",
+      "description": "Replace 'import json' + json.loads/json.dumps with 'from mahabharatha.json_utils import loads, dumps' in all 36+ production files under mahabharatha/ that use JSON. Priority hot-path modules first: state/persistence.py, log_aggregator.py, token_counter.py, parser.py, validation.py. Then batch-migrate remaining files. Do NOT migrate test files or files in .mahabharatha/ legacy directory.",
       "phase": "orjson",
       "level": 6,
       "dependencies": ["TASK-016"],
       "files": {
         "create": [],
         "modify": [
-          "zerg/log_aggregator.py",
-          "zerg/parser.py",
-          "zerg/validation.py",
-          "zerg/config.py",
-          "zerg/graph_validation.py",
-          "zerg/diagnostics/env_diagnostics.py",
-          "zerg/diagnostics/log_analyzer.py",
-          "zerg/diagnostics/knowledge_base.py",
-          "zerg/diagnostics/error_intel.py",
-          "zerg/diagnostics/code_fixer.py",
-          "zerg/diagnostics/hypothesis_engine.py",
-          "zerg/diagnostics/state_introspector.py",
-          "zerg/diagnostics/log_correlator.py",
-          "zerg/doc_engine/extractor.py",
-          "zerg/doc_engine/crossref.py",
-          "zerg/doc_engine/dependencies.py",
-          "zerg/doc_engine/renderer.py",
-          "zerg/git/rescue.py",
-          "zerg/git/release_engine.py",
-          "zerg/git/prereview.py",
-          "zerg/git/commit_engine.py",
-          "zerg/backlog.py",
-          "zerg/charter.py",
-          "zerg/whatif.py",
-          "zerg/test_scope.py",
-          "zerg/claude_tasks_reader.py",
-          "zerg/command_splitter.py",
-          "zerg/validate_commands.py",
-          "zerg/commands/init.py",
-          "zerg/commands/design.py",
-          "zerg/commands/build.py",
-          "zerg/commands/review.py",
-          "zerg/commands/refactor.py",
-          "zerg/commands/test_cmd.py",
-          "zerg/commands/rush.py",
-          "zerg/commands/wiki.py"
+          "mahabharatha/log_aggregator.py",
+          "mahabharatha/parser.py",
+          "mahabharatha/validation.py",
+          "mahabharatha/config.py",
+          "mahabharatha/graph_validation.py",
+          "mahabharatha/diagnostics/env_diagnostics.py",
+          "mahabharatha/diagnostics/log_analyzer.py",
+          "mahabharatha/diagnostics/knowledge_base.py",
+          "mahabharatha/diagnostics/error_intel.py",
+          "mahabharatha/diagnostics/code_fixer.py",
+          "mahabharatha/diagnostics/hypothesis_engine.py",
+          "mahabharatha/diagnostics/state_introspector.py",
+          "mahabharatha/diagnostics/log_correlator.py",
+          "mahabharatha/doc_engine/extractor.py",
+          "mahabharatha/doc_engine/crossref.py",
+          "mahabharatha/doc_engine/dependencies.py",
+          "mahabharatha/doc_engine/renderer.py",
+          "mahabharatha/git/rescue.py",
+          "mahabharatha/git/release_engine.py",
+          "mahabharatha/git/prereview.py",
+          "mahabharatha/git/commit_engine.py",
+          "mahabharatha/backlog.py",
+          "mahabharatha/charter.py",
+          "mahabharatha/whatif.py",
+          "mahabharatha/test_scope.py",
+          "mahabharatha/claude_tasks_reader.py",
+          "mahabharatha/command_splitter.py",
+          "mahabharatha/validate_commands.py",
+          "mahabharatha/commands/init.py",
+          "mahabharatha/commands/design.py",
+          "mahabharatha/commands/build.py",
+          "mahabharatha/commands/review.py",
+          "mahabharatha/commands/refactor.py",
+          "mahabharatha/commands/test_cmd.py",
+          "mahabharatha/commands/kurukshetra.py",
+          "mahabharatha/commands/wiki.py"
         ],
-        "read": ["zerg/json_utils.py"]
+        "read": ["mahabharatha/json_utils.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_parser.py tests/unit/test_validation.py tests/unit/test_log_aggregator.py tests/unit/test_config.py -x --timeout=60 -q",
@@ -516,7 +516,7 @@
       "files": {
         "create": [],
         "modify": [
-          "zerg/formatter_detector.py"
+          "mahabharatha/formatter_detector.py"
         ],
         "read": []
       },
@@ -539,13 +539,13 @@
       "files": {
         "create": [],
         "modify": [
-          "zerg/git/history_engine.py",
-          "zerg/git/rescue.py",
-          "zerg/protocol_state.py",
-          "zerg/commands/design.py",
-          "zerg/verify.py",
-          "zerg/parser.py",
-          "zerg/plugins.py"
+          "mahabharatha/git/history_engine.py",
+          "mahabharatha/git/rescue.py",
+          "mahabharatha/protocol_state.py",
+          "mahabharatha/commands/design.py",
+          "mahabharatha/verify.py",
+          "mahabharatha/parser.py",
+          "mahabharatha/plugins.py"
         ],
         "read": []
       },
@@ -568,10 +568,10 @@
       "files": {
         "create": [],
         "modify": ["CHANGELOG.md"],
-        "read": ["zerg/**/*.py", "tests/**/*.py"]
+        "read": ["mahabharatha/**/*.py", "tests/**/*.py"]
       },
       "verification": {
-        "command": "python -m zerg.validate_commands && python -m pytest tests/unit/test_state*.py tests/integration/test_state_integration.py tests/unit/test_types.py -x --timeout=60 -q",
+        "command": "python -m mahabharatha.validate_commands && python -m pytest tests/unit/test_state*.py tests/integration/test_state_integration.py tests/unit/test_types.py -x --timeout=60 -q",
         "timeout_seconds": 120
       },
       "estimate_minutes": 10,
@@ -654,7 +654,7 @@
       },
       {
         "tasks": ["TASK-010", "TASK-011"],
-        "reason": "Both modify zerg/types.py",
+        "reason": "Both modify mahabharatha/types.py",
         "resolution": "Sequential — TASK-010 first"
       },
       {

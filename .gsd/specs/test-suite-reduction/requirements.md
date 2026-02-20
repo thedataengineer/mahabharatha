@@ -93,4 +93,4 @@ No new dependencies. All infrastructure already in place:
 - `pytest-split>=0.8` (installed)
 - `pytest-xdist>=3.0` (installed)
 - Smoke marker registered in pyproject.toml
-- Smoke quality gate defined in .zerg/config.yaml
+- Smoke quality gate defined in .mahabharatha/config.yaml

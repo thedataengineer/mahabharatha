@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 Worktree Manager."""
+"""Tests for MAHABHARATHA v2 Worktree Manager."""
 
 import subprocess
 import sys
@@ -84,7 +84,7 @@ class TestWorktreeManager:
         wt = wm.create("w1")
 
         assert wt.path.exists()
-        assert wt.branch == "zerg/worker-w1"
+        assert wt.branch == "mahabharatha/worker-w1"
         assert wt.worker_id == "w1"
         assert "w1" in wm.worktrees
 
@@ -121,7 +121,7 @@ class TestWorktreeManager:
         wm = WorktreeManager(git_repo)
         wt = wm.create("test-001")
 
-        assert ".zerg/worktrees/worker-test-001" in str(wt.path)
+        assert ".mahabharatha/worktrees/worker-test-001" in str(wt.path)
 
 
 class TestWorktreeMerge:
@@ -202,4 +202,4 @@ class TestGitIntegration:
         result = subprocess.run(
             ["git", "branch", "-l"], cwd=git_repo, capture_output=True, text=True
         )
-        assert "zerg/worker-w1" in result.stdout
+        assert "mahabharatha/worker-w1" in result.stdout

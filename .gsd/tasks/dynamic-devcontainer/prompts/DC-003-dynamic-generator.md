@@ -5,26 +5,26 @@
 
 ## Objective
 
-Add `DynamicDevcontainerGenerator` class to `zerg/devcontainer_features.py` that generates devcontainer.json configs with multi-language features based on `ProjectStack`.
+Add `DynamicDevcontainerGenerator` class to `mahabharatha/devcontainer_features.py` that generates devcontainer.json configs with multi-language features based on `ProjectStack`.
 
 ## Files Owned
 
-- `zerg/devcontainer_features.py` (modify - add class)
+- `mahabharatha/devcontainer_features.py` (modify - add class)
 
 ## Files to Read
 
-- `zerg/security_rules.py` (reference ProjectStack)
+- `mahabharatha/security_rules.py` (reference ProjectStack)
 
 ## Implementation
 
-Add to `zerg/devcontainer_features.py`:
+Add to `mahabharatha/devcontainer_features.py`:
 
 ```python
 from dataclasses import dataclass
 from pathlib import Path
 import json
 
-from zerg.security_rules import ProjectStack
+from mahabharatha.security_rules import ProjectStack
 
 
 @dataclass
@@ -66,7 +66,7 @@ class DevcontainerSpec:
 class DynamicDevcontainerGenerator:
     """Generate devcontainer configs for multi-language projects."""
 
-    def __init__(self, stack: ProjectStack, name: str = "zerg-worker"):
+    def __init__(self, stack: ProjectStack, name: str = "mahabharatha-worker"):
         """Initialize generator.
 
         Args:
@@ -99,7 +99,7 @@ class DynamicDevcontainerGenerator:
 
         # Add framework-specific post-create commands
         post_commands = list(custom_commands)
-        post_commands.append("echo 'ZERG worker ready'")
+        post_commands.append("echo 'MAHABHARATHA worker ready'")
 
         # Determine image
         if len(self.stack.languages) > 1:
@@ -138,7 +138,7 @@ class DynamicDevcontainerGenerator:
         return config_path
 
     @classmethod
-    def from_languages(cls, languages: set[str], name: str = "zerg-worker") -> "DynamicDevcontainerGenerator":
+    def from_languages(cls, languages: set[str], name: str = "mahabharatha-worker") -> "DynamicDevcontainerGenerator":
         """Create generator from language set.
 
         Args:
@@ -156,8 +156,8 @@ class DynamicDevcontainerGenerator:
 
 ```bash
 python -c "
-from zerg.devcontainer_features import DynamicDevcontainerGenerator
-from zerg.security_rules import ProjectStack
+from mahabharatha.devcontainer_features import DynamicDevcontainerGenerator
+from mahabharatha.security_rules import ProjectStack
 
 # Test multi-language
 stack = ProjectStack(languages={'python', 'go', 'r'})

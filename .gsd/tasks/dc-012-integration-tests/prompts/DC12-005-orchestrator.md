@@ -23,15 +23,15 @@ from unittest.mock import patch, MagicMock
 
 import pytest
 
-from zerg.orchestrator import Orchestrator
-from zerg.launcher import SubprocessLauncher
-from zerg.config import ZergConfig
+from mahabharatha.orchestrator import Orchestrator
+from mahabharatha.launcher import SubprocessLauncher
+from mahabharatha.config import ZergConfig
 
 
 class TestOrchestratorModeSelection:
     """Test suite for orchestrator launcher mode auto-detection."""
 
-    @patch("zerg.orchestrator.TaskGraph")
+    @patch("mahabharatha.orchestrator.TaskGraph")
     def test_auto_detect_without_devcontainer(
         self, mock_task_graph: MagicMock, tmp_path: Path
     ) -> None:
@@ -42,7 +42,7 @@ class TestOrchestratorModeSelection:
         """
         # Create minimal repo structure WITHOUT .devcontainer
         (tmp_path / ".git").mkdir()
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         # Create minimal task graph file
         specs_dir = tmp_path / ".gsd" / "specs" / "test"
@@ -66,7 +66,7 @@ class TestOrchestratorModeSelection:
             f"Expected SubprocessLauncher, got {type(orch.launcher)}"
         assert orch.get_launcher_mode() == "subprocess"
 
-    @patch("zerg.orchestrator.TaskGraph")
+    @patch("mahabharatha.orchestrator.TaskGraph")
     def test_container_mode_available_check(
         self, mock_task_graph: MagicMock, tmp_path: Path
     ) -> None:
@@ -77,7 +77,7 @@ class TestOrchestratorModeSelection:
         """
         # Create minimal structure
         (tmp_path / ".git").mkdir()
-        (tmp_path / ".zerg").mkdir()
+        (tmp_path / ".mahabharatha").mkdir()
 
         specs_dir = tmp_path / ".gsd" / "specs" / "test"
         specs_dir.mkdir(parents=True)

@@ -32,14 +32,14 @@
     {
       "id": "PRF-L1-002",
       "title": "Remove unused variables and imports",
-      "description": "Remove unused code identified by vulture/radon:\n\n1. zerg/commands/design.py line 355: Remove unused variable 'min_minutes'. Find the assignment and delete it (or use the value if it was meant to be used).\n\n2. Remove unused imports from test files:\n   - tests/integration/test_orchestrator_fixes.py:10 — remove 'PropertyMock' import\n   - tests/unit/test_build_cmd.py:8 — remove 'PropertyMock' import\n   - tests/unit/test_log_aggregator.py:8 — remove 'LogQuery' import\n   - tests/unit/test_orchestrator_timeout.py:16 — remove 'PropertyMock' import\n   - tests/unit/test_state_sync.py:9 — remove 'PropertyMock' import\n   - tests/unit/test_worker_protocol.py:12 — remove 'PropertyMock' import\n\nFor each file, read the relevant import lines, remove the unused name from the import statement (keep other imports on the same line if any), and verify with ruff check.",
+      "description": "Remove unused code identified by vulture/radon:\n\n1. mahabharatha/commands/design.py line 355: Remove unused variable 'min_minutes'. Find the assignment and delete it (or use the value if it was meant to be used).\n\n2. Remove unused imports from test files:\n   - tests/integration/test_orchestrator_fixes.py:10 — remove 'PropertyMock' import\n   - tests/unit/test_build_cmd.py:8 — remove 'PropertyMock' import\n   - tests/unit/test_log_aggregator.py:8 — remove 'LogQuery' import\n   - tests/unit/test_orchestrator_timeout.py:16 — remove 'PropertyMock' import\n   - tests/unit/test_state_sync.py:9 — remove 'PropertyMock' import\n   - tests/unit/test_worker_protocol.py:12 — remove 'PropertyMock' import\n\nFor each file, read the relevant import lines, remove the unused name from the import statement (keep other imports on the same line if any), and verify with ruff check.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
         "modify": [
-          "zerg/commands/design.py",
+          "mahabharatha/commands/design.py",
           "tests/integration/test_orchestrator_fixes.py",
           "tests/unit/test_build_cmd.py",
           "tests/unit/test_log_aggregator.py",
@@ -55,14 +55,14 @@
         "All existing tests still pass"
       ],
       "verification": {
-        "command": "ruff check zerg/commands/design.py tests/integration/test_orchestrator_fixes.py tests/unit/test_build_cmd.py tests/unit/test_log_aggregator.py tests/unit/test_orchestrator_timeout.py tests/unit/test_state_sync.py tests/unit/test_worker_protocol.py",
+        "command": "ruff check mahabharatha/commands/design.py tests/integration/test_orchestrator_fixes.py tests/unit/test_build_cmd.py tests/unit/test_log_aggregator.py tests/unit/test_orchestrator_timeout.py tests/unit/test_state_sync.py tests/unit/test_worker_protocol.py",
         "timeout_seconds": 30
       }
     },
     {
       "id": "PRF-L1-003",
-      "title": "Delete legacy .zerg Python scripts",
-      "description": "Delete legacy Python scripts in .zerg/ that duplicate functionality now in zerg/commands/. These are pre-refactor copies that cause HIGH severity code duplication findings.\n\nDelete these 5 files:\n- .zerg/analyze.py\n- .zerg/build.py\n- .zerg/refactor.py\n- .zerg/review.py\n- .zerg/test_runner.py\n\nThese files are NOT imported anywhere (verified via grep). The canonical implementations are in zerg/commands/. Use git rm to remove them from tracking.\n\nDo NOT delete other .zerg/*.py files (orchestrator.py, state.py, etc.) — those serve different purposes.",
+      "title": "Delete legacy .mahabharatha Python scripts",
+      "description": "Delete legacy Python scripts in .mahabharatha/ that duplicate functionality now in mahabharatha/commands/. These are pre-refactor copies that cause HIGH severity code duplication findings.\n\nDelete these 5 files:\n- .mahabharatha/analyze.py\n- .mahabharatha/build.py\n- .mahabharatha/refactor.py\n- .mahabharatha/review.py\n- .mahabharatha/test_runner.py\n\nThese files are NOT imported anywhere (verified via grep). The canonical implementations are in mahabharatha/commands/. Use git rm to remove them from tracking.\n\nDo NOT delete other .mahabharatha/*.py files (orchestrator.py, state.py, etc.) — those serve different purposes.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
@@ -73,11 +73,11 @@
       },
       "acceptance_criteria": [
         "All 5 listed files are deleted",
-        "No other .zerg/ files are affected",
+        "No other .mahabharatha/ files are affected",
         "git rm used for proper tracking"
       ],
       "verification": {
-        "command": "test ! -f .zerg/analyze.py && test ! -f .zerg/build.py && test ! -f .zerg/refactor.py && test ! -f .zerg/review.py && test ! -f .zerg/test_runner.py && echo PASS",
+        "command": "test ! -f .mahabharatha/analyze.py && test ! -f .mahabharatha/build.py && test ! -f .mahabharatha/refactor.py && test ! -f .mahabharatha/review.py && test ! -f .mahabharatha/test_runner.py && echo PASS",
         "timeout_seconds": 10
       }
     },
@@ -106,19 +106,19 @@
     {
       "id": "PRF-L1-005",
       "title": "Configure vulture adapter to exclude test directories",
-      "description": "The vulture adapter currently scans all Python files including tests. Pytest fixtures appear as 'unused variables' to vulture, generating ~160 false positive HIGH findings.\n\nModify zerg/performance/adapters/vulture_adapter.py to:\n1. Add '--exclude' flag to the vulture command to exclude test directories: 'tests/,test_,.zerg/tests/'\n2. This eliminates false positives while keeping dead code detection active for production code (zerg/)\n\nRead the current adapter implementation first to understand the command construction pattern, then add the exclude flag.",
+      "description": "The vulture adapter currently scans all Python files including tests. Pytest fixtures appear as 'unused variables' to vulture, generating ~160 false positive HIGH findings.\n\nModify mahabharatha/performance/adapters/vulture_adapter.py to:\n1. Add '--exclude' flag to the vulture command to exclude test directories: 'tests/,test_,.mahabharatha/tests/'\n2. This eliminates false positives while keeping dead code detection active for production code (mahabharatha/)\n\nRead the current adapter implementation first to understand the command construction pattern, then add the exclude flag.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/performance/adapters/vulture_adapter.py"],
+        "modify": ["mahabharatha/performance/adapters/vulture_adapter.py"],
         "read": []
       },
       "acceptance_criteria": [
         "Vulture command includes --exclude for test directories",
         "Existing adapter tests still pass",
-        "Production code (zerg/) is still scanned"
+        "Production code (mahabharatha/) is still scanned"
       ],
       "verification": {
         "command": "python -m pytest tests/unit/test_performance_adapters.py -x -q -k vulture",
@@ -128,17 +128,17 @@
     {
       "id": "PRF-L2-001",
       "title": "Configure jscpd adapter ignore patterns",
-      "description": "The jscpd adapter scans all files including htmlcov/ (generated HTML), .claude/commands/ (installed copies of zerg/data/commands/), and .zerg/tests/ (legacy test copies). This generates ~100+ false positive duplicate findings.\n\nModify zerg/performance/adapters/jscpd_adapter.py to add --ignore flags to the jscpd command:\n- --ignore 'htmlcov/**'\n- --ignore '.claude/commands/**'\n- --ignore '.zerg/**'\n- --ignore '.gsd/**'\n\nRead the current adapter implementation first to understand command construction, then add the ignore flags to the jscpd invocation.",
+      "description": "The jscpd adapter scans all files including htmlcov/ (generated HTML), .claude/commands/ (installed copies of mahabharatha/data/commands/), and .mahabharatha/tests/ (legacy test copies). This generates ~100+ false positive duplicate findings.\n\nModify mahabharatha/performance/adapters/jscpd_adapter.py to add --ignore flags to the jscpd command:\n- --ignore 'htmlcov/**'\n- --ignore '.claude/commands/**'\n- --ignore '.mahabharatha/**'\n- --ignore '.gsd/**'\n\nRead the current adapter implementation first to understand command construction, then add the ignore flags to the jscpd invocation.",
       "phase": "core",
       "level": 2,
       "dependencies": ["PRF-L1-005"],
       "files": {
         "create": [],
-        "modify": ["zerg/performance/adapters/jscpd_adapter.py"],
+        "modify": ["mahabharatha/performance/adapters/jscpd_adapter.py"],
         "read": []
       },
       "acceptance_criteria": [
-        "jscpd command includes --ignore flags for htmlcov, .claude/commands, .zerg, .gsd",
+        "jscpd command includes --ignore flags for htmlcov, .claude/commands, .mahabharatha, .gsd",
         "Existing adapter tests still pass",
         "Production code duplication is still detected"
       ],
@@ -150,13 +150,13 @@
     {
       "id": "PRF-L2-002",
       "title": "Refactor debug.py long functions",
-      "description": "Two functions in zerg/commands/debug.py are flagged for excessive length:\n- debug() at 334 lines (HIGH severity) — the main Click command function\n- format_result() at 170 lines (MEDIUM)\n- run() at 103 lines (MEDIUM)\n\nRefactor debug() by extracting logical sections into private helper functions. The function likely has clear sections (setup, analysis, output formatting) that can become separate functions. Keep the Click command function as a thin orchestrator.\n\nFor format_result(), extract subsections into helpers if natural boundaries exist.\n\nFor run(), only refactor if a clean split is obvious.\n\nIMPORTANT: Do not change any public API or behavior. All existing tests must continue to pass. Read the full function bodies before refactoring to understand the structure.",
+      "description": "Two functions in mahabharatha/commands/debug.py are flagged for excessive length:\n- debug() at 334 lines (HIGH severity) — the main Click command function\n- format_result() at 170 lines (MEDIUM)\n- run() at 103 lines (MEDIUM)\n\nRefactor debug() by extracting logical sections into private helper functions. The function likely has clear sections (setup, analysis, output formatting) that can become separate functions. Keep the Click command function as a thin orchestrator.\n\nFor format_result(), extract subsections into helpers if natural boundaries exist.\n\nFor run(), only refactor if a clean split is obvious.\n\nIMPORTANT: Do not change any public API or behavior. All existing tests must continue to pass. Read the full function bodies before refactoring to understand the structure.",
       "phase": "core",
       "level": 2,
       "dependencies": ["PRF-L1-002"],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/debug.py"],
+        "modify": ["mahabharatha/commands/debug.py"],
         "read": []
       },
       "acceptance_criteria": [
@@ -166,20 +166,20 @@
         "ruff check passes"
       ],
       "verification": {
-        "command": "python -m pytest tests/unit/test_debug_cmd.py -x -q && ruff check zerg/commands/debug.py",
+        "command": "python -m pytest tests/unit/test_debug_cmd.py -x -q && ruff check mahabharatha/commands/debug.py",
         "timeout_seconds": 120
       }
     },
     {
       "id": "PRF-L2-003",
       "title": "Refactor backlog.py generate_backlog_markdown",
-      "description": "The function generate_backlog_markdown() in zerg/backlog.py is 205 lines (HIGH severity). Refactor by extracting logical sections into helper functions.\n\nThe function likely generates multiple sections of markdown. Each section (header, task table, summary, etc.) can become a private helper.\n\nIMPORTANT: Do not change any public API or behavior. All existing tests must continue to pass. Read the full function first.",
+      "description": "The function generate_backlog_markdown() in mahabharatha/backlog.py is 205 lines (HIGH severity). Refactor by extracting logical sections into helper functions.\n\nThe function likely generates multiple sections of markdown. Each section (header, task table, summary, etc.) can become a private helper.\n\nIMPORTANT: Do not change any public API or behavior. All existing tests must continue to pass. Read the full function first.",
       "phase": "core",
       "level": 2,
       "dependencies": ["PRF-L1-002"],
       "files": {
         "create": [],
-        "modify": ["zerg/backlog.py"],
+        "modify": ["mahabharatha/backlog.py"],
         "read": []
       },
       "acceptance_criteria": [
@@ -189,14 +189,14 @@
         "ruff check passes"
       ],
       "verification": {
-        "command": "python -m pytest tests/ -x -q -k backlog && ruff check zerg/backlog.py",
+        "command": "python -m pytest tests/ -x -q -k backlog && ruff check mahabharatha/backlog.py",
         "timeout_seconds": 120
       }
     },
     {
       "id": "PRF-L3-001",
       "title": "Full verification and re-run analysis",
-      "description": "Run the complete test suite, ruff, and mypy to verify all changes are safe. Then re-run the performance analysis to measure score improvement.\n\n1. ruff check zerg/ tests/\n2. mypy zerg/ --ignore-missing-imports\n3. python -m pytest tests/ -x -q --timeout=30\n4. python -m zerg analyze --performance --format json . (capture new score)\n\nReport: old score (86/100), new score, delta, remaining findings.",
+      "description": "Run the complete test suite, ruff, and mypy to verify all changes are safe. Then re-run the performance analysis to measure score improvement.\n\n1. ruff check mahabharatha/ tests/\n2. mypy mahabharatha/ --ignore-missing-imports\n3. python -m pytest tests/ -x -q --timeout=30\n4. python -m mahabharatha analyze --performance --format json . (capture new score)\n\nReport: old score (86/100), new score, delta, remaining findings.",
       "phase": "quality",
       "level": 3,
       "dependencies": ["PRF-L2-001", "PRF-L2-002", "PRF-L2-003"],
@@ -212,7 +212,7 @@
         "Performance score improved"
       ],
       "verification": {
-        "command": "python -m pytest tests/ -x -q --timeout=30 && ruff check zerg/ && echo PASS",
+        "command": "python -m pytest tests/ -x -q --timeout=30 && ruff check mahabharatha/ && echo PASS",
         "timeout_seconds": 300
       }
     }

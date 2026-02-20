@@ -1,5 +1,5 @@
 {
-  "feature": "rush-perf-fix",
+  "feature": "kurukshetra-perf-fix",
   "version": "2.0",
   "generated": "2026-02-04T15:30:00-07:00",
   "total_tasks": 5,
@@ -16,7 +16,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/launcher.py"],
+        "modify": ["mahabharatha/launcher.py"],
         "read": []
       },
       "verification": {
@@ -38,8 +38,8 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/launcher.py"],
-        "read": ["zerg/heartbeat.py"]
+        "modify": ["mahabharatha/launcher.py"],
+        "read": ["mahabharatha/heartbeat.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_launcher.py -v -k 'subprocess' --tb=short",
@@ -60,7 +60,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/orchestrator.py"],
+        "modify": ["mahabharatha/orchestrator.py"],
         "read": []
       },
       "verification": {
@@ -83,7 +83,7 @@
       "files": {
         "create": [],
         "modify": ["tests/unit/test_launcher.py"],
-        "read": ["zerg/launcher.py"]
+        "read": ["mahabharatha/launcher.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_launcher.py -v -k 'monitor_cooldown or heartbeat_singleton' --tb=short",
@@ -97,15 +97,15 @@
     },
     {
       "id": "TASK-005",
-      "title": "Add integration test for rush performance",
-      "description": "Add or update integration test to verify monitoring optimizations work correctly. Test: (1) orchestrator uses 15s poll interval, (2) rush completes successfully with optimizations, (3) docker call count is reduced (if measurable).",
+      "title": "Add integration test for kurukshetra performance",
+      "description": "Add or update integration test to verify monitoring optimizations work correctly. Test: (1) orchestrator uses 15s poll interval, (2) kurukshetra completes successfully with optimizations, (3) docker call count is reduced (if measurable).",
       "phase": "testing",
       "level": 2,
       "dependencies": ["TASK-003", "TASK-004"],
       "files": {
         "create": [],
         "modify": ["tests/integration/test_rush_performance.py"],
-        "read": ["zerg/orchestrator.py", "zerg/launcher.py"]
+        "read": ["mahabharatha/orchestrator.py", "mahabharatha/launcher.py"]
       },
       "verification": {
         "command": "pytest tests/integration/test_rush_performance.py -v --tb=short",
@@ -115,7 +115,7 @@
       "skills_required": ["python", "pytest"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Testing Context\nVerify poll_interval is 15s in Orchestrator. Verify rush cycle completes with monitoring optimizations. Optional: count docker subprocess calls with mock to verify reduction.\n\n## Dependencies\nTASK-003 changes poll interval. TASK-004 validates unit-level correctness."
+      "context": "## Testing Context\nVerify poll_interval is 15s in Orchestrator. Verify kurukshetra cycle completes with monitoring optimizations. Optional: count docker subprocess calls with mock to verify reduction.\n\n## Dependencies\nTASK-003 changes poll interval. TASK-004 validates unit-level correctness."
     }
   ],
 
@@ -142,7 +142,7 @@
     "conflicts": [
       {
         "tasks": ["TASK-001", "TASK-002"],
-        "file": "zerg/launcher.py",
+        "file": "mahabharatha/launcher.py",
         "resolution": "Different classes in same file - can merge cleanly"
       }
     ]

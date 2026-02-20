@@ -11,7 +11,7 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Extend ZERG's command validation infrastructure with authoring capabilities: scaffold new commands from templates with Task ecosystem boilerplate, validate required sections and patterns, generate pressure test scaffolds, and auto-generate documentation.
+Extend MAHABHARATHA's command validation infrastructure with authoring capabilities: scaffold new commands from templates with Task ecosystem boilerplate, validate required sections and patterns, generate pressure test scaffolds, and auto-generate documentation.
 
 ### 1.2 Goals
 - Reduce command authoring friction (copy → scaffold, validate → live feedback)
@@ -32,7 +32,7 @@ Extend ZERG's command validation infrastructure with authoring capabilities: sca
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    /zerg:create-command                     │
+│                    /mahabharatha:create-command                     │
 │                   (slash command file)                      │
 └────────────────────────┬────────────────────────────────────┘
                          │ invokes
@@ -64,11 +64,11 @@ Extend ZERG's command validation infrastructure with authoring capabilities: sca
 | TaskPatternChecker | Validate Task tool call patterns | validate_commands.py |
 | PressureTestScaffold | Generate test file skeleton | validate_commands.py |
 | DocGenerator | Extract docs from command files | validate_commands.py |
-| create-command.md | Slash command interface | zerg/data/commands/ |
+| create-command.md | Slash command interface | mahabharatha/data/commands/ |
 
 ### 2.3 Data Flow
 
-1. User invokes `/zerg:create-command foo`
+1. User invokes `/mahabharatha:create-command foo`
 2. Command reads _template.md
 3. Replaces placeholders with command metadata
 4. Injects Task tracking boilerplate
@@ -168,16 +168,16 @@ Generated test structure:
 
 ```python
 # tests/pressure/test_{name}.py
-"""Pressure tests for /zerg:{name} command."""
+"""Pressure tests for /mahabharatha:{name} command."""
 
 import pytest
 from pathlib import Path
 
-COMMAND_FILE = Path("zerg/data/commands/{name}.md")
+COMMAND_FILE = Path("mahabharatha/data/commands/{name}.md")
 
 
 class TestCommand{Name}:
-    """Verify /zerg:{name} command behavior."""
+    """Verify /mahabharatha:{name} command behavior."""
 
     def test_command_file_exists(self):
         """Command file must exist."""
@@ -185,7 +185,7 @@ class TestCommand{Name}:
 
     def test_passes_validation(self):
         """Command must pass validate_commands checks."""
-        from zerg.validate_commands import validate_task_references
+        from mahabharatha.validate_commands import validate_task_references
         passed, errors = validate_task_references(COMMAND_FILE.parent)
         # Filter to just this command
         relevant = [e for e in errors if "{name}" in e]
@@ -243,7 +243,7 @@ class DocGenerator:
 **Context**: Requirements specify authoring functions in validate_commands.py.
 
 **Options Considered**:
-1. New module (zerg/command_authoring.py): Cleaner separation
+1. New module (mahabharatha/command_authoring.py): Cleaner separation
 2. Extend validate_commands.py: Single source of truth, specified in requirements
 
 **Decision**: Extend validate_commands.py
@@ -277,8 +277,8 @@ class DocGenerator:
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| zerg/validate_commands.py | TASK-001, TASK-002, TASK-003, TASK-004 | modify |
-| zerg/data/commands/create-command.md | TASK-005 | create |
+| mahabharatha/validate_commands.py | TASK-001, TASK-002, TASK-003, TASK-004 | modify |
+| mahabharatha/data/commands/create-command.md | TASK-005 | create |
 | tests/pressure/test_create_command.py | TASK-006 | create |
 | docs/commands/create-command.md | TASK-007 | create |
 | tests/unit/test_scaffold_generator.py | TASK-008 | create |
@@ -292,7 +292,7 @@ class DocGenerator:
 | TASK-002 | SectionValidator in validate_commands.py | TASK-001, TASK-005 | tests/integration/test_authoring_flow.py |
 | TASK-003 | TaskPatternChecker in validate_commands.py | TASK-001, TASK-005 | tests/integration/test_authoring_flow.py |
 | TASK-004 | DocGenerator in validate_commands.py | TASK-005, TASK-007 | tests/integration/test_authoring_flow.py |
-| TASK-005 | zerg/data/commands/create-command.md | leaf (user-invoked) | — |
+| TASK-005 | mahabharatha/data/commands/create-command.md | leaf (user-invoked) | — |
 | TASK-006 | tests/pressure/test_create_command.py | leaf (test file) | — |
 | TASK-007 | docs/commands/create-command.md | leaf (documentation) | — |
 | TASK-008 | tests/unit/test_scaffold_generator.py | leaf (test file) | — |
@@ -347,7 +347,7 @@ pytest tests/unit/test_scaffold_generator.py -v
 pytest tests/integration/test_authoring_flow.py -v
 
 # Validation check
-python -m zerg.validate_commands
+python -m mahabharatha.validate_commands
 
 # Full test suite
 pytest tests/ -x --timeout=60

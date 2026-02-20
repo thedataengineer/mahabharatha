@@ -1,14 +1,14 @@
-# /zerg:index
+# /mahabharatha:index
 
-Generate a complete documentation wiki for the ZERG project.
+Generate a complete documentation wiki for the MAHABHARATHA project.
 
 ## Synopsis
 
 ```
-/zerg:index [--full]
+/mahabharatha:index [--full]
             [--push]
             [--dry-run]
-            [--output .zerg/wiki/]
+            [--output .mahabharatha/wiki/]
 ```
 
 ## Description
@@ -34,15 +34,15 @@ By default the command operates in incremental mode, only regenerating pages for
 The generated wiki follows this hierarchy:
 
 ```
-.zerg/wiki/
+.mahabharatha/wiki/
   Home.md
   Getting-Started.md
   Tutorial.md
-  zerg-Reference/
-    zerg-init.md
-    zerg-plan.md
-    zerg-design.md
-    zerg-rush.md
+  mahabharatha-Reference/
+    mahabharatha-init.md
+    mahabharatha-plan.md
+    mahabharatha-design.md
+    mahabharatha-kurukshetra.md
     ...
   Architecture/
     Overview.md
@@ -75,32 +75,32 @@ Without `--full`, the command:
 | `--full` | off | Regenerate all pages from scratch instead of incremental updates. |
 | `--push` | off | Push the generated wiki to `{repo}.wiki.git` after generation. |
 | `--dry-run` | off | Preview what would be generated without writing any files. |
-| `--output` | `.zerg/wiki/` | Output directory for the generated wiki pages. |
+| `--output` | `.mahabharatha/wiki/` | Output directory for the generated wiki pages. |
 
 ## Examples
 
 Generate a full wiki from scratch:
 
 ```
-/zerg:index --full
+/mahabharatha:index --full
 ```
 
 Preview what would be generated:
 
 ```
-/zerg:index --dry-run
+/mahabharatha:index --dry-run
 ```
 
 Generate and push to the GitHub Wiki:
 
 ```
-/zerg:index --full --push
+/mahabharatha:index --full --push
 ```
 
 Write to a custom output directory:
 
 ```
-/zerg:index --output docs/wiki/
+/mahabharatha:index --output docs/wiki/
 ```
 
 ## Error Handling
@@ -115,6 +115,6 @@ This command creates a Claude Code Task with the subject prefix `[Index]` on inv
 
 ## See Also
 
-- [[zerg-document]] -- Generate documentation for a single component
-- [[zerg-plugins]] -- Plugin configuration documented in the generated wiki
-- [[zerg-review]] -- Review generated documentation
+- [[mahabharatha-document]] -- Generate documentation for a single component
+- [[mahabharatha-plugins]] -- Plugin configuration documented in the generated wiki
+- [[mahabharatha-review]] -- Review generated documentation

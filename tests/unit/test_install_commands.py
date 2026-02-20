@@ -31,7 +31,7 @@ from mahabharatha.commands.install_commands import (
 
 def _create_md_files(directory: Path, names: list[str] | None = None) -> list[Path]:
     """Create .md command files in the given directory."""
-    names = names or ["init.md", "rush.md", "plan.md"]
+    names = names or ["init.md", "kurukshetra.md", "plan.md"]
     directory.mkdir(parents=True, exist_ok=True)
     paths = []
     for name in names:
@@ -61,7 +61,7 @@ class TestGetSourceDir:
             patch("importlib.resources.files", side_effect=Exception("nope")),
             patch("mahabharatha.commands.install_commands.Path.is_dir", return_value=False),
         ):
-            with pytest.raises(FileNotFoundError, match="Cannot locate ZERG command files"):
+            with pytest.raises(FileNotFoundError, match="Cannot locate MAHABHARATHA command files"):
                 _get_source_dir()
 
 
@@ -145,21 +145,21 @@ class TestInstallShortcutRedirects:
         """Redirect files contain the expected content."""
         source = tmp_path / "source"
         target = tmp_path / "target" / "z"
-        _create_md_files(source, ["rush.md", "plan.md"])
+        _create_md_files(source, ["kurukshetra.md", "plan.md"])
         count = _install_shortcut_redirects(target, source)
         assert count == 2
-        assert "mahabharatha:rush" in (target / "rush.md").read_text()
+        assert "mahabharatha:kurukshetra" in (target / "kurukshetra.md").read_text()
 
     def test_force_overwrites(self, tmp_path: Path) -> None:
         """force=True overwrites existing files."""
         source = tmp_path / "source"
         target = tmp_path / "target" / "z"
-        _create_md_files(source, ["rush.md"])
+        _create_md_files(source, ["kurukshetra.md"])
         target.mkdir(parents=True)
-        (target / "rush.md").write_text("old")
+        (target / "kurukshetra.md").write_text("old")
         count = _install_shortcut_redirects(target, source, force=True)
         assert count == 1
-        assert "mahabharatha:rush" in (target / "rush.md").read_text()
+        assert "mahabharatha:kurukshetra" in (target / "kurukshetra.md").read_text()
 
 
 # ---------------------------------------------------------------------------
@@ -174,17 +174,17 @@ class TestInstallUninstall:
         """Installs into mahabharatha/ and z/ subdirectories."""
         source = tmp_path / "source"
         target = tmp_path / "target"
-        _create_md_files(source, ["init.md", "rush.md"])
+        _create_md_files(source, ["init.md", "kurukshetra.md"])
         count = _install(target, source, copy=True)
         assert count == 4
         assert (target / CANONICAL_PREFIX / "init.md").exists()
-        assert (target / SHORTCUT_PREFIX / "rush.md").exists()
+        assert (target / SHORTCUT_PREFIX / "kurukshetra.md").exists()
 
     def test_uninstall_removes_installed(self, tmp_path: Path) -> None:
         """Uninstall removes .md files from mahabharatha/ and z/ subdirs."""
         source = tmp_path / "source"
         target = tmp_path / "target"
-        _create_md_files(source, ["init.md", "rush.md"])
+        _create_md_files(source, ["init.md", "kurukshetra.md"])
         _install(target, source, copy=True)
         removed = _uninstall(target)
         assert removed == 4
@@ -219,7 +219,7 @@ class TestCLI:
         """Full install to empty target reports installed count."""
         source = tmp_path / "source"
         target = tmp_path / "target"
-        _create_md_files(source, ["init.md", "rush.md"])
+        _create_md_files(source, ["init.md", "kurukshetra.md"])
         runner = CliRunner()
         with patch("mahabharatha.commands.install_commands._get_source_dir", return_value=source):
             result = runner.invoke(install_commands, ["--target", str(target), "--copy"])
@@ -240,7 +240,7 @@ class TestCLI:
         runner = CliRunner()
         result = runner.invoke(uninstall_commands, ["--target", str(target)])
         assert result.exit_code == 0
-        assert "No ZERG commands found" in result.output
+        assert "No MAHABHARATHA commands found" in result.output
 
 
 # ---------------------------------------------------------------------------

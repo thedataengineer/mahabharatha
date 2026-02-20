@@ -4,7 +4,7 @@
 - **Feature**: enforce-workflow-boundaries
 - **Status**: APPROVED
 - **Created**: 2026-02-05
-- **Author**: /zerg:design
+- **Author**: /mahabharatha:design
 
 ---
 
@@ -20,7 +20,7 @@ Add explicit WORKFLOW BOUNDARY sections to `/z:plan` and `/z:brainstorm` command
 
 ### 1.3 Non-Goals
 - Programmatic enforcement in Python code
-- Changes to `/z:design`, `/z:rush`, or other commands
+- Changes to `/z:design`, `/z:kurukshetra`, or other commands
 - CI/CD validation of workflow boundaries
 
 ---
@@ -53,10 +53,10 @@ No architecture changes. This is documentation-only.
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| plan.md | WORKFLOW BOUNDARY section, simplified Phase 5.5 | zerg/data/commands/plan.md |
-| plan.core.md | Same changes (keep in sync) | zerg/data/commands/plan.core.md |
-| brainstorm.md | WORKFLOW BOUNDARY section, AskUserQuestion handoff | zerg/data/commands/brainstorm.md |
-| brainstorm.core.md | Same changes (keep in sync) | zerg/data/commands/brainstorm.core.md |
+| plan.md | WORKFLOW BOUNDARY section, simplified Phase 5.5 | mahabharatha/data/commands/plan.md |
+| plan.core.md | Same changes (keep in sync) | mahabharatha/data/commands/plan.core.md |
+| brainstorm.md | WORKFLOW BOUNDARY section, AskUserQuestion handoff | mahabharatha/data/commands/brainstorm.md |
+| brainstorm.core.md | Same changes (keep in sync) | mahabharatha/data/commands/brainstorm.core.md |
 
 ### 2.3 Data Flow
 
@@ -128,10 +128,10 @@ After Phase {N} completes, the command STOPS. The user must manually run {next-c
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| zerg/data/commands/plan.md | TASK-001 | modify |
-| zerg/data/commands/plan.core.md | TASK-002 | modify |
-| zerg/data/commands/brainstorm.md | TASK-003 | modify |
-| zerg/data/commands/brainstorm.core.md | TASK-004 | modify |
+| mahabharatha/data/commands/plan.md | TASK-001 | modify |
+| mahabharatha/data/commands/plan.core.md | TASK-002 | modify |
+| mahabharatha/data/commands/brainstorm.md | TASK-003 | modify |
+| mahabharatha/data/commands/brainstorm.core.md | TASK-004 | modify |
 
 ### 5.3 Dependency Graph
 

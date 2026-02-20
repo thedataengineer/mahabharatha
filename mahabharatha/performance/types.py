@@ -1,4 +1,4 @@
-"""Shared types and data models for the ZERG performance analysis system."""
+"""Shared types and data models for the MAHABHARATHA performance analysis system."""
 
 from __future__ import annotations
 

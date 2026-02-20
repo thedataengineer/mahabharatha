@@ -157,65 +157,65 @@ Comment templates by context:
 
 | File | Task | Operation |
 |------|------|-----------|
-| zerg/git/pr_engine.py | TASK-001 | modify |
-| zerg/git/history_engine.py | TASK-001 | modify |
-| zerg/git/bisect_engine.py | TASK-001 | modify |
-| zerg/git/release_engine.py | TASK-001 | modify |
-| zerg/data/commands/plan.md | TASK-002 | modify (done) |
-| zerg/data/commands/plan.core.md | TASK-002 | modify (done) |
-| zerg/commands/_utils.py | TASK-003 | modify |
-| zerg/commands/build.py | TASK-003 | modify |
-| zerg/commands/init.py | TASK-003 | modify |
-| zerg/commands/install_commands.py | TASK-003 | modify |
-| zerg/commands/git_cmd.py | TASK-003 | modify |
-| zerg/commands/test_cmd.py | TASK-003 | modify |
-| zerg/commands/logs.py | TASK-003 | modify |
-| zerg/commands/status.py | TASK-003 | modify |
-| zerg/commands/debug.py | TASK-003 | modify |
-| zerg/commands/design.py | TASK-003 | modify |
-| zerg/commands/document.py | TASK-003 | modify |
-| zerg/commands/wiki.py | TASK-003 | modify |
-| zerg/formatter_detector.py | TASK-004 | modify |
-| zerg/validate_commands.py | TASK-004 | modify |
-| zerg/token_tracker.py | TASK-004 | modify |
-| zerg/token_counter.py | TASK-004 | modify |
-| zerg/mcp_router.py | TASK-004 | modify |
-| zerg/repo_map.py | TASK-004 | modify |
-| zerg/repo_map_js.py | TASK-004 | modify |
-| zerg/progress_reporter.py | TASK-004 | modify |
-| zerg/log_aggregator.py | TASK-004 | modify |
-| zerg/heartbeat.py | TASK-004 | modify |
-| zerg/dryrun.py | TASK-004 | modify |
-| zerg/orchestrator.py | TASK-004 | modify |
-| zerg/async_helpers.py | TASK-004 | modify |
-| zerg/cleanup.py | TASK-004 | modify |
-| zerg/status_formatter.py | TASK-004 | modify |
-| zerg/backlog.py | TASK-004 | modify |
-| zerg/protocol_types.py | TASK-004 | modify |
-| zerg/diagnostics/system_diagnostics.py | TASK-005 | modify |
-| zerg/diagnostics/env_diagnostics.py | TASK-005 | modify |
-| zerg/diagnostics/log_correlator.py | TASK-005 | modify |
-| zerg/diagnostics/knowledge_base.py | TASK-005 | modify |
-| zerg/diagnostics/hypothesis_engine.py | TASK-005 | modify |
-| zerg/diagnostics/error_intel.py | TASK-005 | modify |
-| zerg/diagnostics/code_fixer.py | TASK-005 | modify |
-| zerg/diagnostics/recovery.py | TASK-005 | modify |
-| zerg/performance/stack_detector.py | TASK-005 | modify |
-| zerg/performance/catalog.py | TASK-005 | modify |
-| zerg/performance/adapters/dive_adapter.py | TASK-005 | modify |
-| zerg/security/scanner.py | TASK-006 | modify |
-| zerg/security/rules.py | TASK-006 | modify |
-| zerg/security/cve.py | TASK-006 | modify |
-| zerg/rendering/status_renderer.py | TASK-006 | modify |
-| zerg/rendering/dryrun_renderer.py | TASK-006 | modify |
-| zerg/rendering/shared.py | TASK-006 | modify |
-| zerg/launchers/__init__.py | TASK-006 | modify |
-| zerg/doc_engine/detector.py | TASK-006 | modify |
-| .zerg/security.py | TASK-007 | modify |
-| .zerg/rush.py | TASK-007 | modify |
-| .zerg/quality_tools.py | TASK-007 | modify |
-| .zerg/container.py | TASK-007 | modify |
-| .zerg/git_ops.py | TASK-007 | modify |
+| mahabharatha/git/pr_engine.py | TASK-001 | modify |
+| mahabharatha/git/history_engine.py | TASK-001 | modify |
+| mahabharatha/git/bisect_engine.py | TASK-001 | modify |
+| mahabharatha/git/release_engine.py | TASK-001 | modify |
+| mahabharatha/data/commands/plan.md | TASK-002 | modify (done) |
+| mahabharatha/data/commands/plan.core.md | TASK-002 | modify (done) |
+| mahabharatha/commands/_utils.py | TASK-003 | modify |
+| mahabharatha/commands/build.py | TASK-003 | modify |
+| mahabharatha/commands/init.py | TASK-003 | modify |
+| mahabharatha/commands/install_commands.py | TASK-003 | modify |
+| mahabharatha/commands/git_cmd.py | TASK-003 | modify |
+| mahabharatha/commands/test_cmd.py | TASK-003 | modify |
+| mahabharatha/commands/logs.py | TASK-003 | modify |
+| mahabharatha/commands/status.py | TASK-003 | modify |
+| mahabharatha/commands/debug.py | TASK-003 | modify |
+| mahabharatha/commands/design.py | TASK-003 | modify |
+| mahabharatha/commands/document.py | TASK-003 | modify |
+| mahabharatha/commands/wiki.py | TASK-003 | modify |
+| mahabharatha/formatter_detector.py | TASK-004 | modify |
+| mahabharatha/validate_commands.py | TASK-004 | modify |
+| mahabharatha/token_tracker.py | TASK-004 | modify |
+| mahabharatha/token_counter.py | TASK-004 | modify |
+| mahabharatha/mcp_router.py | TASK-004 | modify |
+| mahabharatha/repo_map.py | TASK-004 | modify |
+| mahabharatha/repo_map_js.py | TASK-004 | modify |
+| mahabharatha/progress_reporter.py | TASK-004 | modify |
+| mahabharatha/log_aggregator.py | TASK-004 | modify |
+| mahabharatha/heartbeat.py | TASK-004 | modify |
+| mahabharatha/dryrun.py | TASK-004 | modify |
+| mahabharatha/orchestrator.py | TASK-004 | modify |
+| mahabharatha/async_helpers.py | TASK-004 | modify |
+| mahabharatha/cleanup.py | TASK-004 | modify |
+| mahabharatha/status_formatter.py | TASK-004 | modify |
+| mahabharatha/backlog.py | TASK-004 | modify |
+| mahabharatha/protocol_types.py | TASK-004 | modify |
+| mahabharatha/diagnostics/system_diagnostics.py | TASK-005 | modify |
+| mahabharatha/diagnostics/env_diagnostics.py | TASK-005 | modify |
+| mahabharatha/diagnostics/log_correlator.py | TASK-005 | modify |
+| mahabharatha/diagnostics/knowledge_base.py | TASK-005 | modify |
+| mahabharatha/diagnostics/hypothesis_engine.py | TASK-005 | modify |
+| mahabharatha/diagnostics/error_intel.py | TASK-005 | modify |
+| mahabharatha/diagnostics/code_fixer.py | TASK-005 | modify |
+| mahabharatha/diagnostics/recovery.py | TASK-005 | modify |
+| mahabharatha/performance/stack_detector.py | TASK-005 | modify |
+| mahabharatha/performance/catalog.py | TASK-005 | modify |
+| mahabharatha/performance/adapters/dive_adapter.py | TASK-005 | modify |
+| mahabharatha/security/scanner.py | TASK-006 | modify |
+| mahabharatha/security/rules.py | TASK-006 | modify |
+| mahabharatha/security/cve.py | TASK-006 | modify |
+| mahabharatha/rendering/status_renderer.py | TASK-006 | modify |
+| mahabharatha/rendering/dryrun_renderer.py | TASK-006 | modify |
+| mahabharatha/rendering/shared.py | TASK-006 | modify |
+| mahabharatha/launchers/__init__.py | TASK-006 | modify |
+| mahabharatha/doc_engine/detector.py | TASK-006 | modify |
+| .mahabharatha/security.py | TASK-007 | modify |
+| .mahabharatha/kurukshetra.py | TASK-007 | modify |
+| .mahabharatha/quality_tools.py | TASK-007 | modify |
+| .mahabharatha/container.py | TASK-007 | modify |
+| .mahabharatha/git_ops.py | TASK-007 | modify |
 | tests/unit/test_worker_commit.py | TASK-008 | modify |
 | tests/unit/test_small_modules.py | TASK-008 | modify |
 | tests/unit/test_main_entry.py | TASK-008 | modify |
@@ -224,12 +224,12 @@ Comment templates by context:
 | tests/fixtures/hook_samples/clean/test_file.py | TASK-008 | modify |
 | tests/fixtures/state_fixtures.py | TASK-008 | modify |
 | tests/fixtures/orchestrator_fixtures.py | TASK-008 | modify |
-| .zerg/tests/mocks/mock_state.py | TASK-008 | modify |
+| .mahabharatha/tests/mocks/mock_state.py | TASK-008 | modify |
 | tests/mocks/mock_launcher.py | TASK-008 | modify |
-| zerg/verify.py | TASK-009 | modify |
-| zerg/verification_gates.py | TASK-009 | modify |
-| zerg/level_coordinator.py | TASK-009 | modify |
-| zerg/merge.py | TASK-009 | modify |
+| mahabharatha/verify.py | TASK-009 | modify |
+| mahabharatha/verification_gates.py | TASK-009 | modify |
+| mahabharatha/level_coordinator.py | TASK-009 | modify |
+| mahabharatha/merge.py | TASK-009 | modify |
 | CHANGELOG.md | TASK-010 | modify |
 
 ### 5.3 Consumer Matrix
@@ -280,8 +280,8 @@ Per-task verification:
 
 Global verification (TASK-010):
 - `python -m pytest tests/ --timeout=120` — full suite green
-- `python -m zerg.validate_commands` — drift check clean
-- `ruff check zerg/ tests/` — no new lint errors
+- `python -m mahabharatha.validate_commands` — drift check clean
+- `ruff check mahabharatha/ tests/` — no new lint errors
 
 ---
 

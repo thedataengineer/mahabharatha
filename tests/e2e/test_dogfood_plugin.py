@@ -1,6 +1,6 @@
-"""E2E test for ZERG dogfooding: plugin system build via ZERG orchestration.
+"""E2E test for MAHABHARATHA dogfooding: plugin system build via MAHABHARATHA orchestration.
 
-This test validates that ZERG can orchestrate the plugin system build end-to-end
+This test validates that MAHABHARATHA can orchestrate the plugin system build end-to-end
 using the actual 20-task graph from the production-dogfooding design.
 """
 
@@ -372,12 +372,12 @@ def _plugin_task_graph() -> list[dict]:
 
 
 class TestDogfoodPlugin:
-    """Test ZERG's ability to build its own plugin system via orchestration."""
+    """Test MAHABHARATHA's ability to build its own plugin system via orchestration."""
 
     def test_plugin_system_builds_via_mahabharatha(self, e2e_harness: E2EHarness) -> None:
         """Construct the 20-task plugin system graph and run full pipeline in mock mode.
 
-        Validates that ZERG can orchestrate the plugin system build:
+        Validates that MAHABHARATHA can orchestrate the plugin system build:
         - All 20 tasks complete successfully
         - All 4 levels merge cleanly
         - All plugin files would be created

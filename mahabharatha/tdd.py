@@ -1,4 +1,4 @@
-"""TDD enforcement protocol for ZERG."""
+"""TDD enforcement protocol for MAHABHARATHA."""
 
 from __future__ import annotations
 

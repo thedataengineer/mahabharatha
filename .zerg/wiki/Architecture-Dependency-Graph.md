@@ -1,6 +1,6 @@
 # Architecture: Dependency Graph
 
-This page visualizes the import relationships between ZERG Python modules. Understanding these relationships clarifies which modules are foundational, which are high-level coordinators, and where coupling exists.
+This page visualizes the import relationships between MAHABHARATHA Python modules. Understanding these relationships clarifies which modules are foundational, which are high-level coordinators, and where coupling exists.
 
 ## Dependency Layers
 
@@ -223,11 +223,11 @@ This table lists modules ordered by the number of internal imports they consume 
 
 The codebase follows these dependency rules:
 
-1. **Foundation modules import nothing from `zerg`** (except `constants` which imports nothing). This ensures a stable base layer.
+1. **Foundation modules import nothing from `mahabharatha`** (except `constants` which imports nothing). This ensures a stable base layer.
 2. **No circular imports**. The layered structure prevents cycles: higher layers depend on lower layers, never the reverse.
 3. **The orchestrator is the only module that imports from all layers.** It is the composition root that wires everything together.
 4. **Worker modules (`worker_protocol`, `worker_main`) do not import orchestrator modules.** Workers are independent processes that communicate through state files and the Task system, not through in-process function calls.
-5. **Command modules** in `zerg/commands/` import from the core and infrastructure layers but do not import the orchestrator directly (the `rush` command invokes it through the configured entry point).
+5. **Command modules** in `mahabharatha/commands/` import from the core and infrastructure layers but do not import the orchestrator directly (the `kurukshetra` command invokes it through the configured entry point).
 
 ## Context Engineering Dependencies
 

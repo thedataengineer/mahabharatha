@@ -28,7 +28,7 @@ Create automated enforcement of context engineering principles and Task ecosyste
 
 ## 2. Architecture
 
-### 2.1 New Module: `zerg/validate_commands.py`
+### 2.1 New Module: `mahabharatha/validate_commands.py`
 
 Single module, no new classes. Functions return `(bool, list[str])` matching `validation.py` pattern.
 
@@ -40,19 +40,19 @@ Single module, no new classes. Functions return `(bool, list[str])` matching `va
 | `validate_backbone_depth(commands_dir)` | worker/status/merge/stop/retry have >=3 Task refs | CLAUDE.md drift #2 |
 | `validate_split_pairs(commands_dir)` | .core.md <-> .details.md <-> parent .md all exist | CE integrity |
 | `validate_split_threshold(commands_dir, auto_split)` | Files >=300 lines without .core.md get auto-split | CE enforcement |
-| `validate_state_json_without_tasks(commands_dir)` | Files referencing .zerg/state must also ref TaskList/TaskGet | CLAUDE.md drift #3 |
+| `validate_state_json_without_tasks(commands_dir)` | Files referencing .mahabharatha/state must also ref TaskList/TaskGet | CLAUDE.md drift #3 |
 
 Plus:
 - `validate_all(commands_dir, auto_split)` — aggregator, runs all 5
 - `_get_base_command_files(commands_dir)` — helper, returns .md files excluding .core.md/.details.md/_template.md
-- `__main__` block for `python -m zerg.validate_commands`
+- `__main__` block for `python -m mahabharatha.validate_commands`
 
 **Constants:**
 ```python
 BACKBONE_COMMANDS = {"worker", "status", "merge", "stop", "retry"}
 BACKBONE_MIN_REFS = 3
 TASK_MARKERS = {"TaskCreate", "TaskUpdate", "TaskList", "TaskGet"}
-STATE_PATTERNS = re.compile(r"state.*json|STATE_FILE|\.zerg/state")
+STATE_PATTERNS = re.compile(r"state.*json|STATE_FILE|\.mahabharatha/state")
 EXCLUDED_PREFIXES = ("_",)  # Skip _template.md
 ```
 
@@ -66,10 +66,10 @@ Imports `MIN_LINES_TO_SPLIT` from `command_splitter.py` (single source of truth)
 
 CI workflow detects uncommitted changes after validation and fails with message: "Command files were auto-split. Commit the generated files."
 
-### 2.3 Command Template: `zerg/data/commands/_template.md`
+### 2.3 Command Template: `mahabharatha/data/commands/_template.md`
 
 ~45 lines. Scaffold for new commands with:
-- `# ZERG {CommandName}` header placeholder
+- `# MAHABHARATHA {CommandName}` header placeholder
 - Arguments/flags section
 - Pre-flight checks section
 - Task Tracking boilerplate (pattern from `build.md:50-65`)
@@ -83,7 +83,7 @@ Underscore prefix auto-excludes from validator.
 
 New workflow (separate from changelog-check.yml):
 - Triggers: push to main, PR events
-- Steps: checkout, setup-python, pip install -e ., python -m zerg.validate_commands
+- Steps: checkout, setup-python, pip install -e ., python -m mahabharatha.validate_commands
 - Fails build on any violation
 
 ### 2.5 Pre-commit Integration
@@ -93,10 +93,10 @@ Append local hook to `.pre-commit-config.yaml`:
 - repo: local
   hooks:
     - id: validate-commands
-      name: Validate ZERG command files
-      entry: python -m zerg.validate_commands --auto-split
+      name: Validate MAHABHARATHA command files
+      entry: python -m mahabharatha.validate_commands --auto-split
       language: system
-      files: 'zerg/data/commands/.*\.md$'
+      files: 'mahabharatha/data/commands/.*\.md$'
       pass_filenames: false
 ```
 
@@ -106,9 +106,9 @@ Append local hook to `.pre-commit-config.yaml`:
 
 | File | Action | Est. Lines |
 |------|--------|-----------|
-| `zerg/validate_commands.py` | CREATE | ~180 |
+| `mahabharatha/validate_commands.py` | CREATE | ~180 |
 | `tests/unit/test_validate_commands.py` | CREATE | ~220 |
-| `zerg/data/commands/_template.md` | CREATE | ~45 |
+| `mahabharatha/data/commands/_template.md` | CREATE | ~45 |
 | `.github/workflows/command-validation.yml` | CREATE | ~30 |
 | `.pre-commit-config.yaml` | MODIFY | +8 |
 | `docs/context-engineering.md` | MODIFY | +20 |
@@ -121,7 +121,7 @@ Append local hook to `.pre-commit-config.yaml`:
 
 `tests/unit/test_validate_commands.py` — ~20 tests across 6 classes.
 
-**Positive tests** (real `zerg/data/commands/` directory):
+**Positive tests** (real `mahabharatha/data/commands/` directory):
 - All commands pass task reference check
 - All backbone commands pass depth check
 - All split pairs are consistent
@@ -149,7 +149,7 @@ Append local hook to `.pre-commit-config.yaml`:
 
 ```bash
 # Validator passes on current codebase
-python -m zerg.validate_commands
+python -m mahabharatha.validate_commands
 
 # New tests pass
 pytest tests/unit/test_validate_commands.py -v

@@ -4,14 +4,14 @@
 - **Feature**: worker-metrics
 - **Status**: DRAFT
 - **Created**: 2026-01-27
-- **Author**: ZERG Design Mode
+- **Author**: MAHABHARATHA Design Mode
 
 ---
 
 ## 1. Overview
 
 ### 1.1 Summary
-Add comprehensive metrics tracking to ZERG workers, capturing timing data (initialization, task execution, level duration), computing aggregations (averages, percentiles), persisting to state, and displaying in `zerg status`.
+Add comprehensive metrics tracking to MAHABHARATHA workers, capturing timing data (initialization, task execution, level duration), computing aggregations (averages, percentiles), persisting to state, and displaying in `mahabharatha status`.
 
 ### 1.2 Goals
 - Track worker initialization and task execution timing
@@ -53,11 +53,11 @@ Add comprehensive metrics tracking to ZERG workers, capturing timing data (initi
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| Metric Types | Dataclasses for metrics | `zerg/types.py` |
-| MetricsCollector | Compute metrics from state | `zerg/metrics.py` |
-| StateManager | Store/retrieve timestamps & metrics | `zerg/state.py` |
-| Status Command | Display metrics | `zerg/commands/status.py` |
-| State Schema | Validate metrics in state | `.zerg/schemas/state.schema.json` |
+| Metric Types | Dataclasses for metrics | `mahabharatha/types.py` |
+| MetricsCollector | Compute metrics from state | `mahabharatha/metrics.py` |
+| StateManager | Store/retrieve timestamps & metrics | `mahabharatha/state.py` |
+| Status Command | Display metrics | `mahabharatha/commands/status.py` |
+| State Schema | Validate metrics in state | `.mahabharatha/schemas/state.schema.json` |
 
 ### 2.3 Data Flow
 
@@ -70,7 +70,7 @@ Add comprehensive metrics tracking to ZERG workers, capturing timing data (initi
 
 ## 3. Detailed Design
 
-### 3.1 New Types (zerg/types.py)
+### 3.1 New Types (mahabharatha/types.py)
 
 ```python
 @dataclass
@@ -152,7 +152,7 @@ claimed_at: str  # ISO timestamp when task was claimed
 duration_ms: int  # Execution duration
 ```
 
-### 3.3 MetricsCollector (zerg/metrics.py)
+### 3.3 MetricsCollector (mahabharatha/metrics.py)
 
 ```python
 class MetricsCollector:
@@ -192,7 +192,7 @@ def calculate_percentile(values: list[int], percentile: int) -> int:
     ...
 ```
 
-### 3.4 StateManager Extensions (zerg/state.py)
+### 3.4 StateManager Extensions (mahabharatha/state.py)
 
 New methods:
 ```python
@@ -254,7 +254,7 @@ def get_metrics(self) -> FeatureMetrics | None:
 
 Enhanced output format:
 ```
-ZERG Status: worker-metrics
+MAHABHARATHA Status: worker-metrics
 ════════════════════════════
 
 Progress: ████████████░░░░░░░░ 60% (6/10 tasks)
@@ -312,12 +312,12 @@ Total: 4m00s | Workers: 3 | Tasks: 6/10
 
 | File | Task | Operation | Level |
 |------|------|-----------|-------|
-| `zerg/types.py` | WM-001 | modify | 1 |
-| `zerg/metrics.py` | WM-002 | create | 2 |
-| `zerg/state.py` | WM-003 | modify | 2 |
-| `.zerg/schemas/state.schema.json` | WM-004 | modify | 2 |
-| `zerg/orchestrator.py` | WM-005 | modify | 3 |
-| `zerg/commands/status.py` | WM-006 | modify | 3 |
+| `mahabharatha/types.py` | WM-001 | modify | 1 |
+| `mahabharatha/metrics.py` | WM-002 | create | 2 |
+| `mahabharatha/state.py` | WM-003 | modify | 2 |
+| `.mahabharatha/schemas/state.schema.json` | WM-004 | modify | 2 |
+| `mahabharatha/orchestrator.py` | WM-005 | modify | 3 |
+| `mahabharatha/commands/status.py` | WM-006 | modify | 3 |
 | `tests/unit/test_metrics.py` | WM-007 | create | 4 |
 | `tests/integration/test_metrics_integration.py` | WM-008 | create | 4 |
 
@@ -374,10 +374,10 @@ pytest tests/unit/test_metrics.py -v
 pytest tests/integration/test_metrics_integration.py -v
 
 # Type check
-python -c "from zerg.metrics import MetricsCollector"
+python -c "from mahabharatha.metrics import MetricsCollector"
 
 # Status with metrics
-zerg status --feature <feature> --json | jq '.metrics'
+mahabharatha status --feature <feature> --json | jq '.metrics'
 ```
 
 ---

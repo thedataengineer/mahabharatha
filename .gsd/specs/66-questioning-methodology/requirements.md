@@ -59,5 +59,5 @@
 - All existing flags continue to work
 
 ### NFR-4: Validation
-- python -m zerg.validate_commands must pass
+- python -m mahabharatha.validate_commands must pass
 - Task ecosystem markers preserved

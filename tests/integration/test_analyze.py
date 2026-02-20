@@ -1,4 +1,4 @@
-"""Integration tests for ZERG analyze command."""
+"""Integration tests for MAHABHARATHA analyze command."""
 
 import json
 import tempfile
@@ -109,14 +109,14 @@ class TestAnalyzeFunctional:
     """Functional tests for analyze command."""
 
     def test_analyze_displays_header(self) -> None:
-        """Test analyze shows ZERG Analyze header.
+        """Test analyze shows MAHABHARATHA Analyze header.
 
         Uses --check lint to avoid slow performance/security checks.
         """
         runner = CliRunner()
         result = runner.invoke(cli, ["analyze", "--check", "lint"])
         # Check header is displayed
-        assert "ZERG" in result.output or "Analyze" in result.output
+        assert "MAHABHARATHA" in result.output or "Analyze" in result.output
 
     def test_analyze_lint_check(self) -> None:
         """Test analyze lint check produces output."""

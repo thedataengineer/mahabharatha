@@ -1,4 +1,4 @@
-"""ZERG cleanup command - remove ZERG artifacts."""
+"""MAHABHARATHA cleanup command - remove MAHABHARATHA artifacts."""
 
 import fnmatch
 import shutil
@@ -43,7 +43,7 @@ def cleanup(
     dry_run: bool,
     logs_only: bool,
 ) -> None:
-    """Remove ZERG artifacts.
+    """Remove MAHABHARATHA artifacts.
 
     Cleans worktrees, branches, containers, and logs.
 
@@ -69,7 +69,7 @@ def cleanup(
             console.print("[red]Error:[/red] Specify --feature or --all")
             raise SystemExit(1)
 
-        console.print("\n[bold cyan]ZERG Cleanup[/bold cyan]\n")
+        console.print("\n[bold cyan]MAHABHARATHA Cleanup[/bold cyan]\n")
 
         # Load config
         config = ZergConfig.load()
@@ -108,7 +108,7 @@ def cleanup(
 
 
 def discover_features() -> list[str]:
-    """Discover all features with ZERG artifacts.
+    """Discover all features with MAHABHARATHA artifacts.
 
     Returns:
         List of feature names
@@ -388,7 +388,7 @@ def cleanup_structured_logs(config: ZergConfig, dry_run: bool = False) -> None:
         config: ZergConfig with logging settings
         dry_run: If True, only show what would be cleaned
     """
-    console.print("\n[bold cyan]ZERG Log Cleanup[/bold cyan]\n")
+    console.print("\n[bold cyan]MAHABHARATHA Log Cleanup[/bold cyan]\n")
 
     log_dir = Path(config.logging.directory)
     tasks_dir = log_dir / "tasks"

@@ -1,4 +1,4 @@
-"""ZERG v2 Research Command - External research and context gathering via MCP."""
+"""MAHABHARATHA v2 Research Command - External research and context gathering via MCP."""
 
 import json
 from dataclasses import dataclass, field

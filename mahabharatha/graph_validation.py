@@ -1,4 +1,4 @@
-"""Task graph property validation for ZERG rush execution."""
+"""Task graph property validation for MAHABHARATHA kurukshetra execution."""
 
 from __future__ import annotations
 

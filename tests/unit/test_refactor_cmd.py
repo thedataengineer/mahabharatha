@@ -1,4 +1,4 @@
-"""Unit tests for ZERG refactor command - thinned per TSR2-L3-002."""
+"""Unit tests for MAHABHARATHA refactor command - thinned per TSR2-L3-002."""
 
 from __future__ import annotations
 

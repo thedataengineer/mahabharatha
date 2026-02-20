@@ -1,4 +1,4 @@
-"""Unit tests for ZERG MCP auto-routing system."""
+"""Unit tests for MAHABHARATHA MCP auto-routing system."""
 
 from __future__ import annotations
 

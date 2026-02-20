@@ -1,11 +1,11 @@
-# /zerg:analyze
+# /mahabharatha:analyze
 
 Run static analysis, complexity metrics, and quality assessment.
 
 ## Synopsis
 
 ```
-/zerg:analyze [--check lint|complexity|coverage|security|all]
+/mahabharatha:analyze [--check lint|complexity|coverage|security|all]
               [--format text|json|sarif]
               [--threshold complexity=10,coverage=70]
               [--files path/to/files]
@@ -49,25 +49,25 @@ The `analyze` command performs static analysis on the project codebase. It suppo
 Run all checks with default thresholds:
 
 ```
-/zerg:analyze --check all
+/mahabharatha:analyze --check all
 ```
 
 Run linting only with JSON output:
 
 ```
-/zerg:analyze --check lint --format json
+/mahabharatha:analyze --check lint --format json
 ```
 
 Set custom complexity threshold:
 
 ```
-/zerg:analyze --check complexity --threshold complexity=15
+/mahabharatha:analyze --check complexity --threshold complexity=15
 ```
 
 Generate SARIF output for IDE integration:
 
 ```
-/zerg:analyze --check all --format sarif > results.sarif
+/mahabharatha:analyze --check all --format sarif > results.sarif
 ```
 
 ## Exit Codes
@@ -84,6 +84,6 @@ This command creates a Claude Code Task with the subject prefix `[Analyze]` on i
 
 ## See Also
 
-- [[zerg-security]] -- Dedicated security scanning with compliance presets
-- [[zerg-test]] -- Test execution and coverage measurement
-- [[zerg-refactor]] -- Automated code improvements based on analysis findings
+- [[mahabharatha-security]] -- Dedicated security scanning with compliance presets
+- [[mahabharatha-test]] -- Test execution and coverage measurement
+- [[mahabharatha-refactor]] -- Automated code improvements based on analysis findings

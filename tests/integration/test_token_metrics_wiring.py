@@ -28,7 +28,7 @@ class TestTokenMetricsPipeline:
         counter = TokenCounter(config=config)
 
         # Step 2: Count some sample text
-        sample_text = "def hello_world():\n    print('Hello, ZERG!')\n" * 10
+        sample_text = "def hello_world():\n    print('Hello, MAHABHARATHA!')\n" * 10
         result = counter.count(sample_text)
         assert result.count > 0
         assert result.mode == "estimated"
@@ -59,7 +59,7 @@ class TestTokenMetricsPipeline:
         assert worker_data["cumulative"]["total_tokens"] == sum(breakdown.values())
 
         # Record a second task for the same worker
-        second_text = "class Zergling:\n    pass\n" * 5
+        second_text = "class Warrior:\n    pass\n" * 5
         result2 = counter.count(second_text)
         breakdown2 = {
             "command_template": result2.count,

@@ -1,6 +1,6 @@
-# Tutorial: Building a Minerals Store with ZERG
+# Tutorial: Building a Minerals Store with MAHABHARATHA
 
-This tutorial walks through building a hypothetical "minerals store" e-commerce feature using ZERG. You will plan requirements, generate a task graph, launch parallel workers, and merge the results.
+This tutorial walks through building a hypothetical "minerals store" e-commerce feature using MAHABHARATHA. You will plan requirements, generate a task graph, launch parallel workers, and merge the results.
 
 The minerals store allows users to browse mineral products (vespene gas, crystal shards, rare ores), add them to a cart, and check out. It includes a product catalog API, a shopping cart service, and an order processing pipeline.
 
@@ -8,7 +8,7 @@ The minerals store allows users to browse mineral products (vespene gas, crystal
 
 - [Phase 1: Plan](#phase-1-plan)
 - [Phase 2: Design](#phase-2-design)
-- [Phase 3: Rush](#phase-3-rush)
+- [Phase 3: Kurukshetra](#phase-3-kurukshetra)
 - [Phase 4: Merge](#phase-4-merge)
 - [Phase 5: Verify](#phase-5-verify)
 - [Troubleshooting](#troubleshooting)
@@ -20,10 +20,10 @@ The minerals store allows users to browse mineral products (vespene gas, crystal
 Start by capturing requirements. Run the plan command inside a Claude Code session:
 
 ```
-/zerg:plan minerals-store
+/mahabharatha:plan minerals-store
 ```
 
-ZERG creates the spec directory and enters planning mode:
+MAHABHARATHA creates the spec directory and enters planning mode:
 
 ```
 Created .gsd/specs/minerals-store/
@@ -35,21 +35,21 @@ Set current feature: minerals-store
 The planner reads your project files and asks clarifying questions. Answer them to define the scope. For this tutorial, assume the following conversation:
 
 ```
-ZERG: What problem does the minerals store solve for users?
+MAHABHARATHA: What problem does the minerals store solve for users?
 YOU:  Users need to browse and purchase mineral products through a REST API.
 
-ZERG: What are the core entities and their relationships?
+MAHABHARATHA: What are the core entities and their relationships?
 YOU:  Products (name, price, category, stock), Cart (user_id, items),
       Orders (user_id, items, total, status). A cart becomes an order at checkout.
 
-ZERG: What are the non-functional requirements?
+MAHABHARATHA: What are the non-functional requirements?
 YOU:  Response time under 200ms for catalog reads. PostgreSQL for storage.
       Python with FastAPI. No authentication for this phase -- add later.
 ```
 
 ### Generated Requirements
 
-After the conversation, ZERG writes `.gsd/specs/minerals-store/requirements.md`:
+After the conversation, MAHABHARATHA writes `.gsd/specs/minerals-store/requirements.md`:
 
 ```markdown
 # Requirements: minerals-store
@@ -103,7 +103,7 @@ Review the requirements and approve them:
 YOU: APPROVED
 ```
 
-ZERG updates the status to APPROVED and marks the planning task as complete.
+MAHABHARATHA updates the status to APPROVED and marks the planning task as complete.
 
 ---
 
@@ -112,10 +112,10 @@ ZERG updates the status to APPROVED and marks the planning task as complete.
 With approved requirements, generate the architecture and task graph:
 
 ```
-/zerg:design
+/mahabharatha:design
 ```
 
-ZERG reads the requirements, analyzes the codebase, and produces two artifacts:
+MAHABHARATHA reads the requirements, analyzes the codebase, and produces two artifacts:
 
 1. `.gsd/specs/minerals-store/design.md` -- architecture document
 2. `.gsd/specs/minerals-store/task-graph.json` -- parallelizable task graph
@@ -487,21 +487,21 @@ Review the design and approve:
 YOU: approved
 ```
 
-ZERG registers all 13 tasks in the Claude Code Task system with `[L1]`, `[L2]`, `[L3]`, and `[L4]` subject prefixes.
+MAHABHARATHA registers all 13 tasks in the Claude Code Task system with `[L1]`, `[L2]`, `[L3]`, and `[L4]` subject prefixes.
 
 ---
 
-## Phase 3: Rush
+## Phase 3: Kurukshetra
 
-Launch the swarm. Three workers are optimal for this task graph since the widest level has three parallel tasks:
+Launch the akshauhini. Three workers are optimal for this task graph since the widest level has three parallel tasks:
 
 ```
-/zerg:rush --workers=3
+/mahabharatha:kurukshetra --workers=3
 ```
 
 ### What Happens
 
-ZERG performs these steps automatically:
+MAHABHARATHA performs these steps automatically:
 
 **Step 1 -- Analyze task graph**
 
@@ -514,9 +514,9 @@ Adjusting worker count to 3 (matches max parallelization)
 **Step 2 -- Create git worktrees**
 
 ```
-Creating worktree: ../.zerg-worktrees/minerals-store/worker-0
-Creating worktree: ../.zerg-worktrees/minerals-store/worker-1
-Creating worktree: ../.zerg-worktrees/minerals-store/worker-2
+Creating worktree: ../.mahabharatha-worktrees/minerals-store/worker-0
+Creating worktree: ../.mahabharatha-worktrees/minerals-store/worker-1
+Creating worktree: ../.mahabharatha-worktrees/minerals-store/worker-2
 ```
 
 **Step 3 -- Assign tasks to workers**
@@ -534,9 +534,9 @@ Worker 2 gets TASK-010 in addition to TASK-009 because it depends on all three r
 **Step 4 -- Launch workers**
 
 ```
-Launching Worker 0 on branch zerg/minerals-store/worker-0...
-Launching Worker 1 on branch zerg/minerals-store/worker-1...
-Launching Worker 2 on branch zerg/minerals-store/worker-2...
+Launching Worker 0 on branch mahabharatha/minerals-store/worker-0...
+Launching Worker 1 on branch mahabharatha/minerals-store/worker-1...
+Launching Worker 2 on branch mahabharatha/minerals-store/worker-2...
 Orchestrator started (PID 48201)
 ```
 
@@ -545,13 +545,13 @@ Orchestrator started (PID 48201)
 Open a separate terminal and run:
 
 ```bash
-zerg status --watch --interval 2
+mahabharatha status --watch --interval 2
 ```
 
 Output updates every 2 seconds:
 
 ```
-ZERG STATUS: minerals-store
+MAHABHARATHA STATUS: minerals-store
 ===========================================================
 
 Level 1 (foundation)                          [ACTIVE]
@@ -618,7 +618,7 @@ Each worker follows the same protocol. Here is what Worker 0 does for TASK-004:
 
 After all workers complete a level:
 
-1. The orchestrator triggers `/zerg:merge` for that level
+1. The orchestrator triggers `/mahabharatha:merge` for that level
 2. Worker branches are merged into a staging branch
 3. Quality gates run (lint, typecheck, test)
 4. If gates pass, worker branches are rebased onto the merged result
@@ -630,16 +630,16 @@ This repeats for each level until all tasks are done.
 
 ## Phase 4: Merge
 
-Merging happens automatically during rush, but you can also trigger it manually. If you need to merge Level 2 explicitly:
+Merging happens automatically during kurukshetra, but you can also trigger it manually. If you need to merge Level 2 explicitly:
 
 ```
-/zerg:merge --level 2
+/mahabharatha:merge --level 2
 ```
 
 ### Merge Output
 
 ```
-ZERG MERGE
+MAHABHARATHA MERGE
 ===========================================================
 
 Feature: minerals-store
@@ -650,9 +650,9 @@ Worker Branches:
 +-----------+-------------------------------------+----------+----------+
 | Worker    | Branch                              | Commits  | Status   |
 +-----------+-------------------------------------+----------+----------+
-| worker-0  | zerg/minerals-store/worker-0        | 1        | Ready    |
-| worker-1  | zerg/minerals-store/worker-1        | 1        | Ready    |
-| worker-2  | zerg/minerals-store/worker-2        | 1        | Ready    |
+| worker-0  | mahabharatha/minerals-store/worker-0        | 1        | Ready    |
+| worker-1  | mahabharatha/minerals-store/worker-1        | 1        | Ready    |
+| worker-2  | mahabharatha/minerals-store/worker-2        | 1        | Ready    |
 +-----------+-------------------------------------+----------+----------+
 
 Merge Progress:
@@ -669,7 +669,7 @@ Merge Progress:
 Level 2 merge complete!
 
 Merge commit: b7e4f19
-Tag: zerg/minerals-store/level-2-complete
+Tag: mahabharatha/minerals-store/level-2-complete
 
 Next: Level 3 tasks are now unblocked.
 ===========================================================
@@ -677,7 +677,7 @@ Next: Level 3 tasks are now unblocked.
 
 ### What If Quality Gates Fail?
 
-If the lint or test gate fails after a merge, ZERG reports the failure and stops progression:
+If the lint or test gate fails after a merge, MAHABHARATHA reports the failure and stops progression:
 
 ```
 [5/5] Running quality gates...
@@ -693,7 +693,7 @@ Aborting merge. Fix issues or use --force
 At this point you have two options:
 
 1. Fix the issue manually on the staging branch and re-run the merge
-2. Use `zerg retry TASK-006 --on-base` to re-execute the failing task against the merged base
+2. Use `mahabharatha retry TASK-006 --on-base` to re-execute the failing task against the merged base
 
 ---
 
@@ -702,11 +702,11 @@ At this point you have two options:
 After all four levels complete, check the final state:
 
 ```
-/zerg:status
+/mahabharatha:status
 ```
 
 ```
-ZERG STATUS: minerals-store
+MAHABHARATHA STATUS: minerals-store
 ===========================================================
 
 Feature: minerals-store
@@ -721,14 +721,14 @@ Total: 13/13 tasks complete
 Duration: 18 minutes (estimated sequential: 55 minutes)
 Speedup: 3.1x with 3 workers
 
-Final branch: zerg/minerals-store/staging-level-4
+Final branch: mahabharatha/minerals-store/staging-level-4
 ```
 
 The feature is now on the staging branch. To bring it into your main branch:
 
 ```bash
 git checkout main
-git merge zerg/minerals-store/staging-level-4 --no-ff -m "feat: minerals store e-commerce feature"
+git merge mahabharatha/minerals-store/staging-level-4 --no-ff -m "feat: minerals store e-commerce feature"
 ```
 
 ### Cleanup
@@ -736,14 +736,14 @@ git merge zerg/minerals-store/staging-level-4 --no-ff -m "feat: minerals store e
 Remove the worktrees and temporary branches:
 
 ```
-/zerg:cleanup minerals-store
+/mahabharatha:cleanup minerals-store
 ```
 
 This removes:
 
-- Git worktrees in `../.zerg-worktrees/minerals-store/`
-- Worker branches `zerg/minerals-store/worker-*`
-- State files in `.zerg/state/`
+- Git worktrees in `../.mahabharatha-worktrees/minerals-store/`
+- Worker branches `mahabharatha/minerals-store/worker-*`
+- State files in `.mahabharatha/state/`
 - Completed tasks from the Claude Code Task system
 
 ---
@@ -755,7 +755,7 @@ This removes:
 Check the worker log:
 
 ```bash
-cat .zerg/logs/workers/worker-0.stdout.log
+cat .mahabharatha/logs/workers/worker-0.stdout.log
 ```
 
 If a worker hit its context limit (70%), it exits with code 2 and the orchestrator restarts it. Check the progress file:
@@ -766,11 +766,11 @@ cat .gsd/specs/minerals-store/progress.md
 
 ### Merge conflicts
 
-ZERG prevents merge conflicts through exclusive file ownership. If you see a conflict, it usually means the task graph has a bug where two tasks modify the same file. Re-run `/zerg:design` to regenerate the graph.
+MAHABHARATHA prevents merge conflicts through exclusive file ownership. If you see a conflict, it usually means the task graph has a bug where two tasks modify the same file. Re-run `/mahabharatha:design` to regenerate the graph.
 
 ### Verification command fails
 
-Each task has a verification command in the task graph. If it fails, the worker retries up to 3 times with different approaches. After 3 failures, the task is marked as BLOCKED. Use `/zerg:retry TASK-ID` to reset and re-attempt.
+Each task has a verification command in the task graph. If it fails, the worker retries up to 3 times with different approaches. After 3 failures, the task is marked as BLOCKED. Use `/mahabharatha:retry TASK-ID` to reset and re-attempt.
 
 ### Workers not starting
 
@@ -783,18 +783,18 @@ claude --version
 Check that git worktrees were created:
 
 ```bash
-ls -la ../.zerg-worktrees/minerals-store/
+ls -la ../.mahabharatha-worktrees/minerals-store/
 ```
 
 ---
 
 ## Summary
 
-This tutorial demonstrated the full ZERG workflow:
+This tutorial demonstrated the full MAHABHARATHA workflow:
 
-1. `/zerg:plan minerals-store` -- captured requirements through structured conversation
-2. `/zerg:design` -- generated architecture, file ownership matrix, and a 13-task graph across 4 levels
-3. `/zerg:rush --workers=3` -- launched 3 parallel workers executing tasks level by level
+1. `/mahabharatha:plan minerals-store` -- captured requirements through structured conversation
+2. `/mahabharatha:design` -- generated architecture, file ownership matrix, and a 13-task graph across 4 levels
+3. `/mahabharatha:kurukshetra --workers=3` -- launched 3 parallel workers executing tasks level by level
 4. Automatic merging with quality gates after each level
 5. Final verification showing 3.1x speedup over sequential execution
 

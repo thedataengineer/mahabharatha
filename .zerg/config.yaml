@@ -1,8 +1,8 @@
-# ZERG Configuration
+# MAHABHARATHA Configuration
 # Updated to match ZergConfig schema
 
 project:
-  name: zerg
+  name: mahabharatha
   description: Parallel Claude Code execution system
 
 workers:
@@ -10,7 +10,7 @@ workers:
   timeout_minutes: 60
   retry_attempts: 2
   context_threshold_percent: 70
-  launcher_type: subprocess  # Python fallback; task mode is implicit default for /zerg:rush
+  launcher_type: subprocess  # Python fallback; task mode is implicit default for /mahabharatha:kurukshetra
   backoff_strategy: exponential
   backoff_base_seconds: 30
   backoff_max_seconds: 300
@@ -34,11 +34,11 @@ quality_gates:
     required: true
     timeout: 180
   - name: typecheck
-    command: mypy zerg/ --ignore-missing-imports
+    command: mypy mahabharatha/ --ignore-missing-imports
     required: false
     timeout: 180
   - name: coverage
-    command: pytest tests/unit/ --cov=zerg --cov-fail-under=80 -q --timeout=30
+    command: pytest tests/unit/ --cov=mahabharatha --cov-fail-under=80 -q --timeout=30
     required: false
     timeout: 300
     coverage_threshold: 80
@@ -61,7 +61,7 @@ resources:
 
 logging:
   level: info
-  directory: .zerg/logs
+  directory: .mahabharatha/logs
   retain_days: 7
 
 security:
@@ -87,7 +87,7 @@ analyze:
     strict: false
     exclude_patterns: []
   cross_file:
-    scope: "zerg/"
+    scope: "mahabharatha/"
   conventions:
     naming: snake_case
     require_task_prefixes: true
@@ -105,32 +105,32 @@ architecture:
   # Layer definitions - imports flow downward
   # layers:
   #   - name: core
-  #     paths: ["zerg/config.py", "zerg/constants.py", "zerg/types.py", "zerg/exceptions.py"]
+  #     paths: ["mahabharatha/config.py", "mahabharatha/constants.py", "mahabharatha/types.py", "mahabharatha/exceptions.py"]
   #     allowed_imports: ["stdlib"]
   #   - name: infrastructure
-  #     paths: ["zerg/logging.py", "zerg/ast_cache.py", "zerg/command_executor.py"]
+  #     paths: ["mahabharatha/logging.py", "mahabharatha/ast_cache.py", "mahabharatha/command_executor.py"]
   #     allowed_imports: ["stdlib", "core"]
   #   - name: domain
-  #     paths: ["zerg/gates.py", "zerg/launcher.py", "zerg/orchestrator.py"]
+  #     paths: ["mahabharatha/gates.py", "mahabharatha/launcher.py", "mahabharatha/orchestrator.py"]
   #     allowed_imports: ["stdlib", "core", "infrastructure"]
 
   # Import allow/deny rules per directory
   import_rules:
-    - directory: "zerg/"
+    - directory: "mahabharatha/"
       deny: ["flask", "django", "fastapi"]  # No web frameworks in core
     - directory: "tests/"
       allow: ["*"]  # Tests can import anything
 
   # Naming conventions
   naming_conventions:
-    - directory: "zerg/"
+    - directory: "mahabharatha/"
       files: "snake_case"
       classes: "PascalCase"
       functions: "snake_case"
 
   # Exceptions from architecture rules
   exceptions:
-    - file: "zerg/__init__.py"
+    - file: "mahabharatha/__init__.py"
       reason: "Package re-exports need cross-layer access"
 
 # Planning configuration for bite-sized task planning

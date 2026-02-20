@@ -1,4 +1,4 @@
-"""Structured JSONL log writer for ZERG workers.
+"""Structured JSONL log writer for MAHABHARATHA workers.
 
 Each worker writes to its own worker-{id}.jsonl file.
 Thread-safe via threading.Lock on write operations.

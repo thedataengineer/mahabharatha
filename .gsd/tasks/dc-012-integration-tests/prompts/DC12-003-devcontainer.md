@@ -24,7 +24,7 @@ from pathlib import Path
 
 import pytest
 
-from zerg.devcontainer_features import (
+from mahabharatha.devcontainer_features import (
     DynamicDevcontainerGenerator,
     get_features_for_languages,
     get_post_create_commands,

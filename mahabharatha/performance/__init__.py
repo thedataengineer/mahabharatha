@@ -1,4 +1,4 @@
-"""ZERG performance analysis package — comprehensive performance auditing."""
+"""MAHABHARATHA performance analysis package — comprehensive performance auditing."""
 
 from mahabharatha.performance.aggregator import PerformanceAuditor
 from mahabharatha.performance.catalog import FactorCatalog

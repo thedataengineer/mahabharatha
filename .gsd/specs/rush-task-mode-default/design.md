@@ -1,10 +1,10 @@
-# Technical Design: rush-task-mode-default
+# Technical Design: kurukshetra-task-mode-default
 
 ## Metadata
-- **Feature**: rush-task-mode-default
+- **Feature**: kurukshetra-task-mode-default
 - **Status**: IMPLEMENTED
 - **Created**: 2026-02-04
-- **Author**: ZERG Design Mode
+- **Author**: MAHABHARATHA Design Mode
 
 ---
 
@@ -12,7 +12,7 @@
 
 ### 1.1 Summary
 
-Restructure `rush.core.md` and `rush.md` to make Task Tool Mode the default execution path when `/zerg:rush` is invoked as a slash command. Container and subprocess modes become conditional paths triggered only by explicit `--mode` flags.
+Restructure `kurukshetra.core.md` and `kurukshetra.md` to make Task Tool Mode the default execution path when `/mahabharatha:kurukshetra` is invoked as a slash command. Container and subprocess modes become conditional paths triggered only by explicit `--mode` flags.
 
 ### 1.2 Goals
 - Task Tool Mode executes by default (no flags needed)
@@ -22,8 +22,8 @@ Restructure `rush.core.md` and `rush.md` to make Task Tool Mode the default exec
 - Documentation is clear and consistent
 
 ### 1.3 Non-Goals
-- Changes to Python CLI (`zerg/commands/rush.py`)
-- Changes to Orchestrator (`zerg/orchestrator.py`)
+- Changes to Python CLI (`mahabharatha/commands/kurukshetra.py`)
+- Changes to Orchestrator (`mahabharatha/orchestrator.py`)
 - Changes to launcher infrastructure
 - New Python code
 
@@ -35,7 +35,7 @@ Restructure `rush.core.md` and `rush.md` to make Task Tool Mode the default exec
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│                     /zerg:rush invoked                       │
+│                     /mahabharatha:kurukshetra invoked                       │
 └──────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -77,11 +77,11 @@ Restructure `rush.core.md` and `rush.md` to make Task Tool Mode the default exec
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| Mode Detection | Parse $ARGUMENTS, determine execution mode | `rush.core.md` (new Step 1) |
-| Task Tool Loop | Execute tasks via parallel Task tool calls | `rush.core.md` (new Step 2-6) |
-| Subagent Prompt | Template for each Task tool invocation | `rush.core.md` (references details) |
-| Container Fallback | Invoke Python Orchestrator when explicit | `rush.core.md` (conditional section) |
-| Subprocess Fallback | Same as container but subprocess mode | `rush.core.md` (conditional section) |
+| Mode Detection | Parse $ARGUMENTS, determine execution mode | `kurukshetra.core.md` (new Step 1) |
+| Task Tool Loop | Execute tasks via parallel Task tool calls | `kurukshetra.core.md` (new Step 2-6) |
+| Subagent Prompt | Template for each Task tool invocation | `kurukshetra.core.md` (references details) |
+| Container Fallback | Invoke Python Orchestrator when explicit | `kurukshetra.core.md` (conditional section) |
+| Subprocess Fallback | Same as container but subprocess mode | `kurukshetra.core.md` (conditional section) |
 
 ### 2.3 Data Flow
 
@@ -97,7 +97,7 @@ task-graph.json → Parse levels → FOR each level:
 **Container/Subprocess Mode:**
 ```
 $ARGUMENTS → Detect --mode → Invoke Python:
-  from zerg.orchestrator import Orchestrator
+  from mahabharatha.orchestrator import Orchestrator
   orch = Orchestrator(feature=FEATURE, launcher_mode=MODE)
   orch.start(...)
 ```
@@ -109,16 +109,16 @@ $ARGUMENTS → Detect --mode → Invoke Python:
 ### 3.1 File Structure Changes
 
 ```
-zerg/data/commands/
-├── rush.md           # MODIFY: Add mode detection, Task Tool as default
-├── rush.core.md      # MODIFY: Restructure completely
-└── rush.details.md   # NO CHANGE: Already documents Task Tool Mode correctly
+mahabharatha/data/commands/
+├── kurukshetra.md           # MODIFY: Add mode detection, Task Tool as default
+├── kurukshetra.core.md      # MODIFY: Restructure completely
+└── kurukshetra.details.md   # NO CHANGE: Already documents Task Tool Mode correctly
 ```
 
-### 3.2 rush.core.md New Structure
+### 3.2 kurukshetra.core.md New Structure
 
 ```markdown
-# ZERG Launch (Core)
+# MAHABHARATHA Launch (Core)
 
 ## Pre-Flight
 [Keep existing: FEATURE, TASK_LIST, SPEC_DIR validation]
@@ -131,7 +131,7 @@ Parse $ARGUMENTS for --mode flag:
 
 ## Step 2: Task Tool Mode (Default Path)
 IF MODE == "task":
-  [Level Execution Loop - pulled from rush.details.md]
+  [Level Execution Loop - pulled from kurukshetra.details.md]
 
 ## Step 3: Container/Subprocess Mode (Conditional)
 IF MODE == "container" OR MODE == "subprocess":
@@ -186,7 +186,7 @@ FOR each level in task-graph.json (ascending order):
        Task(
          description: "Execute TASK-{id}",
          subagent_type: "general-purpose",
-         prompt: [Subagent prompt template from rush.details.md:263-301]
+         prompt: [Subagent prompt template from kurukshetra.details.md:263-301]
        )
 
      - Wait for all to return
@@ -240,7 +240,7 @@ IF MODE == "container":
   [Existing Step 5: Docker containers]
 ELSE IF MODE == "subprocess":
   ```python
-  from zerg.orchestrator import Orchestrator
+  from mahabharatha.orchestrator import Orchestrator
   orch = Orchestrator(feature=FEATURE, launcher_mode="subprocess")
   orch.start(task_graph_path=SPEC_DIR/task-graph.json, worker_count=WORKERS)
   ```
@@ -257,13 +257,13 @@ END IF
 
 ### 4.1 Task Tool Mode as Default
 
-**Context**: Currently, `/zerg:rush` without flags delegates to Python CLI which auto-detects subprocess mode. Users expect Task Tool Mode when using slash commands.
+**Context**: Currently, `/mahabharatha:kurukshetra` without flags delegates to Python CLI which auto-detects subprocess mode. Users expect Task Tool Mode when using slash commands.
 
 **Options Considered**:
-1. **Change Python CLI default**: Modify `zerg/commands/rush.py` to default to task mode
+1. **Change Python CLI default**: Modify `mahabharatha/commands/kurukshetra.py` to default to task mode
    - Pros: Single source of truth
    - Cons: Out of scope, requires Python changes, CLI behavior differs from slash command
-2. **Make skill file authoritative**: Restructure rush.core.md to use Task Tool Mode by default
+2. **Make skill file authoritative**: Restructure kurukshetra.core.md to use Task Tool Mode by default
    - Pros: In scope, slash command controls its own behavior, no Python changes
    - Cons: Documentation-only change, CLI still defaults to subprocess
 3. **Remove Task Tool Mode**: Only support container/subprocess
@@ -275,19 +275,19 @@ END IF
 **Rationale**: The slash command should control its own behavior. Task Tool Mode is the natural execution model for slash commands (parallel Task tool calls). CLI users who want container/subprocess mode can use explicit flags.
 
 **Consequences**:
-- `/zerg:rush` (slash command) defaults to Task Tool Mode
-- `zerg rush` (CLI) still defaults to auto-detect (subprocess) unless explicitly changed later
+- `/mahabharatha:kurukshetra` (slash command) defaults to Task Tool Mode
+- `mahabharatha kurukshetra` (CLI) still defaults to auto-detect (subprocess) unless explicitly changed later
 - Documentation clearly explains the difference
 
 ### 4.2 Level Execution Loop Location
 
-**Context**: The level execution loop is documented in rush.details.md but never referenced from rush.core.md.
+**Context**: The level execution loop is documented in kurukshetra.details.md but never referenced from kurukshetra.core.md.
 
 **Options Considered**:
-1. **Inline full loop in rush.core.md**: Copy all loop logic into core
+1. **Inline full loop in kurukshetra.core.md**: Copy all loop logic into core
    - Pros: Self-contained, no file jumping
    - Cons: Duplication, drift risk, bloats core file
-2. **Reference rush.details.md**: Keep loop in details, reference from core
+2. **Reference kurukshetra.details.md**: Keep loop in details, reference from core
    - Pros: DRY, details file is already authoritative for Task Tool Mode
    - Cons: Requires reading two files
 3. **Hybrid**: Put essential loop structure in core, reference details for templates
@@ -299,8 +299,8 @@ END IF
 **Rationale**: Core file should be executable without constantly jumping to details. Put the loop structure and essential logic in core, reference details only for the subagent prompt template.
 
 **Consequences**:
-- rush.core.md contains complete execution logic
-- rush.details.md remains the reference for templates and examples
+- kurukshetra.core.md contains complete execution logic
+- kurukshetra.details.md remains the reference for templates and examples
 - No duplication of the subagent prompt template
 
 ---
@@ -318,19 +318,19 @@ END IF
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/data/commands/rush.core.md` | TASK-001 | modify |
-| `zerg/data/commands/rush.md` | TASK-002 | modify |
+| `mahabharatha/data/commands/kurukshetra.core.md` | TASK-001 | modify |
+| `mahabharatha/data/commands/kurukshetra.md` | TASK-002 | modify |
 
 ### 5.3 Dependency Graph
 
 ```
-TASK-001 (rush.core.md restructure)
+TASK-001 (kurukshetra.core.md restructure)
     │
     ▼
-TASK-002 (rush.md sync)
+TASK-002 (kurukshetra.md sync)
 ```
 
-TASK-002 depends on TASK-001 because rush.md must match the restructured core.
+TASK-002 depends on TASK-001 because kurukshetra.md must match the restructured core.
 
 ---
 
@@ -340,7 +340,7 @@ TASK-002 depends on TASK-001 because rush.md must match the restructured core.
 |------|-------------|--------|------------|
 | Existing workflows break | Low | Medium | Container/subprocess modes still work with explicit --mode |
 | Documentation unclear | Low | Low | Clear mode detection section at top |
-| Task Tool loop incomplete | Low | High | Loop already documented in rush.details.md, just needs wiring |
+| Task Tool loop incomplete | Low | High | Loop already documented in kurukshetra.details.md, just needs wiring |
 
 ---
 
@@ -348,16 +348,16 @@ TASK-002 depends on TASK-001 because rush.md must match the restructured core.
 
 ### 7.1 Manual Verification
 
-1. `/zerg:rush` without flags → Task Tool Mode executes
-2. `/zerg:rush --mode container` → Python Orchestrator invoked
-3. `/zerg:rush --mode subprocess` → Python Orchestrator invoked
-4. `/zerg:rush --mode task` → Task Tool Mode (explicit)
+1. `/mahabharatha:kurukshetra` without flags → Task Tool Mode executes
+2. `/mahabharatha:kurukshetra --mode container` → Python Orchestrator invoked
+3. `/mahabharatha:kurukshetra --mode subprocess` → Python Orchestrator invoked
+4. `/mahabharatha:kurukshetra --mode task` → Task Tool Mode (explicit)
 5. Resume works in Task Tool Mode
 
 ### 7.2 Acceptance Criteria Validation
 
 From requirements.md:
-- [x] AC1: `/zerg:rush` without flags → Task Tool Mode
+- [x] AC1: `/mahabharatha:kurukshetra` without flags → Task Tool Mode
 - [x] AC2: `--mode container` → Orchestrator with container launcher
 - [x] AC3: `--mode subprocess` → Orchestrator with subprocess launcher
 - [x] AC4: Task Tool Mode completes multi-level task graph
@@ -369,8 +369,8 @@ From requirements.md:
 ## 8. Parallel Execution Notes
 
 ### 8.1 Safe Parallelization
-- Level 1 has 1 task (rush.core.md restructure)
-- Level 2 has 1 task (rush.md sync)
+- Level 1 has 1 task (kurukshetra.core.md restructure)
+- Level 2 has 1 task (kurukshetra.md sync)
 - Total: 2 tasks, sequential due to dependency
 
 ### 8.2 Recommended Workers

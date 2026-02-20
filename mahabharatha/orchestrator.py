@@ -1,4 +1,4 @@
-"""ZERG orchestrator - thin coordination engine delegating to extracted components."""
+"""MAHABHARATHA orchestrator - thin coordination engine delegating to extracted components."""
 
 import asyncio
 import contextlib
@@ -632,7 +632,7 @@ class Orchestrator:
 
     def _print_plan(self, assignments: Any) -> None:
         p = self.parser
-        print(f"\n=== ZERG Execution Plan ===\n\nFeature: {self.feature}")
+        print(f"\n=== MAHABHARATHA Execution Plan ===\n\nFeature: {self.feature}")
         print(f"Tasks: {p.total_tasks} | Levels: {p.levels} | Workers: {assignments.worker_count}\n")
         for level in p.levels:
             print(f"Level {level}:")

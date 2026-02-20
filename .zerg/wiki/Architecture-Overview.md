@@ -1,6 +1,6 @@
 # Architecture Overview
 
-ZERG is a parallel Claude Code execution system that coordinates multiple worker instances to implement features concurrently. This page describes the high-level architecture, core abstractions, and design principles that govern the system.
+MAHABHARATHA is a parallel Claude Code execution system that coordinates multiple worker instances to implement features concurrently. This page describes the high-level architecture, core abstractions, and design principles that govern the system.
 
 ## System Architecture
 
@@ -39,7 +39,7 @@ graph TB
         STATE["StateManager"]
         TASKS["Claude Code Tasks"]
         TSYNC["TaskSync"]
-        JSON[".zerg/state/*.json"]
+        JSON[".mahabharatha/state/*.json"]
     end
 
     CLI --> ORCH
@@ -79,7 +79,7 @@ Every feature begins with a **task graph** (`task-graph.json`) produced by the `
 
 ### Level-Based Execution
 
-ZERG enforces a strict execution order by level:
+MAHABHARATHA enforces a strict execution order by level:
 
 1. All workers execute their assigned Level 1 tasks in parallel.
 2. When every Level 1 task completes, the orchestrator merges all worker branches into a staging branch and runs quality gates.
@@ -127,7 +127,7 @@ Both backends implement the `WorkerLauncher` abstract base class defined in `lau
 
 ## Configuration
 
-System behavior is controlled by `.zerg/config.yaml`, which configures:
+System behavior is controlled by `.mahabharatha/config.yaml`, which configures:
 
 - Worker count and timeout limits
 - Launcher type (subprocess or container)

@@ -4,9 +4,9 @@
 
 ## Summary
 
-Add Claude Task ecosystem integration to `zerg design` CLI and validate the `/zerg:design` slash command spec.
+Add Claude Task ecosystem integration to `mahabharatha design` CLI and validate the `/mahabharatha:design` slash command spec.
 
-The CLI (`design.py`) writes a `design-tasks-manifest.json` so rush can register Claude Tasks. The slash command spec already documents Phases 4.5/4.6 correctly.
+The CLI (`design.py`) writes a `design-tasks-manifest.json` so kurukshetra can register Claude Tasks. The slash command spec already documents Phases 4.5/4.6 correctly.
 
 ## Requirements
 

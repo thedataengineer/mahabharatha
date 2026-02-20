@@ -4,19 +4,19 @@
 - **Feature**: git-cleanup-issues-docs
 - **Status**: DRAFT
 - **Created**: 2026-02-02
-- **Author**: /zerg:design
+- **Author**: /mahabharatha:design
 
 ---
 
 ## 1. Overview
 
 ### 1.1 Summary
-Add two new actions (`cleanup` and `issue`) to `/zerg:git`, rename all wiki files from `Command-*.md` to `zerg-*.md` with full cross-reference updates, and audit all documentation for stale flag references from PR #83's flag inversions.
+Add two new actions (`cleanup` and `issue`) to `/mahabharatha:git`, rename all wiki files from `Command-*.md` to `mahabharatha-*.md` with full cross-reference updates, and audit all documentation for stale flag references from PR #83's flag inversions.
 
 ### 1.2 Goals
-- Repository hygiene via `/zerg:git --action cleanup` (branches, refs, worktrees, Docker)
-- AI-optimized issue creation via `/zerg:git --action issue` with strict template
-- Consistent `/zerg:` prefix naming throughout all documentation
+- Repository hygiene via `/mahabharatha:git --action cleanup` (branches, refs, worktrees, Docker)
+- AI-optimized issue creation via `/mahabharatha:git --action issue` with strict template
+- Consistent `/mahabharatha:` prefix naming throughout all documentation
 - All deprecated flags (`--uc`, `--compact`) replaced with current flags (`--no-compact`, `--no-loop`, `--iterations`)
 
 ### 1.3 Non-Goals
@@ -33,13 +33,13 @@ Add two new actions (`cleanup` and `issue`) to `/zerg:git`, rename all wiki file
 This feature is entirely documentation/prompt engineering — no Python code changes except `sidebar.py`. The "architecture" is the command file structure:
 
 ```
-zerg/data/commands/git.md          ← main entry (actions table + flags)
-zerg/data/commands/git.core.md     ← quick reference (~30%)
-zerg/data/commands/git.details.md  ← deep reference (~70%, action sections)
+mahabharatha/data/commands/git.md          ← main entry (actions table + flags)
+mahabharatha/data/commands/git.core.md     ← quick reference (~30%)
+mahabharatha/data/commands/git.details.md  ← deep reference (~70%, action sections)
 
-.zerg/wiki/zerg-*.md               ← renamed from Command-*.md (27 files)
-.zerg/wiki/_Sidebar.md             ← navigation with /zerg: prefix
-zerg/doc_engine/sidebar.py         ← hardcoded page name references
+.mahabharatha/wiki/mahabharatha-*.md               ← renamed from Command-*.md (27 files)
+.mahabharatha/wiki/_Sidebar.md             ← navigation with /mahabharatha: prefix
+mahabharatha/doc_engine/sidebar.py         ← hardcoded page name references
 ```
 
 ### 2.2 Component Breakdown
@@ -47,7 +47,7 @@ zerg/doc_engine/sidebar.py         ← hardcoded page name references
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
 | Git command files | Define cleanup + issue action behavior | git.md, git.core.md, git.details.md |
-| Wiki command pages | Per-command reference docs | 27 zerg-*.md files |
+| Wiki command pages | Per-command reference docs | 27 mahabharatha-*.md files |
 | Wiki navigation | Sidebar + cross-references | _Sidebar.md, all wiki pages |
 | Doc engine | Generate sidebar from page names | sidebar.py |
 | Project docs | README, CLAUDE.md, commands.md, CHANGELOG | 4 files |
@@ -58,11 +58,11 @@ zerg/doc_engine/sidebar.py         ← hardcoded page name references
 
 ### 3.1 Wiki File Naming Convention
 
-**Context**: Wiki files are `Command-init.md` but user wants `/zerg:` prefix everywhere.
+**Context**: Wiki files are `Command-init.md` but user wants `/mahabharatha:` prefix everywhere.
 
-**Decision**: Rename to `zerg-init.md` (filesystem-safe, no colons).
+**Decision**: Rename to `mahabharatha-init.md` (filesystem-safe, no colons).
 
-**Rationale**: Colons are illegal in filenames on Windows/macOS. `zerg-` prefix is clean and maps clearly to `/zerg:init`. Display text in sidebar uses the full `/zerg:init` form.
+**Rationale**: Colons are illegal in filenames on Windows/macOS. `mahabharatha-` prefix is clean and maps clearly to `/mahabharatha:init`. Display text in sidebar uses the full `/mahabharatha:init` form.
 
 ### 3.2 Issue Template Strictness
 
@@ -76,9 +76,9 @@ zerg/doc_engine/sidebar.py         ← hardcoded page name references
 
 **Context**: Should Docker cleanup require an explicit flag?
 
-**Decision**: Auto-detect ZERG containers. `--no-docker` flag to skip.
+**Decision**: Auto-detect MAHABHARATHA containers. `--no-docker` flag to skip.
 
-**Rationale**: If ZERG containers exist, they should be cleaned. Users who want to keep them opt out explicitly.
+**Rationale**: If MAHABHARATHA containers exist, they should be cleaned. Users who want to keep them opt out explicitly.
 
 ---
 
@@ -98,14 +98,14 @@ zerg/doc_engine/sidebar.py         ← hardcoded page name references
 | File(s) | Task | Op |
 |---------|------|----|
 | git.md, git.core.md, git.details.md | T-001 | modify |
-| .zerg/wiki/Command-git.md | T-002 | modify |
-| .zerg/wiki/Command-Reference.md, Home.md | T-003 | modify |
+| .mahabharatha/wiki/Command-git.md | T-002 | modify |
+| .mahabharatha/wiki/Command-Reference.md, Home.md | T-003 | modify |
 | README.md, docs/commands.md | T-004 | modify |
 | CLAUDE.md | T-005 | modify |
-| 27 .zerg/wiki/Command-*.md (rename) | T-006 | rename |
-| zerg/doc_engine/sidebar.py | T-007 | modify |
-| .zerg/wiki/_Sidebar.md | T-008 | modify |
-| All .zerg/wiki/*.md (cross-refs) | T-009 | modify |
+| 27 .mahabharatha/wiki/Command-*.md (rename) | T-006 | rename |
+| mahabharatha/doc_engine/sidebar.py | T-007 | modify |
+| .mahabharatha/wiki/_Sidebar.md | T-008 | modify |
+| All .mahabharatha/wiki/*.md (cross-refs) | T-009 | modify |
 | CHANGELOG.md | T-010 | modify |
 
 ### 4.3 Dependency Graph

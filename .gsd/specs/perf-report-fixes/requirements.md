@@ -12,7 +12,7 @@ Target: eliminate false positives via tool configuration, fix real issues in pro
 ### In Scope
 1. Fix Dockerfile security/lint issues (Container Runtime: 0 → 100)
 2. Remove unused variables/imports in production + test code
-3. Delete legacy `.zerg/*.py` scripts duplicating `zerg/commands/`
+3. Delete legacy `.mahabharatha/*.py` scripts duplicating `mahabharatha/commands/`
 4. Clean `htmlcov/` from git + gitignore it
 5. Configure vulture adapter to exclude test files (eliminate ~160 false positives)
 6. Configure jscpd adapter with ignore patterns (eliminate ~100 false positives)
@@ -22,5 +22,5 @@ Target: eliminate false positives via tool configuration, fix real issues in pro
 - Test file internal duplication (LOW severity, test-specific patterns)
 - Test file maintainability indices (MEDIUM, inherent to test structure)
 - Transitive dependency count (informational, not actionable)
-- `.claude/commands/` ↔ `zerg/data/commands/` duplication (by design — install_commands.py)
+- `.claude/commands/` ↔ `mahabharatha/data/commands/` duplication (by design — install_commands.py)
 - Pytest fixture parameter count (inherent to DI pattern)

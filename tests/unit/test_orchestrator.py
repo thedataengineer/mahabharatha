@@ -1,4 +1,4 @@
-"""Tests for ZERG orchestrator.
+"""Tests for MAHABHARATHA orchestrator.
 
 This module tests orchestrator functionality including:
 - Launcher creation modes (subprocess, container, auto)
@@ -708,7 +708,7 @@ class TestPrintPlan:
         orch._print_plan(assignments)
 
         captured = capsys.readouterr()
-        assert "ZERG Execution Plan" in captured.out
+        assert "MAHABHARATHA Execution Plan" in captured.out
         assert "test-feature" in captured.out
 
 

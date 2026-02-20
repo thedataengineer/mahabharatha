@@ -348,7 +348,7 @@ _PYTHON_PATTERNS: list[KnownPattern] = [
 ]
 
 # ---------------------------------------------------------------------------
-# Known patterns: ZERG-specific
+# Known patterns: MAHABHARATHA-specific
 # ---------------------------------------------------------------------------
 
 _ZERG_PATTERNS: list[KnownPattern] = [
@@ -490,7 +490,7 @@ _ZERG_PATTERNS: list[KnownPattern] = [
         prior_probability=0.07,
         common_causes=[
             "Overlapping file ownership between tasks",
-            "Manual edits on base branch during rush",
+            "Manual edits on base branch during kurukshetra",
             "Incorrect file ownership in task-graph.json",
         ],
         fix_templates=[
@@ -532,7 +532,7 @@ _ZERG_PATTERNS: list[KnownPattern] = [
         ],
         prior_probability=0.04,
         common_causes=[
-            "Previous rush left worktrees without cleanup",
+            "Previous kurukshetra left worktrees without cleanup",
             "Worker crashed before worktree removal",
             "Manual deletion of .mahabharatha directory without git worktree prune",
         ],

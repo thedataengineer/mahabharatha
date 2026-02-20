@@ -1,4 +1,4 @@
-"""Unit tests for ZERG engineering rules loader."""
+"""Unit tests for MAHABHARATHA engineering rules loader."""
 
 from __future__ import annotations
 

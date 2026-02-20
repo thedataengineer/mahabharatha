@@ -1,4 +1,4 @@
-"""Shared rendering utilities for ZERG status and dry-run displays.
+"""Shared rendering utilities for MAHABHARATHA status and dry-run displays.
 
 Provides reusable Rich rendering components used by both
 mahabharatha/dryrun.py and mahabharatha/commands/status.py.

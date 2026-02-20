@@ -26,8 +26,8 @@ Low. Neither is currently exploitable. Fixes bring consistency with OWASP defens
 ## 2. Users
 
 ### 2.1 Primary Users
-- ZERG maintainers creating PRs via `zerg git pr`
-- ZERG maintainers using `zerg git rewrite`
+- MAHABHARATHA maintainers creating PRs via `mahabharatha git pr`
+- MAHABHARATHA maintainers using `mahabharatha git rewrite`
 
 ### 2.2 User Stories
 - As a maintainer, I want PR titles sanitized at output boundary for defense-in-depth consistency
@@ -161,7 +161,7 @@ with os.fdopen(fd, "w") as script_file:
 - [ ] Temp rebase script (squash) created with 0o700 from start via `mkstemp`+`fchmod`
 - [ ] Temp rebase script (reorder) created with 0o700 from start via `mkstemp`+`fchmod`
 - [ ] `python -m pytest tests/ --timeout=120` — green
-- [ ] `ruff check zerg/git/pr_engine.py zerg/git/history_engine.py` — clean
+- [ ] `ruff check mahabharatha/git/pr_engine.py mahabharatha/git/history_engine.py` — clean
 
 ---
 

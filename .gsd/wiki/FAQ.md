@@ -1,63 +1,63 @@
 # Frequently Asked Questions
 
-Common questions about ZERG, organized by topic. Each answer provides context, rationale, and cross-references to help you understand not just the "what" but the "why" behind ZERG's design.
+Common questions about MAHABHARATHA, organized by topic. Each answer provides context, rationale, and cross-references to help you understand not just the "what" but the "why" behind MAHABHARATHA's design.
 
 ---
 
 ## Getting Started
 
-### What is ZERG and how is it different from regular Claude Code?
+### What is MAHABHARATHA and how is it different from regular Claude Code?
 
-ZERG (Zero-Effort Rapid Growth) is a parallel execution system that coordinates multiple Claude Code instances to build features simultaneously. While regular Claude Code runs as a single agent working sequentially through tasks, ZERG fundamentally changes the development model by introducing parallelism, isolation, and spec-driven coordination.
+MAHABHARATHA (Zero-Effort Rapid Growth) is a parallel execution system that coordinates multiple Claude Code instances to build features simultaneously. While regular Claude Code runs as a single agent working sequentially through tasks, MAHABHARATHA fundamentally changes the development model by introducing parallelism, isolation, and spec-driven coordination.
 
-The key insight behind ZERG is that most software features can be decomposed into independent work units that share no files within a given phase. By enforcing exclusive file ownership and organizing tasks into dependency levels, ZERG eliminates merge conflicts while maximizing parallel throughput. A single Claude Code instance might take 2 hours to implement a feature with 20 tasks; a ZERG swarm of 5 workers can complete the same work in 20-30 minutes by executing tasks concurrently within each level.
+The key insight behind MAHABHARATHA is that most software features can be decomposed into independent work units that share no files within a given phase. By enforcing exclusive file ownership and organizing tasks into dependency levels, MAHABHARATHA eliminates merge conflicts while maximizing parallel throughput. A single Claude Code instance might take 2 hours to implement a feature with 20 tasks; a MAHABHARATHA akshauhini of 5 workers can complete the same work in 20-30 minutes by executing tasks concurrently within each level.
 
-Unlike regular Claude Code, ZERG workers are stateless. They read specification documents fresh each time rather than relying on conversation history. This design enables crash recovery, restartability, and true parallelism since workers share no state. The orchestrator coordinates everything through the Claude Code Task system, which serves as the authoritative backbone for tracking progress across all workers.
+Unlike regular Claude Code, MAHABHARATHA workers are stateless. They read specification documents fresh each time rather than relying on conversation history. This design enables crash recovery, restartability, and true parallelism since workers share no state. The orchestrator coordinates everything through the Claude Code Task system, which serves as the authoritative backbone for tracking progress across all workers.
 
-This architecture also enables ZERG to auto-fetch security rules based on your detected tech stack and engineer context per worker to minimize token usage. Each worker receives only the instructions and context relevant to its assigned task, reducing per-worker token consumption by 30-50%.
+This architecture also enables MAHABHARATHA to auto-fetch security rules based on your detected tech stack and engineer context per worker to minimize token usage. Each worker receives only the instructions and context relevant to its assigned task, reducing per-worker token consumption by 30-50%.
 
 For more details on system layers and module responsibilities, see [Architecture](Architecture).
 
-### How do I install ZERG?
+### How do I install MAHABHARATHA?
 
-ZERG installation involves two steps: installing the Python package and installing the slash commands into your project. The package provides the core orchestration logic, while the slash commands integrate ZERG into your Claude Code workflow.
+MAHABHARATHA installation involves two steps: installing the Python package and installing the slash commands into your project. The package provides the core orchestration logic, while the slash commands integrate MAHABHARATHA into your Claude Code workflow.
 
 ```bash
 # Clone and install the package
-git clone https://github.com/rocklambros/zerg.git
-cd zerg
+git clone https://github.com/rocklambros/mahabharatha.git
+cd mahabharatha
 pip install -e ".[dev]"
 pre-commit install
 
 # Install slash commands into your project
 cd /path/to/your/project
-zerg install
+mahabharatha install
 
 # Verify installation
-zerg --help
+mahabharatha --help
 ```
 
-The `zerg install` command copies command files into your project's `.claude/commands/` directory, making them available as `/zerg:*` commands within Claude Code sessions. This approach keeps command definitions version-controlled with your project and allows customization.
+The `mahabharatha install` command copies command files into your project's `.claude/commands/` directory, making them available as `/mahabharatha:*` commands within Claude Code sessions. This approach keeps command definitions version-controlled with your project and allows customization.
 
 Prerequisites include Python 3.12+, the Claude Code CLI (installed and authenticated), and Git. Docker is optional but required for container mode execution, which provides full worker isolation. If you plan to use container mode, ensure Docker is running and your user has permission to run containers.
 
-After installation, run `/zerg:init` inside a Claude Code session to create the `.zerg/` directory structure, generate the default configuration file, and fetch security rules for your detected tech stack.
+After installation, run `/mahabharatha:init` inside a Claude Code session to create the `.mahabharatha/` directory structure, generate the default configuration file, and fetch security rules for your detected tech stack.
 
 For complete installation instructions and first-run guidance, see [Home](Home).
 
-### What's the minimum setup needed to start using ZERG?
+### What's the minimum setup needed to start using MAHABHARATHA?
 
-The minimum setup to go from zero to a working ZERG swarm involves five commands, each representing a distinct phase of the ZERG workflow. Understanding what each phase does helps you use ZERG effectively.
+The minimum setup to go from zero to a working MAHABHARATHA akshauhini involves five commands, each representing a distinct phase of the MAHABHARATHA workflow. Understanding what each phase does helps you use MAHABHARATHA effectively.
 
-1. **`zerg install`** (in terminal): Installs slash commands into your project, making `/zerg:*` commands available
-2. **`/zerg:init`** (in Claude Code): Creates ZERG infrastructure (`.zerg/` directory, config file, security rules)
-3. **`/zerg:plan my-feature`**: Captures requirements through interactive dialogue, generating `requirements.md`
-4. **`/zerg:design`**: Analyzes requirements to produce architecture documentation and a task graph with dependency levels
-5. **`/zerg:rush --workers=3`**: Launches workers to execute the task graph in parallel
+1. **`mahabharatha install`** (in terminal): Installs slash commands into your project, making `/mahabharatha:*` commands available
+2. **`/mahabharatha:init`** (in Claude Code): Creates MAHABHARATHA infrastructure (`.mahabharatha/` directory, config file, security rules)
+3. **`/mahabharatha:plan my-feature`**: Captures requirements through interactive dialogue, generating `requirements.md`
+4. **`/mahabharatha:design`**: Analyzes requirements to produce architecture documentation and a task graph with dependency levels
+5. **`/mahabharatha:kurukshetra --workers=3`**: Launches workers to execute the task graph in parallel
 
-ZERG auto-detects your tech stack from files like `pyproject.toml`, `package.json`, and `Dockerfile`, then fetches appropriate security rules. It also creates a sensible default configuration file that works for most projects.
+MAHABHARATHA auto-detects your tech stack from files like `pyproject.toml`, `package.json`, and `Dockerfile`, then fetches appropriate security rules. It also creates a sensible default configuration file that works for most projects.
 
-After your first successful run, subsequent features only require the plan-design-rush cycle. The infrastructure setup (`init`) is a one-time operation per project.
+After your first successful run, subsequent features only require the plan-design-kurukshetra cycle. The infrastructure setup (`init`) is a one-time operation per project.
 
 For a complete walkthrough of building your first feature, see [Tutorial](Tutorial).
 
@@ -67,7 +67,7 @@ For a complete walkthrough of building your first feature, see [Tutorial](Tutori
 
 ### What's the difference between task, subprocess, and container modes?
 
-ZERG supports three worker execution modes, each with different isolation characteristics, resource requirements, and use cases. Understanding these trade-offs helps you choose the right mode for your situation.
+MAHABHARATHA supports three worker execution modes, each with different isolation characteristics, resource requirements, and use cases. Understanding these trade-offs helps you choose the right mode for your situation.
 
 | Mode | Description | Isolation Level | Resource Overhead |
 |------|-------------|-----------------|-------------------|
@@ -77,11 +77,11 @@ ZERG supports three worker execution modes, each with different isolation charac
 
 **Task mode** is the default when running from Claude Code slash commands. Workers execute as Task sub-agents within your Claude Code session, sharing the same process space. This mode has minimal overhead and is ideal for typical development workflows. However, workers share filesystem access with the parent session.
 
-**Subprocess mode** spawns separate Python processes for each worker. Each worker runs `zerg.worker_main` in its own process, providing memory isolation between workers. This mode requires no Docker but still shares the host filesystem. It's useful for development, testing, and environments where Docker isn't available.
+**Subprocess mode** spawns separate Python processes for each worker. Each worker runs `mahabharatha.worker_main` in its own process, providing memory isolation between workers. This mode requires no Docker but still shares the host filesystem. It's useful for development, testing, and environments where Docker isn't available.
 
 **Container mode** provides maximum isolation by running each worker in its own Docker container. Workers have sandboxed filesystems, network isolation, and resource limits (CPU, memory). The host worktree is mounted into each container, and workers authenticate via OAuth (`~/.claude` mount) or API key (`ANTHROPIC_API_KEY` environment variable). This mode is recommended for production deployments and security-sensitive work.
 
-If `--mode` is not specified, ZERG auto-detects the best option based on your environment: task mode inside Claude Code sessions, container mode if Docker is available with a devcontainer configuration, otherwise subprocess mode.
+If `--mode` is not specified, MAHABHARATHA auto-detects the best option based on your environment: task mode inside Claude Code sessions, container mode if Docker is available with a devcontainer configuration, otherwise subprocess mode.
 
 For container configuration options and security settings, see [Configuration](Configuration).
 
@@ -95,7 +95,7 @@ Container mode is designed for scenarios where isolation, security, and reproduc
 
 **Reproducible environments**: Container images provide consistent execution environments regardless of host machine state. Workers always run in the same environment, eliminating "works on my machine" issues and ensuring predictable behavior across development, CI, and production.
 
-**Production deployments**: When running ZERG in CI/CD pipelines or automated systems, container mode provides the isolation and resource limits necessary for safe multi-tenant execution.
+**Production deployments**: When running MAHABHARATHA in CI/CD pipelines or automated systems, container mode provides the isolation and resource limits necessary for safe multi-tenant execution.
 
 Container mode does require Docker to be installed and running. Workers authenticate using either OAuth (by mounting `~/.claude` read-only into containers) or API key (by passing `ANTHROPIC_API_KEY` as an environment variable). Both authentication methods are implemented in the launcher and work transparently.
 
@@ -103,17 +103,17 @@ For container resource limits and security configuration, see [Configuration](Co
 
 ### How many workers should I use?
 
-Choosing the right worker count involves understanding your task graph's parallelization potential and balancing speedup against resource consumption. ZERG reports a "max parallelization" value during design—this is the maximum number of workers that can ever be simultaneously busy at any dependency level.
+Choosing the right worker count involves understanding your task graph's parallelization potential and balancing speedup against resource consumption. MAHABHARATHA reports a "max parallelization" value during design—this is the maximum number of workers that can ever be simultaneously busy at any dependency level.
 
 | Workers | Use Case | When to Choose |
 |---------|----------|----------------|
-| 1-2 | Small features, learning ZERG, testing | When you want to observe behavior or have < 5 tasks |
+| 1-2 | Small features, learning MAHABHARATHA, testing | When you want to observe behavior or have < 5 tasks |
 | 3-5 | Medium features, balanced throughput | Most common choice, good for 10-30 task features |
 | 6-10 | Large features with many parallelizable tasks | When your task graph has wide levels (8+ tasks per level) |
 
-**Understanding diminishing returns**: If Level 2 of your task graph has only 3 parallelizable tasks, using 10 workers means 7 workers sit idle during that level. The speedup is limited by the narrowest level, not by how many workers you deploy. Check your task graph with `/zerg:status` before choosing worker count—it shows tasks per level.
+**Understanding diminishing returns**: If Level 2 of your task graph has only 3 parallelizable tasks, using 10 workers means 7 workers sit idle during that level. The speedup is limited by the narrowest level, not by how many workers you deploy. Check your task graph with `/mahabharatha:status` before choosing worker count—it shows tasks per level.
 
-**Start conservative and scale up**: For your first few features, start with 4 workers. Use `/zerg:status` during execution to see if workers are frequently waiting for dependencies. If all workers stay busy throughout, try adding more. If workers often idle, reduce the count to avoid wasted resources.
+**Start conservative and scale up**: For your first few features, start with 4 workers. Use `/mahabharatha:status` during execution to see if workers are frequently waiting for dependencies. If all workers stay busy throughout, try adding more. If workers often idle, reduce the count to avoid wasted resources.
 
 **Resource considerations**: Each worker consumes memory, API tokens, and (in container mode) CPU allocation. More workers mean faster completion but higher concurrent resource usage. In CI environments with limited resources, fewer workers with longer timeouts may be more reliable than many workers competing for resources.
 
@@ -123,15 +123,15 @@ For worker configuration options and resource tuning recommendations, see [Confi
 
 ## Git & Branching
 
-### How does ZERG handle git branches?
+### How does MAHABHARATHA handle git branches?
 
-ZERG uses a structured branching model that isolates worker changes while enabling clean, conflict-free merges. Understanding this model helps you reason about where your code lives and how it flows toward integration.
+MAHABHARATHA uses a structured branching model that isolates worker changes while enabling clean, conflict-free merges. Understanding this model helps you reason about where your code lives and how it flows toward integration.
 
 The branching hierarchy consists of three levels:
 
-1. **Worker branches**: Each worker operates on its own branch named `zerg/{feature}/worker-{N}`. Workers commit their changes here during task execution, isolated from each other.
+1. **Worker branches**: Each worker operates on its own branch named `mahabharatha/{feature}/worker-{N}`. Workers commit their changes here during task execution, isolated from each other.
 
-2. **Staging branch**: `zerg/{feature}/staging` serves as the integration point. After all workers complete a level, the orchestrator merges all worker branches into staging, runs quality gates, and resolves any cross-level conflicts.
+2. **Staging branch**: `mahabharatha/{feature}/staging` serves as the integration point. After all workers complete a level, the orchestrator merges all worker branches into staging, runs quality gates, and resolves any cross-level conflicts.
 
 3. **Main branch**: The final destination. After all levels complete and pass quality gates, the staging branch merges to main (or your designated target branch).
 
@@ -148,18 +148,18 @@ For details on the merge process and quality gates, see [Architecture](Architect
 
 ### What are worktrees and why are they used?
 
-Git worktrees are a feature that allows multiple working directories from the same repository, each checked out to a different branch. ZERG uses worktrees to give each worker its own isolated filesystem while sharing the underlying git repository.
+Git worktrees are a feature that allows multiple working directories from the same repository, each checked out to a different branch. MAHABHARATHA uses worktrees to give each worker its own isolated filesystem while sharing the underlying git repository.
 
 ```
-.zerg-worktrees/{feature}-worker-0/  ->  branch: zerg/{feature}/worker-0
-.zerg-worktrees/{feature}-worker-1/  ->  branch: zerg/{feature}/worker-1
+.mahabharatha-worktrees/{feature}-worker-0/  ->  branch: mahabharatha/{feature}/worker-0
+.mahabharatha-worktrees/{feature}-worker-1/  ->  branch: mahabharatha/{feature}/worker-1
 ```
 
 **Why worktrees instead of separate clones?** Worktrees share the repository's object database, meaning git operations (commits, pushes, fetches) don't require network access to sync between workers. Creating a worktree is instant compared to cloning. And disk usage is minimal since object storage is shared.
 
 **Isolation benefits**: Each worktree has its own working directory, staging area, and index. Worker 0 can stage and commit files without affecting Worker 1's state. Workers can edit the same file in different levels (since they work sequentially across levels, not concurrently on the same file).
 
-**Lifecycle**: Worktrees are created automatically by `/zerg:rush` at the start of execution. Each worker operates entirely within its worktree directory. After execution completes, `/zerg:cleanup` removes worktrees to free disk space. The `.zerg-worktrees/` directory is gitignored, so worktrees are never committed.
+**Lifecycle**: Worktrees are created automatically by `/mahabharatha:kurukshetra` at the start of execution. Each worker operates entirely within its worktree directory. After execution completes, `/mahabharatha:cleanup` removes worktrees to free disk space. The `.mahabharatha-worktrees/` directory is gitignored, so worktrees are never committed.
 
 **Debugging tip**: If you need to inspect a worker's state during execution, you can `cd` into its worktree directory and use standard git commands (`git status`, `git log`, `git diff`) to see exactly what that worker has done.
 
@@ -167,7 +167,7 @@ For more on worktree management and the cleanup process, see [Architecture](Arch
 
 ### How do I resolve merge conflicts?
 
-ZERG's exclusive file ownership model is specifically designed to prevent merge conflicts. Each task in `task-graph.json` declares which files it creates and modifies, and the design phase ensures no two tasks at the same level touch the same file. This eliminates within-level conflicts entirely.
+MAHABHARATHA's exclusive file ownership model is specifically designed to prevent merge conflicts. Each task in `task-graph.json` declares which files it creates and modifies, and the design phase ensures no two tasks at the same level touch the same file. This eliminates within-level conflicts entirely.
 
 However, conflicts can still occur in two scenarios:
 
@@ -175,13 +175,13 @@ However, conflicts can still occur in two scenarios:
 
 2. **External changes**: You make manual edits on the staging branch while workers are executing, and those edits conflict with worker changes.
 
-**When ZERG detects a conflict**, it pauses execution and reports the conflicting files and branches. To resolve:
+**When MAHABHARATHA detects a conflict**, it pauses execution and reports the conflicting files and branches. To resolve:
 
-1. Run `/zerg:status` to see which branches conflict and which files are affected
-2. Check out the staging branch: `git checkout zerg/{feature}/staging`
+1. Run `/mahabharatha:status` to see which branches conflict and which files are affected
+2. Check out the staging branch: `git checkout mahabharatha/{feature}/staging`
 3. Manually resolve conflicts using your preferred merge tool
 4. Commit the resolution: `git add . && git commit -m "Resolve merge conflicts"`
-5. Run `/zerg:merge --continue` to resume the merge process
+5. Run `/mahabharatha:merge --continue` to resume the merge process
 
 **Prevention is better than resolution**: When designing tasks, ensure file ownership is truly exclusive. If two tasks need to modify the same file, either combine them into one task, split the file into separate files, or place the tasks in the same level so one depends on the other.
 
@@ -195,7 +195,7 @@ For merge process details and the `--continue` flag behavior, see [Command-Refer
 
 Quality gates are validation commands that run after each level merge to verify the integrated code meets quality standards. They provide automated checkpoints that catch issues before they propagate to subsequent levels or reach the main branch.
 
-Default gates (configurable in `.zerg/config.yaml`):
+Default gates (configurable in `.mahabharatha/config.yaml`):
 
 | Gate | Command | Purpose | Default Required |
 |------|---------|---------|------------------|
@@ -209,7 +209,7 @@ Default gates (configurable in `.zerg/config.yaml`):
 - **Timeout** (exceeded time limit): Treated as failure
 - **Error** (command couldn't run): Pauses for manual intervention
 
-When a required gate fails, ZERG pauses and reports the failure. You can inspect the gate output, fix the issues, and resume with `/zerg:merge --continue`. Non-required gates warn but don't block—useful for advisory checks like coverage thresholds.
+When a required gate fails, MAHABHARATHA pauses and reports the failure. You can inspect the gate output, fix the issues, and resume with `/mahabharatha:merge --continue`. Non-required gates warn but don't block—useful for advisory checks like coverage thresholds.
 
 **Why run gates after level merges?** Individual workers verify their own tasks, but that doesn't guarantee the combined changes work together. A Level 2 task might pass verification in isolation but break a Level 1 feature when merged. Level gates catch these integration issues early, before building on a broken foundation.
 
@@ -217,7 +217,7 @@ For gate configuration options and adding custom gates, see [Configuration](Conf
 
 ### How do I add custom quality gates?
 
-Custom gates let you extend ZERG's validation beyond the defaults. You might add security scanning, coverage thresholds, documentation checks, or project-specific validations.
+Custom gates let you extend MAHABHARATHA's validation beyond the defaults. You might add security scanning, coverage thresholds, documentation checks, or project-specific validations.
 
 **YAML configuration** (simple shell commands):
 
@@ -240,9 +240,9 @@ quality_gates:
 **Python plugins** (complex logic, external integrations):
 
 ```python
-from zerg.plugins import QualityGatePlugin, GateContext
-from zerg.types import GateRunResult
-from zerg.constants import GateResult
+from mahabharatha.plugins import QualityGatePlugin, GateContext
+from mahabharatha.types import GateRunResult
+from mahabharatha.constants import GateResult
 
 class SonarQubeGate(QualityGatePlugin):
     @property
@@ -261,10 +261,10 @@ class SonarQubeGate(QualityGatePlugin):
         )
 ```
 
-Python plugins are discovered via entry points (group: `zerg.plugins`). Add them to your `pyproject.toml`:
+Python plugins are discovered via entry points (group: `mahabharatha.plugins`). Add them to your `pyproject.toml`:
 
 ```toml
-[project.entry-points."zerg.plugins"]
+[project.entry-points."mahabharatha.plugins"]
 sonarqube-gate = "my_package.gates:SonarQubeGate"
 ```
 
@@ -278,13 +278,13 @@ Yes, but understand the implications before doing so. Skipping gates trades conf
 
 **Skipping all gates**:
 ```bash
-/zerg:merge --skip-gates
+/mahabharatha:merge --skip-gates
 ```
 
 **Skipping a specific gate**:
 ```bash
-/zerg:merge --skip-gate lint
-/zerg:merge --skip-gate typecheck
+/mahabharatha:merge --skip-gate lint
+/mahabharatha:merge --skip-gate typecheck
 ```
 
 **Making gates non-blocking permanently**: Set `required: false` in your configuration. Non-blocking gates run and report results but don't stop merges on failure. This is useful for advisory checks where you want visibility but not enforcement.
@@ -316,20 +316,20 @@ For gate configuration and the `--skip-gate` flag, see [Command-Reference](Comma
 
 ### How does container authentication work?
 
-Container workers need to authenticate with Claude's API to execute tasks. ZERG supports two authentication methods, automatically detecting which to use based on available credentials.
+Container workers need to authenticate with Claude's API to execute tasks. MAHABHARATHA supports two authentication methods, automatically detecting which to use based on available credentials.
 
 | Method | Mechanism | Best For | How It Works |
 |--------|-----------|----------|--------------|
 | **OAuth** | Mount `~/.claude` | Claude Pro/Team accounts | Your existing Claude Code credentials are shared with containers |
 | **API Key** | `ANTHROPIC_API_KEY` env var | API key authentication | The API key is passed into containers as an environment variable |
 
-**OAuth authentication**: Your `~/.claude` directory contains OAuth tokens from Claude Code authentication. ZERG mounts this directory read-only into containers at the same path, allowing workers to authenticate using your existing session. This is transparent—if you're authenticated in Claude Code, container workers inherit that authentication.
+**OAuth authentication**: Your `~/.claude` directory contains OAuth tokens from Claude Code authentication. MAHABHARATHA mounts this directory read-only into containers at the same path, allowing workers to authenticate using your existing session. This is transparent—if you're authenticated in Claude Code, container workers inherit that authentication.
 
-**API key authentication**: If `ANTHROPIC_API_KEY` is set in your environment, ZERG passes it into containers. This method works independently of OAuth and is useful for CI environments or when you want explicit API key control.
+**API key authentication**: If `ANTHROPIC_API_KEY` is set in your environment, MAHABHARATHA passes it into containers. This method works independently of OAuth and is useful for CI environments or when you want explicit API key control.
 
-**Detection priority**: ZERG checks for OAuth credentials first (existence of `~/.claude` with valid tokens), then falls back to API key if available. If neither is available, container startup fails with a clear authentication error.
+**Detection priority**: MAHABHARATHA checks for OAuth credentials first (existence of `~/.claude` with valid tokens), then falls back to API key if available. If neither is available, container startup fails with a clear authentication error.
 
-**Security considerations**: OAuth tokens in `~/.claude` are mounted read-only, preventing containers from modifying your credentials. API keys passed via environment variables are visible within the container but not logged by ZERG. For maximum security, use OAuth when possible since it doesn't expose raw credentials.
+**Security considerations**: OAuth tokens in `~/.claude` are mounted read-only, preventing containers from modifying your credentials. API keys passed via environment variables are visible within the container but not logged by MAHABHARATHA. For maximum security, use OAuth when possible since it doesn't expose raw credentials.
 
 For environment variable handling and security configuration, see [Configuration](Configuration).
 
@@ -337,7 +337,7 @@ For environment variable handling and security configuration, see [Configuration
 
 Container resource allocation controls how much CPU, memory, and network access each worker receives. Default settings work for most projects, but you may need to adjust them for resource-intensive tasks or constrained environments.
 
-**Default resource limits** (configurable in `.zerg/config.yaml`):
+**Default resource limits** (configurable in `.mahabharatha/config.yaml`):
 
 ```yaml
 resources:
@@ -358,7 +358,7 @@ resources:
 - **Resource-constrained hosts**: Reduce limits and use fewer workers
 - **Fast I/O needs**: Consider SSD-backed Docker storage drivers
 
-Resource limits are enforced by Docker. If a container exceeds its memory limit, Docker kills it with an OOM (out-of-memory) error. ZERG detects this and marks the worker as failed, potentially retrying on another worker.
+Resource limits are enforced by Docker. If a container exceeds its memory limit, Docker kills it with an OOM (out-of-memory) error. MAHABHARATHA detects this and marks the worker as failed, potentially retrying on another worker.
 
 For all resource and container configuration options, see [Configuration](Configuration).
 
@@ -379,31 +379,31 @@ Container problems typically fall into a few categories: Docker daemon issues, a
 **Diagnostic commands**:
 
 ```bash
-# Check ZERG's view of the environment
-/zerg:debug --env
+# Check MAHABHARATHA's view of the environment
+/mahabharatha:debug --env
 
 # View logs for a specific worker
-/zerg:logs --worker 0
+/mahabharatha:logs --worker 0
 
-# List all ZERG containers (running and stopped)
-docker ps -a | grep zerg
+# List all MAHABHARATHA containers (running and stopped)
+docker ps -a | grep mahabharatha
 
 # View container logs directly
-docker logs zerg-worker-0
+docker logs mahabharatha-worker-0
 
 # Inspect container configuration
-docker inspect zerg-worker-0
+docker inspect mahabharatha-worker-0
 
 # Check resource usage
-docker stats zerg-worker-0
+docker stats mahabharatha-worker-0
 ```
 
 **Debugging workflow**:
-1. Run `/zerg:debug --env` to verify ZERG sees Docker and credentials correctly
-2. Check if containers started: `docker ps -a | grep zerg`
-3. If containers exist but failed, check logs: `docker logs zerg-worker-N`
+1. Run `/mahabharatha:debug --env` to verify MAHABHARATHA sees Docker and credentials correctly
+2. Check if containers started: `docker ps -a | grep mahabharatha`
+3. If containers exist but failed, check logs: `docker logs mahabharatha-worker-N`
 4. Look for specific errors: authentication, OOM, permission denied
-5. Fix the identified issue and retry with `/zerg:rush --resume`
+5. Fix the identified issue and retry with `/mahabharatha:kurukshetra --resume`
 
 **When containers keep failing**: Sometimes the issue is in the task itself, not the container. Compare container logs with the task's verification command. If the task verification is failing, the problem is the generated code, not containerization.
 
@@ -415,13 +415,13 @@ For comprehensive troubleshooting guides, see [Troubleshooting](Troubleshooting)
 
 ### How does context engineering reduce token usage?
 
-Context engineering is ZERG's system for minimizing per-worker token consumption while preserving the information each task needs. When running 5-10 parallel workers, each one independently loads instructions and specifications—without optimization, this can consume 15,000-30,000 tokens per worker before any code is written.
+Context engineering is MAHABHARATHA's system for minimizing per-worker token consumption while preserving the information each task needs. When running 5-10 parallel workers, each one independently loads instructions and specifications—without optimization, this can consume 15,000-30,000 tokens per worker before any code is written.
 
-ZERG addresses this through three coordinated subsystems:
+MAHABHARATHA addresses this through three coordinated subsystems:
 
 **1. Command Splitting**: Large command files (>300 lines) are split into `.core.md` (~30% essential instructions) and `.details.md` (~70% reference material). Workers load only the core content by default, referencing details only when encountering situations that require them. This saves ~2,000-5,000 tokens per command file loaded.
 
-**2. Security Rule Filtering**: Instead of loading all security rules (Python, JavaScript, Docker, OWASP core), ZERG analyzes each task's file extensions and loads only relevant rules. A task that only modifies `.py` files receives Python security rules and OWASP core, not Docker or JavaScript rules. This saves ~1,000-4,000 tokens per task depending on how many rule sets your project has.
+**2. Security Rule Filtering**: Instead of loading all security rules (Python, JavaScript, Docker, OWASP core), MAHABHARATHA analyzes each task's file extensions and loads only relevant rules. A task that only modifies `.py` files receives Python security rules and OWASP core, not Docker or JavaScript rules. This saves ~1,000-4,000 tokens per task depending on how many rule sets your project has.
 
 **3. Task-Scoped Context**: Each task receives curated excerpts from `requirements.md` and `design.md` based on its title, description, and file list—not the entire specification documents. The context assembler identifies paragraphs that mention the task's files or topics and extracts them within a token budget. This saves ~2,000-5,000 tokens per task compared to loading full documents.
 
@@ -486,7 +486,7 @@ Command splitting and task context are complementary subsystems that optimize di
 2. Task AUTH-L2-001's scoped context (relevant spec excerpts, not full `requirements.md` + `design.md`)
 3. Filtered security rules (Python rules only if task creates `.py` files)
 
-Monitoring both: `/zerg:status` shows command split statistics and task context population rates in the CONTEXT BUDGET section.
+Monitoring both: `/mahabharatha:status` shows command split statistics and task context population rates in the CONTEXT BUDGET section.
 
 For implementation details and configuration, see [Context-Engineering](Context-Engineering).
 
@@ -496,7 +496,7 @@ For implementation details and configuration, see [Context-Engineering](Context-
 
 ### What plugin types are supported?
 
-ZERG's plugin system supports three distinct plugin types, each serving a different role in the execution lifecycle. Understanding when to use each type helps you extend ZERG effectively.
+MAHABHARATHA's plugin system supports three distinct plugin types, each serving a different role in the execution lifecycle. Understanding when to use each type helps you extend MAHABHARATHA effectively.
 
 | Type | Purpose | Execution Model | Example Use Cases |
 |------|---------|-----------------|-------------------|
@@ -516,7 +516,7 @@ For the complete plugin API and entry point registration, see [Plugins](Plugins)
 
 ### How do I create a custom plugin?
 
-Custom plugins let you extend ZERG's behavior without modifying core code. The approach differs based on plugin complexity and type.
+Custom plugins let you extend MAHABHARATHA's behavior without modifying core code. The approach differs based on plugin complexity and type.
 
 **YAML-configured hooks** (simplest—shell commands triggered by events):
 
@@ -527,7 +527,7 @@ plugins:
       command: ./scripts/notify.sh "Level {level} done for {feature}"
       timeout: 60
     - event: task_completed
-      command: echo "Task {task_id} completed" >> /tmp/zerg.log
+      command: echo "Task {task_id} completed" >> /tmp/mahabharatha.log
       timeout: 10
 ```
 
@@ -536,9 +536,9 @@ Available event types: `task_started`, `task_completed`, `level_complete`, `merg
 **Python Quality Gate plugins** (full control over validation logic):
 
 ```python
-from zerg.plugins import QualityGatePlugin, GateContext
-from zerg.types import GateRunResult
-from zerg.constants import GateResult
+from mahabharatha.plugins import QualityGatePlugin, GateContext
+from mahabharatha.types import GateRunResult
+from mahabharatha.constants import GateResult
 
 class LicenseCheckGate(QualityGatePlugin):
     @property
@@ -572,18 +572,18 @@ class LicenseCheckGate(QualityGatePlugin):
 **Registering Python plugins**: Add entry points to your `pyproject.toml`:
 
 ```toml
-[project.entry-points."zerg.plugins"]
+[project.entry-points."mahabharatha.plugins"]
 license-check = "my_package.gates:LicenseCheckGate"
 my-notifier = "my_package.hooks:SlackNotifierHook"
 ```
 
-ZERG discovers plugins via `importlib.metadata` at startup. Your plugin class is instantiated and called at the appropriate lifecycle point.
+MAHABHARATHA discovers plugins via `importlib.metadata` at startup. Your plugin class is instantiated and called at the appropriate lifecycle point.
 
 For complete API documentation, available context fields, and example implementations, see [Plugins](Plugins).
 
 ### Where are plugins configured?
 
-All plugin configuration lives in `.zerg/config.yaml` under the `plugins` section. This centralizes plugin settings alongside other ZERG configuration, making it easy to see and modify plugin behavior.
+All plugin configuration lives in `.mahabharatha/config.yaml` under the `plugins` section. This centralizes plugin settings alongside other MAHABHARATHA configuration, making it easy to see and modify plugin behavior.
 
 ```yaml
 plugins:

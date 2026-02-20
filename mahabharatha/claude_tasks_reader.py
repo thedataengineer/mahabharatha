@@ -17,13 +17,13 @@ from mahabharatha.logging import get_logger
 
 logger = get_logger("claude_tasks_reader")
 
-# Pattern for ZERG execution tasks: [L1] Title, [L2] Title, etc.
+# Pattern for MAHABHARATHA execution tasks: [L1] Title, [L2] Title, etc.
 ZERG_TASK_RE = re.compile(r"^\[L(\d+)\]\s+(.+)")
 
-# Pattern for ZERG meta tasks: [Plan], [Design], [Rush], etc.
-ZERG_META_RE = re.compile(r"^\[(Plan|Design|Rush|Debug|Init|Cleanup|Review|Build|Test|Status)\]")
+# Pattern for MAHABHARATHA meta tasks: [Plan], [Design], [Kurukshetra], etc.
+ZERG_META_RE = re.compile(r"^\[(Plan|Design|Kurukshetra|Debug|Init|Cleanup|Review|Build|Test|Status)\]")
 
-# Claude Task status → ZERG TaskStatus mapping
+# Claude Task status → MAHABHARATHA TaskStatus mapping
 _STATUS_MAP_NO_BLOCKERS = {
     "pending": TaskStatus.PENDING.value,
     "in_progress": TaskStatus.IN_PROGRESS.value,
@@ -36,7 +36,7 @@ _STATUS_BLOCKED = TaskStatus.BLOCKED.value
 class ClaudeTasksReader:
     """Read Claude Code Tasks from ~/.claude/tasks/ on disk.
 
-    Discovers ZERG task lists by scanning for [L{n}] subject patterns,
+    Discovers MAHABHARATHA task lists by scanning for [L{n}] subject patterns,
     then synthesizes a state dict compatible with StateManager._state.
     """
 
@@ -54,7 +54,7 @@ class ClaudeTasksReader:
         self._cache_ttl: float = 10.0  # seconds
 
     def find_feature_task_list(self, feature: str) -> Path | None:
-        """Find the Claude Task list directory containing ZERG tasks for a feature.
+        """Find the Claude Task list directory containing MAHABHARATHA tasks for a feature.
 
         Scans ~/.claude/tasks/{UUID}/ directories for task JSON files with
         [L{n}] subject prefixes. Returns the most recently modified match.
@@ -92,7 +92,7 @@ class ClaudeTasksReader:
             mahabharatha_count, feature_match = self._scan_dir_for_mahabharatha_tasks(dir_path, feature_lower)
             if mahabharatha_count > 0 and feature_match:
                 logger.info(
-                    "Found ZERG task list for '%s' at %s (%d tasks)",
+                    "Found MAHABHARATHA task list for '%s' at %s (%d tasks)",
                     feature,
                     dir_path.name,
                     mahabharatha_count,
@@ -101,12 +101,12 @@ class ClaudeTasksReader:
                 self._cache_time = now
                 return dir_path
 
-        # Fallback: return any dir with ZERG tasks (no feature match required)
+        # Fallback: return any dir with MAHABHARATHA tasks (no feature match required)
         for dir_path in task_list_dirs:
             mahabharatha_count, _ = self._scan_dir_for_mahabharatha_tasks(dir_path, feature_lower)
             if mahabharatha_count >= 3:  # At least 3 level tasks = likely a real execution
                 logger.info(
-                    "Found ZERG task list (no feature match) at %s (%d tasks)",
+                    "Found MAHABHARATHA task list (no feature match) at %s (%d tasks)",
                     dir_path.name,
                     mahabharatha_count,
                 )
@@ -114,7 +114,7 @@ class ClaudeTasksReader:
                 self._cache_time = now
                 return dir_path
 
-        logger.debug("No ZERG task list found for feature '%s'", feature)
+        logger.debug("No MAHABHARATHA task list found for feature '%s'", feature)
         return None
 
     def read_tasks(self, task_list_dir: Path) -> dict[str, Any]:
@@ -203,7 +203,7 @@ class ClaudeTasksReader:
         }
 
     def _scan_dir_for_mahabharatha_tasks(self, dir_path: Path, feature_lower: str) -> tuple[int, bool]:
-        """Scan a task list directory for ZERG tasks.
+        """Scan a task list directory for MAHABHARATHA tasks.
 
         Args:
             dir_path: Task list directory to scan.
@@ -243,14 +243,14 @@ class ClaudeTasksReader:
 
     @staticmethod
     def _map_status(claude_status: str, blocked_by: list[str]) -> str:
-        """Map Claude Task status to ZERG TaskStatus value.
+        """Map Claude Task status to MAHABHARATHA TaskStatus value.
 
         Args:
             claude_status: Claude Task status string.
             blocked_by: List of blocking task IDs.
 
         Returns:
-            ZERG TaskStatus value string.
+            MAHABHARATHA TaskStatus value string.
         """
         if claude_status == "pending" and blocked_by:
             return _STATUS_BLOCKED

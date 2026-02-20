@@ -19,7 +19,7 @@ Codebase audit of 7 open GitHub issues reveals **none have been fully resolved**
 | #146 | type: ignore cleanup | P3 | 13 instances (unchanged); 11/13 lack justification; pyproject missing `warn_unused_ignores` | ~0% fixed |
 
 ### Critical Finding
-`zerg/commands/analyze.py:284` — security checker returns **PASS on exception**. If the scanner crashes, the system reports no security issues. This is a fail-open security bug.
+`mahabharatha/commands/analyze.py:284` — security checker returns **PASS on exception**. If the scanner crashes, the system reports no security issues. This is a fail-open security bug.
 
 ## Phased Approach
 
@@ -33,11 +33,11 @@ Codebase audit of 7 open GitHub issues reveals **none have been fully resolved**
 
 ### 1A: Fix analyze.py fail-open (CRITICAL)
 
-`zerg/commands/analyze.py:282-285` — both `CommandValidationError` and bare `Exception` handlers return `passed=True`. On exception, security analysis should **fail closed** (report error, not PASS).
+`mahabharatha/commands/analyze.py:282-285` — both `CommandValidationError` and bare `Exception` handlers return `passed=True`. On exception, security analysis should **fail closed** (report error, not PASS).
 
 **Fix**: Return `passed=False` with an error issue on exception. On `CommandValidationError` (tool not installed), return a skip/warning result, not a pass.
 
-**Files**: `zerg/commands/analyze.py`
+**Files**: `mahabharatha/commands/analyze.py`
 **Verification**: `pytest tests/ -k "analyze" --timeout=30`
 
 ### 1B: Fix 59 HIGH-severity silent exception handlers
@@ -50,21 +50,21 @@ These catch `Exception` with **no logging and no re-raise** — bugs are invisib
 3. **Re-raise after logging** — where the caller should know about the failure
 
 **Priority files** (most handlers):
-- `zerg/commands/cleanup.py` — 7 handlers
-- `zerg/commands/analyze.py` — 5 handlers
-- `zerg/orchestrator.py` — 4 handlers
-- `zerg/token_counter.py` — 3 handlers
-- `zerg/git/bisect_engine.py` — 3 handlers
+- `mahabharatha/commands/cleanup.py` — 7 handlers
+- `mahabharatha/commands/analyze.py` — 5 handlers
+- `mahabharatha/orchestrator.py` — 4 handlers
+- `mahabharatha/token_counter.py` — 3 handlers
+- `mahabharatha/git/bisect_engine.py` — 3 handlers
 
 **Files**: ~30 files (see full list in issue #137 audit)
-**Verification**: `grep -c "except Exception" zerg/ -r` count should drop by ~59; `ruff check zerg/ --select BLE001` should report 0
+**Verification**: `grep -c "except Exception" mahabharatha/ -r` count should drop by ~59; `ruff check mahabharatha/ --select BLE001` should report 0
 
 ### 1C: Enable ruff BLE001 lint rule
 
 Add `BLE001` (bare-except) to ruff select in `pyproject.toml` to prevent new bare-except additions.
 
 **Files**: `pyproject.toml`
-**Verification**: `ruff check zerg/ --select BLE001`
+**Verification**: `ruff check mahabharatha/ --select BLE001`
 
 **Acceptance Criteria (Phase 1)**:
 - [ ] analyze.py security check fails closed on exception
@@ -92,7 +92,7 @@ Modules doing **multiple rglob calls** that should use single-pass:
 
 ### 2B: Extract shared utility
 
-Create `zerg/fs_utils.py` with a `collect_files(root, extensions)` helper:
+Create `mahabharatha/fs_utils.py` with a `collect_files(root, extensions)` helper:
 ```python
 def collect_files(root: Path, extensions: set[str], exclude_dirs: set[str] = ...) -> dict[str, list[Path]]:
     """Single rglob('*') traversal, returns files grouped by extension."""
@@ -100,8 +100,8 @@ def collect_files(root: Path, extensions: set[str], exclude_dirs: set[str] = ...
 
 Adopt in all modules above.
 
-**Files**: New `zerg/fs_utils.py`, 5 modified modules
-**Verification**: `python -c "from zerg.fs_utils import collect_files"` + existing tests pass + `grep -c "rglob(" zerg/ -r --include="*.py"` count drops significantly
+**Files**: New `mahabharatha/fs_utils.py`, 5 modified modules
+**Verification**: `python -c "from mahabharatha.fs_utils import collect_files"` + existing tests pass + `grep -c "rglob(" mahabharatha/ -r --include="*.py"` count drops significantly
 
 **Acceptance Criteria (Phase 2)**:
 - [ ] `fs_utils.py` utility created with single-pass traversal
@@ -113,14 +113,14 @@ Adopt in all modules above.
 
 ## Phase 3: StateManager Decomposition (P2)
 
-**PR scope**: Split 1009-line StateManager monolith into `zerg/state/` package.
+**PR scope**: Split 1009-line StateManager monolith into `mahabharatha/state/` package.
 
-### 3A: Create zerg/state/ package
+### 3A: Create mahabharatha/state/ package
 
 Extract 11 responsibility groups into focused modules:
 
 ```
-zerg/state/
+mahabharatha/state/
 ├── __init__.py          # Re-exports StateManager facade
 ├── manager.py           # StateManager facade (thin orchestrator, <100 lines)
 ├── persistence.py       # PersistenceLayer: load/save/backup/lock (7 methods)
@@ -150,17 +150,17 @@ class StateManager:
 
 ### 3C: Update 15 production importers
 
-Update all `from zerg.state import StateManager` to use the new package. The facade ensures backward compatibility — no API changes needed.
+Update all `from mahabharatha.state import StateManager` to use the new package. The facade ensures backward compatibility — no API changes needed.
 
 ### 3D: Update 15 test files
 
 Ensure all state tests pass against the new package structure.
 
-**Files**: New `zerg/state/` package (9 files), delete `zerg/state.py`, update 30 importers
+**Files**: New `mahabharatha/state/` package (9 files), delete `mahabharatha/state.py`, update 30 importers
 **Verification**: `pytest tests/unit/test_state*.py tests/integration/test_state*.py --timeout=60`
 
 **Acceptance Criteria (Phase 3)**:
-- [ ] `zerg/state/` package with 9 focused modules
+- [ ] `mahabharatha/state/` package with 9 focused modules
 - [ ] No module > 200 lines
 - [ ] No class > 10 public methods
 - [ ] StateManager facade backward-compatible
@@ -173,9 +173,9 @@ Ensure all state tests pass against the new package structure.
 
 **PR scope**: Define TypedDicts for top offenders, reduce dict[str, Any] by 50%+.
 
-### 4A: Define core TypedDicts in zerg/types.py
+### 4A: Define core TypedDicts in mahabharatha/types.py
 
-`zerg/types.py` already has 12 TypedDicts. Add missing ones for the top offenders:
+`mahabharatha/types.py` already has 12 TypedDicts. Add missing ones for the top offenders:
 
 | TypedDict | Replaces | Used In |
 |-----------|----------|---------|
@@ -196,8 +196,8 @@ Convert the 8 highest-count files (covering ~112 of 319 occurrences).
 
 `exceptions.py` has 9 occurrences — these are often `context: dict[str, Any]` fields that could be narrowed.
 
-**Files**: `zerg/types.py` + 10 modified modules
-**Verification**: `mypy zerg/ --strict 2>&1 | grep -c "dict\[str, Any\]"` reduced; all tests pass
+**Files**: `mahabharatha/types.py` + 10 modified modules
+**Verification**: `mypy mahabharatha/ --strict 2>&1 | grep -c "dict\[str, Any\]"` reduced; all tests pass
 
 **Acceptance Criteria (Phase 4)**:
 - [ ] 8+ new TypedDicts defined
@@ -212,10 +212,10 @@ Convert the 8 highest-count files (covering ~112 of 319 occurrences).
 
 **PR scope**: Separate CLI rendering from business logic in dryrun.py and status.py.
 
-### 5A: Create zerg/rendering/ package
+### 5A: Create mahabharatha/rendering/ package
 
 ```
-zerg/rendering/
+mahabharatha/rendering/
 ├── __init__.py
 ├── shared.py            # Move render_utils.py content here
 ├── dryrun_renderer.py   # Extract 11 _render_* methods from dryrun.py
@@ -238,13 +238,13 @@ Split into:
 
 ### 5D: Move render_utils.py into package
 
-Move `zerg/render_utils.py` → `zerg/rendering/shared.py`, update imports.
+Move `mahabharatha/render_utils.py` → `mahabharatha/rendering/shared.py`, update imports.
 
-**Files**: New `zerg/rendering/` (4 files), modified `dryrun.py`, `status.py`, delete `render_utils.py`
+**Files**: New `mahabharatha/rendering/` (4 files), modified `dryrun.py`, `status.py`, delete `render_utils.py`
 **Verification**: `pytest tests/ -k "dryrun or status" --timeout=60`
 
 **Acceptance Criteria (Phase 5)**:
-- [ ] `zerg/rendering/` package exists with 4 modules
+- [ ] `mahabharatha/rendering/` package exists with 4 modules
 - [ ] dryrun.py business logic separated from rendering
 - [ ] status.py business logic separated from rendering
 - [ ] No Rich imports in business-logic-only modules
@@ -261,10 +261,10 @@ Move `zerg/render_utils.py` → `zerg/rendering/shared.py`, update imports.
 ### 6A: Identify handlers that should re-raise
 
 Handlers in **critical paths** where swallowing hides failures:
-- `zerg/merge.py` — merge failures should propagate
-- `zerg/gates.py` — quality gate failures should propagate
-- `zerg/verify.py` — verification failures should propagate
-- `zerg/state.py` — persistence failures should propagate
+- `mahabharatha/merge.py` — merge failures should propagate
+- `mahabharatha/gates.py` — quality gate failures should propagate
+- `mahabharatha/verify.py` — verification failures should propagate
+- `mahabharatha/state.py` — persistence failures should propagate
 
 ### 6B: Narrow exception types
 
@@ -283,7 +283,7 @@ except Exception as e:  # noqa: BLE001 — intentional: plugin failure shouldn't
 ```
 
 **Files**: ~40 files
-**Verification**: `ruff check zerg/ --select BLE001` reports only annotated exceptions; all tests pass
+**Verification**: `ruff check mahabharatha/ --select BLE001` reports only annotated exceptions; all tests pass
 
 **Acceptance Criteria (Phase 6)**:
 - [ ] Critical-path handlers re-raise or fail explicitly
@@ -298,7 +298,7 @@ except Exception as e:  # noqa: BLE001 — intentional: plugin failure shouldn't
 
 **PR scope**: Add orjson wrapper + migrate hot-path modules.
 
-### 7A: Create zerg/json_utils.py
+### 7A: Create mahabharatha/json_utils.py
 
 ```python
 """JSON abstraction — uses orjson when available, falls back to stdlib json."""
@@ -324,24 +324,24 @@ except ImportError:
 ```toml
 [project.optional-dependencies]
 performance = ["orjson>=3.9.0"]
-all = ["zerg[dev]", "zerg[metrics]", "zerg[performance]"]
+all = ["mahabharatha[dev]", "mahabharatha[metrics]", "mahabharatha[performance]"]
 ```
 
 ### 7C: Migrate hot-path modules
 
 Priority modules (highest JSON I/O frequency):
-1. `zerg/state.py` (or `zerg/state/persistence.py` after Phase 3) — most critical
-2. `zerg/log_aggregator.py` — frequent log parsing
-3. `zerg/token_counter.py` — metadata persistence
-4. `zerg/parser.py` — task graph parsing
-5. `zerg/validation.py` — graph validation
+1. `mahabharatha/state.py` (or `mahabharatha/state/persistence.py` after Phase 3) — most critical
+2. `mahabharatha/log_aggregator.py` — frequent log parsing
+3. `mahabharatha/token_counter.py` — metadata persistence
+4. `mahabharatha/parser.py` — task graph parsing
+5. `mahabharatha/validation.py` — graph validation
 
 ### 7D: Gradual migration of remaining 45 files
 
-Batch migrate remaining `import json` users to `from zerg.json_utils import loads, dumps`.
+Batch migrate remaining `import json` users to `from mahabharatha.json_utils import loads, dumps`.
 
-**Files**: New `zerg/json_utils.py`, `pyproject.toml`, 50 modified files
-**Verification**: `python -c "from zerg.json_utils import loads, dumps"` + all tests pass
+**Files**: New `mahabharatha/json_utils.py`, `pyproject.toml`, 50 modified files
+**Verification**: `python -c "from mahabharatha.json_utils import loads, dumps"` + all tests pass
 
 **Acceptance Criteria (Phase 7)**:
 - [ ] `json_utils.py` abstraction with orjson/stdlib fallback
@@ -390,7 +390,7 @@ show_error_codes = true
 ```
 
 **Files**: `pyproject.toml`, 10 modified files
-**Verification**: `mypy zerg/ --strict` passes with 0 errors and 0 unnecessary ignores
+**Verification**: `mypy mahabharatha/ --strict` passes with 0 errors and 0 unnecessary ignores
 
 **Acceptance Criteria (Phase 8)**:
 - [ ] `types-pyyaml` added to dev dependencies
@@ -419,7 +419,7 @@ Phase 8 (type:ignore) ────> after Phase 7 (pyproject changes)
 ### In Scope
 - All 7 GitHub issues (#134, #137, #139, #140, #143, #145, #146)
 - New utility modules (fs_utils.py, json_utils.py)
-- Package creation (zerg/state/, zerg/rendering/)
+- Package creation (mahabharatha/state/, mahabharatha/rendering/)
 - Lint rule additions (BLE001)
 - Dependency additions (types-pyyaml, orjson optional)
 

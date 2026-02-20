@@ -152,7 +152,7 @@ Low severity, non-conflicting edits.
 
 - Each consolidation task runs pytest on modified files as verification
 - TASK-005 runs full test suite with `--ignore=tests/e2e --ignore=tests/pressure -m "not slow"`
-- TASK-005 runs `python -m zerg.validate_commands` for wiring check
+- TASK-005 runs `python -m mahabharatha.validate_commands` for wiring check
 - Smoke suite verified: `pytest -m smoke -x --timeout=5 -q`
 
 ---

@@ -1,8 +1,8 @@
 # Plugin API Reference
 
-This page documents the abstract base classes, dataclasses, and registry methods that make up the ZERG plugin API. For a conceptual overview, see [[Plugin System]].
+This page documents the abstract base classes, dataclasses, and registry methods that make up the MAHABHARATHA plugin API. For a conceptual overview, see [[Plugin System]].
 
-All plugin types are defined in `zerg/plugins.py`.
+All plugin types are defined in `mahabharatha/plugins.py`.
 
 ---
 
@@ -12,7 +12,7 @@ All plugin types are defined in `zerg/plugins.py`.
 
 Base class for custom quality gate implementations.
 
-**Source:** `zerg/plugins.py`
+**Source:** `mahabharatha/plugins.py`
 
 ```python
 class QualityGatePlugin(abc.ABC):
@@ -41,7 +41,7 @@ class QualityGatePlugin(abc.ABC):
 
 Base class for lifecycle event observers.
 
-**Source:** `zerg/plugins.py`
+**Source:** `mahabharatha/plugins.py`
 
 ```python
 class LifecycleHookPlugin(abc.ABC):
@@ -69,7 +69,7 @@ class LifecycleHookPlugin(abc.ABC):
 
 Base class for custom worker execution environments.
 
-**Source:** `zerg/plugins.py`
+**Source:** `mahabharatha/plugins.py`
 
 ```python
 class LauncherPlugin(abc.ABC):
@@ -87,7 +87,7 @@ class LauncherPlugin(abc.ABC):
 **Contract:**
 
 - `name` is referenced in `workers.launcher_type` in the config YAML.
-- `create_launcher()` receives the full ZERG config and must return an object implementing the `WorkerLauncher` ABC from `zerg/launcher.py`.
+- `create_launcher()` receives the full MAHABHARATHA config and must return an object implementing the `WorkerLauncher` ABC from `mahabharatha/launcher.py`.
 - The returned launcher must implement three methods: `launch()`, `wait()`, and `cleanup()`.
 
 ---
@@ -96,7 +96,7 @@ class LauncherPlugin(abc.ABC):
 
 Base class for context engineering plugins that inject task-scoped context into worker prompts.
 
-**Source:** `zerg/plugins.py`
+**Source:** `mahabharatha/plugins.py`
 
 ```python
 class ContextPlugin(abc.ABC):
@@ -140,7 +140,7 @@ class ContextPlugin(abc.ABC):
 
 Context object passed to quality gate `run()` methods.
 
-**Source:** `zerg/plugins.py`
+**Source:** `mahabharatha/plugins.py`
 
 ```python
 @dataclass
@@ -155,7 +155,7 @@ class GateContext:
 
 Event object passed to lifecycle hook `on_event()` methods.
 
-**Source:** `zerg/plugins.py`
+**Source:** `mahabharatha/plugins.py`
 
 ```python
 @dataclass
@@ -171,7 +171,7 @@ class LifecycleEvent:
 
 Return type for quality gate `run()` methods.
 
-**Source:** `zerg/types.py`
+**Source:** `mahabharatha/types.py`
 
 ```python
 @dataclass
@@ -186,7 +186,7 @@ class GateRunResult:
 
 ### GateResult (Enum)
 
-**Source:** `zerg/constants.py`
+**Source:** `mahabharatha/constants.py`
 
 | Value | Meaning |
 |-------|---------|
@@ -202,7 +202,7 @@ class GateRunResult:
 
 The central registry for discovering, registering, and dispatching plugins.
 
-**Source:** `zerg/plugins.py`
+**Source:** `mahabharatha/plugins.py`
 
 ### Registration Methods
 
@@ -247,7 +247,7 @@ class PluginRegistry:
 ```python
 class PluginRegistry:
     def load_yaml_hooks(self, hooks_config: list[dict]) -> None
-    def load_entry_points(self, group: str = "zerg.plugins") -> None
+    def load_entry_points(self, group: str = "mahabharatha.plugins") -> None
 ```
 
 | Method | Parameters | Description |
@@ -259,7 +259,7 @@ class PluginRegistry:
 
 ## Plugin Configuration Models
 
-Configuration models are defined in `zerg/plugin_config.py` using Pydantic.
+Configuration models are defined in `mahabharatha/plugin_config.py` using Pydantic.
 
 ### HookConfig
 
@@ -319,7 +319,7 @@ class PluginsConfig(BaseModel):
 To distribute a plugin as an installable package, declare entry points in `pyproject.toml`:
 
 ```toml
-[project.entry-points."zerg.plugins"]
+[project.entry-points."mahabharatha.plugins"]
 my-security-gate = "my_package.gates:SecurityScanGate"
 my-slack-hook = "my_package.hooks:SlackNotifier"
 my-k8s-launcher = "my_package.launchers:K8sLauncherPlugin"
@@ -343,9 +343,9 @@ The following example implements a quality gate that checks for TODO comments in
 ```python
 # my_plugin/gates.py
 import subprocess
-from zerg.plugins import QualityGatePlugin, GateContext
-from zerg.types import GateRunResult
-from zerg.constants import GateResult
+from mahabharatha.plugins import QualityGatePlugin, GateContext
+from mahabharatha.types import GateRunResult
+from mahabharatha.constants import GateResult
 
 
 class TodoCheckGate(QualityGatePlugin):
@@ -389,7 +389,7 @@ class TodoCheckGate(QualityGatePlugin):
 Register it in `pyproject.toml`:
 
 ```toml
-[project.entry-points."zerg.plugins"]
+[project.entry-points."mahabharatha.plugins"]
 todo-check = "my_plugin.gates:TodoCheckGate"
 ```
 

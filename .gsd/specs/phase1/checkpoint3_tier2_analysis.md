@@ -44,7 +44,7 @@ REFS: Links to authoritative sources
 
 **Hierarchy**: Global (~/.claude/CLAUDE.md) → Project (.claude/CLAUDE.md) → Directory (src/.claude/CLAUDE.md)
 
-**ZERG Application**: Comprehensive security rule library for worker context, hierarchical rule application pattern
+**MAHABHARATHA Application**: Comprehensive security rule library for worker context, hierarchical rule application pattern
 
 ---
 
@@ -75,7 +75,7 @@ REFS: Links to authoritative sources
 
 **Custom Rules** (.nov files): meta, keywords, semantics, llm, condition sections
 
-**ZERG Application**: Hook architecture for orchestrator monitoring, session logging for audit trail, three-tier detection for worker outputs
+**MAHABHARATHA Application**: Hook architecture for orchestrator monitoring, session logging for audit trail, three-tier detection for worker outputs
 
 ---
 
@@ -91,7 +91,7 @@ REFS: Links to authoritative sources
 - SARIF 2.1.0 output for compliance reporting
 - Query suites for different rule sets
 
-**ZERG Application**: Compliance management architecture, deviation record pattern
+**MAHABHARATHA Application**: Compliance management architecture, deviation record pattern
 
 ---
 
@@ -124,7 +124,7 @@ REFS: Links to authoritative sources
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Critical Gaps in ZERG
+### Critical Gaps in MAHABHARATHA
 
 | Gap | Impact | Mitigation Source |
 |-----|--------|-------------------|

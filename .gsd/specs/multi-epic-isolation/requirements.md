@@ -10,11 +10,11 @@
 
 ## 1. Problem Statement
 
-ZERG cannot safely run two independent epics in parallel across separate terminal sessions. Six root causes combine to produce cross-epic stomping of plans, designs, task graphs, worker execution, and git PRs.
+MAHABHARATHA cannot safely run two independent epics in parallel across separate terminal sessions. Six root causes combine to produce cross-epic stomping of plans, designs, task graphs, worker execution, and git PRs.
 
 ### Symptoms Reported
 - Terminal 2's `/z:plan` overwrites Terminal 1's active feature
-- `/z:design` and `/z:rush` operate on the wrong epic after context switch
+- `/z:design` and `/z:kurukshetra` operate on the wrong epic after context switch
 - `/z:git --action ship` creates PRs mixing commits from both epics
 - Workers claim tasks from wrong levels (premature execution)
 - `/z:plan` starts implementing after user types "APPROVE" instead of stopping
@@ -26,7 +26,7 @@ ZERG cannot safely run two independent epics in parallel across separate termina
 ### RC1: `.gsd/.current-feature` is a global singleton (CRITICAL)
 - **15 command markdown files** read `FEATURE=$(cat .gsd/.current-feature 2>/dev/null)`
 - `/z:plan` writes `echo "$FEATURE" > .gsd/.current-feature`
-- **5 Python CLI modules** use `detect_feature()` from `zerg/commands/_utils.py` which reads the same file
+- **5 Python CLI modules** use `detect_feature()` from `mahabharatha/commands/_utils.py` which reads the same file
 - When Terminal 2 plans a new epic, it overwrites Terminal 1's feature pointer
 - ALL subsequent commands in Terminal 1 now operate on Terminal 2's epic
 
@@ -50,7 +50,7 @@ ZERG cannot safely run two independent epics in parallel across separate termina
 - Result: workers can claim Level N+1 tasks before Level N completes
 
 ### RC5: No process-level mutex between terminal sessions
-- No mechanism to detect concurrent ZERG operations on the same repo
+- No mechanism to detect concurrent MAHABHARATHA operations on the same repo
 - No lockfile for exclusive feature access
 - No session ID to track which terminal owns which epic
 
@@ -69,7 +69,7 @@ ZERG cannot safely run two independent epics in parallel across separate termina
 ### FR1: Environment-based feature context (fixes RC1)
 **Replace `.current-feature` singleton with `ZERG_FEATURE` environment variable as primary source.**
 
-- `detect_feature()` in `zerg/commands/_utils.py` priority order becomes:
+- `detect_feature()` in `mahabharatha/commands/_utils.py` priority order becomes:
   1. `ZERG_FEATURE` env var (terminal-session-scoped, cannot be stomped by other terminals)
   2. `--feature` CLI flag (explicit override)
   3. `.gsd/.current-feature` file (fallback for backward compat, last resort)
@@ -79,13 +79,13 @@ ZERG cannot safely run two independent epics in parallel across separate termina
 
 ### FR2: Feature-scoped git ship (fixes RC2)
 - `/z:git --action ship` reads active feature (via FR1's updated detection)
-- Ship scopes to the feature's integration branch: only includes commits from `zerg/{feature}/*` branches
-- If no feature branch exists (user is on a manual branch), ship works as today (no change for non-ZERG workflows)
+- Ship scopes to the feature's integration branch: only includes commits from `mahabharatha/{feature}/*` branches
+- If no feature branch exists (user is on a manual branch), ship works as today (no change for non-MAHABHARATHA workflows)
 - PR title includes feature name: `feat({feature}): {summary}`
 
 ### FR3: Feature-scoped task list auto-export (fixes RC3)
 - `/z:plan` pre-flight sets `CLAUDE_CODE_TASK_LIST_ID` to feature name if not already set
-- `/z:design` and `/z:rush` propagate `CLAUDE_CODE_TASK_LIST_ID` to all workers
+- `/z:design` and `/z:kurukshetra` propagate `CLAUDE_CODE_TASK_LIST_ID` to all workers
 - `/z:status` filters displayed tasks by feature name from current context
 
 ### FR4: Level-aware task claiming (fixes RC4)
@@ -94,8 +94,8 @@ ZERG cannot safely run two independent epics in parallel across separate termina
 - This is a one-line code change: add `current_level=self.state.get_current_level()` to the `claim_task()` call
 
 ### FR5: Per-feature advisory lockfile (fixes RC5)
-- When `/z:rush` starts, create `.gsd/specs/{feature}/.lock` with PID and timestamp
-- When `/z:rush` in another terminal detects lock, warn user: "Another session is running {feature}. Continue? (y/n)"
+- When `/z:kurukshetra` starts, create `.gsd/specs/{feature}/.lock` with PID and timestamp
+- When `/z:kurukshetra` in another terminal detects lock, warn user: "Another session is running {feature}. Continue? (y/n)"
 - Lock is advisory (can be overridden) — not blocking
 - Lock auto-expires after configurable timeout (default: 2 hours)
 - `/z:cleanup` removes stale locks
@@ -166,12 +166,12 @@ Three changes to `plan.core.md` and `plan.md`:
 
 - [ ] Two terminals can run `/z:plan epic-1` and `/z:plan epic-2` without overwriting each other's context (when `ZERG_FEATURE` is exported)
 - [ ] `/z:design` reads correct feature from env var, not stomped `.current-feature`
-- [ ] `/z:rush` workers cannot claim Level 2 tasks while Level 1 is incomplete
+- [ ] `/z:kurukshetra` workers cannot claim Level 2 tasks while Level 1 is incomplete
 - [ ] `/z:git --action ship` only includes commits from the active feature's branches
 - [ ] `/z:plan` stops after approval and prompts user via `AskUserQuestion` — does NOT start designing
-- [ ] `/z:rush` warns if another session holds the feature lock
+- [ ] `/z:kurukshetra` warns if another session holds the feature lock
 - [ ] All existing tests pass (no regressions)
-- [ ] `python -m zerg.validate_commands` passes
+- [ ] `python -m mahabharatha.validate_commands` passes
 
 ---
 
@@ -180,30 +180,30 @@ Three changes to `plan.core.md` and `plan.md`:
 ### Python Source
 | File | Change |
 |------|--------|
-| `zerg/commands/_utils.py` | Add `ZERG_FEATURE` env var as priority 1 in `detect_feature()` |
-| `zerg/protocol_state.py` | Add `current_level=self.state.get_current_level()` to `claim_task()` call |
+| `mahabharatha/commands/_utils.py` | Add `ZERG_FEATURE` env var as priority 1 in `detect_feature()` |
+| `mahabharatha/protocol_state.py` | Add `current_level=self.state.get_current_level()` to `claim_task()` call |
 
 ### Command Markdown (15 files)
 | File | Change |
 |------|--------|
-| `zerg/data/commands/plan.core.md` | Restructure Phase 5 approval gate, add AskUserQuestion |
-| `zerg/data/commands/plan.md` | Same as plan.core.md |
-| `zerg/data/commands/design.core.md` | Update pre-flight: `FEATURE=${ZERG_FEATURE:-$(cat ...)}` |
-| `zerg/data/commands/design.md` | Same |
-| `zerg/data/commands/rush.core.md` | Update pre-flight + add lock check |
-| `zerg/data/commands/rush.md` | Same |
-| `zerg/data/commands/merge.core.md` | Update pre-flight |
-| `zerg/data/commands/merge.md` | Same |
-| `zerg/data/commands/status.core.md` | Update pre-flight |
-| `zerg/data/commands/status.md` | Same |
-| `zerg/data/commands/git.details.md` | Scope ship action to feature branches |
-| `zerg/data/commands/stop.md` | Update pre-flight |
-| `zerg/data/commands/cleanup.md` | Update pre-flight + add lock cleanup |
-| `zerg/data/commands/retry.md` | Update pre-flight |
-| `zerg/data/commands/debug.core.md` | Update pre-flight |
-| `zerg/data/commands/debug.md` | Same |
-| `zerg/data/commands/estimate.core.md` | Update pre-flight |
-| `zerg/data/commands/estimate.md` | Same |
+| `mahabharatha/data/commands/plan.core.md` | Restructure Phase 5 approval gate, add AskUserQuestion |
+| `mahabharatha/data/commands/plan.md` | Same as plan.core.md |
+| `mahabharatha/data/commands/design.core.md` | Update pre-flight: `FEATURE=${ZERG_FEATURE:-$(cat ...)}` |
+| `mahabharatha/data/commands/design.md` | Same |
+| `mahabharatha/data/commands/kurukshetra.core.md` | Update pre-flight + add lock check |
+| `mahabharatha/data/commands/kurukshetra.md` | Same |
+| `mahabharatha/data/commands/merge.core.md` | Update pre-flight |
+| `mahabharatha/data/commands/merge.md` | Same |
+| `mahabharatha/data/commands/status.core.md` | Update pre-flight |
+| `mahabharatha/data/commands/status.md` | Same |
+| `mahabharatha/data/commands/git.details.md` | Scope ship action to feature branches |
+| `mahabharatha/data/commands/stop.md` | Update pre-flight |
+| `mahabharatha/data/commands/cleanup.md` | Update pre-flight + add lock cleanup |
+| `mahabharatha/data/commands/retry.md` | Update pre-flight |
+| `mahabharatha/data/commands/debug.core.md` | Update pre-flight |
+| `mahabharatha/data/commands/debug.md` | Same |
+| `mahabharatha/data/commands/estimate.core.md` | Update pre-flight |
+| `mahabharatha/data/commands/estimate.md` | Same |
 
 ### Tests
 | File | Change |

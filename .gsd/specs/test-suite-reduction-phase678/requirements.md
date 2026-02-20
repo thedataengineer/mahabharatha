@@ -99,7 +99,7 @@ Changes to `.github/workflows/ci.yml`:
 
 2. **Coverage floor**: Add to test command:
    ```
-   --cov=zerg --cov-fail-under=75
+   --cov=mahabharatha --cov-fail-under=75
    ```
 
 3. **Shard consolidation**: Evaluate whether to drop to 1 shard. If total test time <2.5min with 1 shard, consolidate. Otherwise keep 2.
@@ -111,10 +111,10 @@ Changes to `.github/workflows/ci.yml`:
 Final validation after all changes:
 
 1. Full test suite passes: `pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m "not slow and not docker" --timeout=120`
-2. Coverage ≥ 75%: `--cov=zerg --cov-fail-under=75`
+2. Coverage ≥ 75%: `--cov=mahabharatha --cov-fail-under=75`
 3. Smoke tests pass: `pytest -m smoke -x --timeout=5`
-4. Import check: `python -c "import zerg; print('OK')"`
-5. Validate commands: `python -m zerg.validate_commands`
+4. Import check: `python -c "import mahabharatha; print('OK')"`
+5. Validate commands: `python -m mahabharatha.validate_commands`
 6. Total test count in range 3,200-3,500
 7. CHANGELOG updated
 8. `.test_durations` regenerated

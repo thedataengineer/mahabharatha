@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 Quality Gates."""
+"""Tests for MAHABHARATHA v2 Quality Gates."""
 
 import sys
 from pathlib import Path
@@ -194,7 +194,7 @@ class TestCodeQualityGate:
 
         gate = CodeQualityGate()
         # Use existing file that passes lint
-        result = gate._run_linter([".zerg/task_graph.py"])
+        result = gate._run_linter([".mahabharatha/task_graph.py"])
         # May pass or fail depending on actual lint state
         assert isinstance(result.passed, bool)
 

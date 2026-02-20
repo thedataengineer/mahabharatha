@@ -1,4 +1,4 @@
-"""ZERG state introspection for deep debugging."""
+"""MAHABHARATHA state introspection for deep debugging."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ logger = get_logger("diagnostics.state")
 
 @dataclass
 class ZergHealthReport:
-    """Health report from ZERG state introspection."""
+    """Health report from MAHABHARATHA state introspection."""
 
     feature: str
     state_exists: bool
@@ -47,7 +47,7 @@ class ZergHealthReport:
 
 
 class ZergStateIntrospector:
-    """Introspect ZERG state for diagnostic analysis."""
+    """Introspect MAHABHARATHA state for diagnostic analysis."""
 
     def __init__(
         self,

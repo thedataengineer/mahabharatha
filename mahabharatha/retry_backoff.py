@@ -1,4 +1,4 @@
-"""Retry backoff calculator for ZERG task retries."""
+"""Retry backoff calculator for MAHABHARATHA task retries."""
 
 import random
 

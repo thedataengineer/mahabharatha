@@ -4,13 +4,13 @@
 - **Feature**: orchestrator-coordination-fix
 - **Status**: APPROVED
 - **Created**: 2026-02-04
-- **Discovery**: Debug analysis of bite-sized-planning rush failures
+- **Discovery**: Debug analysis of bite-sized-planning kurukshetra failures
 
 ---
 
 ## Summary
 
-Fix 6 critical orchestrator bugs that cause merge conflicts, level violations, and redundant gate runs during parallel rush execution.
+Fix 6 critical orchestrator bugs that cause merge conflicts, level violations, and redundant gate runs during parallel kurukshetra execution.
 
 ---
 
@@ -21,10 +21,10 @@ The orchestrator currently:
 2. Allows workers to claim tasks from any level (should enforce current level)
 3. Allows workers to claim tasks with incomplete dependencies
 4. Locks staging branch in main worktree causing branch deletion failures
-5. Provides no live status updates during rush
+5. Provides no live status updates during kurukshetra
 6. Runs quality gates after each level (should run once at ship)
 
-Evidence: During the `bite-sized-planning` rush, workers executed L3/L4 tasks while L1 wasn't merged, causing conflicts and failures despite exclusive file ownership.
+Evidence: During the `bite-sized-planning` kurukshetra, workers executed L3/L4 tasks while L1 wasn't merged, causing conflicts and failures despite exclusive file ownership.
 
 ---
 
@@ -63,7 +63,7 @@ Remove merge-to-main from level completion. Merging should ONLY happen during `/
 
 Add event streaming for `/z:status --live`.
 
-- EventEmitter writes JSONL to `.zerg/state/{feature}-events.jsonl`
+- EventEmitter writes JSONL to `.mahabharatha/state/{feature}-events.jsonl`
 - Events: level_start, task_claim, task_complete, task_fail, level_complete
 - `--live` flag tails event file and displays with Rich
 

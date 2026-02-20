@@ -1,19 +1,19 @@
-# DC-010: Add --mode Flag to Rush Command
+# DC-010: Add --mode Flag to Kurukshetra Command
 
 **Level**: 4 | **Critical Path**: No | **Estimate**: 15 min
 **Dependencies**: DC-009
 
 ## Objective
 
-Add `--mode subprocess|container|auto` option to `zerg rush` command. Pass the mode to the orchestrator configuration.
+Add `--mode subprocess|container|auto` option to `mahabharatha kurukshetra` command. Pass the mode to the orchestrator configuration.
 
 ## Files Owned
 
-- `zerg/commands/rush.py` (modify)
+- `mahabharatha/commands/kurukshetra.py` (modify)
 
 ## Files to Read
 
-- `zerg/config.py` (WorkersConfig)
+- `mahabharatha/config.py` (WorkersConfig)
 
 ## Implementation
 
@@ -36,7 +36,7 @@ Add `--mode subprocess|container|auto` option to `zerg rush` command. Pass the m
 )
 @click.option("--verbose", "-v", is_flag=True, help="Verbose output")
 @click.pass_context
-def rush(
+def kurukshetra(
     ctx: click.Context,
     workers: int,
     feature: str | None,
@@ -54,13 +54,13 @@ def rush(
 
     Examples:
 
-        zerg rush --workers 5
+        mahabharatha kurukshetra --workers 5
 
-        zerg rush --feature user-auth --dry-run
+        mahabharatha kurukshetra --feature user-auth --dry-run
 
-        zerg rush --mode container --workers 3
+        mahabharatha kurukshetra --mode container --workers 3
 
-        zerg rush --resume --workers 3
+        mahabharatha kurukshetra --resume --workers 3
     """
 ```
 
@@ -133,8 +133,8 @@ def show_dry_run(task_data: dict, workers: int, feature: str, mode: str = "auto"
 
     # Show mode status
     if mode == "auto" or mode == "container":
-        from zerg.orchestrator import Orchestrator
-        from zerg.config import ZergConfig
+        from mahabharatha.orchestrator import Orchestrator
+        from mahabharatha.config import ZergConfig
         orch = Orchestrator(feature, ZergConfig())
         available, reason = orch.container_mode_available()
         if mode == "container" and not available:
@@ -150,13 +150,13 @@ def show_dry_run(task_data: dict, workers: int, feature: str, mode: str = "auto"
 
 ```bash
 # Check --mode appears in help
-zerg rush --help | grep -E '\-\-mode|\-m'
+mahabharatha kurukshetra --help | grep -E '\-\-mode|\-m'
 
 # Check mode options
-zerg rush --help | grep -E 'subprocess|container|auto'
+mahabharatha kurukshetra --help | grep -E 'subprocess|container|auto'
 
 # Test dry run with mode
-zerg rush --mode subprocess --dry-run 2>&1 | head -20
+mahabharatha kurukshetra --mode subprocess --dry-run 2>&1 | head -20
 ```
 
 ## Acceptance Criteria
@@ -167,4 +167,4 @@ zerg rush --mode subprocess --dry-run 2>&1 | head -20
 - [ ] Summary table shows mode
 - [ ] Dry run shows container mode availability
 - [ ] Help text documents the option
-- [ ] No ruff errors: `ruff check zerg/commands/rush.py`
+- [ ] No ruff errors: `ruff check mahabharatha/commands/kurukshetra.py`

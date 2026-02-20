@@ -1,4 +1,4 @@
-"""Integration tests for ZERG review command."""
+"""Integration tests for MAHABHARATHA review command."""
 
 import tempfile
 from pathlib import Path
@@ -52,10 +52,10 @@ class TestReviewFunctional:
     """Functional tests for review command."""
 
     def test_review_displays_header(self) -> None:
-        """Test review shows ZERG Review header."""
+        """Test review shows MAHABHARATHA Review header."""
         runner = CliRunner()
         result = runner.invoke(cli, ["review"])
-        assert "ZERG" in result.output or "Review" in result.output
+        assert "MAHABHARATHA" in result.output or "Review" in result.output
 
     @pytest.mark.parametrize("mode", ["prepare", "full"])
     def test_review_mode_executes(self, mode: str) -> None:

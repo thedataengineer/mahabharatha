@@ -38,7 +38,7 @@ fi
 
 # Setup git identity for commits
 echo "Configuring git..."
-git config --global user.email "zerg-worker-${ZERG_WORKER_ID:-0}@agentic.local"
+git config --global user.email "mahabharatha-worker-${ZERG_WORKER_ID:-0}@agentic.local"
 git config --global user.name "Factory Worker ${ZERG_WORKER_ID:-0}"
 git config --global init.defaultBranch main
 git config --global pull.rebase true

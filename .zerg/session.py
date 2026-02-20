@@ -1,4 +1,4 @@
-"""ZERG v2 Session Command - Session save/load for multi-session continuity."""
+"""MAHABHARATHA v2 Session Command - Session save/load for multi-session continuity."""
 
 import json
 import shutil
@@ -22,7 +22,7 @@ class SessionConfig:
     """Configuration for session operations."""
 
     compress: bool = False
-    session_dir: str = ".zerg/sessions"
+    session_dir: str = ".mahabharatha/sessions"
 
 
 @dataclass
@@ -79,7 +79,7 @@ class SessionResult:
 class SessionManager:
     """Manage session persistence."""
 
-    def __init__(self, session_dir: str = ".zerg/sessions"):
+    def __init__(self, session_dir: str = ".mahabharatha/sessions"):
         """Initialize session manager."""
         self.session_dir = Path(session_dir)
         self.session_dir.mkdir(parents=True, exist_ok=True)

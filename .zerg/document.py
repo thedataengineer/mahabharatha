@@ -1,4 +1,4 @@
-"""ZERG v2 Document Command - Documentation generation and maintenance."""
+"""MAHABHARATHA v2 Document Command - Documentation generation and maintenance."""
 
 import json
 from dataclasses import dataclass

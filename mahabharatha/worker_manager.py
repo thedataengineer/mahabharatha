@@ -1,4 +1,4 @@
-"""ZERG WorkerManager - worker lifecycle management extracted from Orchestrator."""
+"""MAHABHARATHA WorkerManager - worker lifecycle management extracted from Orchestrator."""
 
 from __future__ import annotations
 
@@ -82,7 +82,7 @@ class WorkerManager:
 
         Args:
             feature: Feature name being executed
-            config: ZERG configuration
+            config: MAHABHARATHA configuration
             state: State manager for persisting worker/task state
             levels: Level controller for tracking level progress
             parser: Task parser for accessing task definitions

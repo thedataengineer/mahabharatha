@@ -1,4 +1,4 @@
-"""End-to-end tests for the full ZERG pipeline.
+"""End-to-end tests for the full MAHABHARATHA pipeline.
 
 Tests the complete orchestration flow from task graph setup through
 execution and merge using the E2EHarness with MockWorker.
@@ -15,7 +15,7 @@ from tests.e2e.mock_worker import MockWorker
 
 
 class TestFullPipeline:
-    """Test suite for end-to-end ZERG orchestration flows."""
+    """Test suite for end-to-end MAHABHARATHA orchestration flows."""
 
     def test_mock_pipeline_completes(
         self,

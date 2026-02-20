@@ -1,4 +1,4 @@
-"""Git configuration models for ZERG."""
+"""Git configuration models for MAHABHARATHA."""
 
 from __future__ import annotations
 
@@ -58,22 +58,22 @@ class GitConfig(BaseModel):
     release: GitReleaseConfig = Field(default_factory=GitReleaseConfig)
     rescue: GitRescueConfig = Field(default_factory=GitRescueConfig)
     review: GitReviewConfig = Field(default_factory=GitReviewConfig)
-    context_mode: str = Field(default="auto", pattern="^(solo|team|swarm|auto)$")
+    context_mode: str = Field(default="auto", pattern="^(solo|team|akshauhini|auto)$")
 
 
 def detect_context(runner: GitRunner) -> str:
-    """Detect solo/team/swarm context based on repository state.
+    """Detect solo/team/akshauhini context based on repository state.
 
     Inspects active worker branches to determine the collaboration mode:
     - solo: No worker branches detected
     - team: 1-3 worker branches active
-    - swarm: 4+ worker branches active
+    - akshauhini: 4+ worker branches active
 
     Args:
         runner: GitRunner instance for repository inspection
 
     Returns:
-        One of "solo", "team", or "swarm"
+        One of "solo", "team", or "akshauhini"
     """
     try:
         result = runner._run("branch", "--list", "mahabharatha/*/worker-*", check=False)
@@ -87,4 +87,4 @@ def detect_context(runner: GitRunner) -> str:
     elif count <= 3:
         return "team"
     else:
-        return "swarm"
+        return "akshauhini"

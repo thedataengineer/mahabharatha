@@ -11,7 +11,7 @@
 
 ## 1. Problem Statement
 
-Creating new ZERG commands requires:
+Creating new MAHABHARATHA commands requires:
 1. Copying `_template.md` and manually editing
 2. Remembering Task ecosystem requirements (backbone drift is common)
 3. Running `validate_commands.py` repeatedly to check compliance
@@ -24,7 +24,7 @@ Authors frequently miss required sections, forget Task tool calls, or create com
 
 ## 2. Functional Requirements
 
-### FR-1: Scaffold Command (`/zerg:create-command`)
+### FR-1: Scaffold Command (`/mahabharatha:create-command`)
 - **FR-1.1**: Create new command file from template
 - **FR-1.2**: Hybrid mode: quick scaffold by default, `--interactive` flag for wizard
 - **FR-1.3**: Auto-detect split requirement at 300 lines, create .core.md + .details.md pair
@@ -56,7 +56,7 @@ Authors frequently miss required sections, forget Task tool calls, or create com
 ### NFR-1: Integration
 - Extend existing `validate_commands.py` (single source of truth)
 - No new module files for core validation logic
-- New command file: `zerg/data/commands/create-command.md`
+- New command file: `mahabharatha/data/commands/create-command.md`
 
 ### NFR-2: Backward Compatibility
 - Existing commands continue to pass validation
@@ -73,7 +73,7 @@ Authors frequently miss required sections, forget Task tool calls, or create com
 ## 4. Scope Boundaries
 
 ### In Scope
-- `/zerg:create-command` slash command
+- `/mahabharatha:create-command` slash command
 - Authoring functions in validate_commands.py
 - Pressure test framework scaffold
 - Wiki + reference documentation generation
@@ -89,10 +89,10 @@ Authors frequently miss required sections, forget Task tool calls, or create com
 ## 5. User Stories
 
 ### US-1: Quick Scaffold
-> As a ZERG contributor, I want to run `/zerg:create-command my-command` and get a valid, Task-integrated command file so I can start implementing immediately.
+> As a MAHABHARATHA contributor, I want to run `/mahabharatha:create-command my-command` and get a valid, Task-integrated command file so I can start implementing immediately.
 
 ### US-2: Interactive Wizard
-> As a new contributor, I want to run `/zerg:create-command my-command --interactive` and be guided through required sections so I don't miss anything.
+> As a new contributor, I want to run `/mahabharatha:create-command my-command --interactive` and be guided through required sections so I don't miss anything.
 
 ### US-3: Validation Feedback
 > As an author, I want validation errors to tell me exactly what's wrong and how to fix it so I don't have to guess.
@@ -108,9 +108,9 @@ Authors frequently miss required sections, forget Task tool calls, or create com
 ## 6. Acceptance Criteria
 
 ### AC-1: Scaffold Command
-- [ ] `/zerg:create-command foo` creates `zerg/data/commands/foo.md`
+- [ ] `/mahabharatha:create-command foo` creates `mahabharatha/data/commands/foo.md`
 - [ ] File includes Pre-Flight, Task Tracking, Help sections
-- [ ] File passes `python -m zerg.validate_commands`
+- [ ] File passes `python -m mahabharatha.validate_commands`
 - [ ] `--interactive` prompts for command metadata
 
 ### AC-2: Auto-Split
@@ -139,7 +139,7 @@ Authors frequently miss required sections, forget Task tool calls, or create com
 
 - Python 3.11+ required
 - Must integrate with existing validate_commands.py (630 lines)
-- Command file follows ZERG conventions (bash pseudo-code, markdown structure)
+- Command file follows MAHABHARATHA conventions (bash pseudo-code, markdown structure)
 - Test files use pytest
 
 ---

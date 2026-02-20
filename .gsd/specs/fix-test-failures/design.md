@@ -22,12 +22,12 @@ Best fix: (a) — change harness.py line 215 from `from tests.e2e.mock_worker im
 
 ### TASK-002: Fix MetricsCollector patch location (TEST BUG)
 **File**: `tests/integration/test_orchestrator_integration.py`
-**Change**: Line 632 — change `patch("zerg.orchestrator.MetricsCollector")` to `patch("zerg.level_coordinator.MetricsCollector")`. The `_on_level_complete_handler` delegates to `LevelCoordinator.handle_level_complete()` which calls `MetricsCollector` from `zerg.level_coordinator` line 238.
+**Change**: Line 632 — change `patch("mahabharatha.orchestrator.MetricsCollector")` to `patch("mahabharatha.level_coordinator.MetricsCollector")`. The `_on_level_complete_handler` delegates to `LevelCoordinator.handle_level_complete()` which calls `MetricsCollector` from `mahabharatha.level_coordinator` line 238.
 
 ### TASK-003: Fix is_level_complete semantics (SOURCE BUG)
-**Files**: `zerg/levels.py`, `tests/unit/test_levels_extended.py`, `tests/integration/test_rush_flow.py`
+**Files**: `mahabharatha/levels.py`, `tests/unit/test_levels_extended.py`, `tests/integration/test_rush_flow.py`
 **Change**:
-1. In `zerg/levels.py`: Rename current `is_level_complete` to `is_level_resolved` (all tasks terminal). Create new `is_level_complete` that returns True only when ALL tasks are COMPLETED (zero failures).
+1. In `mahabharatha/levels.py`: Rename current `is_level_complete` to `is_level_resolved` (all tasks terminal). Create new `is_level_complete` that returns True only when ALL tasks are COMPLETED (zero failures).
 2. Update orchestrator callers (lines 560, 815) and `can_advance()` (line 234) to use `is_level_resolved()` — preserving existing orchestrator behavior.
 3. Update `test_is_level_complete_with_failures` to use `is_level_resolved` assertion.
 4. The `test_task_failure_blocks_level` test now passes as-is.

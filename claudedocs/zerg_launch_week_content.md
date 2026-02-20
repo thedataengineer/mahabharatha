@@ -1,8 +1,8 @@
-# Zerg Launch Week Content — February 9-15, 2026
+# Mahabharatha Launch Week Content — February 9-15, 2026
 
-All final LinkedIn posts and tweets for the Zerg open source launch week. Content is ordered chronologically by publish day. Each post has been optimized for LinkedIn algorithm performance (360Brew model, January 2026), reading level B1 English, and Rock's "grumpy security uncle" voice.
+All final LinkedIn posts and tweets for the Mahabharatha open source launch week. Content is ordered chronologically by publish day. Each post has been optimized for LinkedIn algorithm performance (360Brew model, January 2026), reading level B1 English, and Rock's "grumpy security uncle" voice.
 
-Project: github.com/rocklambros/zerg
+Project: github.com/rocklambros/mahabharatha
 Blog: rockcybermusings.com
 Version: 0.2.0 (MIT License)
 
@@ -10,11 +10,11 @@ Version: 0.2.0 (MIT License)
 
 ## MONDAY — Tease Post (LinkedIn)
 
-**Purpose:** Bridge from last week's teaser campaign into Tuesday's launch. First time naming Zerg publicly.
+**Purpose:** Bridge from last week's teaser campaign into Tuesday's launch. First time naming Mahabharatha publicly.
 
 ---
 
-For one week I teased a project. Tomorrow the Zerg rush begins.
+For one week I teased a project. Tomorrow the Mahabharatha kurukshetra begins.
 
 I told you about context rot. How your AI forgets its own security decisions by file 12.
 
@@ -26,15 +26,15 @@ Each post ended the same way. "I'm building something."
 
 Tomorrow you see what it is.
 
-Zerg. Parallel Claude Code orchestration built security-first. Named after the Starcraft swarm because that's exactly how it works. Spawn workers. Overwhelm the problem. Win through coordinated aggression.
+Mahabharatha. Parallel Claude Code orchestration built security-first. Named after the Starcraft akshauhini because that's exactly how it works. Spawn workers. Overwhelm the problem. Win through coordinated aggression.
 
-Except these zerglings write secure code. They read specs instead of conversation history. They crash and recover without losing progress. And they can't poison each other because every worker runs in its own worktree.
+Except these warriors write secure code. They read specs instead of conversation history. They crash and recover without losing progress. And they can't poison each other because every worker runs in its own worktree.
 
 I've been running this on my own projects for months. Tomorrow the repo goes public, the blog drops, and you can judge for yourself.
 
 Fair warning. Once you see five Claude Code instances working a feature in parallel, you won't go back to one.
 
-Tomorrow. The swarm launches.
+Tomorrow. The akshauhini launches.
 
 👉 Follow and connect for more AI and cybersecurity insights with the occasional rant
 
@@ -46,11 +46,11 @@ Tomorrow. The swarm launches.
 
 **Purpose:** Full announcement. Drive stars, clones, blog reads. Anchor post for the week.
 
-**First Comment:** Full technical breakdown on how the architecture works, why I made the security decisions I did, and how to get started in 5 minutes. [BLOG URL] | Repo: github.com/rocklambros/zerg
+**First Comment:** Full technical breakdown on how the architecture works, why I made the security decisions I did, and how to get started in 5 minutes. [BLOG URL] | Repo: github.com/rocklambros/mahabharatha
 
 ---
 
-The Swarm is here. I built a zergling rush for Claude Code.
+The Akshauhini is here. I built a warrior kurukshetra for Claude Code.
 
 Every major AI coding assistant got pwned last year. GitHub Copilot. Cursor. Windsurf. Claude Code. JetBrains Junie. All of them.
 
@@ -62,7 +62,7 @@ I watched this unfold while building parallel Claude Code infrastructure. The sp
 
 The security gaps were terrifying.
 
-So I built Zerg. Named after the swarm for a reason. Spawn workers fast, overwhelm the problem, win through coordinated aggression. Except these zerglings write secure code and don't die to a wall of siege tanks.
+So I built Mahabharatha. Named after the akshauhini for a reason. Spawn workers fast, overwhelm the problem, win through coordinated aggression. Except these warriors write secure code and don't die to a wall of siege tanks.
 
 Parallel Claude Code orchestration with security, context engineering, and crash recovery built in from day one.
 
@@ -70,7 +70,7 @@ Not bolted on. Not "coming in phase two." Built in.
 
 Here's what it does that nothing else combines into one system.
 
-→ Three rush modes (task, subprocess, container) for different isolation levels
+→ Three kurukshetra modes (task, subprocess, container) for different isolation levels
 → Context engineering that cuts tokens 30-50% per worker
 → Crash recovery with circuit breakers and heartbeat monitoring
 → OWASP security rules fetched from external repos so poisoned commits can't degrade your baseline
@@ -88,7 +88,7 @@ Star it. Clone it. Break it. Tell me what fails.
 
 The agentic AI industry is obsessed with autonomy. It should be obsessed with recovery.
 
-You must construct additional pylons. Or just /zerg:rush.
+You must construct additional pylons. Or just /mahabharatha:kurukshetra.
 
 👉 Follow and connect for more AI and cybersecurity insights with the occasional rant
 
@@ -104,7 +104,7 @@ You must construct additional pylons. Or just /zerg:rush.
 
 ---
 
-Zerg workers don't load your whole security rulebook. Here's why.
+Mahabharatha workers don't load your whole security rulebook. Here's why.
 
 I ran five Claude Code instances on a Python API last month. Each one got the full security rule set. JavaScript rules. Docker rules. Kubernetes rules. Every language. Every framework.
 
@@ -118,7 +118,7 @@ Chroma's research on context degradation found that LLM performance grows "incre
 
 [Source: "Context Rot," Hong et al., Chroma Research, 2025]
 
-So I built context engineering into Zerg from the start. Three mechanisms.
+So I built context engineering into Mahabharatha from the start. Three mechanisms.
 
 Command splitting breaks large instruction files into core docs (30% of tokens) and reference docs (70%). Workers load only what their task needs.
 
@@ -132,7 +132,7 @@ But here's what most people miss. Token reduction is also attack surface reducti
 
 Context engineering is security engineering. Most people treat them as separate problems. They aren't.
 
-Link in comments to see how this works inside Zerg.
+Link in comments to see how this works inside Mahabharatha.
 
 👉 Follow and connect for more AI and cybersecurity insights with the occasional rant
 
@@ -142,13 +142,13 @@ Link in comments to see how this works inside Zerg.
 
 ## THURSDAY — Deep Dive: Spec-Driven Execution + Task Graph (LinkedIn)
 
-**Purpose:** Architecture post. Show how Zerg coordinates workers. Includes Serena comparison for credibility and honesty.
+**Purpose:** Architecture post. Show how Mahabharatha coordinates workers. Includes Serena comparison for credibility and honesty.
 
 **First Comment:** Link to repo.
 
 ---
 
-Zerg workers don't remember anything. That's the whole point.
+Mahabharatha workers don't remember anything. That's the whole point.
 
 I used to run Serena as my MCP coding toolkit. Symbol-level code retrieval. Semantic editing. Legitimately smart about navigating large codebases.
 
@@ -160,23 +160,23 @@ That was the night I decided workers should be stateless.
 
 Conversation history is the worst possible memory system for parallel coding agents. It bloats over time. It degrades over distance. And it dies when a process dies.
 
-In Zerg, no worker relies on conversation history. Every worker reads from spec files. requirements.md. design.md. task-graph.json. If a worker crashes, another picks up the same task and reads the same specs. No context lost. No decisions forgotten.
+In Mahabharatha, no worker relies on conversation history. Every worker reads from spec files. requirements.md. design.md. task-graph.json. If a worker crashes, another picks up the same task and reads the same specs. No context lost. No decisions forgotten.
 
 The task graph is where it gets interesting.
 
 Every file in the project gets assigned to exactly one worker per execution level. Worker 1 owns models/product.py. Worker 2 owns models/cart.py. Worker 3 owns models/order.py. No overlap. No negotiation.
 
-59% of developers now run three or more AI tools in parallel. Most deal with merge conflicts at the end. Zerg eliminates them at the design phase.
+59% of developers now run three or more AI tools in parallel. Most deal with merge conflicts at the end. Mahabharatha eliminates them at the design phase.
 
 [Source: AI Coding Statistics, Second Talent / Stack Overflow Developer Survey, 2025]
 
 Levels enforce dependency order. Level 1 builds the foundation. All workers must pass quality gates before Level 2 starts. No partial merges. No broken intermediate states.
 
-The result looks like waterfall on paper. In practice it runs like a swarm. Four workers finishing a level in minutes instead of one agent grinding through it sequentially.
+The result looks like waterfall on paper. In practice it runs like a akshauhini. Four workers finishing a level in minutes instead of one agent grinding through it sequentially.
 
-Serena is great at what it does. I still respect the project. But it was built for a single agent with memory. Zerg was built for a swarm without it.
+Serena is great at what it does. I still respect the project. But it was built for a single agent with memory. Mahabharatha was built for a akshauhini without it.
 
-Spec as memory. Exclusive file ownership. Level-gated execution. That's how you coordinate a swarm without the chaos.
+Spec as memory. Exclusive file ownership. Level-gated execution. That's how you coordinate a akshauhini without the chaos.
 
 Link to the repo in comments.
 
@@ -194,7 +194,7 @@ Link to the repo in comments.
 
 ---
 
-Zerg assumes every worker can be compromised. Here's what that looks like.
+Mahabharatha assumes every worker can be compromised. Here's what that looks like.
 
 Most parallel coding tools don't ask this question. They should.
 
@@ -216,7 +216,7 @@ Pre-commit hooks run before any worker pushes code. Secret detection. Security r
 
 This is defense in depth for AI coding agents. Not one wall. Layers.
 
-Most orchestration tools optimize for speed and autonomy. Zerg optimizes for blast radius containment. Fast is useless if a single compromised worker can take down the whole project.
+Most orchestration tools optimize for speed and autonomy. Mahabharatha optimizes for blast radius containment. Fast is useless if a single compromised worker can take down the whole project.
 
 Link to the repo in comments.
 
@@ -234,43 +234,43 @@ Link to the repo in comments.
 
 ### Tweet 1 — Launch Day (Tuesday)
 
-Zerg is live. Parallel Claude Code orchestration with security built in from day one. Not bolted on. Not "phase two." Open source, MIT license. github.com/rocklambros/zerg
+Mahabharatha is live. Parallel Claude Code orchestration with security built in from day one. Not bolted on. Not "phase two." Open source, MIT license. github.com/rocklambros/mahabharatha
 
 ### Tweet 2 — IDEsaster Angle (Tuesday)
 
-100% of tested AI IDEs were vulnerable to prompt injection last year. Then people started running five of them in parallel. I built Zerg because that math scared me. github.com/rocklambros/zerg
+100% of tested AI IDEs were vulnerable to prompt injection last year. Then people started running five of them in parallel. I built Mahabharatha because that math scared me. github.com/rocklambros/mahabharatha
 
 ### Tweet 3 — Starcraft Hook (Wednesday)
 
-Named it Zerg for a reason. Spawn workers. Overwhelm the problem. Win through coordinated aggression. Except these zerglings write secure code and don't die to siege tanks. github.com/rocklambros/zerg
+Named it Mahabharatha for a reason. Spawn workers. Overwhelm the problem. Win through coordinated aggression. Except these warriors write secure code and don't die to siege tanks. github.com/rocklambros/mahabharatha
 
 ### Tweet 4 — Context Engineering (Wednesday)
 
-Your AI coding agent loads every security rule for every language into every task. 70% of those tokens are waste. Zerg filters rules by file type. 30-50% fewer tokens per worker. Fewer tokens = fewer prompt injection vectors.
+Your AI coding agent loads every security rule for every language into every task. 70% of those tokens are waste. Mahabharatha filters rules by file type. 30-50% fewer tokens per worker. Fewer tokens = fewer prompt injection vectors.
 
 ### Tweet 5 — Merge Conflicts (Thursday)
 
-Most parallel agent tools let workers race each other, then deal with merge conflicts at the end. Zerg assigns each file to exactly one worker. Conflicts become structurally impossible.
+Most parallel agent tools let workers race each other, then deal with merge conflicts at the end. Mahabharatha assigns each file to exactly one worker. Conflicts become structurally impossible.
 
 ### Tweet 6 — Spec as Memory (Thursday)
 
-Conversation history dies when a process crashes. Specs don't. Zerg workers are stateless. They read requirements.md, not chat logs. Crash one, restart it, zero context lost.
+Conversation history dies when a process crashes. Specs don't. Mahabharatha workers are stateless. They read requirements.md, not chat logs. Crash one, restart it, zero context lost.
 
 ### Tweet 7 — Container Isolation (Friday)
 
-Zerg container mode: non-root UID 10001, LD_PRELOAD blocked, environment variables filtered. Even if prompt injection succeeds, blast radius stays contained. Security isn't a feature flag. It's architecture.
+Mahabharatha container mode: non-root UID 10001, LD_PRELOAD blocked, environment variables filtered. Even if prompt injection succeeds, blast radius stays contained. Security isn't a feature flag. It's architecture.
 
 ### Tweet 8 — Philosophy (Saturday)
 
-The agentic AI industry is obsessed with autonomy. It should be obsessed with recovery. What happens when one of your five parallel agents crashes at 2 AM? That question shaped every decision in Zerg.
+The agentic AI industry is obsessed with autonomy. It should be obsessed with recovery. What happens when one of your five parallel agents crashes at 2 AM? That question shaped every decision in Mahabharatha.
 
 ### Tweet 9 — Open Source CTA (Saturday)
 
-Zerg v0.2.0. 26 slash commands. Three rush modes. OWASP security rules fetched from external repos. Pre-commit secret detection. Open source. Star it. Clone it. Break it. Tell me what fails. github.com/rocklambros/zerg
+Mahabharatha v0.2.0. 26 slash commands. Three kurukshetra modes. OWASP security rules fetched from external repos. Pre-commit secret detection. Open source. Star it. Clone it. Break it. Tell me what fails. github.com/rocklambros/mahabharatha
 
 ### Tweet 10 — Closing Zinger (Sunday)
 
-You must construct additional pylons. Or just /zerg:rush.
+You must construct additional pylons. Or just /mahabharatha:kurukshetra.
 
 ---
 
@@ -290,11 +290,11 @@ These citations have been web-verified and can be reused across content:
 
 ---
 
-## REFERENCE — Zerg Key Features
+## REFERENCE — Mahabharatha Key Features
 
 For quick reference when creating additional content:
 
-- **Three rush modes:** task, subprocess, container (different isolation levels)
+- **Three kurukshetra modes:** task, subprocess, container (different isolation levels)
 - **Context engineering:** command splitting (30/70), security rule filtering by file extension, 4,000 token task budgets. 30-50% token reduction per worker.
 - **Spec-driven execution:** workers read spec files not conversation history. Stateless and restartable.
 - **Exclusive file ownership:** task graph assigns each file to one worker per level. Merge conflicts structurally impossible.
@@ -303,4 +303,4 @@ For quick reference when creating additional content:
 - **Security:** container isolation (UID 10001, LD_PRELOAD blocked), external OWASP rule fetching from TikiTribe repo, pre-commit hooks with secret detection, git worktree isolation per worker.
 - **26 slash commands** with /z: shortcuts.
 - **Diagnostics engine:** Bayesian hypothesis testing against 30+ known failure patterns across Python, JavaScript, Go, Rust.
-- **Version:** 0.2.0, MIT license, pip install zerg-ai
+- **Version:** 0.2.0, MIT license, pip install mahabharatha-ai

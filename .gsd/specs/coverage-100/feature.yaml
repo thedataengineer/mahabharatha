@@ -1,7 +1,7 @@
 name: coverage-100
 title: 100% Test Coverage Achievement
 description: >
-  Achieve 100% test coverage for all core ZERG modules including
+  Achieve 100% test coverage for all core MAHABHARATHA modules including
   orchestrator, launcher, state, worker_protocol, merge, and git_ops.
 
 status: pending
@@ -35,7 +35,7 @@ approach:
 quality_gates:
   - pytest tests/unit/ -v
   - pytest tests/integration/ -v
-  - pytest --cov=zerg --cov-fail-under=95
+  - pytest --cov=mahabharatha --cov-fail-under=95
 
 timeline:
   levels: 6

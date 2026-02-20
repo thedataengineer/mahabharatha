@@ -28,7 +28,7 @@ EXPECTED_CORE_MD_FILES = [
     "merge.core.md",
     "plan.core.md",
     "plugins.core.md",
-    "rush.core.md",
+    "kurukshetra.core.md",
     "status.core.md",
     "worker.core.md",
 ]

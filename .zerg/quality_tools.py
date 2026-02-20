@@ -1,4 +1,4 @@
-"""ZERG v2 Quality Tools - Auto-detection and configuration of quality tools."""
+"""MAHABHARATHA v2 Quality Tools - Auto-detection and configuration of quality tools."""
 
 import shutil
 import subprocess

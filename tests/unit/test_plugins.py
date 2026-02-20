@@ -1,4 +1,4 @@
-"""Unit tests for the ZERG plugin system (mahabharatha/plugins.py)."""
+"""Unit tests for the MAHABHARATHA plugin system (mahabharatha/plugins.py)."""
 
 from __future__ import annotations
 

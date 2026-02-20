@@ -1,7 +1,7 @@
-# Technical Design: zerg-help-flag
+# Technical Design: mahabharatha-help-flag
 
 ## Metadata
-- **Feature**: zerg-help-flag
+- **Feature**: mahabharatha-help-flag
 - **Status**: APPROVED
 - **Created**: 2026-01-31
 - **Author**: Factory Design Mode
@@ -11,10 +11,10 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Add `--help` flag to all 25 `/zerg:` commands. When invoked with `--help`, Claude displays a formatted help block showing the command name, one-line description, and all available flags/options, then stops without executing the command. Implementation modifies existing command files only — no new files.
+Add `--help` flag to all 25 `/mahabharatha:` commands. When invoked with `--help`, Claude displays a formatted help block showing the command name, one-line description, and all available flags/options, then stops without executing the command. Implementation modifies existing command files only — no new files.
 
 ### 1.2 Goals
-- Universal `--help` for every `/zerg:*` command
+- Universal `--help` for every `/mahabharatha:*` command
 - Consistent output format across all commands
 - Zero new files — modify existing command markdown only
 
@@ -41,7 +41,7 @@ For each command file, add two things:
 # Help flag
 if echo "$ARGUMENTS" | grep -q '\-\-help'; then
   cat << 'HELP'
-/zerg:{command} — {one-line description}
+/mahabharatha:{command} — {one-line description}
 
 Flags:
   {flag1}    {description}
@@ -56,7 +56,7 @@ fi
 
 | Category | Files | Modify |
 |----------|-------|--------|
-| Split commands (12) | debug, design, estimate, explain, init, merge, plan, plugins, rush, select-tool, status, worker | `.core.md` only (parent is copy of core) |
+| Split commands (12) | debug, design, estimate, explain, init, merge, plan, plugins, kurukshetra, select-tool, status, worker | `.core.md` only (parent is copy of core) |
 | Standalone commands (13) | analyze, build, cleanup, document, git, index, logs, refactor, retry, review, security, stop, test | `.md` (the only file) |
 
 ### 2.3 Post-Modification
@@ -96,7 +96,7 @@ After modifying `.core.md` files, regenerate parent `.md` files to match (copy c
 | 1 | analyze, build, cleanup, debug, design |
 | 2 | document, estimate, explain, git, index |
 | 3 | init, logs, merge, plan, plugins |
-| 4 | refactor, retry, review, rush, security |
+| 4 | refactor, retry, review, kurukshetra, security |
 | 5 | select-tool, status, stop, test, worker |
 
 ### 4.3 File Ownership

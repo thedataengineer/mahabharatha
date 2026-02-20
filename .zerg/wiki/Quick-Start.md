@@ -1,10 +1,10 @@
 # Quick Start
 
-This page walks through the full ZERG workflow from initialization to merged code. Each step shows the command, what it does, and what to expect.
+This page walks through the full MAHABHARATHA workflow from initialization to merged code. Each step shows the command, what it does, and what to expect.
 
 **Time estimate:** 15 to 30 minutes for a small feature (3 to 5 tasks).
 
-**Prerequisites:** ZERG installed, Claude Code available, git repository initialized. See [[Installation]] if you have not set up yet.
+**Prerequisites:** MAHABHARATHA installed, Claude Code available, git repository initialized. See [[Installation]] if you have not set up yet.
 
 ---
 
@@ -13,7 +13,7 @@ This page walks through the full ZERG workflow from initialization to merged cod
 - [Step 1: Initialize](#step-1-initialize)
 - [Step 2: Plan](#step-2-plan)
 - [Step 3: Design](#step-3-design)
-- [Step 4: Rush](#step-4-rush)
+- [Step 4: Kurukshetra](#step-4-kurukshetra)
 - [Step 5: Monitor](#step-5-monitor)
 - [Step 6: Merge](#step-6-merge)
 - [What Happens Next](#what-happens-next)
@@ -25,23 +25,23 @@ This page walks through the full ZERG workflow from initialization to merged cod
 Open Claude Code in your project directory and run the init command.
 
 ```
-/zerg:init
+/mahabharatha:init
 ```
 
 **What it does:**
 
 - Detects your project's languages and frameworks.
-- Creates the `.zerg/` directory with `config.yaml`.
+- Creates the `.mahabharatha/` directory with `config.yaml`.
 - Generates `.devcontainer/` configuration (for container mode).
 - Creates `.gsd/` directory for specs and project metadata.
 
 **Expected output:**
 
 ```
-ZERG Init - Discovery Mode
+MAHABHARATHA Init - Discovery Mode
 Detected languages: python
 Detected frameworks: fastapi
-Created .zerg/config.yaml
+Created .mahabharatha/config.yaml
 Created .devcontainer/
 Created .gsd/PROJECT.md
 Initialization complete.
@@ -50,10 +50,10 @@ Initialization complete.
 **Verification:** Confirm the directories exist.
 
 ```bash
-ls -la .zerg/config.yaml .gsd/PROJECT.md
+ls -la .mahabharatha/config.yaml .gsd/PROJECT.md
 ```
 
-You only need to run `/zerg:init` once per project. Skip this step if your project is already initialized.
+You only need to run `/mahabharatha:init` once per project. Skip this step if your project is already initialized.
 
 ---
 
@@ -62,7 +62,7 @@ You only need to run `/zerg:init` once per project. Skip this step if your proje
 If you are not sure what to build yet, use the brainstorm command to explore ideas before planning.
 
 ```
-/zerg:brainstorm --socratic
+/mahabharatha:brainstorm --socratic
 ```
 
 **What it does:**
@@ -71,7 +71,7 @@ If you are not sure what to build yet, use the brainstorm command to explore ide
 - Conducts structured Socratic questioning rounds to refine ideas.
 - For single-question mode: provide a focused question with structured answer options.
 - Creates prioritized GitHub issues from the results.
-- Suggests a top-priority feature to pass to `/zerg:plan`.
+- Suggests a top-priority feature to pass to `/mahabharatha:plan`.
 
 **Enhanced Pipeline:**
 
@@ -79,16 +79,16 @@ The brainstorm output goes through validation (trade-offs vs. scope), followed b
 
 This step is entirely optional. If you already know what feature to build, skip directly to Step 2.
 
-See [[zerg-brainstorm]] for full details and options.
+See [[mahabharatha-brainstorm]] for full details and options.
 
 ---
 
 ## Step 2: Plan
 
-Tell ZERG what feature to build.
+Tell MAHABHARATHA what feature to build.
 
 ```
-/zerg:plan user-auth
+/mahabharatha:plan user-auth
 ```
 
 **What it does:**
@@ -101,7 +101,7 @@ Tell ZERG what feature to build.
 
 **What to expect:**
 
-ZERG will ask questions in groups. Answer each group, then ZERG will ask follow-up questions based on your answers. A typical planning session has 2 to 4 rounds of questions.
+MAHABHARATHA will ask questions in groups. Answer each group, then MAHABHARATHA will ask follow-up questions based on your answers. A typical planning session has 2 to 4 rounds of questions.
 
 ```
 Planning: user-auth
@@ -114,7 +114,7 @@ Context gathered. I have some questions:
 4. What endpoints do you need? (register, login, logout, refresh?)
 ```
 
-After you answer all questions, ZERG generates the requirements document and asks for approval.
+After you answer all questions, MAHABHARATHA generates the requirements document and asks for approval.
 
 **Approval:**
 
@@ -123,7 +123,7 @@ Requirements ready for review.
 Reply with "APPROVED" to proceed, or describe changes needed.
 ```
 
-Type `APPROVED` (case-insensitive) to proceed. If something is wrong, describe what needs to change and ZERG will revise.
+Type `APPROVED` (case-insensitive) to proceed. If something is wrong, describe what needs to change and MAHABHARATHA will revise.
 
 **Verification:** Confirm the requirements file exists and is marked approved.
 
@@ -138,7 +138,7 @@ head -20 .gsd/specs/user-auth/requirements.md
 Generate the technical architecture and task graph.
 
 ```
-/zerg:design
+/mahabharatha:design
 ```
 
 **What it does:**
@@ -189,12 +189,12 @@ jq '.total_tasks, .max_parallelization' .gsd/specs/user-auth/task-graph.json
 
 ---
 
-## Step 4: Rush
+## Step 4: Kurukshetra
 
 Launch parallel workers to execute the task graph.
 
 ```
-/zerg:rush --workers=3
+/mahabharatha:kurukshetra --workers=3
 ```
 
 **What it does:**
@@ -211,12 +211,12 @@ Launch parallel workers to execute the task graph.
 |------|---------|-------------|
 | `--workers=N` | 5 | Number of parallel workers |
 | `--mode container` | subprocess | Run workers in Docker containers |
-| `--resume` | off | Resume from a previous interrupted rush |
+| `--resume` | off | Resume from a previous interrupted kurukshetra |
 
 **Expected output:**
 
 ```
-Launching ZERG Rush: user-auth
+Launching MAHABHARATHA Kurukshetra: user-auth
 
 Task graph: 9 tasks across 5 levels
 Workers: 3 (adjusted from 5 -- max parallelization is 3)
@@ -228,10 +228,10 @@ Launching Worker 2 on port 49154...
 All workers launched. Orchestrator running (PID: 12345).
 
 Monitor progress in a separate terminal:
-  zerg status --dashboard
+  mahabharatha status --dashboard
 ```
 
-**Important:** The `/zerg:rush` command occupies the current Claude Code session. Open a separate terminal for monitoring (see Step 5).
+**Important:** The `/mahabharatha:kurukshetra` command occupies the current Claude Code session. Open a separate terminal for monitoring (see Step 5).
 
 ---
 
@@ -242,7 +242,7 @@ Check progress from a separate terminal.
 ### Option A: Live Dashboard (Recommended)
 
 ```bash
-zerg status --dashboard
+mahabharatha status --dashboard
 ```
 
 This opens a TUI with live-updating progress bars, worker status, and event streaming.
@@ -250,7 +250,7 @@ This opens a TUI with live-updating progress bars, worker status, and event stre
 ### Option B: Text Refresh
 
 ```bash
-zerg status --watch --interval 2
+mahabharatha status --watch --interval 2
 ```
 
 ### Option C: One-Shot Check
@@ -258,7 +258,7 @@ zerg status --watch --interval 2
 From a separate Claude Code session:
 
 ```
-/zerg:status
+/mahabharatha:status
 ```
 
 **Example status output:**
@@ -297,58 +297,58 @@ Merging happens automatically after each level completes. The orchestrator:
 You can also trigger a merge manually:
 
 ```
-/zerg:merge
+/mahabharatha:merge
 ```
 
-**Quality gates** are defined in `.zerg/config.yaml`. The default gates are:
+**Quality gates** are defined in `.mahabharatha/config.yaml`. The default gates are:
 
 | Gate | Command | Required |
 |------|---------|----------|
 | lint | `ruff check .` | Yes |
 | typecheck | `mypy . --strict --ignore-missing-imports` | Yes |
 | test | `pytest tests/unit/ -x --timeout=30` | Yes |
-| coverage | `pytest tests/unit/ --cov=zerg --cov-fail-under=80` | No |
+| coverage | `pytest tests/unit/ --cov=mahabharatha --cov-fail-under=80` | No |
 | security | `ruff check . --select S` | No |
 
 **If a quality gate fails:**
 
 - Execution pauses at the current level.
 - The status dashboard shows which gate failed and the error output.
-- You can fix the issue manually, or use `/zerg:retry <task-id>` to re-run a specific task.
-- After fixing, run `/zerg:merge` to retry the merge and quality gates.
+- You can fix the issue manually, or use `/mahabharatha:retry <task-id>` to re-run a specific task.
+- After fixing, run `/mahabharatha:merge` to retry the merge and quality gates.
 
 ---
 
 ## What Happens Next
 
-After all levels complete and quality gates pass, your feature code is on the `zerg/<feature>/base` branch.
+After all levels complete and quality gates pass, your feature code is on the `mahabharatha/<feature>/base` branch.
 
 **To integrate into your main branch:**
 
 ```bash
 git checkout main
-git merge zerg/user-auth/base
+git merge mahabharatha/user-auth/base
 ```
 
-**To clean up ZERG artifacts:**
+**To clean up MAHABHARATHA artifacts:**
 
 ```
-/zerg:cleanup
+/mahabharatha:cleanup
 ```
 
 This removes worktrees, worker branches, and temporary state files.
 
 ---
 
-## Common Issues During a Rush
+## Common Issues During a Kurukshetra
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
 | Worker exits immediately | Missing API key or auth | Check `ANTHROPIC_API_KEY` or OAuth setup |
-| "Task graph not found" | Skipped the design step | Run `/zerg:design` first |
-| Quality gate fails on merge | Worker produced code with lint/type errors | Fix manually or `/zerg:retry` the task |
-| Workers idle at next level | Previous level merge not triggered | Run `/zerg:merge` manually |
-| "Port already in use" | Previous workers did not shut down | Run `/zerg:stop` then retry |
+| "Task graph not found" | Skipped the design step | Run `/mahabharatha:design` first |
+| Quality gate fails on merge | Worker produced code with lint/type errors | Fix manually or `/mahabharatha:retry` the task |
+| Workers idle at next level | Previous level merge not triggered | Run `/mahabharatha:merge` manually |
+| "Port already in use" | Previous workers did not shut down | Run `/mahabharatha:stop` then retry |
 
 ---
 

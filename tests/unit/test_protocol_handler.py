@@ -1,4 +1,4 @@
-"""Tests for ZERG protocol handler module.
+"""Tests for MAHABHARATHA protocol handler module.
 
 Tests cover: task execution pipeline, Claude CLI invocation, prompt building,
 verification dispatch, commit flow, error handling, and plugin/structured
@@ -461,7 +461,7 @@ class TestCommitTaskChanges:
         assert result is True
         handler.git.commit.assert_called_once()
         commit_msg = handler.git.commit.call_args[0][0]
-        assert "ZERG [1]" in commit_msg
+        assert "MAHABHARATHA [1]" in commit_msg
         assert "Implement auth module" in commit_msg
         assert "Task-ID: TASK-001" in commit_msg
 

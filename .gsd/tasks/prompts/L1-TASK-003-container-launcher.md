@@ -13,7 +13,7 @@ Workers run in Docker containers based on the devcontainer spec. This provides c
 ## Files to Modify/Create
 
 ```
-.zerg/
+.mahabharatha/
 └── container.py              # CREATE: ContainerLauncher class
 
 .devcontainer/
@@ -39,7 +39,7 @@ class ContainerConfig:
     ports: list[int]
     memory_limit: str = "4g"
     cpu_limit: float = 2.0
-    network: str = "zerg-internal"
+    network: str = "mahabharatha-internal"
 
 @dataclass
 class RunningContainer:
@@ -52,24 +52,24 @@ class RunningContainer:
 
 class ContainerLauncher:
     """Manages Docker containers for worker isolation."""
-    
+
     def __init__(self):
         self.client = docker.from_env()
         self.containers: dict[str, RunningContainer] = {}
         self._ensure_network()
-    
+
     def launch(self, worker_id: str, config: ContainerConfig) -> RunningContainer:
         """Launch worker container."""
-        
+
         # Build environment
         env = {
             'ZERG_WORKER_ID': worker_id,
             **config.env_vars
         }
-        
+
         # Port bindings
         port_bindings = {f"{p}/tcp": p for p in config.ports}
-        
+
         # Volume mounts
         volumes = {
             str(config.worktree_path.absolute()): {
@@ -77,12 +77,12 @@ class ContainerLauncher:
                 'mode': 'rw'
             }
         }
-        
+
         # Launch container
         container = self.client.containers.run(
             config.image,
             detach=True,
-            name=f"zerg-worker-{worker_id}",
+            name=f"mahabharatha-worker-{worker_id}",
             environment=env,
             ports=port_bindings,
             volumes=volumes,
@@ -92,7 +92,7 @@ class ContainerLauncher:
             working_dir='/workspace',
             remove=False,  # Keep for logs on failure
         )
-        
+
         running = RunningContainer(
             container_id=container.id,
             worker_id=worker_id,
@@ -100,15 +100,15 @@ class ContainerLauncher:
             ports=config.ports,
             started_at=datetime.now()
         )
-        
+
         self.containers[worker_id] = running
         return running
-    
+
     def stop(self, worker_id: str, timeout: int = 30) -> None:
         """Stop worker container gracefully."""
         if worker_id not in self.containers:
             return
-        
+
         running = self.containers[worker_id]
         try:
             container = self.client.containers.get(running.container_id)
@@ -116,40 +116,40 @@ class ContainerLauncher:
             container.remove()
         except docker.errors.NotFound:
             pass
-        
+
         del self.containers[worker_id]
-    
+
     def get_logs(self, worker_id: str, tail: int = 100) -> str:
         """Get container logs."""
         if worker_id not in self.containers:
             return ""
-        
+
         running = self.containers[worker_id]
         try:
             container = self.client.containers.get(running.container_id)
             return container.logs(tail=tail).decode('utf-8')
         except docker.errors.NotFound:
             return ""
-    
+
     def is_running(self, worker_id: str) -> bool:
         """Check if container is still running."""
         if worker_id not in self.containers:
             return False
-        
+
         running = self.containers[worker_id]
         try:
             container = self.client.containers.get(running.container_id)
             return container.status == 'running'
         except docker.errors.NotFound:
             return False
-    
+
     def _ensure_network(self) -> None:
         """Ensure internal network exists."""
         try:
-            self.client.networks.get('zerg-internal')
+            self.client.networks.get('mahabharatha-internal')
         except docker.errors.NotFound:
             self.client.networks.create(
-                'zerg-internal',
+                'mahabharatha-internal',
                 driver='bridge',
                 internal=True  # No external access
             )
@@ -164,7 +164,7 @@ version: '3.8'
 
 services:
   # Base worker service (used as template)
-  zerg-worker:
+  mahabharatha-worker:
     build:
       context: .
       dockerfile: Dockerfile
@@ -177,7 +177,7 @@ services:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
     working_dir: /workspace
     networks:
-      - zerg-internal
+      - mahabharatha-internal
     deploy:
       resources:
         limits:
@@ -185,7 +185,7 @@ services:
           cpus: '2.0'
 
 networks:
-  zerg-internal:
+  mahabharatha-internal:
     driver: bridge
     internal: true
 ```
@@ -198,7 +198,7 @@ class ResourceLimits:
     """Container resource limits."""
     memory: str = "4g"
     cpus: float = 2.0
-    
+
     @classmethod
     def from_config(cls, config: dict) -> "ResourceLimits":
         return cls(
@@ -220,7 +220,7 @@ class ResourceLimits:
 ## Verification
 
 ```bash
-cd .zerg && python -c "
+cd .mahabharatha && python -c "
 from container import ContainerLauncher, ContainerConfig
 from pathlib import Path
 import tempfile
@@ -243,11 +243,11 @@ with tempfile.TemporaryDirectory() as tmpdir:
         env_vars={'TEST_VAR': 'hello'},
         ports=[8080]
     )
-    
+
     # Launch container
     running = cl.launch('test-001', config)
     assert cl.is_running('test-001')
-    
+
     # Stop container
     cl.stop('test-001')
     assert not cl.is_running('test-001')
@@ -259,7 +259,7 @@ print('OK: Container launcher works')
 ## Test Cases
 
 ```python
-# .zerg/tests/test_container.py
+# .mahabharatha/tests/test_container.py
 import pytest
 from container import ContainerLauncher, ContainerConfig
 from pathlib import Path
@@ -313,5 +313,5 @@ def test_resource_limits(launcher, config):
 
 1. All acceptance criteria checked
 2. Verification command passes
-3. Unit tests pass: `pytest .zerg/tests/test_container.py`
+3. Unit tests pass: `pytest .mahabharatha/tests/test_container.py`
 4. docker-compose.yaml updated with worker template

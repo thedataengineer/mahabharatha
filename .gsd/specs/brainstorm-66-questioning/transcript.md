@@ -18,4 +18,4 @@
 
 ## Round 5: Prioritization & Scope
 - **MVP**: Full scope — all 5 features in one implementation.
-- **Issue strategy**: Epic + sub-issues. #66 becomes epic, atomic sub-tasks reference it. Aligns with ZERG swarm/dependency model.
+- **Issue strategy**: Epic + sub-issues. #66 becomes epic, atomic sub-tasks reference it. Aligns with MAHABHARATHA akshauhini/dependency model.

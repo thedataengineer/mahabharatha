@@ -7,23 +7,23 @@
   "tasks": [
     {
       "id": "TASK-001",
-      "title": "Architecture: zerg/git/ package, GitRunner, types, config",
-      "description": "Create zerg/git/ package. Extract GitRunner base from GitOps. Define shared types. Create GitConfig Pydantic model. Add GitConfig to ZergConfig. Replace zerg/git_ops.py with backward-compatible shim.",
+      "title": "Architecture: mahabharatha/git/ package, GitRunner, types, config",
+      "description": "Create mahabharatha/git/ package. Extract GitRunner base from GitOps. Define shared types. Create GitConfig Pydantic model. Add GitConfig to ZergConfig. Replace mahabharatha/git_ops.py with backward-compatible shim.",
       "issue": 49,
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/git/__init__.py", "zerg/git/types.py", "zerg/git/config.py", "zerg/git/base.py", "zerg/git/ops.py", "tests/unit/test_git_base.py", "tests/unit/test_git_config.py", "tests/unit/test_git_types.py"],
-        "modify": ["zerg/git_ops.py", "zerg/config.py"],
-        "read": ["zerg/exceptions.py", "zerg/logging.py", "zerg/plugin_config.py"]
+        "create": ["mahabharatha/git/__init__.py", "mahabharatha/git/types.py", "mahabharatha/git/config.py", "mahabharatha/git/base.py", "mahabharatha/git/ops.py", "tests/unit/test_git_base.py", "tests/unit/test_git_config.py", "tests/unit/test_git_types.py"],
+        "modify": ["mahabharatha/git_ops.py", "mahabharatha/config.py"],
+        "read": ["mahabharatha/exceptions.py", "mahabharatha/logging.py", "mahabharatha/plugin_config.py"]
       },
       "verification": {
-        "command": "python -c 'from zerg.git import GitOps; from zerg.git_ops import GitOps, BranchInfo; from zerg.git.types import CommitInfo, CommitType; from zerg.git.config import GitConfig; from zerg.git.base import GitRunner; print(\"OK\")' && pytest tests/unit/test_git_base.py tests/unit/test_git_config.py tests/unit/test_git_types.py tests/unit/test_git_ops.py -x -q",
+        "command": "python -c 'from mahabharatha.git import GitOps; from mahabharatha.git_ops import GitOps, BranchInfo; from mahabharatha.git.types import CommitInfo, CommitType; from mahabharatha.git.config import GitConfig; from mahabharatha.git.base import GitRunner; print(\"OK\")' && pytest tests/unit/test_git_base.py tests/unit/test_git_config.py tests/unit/test_git_types.py tests/unit/test_git_ops.py -x -q",
         "timeout_seconds": 120
       },
       "skills_required": ["python", "pydantic"],
-      "context": "## Spec Context\nCreate zerg/git/ package as foundation for 7 engine modules. GitRunner extracts _run(), _validate_repo(), current_branch(), current_commit(), has_changes() from existing GitOps (445 lines). GitOps inherits GitRunner. Shim at zerg/git_ops.py re-exports GitOps and BranchInfo. 4 consumers must keep working: merge.py, worker_protocol.py, git_cmd.py, cleanup.py.\n\n## Types\nCommitType(str, Enum): feat/fix/docs/style/refactor/test/chore/perf/ci/build/revert. CommitInfo(frozen): sha, message, author, date, files, commit_type. DiffAnalysis: files_changed, insertions, deletions, by_extension, by_directory. ReviewFinding: domain, severity, file, line, message, suggestion, rule_id. RescueSnapshot: timestamp, branch, commit, operation, tag, description.\n\n## Config\nGitConfig sub-models: GitCommitConfig(mode=confirm), GitPRConfig(context_depth=full, size_warning_loc=400), GitReleaseConfig(tag_prefix=v), GitRescueConfig(auto_snapshot=True, max_snapshots=20), GitReviewConfig(domains=[security,performance,quality,architecture]). detect_context(): solo/team/swarm.\n\n## Security\n- subprocess argument lists only, never shell=True\n- Path.resolve() + is_relative_to() for file validation\n- JSON serialization only for state files"
+      "context": "## Spec Context\nCreate mahabharatha/git/ package as foundation for 7 engine modules. GitRunner extracts _run(), _validate_repo(), current_branch(), current_commit(), has_changes() from existing GitOps (445 lines). GitOps inherits GitRunner. Shim at mahabharatha/git_ops.py re-exports GitOps and BranchInfo. 4 consumers must keep working: merge.py, worker_protocol.py, git_cmd.py, cleanup.py.\n\n## Types\nCommitType(str, Enum): feat/fix/docs/style/refactor/test/chore/perf/ci/build/revert. CommitInfo(frozen): sha, message, author, date, files, commit_type. DiffAnalysis: files_changed, insertions, deletions, by_extension, by_directory. ReviewFinding: domain, severity, file, line, message, suggestion, rule_id. RescueSnapshot: timestamp, branch, commit, operation, tag, description.\n\n## Config\nGitConfig sub-models: GitCommitConfig(mode=confirm), GitPRConfig(context_depth=full, size_warning_loc=400), GitReleaseConfig(tag_prefix=v), GitRescueConfig(auto_snapshot=True, max_snapshots=20), GitReviewConfig(domains=[security,performance,quality,architecture]). detect_context(): solo/team/akshauhini.\n\n## Security\n- subprocess argument lists only, never shell=True\n- Path.resolve() + is_relative_to() for file validation\n- JSON serialization only for state files"
     },
     {
       "id": "TASK-002",
@@ -34,9 +34,9 @@
       "level": 2,
       "dependencies": ["TASK-001"],
       "files": {
-        "create": ["zerg/git/commit_engine.py", "tests/unit/test_git_commit_engine.py"],
+        "create": ["mahabharatha/git/commit_engine.py", "tests/unit/test_git_commit_engine.py"],
         "modify": [],
-        "read": ["zerg/git/base.py", "zerg/git/types.py", "zerg/git/config.py", "zerg/commands/git_cmd.py"]
+        "read": ["mahabharatha/git/base.py", "mahabharatha/git/types.py", "mahabharatha/git/config.py", "mahabharatha/commands/git_cmd.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_git_commit_engine.py -x -q",
@@ -48,22 +48,22 @@
     {
       "id": "TASK-003",
       "title": "Git rescue system: triple-layer undo/recovery",
-      "description": "Build rescue.py: OperationLogger (JSON lines to .zerg/git-ops.log), SnapshotManager (lightweight tags, pruning), RescueEngine (--list/--undo/--restore/--recover-branch). Auto-snapshot before risky ops.",
+      "description": "Build rescue.py: OperationLogger (JSON lines to .mahabharatha/git-ops.log), SnapshotManager (lightweight tags, pruning), RescueEngine (--list/--undo/--restore/--recover-branch). Auto-snapshot before risky ops.",
       "issue": 46,
       "phase": "core",
       "level": 2,
       "dependencies": ["TASK-001"],
       "files": {
-        "create": ["zerg/git/rescue.py", "tests/unit/test_git_rescue.py"],
+        "create": ["mahabharatha/git/rescue.py", "tests/unit/test_git_rescue.py"],
         "modify": [],
-        "read": ["zerg/git/base.py", "zerg/git/types.py", "zerg/git/config.py"]
+        "read": ["mahabharatha/git/base.py", "mahabharatha/git/types.py", "mahabharatha/git/config.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_git_rescue.py -x -q",
         "timeout_seconds": 120
       },
       "skills_required": ["python"],
-      "context": "## Spec\nLayer 1: Enhanced reflog with human-readable descriptions. Layer 2: JSON lines ops log. Layer 3: Snapshot tags (zerg-snapshot-{timestamp}), max 20. Rescue: --list (20 ops), --undo (revert last), --restore SNAPSHOT, --recover-branch NAME.\n\n## Deps\nTASK-001: GitRunner, RescueSnapshot, GitRescueConfig\n\n## Security\n- subprocess argument lists only\n- Validate ops_log path\n- JSON only for serialization"
+      "context": "## Spec\nLayer 1: Enhanced reflog with human-readable descriptions. Layer 2: JSON lines ops log. Layer 3: Snapshot tags (mahabharatha-snapshot-{timestamp}), max 20. Rescue: --list (20 ops), --undo (revert last), --restore SNAPSHOT, --recover-branch NAME.\n\n## Deps\nTASK-001: GitRunner, RescueSnapshot, GitRescueConfig\n\n## Security\n- subprocess argument lists only\n- Validate ops_log path\n- JSON only for serialization"
     },
     {
       "id": "TASK-004",
@@ -74,9 +74,9 @@
       "level": 3,
       "dependencies": ["TASK-002"],
       "files": {
-        "create": ["zerg/git/pr_engine.py", "tests/unit/test_git_pr_engine.py"],
+        "create": ["mahabharatha/git/pr_engine.py", "tests/unit/test_git_pr_engine.py"],
         "modify": [],
-        "read": ["zerg/git/base.py", "zerg/git/types.py", "zerg/git/config.py", "zerg/git/commit_engine.py"]
+        "read": ["mahabharatha/git/base.py", "mahabharatha/git/types.py", "mahabharatha/git/config.py", "mahabharatha/git/commit_engine.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_git_pr_engine.py -x -q",
@@ -94,9 +94,9 @@
       "level": 3,
       "dependencies": ["TASK-002"],
       "files": {
-        "create": ["zerg/git/release_engine.py", "tests/unit/test_git_release_engine.py"],
+        "create": ["mahabharatha/git/release_engine.py", "tests/unit/test_git_release_engine.py"],
         "modify": [],
-        "read": ["zerg/git/base.py", "zerg/git/types.py", "zerg/git/config.py", "zerg/git/commit_engine.py"]
+        "read": ["mahabharatha/git/base.py", "mahabharatha/git/types.py", "mahabharatha/git/config.py", "mahabharatha/git/commit_engine.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_git_release_engine.py -x -q",
@@ -114,9 +114,9 @@
       "level": 3,
       "dependencies": ["TASK-002"],
       "files": {
-        "create": ["zerg/git/history_engine.py", "tests/unit/test_git_history_engine.py"],
+        "create": ["mahabharatha/git/history_engine.py", "tests/unit/test_git_history_engine.py"],
         "modify": [],
-        "read": ["zerg/git/base.py", "zerg/git/types.py", "zerg/git/config.py", "zerg/git/commit_engine.py"]
+        "read": ["mahabharatha/git/base.py", "mahabharatha/git/types.py", "mahabharatha/git/config.py", "mahabharatha/git/commit_engine.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_git_history_engine.py -x -q",
@@ -128,42 +128,42 @@
     {
       "id": "TASK-007",
       "title": "AI pre-review: context assembly for Claude Code analysis",
-      "description": "Build prereview.py: ContextPreparer (changed files + hunks), DomainFilter (security rules by extension), ReviewReporter (structured markdown to .zerg/review-reports/, budget ~4000 tokens/domain). Context assembler, not analyzer.",
+      "description": "Build prereview.py: ContextPreparer (changed files + hunks), DomainFilter (security rules by extension), ReviewReporter (structured markdown to .mahabharatha/review-reports/, budget ~4000 tokens/domain). Context assembler, not analyzer.",
       "issue": 48,
       "phase": "features",
       "level": 3,
       "dependencies": ["TASK-002"],
       "files": {
-        "create": ["zerg/git/prereview.py", "tests/unit/test_git_prereview.py"],
+        "create": ["mahabharatha/git/prereview.py", "tests/unit/test_git_prereview.py"],
         "modify": [],
-        "read": ["zerg/git/base.py", "zerg/git/types.py", "zerg/git/config.py", ".claude/rules/security"]
+        "read": ["mahabharatha/git/base.py", "mahabharatha/git/types.py", "mahabharatha/git/config.py", ".claude/rules/security"]
       },
       "verification": {
         "command": "pytest tests/unit/test_git_prereview.py -x -q",
         "timeout_seconds": 120
       },
       "skills_required": ["python"],
-      "context": "## Spec\nContext assembler: prepare scoped context for Claude Code AI.\nContextPreparer: git diff --name-only + per-file hunks, truncate to budget.\nDomainFilter: .py->Python rules, .js/.ts->JS rules, Dockerfile->Docker rules, always OWASP core summary. Extract Quick Reference tables.\nReviewReporter: .zerg/review-reports/{timestamp}-{branch}.md. Budget: ~30% rules, ~50% code, ~20% context.\n\n## Deps\nTASK-002: DiffAnalyzer. TASK-001: GitRunner, DiffAnalysis, ReviewFinding, GitReviewConfig.\n\n## Security\n- Validate paths when reading rules, JSON only"
+      "context": "## Spec\nContext assembler: prepare scoped context for Claude Code AI.\nContextPreparer: git diff --name-only + per-file hunks, truncate to budget.\nDomainFilter: .py->Python rules, .js/.ts->JS rules, Dockerfile->Docker rules, always OWASP core summary. Extract Quick Reference tables.\nReviewReporter: .mahabharatha/review-reports/{timestamp}-{branch}.md. Budget: ~30% rules, ~50% code, ~20% context.\n\n## Deps\nTASK-002: DiffAnalyzer. TASK-001: GitRunner, DiffAnalysis, ReviewFinding, GitReviewConfig.\n\n## Security\n- Validate paths when reading rules, JSON only"
     },
     {
       "id": "TASK-008",
       "title": "AI-powered bisect: predictive + semantic + auto-fix",
-      "description": "Build bisect_engine.py: CommitRanker (score by file overlap, size, recency, type), SemanticTester (test output analysis), BisectRunner (predictive then git bisect), RootCauseAnalyzer. Report to .zerg/bisect-reports/.",
+      "description": "Build bisect_engine.py: CommitRanker (score by file overlap, size, recency, type), SemanticTester (test output analysis), BisectRunner (predictive then git bisect), RootCauseAnalyzer. Report to .mahabharatha/bisect-reports/.",
       "issue": 45,
       "phase": "advanced",
       "level": 4,
       "dependencies": ["TASK-002", "TASK-007"],
       "files": {
-        "create": ["zerg/git/bisect_engine.py", "tests/unit/test_git_bisect_engine.py"],
+        "create": ["mahabharatha/git/bisect_engine.py", "tests/unit/test_git_bisect_engine.py"],
         "modify": [],
-        "read": ["zerg/git/base.py", "zerg/git/types.py", "zerg/git/config.py", "zerg/git/commit_engine.py", "zerg/git/prereview.py"]
+        "read": ["mahabharatha/git/base.py", "mahabharatha/git/types.py", "mahabharatha/git/config.py", "mahabharatha/git/commit_engine.py", "mahabharatha/git/prereview.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_git_bisect_engine.py -x -q",
         "timeout_seconds": 120
       },
       "skills_required": ["python"],
-      "context": "## Spec\nPipeline: 1) Predictive score (file_overlap*0.4 + size*0.2 + recency*0.2 + type*0.2), skip if >90%. 2) Semantic bisect: git bisect with output analysis. 3) Root cause + fix suggestion. 4) Report to .zerg/bisect-reports/.\n\n## Deps\nTASK-002: DiffAnalyzer, CommitType. TASK-007: ContextPreparer. TASK-001: GitRunner, CommitInfo.\n\n## Security\n- Validate test commands, subprocess argument lists, sanitize symptom text"
+      "context": "## Spec\nPipeline: 1) Predictive score (file_overlap*0.4 + size*0.2 + recency*0.2 + type*0.2), skip if >90%. 2) Semantic bisect: git bisect with output analysis. 3) Root cause + fix suggestion. 4) Report to .mahabharatha/bisect-reports/.\n\n## Deps\nTASK-002: DiffAnalyzer, CommitType. TASK-007: ContextPreparer. TASK-001: GitRunner, CommitInfo.\n\n## Security\n- Validate test commands, subprocess argument lists, sanitize symptom text"
     },
     {
       "id": "TASK-009",
@@ -174,12 +174,12 @@
       "level": 4,
       "dependencies": ["TASK-002", "TASK-003", "TASK-004", "TASK-005", "TASK-006", "TASK-007", "TASK-008"],
       "files": {
-        "create": ["zerg/data/commands/git.core.md", "zerg/data/commands/git.details.md"],
-        "modify": ["zerg/commands/git_cmd.py", "zerg/data/commands/git.md"],
-        "read": ["zerg/git/commit_engine.py", "zerg/git/rescue.py", "zerg/git/pr_engine.py", "zerg/git/release_engine.py", "zerg/git/history_engine.py", "zerg/git/prereview.py", "zerg/git/bisect_engine.py"]
+        "create": ["mahabharatha/data/commands/git.core.md", "mahabharatha/data/commands/git.details.md"],
+        "modify": ["mahabharatha/commands/git_cmd.py", "mahabharatha/data/commands/git.md"],
+        "read": ["mahabharatha/git/commit_engine.py", "mahabharatha/git/rescue.py", "mahabharatha/git/pr_engine.py", "mahabharatha/git/release_engine.py", "mahabharatha/git/history_engine.py", "mahabharatha/git/prereview.py", "mahabharatha/git/bisect_engine.py"]
       },
       "verification": {
-        "command": "pytest tests/unit/test_git_cmd.py -x -q && python -m zerg.validate_commands && python -m zerg git --help",
+        "command": "pytest tests/unit/test_git_cmd.py -x -q && python -m mahabharatha.validate_commands && python -m mahabharatha git --help",
         "timeout_seconds": 120
       },
       "skills_required": ["python", "click"]

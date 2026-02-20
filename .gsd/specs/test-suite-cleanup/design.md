@@ -163,7 +163,7 @@ graph TD
 
 | Risk | Probability | Impact | Mitigation |
 |------|-------------|--------|------------|
-| Moved tests have import path issues | Low | Med | git mv preserves content; imports use zerg.* not relative |
+| Moved tests have import path issues | Low | Med | git mv preserves content; imports use mahabharatha.* not relative |
 | .test_durations has stale entries | Low | Low | Full regeneration overwrites all entries |
 | Deleted coverage tests had unique coverage | Low | Low | Verified: 0 unique tests in duplicates, coverage files test same paths |
 

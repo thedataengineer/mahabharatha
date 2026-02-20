@@ -1,6 +1,6 @@
 # Context Engineering
 
-ZERG's context engineering plugin minimizes token usage across parallel workers. Instead of every worker loading the full set of command files, security rules, and spec documents, ZERG scopes context to what each task actually needs.
+MAHABHARATHA's context engineering plugin minimizes token usage across parallel workers. Instead of every worker loading the full set of command files, security rules, and spec documents, MAHABHARATHA scopes context to what each task actually needs.
 
 ---
 
@@ -44,13 +44,13 @@ Large command files (>300 lines) are split into two parts:
 
 The original command file retains core content for backward compatibility. Workers load `.core.md` by default and reference `.details.md` only when they encounter situations that need it.
 
-**Split commands** (10 total): brainstorm, init, design, rush, plugins, debug, plan, worker, merge, status.
+**Split commands** (10 total): brainstorm, init, design, kurukshetra, plugins, debug, plan, worker, merge, status.
 
 **Token savings**: ~2,000-5,000 tokens per worker per command invocation.
 
 ### Security Rule Filtering
 
-ZERG detects which file types each task will create or modify, then loads only the relevant security rules:
+MAHABHARATHA detects which file types each task will create or modify, then loads only the relevant security rules:
 
 | File Extension | Security Rules Loaded |
 |---------------|----------------------|
@@ -96,7 +96,7 @@ Instead of workers loading the entire `requirements.md` (often 2,000+ tokens) an
 ## Configuration
 
 ```yaml
-# .zerg/config.yaml
+# .mahabharatha/config.yaml
 plugins:
   context_engineering:
     enabled: true                    # Master switch
@@ -124,13 +124,13 @@ plugins:
     enabled: false
 ```
 
-Workers will load full command files, all security rules, and entire spec documents — the same behavior as ZERG without the plugin.
+Workers will load full command files, all security rules, and entire spec documents — the same behavior as MAHABHARATHA without the plugin.
 
 ---
 
 ## Monitoring
 
-`/zerg:status` includes a **CONTEXT BUDGET** section when context engineering is active:
+`/mahabharatha:status` includes a **CONTEXT BUDGET** section when context engineering is active:
 
 ```
 CONTEXT BUDGET
@@ -151,7 +151,7 @@ CONTEXT BUDGET
 
 ## How It Integrates
 
-### During `/zerg:design`
+### During `/mahabharatha:design`
 
 The design phase populates task context:
 
@@ -163,7 +163,7 @@ The design phase populates task context:
    - Filter security rules by the task's file extensions
 3. Write the `context` field into `task-graph.json`
 
-### During `/zerg:rush`
+### During `/mahabharatha:kurukshetra`
 
 The orchestrator passes task context to workers:
 
@@ -173,10 +173,10 @@ The orchestrator passes task context to workers:
 4. Worker loads task context excerpt (not full spec files)
 5. If any context loading fails and `fallback_to_full: true`, worker loads full files
 
-### During `/zerg:status`
+### During `/mahabharatha:status`
 
 Status reads context engineering metrics from:
-- Split command file counts in `zerg/data/commands/`
+- Split command file counts in `mahabharatha/data/commands/`
 - Task context population from `task-graph.json`
 - Security rule filtering stats from the plugin registry
 
@@ -188,7 +188,7 @@ Status reads context engineering metrics from:
 
 **Use the default budget.** 4,000 tokens covers most task contexts well. Increase it only if workers are missing context they need. Decrease it only if you're running many workers and need to minimize total token usage.
 
-**Monitor the context rate.** If the "Task context rate" in `/zerg:status` shows less than 80% populated, your spec documents may not have enough section structure for effective matching. Adding headers and clear section breaks to requirements.md helps.
+**Monitor the context rate.** If the "Task context rate" in `/mahabharatha:status` shows less than 80% populated, your spec documents may not have enough section structure for effective matching. Adding headers and clear section breaks to requirements.md helps.
 
 **Let fallback work.** Keep `fallback_to_full: true` unless you have a specific reason to disable it. A worker that falls back to full context is better than a worker that fails because it couldn't load its instructions.
 
@@ -196,13 +196,13 @@ Status reads context engineering metrics from:
 
 ## Automated Validation
 
-Run `python -m zerg.validate_commands` to check all command files for:
+Run `python -m mahabharatha.validate_commands` to check all command files for:
 
 - **Task ecosystem integration** — every base `.md` file has TaskCreate/TaskUpdate/TaskList/TaskGet
 - **Backbone command depth** — worker, status, merge, stop, retry have ≥3 Task refs each
 - **Split file pair consistency** — `.core.md` ↔ `.details.md` ↔ parent `.md` all exist
 - **Oversized unsplit files** — files ≥300 lines without `.core.md` split
-- **State JSON cross-referencing** — files referencing `.zerg/state` must also reference TaskList/TaskGet
+- **State JSON cross-referencing** — files referencing `.mahabharatha/state` must also reference TaskList/TaskGet
 
 Use `--auto-split` to automatically split oversized files via `CommandSplitter`.
 

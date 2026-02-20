@@ -11,11 +11,11 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Three prompt-level and one code-level change across ZERG's documentation, planning, and design commands. The `--tone` flag adds tone-controlled documentation generation to `/zerg:document` (with 3 tone definition files). Anti-implementation guards harden `/z:plan` against workflow drift. A new Section 11 in the plan template and mandatory doc tasks in the design command ensure documentation stays current. All project docs are updated to reflect these changes.
+Three prompt-level and one code-level change across MAHABHARATHA's documentation, planning, and design commands. The `--tone` flag adds tone-controlled documentation generation to `/mahabharatha:document` (with 3 tone definition files). Anti-implementation guards harden `/z:plan` against workflow drift. A new Section 11 in the plan template and mandatory doc tasks in the design command ensure documentation stays current. All project docs are updated to reflect these changes.
 
 ### 1.2 Goals
-- Educational documentation as default output from `/zerg:document`
-- Zero-tolerance plan→design→rush workflow boundary enforcement
+- Educational documentation as default output from `/mahabharatha:document`
+- Zero-tolerance plan→design→kurukshetra workflow boundary enforcement
 - Documentation drift eliminated via systematic impact tracking
 
 ### 1.3 Non-Goals
@@ -40,14 +40,14 @@ Three prompt-level and one code-level change across ZERG's documentation, planni
 │  └──────────┘  └──────────┘  └──────────────────┘  │
 │                                       │             │
 │                              ┌────────▼─────────┐   │
-│                              │ zerg/data/tones/  │   │
+│                              │ mahabharatha/data/tones/  │   │
 │                              │ ├ educational.md  │   │
 │                              │ ├ reference.md    │   │
 │                              │ └ tutorial.md     │   │
 │                              └──────────────────┘   │
 │                                                     │
 │  ┌──────────────────────────────────────────────┐   │
-│  │ zerg/commands/document.py  (+--tone option)  │   │
+│  │ mahabharatha/commands/document.py  (+--tone option)  │   │
 │  └──────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────┘
 ```
@@ -56,22 +56,22 @@ Three prompt-level and one code-level change across ZERG's documentation, planni
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| Tone Definitions | Define output style for each tone | `zerg/data/tones/{educational,reference,tutorial}.md` |
-| Document Command (Python) | Parse `--tone` flag, pass to renderer | `zerg/commands/document.py` |
-| Document Command (Prompt) | Instruct Claude to load and apply tone | `zerg/data/commands/document.md` |
-| Plan Core (Prompt) | Anti-implementation guards at 4+ locations | `zerg/data/commands/plan.core.md` |
-| Plan Parent (Prompt) | Sync guards with core file | `zerg/data/commands/plan.md` |
-| Plan Details (Prompt) | Section 11 in requirements template | `zerg/data/commands/plan.details.md` |
-| Design Core (Prompt) | Mandatory doc task generation | `zerg/data/commands/design.core.md` |
-| Design Parent (Prompt) | Sync doc task guidance with core | `zerg/data/commands/design.md` |
+| Tone Definitions | Define output style for each tone | `mahabharatha/data/tones/{educational,reference,tutorial}.md` |
+| Document Command (Python) | Parse `--tone` flag, pass to renderer | `mahabharatha/commands/document.py` |
+| Document Command (Prompt) | Instruct Claude to load and apply tone | `mahabharatha/data/commands/document.md` |
+| Plan Core (Prompt) | Anti-implementation guards at 4+ locations | `mahabharatha/data/commands/plan.core.md` |
+| Plan Parent (Prompt) | Sync guards with core file | `mahabharatha/data/commands/plan.md` |
+| Plan Details (Prompt) | Section 11 in requirements template | `mahabharatha/data/commands/plan.details.md` |
+| Design Core (Prompt) | Mandatory doc task generation | `mahabharatha/data/commands/design.core.md` |
+| Design Parent (Prompt) | Sync doc task guidance with core | `mahabharatha/data/commands/design.md` |
 | Project Docs | Keep docs current with changes | README, CHANGELOG, wiki, command refs |
 
 ### 2.3 Data Flow
 
-1. User invokes `/zerg:document target --tone educational`
+1. User invokes `/mahabharatha:document target --tone educational`
 2. Click parses `--tone` flag (default: `educational`)
 3. Python passes tone to DocRenderer
-4. Prompt layer reads `zerg/data/tones/educational.md` for style instructions
+4. Prompt layer reads `mahabharatha/data/tones/educational.md` for style instructions
 5. DocRenderer generates documentation following tone guidelines
 6. Output to stdout or `--output` path
 
@@ -94,7 +94,7 @@ The tone string is passed to DocRenderer.render() and stored for prompt-layer us
 
 ### 3.2 Tone Definition Files
 
-Each tone file at `zerg/data/tones/{tone}.md` contains:
+Each tone file at `mahabharatha/data/tones/{tone}.md` contains:
 - Tone name and description
 - Output structure template
 - Required sections per concept
@@ -204,16 +204,16 @@ Added to `plan.details.md` requirements template after Section 10:
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/data/tones/educational.md` | TASK-001 | create |
-| `zerg/data/tones/reference.md` | TASK-002 | create |
-| `zerg/data/tones/tutorial.md` | TASK-003 | create |
-| `zerg/commands/document.py` | TASK-004 | modify |
-| `zerg/data/commands/document.md` | TASK-004 | modify |
-| `zerg/data/commands/plan.core.md` | TASK-005 | modify |
-| `zerg/data/commands/plan.md` | TASK-005 | modify |
-| `zerg/data/commands/plan.details.md` | TASK-006 | modify |
-| `zerg/data/commands/design.core.md` | TASK-007 | modify |
-| `zerg/data/commands/design.md` | TASK-007 | modify |
+| `mahabharatha/data/tones/educational.md` | TASK-001 | create |
+| `mahabharatha/data/tones/reference.md` | TASK-002 | create |
+| `mahabharatha/data/tones/tutorial.md` | TASK-003 | create |
+| `mahabharatha/commands/document.py` | TASK-004 | modify |
+| `mahabharatha/data/commands/document.md` | TASK-004 | modify |
+| `mahabharatha/data/commands/plan.core.md` | TASK-005 | modify |
+| `mahabharatha/data/commands/plan.md` | TASK-005 | modify |
+| `mahabharatha/data/commands/plan.details.md` | TASK-006 | modify |
+| `mahabharatha/data/commands/design.core.md` | TASK-007 | modify |
+| `mahabharatha/data/commands/design.md` | TASK-007 | modify |
 | `tests/unit/test_document_tone.py` | TASK-008 | create |
 | `CHANGELOG.md` | TASK-009 | modify |
 | `README.md` | TASK-009 | modify |
@@ -265,8 +265,8 @@ graph TD
 
 ### 7.3 Verification Commands
 - `python -m pytest tests/unit/test_document_tone.py -x -q`
-- `python -m zerg.validate_commands`
-- `grep -c "MUST NEVER" zerg/data/commands/plan.core.md` (expect >= 4 guard markers)
+- `python -m mahabharatha.validate_commands`
+- `grep -c "MUST NEVER" mahabharatha/data/commands/plan.core.md` (expect >= 4 guard markers)
 
 ---
 
@@ -294,10 +294,10 @@ graph TD
 
 | Task | Creates/Modifies | Consumed By | Integration Test |
 |------|-----------------|-------------|-----------------|
-| TASK-001 | `zerg/data/tones/educational.md` | TASK-004 | tests/unit/test_document_tone.py |
-| TASK-002 | `zerg/data/tones/reference.md` | TASK-004 | tests/unit/test_document_tone.py |
-| TASK-003 | `zerg/data/tones/tutorial.md` | TASK-004 | tests/unit/test_document_tone.py |
-| TASK-004 | `zerg/commands/document.py`, `document.md` | TASK-008 | tests/unit/test_document_tone.py |
+| TASK-001 | `mahabharatha/data/tones/educational.md` | TASK-004 | tests/unit/test_document_tone.py |
+| TASK-002 | `mahabharatha/data/tones/reference.md` | TASK-004 | tests/unit/test_document_tone.py |
+| TASK-003 | `mahabharatha/data/tones/tutorial.md` | TASK-004 | tests/unit/test_document_tone.py |
+| TASK-004 | `mahabharatha/commands/document.py`, `document.md` | TASK-008 | tests/unit/test_document_tone.py |
 | TASK-005 | `plan.core.md`, `plan.md` | leaf (prompt) | — |
 | TASK-006 | `plan.details.md` | leaf (prompt) | — |
 | TASK-007 | `design.core.md`, `design.md` | leaf (prompt) | — |

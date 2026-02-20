@@ -53,10 +53,10 @@ Temp Script Flow (AFTER):
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| PRCreator.create() | PR creation via gh CLI | zerg/git/pr_engine.py |
-| PRCreator._save_draft() | Draft file fallback | zerg/git/pr_engine.py |
-| HistoryEngine._squash_commits() | Git rebase squash script | zerg/git/history_engine.py |
-| HistoryEngine._reorder_commits() | Git rebase reorder script | zerg/git/history_engine.py |
+| PRCreator.create() | PR creation via gh CLI | mahabharatha/git/pr_engine.py |
+| PRCreator._save_draft() | Draft file fallback | mahabharatha/git/pr_engine.py |
+| HistoryEngine._squash_commits() | Git rebase squash script | mahabharatha/git/history_engine.py |
+| HistoryEngine._reorder_commits() | Git rebase reorder script | mahabharatha/git/history_engine.py |
 
 ### 2.3 Data Flow
 - **PR title**: `pr_data["title"]` → `_sanitize_pr_content()` → `html.escape()` → safe string
@@ -159,8 +159,8 @@ with os.fdopen(fd, "w") as script_file:
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| zerg/git/pr_engine.py | TASK-001 | modify |
-| zerg/git/history_engine.py | TASK-002 | modify |
+| mahabharatha/git/pr_engine.py | TASK-001 | modify |
+| mahabharatha/git/history_engine.py | TASK-002 | modify |
 | CHANGELOG.md | TASK-003 | modify |
 
 ### 5.3 Dependency Graph
@@ -187,7 +187,7 @@ TASK-002 [Temp file hardening]  ───┘
 
 ### 7.1 Verification
 - `python -m pytest tests/ --timeout=120` — full suite green
-- `ruff check zerg/git/pr_engine.py zerg/git/history_engine.py` — clean
+- `ruff check mahabharatha/git/pr_engine.py mahabharatha/git/history_engine.py` — clean
 
 ### 7.2 No New Tests Required
 Existing test suite covers PR creation and history engine paths. Changes are non-behavioral.

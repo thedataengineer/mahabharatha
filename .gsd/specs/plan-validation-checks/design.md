@@ -48,8 +48,8 @@ design.core.md:
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| Plan skip-validation | Bypass validation in /z:plan | `zerg/data/commands/plan.core.md` |
-| Design skip-validation | Bypass validation in /z:design | `zerg/data/commands/design.core.md` |
+| Plan skip-validation | Bypass validation in /z:plan | `mahabharatha/data/commands/plan.core.md` |
+| Design skip-validation | Bypass validation in /z:design | `mahabharatha/data/commands/design.core.md` |
 
 ### 2.3 Data Flow
 
@@ -85,7 +85,7 @@ Before proceeding, validate this plan hasn't been superseded:
 
 **Edit 3 — Help section (line ~200):**
 ```
-/zerg:plan — Capture complete requirements for a feature.
+/mahabharatha:plan — Capture complete requirements for a feature.
 
 Flags:
   -s, --socratic        Use structured 3-round discovery mode
@@ -115,7 +115,7 @@ Before proceeding, validate this design is still needed:
 
 **Edit 3 — Help section (line ~710):**
 ```
-/zerg:design — Generate technical architecture and prepare for parallel execution.
+/mahabharatha:design — Generate technical architecture and prepare for parallel execution.
 
 Flags:
   --skip-validation     Skip pre-execution validation checks
@@ -133,7 +133,7 @@ Flags:
 **Options Considered**:
 1. Check $ARGUMENTS string for "--skip-validation"
 2. Environment variable ZERG_SKIP_VALIDATION
-3. Config option in .zerg/config.yaml
+3. Config option in .mahabharatha/config.yaml
 
 **Decision**: Option 1 — Check $ARGUMENTS
 
@@ -156,8 +156,8 @@ Flags:
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/data/commands/plan.core.md` | TASK-001 | modify |
-| `zerg/data/commands/design.core.md` | TASK-002 | modify |
+| `mahabharatha/data/commands/plan.core.md` | TASK-001 | modify |
+| `mahabharatha/data/commands/design.core.md` | TASK-002 | modify |
 | `CHANGELOG.md` | TASK-003 | modify |
 
 ### 5.3 Dependency Graph
@@ -188,8 +188,8 @@ N/A — prompt instruction changes, not Python code.
 Manual: run `/z:plan test-feature --skip-validation` and verify Phase 0 is skipped.
 
 ### 7.3 Verification Commands
-- `grep -q 'skip-validation' zerg/data/commands/plan.core.md`
-- `grep -q 'skip-validation' zerg/data/commands/design.core.md`
+- `grep -q 'skip-validation' mahabharatha/data/commands/plan.core.md`
+- `grep -q 'skip-validation' mahabharatha/data/commands/design.core.md`
 
 ---
 

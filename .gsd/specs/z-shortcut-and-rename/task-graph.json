@@ -10,25 +10,25 @@
     {
       "id": "ZR-L1-001",
       "title": "Rename troubleshoot.py to debug.py with symbol renames",
-      "description": "Create zerg/commands/debug.py by copying troubleshoot.py and renaming all symbols: TroubleshootPhase→DebugPhase, TroubleshootConfig→DebugConfig, TroubleshootCommand→DebugCommand, troubleshoot→debug (click command function), get_logger('troubleshoot')→get_logger('debug'). Delete the old troubleshoot.py file. Also rename .zerg/troubleshoot.py to .zerg/debug.py with the same treatment.",
+      "description": "Create mahabharatha/commands/debug.py by copying troubleshoot.py and renaming all symbols: TroubleshootPhase→DebugPhase, TroubleshootConfig→DebugConfig, TroubleshootCommand→DebugCommand, troubleshoot→debug (click command function), get_logger('troubleshoot')→get_logger('debug'). Delete the old troubleshoot.py file. Also rename .mahabharatha/troubleshoot.py to .mahabharatha/debug.py with the same treatment.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["zerg/commands/debug.py"],
+        "create": ["mahabharatha/commands/debug.py"],
         "modify": [],
-        "read": ["zerg/commands/troubleshoot.py"],
-        "delete": ["zerg/commands/troubleshoot.py"]
+        "read": ["mahabharatha/commands/troubleshoot.py"],
+        "delete": ["mahabharatha/commands/troubleshoot.py"]
       },
       "acceptance_criteria": [
-        "zerg/commands/debug.py exists with all symbols renamed",
-        "zerg/commands/troubleshoot.py is deleted",
+        "mahabharatha/commands/debug.py exists with all symbols renamed",
+        "mahabharatha/commands/troubleshoot.py is deleted",
         "No references to 'Troubleshoot' remain as class/enum prefix in debug.py",
         "Click command function is named 'debug' not 'troubleshoot'",
         "Logger uses get_logger('debug')"
       ],
       "verification": {
-        "command": "python -c \"from zerg.commands.debug import debug; print('OK')\" && ! python -c \"from zerg.commands.troubleshoot import troubleshoot\" 2>/dev/null && echo 'OLD REMOVED'",
+        "command": "python -c \"from mahabharatha.commands.debug import debug; print('OK')\" && ! python -c \"from mahabharatha.commands.troubleshoot import troubleshoot\" 2>/dev/null && echo 'OLD REMOVED'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15
@@ -36,24 +36,24 @@
     {
       "id": "ZR-L1-002",
       "title": "Update install_commands for z: shortcut support",
-      "description": "Modify zerg/commands/install_commands.py to: (1) Add Z_COMMAND_GLOB = 'z:*.md' constant. (2) In _install(), after installing zerg:*.md files, generate z:*.md symlinks in the target directory. For each installed zerg:X.md, create a symlink z:X.md pointing to the same source file. (3) In _uninstall(), also remove z:*.md files. (4) Update auto_install_commands() to handle both globs. The z:*.md files do NOT exist in the source directory — they are generated at install time as symlinks to the zerg:*.md source files.",
+      "description": "Modify mahabharatha/commands/install_commands.py to: (1) Add Z_COMMAND_GLOB = 'z:*.md' constant. (2) In _install(), after installing mahabharatha:*.md files, generate z:*.md symlinks in the target directory. For each installed mahabharatha:X.md, create a symlink z:X.md pointing to the same source file. (3) In _uninstall(), also remove z:*.md files. (4) Update auto_install_commands() to handle both globs. The z:*.md files do NOT exist in the source directory — they are generated at install time as symlinks to the mahabharatha:*.md source files.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/install_commands.py"],
+        "modify": ["mahabharatha/commands/install_commands.py"],
         "read": []
       },
       "acceptance_criteria": [
         "Z_COMMAND_GLOB constant defined",
-        "_install creates z:*.md symlinks alongside zerg:*.md",
-        "_uninstall removes both zerg:*.md and z:*.md",
+        "_install creates z:*.md symlinks alongside mahabharatha:*.md",
+        "_uninstall removes both mahabharatha:*.md and z:*.md",
         "auto_install_commands handles both globs",
-        "No z:*.md files in zerg/data/commands/ (generated at install time only)"
+        "No z:*.md files in mahabharatha/data/commands/ (generated at install time only)"
       ],
       "verification": {
-        "command": "python -c \"from zerg.commands.install_commands import install_commands; print('OK')\"",
+        "command": "python -c \"from mahabharatha.commands.install_commands import install_commands; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10
@@ -61,22 +61,22 @@
     {
       "id": "ZR-L2-001",
       "title": "Update commands __init__.py for debug import",
-      "description": "Modify zerg/commands/__init__.py: change 'from zerg.commands.troubleshoot import troubleshoot' to 'from zerg.commands.debug import debug'. Update __all__ list: replace 'troubleshoot' with 'debug'.",
+      "description": "Modify mahabharatha/commands/__init__.py: change 'from mahabharatha.commands.troubleshoot import troubleshoot' to 'from mahabharatha.commands.debug import debug'. Update __all__ list: replace 'troubleshoot' with 'debug'.",
       "phase": "core",
       "level": 2,
       "dependencies": ["ZR-L1-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/__init__.py"],
+        "modify": ["mahabharatha/commands/__init__.py"],
         "read": []
       },
       "acceptance_criteria": [
-        "Import is from zerg.commands.debug",
+        "Import is from mahabharatha.commands.debug",
         "__all__ contains 'debug' not 'troubleshoot'",
         "No references to troubleshoot remain"
       ],
       "verification": {
-        "command": "python -c \"from zerg.commands import debug; print('OK')\"",
+        "command": "python -c \"from mahabharatha.commands import debug; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5
@@ -84,13 +84,13 @@
     {
       "id": "ZR-L2-002",
       "title": "Update cli.py for debug command registration",
-      "description": "Modify zerg/cli.py: change import from 'troubleshoot' to 'debug'. Change cli.add_command(troubleshoot) to cli.add_command(debug). The CLI command will now be 'zerg debug' instead of 'zerg troubleshoot'.",
+      "description": "Modify mahabharatha/cli.py: change import from 'troubleshoot' to 'debug'. Change cli.add_command(troubleshoot) to cli.add_command(debug). The CLI command will now be 'mahabharatha debug' instead of 'mahabharatha troubleshoot'.",
       "phase": "core",
       "level": 2,
       "dependencies": ["ZR-L1-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/cli.py"],
+        "modify": ["mahabharatha/cli.py"],
         "read": []
       },
       "acceptance_criteria": [
@@ -99,32 +99,32 @@
         "No references to troubleshoot remain in cli.py"
       ],
       "verification": {
-        "command": "python -c \"from zerg.cli import cli; names = [c.name for c in cli.commands.values()]; assert 'debug' in names and 'troubleshoot' not in names; print('OK')\"",
+        "command": "python -c \"from mahabharatha.cli import cli; names = [c.name for c in cli.commands.values()]; assert 'debug' in names and 'troubleshoot' not in names; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5
     },
     {
       "id": "ZR-L2-003",
-      "title": "Rename slash command zerg:troubleshoot.md to zerg:debug.md",
-      "description": "Rename zerg/data/commands/zerg:troubleshoot.md to zerg/data/commands/zerg:debug.md. Inside the file, replace all occurrences of 'troubleshoot' with 'debug' and 'Troubleshoot' with 'Debug' in command names, titles, and references. Update cross-references like '/zerg:troubleshoot' to '/zerg:debug'. Keep the diagnostic content unchanged.",
+      "title": "Rename slash command mahabharatha:troubleshoot.md to mahabharatha:debug.md",
+      "description": "Rename mahabharatha/data/commands/mahabharatha:troubleshoot.md to mahabharatha/data/commands/mahabharatha:debug.md. Inside the file, replace all occurrences of 'troubleshoot' with 'debug' and 'Troubleshoot' with 'Debug' in command names, titles, and references. Update cross-references like '/mahabharatha:troubleshoot' to '/mahabharatha:debug'. Keep the diagnostic content unchanged.",
       "phase": "core",
       "level": 2,
       "dependencies": ["ZR-L1-001"],
       "files": {
-        "create": ["zerg/data/commands/zerg:debug.md"],
+        "create": ["mahabharatha/data/commands/mahabharatha:debug.md"],
         "modify": [],
-        "read": ["zerg/data/commands/zerg:troubleshoot.md"],
-        "delete": ["zerg/data/commands/zerg:troubleshoot.md"]
+        "read": ["mahabharatha/data/commands/mahabharatha:troubleshoot.md"],
+        "delete": ["mahabharatha/data/commands/mahabharatha:troubleshoot.md"]
       },
       "acceptance_criteria": [
-        "zerg:debug.md exists with correct content",
-        "zerg:troubleshoot.md is deleted",
+        "mahabharatha:debug.md exists with correct content",
+        "mahabharatha:troubleshoot.md is deleted",
         "All internal references say 'debug' not 'troubleshoot'",
-        "Command name tag shows /zerg:debug"
+        "Command name tag shows /mahabharatha:debug"
       ],
       "verification": {
-        "command": "test -f zerg/data/commands/zerg:debug.md && ! test -f 'zerg/data/commands/zerg:troubleshoot.md' && echo 'OK'",
+        "command": "test -f mahabharatha/data/commands/mahabharatha:debug.md && ! test -f 'mahabharatha/data/commands/mahabharatha:troubleshoot.md' && echo 'OK'",
         "timeout_seconds": 10
       },
       "estimate_minutes": 10
@@ -132,29 +132,29 @@
     {
       "id": "ZR-L2-004",
       "title": "Update diagnostics package references",
-      "description": "Update all 'troubleshoot' references in the diagnostics package: (1) zerg/diagnostics/__init__.py docstring, (2) zerg/diagnostics/recovery.py: import from debug not troubleshoot, string 'zerg troubleshoot' → 'zerg debug', (3) zerg/diagnostics/code_fixer.py: string 'zerg troubleshoot' → 'zerg debug', (4) zerg/diagnostics/knowledge_base.py: docstring, (5) zerg/diagnostics/system_diagnostics.py: docstring, (6) zerg/diagnostics/state_introspector.py: docstring. Also rename .zerg/troubleshoot.py to .zerg/debug.py if it exists, updating all internal references.",
+      "description": "Update all 'troubleshoot' references in the diagnostics package: (1) mahabharatha/diagnostics/__init__.py docstring, (2) mahabharatha/diagnostics/recovery.py: import from debug not troubleshoot, string 'mahabharatha troubleshoot' → 'mahabharatha debug', (3) mahabharatha/diagnostics/code_fixer.py: string 'mahabharatha troubleshoot' → 'mahabharatha debug', (4) mahabharatha/diagnostics/knowledge_base.py: docstring, (5) mahabharatha/diagnostics/system_diagnostics.py: docstring, (6) mahabharatha/diagnostics/state_introspector.py: docstring. Also rename .mahabharatha/troubleshoot.py to .mahabharatha/debug.py if it exists, updating all internal references.",
       "phase": "core",
       "level": 2,
       "dependencies": ["ZR-L1-001"],
       "files": {
         "create": [],
         "modify": [
-          "zerg/diagnostics/__init__.py",
-          "zerg/diagnostics/recovery.py",
-          "zerg/diagnostics/code_fixer.py",
-          "zerg/diagnostics/knowledge_base.py",
-          "zerg/diagnostics/system_diagnostics.py",
-          "zerg/diagnostics/state_introspector.py"
+          "mahabharatha/diagnostics/__init__.py",
+          "mahabharatha/diagnostics/recovery.py",
+          "mahabharatha/diagnostics/code_fixer.py",
+          "mahabharatha/diagnostics/knowledge_base.py",
+          "mahabharatha/diagnostics/system_diagnostics.py",
+          "mahabharatha/diagnostics/state_introspector.py"
         ],
         "read": []
       },
       "acceptance_criteria": [
         "No 'troubleshoot' string references remain in diagnostics package",
-        "recovery.py imports from zerg.commands.debug",
+        "recovery.py imports from mahabharatha.commands.debug",
         "All docstrings updated"
       ],
       "verification": {
-        "command": "! grep -ri 'troubleshoot' zerg/diagnostics/ && echo 'OK: No troubleshoot refs in diagnostics'",
+        "command": "! grep -ri 'troubleshoot' mahabharatha/diagnostics/ && echo 'OK: No troubleshoot refs in diagnostics'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10
@@ -162,7 +162,7 @@
     {
       "id": "ZR-L3-001",
       "title": "Rename and update unit test file for debug command",
-      "description": "Create tests/unit/test_debug_cmd.py from tests/unit/test_troubleshoot_cmd.py. Replace all 'troubleshoot' → 'debug' and 'Troubleshoot' → 'Debug' in: imports, class names, function names, string assertions, mock paths. Delete the old test_troubleshoot_cmd.py. The tests must pass against the renamed zerg/commands/debug.py module.",
+      "description": "Create tests/unit/test_debug_cmd.py from tests/unit/test_troubleshoot_cmd.py. Replace all 'troubleshoot' → 'debug' and 'Troubleshoot' → 'Debug' in: imports, class names, function names, string assertions, mock paths. Delete the old test_troubleshoot_cmd.py. The tests must pass against the renamed mahabharatha/commands/debug.py module.",
       "phase": "integration",
       "level": 3,
       "dependencies": ["ZR-L2-001", "ZR-L2-002"],
@@ -175,7 +175,7 @@
       "acceptance_criteria": [
         "test_debug_cmd.py exists with all references updated",
         "test_troubleshoot_cmd.py is deleted",
-        "All imports reference zerg.commands.debug",
+        "All imports reference mahabharatha.commands.debug",
         "All tests pass"
       ],
       "verification": {
@@ -212,7 +212,7 @@
     {
       "id": "ZR-L3-003",
       "title": "Update diagnostics test references",
-      "description": "Update tests/unit/test_diagnostics/test_recovery.py: change import from zerg.commands.troubleshoot to zerg.commands.debug. Update any string assertions referencing 'troubleshoot' to 'debug'.",
+      "description": "Update tests/unit/test_diagnostics/test_recovery.py: change import from mahabharatha.commands.troubleshoot to mahabharatha.commands.debug. Update any string assertions referencing 'troubleshoot' to 'debug'.",
       "phase": "integration",
       "level": 3,
       "dependencies": ["ZR-L2-004"],
@@ -222,7 +222,7 @@
         "read": []
       },
       "acceptance_criteria": [
-        "Import references zerg.commands.debug",
+        "Import references mahabharatha.commands.debug",
         "No 'troubleshoot' string references remain",
         "Tests pass"
       ],
@@ -235,7 +235,7 @@
     {
       "id": "ZR-L4-001",
       "title": "Update user-facing documentation",
-      "description": "Update all user-facing docs replacing 'troubleshoot' → 'debug': (1) README.md — all occurrences of 'zerg troubleshoot', '/zerg:troubleshoot', 'troubleshoot' command references. (2) claudedocs/backlog.md — update item 11 to completed. (3) claudedocs/dogfood-bugs.md — any troubleshoot refs. (4) claudedocs/zerg_scratch.md — any troubleshoot refs. (5) claudedocs/session-2026-01-26-documentation.md — any troubleshoot refs. (6) docs/tutorial-minerals-store.md — any troubleshoot refs. (7) PROJECT_INSTRUCTIONS.md — any troubleshoot refs.",
+      "description": "Update all user-facing docs replacing 'troubleshoot' → 'debug': (1) README.md — all occurrences of 'mahabharatha troubleshoot', '/mahabharatha:troubleshoot', 'troubleshoot' command references. (2) claudedocs/backlog.md — update item 11 to completed. (3) claudedocs/dogfood-bugs.md — any troubleshoot refs. (4) claudedocs/zerg_scratch.md — any troubleshoot refs. (5) claudedocs/session-2026-01-26-documentation.md — any troubleshoot refs. (6) docs/tutorial-minerals-store.md — any troubleshoot refs. (7) PROJECT_INSTRUCTIONS.md — any troubleshoot refs.",
       "phase": "testing",
       "level": 4,
       "dependencies": ["ZR-L3-001", "ZR-L3-002", "ZR-L3-003"],
@@ -254,8 +254,8 @@
       },
       "acceptance_criteria": [
         "No 'troubleshoot' references remain in any listed file (except historical backlog Completed entries)",
-        "All /zerg:troubleshoot → /zerg:debug",
-        "All 'zerg troubleshoot' → 'zerg debug'"
+        "All /mahabharatha:troubleshoot → /mahabharatha:debug",
+        "All 'mahabharatha troubleshoot' → 'mahabharatha debug'"
       ],
       "verification": {
         "command": "! grep -ri 'troubleshoot' README.md docs/tutorial-minerals-store.md PROJECT_INSTRUCTIONS.md && echo 'OK: No troubleshoot refs in main docs'",
@@ -266,7 +266,7 @@
     {
       "id": "ZR-L4-002",
       "title": "Update CLAUDE.md and project configuration docs",
-      "description": "Update CLAUDE.md: replace all 'troubleshoot' → 'debug' and '/zerg:troubleshoot' → '/zerg:debug'. Update .gsd/PROJECT.md if it has troubleshoot references. Update tasks/COVERAGE-100-BACKLOG.md if it references troubleshoot. Update .gsd/tasks/prompts/L3-quality-commands.md if it references troubleshoot.",
+      "description": "Update CLAUDE.md: replace all 'troubleshoot' → 'debug' and '/mahabharatha:troubleshoot' → '/mahabharatha:debug'. Update .gsd/PROJECT.md if it has troubleshoot references. Update tasks/COVERAGE-100-BACKLOG.md if it references troubleshoot. Update .gsd/tasks/prompts/L3-quality-commands.md if it references troubleshoot.",
       "phase": "testing",
       "level": 4,
       "dependencies": ["ZR-L3-001", "ZR-L3-002", "ZR-L3-003"],
@@ -283,7 +283,7 @@
       },
       "acceptance_criteria": [
         "No 'troubleshoot' references remain in CLAUDE.md",
-        "All /zerg:troubleshoot → /zerg:debug"
+        "All /mahabharatha:troubleshoot → /mahabharatha:debug"
       ],
       "verification": {
         "command": "! grep -i 'troubleshoot' CLAUDE.md && echo 'OK: CLAUDE.md clean'",
@@ -294,7 +294,7 @@
     {
       "id": "ZR-L5-001",
       "title": "Quality gates and final verification",
-      "description": "Run full quality sweep: (1) ruff check on all modified files, (2) mypy on zerg/ and tests/, (3) full test suite, (4) grep -ri troubleshoot across entire project to catch any missed references (excluding .git/, .gsd/specs/troubleshoot-enhancement/ which is historical, and node_modules/). (5) Verify zerg install-commands --force works and creates both zerg:*.md and z:*.md. (6) Verify z:debug.md would be created.",
+      "description": "Run full quality sweep: (1) ruff check on all modified files, (2) mypy on mahabharatha/ and tests/, (3) full test suite, (4) grep -ri troubleshoot across entire project to catch any missed references (excluding .git/, .gsd/specs/troubleshoot-enhancement/ which is historical, and node_modules/). (5) Verify mahabharatha install-commands --force works and creates both mahabharatha:*.md and z:*.md. (6) Verify z:debug.md would be created.",
       "phase": "quality",
       "level": 5,
       "dependencies": ["ZR-L4-001", "ZR-L4-002"],
@@ -308,10 +308,10 @@
         "mypy passes with no errors",
         "All tests pass",
         "No stray 'troubleshoot' references outside historical spec files",
-        "install-commands produces both zerg: and z: prefixed files"
+        "install-commands produces both mahabharatha: and z: prefixed files"
       ],
       "verification": {
-        "command": "ruff check zerg/ tests/ && python -m mypy zerg/ --ignore-missing-imports && python -m pytest tests/ -x -q 2>&1 | tail -5",
+        "command": "ruff check mahabharatha/ tests/ && python -m mypy mahabharatha/ --ignore-missing-imports && python -m pytest tests/ -x -q 2>&1 | tail -5",
         "timeout_seconds": 300
       },
       "estimate_minutes": 15

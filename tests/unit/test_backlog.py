@@ -1,4 +1,4 @@
-"""Comprehensive tests for the ZERG backlog module."""
+"""Comprehensive tests for the MAHABHARATHA backlog module."""
 
 from __future__ import annotations
 

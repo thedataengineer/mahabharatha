@@ -185,7 +185,7 @@
     {
       "id": "TASK-007",
       "title": "Update CI config: docker exclusion + coverage floor",
-      "description": "Update .github/workflows/ci.yml:\n\n1. Change test marker from `-m \"not slow\"` to `-m \"not slow and not docker\"` (line 86)\n2. Add `--cov=zerg --cov-fail-under=75` to the test command (line 86)\n\nThe result should be:\n```yaml\nrun: pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m \"not slow and not docker\" --cov=zerg --cov-fail-under=75 -v --tb=short --timeout=120 --splits 2 --group ${{ matrix.shard }}\n```\n\nDo NOT change shard count (keep 2). Do NOT modify any other jobs.",
+      "description": "Update .github/workflows/ci.yml:\n\n1. Change test marker from `-m \"not slow\"` to `-m \"not slow and not docker\"` (line 86)\n2. Add `--cov=mahabharatha --cov-fail-under=75` to the test command (line 86)\n\nThe result should be:\n```yaml\nrun: pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m \"not slow and not docker\" --cov=mahabharatha --cov-fail-under=75 -v --tb=short --timeout=120 --splits 2 --group ${{ matrix.shard }}\n```\n\nDo NOT change shard count (keep 2). Do NOT modify any other jobs.",
       "phase": "integration",
       "level": 2,
       "dependencies": ["TASK-001", "TASK-002"],
@@ -204,12 +204,12 @@
       "skills_required": ["yaml", "ci"],
       "consumers": ["TASK-008"],
       "integration_test": null,
-      "context": "## Task Context\nUpdate line 86 of .github/workflows/ci.yml.\n\nCurrent:\n```yaml\nrun: pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m \"not slow\" -v --tb=short --timeout=120 --splits 2 --group ${{ matrix.shard }}\n```\n\nTarget:\n```yaml\nrun: pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m \"not slow and not docker\" --cov=zerg --cov-fail-under=75 -v --tb=short --timeout=120 --splits 2 --group ${{ matrix.shard }}\n```\n\nDo NOT change shard count. Do NOT modify other jobs (quality, smoke, audit)."
+      "context": "## Task Context\nUpdate line 86 of .github/workflows/ci.yml.\n\nCurrent:\n```yaml\nrun: pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m \"not slow\" -v --tb=short --timeout=120 --splits 2 --group ${{ matrix.shard }}\n```\n\nTarget:\n```yaml\nrun: pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m \"not slow and not docker\" --cov=mahabharatha --cov-fail-under=75 -v --tb=short --timeout=120 --splits 2 --group ${{ matrix.shard }}\n```\n\nDo NOT change shard count. Do NOT modify other jobs (quality, smoke, audit)."
     },
     {
       "id": "TASK-008",
       "title": "Final verification + artifacts",
-      "description": "Run full verification suite and update artifacts:\n\n1. Full test suite: `pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow and not docker' --timeout=120`\n2. Coverage check: `pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow and not docker' --cov=zerg --cov-fail-under=75 --timeout=120`\n3. Smoke tests: `pytest -m smoke -x --timeout=5`\n4. Import check: `python -c 'import zerg; print(\"OK\")'`\n5. Validate commands: `python -m zerg.validate_commands`\n6. Count total tests: must be in range 3,200-3,500\n7. Regenerate `.test_durations`: `pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow and not docker' --store-durations --timeout=120`\n8. Update CHANGELOG.md under [Unreleased] with phase 6-8 summary\n\nIf any check fails, report the failure clearly.",
+      "description": "Run full verification suite and update artifacts:\n\n1. Full test suite: `pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow and not docker' --timeout=120`\n2. Coverage check: `pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow and not docker' --cov=mahabharatha --cov-fail-under=75 --timeout=120`\n3. Smoke tests: `pytest -m smoke -x --timeout=5`\n4. Import check: `python -c 'import mahabharatha; print(\"OK\")'`\n5. Validate commands: `python -m mahabharatha.validate_commands`\n6. Count total tests: must be in range 3,200-3,500\n7. Regenerate `.test_durations`: `pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow and not docker' --store-durations --timeout=120`\n8. Update CHANGELOG.md under [Unreleased] with phase 6-8 summary\n\nIf any check fails, report the failure clearly.",
       "phase": "verification",
       "level": 3,
       "dependencies": ["TASK-001", "TASK-002", "TASK-003", "TASK-004", "TASK-005", "TASK-006", "TASK-007"],
@@ -222,7 +222,7 @@
         "read": []
       },
       "verification": {
-        "command": "pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow and not docker' --cov=zerg --cov-fail-under=75 -q --timeout=120 && pytest -m smoke -x --timeout=5 -q && python -c 'import zerg; print(\"OK\")' && python -m zerg.validate_commands",
+        "command": "pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow and not docker' --cov=mahabharatha --cov-fail-under=75 -q --timeout=120 && pytest -m smoke -x --timeout=5 -q && python -c 'import mahabharatha; print(\"OK\")' && python -m mahabharatha.validate_commands",
         "timeout_seconds": 300
       },
       "estimate_minutes": 15,

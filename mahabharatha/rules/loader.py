@@ -1,4 +1,4 @@
-"""Rule loading and filtering for the ZERG engineering rules framework."""
+"""Rule loading and filtering for the MAHABHARATHA engineering rules framework."""
 
 from __future__ import annotations
 

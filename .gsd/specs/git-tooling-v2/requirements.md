@@ -5,7 +5,7 @@
 **Sub-Issues**: #42, #43, #44, #45, #46, #47, #48, #49
 
 ## Problem Statement
-Current `/zerg:git` has 6 basic actions with naive commit message generation. The entire git workflow pipeline — from commit through PR to release — lacks AI intelligence, safety nets, and project-context awareness. No competing tool offers a unified solution.
+Current `/mahabharatha:git` has 6 basic actions with naive commit message generation. The entire git workflow pipeline — from commit through PR to release — lacks AI intelligence, safety nets, and project-context awareness. No competing tool offers a unified solution.
 
 ## Functional Requirements
 
@@ -42,7 +42,7 @@ Current `/zerg:git` has 6 basic actions with naive commit message generation. Th
 
 ### FR-5: Rescue System (#46) — P1
 - Layer 1: Enhanced reflog with human-readable descriptions
-- Layer 2: Operation log (.zerg/git-ops.log) with full context
+- Layer 2: Operation log (.mahabharatha/git-ops.log) with full context
 - Layer 3: Auto-snapshots (lightweight tags) before risky operations
 - Commands: --list, --undo, --restore, --recover-branch
 - Risk detection for rebase/merge/reset/force-push
@@ -59,22 +59,22 @@ Current `/zerg:git` has 6 basic actions with naive commit message generation. Th
 - Pattern-based heuristic analysis (no LLM API calls)
 - Confidence filtering (>80% threshold, configurable)
 - Actionable fix suggestions per finding
-- Report saved to .zerg/review-reports/
+- Report saved to .mahabharatha/review-reports/
 
 ### FR-8: Architecture + Config (#49) — P0
-- `zerg/git/` package with 7 engine modules
+- `mahabharatha/git/` package with 7 engine modules
 - GitRunner base class extracted from GitOps
-- GitOps backward-compatible via shim in `zerg/git_ops.py`
-- GitConfig Pydantic model in `.zerg/config.yaml`
-- Context detection: solo / team / swarm
+- GitOps backward-compatible via shim in `mahabharatha/git_ops.py`
+- GitConfig Pydantic model in `.mahabharatha/config.yaml`
+- Context detection: solo / team / akshauhini
 
 ## Non-Functional Requirements
 
-- **Backward compatibility**: `from zerg.git_ops import GitOps` must keep working
+- **Backward compatibility**: `from mahabharatha.git_ops import GitOps` must keep working
 - **Performance**: All operations complete in <5s (excluding network I/O)
 - **Test coverage**: >80% per engine module
 - **No new dependencies**: Use stdlib + existing deps (click, rich, pydantic, pyyaml)
-- **Command validation**: `python -m zerg.validate_commands` must pass
+- **Command validation**: `python -m mahabharatha.validate_commands` must pass
 - **Split compliance**: git.md → git.core.md + git.details.md when >300 lines
 
 ## Scope Boundaries
@@ -84,14 +84,14 @@ Current `/zerg:git` has 6 basic actions with naive commit message generation. Th
 
 ## Dependencies
 - `gh` CLI for PR creation and GitHub releases (graceful degradation if absent)
-- Existing `zerg/git_ops.py` GitOps class (migrated, not rewritten)
+- Existing `mahabharatha/git_ops.py` GitOps class (migrated, not rewritten)
 
 ## Acceptance Criteria
-- [ ] `zerg/git/` package with all 7 engines + base + types + config
-- [ ] `zerg/git_ops.py` is a backward-compatible shim
+- [ ] `mahabharatha/git/` package with all 7 engines + base + types + config
+- [ ] `mahabharatha/git_ops.py` is a backward-compatible shim
 - [ ] 11 actions in CLI: commit, branch, merge, sync, history, finish, pr, release, review, rescue, bisect
-- [ ] GitConfig in .zerg/config.yaml with all sections
+- [ ] GitConfig in .mahabharatha/config.yaml with all sections
 - [ ] git.core.md + git.details.md split
 - [ ] ~140 new tests across 10 test files, all passing
-- [ ] `python -m zerg.validate_commands` passes
+- [ ] `python -m mahabharatha.validate_commands` passes
 - [ ] All 4 existing GitOps consumers work without changes

@@ -1,4 +1,4 @@
-"""Tests for ZERG verification gate pipeline."""
+"""Tests for MAHABHARATHA verification gate pipeline."""
 
 import json
 from datetime import datetime, timedelta

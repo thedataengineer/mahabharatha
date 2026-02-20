@@ -13,7 +13,7 @@ Mahabharatha is a distributed software development system that coordinates multi
 - [Execution Flow](#execution-flow)
 - [Module Reference](#module-reference)
 - [Cross-Cutting Capabilities](#cross-cutting-capabilities)
-- [Zergling Execution Model](#warrior-execution-model)
+- [Warrior Execution Model](#warrior-execution-model)
 - [Resilience](#resilience)
 - [State Management](#state-management)
 - [Claude Code Task Integration](#claude-code-task-integration)
@@ -30,7 +30,7 @@ Mahabharatha is a distributed software development system that coordinates multi
 
 ### Spec as Memory
 
-Zerglings do not share conversation context. They share:
+Warriors do not share conversation context. They share:
 - `requirements.md` — what to build
 - `design.md` — how to build it
 - `task-graph.json` — atomic work units
@@ -75,7 +75,7 @@ Each warrior operates in its own git worktree with its own branch:
 .mahabharatha-worktrees/{feature}/worker-1/  ->  branch: mahabharatha/{feature}/worker-1
 ```
 
-Zerglings commit independently. No filesystem conflicts.
+Warriors commit independently. No filesystem conflicts.
 
 ---
 
@@ -95,37 +95,46 @@ Each layer also serves as a checkpoint. If requirements are unclear, you find ou
 
 ### Layer Architecture
 
-```
-+---------------------------------------------------------------------+
-|                     Layer 1: Planning                                |
-|          requirements.md + INFRASTRUCTURE.md                        |
-+---------------------------------------------------------------------+
-                              |
-                              v
-+---------------------------------------------------------------------+
-|                     Layer 2: Design                                  |
-|              design.md + task-graph.json                             |
-+---------------------------------------------------------------------+
-                              |
-                              v
-+---------------------------------------------------------------------+
-|                  Layer 3: Orchestration                              |
-|   Zergling lifecycle - Level sync - Branch merging - Monitoring     |
-+---------------------------------------------------------------------+
-          |                   |                   |
-          v                   v                   v
-+-------------+     +-------------+     +-------------+
-| Zergling 0  |     | Zergling 1  |     | Zergling N  |
-|  (worktree) |     |  (worktree) |     |  (worktree) |
-+-------------+     +-------------+     +-------------+
-          |                   |                   |
-          +-------------------+-------------------+
-                              |
-                              v
-+---------------------------------------------------------------------+
-|                  Layer 4: Quality Gates                              |
-|           Lint - Type-check - Test - Merge to main                  |
-+---------------------------------------------------------------------+
+```mermaid
+graph TD
+    subgraph "Layer 1: Planning"
+        L1["requirements.md + INFRASTRUCTURE.md"]
+    end
+
+    subgraph "Layer 2: Design"
+        L2["design.md + task-graph.json"]
+    end
+
+    subgraph "Layer 3: Orchestration"
+        L3["Warrior lifecycle - Level sync - Branch merging - Monitoring"]
+    end
+
+    subgraph "Execution"
+        W0["Warrior 0 (worktree)"]
+        W1["Warrior 1 (worktree)"]
+        WN["Warrior N (worktree)"]
+    end
+
+    subgraph "Layer 4: Quality Gates"
+        L4["Lint - Type-check - Test - Merge to main"]
+    end
+
+    L1 --> L2
+    L2 --> L3
+    L3 --> W0
+    L3 --> W1
+    L3 --> WN
+    W0 --> L4
+    W1 --> L4
+    WN --> L4
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 ### How the Layers Connect
@@ -154,23 +163,35 @@ This separation also makes Mahabharatha more maintainable. Core orchestration lo
 
 ### Plugin Architecture
 
-```
-PluginRegistry
-+-- hooks: dict[str, list[Callable]]     # LifecycleHookPlugin callbacks
-+-- gates: dict[str, QualityGatePlugin]  # Named quality gate plugins
-+-- launchers: dict[str, LauncherPlugin] # Named launcher plugins
+```mermaid
+classDiagram
+    class PluginRegistry {
+        +hooks: dict[str, list[Callable]]
+        +gates: dict[str, QualityGatePlugin]
+        +launchers: dict[str, LauncherPlugin]
+    }
 
-QualityGatePlugin (ABC)
-+-- name: str
-+-- run(ctx: GateContext) -> GateRunResult
+    class QualityGatePlugin {
+        <<Abstract>>
+        +name: str
+        +run(ctx: GateContext) GateRunResult
+    }
 
-LifecycleHookPlugin (ABC)
-+-- name: str
-+-- on_event(event: LifecycleEvent) -> None
+    class LifecycleHookPlugin {
+        <<Abstract>>
+        +name: str
+        +on_event(event: LifecycleEvent)
+    }
 
-LauncherPlugin (ABC)
-+-- name: str
-+-- create_launcher(config) -> WorkerLauncher
+    class LauncherPlugin {
+        <<Abstract>>
+        +name: str
+        +create_launcher(config) WorkerLauncher
+    }
+
+    PluginRegistry o-- QualityGatePlugin
+    PluginRegistry o-- LifecycleHookPlugin
+    PluginRegistry o-- LauncherPlugin
 ```
 
 ### How Plugins Connect
@@ -207,11 +228,19 @@ The most expensive bugs are requirements bugs—building the wrong thing entirel
 
 #### Planning Flow
 
-```
-User Requirements -> [Socratic Discovery] -> requirements.md
-                                                |
-                                                v
-                                    .gsd/specs/{feature}/requirements.md
+```mermaid
+graph LR
+    UR["User Requirements"] --> SD["Socratic Discovery"]
+    SD --> RM["requirements.md"]
+    RM --> Path[".gsd/specs/{feature}/requirements.md"]
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 ### Design Phase (`/mahabharatha:design`)
@@ -226,12 +255,21 @@ Parallel execution requires careful coordination. If two workers both try to mod
 
 #### Design Flow
 
-```
-requirements.md -> [Architecture Analysis] -> task-graph.json + design.md
-                                                |
-                    +---------------------------+---------------------------+
-                    v                           v                           v
-            Level 1 Tasks              Level 2 Tasks              Level N Tasks
+```mermaid
+graph TD
+    RM["requirements.md"] --> AA["Architecture Analysis"]
+    AA --> TG["task-graph.json + design.md"]
+    TG --> L1["Level 1 Tasks"]
+    TG --> L2["Level 2 Tasks"]
+    TG --> LN["Level N Tasks"]
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 ### Kurukshetra Phase (`/mahabharatha:Kurukshetra`)
@@ -248,40 +286,44 @@ The level-based approach ensures dependencies are respected. All Level 1 tasks (
 
 #### Kurukshetra Flow
 
-```
-[Orchestrator Start]
-        |
-        v
-[Load task-graph.json] -> [Assign tasks to warriors]
-        |
-        v
-[Create git worktrees]
-        |
-        v
-[Spawn N warrior processes]
-        |
-        v
-+---------------------------------------------------------------------+
-|  FOR EACH LEVEL:                                                    |
-|    1. Zerglings execute tasks in PARALLEL                           |
-|    2. Poll until all level tasks complete                           |
-|    3. MERGE PROTOCOL:                                               |
-|       - Merge all warrior branches -> staging                      |
-|       - Run quality gates                                           |
-|       - Promote staging -> main                                     |
-|    4. Rebase warrior branches                                      |
-|    5. Advance to next level                                         |
-+---------------------------------------------------------------------+
-        |
-        v
-[All tasks complete]
+```mermaid
+graph TD
+    Start["Orchestrator Start"] --> Load["Load task-graph.json"]
+    Load --> Assign["Assign tasks to warriors"]
+    Assign --> Worktree["Create git worktrees"]
+    Worktree --> Spawn["Spawn N warrior processes"]
+    Spawn --> LevelLoop{{"FOR EACH LEVEL"}}
+
+    subgraph "Level Processing"
+        Execute["Warriors execute tasks in PARALLEL"]
+        Poll["Poll until all level tasks complete"]
+        MergeProtocol["MERGE PROTOCOL"]
+        Rebase["Rebase warrior branches"]
+        Advance["Advance to next level"]
+    end
+
+    LevelLoop --> Execute
+    Execute --> Poll
+    Poll --> MergeProtocol
+    MergeProtocol --> Rebase
+    Rebase --> Advance
+    Advance -- "More levels" --> LevelLoop
+    Advance -- "Finished" --> Finish["All tasks complete"]
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 ### How the Phases Connect
 
 The phases form a pipeline: planning feeds design, design feeds Kurukshetra. But it's not just data flow—it's also quality gates between each transition. You must approve the requirements before design starts. You must approve the task graph before Kurukshetra starts. This prevents expensive mistakes from propagating through the pipeline.
 
-### Zergling Protocol
+### Warrior Protocol
 
 Each warrior:
 
@@ -312,7 +354,7 @@ Mahabharatha is composed of 80+ Python modules organized into functional groups.
 | `orchestrator.py` | Fleet management, level transitions, merge triggers |
 | `levels.py` | Level-based execution control, dependency enforcement |
 | `state.py` | Thread-safe file-based state persistence |
-| `worker_protocol.py` | Zergling-side execution, Claude Code invocation |
+| `worker_protocol.py` | Warrior-side execution, Claude Code invocation |
 | `launcher.py` | Abstract worker spawning (subprocess/container) |
 | `launcher_configurator.py` | Launcher mode detection and configuration |
 | `worker_manager.py` | Worker lifecycle management, health tracking |
@@ -533,16 +575,16 @@ Commands are implemented as Python modules in `mahabharatha/commands/` and/or as
 | `/mahabharatha:explain` | (spec only) | Educational code explanations |
 | `/mahabharatha:index` | (spec only) | Project documentation wiki generation |
 | `/mahabharatha:select-tool` | (spec only) | Intelligent tool routing |
-| `/mahabharatha:worker` | `worker_protocol.py` | Zergling execution protocol |
+| `/mahabharatha:worker` | `worker_protocol.py` | Warrior execution protocol |
 | `/mahabharatha:wiki` | `wiki.py` | Generate wiki documentation pages |
 | `install_commands.py` | | Install/uninstall slash commands |
 | `loop_mixin.py` | | Shared improvement loop mixin for commands |
 
 ---
 
-## Zergling Execution Model
+## Warrior Execution Model
 
-### What Is a Zergling?
+### What Is a Warrior?
 
 A warrior is a single Claude Code worker instance—an AI that reads the spec files and writes code to complete its assigned tasks. The name comes from the idea of overwhelming a feature with many small, focused workers rather than one monolithic process.
 
@@ -556,25 +598,33 @@ By keeping warriors fully isolated, Mahabharatha achieves: crash recovery (just 
 
 ### Isolation Strategy
 
-```
-+---------------------------------------------------------------------+
-|                    MahabharathaLING ISOLATION LAYERS                         |
-+---------------------------------------------------------------------+
-| 1. Git Worktree: .mahabharatha-worktrees/{feature}-worker-{id}/             |
-|    - Independent file system                                        |
-|    - Separate git history                                           |
-|    - Own branch: mahabharatha/{feature}/worker-{id}                         |
-+---------------------------------------------------------------------+
-| 2. Process Isolation                                                |
-|    - Separate process per warrior                                  |
-|    - Independent memory space                                       |
-|    - Communication via state files                                  |
-+---------------------------------------------------------------------+
-| 3. Spec-Driven Execution                                            |
-|    - No conversation history sharing                                |
-|    - Read specs fresh each time                                     |
-|    - Stateless, restartable                                         |
-+---------------------------------------------------------------------+
+```mermaid
+graph TD
+    subgraph "Isolation Layer 1: Git Worktree"
+        W1["Independent file system"]
+        W2["Separate git history"]
+        W3["Own branch: mahabharatha/{feature}/worker-{id}"]
+    end
+
+    subgraph "Isolation Layer 2: Process Isolation"
+        P1["Separate process per warrior"]
+        P2["Independent memory space"]
+        P3["Communication via state files"]
+    end
+
+    subgraph "Isolation Layer 3: Spec-Driven Execution"
+        S1["No conversation history sharing"]
+        S2["Read specs fresh each time"]
+        S3["Stateless, restartable"]
+    end
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 ### How Isolation Layers Work Together
@@ -599,21 +649,35 @@ Rather than hard-coding one approach, Mahabharatha lets you swap launchers. Your
 
 #### Launcher Architecture
 
-```
-WorkerLauncher (ABC)
-+-- SubprocessLauncher
-|   +-- spawn() -> subprocess.Popen
-|   +-- monitor() -> Check process status
-|   +-- terminate() -> Kill process
-|
-+-- ContainerLauncher
-|   +-- spawn() -> docker run
-|   +-- monitor() -> Check container status
-|   +-- terminate() -> Stop/kill container
-|
-+-- LauncherConfigurator
-    +-- detect_mode() -> auto-select launcher
-    +-- configure() -> build launcher with settings
+```mermaid
+classDiagram
+    class WorkerLauncher {
+        <<Abstract>>
+        +spawn()*
+        +monitor()*
+        +terminate()*
+    }
+
+    class SubprocessLauncher {
+        +spawn() -> subprocess.Popen
+        +monitor() Check status
+        +terminate() Kill process
+    }
+
+    class ContainerLauncher {
+        +spawn() -> docker run
+        +monitor() Check container status
+        +terminate() Stop/kill container
+    }
+
+    class LauncherConfigurator {
+        +detect_mode()
+        +configure()
+    }
+
+    WorkerLauncher <|-- SubprocessLauncher
+    WorkerLauncher <|-- ContainerLauncher
+    LauncherConfigurator ..> WorkerLauncher : configures
 ```
 
 #### How Launchers Connect
@@ -642,7 +706,7 @@ Plugin launchers are resolved via `get_plugin_launcher(name, registry)` which de
 
 - Monitor token usage via `ContextTracker`
 - Checkpoint at 70% context threshold (configurable)
-- Zergling exits gracefully (code 2)
+- Warrior exits gracefully (code 2)
 - Orchestrator restarts warrior from checkpoint
 
 ---
@@ -665,23 +729,24 @@ This also enables progressive enhancement. Start with defaults, then turn up ver
 
 Mahabharatha includes 8 cross-cutting capabilities that influence worker behavior across all phases:
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    Cross-Cutting Capability Flow                     │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  CLI Flags ──┬──► CapabilityResolver ──► ResolvedCapabilities        │
-│              │          ▲                       │                    │
-│  Config ─────┤          │                       ▼                    │
-│              │    Task Graph              Worker Env Vars            │
-│  Task ───────┴─── Analysis                (Mahabharatha_DEPTH, etc.)         │
-│                                                 │                    │
-│                                                 ▼                    │
-│                                        ContextEngineeringPlugin      │
-│                                                 │                    │
-│                                                 ▼                    │
-│                                        Task-Scoped Context           │
-└─────────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    CLI["CLI Flags"] --> CR["CapabilityResolver"]
+    Config["Config"] --> CR
+    Task["Task Analysis"] --> CR
+
+    CR --> RC["ResolvedCapabilities"]
+    RC --> EnvVars["Worker Env Vars (MAHABHARATHA_DEPTH, etc.)"]
+    EnvVars --> CEP["ContextEngineeringPlugin"]
+    CEP --> STC["Task-Scoped Context"]
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 ### How Capabilities Flow
@@ -739,16 +804,24 @@ Loops also detect dead ends. If the quality score stops improving (plateau) or g
 
 The `LoopController` enables iterative refinement:
 
-```
-Initial Score ──► Run Gates ──► Check Convergence ──► Iterate or Stop
-                      │                 │
-                      │         ┌───────┴───────┐
-                      │         ▼               ▼
-                      │    Converged        Plateau/Regressed
-                      │    (score ≥ 0.99)   (no improvement)
-                      │         │               │
-                      ▼         ▼               ▼
-              Improve Code   Complete        Complete
+```mermaid
+graph TD
+    InitialScore["Initial Score"] --> RunGates["Run Gates"]
+    RunGates --> CheckConv{"Check Convergence"}
+
+    CheckConv -- "Converged (score >= 0.99)" --> Complete_C["Complete"]
+    CheckConv -- "Plateau/Regressed (no improvement)" --> Complete_P["Complete"]
+    CheckConv -- "Still Improving" --> Improve["Improve Code"]
+
+    Improve --> RunGates
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 Loop status values: `RUNNING`, `CONVERGED`, `PLATEAU`, `REGRESSED`, `MAX_ITERATIONS`, `ABORTED`
@@ -785,13 +858,14 @@ When an external service (like the Claude API) has a temporary outage, repeatedl
 
 #### Circuit Breaker Flow
 
-```
-Closed ──► Failures exceed threshold ──► Open
-   ▲                                       │
-   │                                       │
-   └── Cooldown expires, test succeeds ◄───┘
-                                     │
-                               Half-Open
+```mermaid
+stateDiagram-v2
+    [*] --> Closed
+
+    Closed --> Open : Failures exceed threshold
+    Open --> HalfOpen : Cooldown expires
+    HalfOpen --> Closed : Test succeeds
+    HalfOpen --> Open : Test fails
 ```
 
 In the **Closed** state, requests flow normally. After enough failures hit the threshold, the breaker **Opens**—all requests fail fast without even trying. After a cooldown period, it goes **Half-Open** and allows one test request. If that succeeds, back to Closed. If it fails, back to Open.
@@ -842,13 +916,20 @@ A task failing verification (the code doesn't work) is different from a worker c
 
 #### Crash Recovery Flow
 
-```
-Worker Crash ──► Detect via Heartbeat ──► Mark Task "worker_crash"
-                                               │
-                               ┌───────────────┴───────────────┐
-                               ▼                               ▼
-                    Reset Task to PENDING           DO NOT increment
-                    (for reassignment)              retry_count
+```mermaid
+graph TD
+    Crash["Worker Crash"] --> Heartbeat["Detect via Heartbeat"]
+    Heartbeat --> Mark["Mark Task 'worker_crash'"]
+    Mark --> Reset["Reset Task to PENDING (for reassignment)"]
+    Mark --> NoInc["DO NOT increment retry_count"]
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 The heartbeat monitor periodically checks whether workers are alive. When a worker stops responding, the orchestrator marks the task status as `worker_crash`, which distinguishes it from `failed` (verification failure). The task returns to PENDING status and gets reassigned—but crucially, the retry count stays the same.
@@ -936,9 +1017,15 @@ Clear states prevent ambiguity. "Is this task done? Can I claim it? Has it been 
 
 #### Status Flow
 
-```
-pending -> claimed -> in_progress -> verifying -> complete
-                                              \-> failed -> retry?
+```mermaid
+stateDiagram-v2
+    pending --> claimed
+    claimed --> in_progress
+    in_progress --> verifying
+    verifying --> complete
+    verifying --> failed
+    failed --> retry : retry?
+    retry --> pending
 ```
 
 **Pending**: The task exists but no worker has picked it up yet.
@@ -976,18 +1063,24 @@ The Claude Code Task system is the **authoritative backbone** for all Mahabharat
 
 ### How Tasks Flow
 
-```
-/mahabharatha:design -> TaskCreate for each task (subject: "[L{level}] {title}")
-                     |
-                     v
-/mahabharatha:Kurukshetra   -> TaskUpdate (in_progress) when worker claims task
-                     |
-                     v
-Worker       -> TaskUpdate (completed) on success
-                TaskUpdate (failed) on failure
-                     |
-                     v
-/mahabharatha:status -> TaskList to read current state
+```mermaid
+graph TD
+    Design["/mahabharatha:design"] --> Create["TaskCreate for each task (subject: '[Lx] title')"]
+    Create --> Kurukshetra["/mahabharatha:Kurukshetra"]
+    Kurukshetra --> Claim["TaskUpdate (in_progress) when worker claims task"]
+    Claim --> Worker{"Worker Result"}
+    Worker -- "Success" --> Completed["TaskUpdate (completed)"]
+    Worker -- "Failure" --> Failed["TaskUpdate (failed)"]
+    Completed --> Status["/mahabharatha:status -> TaskList to read state"]
+    Failed --> Status
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 ### How Task Integration Works
@@ -1046,36 +1139,31 @@ Mahabharatha includes a context engineering plugin that reduces per-worker token
 
 ### Context Architecture
 
-```
-/mahabharatha:design phase:
-  requirements.md + design.md
-      |
-      v
-  [Section Parser] → Extract relevant paragraphs per task
-      |
-      v
-  [Security Filter] → Match .py → Python rules, .js → JS rules
-      |
-      v
-  [Context Assembler] → Combine within token budget (default: 4000)
-      |
-      v
-  task-graph.json (each task has a "context" field)
+```mermaid
+graph TD
+    subgraph "Design Phase"
+        Spec["requirements.md + design.md"] --> SectionParser["Section Parser: Extract relevant paragraphs"]
+        SectionParser --> SecurityFilter["Security Filter: Match extensions to rules"]
+        SecurityFilter --> Assembler["Context Assembler: Combine within budget"]
+        Assembler --> TaskGraph["task-graph.json (with context field)"]
+    end
 
-/mahabharatha:Kurukshetra phase:
-  Worker receives task assignment
-      |
-      v
-  Load .core.md (not full command file)
-      |
-      v
-  Load task.context (not full spec files)
-      |
-      v
-  Load filtered security rules (not all rules)
-      |
-      v
-  Execute task with scoped context
+    subgraph "Kurukshetra Phase"
+        TaskAssignment["Worker receives task assignment"] --> SplitCmd["Load .core.md (not full command file)"]
+        SplitCmd --> LoadContext["Load task.context (not full spec files)"]
+        LoadContext --> LoadRules["Load filtered security rules"]
+        LoadRules --> Execute["Execute task with scoped context"]
+    end
+
+    TaskGraph --> TaskAssignment
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 ### How Context Gets Built
@@ -1114,47 +1202,21 @@ The `mahabharatha/diagnostics/` package powers `/mahabharatha:debug` with intell
 
 ### Diagnostic Flow
 
-```
-Error Detected
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│  PHASE 1: ERROR INTELLIGENCE                                         │
-│  error_intel.py: Parse error → Fingerprint → Classify                │
-│  - Multi-language support (Python, JavaScript, Go, Rust)            │
-│  - Stack trace parsing and chain analysis                           │
-│  - Error fingerprinting for deduplication                           │
-└─────────────────────────────────────────────────────────────────────┘
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│  PHASE 2: LOG CORRELATION                                            │
-│  log_correlator.py: Correlate across workers → Build timeline        │
-│  - Temporal clustering (events within time windows)                 │
-│  - Cross-worker correlation via Jaccard similarity                  │
-│  - Pattern analysis and trend detection                             │
-└─────────────────────────────────────────────────────────────────────┘
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│  PHASE 3: HYPOTHESIS GENERATION                                      │
-│  hypothesis_engine.py: Generate → Score → Test hypotheses            │
-│  - Bayesian prior/posterior probability calculation                 │
-│  - Knowledge base of 30+ known failure patterns                     │
-│  - Evidence-weighted hypothesis ranking                             │
-└─────────────────────────────────────────────────────────────────────┘
-      │
-      ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│  PHASE 4: RECOVERY PLANNING                                          │
-│  recovery.py: Generate risk-rated recovery plan                      │
-│  - SAFE: Non-destructive fixes (e.g., install missing dependency)   │
-│  - MODERATE: Reversible changes (e.g., reset task state)            │
-│  - DESTRUCTIVE: Irreversible actions (e.g., clean worktrees)        │
-└─────────────────────────────────────────────────────────────────────┘
-      │
-      ▼
-Execute with --fix (optional)
+```mermaid
+graph TD
+    Error["Error Detected"] --> P1["PHASE 1: ERROR INTELLIGENCE (Parse -> Fingerprint -> Classify)"]
+    P1 --> P2["PHASE 2: LOG CORRELATION (Correlate across workers -> Build timeline)"]
+    P2 --> P3["PHASE 3: HYPOTHESIS GENERATION (Generate -> Score -> Test)"]
+    P3 --> P4["PHASE 4: RECOVERY PLANNING (Generate risk-rated plan)"]
+    P4 --> Fix["Execute with --fix (optional)"]
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 ### How Diagnostics Phases Connect
@@ -1543,7 +1605,7 @@ project/
 |   |   +-- pre-commit       # Pre-commit hook script
 |   +-- state/               # Runtime state
 |   |   +-- {feature}.json
-|   +-- logs/                # Zergling logs
+|   +-- logs/                # Warrior logs
 |       +-- workers/         # Structured JSONL per-worker
 |       |   +-- worker-{id}.jsonl
 |       +-- tasks/           # Per-task artifacts
@@ -1590,7 +1652,7 @@ project/
 | Scenario | Response |
 |----------|----------|
 | Task verification fails | Retry 3x (with backoff), then mark blocked |
-| Zergling crashes | Orchestrator detects, respawns from checkpoint |
+| Warrior crashes | Orchestrator detects, respawns from checkpoint |
 | Merge conflict | Pause for human intervention |
 | All warriors blocked | Pause Mahabharatha, alert human |
 | Context limit (70%) | Commit WIP, exit for restart |
@@ -1638,7 +1700,7 @@ This lets E2E tests run without actual API calls—fast, free, and repeatable.
 
 ## Scaling Guidelines
 
-| Zerglings | Use Case |
+| Warriors | Use Case |
 |-----------|----------|
 | 1-2 | Small features, learning |
 | 3-5 | Medium features, balanced |
@@ -1652,7 +1714,7 @@ Diminishing returns beyond the widest level's parallelizable tasks.
 
 Mahabharatha enables rapid parallel development through:
 
-1. **Spec-driven execution** — Zerglings read specifications, not conversation history
+1. **Spec-driven execution** — Warriors read specifications, not conversation history
 2. **Exclusive file ownership** — No merge conflicts possible within levels
 3. **Level-based dependencies** — Proper sequencing guaranteed
 4. **Context engineering** — 30-50% token reduction per worker via command splitting, security rule filtering, and task-scoped context

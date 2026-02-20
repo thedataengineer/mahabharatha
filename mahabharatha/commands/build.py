@@ -1,4 +1,4 @@
-"""ZERG build command - build orchestration with error recovery."""
+"""MAHABHARATHA build command - build orchestration with error recovery."""
 
 import subprocess
 import time
@@ -463,7 +463,7 @@ def build(
             _build_docker_image()
             return
 
-        console.print("\n[bold cyan]ZERG Build[/bold cyan]\n")
+        console.print("\n[bold cyan]MAHABHARATHA Build[/bold cyan]\n")
 
         cwd = str(Path.cwd())
 

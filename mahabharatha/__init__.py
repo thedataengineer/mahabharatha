@@ -1,10 +1,10 @@
-"""ZERG - Parallel Claude Code execution system.
+"""MAHABHARATHA - Parallel Claude Code execution system.
 
 Overwhelm features with coordinated worker instances.
 """
 
 __version__ = "0.3.2"
-__author__ = "ZERG Team"
+__author__ = "MAHABHARATHA Team"
 
 from mahabharatha.architecture import ArchitectureChecker, ArchitectureConfig
 from mahabharatha.architecture_gate import ArchitectureGate

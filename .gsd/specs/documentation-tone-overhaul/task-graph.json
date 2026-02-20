@@ -27,7 +27,7 @@
       "skills_required": ["documentation"],
       "consumers": ["TASK-016"],
       "integration_test": null,
-      "context": "## Task Context\n\nCreate a quick-reference version of command docs for experienced users.\n\n## FR-4 Requirement\nCreate two versions: quick-lookup (flag tables, terse) and deep-dive (educational).\n\n## Format\n```markdown\n# Quick Reference\n\nFast lookup for experienced users. For explanations, see [commands-deep.md](commands-deep.md).\n\n## /zerg:rush\nFlags: `--workers=N`, `--mode container|task`, `--resume`\nStart parallel workers. Requires approved design.\n```"
+      "context": "## Task Context\n\nCreate a quick-reference version of command docs for experienced users.\n\n## FR-4 Requirement\nCreate two versions: quick-lookup (flag tables, terse) and deep-dive (educational).\n\n## Format\n```markdown\n# Quick Reference\n\nFast lookup for experienced users. For explanations, see [commands-deep.md](commands-deep.md).\n\n## /mahabharatha:kurukshetra\nFlags: `--workers=N`, `--mode container|task`, `--resume`\nStart parallel workers. Requires approved design.\n```"
     },
     {
       "id": "TASK-002",
@@ -54,7 +54,7 @@
     {
       "id": "TASK-003",
       "title": "Rewrite Home.md",
-      "description": "Rewrite wiki Home.md from reference-style to educational. Replace quick-start bullets with welcome narrative. Add guided navigation based on user goals. Explain ZERG concepts before showing commands.",
+      "description": "Rewrite wiki Home.md from reference-style to educational. Replace quick-start bullets with welcome narrative. Add guided navigation based on user goals. Explain MAHABHARATHA concepts before showing commands.",
       "phase": "core-wiki",
       "level": 2,
       "dependencies": [],
@@ -64,19 +64,19 @@
         "read": [".gsd/specs/documentation-tone-overhaul/requirements.md"]
       },
       "verification": {
-        "command": "grep -q 'What Is ZERG' .gsd/wiki/Home.md || grep -q 'Welcome' .gsd/wiki/Home.md",
+        "command": "grep -q 'What Is MAHABHARATHA' .gsd/wiki/Home.md || grep -q 'Welcome' .gsd/wiki/Home.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 25,
       "skills_required": ["documentation"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Task Context\n\nRewrite wiki entry point for educational tone.\n\n## Current Problems\n- Quick start is command-list, not narrative\n- No concept explanation before commands\n- Table-based, not welcoming\n\n## Target Structure\n1. Welcome narrative (what is ZERG, who is it for)\n2. Guided navigation by goal (new user, returning user, contributor)\n3. Visual overview (ASCII diagram of workflow)\n4. Then commands\n\n## FR-2 Target Audience\nSomeone new to AI coding assistants who needs concepts before implementation."
+      "context": "## Task Context\n\nRewrite wiki entry point for educational tone.\n\n## Current Problems\n- Quick start is command-list, not narrative\n- No concept explanation before commands\n- Table-based, not welcoming\n\n## Target Structure\n1. Welcome narrative (what is MAHABHARATHA, who is it for)\n2. Guided navigation by goal (new user, returning user, contributor)\n3. Visual overview (ASCII diagram of workflow)\n4. Then commands\n\n## FR-2 Target Audience\nSomeone new to AI coding assistants who needs concepts before implementation."
     },
     {
       "id": "TASK-004",
       "title": "Rewrite Tutorial.md",
-      "description": "Rewrite wiki Tutorial.md with simulated dialogues for planning phases (brainstorm, plan, design) and real command output for execution phases (rush, status). Follow FR-1 structure and FR-3 dialogue format.",
+      "description": "Rewrite wiki Tutorial.md with simulated dialogues for planning phases (brainstorm, plan, design) and real command output for execution phases (kurukshetra, status). Follow FR-1 structure and FR-3 dialogue format.",
       "phase": "core-wiki",
       "level": 2,
       "dependencies": [],
@@ -86,14 +86,14 @@
         "read": [".gsd/specs/documentation-tone-overhaul/requirements.md"]
       },
       "verification": {
-        "command": "grep -q 'ZERG:' .gsd/wiki/Tutorial.md && grep -q 'YOU:' .gsd/wiki/Tutorial.md",
+        "command": "grep -q 'MAHABHARATHA:' .gsd/wiki/Tutorial.md && grep -q 'YOU:' .gsd/wiki/Tutorial.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 35,
       "skills_required": ["documentation"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Task Context\n\nRewrite tutorial with simulated dialogues.\n\n## FR-3 Dialogue Format\nPlanning phases MUST include dialogues:\n```\nZERG: What problem does the minerals store solve for users?\nYOU:  Users need to browse and purchase mineral products through a REST API.\n\nZERG: What are the core entities and their relationships?\nYOU:  Products, Cart, Orders. A cart becomes an order at checkout.\n```\n\n## Phase Treatment\n- Discovery phases (brainstorm, plan, design): Simulated dialogues\n- Execution phases (rush, merge, status): Real command output\n\n## FR-1 Structure\nEach step: CONCEPT → NARRATIVE → DIAGRAM → COMMAND"
+      "context": "## Task Context\n\nRewrite tutorial with simulated dialogues.\n\n## FR-3 Dialogue Format\nPlanning phases MUST include dialogues:\n```\nZERG: What problem does the minerals store solve for users?\nYOU:  Users need to browse and purchase mineral products through a REST API.\n\nZERG: What are the core entities and their relationships?\nYOU:  Products, Cart, Orders. A cart becomes an order at checkout.\n```\n\n## Phase Treatment\n- Discovery phases (brainstorm, plan, design): Simulated dialogues\n- Execution phases (kurukshetra, merge, status): Real command output\n\n## FR-1 Structure\nEach step: CONCEPT → NARRATIVE → DIAGRAM → COMMAND"
     },
     {
       "id": "TASK-005",
@@ -108,14 +108,14 @@
         "read": [".gsd/specs/documentation-tone-overhaul/requirements.md"]
       },
       "verification": {
-        "command": "grep -q 'Why I Built This' README.md && grep -q 'ZERG:' README.md",
+        "command": "grep -q 'Why I Built This' README.md && grep -q 'MAHABHARATHA:' README.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 30,
       "skills_required": ["documentation"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Task Context\n\nRewrite README tutorial section only. Keep other sections intact.\n\n## IMPORTANT\n- Keep 'Why I Built This' section UNCHANGED\n- Only modify 'Tutorial: Your First ZERG Project' section\n\n## Current Problems\n- Step-list format ('Step 1:', 'Step 2:')\n- 'What happens:' bullets instead of explanations\n- No simulated dialogues\n\n## Target\n- Narrative flow explaining each phase\n- Simulated dialogues for brainstorm/plan/design\n- Real output for rush/status\n- 'Why' before 'How'"
+      "context": "## Task Context\n\nRewrite README tutorial section only. Keep other sections intact.\n\n## IMPORTANT\n- Keep 'Why I Built This' section UNCHANGED\n- Only modify 'Tutorial: Your First MAHABHARATHA Project' section\n\n## Current Problems\n- Step-list format ('Step 1:', 'Step 2:')\n- 'What happens:' bullets instead of explanations\n- No simulated dialogues\n\n## Target\n- Narrative flow explaining each phase\n- Simulated dialogues for brainstorm/plan/design\n- Real output for kurukshetra/status\n- 'Why' before 'How'"
     },
     {
       "id": "TASK-006",
@@ -171,7 +171,7 @@
       "files": {
         "create": [],
         "modify": [".gsd/wiki/Configuration.md"],
-        "read": [".gsd/specs/documentation-tone-overhaul/requirements.md", ".zerg/config.yaml"]
+        "read": [".gsd/specs/documentation-tone-overhaul/requirements.md", ".mahabharatha/config.yaml"]
       },
       "verification": {
         "command": "grep -qE 'why|When to change|scenario' .gsd/wiki/Configuration.md",
@@ -203,7 +203,7 @@
       "skills_required": ["documentation"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Task Context\n\nRewrite wiki architecture page with narrative.\n\n## Approach\n- Tell the 'story' of a request flowing through ZERG\n- Explain each component's role in plain language\n- Add 'why' before each diagram\n- Use analogy (e.g., factory floor) if helpful"
+      "context": "## Task Context\n\nRewrite wiki architecture page with narrative.\n\n## Approach\n- Tell the 'story' of a request flowing through MAHABHARATHA\n- Explain each component's role in plain language\n- Add 'why' before each diagram\n- Use analogy (e.g., factory floor) if helpful"
     },
     {
       "id": "TASK-010",
@@ -225,12 +225,12 @@
       "skills_required": ["documentation"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Task Context\n\nMake token optimization accessible to newcomers.\n\n## Current Problems\n- Technical jargon without explanation\n- Assumes reader knows LLM context windows\n- No 'why this matters'\n\n## Target\n1. 'Token economics 101' - what are tokens, why limited\n2. Visual budget diagram showing allocation\n3. Why ZERG engineers context (save money, focus workers)\n4. Then technical details"
+      "context": "## Task Context\n\nMake token optimization accessible to newcomers.\n\n## Current Problems\n- Technical jargon without explanation\n- Assumes reader knows LLM context windows\n- No 'why this matters'\n\n## Target\n1. 'Token economics 101' - what are tokens, why limited\n2. Visual budget diagram showing allocation\n3. Why MAHABHARATHA engineers context (save money, focus workers)\n4. Then technical details"
     },
     {
       "id": "TASK-011",
       "title": "Rewrite Plugins.md",
-      "description": "Rewrite wiki Plugins.md. Add 'Why extend ZERG' narrative. Include use case stories. Create step-by-step plugin creation guide with concept explanations at each step.",
+      "description": "Rewrite wiki Plugins.md. Add 'Why extend MAHABHARATHA' narrative. Include use case stories. Create step-by-step plugin creation guide with concept explanations at each step.",
       "phase": "advanced",
       "level": 4,
       "dependencies": [],
@@ -247,12 +247,12 @@
       "skills_required": ["documentation"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Task Context\n\nMake plugin system accessible.\n\n## Target Structure\n1. 'Why extend ZERG' - real-world use cases\n2. Plugin types with plain-language descriptions\n3. 'Your first plugin' guide with explanations\n4. Advanced patterns (after basics established)"
+      "context": "## Task Context\n\nMake plugin system accessible.\n\n## Target Structure\n1. 'Why extend MAHABHARATHA' - real-world use cases\n2. Plugin types with plain-language descriptions\n3. 'Your first plugin' guide with explanations\n4. Advanced patterns (after basics established)"
     },
     {
       "id": "TASK-012",
       "title": "Rewrite Security.md",
-      "description": "Rewrite wiki Security.md. Add 'Why security matters in AI assistants' introduction. Explain threat model in plain language. Then show how ZERG addresses each concern.",
+      "description": "Rewrite wiki Security.md. Add 'Why security matters in AI assistants' introduction. Explain threat model in plain language. Then show how MAHABHARATHA addresses each concern.",
       "phase": "advanced",
       "level": 4,
       "dependencies": [],
@@ -269,7 +269,7 @@
       "skills_required": ["documentation"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Task Context\n\nMake security accessible, not scary.\n\n## Target Structure\n1. 'Why security matters in AI assistants' - real risks\n2. Threat model in plain language (who, what, how)\n3. How ZERG addresses each threat\n4. What users need to do (minimal but important)"
+      "context": "## Task Context\n\nMake security accessible, not scary.\n\n## Target Structure\n1. 'Why security matters in AI assistants' - real risks\n2. Threat model in plain language (who, what, how)\n3. How MAHABHARATHA addresses each threat\n4. What users need to do (minimal but important)"
     },
     {
       "id": "TASK-013",

@@ -1,4 +1,4 @@
-"""Unit tests for ZERG logging module."""
+"""Unit tests for MAHABHARATHA logging module."""
 
 import json
 import logging

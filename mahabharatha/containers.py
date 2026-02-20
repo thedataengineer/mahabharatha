@@ -1,4 +1,4 @@
-"""Container management for ZERG workers."""
+"""Container management for MAHABHARATHA workers."""
 
 import asyncio
 import os
@@ -28,7 +28,7 @@ class ContainerInfo:
 
 
 class ContainerManager:
-    """Manage Docker containers for ZERG workers."""
+    """Manage Docker containers for MAHABHARATHA workers."""
 
     def __init__(
         self,
@@ -38,7 +38,7 @@ class ContainerManager:
         """Initialize container manager.
 
         Args:
-            config: ZERG configuration
+            config: MAHABHARATHA configuration
             compose_file: Path to docker-compose.yaml
         """
         self.config = config or ZergConfig.load()

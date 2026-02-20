@@ -1,4 +1,4 @@
-"""ZERG context usage tracking.
+"""MAHABHARATHA context usage tracking.
 
 Provides heuristic-based token counting and context threshold monitoring
 for worker checkpoint decisions.

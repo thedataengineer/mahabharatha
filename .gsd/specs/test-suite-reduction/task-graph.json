@@ -29,7 +29,7 @@
         ],
         "read": [
           "pyproject.toml",
-          ".zerg/config.yaml",
+          ".mahabharatha/config.yaml",
           ".test_durations"
         ]
       },
@@ -45,7 +45,7 @@
       "estimate_minutes": 10,
       "consumers": ["TSR-L2-001"],
       "integration_test": null,
-      "context": "## Task Context\nAdd @pytest.mark.smoke to fastest critical-path unit tests.\n\n### Selection criteria\n- Tests completing in <1s (check .test_durations)\n- Core modules: config, types, exceptions, graph_validation, state, CLI, parser, constants\n- Do NOT mark integration or slow tests\n- Total smoke suite target: <30s\n\n### Pattern\nAdd marker to individual test methods or entire classes:\n```python\n@pytest.mark.smoke\nclass TestZergConfig:\n```\nOr per-method:\n```python\n@pytest.mark.smoke\ndef test_default_values(self):\n```\n\n### Target selections (~25-30 tests):\n1. test_config.py: TestZergConfig basic creation/defaults (3-4 tests)\n2. test_types.py: TestTask, TestTaskGraph basic creation (3-4 tests)\n3. test_exceptions.py: TestZergError basic tests (2-3 tests)\n4. test_graph_validation.py: TestValidateDependencies valid/invalid/empty (3-4 tests)\n5. test_state.py: TestStateManager init/load/save (3-4 tests)\n6. test_cli.py: test_version, test_help (2 tests)\n7. test_launcher.py: TestLauncherType, TestLauncherConfig basics (2-3 tests)\n8. test_parser.py: Basic parsing tests (3-4 tests)\n9. test_constants.py: Basic constant validation (2-3 tests)\n\n### Infrastructure already in place\n- Marker registered in pyproject.toml: `smoke: Critical path tests (< 30s total)`\n- Quality gate in .zerg/config.yaml: `pytest -m smoke -x --timeout=5 -q`"
+      "context": "## Task Context\nAdd @pytest.mark.smoke to fastest critical-path unit tests.\n\n### Selection criteria\n- Tests completing in <1s (check .test_durations)\n- Core modules: config, types, exceptions, graph_validation, state, CLI, parser, constants\n- Do NOT mark integration or slow tests\n- Total smoke suite target: <30s\n\n### Pattern\nAdd marker to individual test methods or entire classes:\n```python\n@pytest.mark.smoke\nclass TestZergConfig:\n```\nOr per-method:\n```python\n@pytest.mark.smoke\ndef test_default_values(self):\n```\n\n### Target selections (~25-30 tests):\n1. test_config.py: TestZergConfig basic creation/defaults (3-4 tests)\n2. test_types.py: TestTask, TestTaskGraph basic creation (3-4 tests)\n3. test_exceptions.py: TestZergError basic tests (2-3 tests)\n4. test_graph_validation.py: TestValidateDependencies valid/invalid/empty (3-4 tests)\n5. test_state.py: TestStateManager init/load/save (3-4 tests)\n6. test_cli.py: test_version, test_help (2 tests)\n7. test_launcher.py: TestLauncherType, TestLauncherConfig basics (2-3 tests)\n8. test_parser.py: Basic parsing tests (3-4 tests)\n9. test_constants.py: Basic constant validation (2-3 tests)\n\n### Infrastructure already in place\n- Marker registered in pyproject.toml: `smoke: Critical path tests (< 30s total)`\n- Quality gate in .mahabharatha/config.yaml: `pytest -m smoke -x --timeout=5 -q`"
     },
     {
       "id": "TSR-L1-002",
@@ -65,8 +65,8 @@
         ],
         "read": [
           "tests/unit/test_launcher_extended.py",
-          "zerg/env_validator.py",
-          "zerg/launcher_types.py"
+          "mahabharatha/env_validator.py",
+          "mahabharatha/launcher_types.py"
         ]
       },
       "acceptance_criteria": [
@@ -107,7 +107,7 @@
           "tests/unit/test_launcher_network.py",
           "tests/unit/test_launcher_exec.py",
           "tests/unit/test_launcher_errors.py",
-          "zerg/launchers/container_launcher.py"
+          "mahabharatha/launchers/container_launcher.py"
         ]
       },
       "acceptance_criteria": [
@@ -178,13 +178,13 @@
         "Smoke suite runs < 30s"
       ],
       "verification": {
-        "command": "python -m pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow' --timeout=120 -q 2>&1 | tail -5 && python -m zerg.validate_commands && python -m pytest -m smoke -x --timeout=5 -q 2>&1 | tail -3 && grep -q 'smoke' CHANGELOG.md && echo 'ALL CHECKS PASSED'",
+        "command": "python -m pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow' --timeout=120 -q 2>&1 | tail -5 && python -m mahabharatha.validate_commands && python -m pytest -m smoke -x --timeout=5 -q 2>&1 | tail -3 && grep -q 'smoke' CHANGELOG.md && echo 'ALL CHECKS PASSED'",
         "timeout_seconds": 600
       },
       "estimate_minutes": 8,
       "consumers": [],
       "integration_test": null,
-      "context": "## Task Context\nFinal verification and documentation.\n\n### CHANGELOG entry (under [Unreleased]):\n#### Changed\n- Consolidate 8 launcher test files into 4, removing ~75 duplicate tests and ~1,500 lines\n- Add @pytest.mark.smoke to ~25 critical-path unit tests\n\n#### Added\n- Smoke CI job in ci.yml gating test shards for fast-fail feedback (~10s)\n\n### Commands:\n```bash\n# Regenerate durations\npython -m pytest tests/unit tests/integration --store-durations -q\n\n# Full suite\npython -m pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow' --timeout=120 -q\n\n# Validate wiring\npython -m zerg.validate_commands\n\n# Smoke check\npython -m pytest -m smoke -x --timeout=5 -q\n```"
+      "context": "## Task Context\nFinal verification and documentation.\n\n### CHANGELOG entry (under [Unreleased]):\n#### Changed\n- Consolidate 8 launcher test files into 4, removing ~75 duplicate tests and ~1,500 lines\n- Add @pytest.mark.smoke to ~25 critical-path unit tests\n\n#### Added\n- Smoke CI job in ci.yml gating test shards for fast-fail feedback (~10s)\n\n### Commands:\n```bash\n# Regenerate durations\npython -m pytest tests/unit tests/integration --store-durations -q\n\n# Full suite\npython -m pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow' --timeout=120 -q\n\n# Validate wiring\npython -m mahabharatha.validate_commands\n\n# Smoke check\npython -m pytest -m smoke -x --timeout=5 -q\n```"
     }
   ],
 

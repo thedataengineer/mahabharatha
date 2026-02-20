@@ -1,4 +1,4 @@
-"""Mermaid diagram syntax generation for ZERG documentation."""
+"""Mermaid diagram syntax generation for MAHABHARATHA documentation."""
 
 from __future__ import annotations
 

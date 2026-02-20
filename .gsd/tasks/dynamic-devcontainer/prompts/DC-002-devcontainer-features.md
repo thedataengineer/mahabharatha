@@ -4,11 +4,11 @@
 
 ## Objective
 
-Create new module `zerg/devcontainer_features.py` with mappings from detected languages to devcontainer feature URLs.
+Create new module `mahabharatha/devcontainer_features.py` with mappings from detected languages to devcontainer feature URLs.
 
 ## Files Owned
 
-- `zerg/devcontainer_features.py` (create)
+- `mahabharatha/devcontainer_features.py` (create)
 
 ## Implementation
 
@@ -95,7 +95,7 @@ def get_custom_install_commands(languages: set[str]) -> list[str]:
 
 ```bash
 python -c "
-from zerg.devcontainer_features import (
+from mahabharatha.devcontainer_features import (
     DEVCONTAINER_FEATURES,
     CUSTOM_INSTALL_COMMANDS,
     get_features_for_languages,

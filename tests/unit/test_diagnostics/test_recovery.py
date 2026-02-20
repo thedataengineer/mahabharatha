@@ -34,7 +34,7 @@ class TestRecoveryPlan:
         plan = RecoveryPlan(
             problem="Workers crashed",
             root_cause="OOM",
-            steps=[RecoveryStep(description="Restart", command="mahabharatha rush")],
+            steps=[RecoveryStep(description="Restart", command="mahabharatha kurukshetra")],
             verification_command="mahabharatha status",
             prevention="Increase memory",
         )

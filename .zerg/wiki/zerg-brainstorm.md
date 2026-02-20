@@ -1,16 +1,16 @@
-# /zerg:brainstorm
+# /mahabharatha:brainstorm
 
 Open-ended feature discovery through competitive research, Socratic questioning, and automated GitHub issue creation.
 
 ## Synopsis
 
 ```
-/zerg:brainstorm [domain-or-topic] [OPTIONS]
+/mahabharatha:brainstorm [domain-or-topic] [OPTIONS]
 ```
 
 ## Description
 
-`/zerg:brainstorm` starts an interactive discovery session for exploring feature ideas. It optionally researches the competitive landscape via web search, conducts structured Socratic questioning to refine ideas, and creates prioritized GitHub issues from the results.
+`/mahabharatha:brainstorm` starts an interactive discovery session for exploring feature ideas. It optionally researches the competitive landscape via web search, conducts structured Socratic questioning to refine ideas, and creates prioritized GitHub issues from the results.
 
 The command follows a multi-phase workflow:
 
@@ -51,7 +51,7 @@ The domain is auto-detected from the topic argument or can be influenced by the 
 
 ### Context Management
 
-The command uses ZERG's context engineering system:
+The command uses MAHABHARATHA's context engineering system:
 
 - **Command splitting** -- `.core.md` (~30%) and `.details.md` (~70%) for token efficiency.
 - **Scoped loading** -- Loads `PROJECT.md` for research context; codebase structure only when needed.
@@ -74,19 +74,19 @@ The command uses ZERG's context engineering system:
 
 ```bash
 # Brainstorm features for a mobile app
-/zerg:brainstorm mobile-app-features
+/mahabharatha:brainstorm mobile-app-features
 
 # Skip research, just do Socratic ideation
-/zerg:brainstorm --skip-research
+/mahabharatha:brainstorm --skip-research
 
 # Extended discovery with 5 rounds, preview only
-/zerg:brainstorm api-improvements --rounds 5 --dry-run
+/mahabharatha:brainstorm api-improvements --rounds 5 --dry-run
 
 # Use Socratic mode with domain-aware question trees
-/zerg:brainstorm authentication --socratic
+/mahabharatha:brainstorm authentication --socratic
 
 # Combine socratic mode with dry-run for pure discovery
-/zerg:brainstorm infrastructure --socratic --skip-issues
+/mahabharatha:brainstorm infrastructure --socratic --skip-issues
 ```
 
 ## Output
@@ -116,6 +116,6 @@ On completion, the following files are created:
 
 ## See Also
 
-- [[zerg-plan]] -- Next step: capture detailed requirements for a specific feature
-- [[zerg-design]] -- After planning, generate architecture and task graph
-- [[zerg-Reference]] -- Full command index
+- [[mahabharatha-plan]] -- Next step: capture detailed requirements for a specific feature
+- [[mahabharatha-design]] -- After planning, generate architecture and task graph
+- [[mahabharatha-Reference]] -- Full command index

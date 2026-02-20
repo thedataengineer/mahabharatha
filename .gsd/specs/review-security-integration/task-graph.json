@@ -9,125 +9,125 @@
   "tasks": [
     {
       "id": "TASK-001",
-      "title": "Migrate security.py + security_rules.py to zerg/security/ package",
-      "description": "Atomic migration: create zerg/security/ package directory. Move scan functions (check_for_secrets, check_sensitive_files, check_for_non_ascii_filenames, check_file_size, get_large_files, run_security_scan, validate_commit_message) and constants (SECRET_PATTERNS, HOOK_PATTERNS, SENSITIVE_FILES) to scanner.py. Move install_hooks/uninstall_hooks to hooks.py. Copy all of security_rules.py to rules.py. Create __init__.py with SecurityFinding and SecurityResult dataclasses plus backward-compat re-exports of all old public names. Delete zerg/security.py and zerg/security_rules.py.",
+      "title": "Migrate security.py + security_rules.py to mahabharatha/security/ package",
+      "description": "Atomic migration: create mahabharatha/security/ package directory. Move scan functions (check_for_secrets, check_sensitive_files, check_for_non_ascii_filenames, check_file_size, get_large_files, run_security_scan, validate_commit_message) and constants (SECRET_PATTERNS, HOOK_PATTERNS, SENSITIVE_FILES) to scanner.py. Move install_hooks/uninstall_hooks to hooks.py. Copy all of security_rules.py to rules.py. Create __init__.py with SecurityFinding and SecurityResult dataclasses plus backward-compat re-exports of all old public names. Delete mahabharatha/security.py and mahabharatha/security_rules.py.",
       "phase": "migration",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [
-          "zerg/security/__init__.py",
-          "zerg/security/scanner.py",
-          "zerg/security/hooks.py",
-          "zerg/security/rules.py"
+          "mahabharatha/security/__init__.py",
+          "mahabharatha/security/scanner.py",
+          "mahabharatha/security/hooks.py",
+          "mahabharatha/security/rules.py"
         ],
         "modify": [],
         "delete": [
-          "zerg/security.py",
-          "zerg/security_rules.py"
+          "mahabharatha/security.py",
+          "mahabharatha/security_rules.py"
         ],
         "read": []
       },
       "verification": {
-        "command": "python -c \"from zerg.security import run_security_scan, check_for_secrets, SECRET_PATTERNS, SENSITIVE_FILES, install_hooks, SecurityResult, SecurityFinding; from zerg.security.rules import detect_project_stack, get_required_rules; print('OK')\"",
+        "command": "python -c \"from mahabharatha.security import run_security_scan, check_for_secrets, SECRET_PATTERNS, SENSITIVE_FILES, install_hooks, SecurityResult, SecurityFinding; from mahabharatha.security.rules import detect_project_stack, get_required_rules; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 40,
       "skills_required": ["python"],
       "consumers": ["TASK-002", "TASK-003", "TASK-004", "TASK-005"],
       "integration_test": "tests/integration/test_review_security.py",
-      "context": "## Security Rules (Python)\n- Use parameterized queries for DB access\n- Avoid unsafe deserialization\n- Use subprocess with argument lists, not shell=True\n- Validate file paths to prevent traversal\n\n## Spec Context\nFR-1: Promote zerg/security.py and zerg/security_rules.py into a zerg/security/ package. All existing callers must be updated. __init__.py re-exports: run_security_scan(), SecurityResult, SecurityFinding, check_for_secrets, SECRET_PATTERNS, SENSITIVE_FILES, HOOK_PATTERNS, install_hooks, uninstall_hooks, validate_commit_message, check_file_size, get_large_files, check_sensitive_files, check_for_non_ascii_filenames. FR-3: SecurityFinding dataclass with category, severity, file, line, message, cwe, remediation, pattern_name. SecurityResult with findings, categories_scanned, files_scanned, scan_duration_seconds, passed, summary.\n\n## Dependencies\nNone - this is the foundation task."
+      "context": "## Security Rules (Python)\n- Use parameterized queries for DB access\n- Avoid unsafe deserialization\n- Use subprocess with argument lists, not shell=True\n- Validate file paths to prevent traversal\n\n## Spec Context\nFR-1: Promote mahabharatha/security.py and mahabharatha/security_rules.py into a mahabharatha/security/ package. All existing callers must be updated. __init__.py re-exports: run_security_scan(), SecurityResult, SecurityFinding, check_for_secrets, SECRET_PATTERNS, SENSITIVE_FILES, HOOK_PATTERNS, install_hooks, uninstall_hooks, validate_commit_message, check_file_size, get_large_files, check_sensitive_files, check_for_non_ascii_filenames. FR-3: SecurityFinding dataclass with category, severity, file, line, message, cwe, remediation, pattern_name. SecurityResult with findings, categories_scanned, files_scanned, scan_duration_seconds, passed, summary.\n\n## Dependencies\nNone - this is the foundation task."
     },
     {
       "id": "TASK-002",
       "title": "Create patterns.py with 15 capability pattern registries",
-      "description": "Create zerg/security/patterns.py with a SecurityPattern dataclass and PATTERN_REGISTRY dict containing pattern lists for all 15 capability areas: (1) secret detection - consolidate SECRET_PATTERNS + HOOK_PATTERNS.security, (2) injection detection - shell/code/SQL injection, (3) deserialization risks - unsafe deserialization and YAML, (4) cryptographic misuse - MD5/SHA1 for passwords, hardcoded IVs, (5) error handling - bare except, fail-open, stack trace leakage, (6) input validation - unvalidated user input to dangerous sinks, (8) lockfile integrity - missing lockfiles, unpinned deps, (9) license compliance - GPL/AGPL detection, (11) sensitive files - .env, credentials in repo, (12) file permissions - world-writable, (13) env var leakage - logging env vars with secrets, (14) Dockerfile security - running as root, no USER, (15) symlink escape - path traversal. Capabilities 7 (CVE) and 10 (git history) handled elsewhere.",
+      "description": "Create mahabharatha/security/patterns.py with a SecurityPattern dataclass and PATTERN_REGISTRY dict containing pattern lists for all 15 capability areas: (1) secret detection - consolidate SECRET_PATTERNS + HOOK_PATTERNS.security, (2) injection detection - shell/code/SQL injection, (3) deserialization risks - unsafe deserialization and YAML, (4) cryptographic misuse - MD5/SHA1 for passwords, hardcoded IVs, (5) error handling - bare except, fail-open, stack trace leakage, (6) input validation - unvalidated user input to dangerous sinks, (8) lockfile integrity - missing lockfiles, unpinned deps, (9) license compliance - GPL/AGPL detection, (11) sensitive files - .env, credentials in repo, (12) file permissions - world-writable, (13) env var leakage - logging env vars with secrets, (14) Dockerfile security - running as root, no USER, (15) symlink escape - path traversal. Capabilities 7 (CVE) and 10 (git history) handled elsewhere.",
       "phase": "capabilities",
       "level": 2,
       "dependencies": ["TASK-001"],
       "files": {
-        "create": ["zerg/security/patterns.py"],
+        "create": ["mahabharatha/security/patterns.py"],
         "modify": [],
-        "read": ["zerg/security/scanner.py"]
+        "read": ["mahabharatha/security/scanner.py"]
       },
       "verification": {
-        "command": "python -c \"from zerg.security.patterns import PATTERN_REGISTRY, SecurityPattern; assert len(PATTERN_REGISTRY) >= 13; print(f'OK: {len(PATTERN_REGISTRY)} categories')\"",
+        "command": "python -c \"from mahabharatha.security.patterns import PATTERN_REGISTRY, SecurityPattern; assert len(PATTERN_REGISTRY) >= 13; print(f'OK: {len(PATTERN_REGISTRY)} categories')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 30,
       "skills_required": ["python", "regex", "security"],
       "consumers": ["TASK-004"],
       "integration_test": "tests/unit/test_security_engine.py",
-      "context": "## Security Rules (Python)\n- All patterns must be pre-compiled with re.compile for performance\n- Avoid ReDoS: no nested quantifiers in patterns\n\n## Spec Context\nFR-2: 15 capability areas. Each pattern carries: name, category, regex, severity, message, cwe (optional), remediation, file_extensions (optional). OWASP CWE mappings: secrets=CWE-798, injection=CWE-78/CWE-94, deserialization=CWE-502, crypto=CWE-327/CWE-328, error-handling=CWE-755. NFR-2: Extensibility - new patterns added to patterns.py without modifying scanner.\n\n## Dependencies\nTASK-001 creates the zerg/security/ package structure. patterns.py is a new standalone module within it."
+      "context": "## Security Rules (Python)\n- All patterns must be pre-compiled with re.compile for performance\n- Avoid ReDoS: no nested quantifiers in patterns\n\n## Spec Context\nFR-2: 15 capability areas. Each pattern carries: name, category, regex, severity, message, cwe (optional), remediation, file_extensions (optional). OWASP CWE mappings: secrets=CWE-798, injection=CWE-78/CWE-94, deserialization=CWE-502, crypto=CWE-327/CWE-328, error-handling=CWE-755. NFR-2: Extensibility - new patterns added to patterns.py without modifying scanner.\n\n## Dependencies\nTASK-001 creates the mahabharatha/security/ package structure. patterns.py is a new standalone module within it."
     },
     {
       "id": "TASK-003",
       "title": "Create cve.py with dependency CVE scanning and fallback",
-      "description": "Create zerg/security/cve.py implementing scan_dependencies(project_path) -> list[SecurityFinding]. Strategy: (1) Parse dependency files - requirements.txt, package.json, Cargo.toml, go.mod. (2) Query osv.dev API with 5s timeout per batch. (3) On API failure, fall back to heuristic checks: unpinned versions, missing lockfiles, known-bad version ranges. Supported ecosystems: Python (pip), Node.js (npm), Rust (cargo), Go (go.mod). Import SecurityFinding from zerg.security.__init__.",
+      "description": "Create mahabharatha/security/cve.py implementing scan_dependencies(project_path) -> list[SecurityFinding]. Strategy: (1) Parse dependency files - requirements.txt, package.json, Cargo.toml, go.mod. (2) Query osv.dev API with 5s timeout per batch. (3) On API failure, fall back to heuristic checks: unpinned versions, missing lockfiles, known-bad version ranges. Supported ecosystems: Python (pip), Node.js (npm), Rust (cargo), Go (go.mod). Import SecurityFinding from mahabharatha.security.__init__.",
       "phase": "capabilities",
       "level": 2,
       "dependencies": ["TASK-001"],
       "files": {
-        "create": ["zerg/security/cve.py"],
+        "create": ["mahabharatha/security/cve.py"],
         "modify": [],
-        "read": ["zerg/security/__init__.py"]
+        "read": ["mahabharatha/security/__init__.py"]
       },
       "verification": {
-        "command": "python -c \"from zerg.security.cve import scan_dependencies; from pathlib import Path; r = scan_dependencies(Path('.')); print(f'OK: {len(r)} findings')\"",
+        "command": "python -c \"from mahabharatha.security.cve import scan_dependencies; from pathlib import Path; r = scan_dependencies(Path('.')); print(f'OK: {len(r)} findings')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 25,
       "skills_required": ["python", "security"],
       "consumers": ["TASK-004"],
       "integration_test": "tests/unit/test_security_engine.py",
-      "context": "## Security Rules (Python)\n- Use urllib/requests with timeout for API calls\n- Validate URL schemes before fetching\n- Handle JSON parse errors gracefully\n\n## Spec Context\nFR-6: CVE Scanning with Fallback. (1) Try osv.dev API first - POST to https://api.osv.dev/v1/querybatch with package list. (2) Fallback to heuristics if offline or API fails: unpinned versions, missing lockfiles, known-bad ranges. (3) Supported ecosystems: PyPI, npm, crates.io, Go. NFR-1: CVE API calls have 5-second timeout with graceful fallback.\n\n## Dependencies\nTASK-001 creates SecurityFinding dataclass in zerg/security/__init__.py."
+      "context": "## Security Rules (Python)\n- Use urllib/requests with timeout for API calls\n- Validate URL schemes before fetching\n- Handle JSON parse errors gracefully\n\n## Spec Context\nFR-6: CVE Scanning with Fallback. (1) Try osv.dev API first - POST to https://api.osv.dev/v1/querybatch with package list. (2) Fallback to heuristics if offline or API fails: unpinned versions, missing lockfiles, known-bad ranges. (3) Supported ecosystems: PyPI, npm, crates.io, Go. NFR-1: CVE API calls have 5-second timeout with graceful fallback.\n\n## Dependencies\nTASK-001 creates SecurityFinding dataclass in mahabharatha/security/__init__.py."
     },
     {
       "id": "TASK-005",
-      "title": "Update all callers to import from zerg.security package",
-      "description": "Update imports in three caller files: (1) zerg/commands/security_rules_cmd.py - change 'from zerg.security_rules import ...' to 'from zerg.security.rules import ...'. (2) zerg/context_plugin.py - change 'from zerg.security_rules import filter_rules_for_files, summarize_rules' to 'from zerg.security.rules import ...'. (3) zerg/commands/init.py - change 'from zerg.security_rules import ProjectStack, detect_project_stack, integrate_security_rules' to 'from zerg.security.rules import ...'. Verify all three files still import correctly.",
+      "title": "Update all callers to import from mahabharatha.security package",
+      "description": "Update imports in three caller files: (1) mahabharatha/commands/security_rules_cmd.py - change 'from mahabharatha.security_rules import ...' to 'from mahabharatha.security.rules import ...'. (2) mahabharatha/context_plugin.py - change 'from mahabharatha.security_rules import filter_rules_for_files, summarize_rules' to 'from mahabharatha.security.rules import ...'. (3) mahabharatha/commands/init.py - change 'from mahabharatha.security_rules import ProjectStack, detect_project_stack, integrate_security_rules' to 'from mahabharatha.security.rules import ...'. Verify all three files still import correctly.",
       "phase": "capabilities",
       "level": 2,
       "dependencies": ["TASK-001"],
       "files": {
         "create": [],
         "modify": [
-          "zerg/commands/security_rules_cmd.py",
-          "zerg/context_plugin.py",
-          "zerg/commands/init.py"
+          "mahabharatha/commands/security_rules_cmd.py",
+          "mahabharatha/context_plugin.py",
+          "mahabharatha/commands/init.py"
         ],
         "read": []
       },
       "verification": {
-        "command": "python -c \"from zerg.commands.security_rules_cmd import security_rules_group; from zerg.context_plugin import ContextEngineeringPlugin; from zerg.commands.init import init; print('OK')\"",
+        "command": "python -c \"from mahabharatha.commands.security_rules_cmd import security_rules_group; from mahabharatha.context_plugin import ContextEngineeringPlugin; from mahabharatha.commands.init import init; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
       "skills_required": ["python"],
       "consumers": ["TASK-008"],
       "integration_test": "tests/unit/test_security_rules_cmd.py",
-      "context": "## Spec Context\nFR-7: Shared Engine - No Duplication. security_rules_cmd.py CLI uses the same package for rule management. All existing callers must be updated to import from zerg.security (package).\n\n## Dependencies\nTASK-001 creates zerg/security/rules.py from zerg/security_rules.py."
+      "context": "## Spec Context\nFR-7: Shared Engine - No Duplication. security_rules_cmd.py CLI uses the same package for rule management. All existing callers must be updated to import from mahabharatha.security (package).\n\n## Dependencies\nTASK-001 creates mahabharatha/security/rules.py from mahabharatha/security_rules.py."
     },
     {
       "id": "TASK-004",
       "title": "Upgrade scanner.py to use patterns.py and return SecurityResult",
-      "description": "Modify zerg/security/scanner.py: (1) Import PATTERN_REGISTRY from patterns.py. (2) Import scan_dependencies from cve.py. (3) Rewrite run_security_scan() to iterate all pattern categories, run CVE scan, run git history scan (last 100 commits via git log), collect SecurityFinding objects, assemble SecurityResult. (4) Accept optional parameters: categories (list of category names to scan), files (explicit file list), git_history_depth (default 100). (5) Update __init__.py exports to include the upgraded run_security_scan returning SecurityResult. (6) Keep old dict-returning function as _legacy_scan() for backward compat if needed, but primary API returns SecurityResult.",
+      "description": "Modify mahabharatha/security/scanner.py: (1) Import PATTERN_REGISTRY from patterns.py. (2) Import scan_dependencies from cve.py. (3) Rewrite run_security_scan() to iterate all pattern categories, run CVE scan, run git history scan (last 100 commits via git log), collect SecurityFinding objects, assemble SecurityResult. (4) Accept optional parameters: categories (list of category names to scan), files (explicit file list), git_history_depth (default 100). (5) Update __init__.py exports to include the upgraded run_security_scan returning SecurityResult. (6) Keep old dict-returning function as _legacy_scan() for backward compat if needed, but primary API returns SecurityResult.",
       "phase": "wiring",
       "level": 3,
       "dependencies": ["TASK-001", "TASK-002", "TASK-003"],
       "files": {
         "create": [],
         "modify": [
-          "zerg/security/scanner.py",
-          "zerg/security/__init__.py"
+          "mahabharatha/security/scanner.py",
+          "mahabharatha/security/__init__.py"
         ],
         "read": [
-          "zerg/security/patterns.py",
-          "zerg/security/cve.py"
+          "mahabharatha/security/patterns.py",
+          "mahabharatha/security/cve.py"
         ]
       },
       "verification": {
-        "command": "python -c \"from zerg.security import run_security_scan; r = run_security_scan('.'); assert hasattr(r, 'findings'); assert hasattr(r, 'passed'); assert hasattr(r, 'summary'); print(f'OK: {r.files_scanned} files, {len(r.findings)} findings')\"",
+        "command": "python -c \"from mahabharatha.security import run_security_scan; r = run_security_scan('.'); assert hasattr(r, 'findings'); assert hasattr(r, 'passed'); assert hasattr(r, 'summary'); print(f'OK: {r.files_scanned} files, {len(r.findings)} findings')\"",
         "timeout_seconds": 60
       },
       "estimate_minutes": 30,
@@ -139,7 +139,7 @@
     {
       "id": "TASK-008",
       "title": "Update existing test file imports for new package structure",
-      "description": "Update imports in existing test files: (1) tests/unit/test_security.py - update 'from zerg.security import ...' to import from specific submodules where appropriate, or verify __init__.py re-exports work. (2) tests/unit/test_security_path_traversal.py - verify import path works. (3) tests/unit/test_security_rules.py - update 'from zerg.security_rules import ...' to 'from zerg.security.rules import ...'. (4) tests/unit/test_security_rules_cmd.py - update if any direct security_rules imports exist. Run all four test files to verify they pass.",
+      "description": "Update imports in existing test files: (1) tests/unit/test_security.py - update 'from mahabharatha.security import ...' to import from specific submodules where appropriate, or verify __init__.py re-exports work. (2) tests/unit/test_security_path_traversal.py - verify import path works. (3) tests/unit/test_security_rules.py - update 'from mahabharatha.security_rules import ...' to 'from mahabharatha.security.rules import ...'. (4) tests/unit/test_security_rules_cmd.py - update if any direct security_rules imports exist. Run all four test files to verify they pass.",
       "phase": "wiring",
       "level": 3,
       "dependencies": ["TASK-001", "TASK-005"],
@@ -166,17 +166,17 @@
     {
       "id": "TASK-006",
       "title": "Integrate security as Stage 3 in review.py with --no-security flag",
-      "description": "Modify zerg/commands/review.py: (1) Add 'from zerg.security import run_security_scan, SecurityResult' import. (2) Add security_passed and security_result fields to ReviewResult dataclass. (3) Update overall_passed property to include security_passed. (4) Add _run_security_review() method to ReviewCommand. (5) Call _run_security_review() in run() for 'receive' and 'full' modes. (6) Add --no-security flag to CLI. When set, skip security scan and print warning. (7) Update Rich table output: add 'Stage 3 (Security)' row showing pass/fail/skipped. (8) Show security findings by severity below the table. (9) Remove 'hardcoded_secret' pattern from CodeAnalyzer.PATTERNS (defer to security engine). (10) Update format_result() for both JSON and text formats to include security data.",
+      "description": "Modify mahabharatha/commands/review.py: (1) Add 'from mahabharatha.security import run_security_scan, SecurityResult' import. (2) Add security_passed and security_result fields to ReviewResult dataclass. (3) Update overall_passed property to include security_passed. (4) Add _run_security_review() method to ReviewCommand. (5) Call _run_security_review() in run() for 'receive' and 'full' modes. (6) Add --no-security flag to CLI. When set, skip security scan and print warning. (7) Update Rich table output: add 'Stage 3 (Security)' row showing pass/fail/skipped. (8) Show security findings by severity below the table. (9) Remove 'hardcoded_secret' pattern from CodeAnalyzer.PATTERNS (defer to security engine). (10) Update format_result() for both JSON and text formats to include security data.",
       "phase": "integration",
       "level": 4,
       "dependencies": ["TASK-004"],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/review.py"],
-        "read": ["zerg/security/__init__.py", "zerg/security/scanner.py"]
+        "modify": ["mahabharatha/commands/review.py"],
+        "read": ["mahabharatha/security/__init__.py", "mahabharatha/security/scanner.py"]
       },
       "verification": {
-        "command": "python -c \"from zerg.commands.review import ReviewResult, ReviewCommand, review; r = ReviewResult(files_reviewed=0, items=[], spec_passed=True, quality_passed=True); assert hasattr(r, 'security_passed'); print('OK')\"",
+        "command": "python -c \"from mahabharatha.commands.review import ReviewResult, ReviewCommand, review; r = ReviewResult(files_reviewed=0, items=[], spec_passed=True, quality_passed=True); assert hasattr(r, 'security_passed'); print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 35,
@@ -196,9 +196,9 @@
         "create": ["tests/unit/test_security_engine.py"],
         "modify": [],
         "read": [
-          "zerg/security/scanner.py",
-          "zerg/security/patterns.py",
-          "zerg/security/cve.py"
+          "mahabharatha/security/scanner.py",
+          "mahabharatha/security/patterns.py",
+          "mahabharatha/security/cve.py"
         ]
       },
       "verification": {
@@ -221,7 +221,7 @@
       "files": {
         "create": ["tests/integration/test_review_security.py"],
         "modify": ["tests/unit/test_review_cmd.py"],
-        "read": ["zerg/commands/review.py"]
+        "read": ["mahabharatha/commands/review.py"]
       },
       "verification": {
         "command": "python -m pytest tests/integration/test_review_security.py tests/unit/test_review_cmd.py -x -q 2>&1 | tail -5",
@@ -231,20 +231,20 @@
       "skills_required": ["python", "testing"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nAcceptance: zerg review CLI output shows 3-stage table. zerg review --no-security skips Stage 3 with warning. /z:review and /z:security both call run_security_scan(). CodeAnalyzer in review.py no longer checks for secrets. All existing tests pass. New tests cover consolidated security engine.\n\n## Dependencies\nTASK-006 integrated security as Stage 3 in review.py. This task verifies the integration end-to-end."
+      "context": "## Spec Context\nAcceptance: mahabharatha review CLI output shows 3-stage table. mahabharatha review --no-security skips Stage 3 with warning. /z:review and /z:security both call run_security_scan(). CodeAnalyzer in review.py no longer checks for secrets. All existing tests pass. New tests cover consolidated security engine.\n\n## Dependencies\nTASK-006 integrated security as Stage 3 in review.py. This task verifies the integration end-to-end."
     },
     {
       "id": "TASK-010",
       "title": "Update slash commands, docs, and CHANGELOG.md",
-      "description": "Update documentation: (1) zerg/data/commands/review.md - add Stage 3 Security description, --no-security flag, 3-stage output example. (2) zerg/data/commands/security.md - reference shared engine with review, note run_security_scan() is the common API. (3) docs/commands-quick.md - update /zerg:review row to mention 3-stage and --no-security. (4) docs/commands-deep.md - update /zerg:review section with 3-stage diagram and security details, update /zerg:security section to note shared engine. (5) CHANGELOG.md - add entry under [Unreleased] in 'Added' category: consolidated security engine with 15 capabilities, review Stage 3 integration, --no-security flag.",
+      "description": "Update documentation: (1) mahabharatha/data/commands/review.md - add Stage 3 Security description, --no-security flag, 3-stage output example. (2) mahabharatha/data/commands/security.md - reference shared engine with review, note run_security_scan() is the common API. (3) docs/commands-quick.md - update /mahabharatha:review row to mention 3-stage and --no-security. (4) docs/commands-deep.md - update /mahabharatha:review section with 3-stage diagram and security details, update /mahabharatha:security section to note shared engine. (5) CHANGELOG.md - add entry under [Unreleased] in 'Added' category: consolidated security engine with 15 capabilities, review Stage 3 integration, --no-security flag.",
       "phase": "quality",
       "level": 5,
       "dependencies": ["TASK-007", "TASK-008", "TASK-009"],
       "files": {
         "create": [],
         "modify": [
-          "zerg/data/commands/review.md",
-          "zerg/data/commands/security.md",
+          "mahabharatha/data/commands/review.md",
+          "mahabharatha/data/commands/security.md",
           "docs/commands-quick.md",
           "docs/commands-deep.md",
           "CHANGELOG.md"
@@ -252,7 +252,7 @@
         "read": []
       },
       "verification": {
-        "command": "grep -q 'no-security' zerg/data/commands/review.md && grep -q 'Stage 3' zerg/data/commands/review.md && grep -q 'Unreleased' CHANGELOG.md && echo 'OK'",
+        "command": "grep -q 'no-security' mahabharatha/data/commands/review.md && grep -q 'Stage 3' mahabharatha/data/commands/review.md && grep -q 'Unreleased' CHANGELOG.md && echo 'OK'",
         "timeout_seconds": 30
       },
       "estimate_minutes": 25,
@@ -304,12 +304,12 @@
     "description": "Tasks that cannot run in parallel due to shared files. Within each level, no file conflicts exist.",
     "conflicts": [
       {
-        "file": "zerg/security/scanner.py",
+        "file": "mahabharatha/security/scanner.py",
         "tasks": ["TASK-001", "TASK-004"],
         "resolution": "Sequential levels: TASK-001 (L1) creates, TASK-004 (L3) modifies"
       },
       {
-        "file": "zerg/security/__init__.py",
+        "file": "mahabharatha/security/__init__.py",
         "tasks": ["TASK-001", "TASK-004"],
         "resolution": "Sequential levels: TASK-001 (L1) creates, TASK-004 (L3) modifies"
       }

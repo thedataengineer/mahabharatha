@@ -1,4 +1,4 @@
-"""Tests for ZERG StepGenerator module."""
+"""Tests for MAHABHARATHA StepGenerator module."""
 
 from unittest.mock import MagicMock
 

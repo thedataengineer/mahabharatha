@@ -4,14 +4,14 @@
 - **Feature**: issue-94
 - **Status**: DRAFT
 - **Created**: 2026-02-02
-- **Author**: ZERG Design Mode
+- **Author**: MAHABHARATHA Design Mode
 
 ---
 
 ## 1. Overview
 
 ### 1.1 Summary
-Three changes to the ZERG plan command and documentation: (A) add AskUserQuestion post-approval prompt with next-step options, (B) add a Documentation section to the requirements.md template, (C) fix documentation gaps in `docs/commands.md` for missing git flags.
+Three changes to the MAHABHARATHA plan command and documentation: (A) add AskUserQuestion post-approval prompt with next-step options, (B) add a Documentation section to the requirements.md template, (C) fix documentation gaps in `docs/commands.md` for missing git flags.
 
 ### 1.2 Goals
 - Smooth handoff from plan → design phase
@@ -90,15 +90,15 @@ Add after Section 9 (Approval) in the requirements.md template:
 ```markdown
 ## 10. Documentation
 
-After implementation, execute `/zerg:document` to update all documentation:
-- Ensure all ZERG commands and flags are accounted for in docs
-- Wiki command pages must follow the `zerg-*.md` naming convention (non-command pages unaffected)
-- Before executing documentation updates, plan via `/zerg:design` and estimate via `/zerg:estimate`
+After implementation, execute `/mahabharatha:document` to update all documentation:
+- Ensure all MAHABHARATHA commands and flags are accounted for in docs
+- Wiki command pages must follow the `mahabharatha-*.md` naming convention (non-command pages unaffected)
+- Before executing documentation updates, plan via `/mahabharatha:design` and estimate via `/mahabharatha:estimate`
 ```
 
 ### 3.3 Missing Git Flags in docs/commands.md
 
-Add to the `/zerg:git` flag table:
+Add to the `/mahabharatha:git` flag table:
 
 | Flag | Description |
 |------|-------------|
@@ -117,7 +117,7 @@ Add to the `/zerg:git` flag table:
 **Rationale**: FR-A05 and FR-A06 require this ordering.
 
 ### 4.2 Template vs Post-Approval for Documentation
-**Context**: Where does the `/zerg:document` guidance live?
+**Context**: Where does the `/mahabharatha:document` guidance live?
 **Decision**: In the requirements.md template (Section 10).
 **Rationale**: User chose this in planning phase. Every generated requirements.md will include it.
 
@@ -137,9 +137,9 @@ All 3 tasks are independent — they modify different files with no shared depen
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/data/commands/plan.md` | TASK-001 | modify |
-| `zerg/data/commands/plan.core.md` | TASK-001 | modify |
-| `zerg/data/commands/plan.details.md` | TASK-002 | modify |
+| `mahabharatha/data/commands/plan.md` | TASK-001 | modify |
+| `mahabharatha/data/commands/plan.core.md` | TASK-001 | modify |
+| `mahabharatha/data/commands/plan.details.md` | TASK-002 | modify |
 | `docs/commands.md` | TASK-003 | modify |
 
 Note: TASK-001 owns both plan.md and plan.core.md since they must stay in sync.
@@ -166,12 +166,12 @@ TASK-003 ──┘
 ## 7. Testing Strategy
 
 ### 7.1 Verification
-- TASK-001: `grep -q "AskUserQuestion" zerg/data/commands/plan.md && grep -q "AskUserQuestion" zerg/data/commands/plan.core.md`
-- TASK-002: `grep -q "Documentation" zerg/data/commands/plan.details.md && grep -q "zerg:document" zerg/data/commands/plan.details.md`
+- TASK-001: `grep -q "AskUserQuestion" mahabharatha/data/commands/plan.md && grep -q "AskUserQuestion" mahabharatha/data/commands/plan.core.md`
+- TASK-002: `grep -q "Documentation" mahabharatha/data/commands/plan.details.md && grep -q "mahabharatha:document" mahabharatha/data/commands/plan.details.md`
 - TASK-003: `grep -q "no-docker" docs/commands.md && grep -q "include-stashes" docs/commands.md && grep -q "limit N" docs/commands.md && grep -q "priority P" docs/commands.md`
 
 ### 7.2 Manual Verification
-- Run `/zerg:plan test-feature` and verify the post-approval prompt appears after approval
+- Run `/mahabharatha:plan test-feature` and verify the post-approval prompt appears after approval
 - Check that the generated requirements.md includes Section 10 (Documentation)
 
 ---

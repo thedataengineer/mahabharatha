@@ -1,4 +1,4 @@
-"""Integration tests for rush pre-execution validation with graph validation."""
+"""Integration tests for kurukshetra pre-execution validation with graph validation."""
 
 import json
 from pathlib import Path

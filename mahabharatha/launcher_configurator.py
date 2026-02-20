@@ -1,4 +1,4 @@
-"""ZERG launcher configuration component.
+"""MAHABHARATHA launcher configuration component.
 
 Extracted from Orchestrator to handle launcher creation, auto-detection,
 and container lifecycle management.
@@ -41,7 +41,7 @@ class LauncherConfigurator:
         """Initialize launcher configurator.
 
         Args:
-            config: ZERG configuration
+            config: MAHABHARATHA configuration
             repo_path: Path to git repository (resolved)
             plugin_registry: Plugin registry for custom launchers
         """

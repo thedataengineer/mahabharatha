@@ -1,7 +1,7 @@
 # Brainstorm Summary: #66 Questioning Methodology
 
 ## Session Info
-- Domain: /zerg:brainstorm questioning methodology enhancement
+- Domain: /mahabharatha:brainstorm questioning methodology enhancement
 - Rounds: 5 (Socratic discovery)
 - Issues created: 5 sub-issues + 1 epic update
 
@@ -16,7 +16,7 @@
 | Trade-off placement | Dedicated round | Clear separation from discovery |
 | Architecture | brainstorm.details.md only | Minimizes context usage, no new Python code |
 | Question count | Dynamic with progress indicator | Explain methodology upfront, show ~N remaining |
-| Issue strategy | Epic + atomic sub-issues | Aligns with ZERG swarm/dependency model |
+| Issue strategy | Epic + atomic sub-issues | Aligns with MAHABHARATHA akshauhini/dependency model |
 
 ## Dependency Graph
 ```
@@ -35,5 +35,5 @@ Start → Explain methodology → Discovery (dynamic, ~5-15 questions)
 
 ## Next Step
 ```
-/zerg:plan #66-questioning-methodology
+/mahabharatha:plan #66-questioning-methodology
 ```

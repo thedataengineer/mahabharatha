@@ -1,4 +1,4 @@
-"""ZERG engineering rules framework."""
+"""MAHABHARATHA engineering rules framework."""
 
 from mahabharatha.rules.injector import RuleInjector
 from mahabharatha.rules.loader import Rule, RuleLoader, RulePriority, RuleSet

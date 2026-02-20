@@ -1,4 +1,4 @@
-"""Tests for ZERG context tracker module."""
+"""Tests for MAHABHARATHA context tracker module."""
 
 from datetime import datetime
 from pathlib import Path

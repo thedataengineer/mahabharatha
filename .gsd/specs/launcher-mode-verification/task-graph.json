@@ -9,18 +9,18 @@
   "tasks": [
     {
       "id": "TASK-001",
-      "title": "Enhance rush launcher mode output",
+      "title": "Enhance kurukshetra launcher mode output",
       "description": "Replace class name display with human-friendly mode label and worker count. Add mode to completion summary.",
       "phase": "fix",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/rush.py"],
+        "modify": ["mahabharatha/commands/kurukshetra.py"],
         "read": []
       },
       "verification": {
-        "command": "python -c \"from zerg.commands.rush import rush; print('ok')\"",
+        "command": "python -c \"from mahabharatha.commands.kurukshetra import kurukshetra; print('ok')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5,
@@ -28,7 +28,7 @@
     },
     {
       "id": "TASK-002",
-      "title": "Update rush tests for new output format",
+      "title": "Update kurukshetra tests for new output format",
       "description": "Update any test assertions checking for old 'Launcher:' output to match new 'Launcher mode:' format.",
       "phase": "testing",
       "level": 2,

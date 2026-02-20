@@ -1,4 +1,4 @@
-"""ZERG design command - generate architecture and task graph."""
+"""MAHABHARATHA design command - generate architecture and task graph."""
 
 import json
 import os
@@ -78,7 +78,7 @@ def design(
         mahabharatha design --max-task-minutes 45 --min-task-minutes 10
     """
     try:
-        console.print("\n[bold cyan]ZERG Design[/bold cyan]\n")
+        console.print("\n[bold cyan]MAHABHARATHA Design[/bold cyan]\n")
 
         # Print task list ID for coordination visibility
         task_list_id = os.environ.get("CLAUDE_CODE_TASK_LIST_ID")
@@ -196,7 +196,7 @@ def design(
         console.print("  1. Edit design.md with architecture details")
         console.print("  2. Populate task-graph.json with specific tasks")
         console.print("  3. Run [cyan]mahabharatha design --validate-only[/cyan] to check")
-        console.print("  4. Run [cyan]mahabharatha rush[/cyan] to start execution")
+        console.print("  4. Run [cyan]mahabharatha kurukshetra[/cyan] to start execution")
 
     except KeyboardInterrupt:
         console.print("\n[yellow]Interrupted[/yellow]")
@@ -235,7 +235,7 @@ def create_design_template(path: Path, feature: str) -> None:
 - **Feature**: {feature}
 - **Status**: DRAFT
 - **Created**: {timestamp}
-- **Author**: ZERG Design
+- **Author**: MAHABHARATHA Design
 
 ---
 

@@ -1,4 +1,4 @@
-"""ZERG Worker Metrics Collection.
+"""MAHABHARATHA Worker Metrics Collection.
 
 Provides comprehensive metrics collection and tracking for worker instances,
 including task execution timing, context usage, resource consumption, and

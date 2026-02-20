@@ -145,16 +145,16 @@ Implemented comprehensive test coverage across 4 levels, adding 808 new tests to
 pytest
 
 # With coverage report
-pytest --cov=zerg --cov-report=term-missing
+pytest --cov=mahabharatha --cov-report=term-missing
 
 # HTML coverage report
-pytest --cov=zerg --cov-report=html
+pytest --cov=mahabharatha --cov-report=html
 ```
 
 ## Verification
 
 ```bash
-$ pytest --cov=zerg --cov-report=term-missing
+$ pytest --cov=mahabharatha --cov-report=term-missing
 ======================== 935 passed in 62.14s ========================
 TOTAL                                  5136   1905    63%
 ```

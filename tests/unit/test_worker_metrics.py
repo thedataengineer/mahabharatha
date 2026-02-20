@@ -1,4 +1,4 @@
-"""Tests for ZERG Worker Metrics module."""
+"""Tests for MAHABHARATHA Worker Metrics module."""
 
 import json
 import time

@@ -9,18 +9,18 @@
   "tasks": [
     {
       "id": "TASK-001",
-      "title": "Update rush.details.md auto-detection logic",
-      "description": "Simplify auto-detection logic in rush.details.md to: 1) If --mode explicit → use that, 2) Otherwise → task mode (default). Remove rules 2-4 about devcontainer/image checking.",
+      "title": "Update kurukshetra.details.md auto-detection logic",
+      "description": "Simplify auto-detection logic in kurukshetra.details.md to: 1) If --mode explicit → use that, 2) Otherwise → task mode (default). Remove rules 2-4 about devcontainer/image checking.",
       "phase": "documentation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/rush.details.md"],
+        "modify": ["mahabharatha/data/commands/kurukshetra.details.md"],
         "read": [".gsd/specs/task-mode-default/requirements.md"]
       },
       "verification": {
-        "command": "grep -q 'task mode (default)' zerg/data/commands/rush.details.md",
+        "command": "grep -q 'task mode (default)' mahabharatha/data/commands/kurukshetra.details.md",
         "timeout_seconds": 10
       },
       "estimate_minutes": 3,
@@ -30,18 +30,18 @@
     },
     {
       "id": "TASK-002",
-      "title": "Update rush.core.md help text",
+      "title": "Update kurukshetra.core.md help text",
       "description": "Change help text from '--mode MODE  Execution mode: subprocess|container|auto (default: auto)' to '--mode MODE  Execution mode: task|container|subprocess (default: task)'",
       "phase": "documentation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/rush.core.md"],
+        "modify": ["mahabharatha/data/commands/kurukshetra.core.md"],
         "read": [".gsd/specs/task-mode-default/requirements.md"]
       },
       "verification": {
-        "command": "grep -q 'task|container|subprocess (default: task)' zerg/data/commands/rush.core.md",
+        "command": "grep -q 'task|container|subprocess (default: task)' mahabharatha/data/commands/kurukshetra.core.md",
         "timeout_seconds": 10
       },
       "estimate_minutes": 2,
@@ -51,18 +51,18 @@
     },
     {
       "id": "TASK-003",
-      "title": "Update rush.md help text",
+      "title": "Update kurukshetra.md help text",
       "description": "Change help text from '--mode MODE  Execution mode: container|subprocess' to '--mode MODE  Execution mode: task|container|subprocess (default: task)'",
       "phase": "documentation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/rush.md"],
+        "modify": ["mahabharatha/data/commands/kurukshetra.md"],
         "read": [".gsd/specs/task-mode-default/requirements.md"]
       },
       "verification": {
-        "command": "grep -q 'task|container|subprocess (default: task)' zerg/data/commands/rush.md",
+        "command": "grep -q 'task|container|subprocess (default: task)' mahabharatha/data/commands/kurukshetra.md",
         "timeout_seconds": 10
       },
       "estimate_minutes": 2,
@@ -73,17 +73,17 @@
     {
       "id": "TASK-004",
       "title": "Simplify _auto_detect_launcher_type()",
-      "description": "Modify zerg/launcher_configurator.py:_auto_detect_launcher_type() to always return LauncherType.SUBPROCESS. Remove devcontainer existence check and Docker image check (lines 129-155).",
+      "description": "Modify mahabharatha/launcher_configurator.py:_auto_detect_launcher_type() to always return LauncherType.SUBPROCESS. Remove devcontainer existence check and Docker image check (lines 129-155).",
       "phase": "core",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/launcher_configurator.py"],
+        "modify": ["mahabharatha/launcher_configurator.py"],
         "read": [".gsd/specs/task-mode-default/requirements.md"]
       },
       "verification": {
-        "command": "python -c \"from zerg.launcher_configurator import LauncherConfigurator; print('OK')\"",
+        "command": "python -c \"from mahabharatha.launcher_configurator import LauncherConfigurator; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 3,
@@ -94,17 +94,17 @@
     {
       "id": "TASK-005",
       "title": "Update config.yaml comment",
-      "description": "Update .zerg/config.yaml comment on launcher_type line to clarify task mode is implicit default for slash commands.",
+      "description": "Update .mahabharatha/config.yaml comment on launcher_type line to clarify task mode is implicit default for slash commands.",
       "phase": "configuration",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": [".zerg/config.yaml"],
+        "modify": [".mahabharatha/config.yaml"],
         "read": [".gsd/specs/task-mode-default/requirements.md"]
       },
       "verification": {
-        "command": "python -c \"import yaml; yaml.safe_load(open('.zerg/config.yaml')); print('OK')\"",
+        "command": "python -c \"import yaml; yaml.safe_load(open('.mahabharatha/config.yaml')); print('OK')\"",
         "timeout_seconds": 10
       },
       "estimate_minutes": 1,
@@ -122,7 +122,7 @@
       "files": {
         "create": [],
         "modify": ["tests/unit/test_launcher_configurator.py"],
-        "read": ["zerg/launcher_configurator.py"]
+        "read": ["mahabharatha/launcher_configurator.py"]
       },
       "verification": {
         "command": "pytest tests/unit/test_launcher_configurator.py -v --timeout=30",
@@ -143,7 +143,7 @@
       "files": {
         "create": [],
         "modify": ["tests/integration/test_container_launcher.py"],
-        "read": ["zerg/launcher_configurator.py"]
+        "read": ["mahabharatha/launcher_configurator.py"]
       },
       "verification": {
         "command": "pytest tests/integration/test_container_launcher.py -v --timeout=60",

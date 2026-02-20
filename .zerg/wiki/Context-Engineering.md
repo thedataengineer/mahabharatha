@@ -1,6 +1,6 @@
 # Context Engineering
 
-ZERG includes a context engineering system that minimizes token usage across workers. Each Claude Code worker has a finite context window. By giving each worker only the context relevant to its task -- rather than loading the full spec and all security rules -- ZERG reduces per-worker token consumption by an estimated 2,000 to 5,000 tokens.
+MAHABHARATHA includes a context engineering system that minimizes token usage across workers. Each Claude Code worker has a finite context window. By giving each worker only the context relevant to its task -- rather than loading the full spec and all security rules -- MAHABHARATHA reduces per-worker token consumption by an estimated 2,000 to 5,000 tokens.
 
 The system has three subsystems: command splitting, task-scoped context, and security rule filtering. For implementation details, see [[Context Engineering Internals]].
 
@@ -8,7 +8,7 @@ The system has three subsystems: command splitting, task-scoped context, and sec
 
 ## Why Context Engineering Matters
 
-Each ZERG worker is a Claude Code session that receives:
+Each MAHABHARATHA worker is a Claude Code session that receives:
 
 1. The task description and verification command from task-graph.json.
 2. Feature specs (requirements.md, design.md).
@@ -38,16 +38,16 @@ The following 10 command files have been split:
 
 | Command | Core File | Details File |
 |---------|-----------|-------------|
-| `zerg:init` | `zerg:init.core.md` | `zerg:init.details.md` |
-| `zerg:design` | `zerg:design.core.md` | `zerg:design.details.md` |
-| `zerg:rush` | `zerg:rush.core.md` | `zerg:rush.details.md` |
-| `zerg:plugins` | `zerg:plugins.core.md` | `zerg:plugins.details.md` |
-| `zerg:debug` | `zerg:debug.core.md` | `zerg:debug.details.md` |
-| `zerg:plan` | `zerg:plan.core.md` | `zerg:plan.details.md` |
-| `zerg:worker` | `zerg:worker.core.md` | `zerg:worker.details.md` |
-| `zerg:merge` | `zerg:merge.core.md` | `zerg:merge.details.md` |
-| `zerg:status` | `zerg:status.core.md` | `zerg:status.details.md` |
-| `zerg:brainstorm` | `zerg:brainstorm.core.md` | `zerg:brainstorm.details.md` |
+| `mahabharatha:init` | `mahabharatha:init.core.md` | `mahabharatha:init.details.md` |
+| `mahabharatha:design` | `mahabharatha:design.core.md` | `mahabharatha:design.details.md` |
+| `mahabharatha:kurukshetra` | `mahabharatha:kurukshetra.core.md` | `mahabharatha:kurukshetra.details.md` |
+| `mahabharatha:plugins` | `mahabharatha:plugins.core.md` | `mahabharatha:plugins.details.md` |
+| `mahabharatha:debug` | `mahabharatha:debug.core.md` | `mahabharatha:debug.details.md` |
+| `mahabharatha:plan` | `mahabharatha:plan.core.md` | `mahabharatha:plan.details.md` |
+| `mahabharatha:worker` | `mahabharatha:worker.core.md` | `mahabharatha:worker.details.md` |
+| `mahabharatha:merge` | `mahabharatha:merge.core.md` | `mahabharatha:merge.details.md` |
+| `mahabharatha:status` | `mahabharatha:status.core.md` | `mahabharatha:status.details.md` |
+| `mahabharatha:brainstorm` | `mahabharatha:brainstorm.core.md` | `mahabharatha:brainstorm.details.md` |
 
 The original `.md` file is preserved with core content plus a reference comment pointing to the details file. This maintains backward compatibility with existing symlinks.
 
@@ -66,7 +66,7 @@ Each task in `task-graph.json` can receive scoped context instead of the full fe
 
 ### Example
 
-Given a task that creates `zerg/auth_middleware.py` with the description "Implement JWT authentication middleware":
+Given a task that creates `mahabharatha/auth_middleware.py` with the description "Implement JWT authentication middleware":
 
 - Keywords extracted: `implement`, `authentication`, `middleware`, `auth`
 - Relevant spec sections: paragraphs mentioning "authentication", "middleware", "JWT"
@@ -107,7 +107,7 @@ A task that only touches Python files will not receive JavaScript or Docker secu
 
 ## Configuration
 
-All context engineering settings are under `plugins.context_engineering` in `.zerg/config.yaml`:
+All context engineering settings are under `plugins.context_engineering` in `.mahabharatha/config.yaml`:
 
 ```yaml
 plugins:
@@ -140,7 +140,7 @@ plugins:
 
 ## Monitoring
 
-Use `/zerg:status` to view the CONTEXT BUDGET section, which shows:
+Use `/mahabharatha:status` to view the CONTEXT BUDGET section, which shows:
 
 - **Split command count** -- number of commands using `.core.md` files and estimated token savings.
 - **Per-task context population** -- percentage of tasks that received scoped context vs. full context.

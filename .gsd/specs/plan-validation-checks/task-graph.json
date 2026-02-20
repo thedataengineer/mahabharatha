@@ -16,11 +16,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/plan.core.md"],
+        "modify": ["mahabharatha/data/commands/plan.core.md"],
         "read": [".gsd/specs/plan-validation-checks/design.md"]
       },
       "verification": {
-        "command": "grep -c 'skip-validation' zerg/data/commands/plan.core.md | grep -q '[3-9]' && echo 'OK: 3+ occurrences found'",
+        "command": "grep -c 'skip-validation' mahabharatha/data/commands/plan.core.md | grep -q '[3-9]' && echo 'OK: 3+ occurrences found'",
         "timeout_seconds": 10
       },
       "estimate_minutes": 3,
@@ -38,11 +38,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/design.core.md"],
+        "modify": ["mahabharatha/data/commands/design.core.md"],
         "read": [".gsd/specs/plan-validation-checks/design.md"]
       },
       "verification": {
-        "command": "grep -c 'skip-validation' zerg/data/commands/design.core.md | grep -q '[3-9]' && echo 'OK: 3+ occurrences found'",
+        "command": "grep -c 'skip-validation' mahabharatha/data/commands/design.core.md | grep -q '[3-9]' && echo 'OK: 3+ occurrences found'",
         "timeout_seconds": 10
       },
       "estimate_minutes": 3,
@@ -54,17 +54,17 @@
     {
       "id": "TASK-003",
       "title": "Update CHANGELOG.md and run wiring verification",
-      "description": "Add entry under [Unreleased] documenting --skip-validation flag for /z:plan and /z:design. Then run python -m zerg.validate_commands to verify no structural drift.",
+      "description": "Add entry under [Unreleased] documenting --skip-validation flag for /z:plan and /z:design. Then run python -m mahabharatha.validate_commands to verify no structural drift.",
       "phase": "quality",
       "level": 2,
       "dependencies": ["TASK-001", "TASK-002"],
       "files": {
         "create": [],
         "modify": ["CHANGELOG.md"],
-        "read": ["zerg/data/commands/plan.core.md", "zerg/data/commands/design.core.md"]
+        "read": ["mahabharatha/data/commands/plan.core.md", "mahabharatha/data/commands/design.core.md"]
       },
       "verification": {
-        "command": "grep -q 'skip-validation' CHANGELOG.md && python -m zerg.validate_commands && echo 'OK'",
+        "command": "grep -q 'skip-validation' CHANGELOG.md && python -m mahabharatha.validate_commands && echo 'OK'",
         "timeout_seconds": 120
       },
       "estimate_minutes": 5,

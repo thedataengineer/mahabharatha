@@ -27,7 +27,7 @@ class TestCommitAndTaskCompletion:
 
         head_before = git.current_commit()
         title = task.get("title", task["id"])
-        commit_msg = f"ZERG [{worker_id}]: {title}\n\nTask-ID: {task['id']}"
+        commit_msg = f"MAHABHARATHA [{worker_id}]: {title}\n\nTask-ID: {task['id']}"
 
         git.commit(commit_msg, add_all=True)
 
@@ -53,7 +53,7 @@ class TestCommitAndTaskCompletion:
         head_before = git.current_commit()
 
         with pytest.raises(GitError):
-            git.commit("ZERG [0]: Test task", add_all=True)
+            git.commit("MAHABHARATHA [0]: Test task", add_all=True)
 
         head_after = git.current_commit()
 
@@ -69,7 +69,7 @@ class TestCommitAndTaskCompletion:
         task = {"id": "TASK-001", "title": "Test task"}
 
         head_before = git.current_commit()
-        git.commit("ZERG [0]: Test task", add_all=True)
+        git.commit("MAHABHARATHA [0]: Test task", add_all=True)
         head_after = git.current_commit()
 
         # BF-009: This should be detected as failure
@@ -123,7 +123,7 @@ class TestMultiTaskCommitFlow:
         commits = []
         for task in tasks:
             git.simulate_changes()
-            commit_sha = git.commit(f"ZERG [0]: {task['title']}", add_all=True)
+            commit_sha = git.commit(f"MAHABHARATHA [0]: {task['title']}", add_all=True)
             commits.append(
                 {
                     "task_id": task["id"],
@@ -146,7 +146,7 @@ class TestMultiTaskCommitFlow:
 
         # Commit task 1 successfully
         git.simulate_changes()
-        git.commit("ZERG [0]: Task 1", add_all=True)
+        git.commit("MAHABHARATHA [0]: Task 1", add_all=True)
         head_after_1 = git.current_commit()
 
         # Configure failure for next commit
@@ -154,7 +154,7 @@ class TestMultiTaskCommitFlow:
         git.simulate_changes()
 
         with pytest.raises(GitError):
-            git.commit("ZERG [0]: Task 2", add_all=True)
+            git.commit("MAHABHARATHA [0]: Task 2", add_all=True)
 
         # First commit should still be valid
         assert git.get_commit("HEAD") == head_after_1
@@ -213,7 +213,7 @@ class TestCheckpointCommit:
 
         worker_id = 0
         task_id = "TASK-001"
-        commit_msg = f"WIP: ZERG [{worker_id}] checkpoint during {task_id}"
+        commit_msg = f"WIP: MAHABHARATHA [{worker_id}] checkpoint during {task_id}"
 
         commit_sha = git.commit(commit_msg, add_all=True)
 
@@ -228,7 +228,7 @@ class TestCheckpointCommit:
         git.simulate_changes()
 
         head_before = git.current_commit()
-        commit_sha = git.commit("WIP: ZERG [0] checkpoint during TASK-001", add_all=True)
+        commit_sha = git.commit("WIP: MAHABHARATHA [0] checkpoint during TASK-001", add_all=True)
         head_after = git.current_commit()
 
         # Checkpoint should change HEAD
@@ -248,7 +248,7 @@ class TestBranchOperations:
         git.checkout("mahabharatha/test/worker-0")
 
         git.simulate_changes()
-        commit_sha = git.commit("ZERG [0]: Task 1", add_all=True)
+        commit_sha = git.commit("MAHABHARATHA [0]: Task 1", add_all=True)
 
         # Should be on worker branch
         assert git.current_branch() == "mahabharatha/test/worker-0"
@@ -264,7 +264,7 @@ class TestBranchOperations:
             git.create_branch(branch, "main")
             git.checkout(branch)
             git.simulate_changes()
-            commit = git.commit(f"ZERG [{i}]: Task", add_all=True)
+            commit = git.commit(f"MAHABHARATHA [{i}]: Task", add_all=True)
             workers.append(
                 {
                     "worker_id": i,

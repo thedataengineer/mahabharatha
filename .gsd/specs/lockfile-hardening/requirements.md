@@ -5,13 +5,13 @@
 - **Status**: APPROVED
 - **Created**: 2026-02-11
 - **Priority**: Medium — code quality findings from review, no production incidents
-- **Source**: `/zerg:review` full two-stage review of multi-epic-isolation feature
+- **Source**: `/mahabharatha:review` full two-stage review of multi-epic-isolation feature
 
 ---
 
 ## 1. Problem Statement
 
-Code review of `zerg/commands/_utils.py` found 5 issues in lockfile and detect_feature code. All are hardening improvements — the code works but has edge-case vulnerabilities.
+Code review of `mahabharatha/commands/_utils.py` found 5 issues in lockfile and detect_feature code. All are hardening improvements — the code works but has edge-case vulnerabilities.
 
 ---
 
@@ -88,7 +88,7 @@ Code review of `zerg/commands/_utils.py` found 5 issues in lockfile and detect_f
 ## 5. Scope
 
 ### In Scope
-- `zerg/commands/_utils.py` — all 5 fixes
+- `mahabharatha/commands/_utils.py` — all 5 fixes
 - `tests/unit/test_lockfile.py` — new tests for F1, F2, F4, F5
 - `tests/unit/test_commands_utils.py` — new test for F3
 
@@ -115,7 +115,7 @@ Code review of `zerg/commands/_utils.py` found 5 issues in lockfile and detect_f
 
 | File | Change |
 |------|--------|
-| `zerg/commands/_utils.py` | All 5 fixes |
+| `mahabharatha/commands/_utils.py` | All 5 fixes |
 | `tests/unit/test_lockfile.py` | New tests for F1, F2, F4, F5 |
 | `tests/unit/test_commands_utils.py` | New test for F3 |
 

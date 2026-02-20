@@ -1,4 +1,4 @@
-"""Mock objects for ZERG testing."""
+"""Mock objects for MAHABHARATHA testing."""
 
 from tests.mocks.mock_git import MockGitOps
 from tests.mocks.mock_launcher import MockContainerLauncher

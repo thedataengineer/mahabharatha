@@ -1,4 +1,4 @@
-"""ZERG init command - initialize ZERG for a project."""
+"""MAHABHARATHA init command - initialize MAHABHARATHA for a project."""
 
 from pathlib import Path
 from typing import Any
@@ -117,13 +117,13 @@ def init(
     with_containers: bool,
     force: bool,
 ) -> None:
-    """Initialize ZERG for the current project.
+    """Initialize MAHABHARATHA for the current project.
 
     Creates .mahabharatha/ configuration and .devcontainer/ setup.
 
     Operates in two modes:
     - **Inception Mode**: For empty directories - creates project from scratch
-    - **Discovery Mode**: For existing projects - analyzes and configures ZERG
+    - **Discovery Mode**: For existing projects - analyzes and configures MAHABHARATHA
 
     Examples:
 
@@ -136,7 +136,7 @@ def init(
     try:
         # Check if this is an empty directory (Inception Mode)
         if is_empty_project():
-            console.print("\n[bold cyan]ZERG Init - Inception Mode[/bold cyan]")
+            console.print("\n[bold cyan]MAHABHARATHA Init - Inception Mode[/bold cyan]")
             console.print("[dim]Empty directory detected. Starting new project wizard...[/dim]\n")
 
             # Import and run inception mode
@@ -146,15 +146,15 @@ def init(
             if not success:
                 raise SystemExit(1)
 
-            # After inception, continue with ZERG setup
-            console.print("\n[bold]Configuring ZERG infrastructure...[/bold]")
+            # After inception, continue with MAHABHARATHA setup
+            console.print("\n[bold]Configuring MAHABHARATHA infrastructure...[/bold]")
 
-        console.print("\n[bold cyan]ZERG Init - Discovery Mode[/bold cyan]\n")
+        console.print("\n[bold cyan]MAHABHARATHA Init - Discovery Mode[/bold cyan]\n")
 
         # Check existing config
         mahabharatha_dir = Path(".mahabharatha")
         if mahabharatha_dir.exists() and not force:
-            console.print("[yellow]ZERG already initialized.[/yellow]")
+            console.print("[yellow]MAHABHARATHA already initialized.[/yellow]")
             console.print("Use [cyan]--force[/cyan] to reinitialize.")
             return
 
@@ -220,11 +220,11 @@ def init(
 
         auto_install_commands()
 
-        console.print("\n[green]✓[/green] ZERG initialized successfully!")
+        console.print("\n[green]✓[/green] MAHABHARATHA initialized successfully!")
         console.print("\nNext steps:")
         console.print("  1. Run [cyan]mahabharatha plan <feature>[/cyan] to capture requirements")
         console.print("  2. Run [cyan]mahabharatha design[/cyan] to create task graph")
-        console.print("  3. Run [cyan]mahabharatha rush[/cyan] to start execution")
+        console.print("  3. Run [cyan]mahabharatha kurukshetra[/cyan] to start execution")
 
     except Exception as e:
         console.print(f"\n[red]Error:[/red] {e}")
@@ -271,7 +271,7 @@ def get_primary_language(stack: ProjectStack) -> str | None:
 
 
 def create_directory_structure() -> None:
-    """Create ZERG directory structure."""
+    """Create MAHABHARATHA directory structure."""
     dirs = [
         ".mahabharatha",
         ".mahabharatha/state",
@@ -433,7 +433,7 @@ def create_devcontainer(stack: ProjectStack | None, security: str) -> None:
 
     # Use dynamic generator for multi-language support
     generator = DynamicDevcontainerGenerator(
-        name="ZERG Worker",
+        name="MAHABHARATHA Worker",
         install_claude=True,
     )
 
@@ -579,7 +579,7 @@ def show_summary(
         security_rules_result: Results from security rules integration
         container_built: Whether container was built
     """
-    table = Table(title="ZERG Configuration", show_header=False)
+    table = Table(title="MAHABHARATHA Configuration", show_header=False)
     table.add_column("Setting", style="cyan")
     table.add_column("Value")
 

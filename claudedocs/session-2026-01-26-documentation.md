@@ -1,4 +1,4 @@
-# Session: ZERG Documentation Overhaul
+# Session: MAHABHARATHA Documentation Overhaul
 
 **Date**: 2026-01-26
 **Duration**: ~45 minutes
@@ -6,7 +6,7 @@
 
 ## Summary
 
-Implemented comprehensive documentation plan for ZERG parallel execution system.
+Implemented comprehensive documentation plan for MAHABHARATHA parallel execution system.
 
 ## Deliverables Created
 
@@ -25,7 +25,7 @@ Implemented comprehensive documentation plan for ZERG parallel execution system.
 
 ### Level 2: README Command Reference
 Documented all 18 CLI commands with flags, defaults, and examples:
-- **Workflow**: `init`, `plan`, `design`, `rush`
+- **Workflow**: `init`, `plan`, `design`, `kurukshetra`
 - **Monitoring**: `status`, `stop`, `logs`
 - **Task**: `retry`, `merge`, `cleanup`
 - **Quality**: `test`, `build`, `analyze`, `review`, `debug`, `refactor`
@@ -55,7 +55,7 @@ e574490 docs: add complete slash command reference to README
 ## Key Patterns Discovered
 
 ### Command File Structure
-All command implementations in `zerg/commands/*.py` follow consistent pattern:
+All command implementations in `mahabharatha/commands/*.py` follow consistent pattern:
 - Click decorators for CLI options
 - Rich console for formatted output
 - Auto-detection of feature from state files
@@ -64,7 +64,7 @@ All command implementations in `zerg/commands/*.py` follow consistent pattern:
 ### Slash Commands
 19 Claude Code skills map to CLI commands:
 ```
-.claude/commands/zerg:*.md → zerg <command>
+.claude/commands/mahabharatha:*.md → mahabharatha <command>
 ```
 
 ## Files Modified
@@ -79,7 +79,7 @@ docs/tutorial-minerals-store.md        # New file
 
 - README format: GitHub-flavored markdown with tables
 - Tutorial uses realistic CLI output examples
-- SC2 theme: Minerals, Vespene Gas, Protoss/Terran/Zerg factions
+- SC2 theme: Minerals, Vespene Gas, Protoss/Terran/Mahabharatha factions
 - All 18 commands documented with complete flag tables
 
 ## Session Artifacts

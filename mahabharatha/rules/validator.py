@@ -1,4 +1,4 @@
-"""Validation for ZERG engineering rule sets."""
+"""Validation for MAHABHARATHA engineering rule sets."""
 
 from __future__ import annotations
 

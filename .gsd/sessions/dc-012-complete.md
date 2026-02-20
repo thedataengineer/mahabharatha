@@ -8,17 +8,17 @@
 
 ## Session Summary
 
-Implemented DC-012 integration tests for the dynamic devcontainer feature using ZERG methodology.
+Implemented DC-012 integration tests for the dynamic devcontainer feature using MAHABHARATHA methodology.
 
 ### Accomplishments
 
 1. **Created task infrastructure**:
-   - `.gsd/specs/dc-012-integration-tests/task-graph.json` - ZERG task graph
+   - `.gsd/specs/dc-012-integration-tests/task-graph.json` - MAHABHARATHA task graph
    - `.gsd/tasks/dc-012-integration-tests/BACKLOG.md` - Task backlog
    - 9 prompt files for worker execution
 
 2. **Fixed configuration**:
-   - Updated `.zerg/config.yaml` to match new ZergConfig schema
+   - Updated `.mahabharatha/config.yaml` to match new ZergConfig schema
    - quality_gates as list of QualityGate objects
    - mcp_servers as list of strings
 
@@ -29,7 +29,7 @@ Implemented DC-012 integration tests for the dynamic devcontainer feature using 
    - `test_container_launcher_checks.py` - Launcher availability (3 tests)
    - `test_container_orchestrator.py` - Orchestrator mode selection (2 tests)
    - `test_container_init_cmd.py` - Init command CLI (1 test)
-   - `test_container_rush_cmd.py` - Rush --mode flag (1 test)
+   - `test_container_rush_cmd.py` - Kurukshetra --mode flag (1 test)
    - `test_container_e2e.py` - End-to-end flow (1 test)
 
 4. **Fixed API mismatches**:
@@ -85,4 +85,4 @@ mcp_servers:
 
 1. Container dogfooding plan available at `claudedocs/plan-container-dogfooding.md`
 2. Continue toward 100% test coverage effort
-3. Consider running ZERG rush to validate task graph execution
+3. Consider running MAHABHARATHA kurukshetra to validate task graph execution

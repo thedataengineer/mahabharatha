@@ -64,7 +64,7 @@ Each worker thins a command test file by applying these rules in order:
 
 **Context**: 18 files to thin, ranging from 765 LOC to 1,788 LOC.
 **Decision**: Split into 3 workers by file count (6 files each), balanced by total LOC.
-**Rationale**: Each file is independent. 3 workers matches max parallelization from prior rush.
+**Rationale**: Each file is independent. 3 workers matches max parallelization from prior kurukshetra.
 
 ### 3.3 Phase 3A Before 3B for Shared Files
 

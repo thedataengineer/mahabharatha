@@ -5,7 +5,7 @@
 
 ## Summary
 
-Completed comprehensive test coverage improvement plan for ZERG project.
+Completed comprehensive test coverage improvement plan for MAHABHARATHA project.
 
 ## Results
 
@@ -62,8 +62,8 @@ Completed comprehensive test coverage improvement plan for ZERG project.
 ```python
 @pytest.fixture
 def mock_orchestrator_deps():
-    with patch("zerg.orchestrator.StateManager") as state_mock, \
-         patch("zerg.orchestrator.LevelController") as levels_mock, \
+    with patch("mahabharatha.orchestrator.StateManager") as state_mock, \
+         patch("mahabharatha.orchestrator.LevelController") as levels_mock, \
          # ... other patches
         yield {"state": state, "levels": levels, ...}
 ```

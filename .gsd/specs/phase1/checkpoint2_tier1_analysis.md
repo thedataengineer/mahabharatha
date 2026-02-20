@@ -26,7 +26,7 @@
 - Trust type system, avoid defensive code
 - Clean logs over verbose output
 
-**Delta from ZERG**: Production Rust implementation vs Python design, desktop UI, established testing framework
+**Delta from MAHABHARATHA**: Production Rust implementation vs Python design, desktop UI, established testing framework
 
 ---
 
@@ -47,7 +47,7 @@
 
 **Agent Support**: First-class support for 7 agents: Claude Code, OpenCode, Codex, Gemini, Copilot, Qwen, Amp
 
-**Delta from ZERG**: Production Go implementation, credential system, multi-agent support, path preservation
+**Delta from MAHABHARATHA**: Production Go implementation, credential system, multi-agent support, path preservation
 
 ---
 
@@ -75,7 +75,7 @@
 - Same-session execution
 - Continuous progress tracking
 
-**Delta from ZERG**: Skill-based vs command-based, marketplace integration, human-in-loop enforcement
+**Delta from MAHABHARATHA**: Skill-based vs command-based, marketplace integration, human-in-loop enforcement
 
 ---
 
@@ -96,27 +96,27 @@
 
 **MCP Integration**: 8 servers (Tavily, Context7, Sequential-Thinking, Serena, Playwright, Magic, Morphllm-Fast-Apply, Chrome DevTools)
 
-**Delta from ZERG**: Production Python implementation, extensive command library, 16 agents, behavioral modes
+**Delta from MAHABHARATHA**: Production Python implementation, extensive command library, 16 agents, behavioral modes
 
 ---
 
 ## Converging Patterns (3+ Sources)
 
 ### 1. Git Worktrees for Isolation
-- **ZERG**: Design specifies worktrees per worker
+- **MAHABHARATHA**: Design specifies worktrees per worker
 - **packnplay**: XDG-compliant worktree management
 - **superpowers**: using-git-worktrees skill
 - **Consensus**: Standard approach for parallel AI agent work
 
 ### 2. MCP Server Integration
-- **ZERG**: Config template references MCP
+- **MAHABHARATHA**: Config template references MCP
 - **goose**: goose-mcp crate
 - **packnplay**: Agent-specific MCP mounting
 - **SuperClaude**: 8 MCP servers with CLI installation
 - **Consensus**: MCP is the extension mechanism
 
 ### 3. Task Decomposition with Verification
-- **ZERG**: verification_command per task
+- **MAHABHARATHA**: verification_command per task
 - **superpowers**: writing-plans (2-5 min tasks with verification)
 - **SuperClaude**: /sc:spawn with decomposition
 - **Consensus**: Tasks need verification commands
@@ -127,8 +127,8 @@
 
 | Repository | Innovation |
 |------------|------------|
-| ZERG | Level-based synchronization with merge gates |
-| ZERG | Exclusive file ownership at design time |
+| MAHABHARATHA | Level-based synchronization with merge gates |
+| MAHABHARATHA | Exclusive file ownership at design time |
 | packnplay | Smart user detection with caching |
 | packnplay | Host path preservation (no /workspace) |
 | superpowers | Two-stage review (spec then code quality) |
@@ -139,7 +139,7 @@
 
 ## Patterns to Adopt
 
-| Source | Pattern | ZERG Application |
+| Source | Pattern | MAHABHARATHA Application |
 |--------|---------|------------------|
 | packnplay | Git worktree management | Runtime implementation |
 | packnplay | Smart user detection | Devcontainer integration |

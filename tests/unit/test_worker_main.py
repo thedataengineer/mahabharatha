@@ -1,4 +1,4 @@
-"""Unit tests for ZERG worker_main module."""
+"""Unit tests for MAHABHARATHA worker_main module."""
 
 import argparse
 import os

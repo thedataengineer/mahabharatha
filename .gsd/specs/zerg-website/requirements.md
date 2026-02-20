@@ -1,7 +1,7 @@
-# Requirements: ZERG Website
+# Requirements: MAHABHARATHA Website
 
 **Status**: APPROVED
-**Feature**: zerg-website
+**Feature**: mahabharatha-website
 **Epic**: #204
 **Date**: 2026-02-07
 **Prior Art**: `.gsd/specs/brainstorm-website/` (brainstorm, validated-design, research, tradeoffs)
@@ -10,7 +10,7 @@
 
 ## 1. Problem Statement
 
-The current MkDocs-based docs site at `https://rocklambros.github.io/zerg/` needs a custom landing page that communicates ZERG's value proposition — security, containerized parallel execution, context engineering, and token efficiency — in a way that's visually compelling and potentially viral.
+The current MkDocs-based docs site at `https://rocklambros.github.io/mahabharatha/` needs a custom landing page that communicates MAHABHARATHA's value proposition — security, containerized parallel execution, context engineering, and token efficiency — in a way that's visually compelling and potentially viral.
 
 ## 2. Solution
 
@@ -34,7 +34,7 @@ Single-page landing site replacing MkDocs as the homepage. Pure HTML/CSS/JS with
 - Blog or dynamic content
 - User accounts / authentication
 - Analytics beyond what GitHub provides
-- Custom domain (uses `rocklambros.github.io/zerg/`)
+- Custom domain (uses `rocklambros.github.io/mahabharatha/`)
 - JavaScript frameworks (React, Vue, etc.)
 - Build step / bundler / node_modules
 
@@ -42,25 +42,25 @@ Single-page landing site replacing MkDocs as the homepage. Pure HTML/CSS/JS with
 
 ### 4.1 Sticky Navigation Bar
 - Fixed top bar, semi-transparent background with backdrop blur
-- Left: ZERG logo (optimized) + wordmark
+- Left: MAHABHARATHA logo (optimized) + wordmark
 - Center: Section anchor links (Why, How, Commands, Quick Start, FAQ)
 - Right: Dark/light toggle (sun/moon icon) + **prominent GitHub repo link** (icon + "GitHub" text, not just an icon)
 - Smooth scroll to anchors on click
 - Collapses to hamburger menu on mobile
 
 ### 4.2 Hero Section
-- **Tone**: Playful Zerg-themed, viral-worthy, but grounded in real value
-- **Headline**: Commanding statement incorporating the swarm metaphor + value props (security, parallel execution, token efficiency). Aim for memorable/shareable.
-- **Subheadline**: One-liner explaining what ZERG actually is
-- **CTA**: `pip install zerg-ai` with copy-to-clipboard button
+- **Tone**: Playful Mahabharatha-themed, viral-worthy, but grounded in real value
+- **Headline**: Commanding statement incorporating the akshauhini metaphor + value props (security, parallel execution, token efficiency). Aim for memorable/shareable.
+- **Subheadline**: One-liner explaining what MAHABHARATHA actually is
+- **CTA**: `pip install mahabharatha-ai` with copy-to-clipboard button
 - **4 Glass Pillar Cards** (glassmorphism style, frosted panels):
   1. **Secure by Default** — Auto-fetched OWASP rules, language-specific security
   2. **Run Anywhere** — Docker containers, subprocess, or task mode
   3. **Massively Parallel** — Coordinated workers with dependency-aware scheduling
   4. **Token Smart** — Context engineering: 30-50% token savings per worker
 
-### 4.3 Why ZERG
-- Compact format: 3-4 bullet pairs (pain point → ZERG solution)
+### 4.3 Why MAHABHARATHA
+- Compact format: 3-4 bullet pairs (pain point → MAHABHARATHA solution)
 - Example pairs:
   - Manual setup for every feature → Auto-detects stack, fetches rules, generates configs
   - Sequential execution bottleneck → 5+ workers building in parallel
@@ -69,13 +69,13 @@ Single-page landing site replacing MkDocs as the homepage. Pure HTML/CSS/JS with
 
 ### 4.4 How It Works
 - Responsive pipeline visualization: horizontal on desktop, vertical on mobile
-- 4 stages with icons: Plan → Design → Rush → Merge
+- 4 stages with icons: Plan → Design → Kurukshetra → Merge
 - Each stage: icon + title + 1-line description
 - Connecting arrows/lines between stages
 - Brief explanation of what happens at each step
 
 ### 4.5 Commands Cheat Sheet
-- Full table of all 26 `/zerg:*` commands
+- Full table of all 26 `/mahabharatha:*` commands
 - Columns: Command | Description (one-liner)
 - Grouped by category (workflow, utilities, monitoring)
 - Link to GitHub wiki for deep documentation
@@ -84,10 +84,10 @@ Single-page landing site replacing MkDocs as the homepage. Pure HTML/CSS/JS with
 ### 4.6 Quick Start
 - 4-step code block with copy-to-clipboard:
   ```bash
-  pip install zerg-ai
-  /zerg:plan user-auth
-  /zerg:design
-  /zerg:rush --workers=5
+  pip install mahabharatha-ai
+  /mahabharatha:plan user-auth
+  /mahabharatha:design
+  /mahabharatha:kurukshetra --workers=5
   ```
 - Brief annotation per step
 
@@ -110,7 +110,7 @@ Single-page landing site replacing MkDocs as the homepage. Pure HTML/CSS/JS with
 
 - **Dark-first**: Dark navy background (#0f172a or similar)
 - **Light mode**: Clean white/light gray, toggle via sun/moon icon
-- **Accent colors**: Purple (#7c3aed) and toxic green (#22c55e) — Zerg-inspired, subtle
+- **Accent colors**: Purple (#7c3aed) and toxic green (#22c55e) — Mahabharatha-inspired, subtle
 - **Glassmorphism**: Frosted panels with `backdrop-filter: blur()`, semi-transparent borders
 - **Typography**: System font stack for body, monospace for code blocks
 - **Gradient text**: For hero headline emphasis
@@ -134,7 +134,7 @@ docs/
     js/
       main.js             # Dark/light toggle, copy-to-clipboard, FAQ accordion, scroll animations
     img/
-      zerg-logo-web.png   # Optimized logo (<200KB)
+      mahabharatha-logo-web.png   # Optimized logo (<200KB)
       og-image.png        # Open Graph preview image
   commands-quick.md       # Existing (preserved)
   commands-deep.md        # Existing (preserved)
@@ -152,7 +152,7 @@ docs/
 
 ### 6.4 Logo Optimization
 - Source: `logo/zerg_logo.png` (7.6MB)
-- Target: `docs/assets/img/zerg-logo-web.png` (<200KB)
+- Target: `docs/assets/img/mahabharatha-logo-web.png` (<200KB)
 - Resize to max 400px width for web display
 - Compress with quality optimization
 - Generate separate OG image (1200x630) for social sharing
@@ -173,7 +173,7 @@ docs/
 
 ## 8. Acceptance Criteria
 
-1. Landing page loads at `https://rocklambros.github.io/zerg/`
+1. Landing page loads at `https://rocklambros.github.io/mahabharatha/`
 2. All 7 content sections render correctly
 3. Dark/light mode toggle works and persists via localStorage
 4. All 26 commands appear in cheat sheet table
@@ -216,9 +216,9 @@ docs/
 
 1. **Headline copy**: Exact wording for viral hero headline (to be drafted during design)
 2. **FAQ content**: Specific Q&A pairs (to be defined during design)
-3. ~~**OG image design**~~: RESOLVED — Use optimized zerg logo as OG image base (1200x630, logo centered on dark background)
+3. ~~**OG image design**~~: RESOLVED — Use optimized mahabharatha logo as OG image base (1200x630, logo centered on dark background)
 4. **MkDocs removal timing**: Remove mkdocs.yml + pip install in same PR, or separate cleanup PR?
-5. ~~**Custom domain**~~: RESOLVED — `zerg-ai.com` planned. OG URLs and meta tags should use `zerg-ai.com` as canonical. GitHub Pages serves as interim until domain is configured.
+5. ~~**Custom domain**~~: RESOLVED — `mahabharatha-ai.com` planned. OG URLs and meta tags should use `mahabharatha-ai.com` as canonical. GitHub Pages serves as interim until domain is configured.
 
 ## 13. Risks
 

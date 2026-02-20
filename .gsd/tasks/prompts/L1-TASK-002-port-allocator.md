@@ -13,7 +13,7 @@ Each worker needs a unique port for its MCP server. The port allocator manages t
 ## Files to Create
 
 ```
-.zerg/
+.mahabharatha/
 └── ports.py          # PortAllocator class
 ```
 
@@ -36,19 +36,19 @@ class PortAssignment:
 
 class PortAllocator:
     """Manages port allocation for workers."""
-    
+
     EPHEMERAL_START = 49152
     EPHEMERAL_END = 65535
-    
+
     def __init__(self):
         self.assignments: dict[str, PortAssignment] = {}
         self.used_ports: set[int] = set()
-    
+
     def allocate(self, worker_id: str) -> int:
         """Allocate a port for a worker."""
         if worker_id in self.assignments:
             return self.assignments[worker_id].port
-        
+
         port = self._find_available_port()
         assignment = PortAssignment(
             port=port,
@@ -58,25 +58,25 @@ class PortAllocator:
         self.assignments[worker_id] = assignment
         self.used_ports.add(port)
         return port
-    
+
     def release(self, worker_id: str) -> None:
         """Release a worker's port."""
         if worker_id in self.assignments:
             port = self.assignments[worker_id].port
             self.used_ports.discard(port)
             del self.assignments[worker_id]
-    
+
     def _find_available_port(self) -> int:
         """Find an available port in the ephemeral range."""
         max_attempts = 100
-        
+
         for _ in range(max_attempts):
             port = random.randint(self.EPHEMERAL_START, self.EPHEMERAL_END)
             if port not in self.used_ports and self._is_port_available(port):
                 return port
-        
+
         raise RuntimeError("No available ports in ephemeral range")
-    
+
     def _is_port_available(self, port: int) -> bool:
         """Check if port is available on the system."""
         try:
@@ -85,7 +85,7 @@ class PortAllocator:
                 return True
         except OSError:
             return False
-    
+
     def get_assignment(self, worker_id: str) -> Optional[PortAssignment]:
         """Get port assignment for a worker."""
         return self.assignments.get(worker_id)
@@ -102,7 +102,7 @@ class PortAllocator:
 ## Verification
 
 ```bash
-cd .zerg && python -c "
+cd .mahabharatha && python -c "
 from ports import PortAllocator
 
 pa = PortAllocator()
@@ -129,7 +129,7 @@ print(f'OK: Ports allocated: {p1}, {p2}')
 ## Test Cases
 
 ```python
-# .zerg/tests/test_ports.py
+# .mahabharatha/tests/test_ports.py
 import pytest
 from ports import PortAllocator
 
@@ -160,4 +160,4 @@ def test_port_in_range():
 
 1. All acceptance criteria checked
 2. Verification command passes
-3. Unit tests pass: `pytest .zerg/tests/test_ports.py`
+3. Unit tests pass: `pytest .mahabharatha/tests/test_ports.py`

@@ -1,4 +1,4 @@
-"""ZERG v2 Port Allocator - Ephemeral port management for worker isolation."""
+"""MAHABHARATHA v2 Port Allocator - Ephemeral port management for worker isolation."""
 
 import random
 import socket

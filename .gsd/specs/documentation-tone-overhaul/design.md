@@ -4,7 +4,7 @@
 - **Feature**: documentation-tone-overhaul
 - **Status**: DRAFT
 - **Created**: 2026-02-04
-- **Author**: ZERG Design Mode
+- **Author**: MAHABHARATHA Design Mode
 
 ---
 
@@ -12,7 +12,7 @@
 
 ### 1.1 Summary
 
-This feature rewrites all ZERG documentation from reference-style (tables, bullet lists, terse descriptions) to educational-style (concept-first explanations, narrative context, ASCII diagrams with annotations, simulated dialogues). The rewrite follows FR-1's structure: CONCEPT → NARRATIVE → DIAGRAM → COMMAND.
+This feature rewrites all MAHABHARATHA documentation from reference-style (tables, bullet lists, terse descriptions) to educational-style (concept-first explanations, narrative context, ASCII diagrams with annotations, simulated dialogues). The rewrite follows FR-1's structure: CONCEPT → NARRATIVE → DIAGRAM → COMMAND.
 
 ### 1.2 Goals
 
@@ -119,17 +119,17 @@ Planning/discovery phases include dialogues:
 ### Discovery Dialogue
 
 ```
-ZERG: What problem does this feature solve for users?
+MAHABHARATHA: What problem does this feature solve for users?
 YOU:  Users need to browse mineral products and add them to a cart.
 
-ZERG: What are the core entities and their relationships?
+MAHABHARATHA: What are the core entities and their relationships?
 YOU:  Products have prices and quantities. Carts hold product references.
 
-ZERG: What happens at checkout?
+MAHABHARATHA: What happens at checkout?
 YOU:  Cart becomes an order with shipping info and payment confirmation.
 ```
 
-{Explanation of what ZERG learned from this dialogue}
+{Explanation of what MAHABHARATHA learned from this dialogue}
 ```
 
 ---
@@ -140,7 +140,7 @@ YOU:  Cart becomes an order with shipping info and payment confirmation.
 
 #### Home.md (Entry Point)
 - **Current**: Quick start bullets, installation table, page list
-- **Target**: Welcome narrative explaining ZERG's purpose, guided navigation based on user goals, concept overview before commands
+- **Target**: Welcome narrative explaining MAHABHARATHA's purpose, guided navigation based on user goals, concept overview before commands
 
 #### Tutorial.md (Learning Path)
 - **Current**: Numbered steps with "What happens" bullets
@@ -164,11 +164,11 @@ YOU:  Cart becomes an order with shipping info and payment confirmation.
 
 #### Plugins.md
 - **Current**: Hook definitions and examples
-- **Target**: "Why extend ZERG" narrative, use case stories, step-by-step plugin creation guide
+- **Target**: "Why extend MAHABHARATHA" narrative, use case stories, step-by-step plugin creation guide
 
 #### Security.md
 - **Current**: Security feature descriptions
-- **Target**: "Why security matters in AI assistants", threat model explanation, then how ZERG addresses each
+- **Target**: "Why security matters in AI assistants", threat model explanation, then how MAHABHARATHA addresses each
 
 #### Troubleshooting.md
 - **Current**: Problem → Solution tables
@@ -190,7 +190,7 @@ YOU:  Cart becomes an order with shipping info and payment confirmation.
 
 Fast lookup for experienced users. For explanations, see [commands-deep.md](commands-deep.md).
 
-## /zerg:rush
+## /mahabharatha:kurukshetra
 Flags: `--workers=N`, `--mode container|task`, `--resume`
 Start parallel workers. Requires approved design.
 ```
@@ -199,13 +199,13 @@ Start parallel workers. Requires approved design.
 ```markdown
 # Command Reference (Deep Dive)
 
-## /zerg:rush
+## /mahabharatha:kurukshetra
 
 ### What Is It?
-The rush command is ZERG's execution engine...
+The kurukshetra command is MAHABHARATHA's execution engine...
 
 ### Why Use It?
-When you have an approved design, rush spawns...
+When you have an approved design, kurukshetra spawns...
 
 ### How It Works
 {ASCII diagram of worker spawning}
@@ -219,21 +219,21 @@ When you have an approved design, rush spawns...
 Transform from step-list to narrative:
 
 ```markdown
-## Tutorial: Your First ZERG Project
+## Tutorial: Your First MAHABHARATHA Project
 
 Imagine you're building a Starcraft 2 themed store. You could write each file
-one at a time, but that takes hours. ZERG lets you describe what you want,
-then spawns a swarm of workers to build it in parallel.
+one at a time, but that takes hours. MAHABHARATHA lets you describe what you want,
+then spawns a akshauhini of workers to build it in parallel.
 
 Let's walk through how this works...
 
 ### Starting the Conversation
 
-Before ZERG can help, it needs to understand your project. The `/zerg:plan`
+Before MAHABHARATHA can help, it needs to understand your project. The `/mahabharatha:plan`
 command starts a discovery conversation:
 
 ```
-ZERG: What problem does the minerals store solve for users?
+MAHABHARATHA: What problem does the minerals store solve for users?
 YOU:  Users need to browse and purchase mineral products through a REST API.
 ```
 
@@ -270,9 +270,9 @@ YOU:  Users need to browse and purchase mineral products through a REST API.
 
 **Decision**: Dialogues for discovery phases, real output for execution phases
 
-**Rationale**: Discovery is conversational (ZERG asks, you answer). Execution is deterministic (ZERG runs commands, shows output). Mixing them confuses the mental model.
+**Rationale**: Discovery is conversational (MAHABHARATHA asks, you answer). Execution is deterministic (MAHABHARATHA runs commands, shows output). Mixing them confuses the mental model.
 
-**Consequences**: Tutorial has hybrid format. Clear distinction helps readers understand ZERG's modes.
+**Consequences**: Tutorial has hybrid format. Clear distinction helps readers understand MAHABHARATHA's modes.
 
 ### 4.3 Rewrite In-Place vs. New Files
 
@@ -378,7 +378,7 @@ Level 6 (Finalization - Depends on all others):
 
 Each rewritten file must pass:
 1. **Structure check**: Has CONCEPT → NARRATIVE → DIAGRAM → COMMAND for each major topic
-2. **Dialogue check**: Planning tutorials have ZERG/YOU dialogues
+2. **Dialogue check**: Planning tutorials have MAHABHARATHA/YOU dialogues
 3. **Link check**: All internal links resolve
 4. **Jargon check**: No unexplained technical terms
 

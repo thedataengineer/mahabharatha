@@ -501,7 +501,7 @@ class TestWikiCommand:
         output_dir = tmp_path / "wiki_out"
 
         sidebar_inst = mocks["SidebarGenerator"].return_value
-        sidebar_inst.generate.return_value = "## ZERG Wiki\n\n**Reference**"
+        sidebar_inst.generate.return_value = "## MAHABHARATHA Wiki\n\n**Reference**"
 
         with (
             patch("mahabharatha.doc_engine.crossref.CrossRefBuilder", mocks["CrossRefBuilder"]),

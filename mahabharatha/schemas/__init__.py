@@ -1,4 +1,4 @@
-"""ZERG JSON schemas for validation."""
+"""MAHABHARATHA JSON schemas for validation."""
 
 from pathlib import Path
 

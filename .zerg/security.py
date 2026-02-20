@@ -1,4 +1,4 @@
-"""ZERG v2 Security Command - Security review, vulnerability scanning, hardening."""
+"""MAHABHARATHA v2 Security Command - Security review, vulnerability scanning, hardening."""
 
 import json
 import re
@@ -332,7 +332,7 @@ class SecurityCommand:
             "version": "2.1.0",
             "runs": [
                 {
-                    "tool": {"driver": {"name": "zerg-security", "version": "2.0"}},
+                    "tool": {"driver": {"name": "mahabharatha-security", "version": "2.0"}},
                     "results": [
                         {
                             "ruleId": v.cwe_id or v.vuln_type.value,

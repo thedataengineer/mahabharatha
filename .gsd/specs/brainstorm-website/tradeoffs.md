@@ -1,4 +1,4 @@
-# Trade-off Decisions: ZERG Website
+# Trade-off Decisions: MAHABHARATHA Website
 
 ## 1. Tailwind Loading
 **Decision**: CDN (Play CDN)

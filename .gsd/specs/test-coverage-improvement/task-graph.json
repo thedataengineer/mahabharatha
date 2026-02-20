@@ -17,17 +17,17 @@
       "files": {
         "create": ["tests/unit/test_merge_coordinator.py"],
         "modify": [],
-        "read": ["zerg/merge.py", "tests/unit/test_merge_cmd.py"]
+        "read": ["mahabharatha/merge.py", "tests/unit/test_merge_cmd.py"]
       },
       "verification": {
-        "command": "python -m pytest tests/unit/test_merge_coordinator.py -v --timeout=30 && python -m pytest tests/unit/test_merge_coordinator.py --cov=zerg/merge --cov-report=term-missing --timeout=30 2>&1 | grep 'zerg/merge.py'",
+        "command": "python -m pytest tests/unit/test_merge_coordinator.py -v --timeout=30 && python -m pytest tests/unit/test_merge_coordinator.py --cov=mahabharatha/merge --cov-report=term-missing --timeout=30 2>&1 | grep 'mahabharatha/merge.py'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 15,
       "skills_required": ["python", "pytest"],
       "consumers": ["TASK-018"],
       "integration_test": null,
-      "context": "## Module: zerg/merge.py\nMergeCoordinator handles post-level merge operations. Key classes: MergeCoordinator with merge_level(), run_quality_gates(), finalize(). Uncovered lines: 69-75, 87-89, 108-142, 161-196, 216-251, 270-290, 298-306, 328-414, 429, 440. Uses StateManager, git_ops. Existing test_merge_cmd.py tests CLI layer only.\n\n## Test Pattern\nUse MagicMock for StateManager and git subprocess calls. Parametrize quality gate pass/fail scenarios."
+      "context": "## Module: mahabharatha/merge.py\nMergeCoordinator handles post-level merge operations. Key classes: MergeCoordinator with merge_level(), run_quality_gates(), finalize(). Uncovered lines: 69-75, 87-89, 108-142, 161-196, 216-251, 270-290, 298-306, 328-414, 429, 440. Uses StateManager, git_ops. Existing test_merge_cmd.py tests CLI layer only.\n\n## Test Pattern\nUse MagicMock for StateManager and git subprocess calls. Parametrize quality gate pass/fail scenarios."
     },
     {
       "id": "TASK-002",
@@ -39,17 +39,17 @@
       "files": {
         "create": [],
         "modify": ["tests/unit/test_state_reconciler.py"],
-        "read": ["zerg/state_reconciler.py"]
+        "read": ["mahabharatha/state_reconciler.py"]
       },
       "verification": {
-        "command": "python -m pytest tests/unit/test_state_reconciler.py -v --timeout=30 && python -m pytest tests/unit/test_state_reconciler.py --cov=zerg/state_reconciler --cov-report=term-missing --timeout=30 2>&1 | grep 'zerg/state_reconciler.py'",
+        "command": "python -m pytest tests/unit/test_state_reconciler.py -v --timeout=30 && python -m pytest tests/unit/test_state_reconciler.py --cov=mahabharatha/state_reconciler --cov-report=term-missing --timeout=30 2>&1 | grep 'mahabharatha/state_reconciler.py'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 12,
       "skills_required": ["python", "pytest"],
       "consumers": ["TASK-018"],
       "integration_test": null,
-      "context": "## Module: zerg/state_reconciler.py\n177 lines, 128 uncovered. StateReconciler detects and repairs drift between Claude Tasks and state JSON. Uncovered lines: 39, 66, 71, 75, 133-159, 175-205, 221-227, 236-294, 312-336, 345-387, 396-406, 418-463, 479-495. Existing test file has basic tests but skips reconciliation logic paths."
+      "context": "## Module: mahabharatha/state_reconciler.py\n177 lines, 128 uncovered. StateReconciler detects and repairs drift between Claude Tasks and state JSON. Uncovered lines: 39, 66, 71, 75, 133-159, 175-205, 221-227, 236-294, 312-336, 345-387, 396-406, 418-463, 479-495. Existing test file has basic tests but skips reconciliation logic paths."
     },
     {
       "id": "TASK-003",
@@ -61,17 +61,17 @@
       "files": {
         "create": ["tests/unit/test_ports.py"],
         "modify": [],
-        "read": ["zerg/ports.py"]
+        "read": ["mahabharatha/ports.py"]
       },
       "verification": {
-        "command": "python -m pytest tests/unit/test_ports.py -v --timeout=30 && python -m pytest tests/unit/test_ports.py --cov=zerg/ports --cov-report=term-missing --timeout=30 2>&1 | grep 'zerg/ports.py'",
+        "command": "python -m pytest tests/unit/test_ports.py -v --timeout=30 && python -m pytest tests/unit/test_ports.py --cov=mahabharatha/ports --cov-report=term-missing --timeout=30 2>&1 | grep 'mahabharatha/ports.py'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 10,
       "skills_required": ["python", "pytest"],
       "consumers": ["TASK-018"],
       "integration_test": null,
-      "context": "## Module: zerg/ports.py\n76 lines, 51 uncovered. Port allocation for worker processes. Functions: allocate_port(), release_port(), is_port_available(), find_free_port_range(). Uses socket module. Uncovered lines: 31-40, 54-81, 89, 97-99, 103-105, 113, 125-127, 136-138, 148, 161-162, 174-180, 189-190."
+      "context": "## Module: mahabharatha/ports.py\n76 lines, 51 uncovered. Port allocation for worker processes. Functions: allocate_port(), release_port(), is_port_available(), find_free_port_range(). Uses socket module. Uncovered lines: 31-40, 54-81, 89, 97-99, 103-105, 113, 125-127, 136-138, 148, 161-162, 174-180, 189-190."
     },
     {
       "id": "TASK-004",
@@ -83,17 +83,17 @@
       "files": {
         "create": ["tests/unit/test_status_renderer.py"],
         "modify": [],
-        "read": ["zerg/rendering/status_renderer.py"]
+        "read": ["mahabharatha/rendering/status_renderer.py"]
       },
       "verification": {
-        "command": "python -m pytest tests/unit/test_status_renderer.py -v --timeout=30 && python -m pytest tests/unit/test_status_renderer.py --cov=zerg/rendering/status_renderer --cov-report=term-missing --timeout=30 2>&1 | grep 'status_renderer.py'",
+        "command": "python -m pytest tests/unit/test_status_renderer.py -v --timeout=30 && python -m pytest tests/unit/test_status_renderer.py --cov=mahabharatha/rendering/status_renderer --cov-report=term-missing --timeout=30 2>&1 | grep 'status_renderer.py'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 20,
       "skills_required": ["python", "pytest", "rich"],
       "consumers": ["TASK-018"],
       "integration_test": null,
-      "context": "## Module: zerg/rendering/status_renderer.py\n665 lines, 367 uncovered. LARGEST uncovered module. Rich-based terminal rendering for /zerg:status output. Multiple render_*() methods for different status sections. Mock Rich Console to capture output. Focus on render_header(), render_tasks(), render_progress(), render_workers()."
+      "context": "## Module: mahabharatha/rendering/status_renderer.py\n665 lines, 367 uncovered. LARGEST uncovered module. Rich-based terminal rendering for /mahabharatha:status output. Multiple render_*() methods for different status sections. Mock Rich Console to capture output. Focus on render_header(), render_tasks(), render_progress(), render_workers()."
     },
     {
       "id": "TASK-005",
@@ -105,17 +105,17 @@
       "files": {
         "create": ["tests/unit/test_subprocess_launcher.py"],
         "modify": [],
-        "read": ["zerg/launchers/subprocess_launcher.py", "zerg/launchers/base.py"]
+        "read": ["mahabharatha/launchers/subprocess_launcher.py", "mahabharatha/launchers/base.py"]
       },
       "verification": {
-        "command": "python -m pytest tests/unit/test_subprocess_launcher.py -v --timeout=30 && python -m pytest tests/unit/test_subprocess_launcher.py --cov=zerg/launchers/subprocess_launcher --cov-report=term-missing --timeout=30 2>&1 | grep 'subprocess_launcher.py'",
+        "command": "python -m pytest tests/unit/test_subprocess_launcher.py -v --timeout=30 && python -m pytest tests/unit/test_subprocess_launcher.py --cov=mahabharatha/launchers/subprocess_launcher --cov-report=term-missing --timeout=30 2>&1 | grep 'subprocess_launcher.py'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 15,
       "skills_required": ["python", "pytest"],
       "consumers": ["TASK-018"],
       "integration_test": null,
-      "context": "## Module: zerg/launchers/subprocess_launcher.py\n238 lines, 120 uncovered. SubprocessLauncher extends BaseLauncher. Key methods: launch(), _build_command(), _wait_for_completion(), _handle_timeout(). Uncovered lines: 99, 106-107, 110-111, 138-143, 200, 209, 211, 213, 237, 244-246, 304, 318-336, 361-460, 474-492, 507-542."
+      "context": "## Module: mahabharatha/launchers/subprocess_launcher.py\n238 lines, 120 uncovered. SubprocessLauncher extends BaseLauncher. Key methods: launch(), _build_command(), _wait_for_completion(), _handle_timeout(). Uncovered lines: 99, 106-107, 110-111, 138-143, 200, 209, 211, 213, 237, 244-246, 304, 318-336, 361-460, 474-492, 507-542."
     },
     {
       "id": "TASK-006",
@@ -127,7 +127,7 @@
       "files": {
         "create": ["tests/unit/test_perf_adapters_batch.py"],
         "modify": [],
-        "read": ["zerg/performance/adapters/pipdeptree_adapter.py", "zerg/performance/adapters/jscpd_adapter.py", "zerg/performance/adapters/cloc_adapter.py", "zerg/performance/adapters/deptry_adapter.py"]
+        "read": ["mahabharatha/performance/adapters/pipdeptree_adapter.py", "mahabharatha/performance/adapters/jscpd_adapter.py", "mahabharatha/performance/adapters/cloc_adapter.py", "mahabharatha/performance/adapters/deptry_adapter.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_perf_adapters_batch.py -v --timeout=30",
@@ -149,17 +149,17 @@
       "files": {
         "create": [],
         "modify": ["tests/unit/test_git_history_engine.py"],
-        "read": ["zerg/git/history_engine.py"]
+        "read": ["mahabharatha/git/history_engine.py"]
       },
       "verification": {
-        "command": "python -m pytest tests/unit/test_git_history_engine.py -v --timeout=30 && python -m pytest tests/unit/test_git_history_engine.py --cov=zerg/git/history_engine --cov-report=term-missing --timeout=30 2>&1 | grep 'history_engine.py'",
+        "command": "python -m pytest tests/unit/test_git_history_engine.py -v --timeout=30 && python -m pytest tests/unit/test_git_history_engine.py --cov=mahabharatha/git/history_engine --cov-report=term-missing --timeout=30 2>&1 | grep 'history_engine.py'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 15,
       "skills_required": ["python", "pytest", "git"],
       "consumers": ["TASK-018"],
       "integration_test": null,
-      "context": "## Module: zerg/git/history_engine.py\n409 lines, 196 uncovered. HistoryEngine provides git log parsing, blame analysis, commit traversal. Uncovered: lines 104-115, 148, 199, 262-276, 284-285, 294-296, 301-304, 321-322, 327-330, 345-366, 385, 408-416, 481-485, 529-614, 626-703, 731-737. Mock git subprocess output."
+      "context": "## Module: mahabharatha/git/history_engine.py\n409 lines, 196 uncovered. HistoryEngine provides git log parsing, blame analysis, commit traversal. Uncovered: lines 104-115, 148, 199, 262-276, 284-285, 294-296, 301-304, 321-322, 327-330, 345-366, 385, 408-416, 481-485, 529-614, 626-703, 731-737. Mock git subprocess output."
     },
     {
       "id": "TASK-008",
@@ -171,7 +171,7 @@
       "files": {
         "create": ["tests/unit/test_state_repos.py"],
         "modify": [],
-        "read": ["zerg/state/metrics_store.py", "zerg/state/retry_repo.py", "zerg/state/task_repo.py", "zerg/state/worker_repo.py"]
+        "read": ["mahabharatha/state/metrics_store.py", "mahabharatha/state/retry_repo.py", "mahabharatha/state/task_repo.py", "mahabharatha/state/worker_repo.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_state_repos.py -v --timeout=30",
@@ -193,17 +193,17 @@
       "files": {
         "create": [],
         "modify": ["tests/unit/test_inception_detection.py"],
-        "read": ["zerg/inception.py"]
+        "read": ["mahabharatha/inception.py"]
       },
       "verification": {
-        "command": "python -m pytest tests/unit/test_inception_detection.py -v --timeout=30 && python -m pytest tests/unit/test_inception_detection.py --cov=zerg/inception --cov-report=term-missing --timeout=30 2>&1 | grep 'zerg/inception.py'",
+        "command": "python -m pytest tests/unit/test_inception_detection.py -v --timeout=30 && python -m pytest tests/unit/test_inception_detection.py --cov=mahabharatha/inception --cov-report=term-missing --timeout=30 2>&1 | grep 'mahabharatha/inception.py'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 10,
       "skills_required": ["python", "pytest"],
       "consumers": ["TASK-018"],
       "integration_test": null,
-      "context": "## Module: zerg/inception.py\n195 lines, 67 uncovered. Project inception/detection logic. Uncovered: lines 83-85, 88, 91-93, 265, 369-423, 428-456, 471-489. Existing test_inception_detection.py covers basics but misses template selection and complex project type detection."
+      "context": "## Module: mahabharatha/inception.py\n195 lines, 67 uncovered. Project inception/detection logic. Uncovered: lines 83-85, 88, 91-93, 265, 369-423, 428-456, 471-489. Existing test_inception_detection.py covers basics but misses template selection and complex project type detection."
     },
     {
       "id": "TASK-010",
@@ -215,17 +215,17 @@
       "files": {
         "create": [],
         "modify": ["tests/unit/test_spec_loader.py"],
-        "read": ["zerg/spec_loader.py"]
+        "read": ["mahabharatha/spec_loader.py"]
       },
       "verification": {
-        "command": "python -m pytest tests/unit/test_spec_loader.py -v --timeout=30 && python -m pytest tests/unit/test_spec_loader.py --cov=zerg/spec_loader --cov-report=term-missing --timeout=30 2>&1 | grep 'zerg/spec_loader.py'",
+        "command": "python -m pytest tests/unit/test_spec_loader.py -v --timeout=30 && python -m pytest tests/unit/test_spec_loader.py --cov=mahabharatha/spec_loader --cov-report=term-missing --timeout=30 2>&1 | grep 'mahabharatha/spec_loader.py'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 10,
       "skills_required": ["python", "pytest"],
       "consumers": ["TASK-018"],
       "integration_test": null,
-      "context": "## Module: zerg/spec_loader.py\n130 lines, 49 uncovered. Loads and parses spec files (requirements.md, design.md, task-graph.json). Uncovered lines: 101-103, 188, 196, 219-247, 258-269, 281-290. Mock filesystem for loading tests."
+      "context": "## Module: mahabharatha/spec_loader.py\n130 lines, 49 uncovered. Loads and parses spec files (requirements.md, design.md, task-graph.json). Uncovered lines: 101-103, 188, 196, 219-247, 258-269, 281-290. Mock filesystem for loading tests."
     },
     {
       "id": "TASK-011",
@@ -237,17 +237,17 @@
       "files": {
         "create": ["tests/unit/test_container_launcher.py"],
         "modify": [],
-        "read": ["zerg/launchers/container_launcher.py", "zerg/launchers/base.py"]
+        "read": ["mahabharatha/launchers/container_launcher.py", "mahabharatha/launchers/base.py"]
       },
       "verification": {
-        "command": "python -m pytest tests/unit/test_container_launcher.py -v --timeout=30 && python -m pytest tests/unit/test_container_launcher.py --cov=zerg/launchers/container_launcher --cov-report=term-missing --timeout=30 2>&1 | grep 'container_launcher.py'",
+        "command": "python -m pytest tests/unit/test_container_launcher.py -v --timeout=30 && python -m pytest tests/unit/test_container_launcher.py --cov=mahabharatha/launchers/container_launcher --cov-report=term-missing --timeout=30 2>&1 | grep 'container_launcher.py'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 12,
       "skills_required": ["python", "pytest", "docker"],
       "consumers": ["TASK-018"],
       "integration_test": null,
-      "context": "## Module: zerg/launchers/container_launcher.py\n327 lines, 101 uncovered. ContainerLauncher extends BaseLauncher for Docker execution. Key methods: _build_docker_command(), _mount_volumes(), _inject_env(). Uncovered: 93, 133-137, 249-254, 332-337, 397-399, 461-462, 538-546, 557-559, 621-622, 679-694, 726-731, 746-748, 773-879, 901-940."
+      "context": "## Module: mahabharatha/launchers/container_launcher.py\n327 lines, 101 uncovered. ContainerLauncher extends BaseLauncher for Docker execution. Key methods: _build_docker_command(), _mount_volumes(), _inject_env(). Uncovered: 93, 133-137, 249-254, 332-337, 397-399, 461-462, 538-546, 557-559, 621-622, 679-694, 726-731, 746-748, 773-879, 901-940."
     },
     {
       "id": "TASK-012",
@@ -259,17 +259,17 @@
       "files": {
         "create": [],
         "modify": ["tests/unit/test_level_coordinator.py"],
-        "read": ["zerg/level_coordinator.py"]
+        "read": ["mahabharatha/level_coordinator.py"]
       },
       "verification": {
-        "command": "python -m pytest tests/unit/test_level_coordinator.py -v --timeout=30 && python -m pytest tests/unit/test_level_coordinator.py --cov=zerg/level_coordinator --cov-report=term-missing --timeout=30 2>&1 | grep 'zerg/level_coordinator.py'",
+        "command": "python -m pytest tests/unit/test_level_coordinator.py -v --timeout=30 && python -m pytest tests/unit/test_level_coordinator.py --cov=mahabharatha/level_coordinator --cov-report=term-missing --timeout=30 2>&1 | grep 'mahabharatha/level_coordinator.py'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 12,
       "skills_required": ["python", "pytest"],
       "consumers": ["TASK-018"],
       "integration_test": null,
-      "context": "## Module: zerg/level_coordinator.py\n241 lines, 70 uncovered. LevelCoordinator manages level-based task execution. Uncovered: 149-150, 165, 218-226, 248, 261-267, 284-285, 301-302, 310-327, 412-413, 469-471, 495-537, 548-573, 591-612. Focus on advance_level(), check_level_complete(), handle_failure()."
+      "context": "## Module: mahabharatha/level_coordinator.py\n241 lines, 70 uncovered. LevelCoordinator manages level-based task execution. Uncovered: 149-150, 165, 218-226, 248, 261-267, 284-285, 301-302, 310-327, 412-413, 469-471, 495-537, 548-573, 591-612. Focus on advance_level(), check_level_complete(), handle_failure()."
     },
     {
       "id": "TASK-013",
@@ -281,17 +281,17 @@
       "files": {
         "create": ["tests/unit/test_protocol_handler.py"],
         "modify": [],
-        "read": ["zerg/protocol_handler.py"]
+        "read": ["mahabharatha/protocol_handler.py"]
       },
       "verification": {
-        "command": "python -m pytest tests/unit/test_protocol_handler.py -v --timeout=30 && python -m pytest tests/unit/test_protocol_handler.py --cov=zerg/protocol_handler --cov-report=term-missing --timeout=30 2>&1 | grep 'zerg/protocol_handler.py'",
+        "command": "python -m pytest tests/unit/test_protocol_handler.py -v --timeout=30 && python -m pytest tests/unit/test_protocol_handler.py --cov=mahabharatha/protocol_handler --cov-report=term-missing --timeout=30 2>&1 | grep 'mahabharatha/protocol_handler.py'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 10,
       "skills_required": ["python", "pytest"],
       "consumers": ["TASK-018"],
       "integration_test": null,
-      "context": "## Module: zerg/protocol_handler.py\n194 lines, 52 uncovered. Handles worker protocol messages. Uncovered: 131, 141, 151-152, 187, 198-212, 224, 235-236, 250-281, 343, 409-422, 475-476, 491, 504, 514-596, 613-623."
+      "context": "## Module: mahabharatha/protocol_handler.py\n194 lines, 52 uncovered. Handles worker protocol messages. Uncovered: 131, 141, 151-152, 187, 198-212, 224, 235-236, 250-281, 343, 409-422, 475-476, 491, 504, 514-596, 613-623."
     },
     {
       "id": "TASK-014",
@@ -303,17 +303,17 @@
       "files": {
         "create": ["tests/unit/test_rendering_shared.py"],
         "modify": [],
-        "read": ["zerg/rendering/shared.py"]
+        "read": ["mahabharatha/rendering/shared.py"]
       },
       "verification": {
-        "command": "python -m pytest tests/unit/test_rendering_shared.py -v --timeout=30 && python -m pytest tests/unit/test_rendering_shared.py --cov=zerg/rendering/shared --cov-report=term-missing --timeout=30 2>&1 | grep 'shared.py'",
+        "command": "python -m pytest tests/unit/test_rendering_shared.py -v --timeout=30 && python -m pytest tests/unit/test_rendering_shared.py --cov=mahabharatha/rendering/shared --cov-report=term-missing --timeout=30 2>&1 | grep 'shared.py'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 5,
       "skills_required": ["python", "pytest"],
       "consumers": ["TASK-018"],
       "integration_test": null,
-      "context": "## Module: zerg/rendering/shared.py\n61 lines, 20 uncovered. Shared rendering utilities. Uncovered: 34-39, 52-54, 75, 79, 138-149."
+      "context": "## Module: mahabharatha/rendering/shared.py\n61 lines, 20 uncovered. Shared rendering utilities. Uncovered: 34-39, 52-54, 75, 79, 138-149."
     },
     {
       "id": "TASK-015",
@@ -325,17 +325,17 @@
       "files": {
         "create": [],
         "modify": ["tests/unit/test_git_rescue.py"],
-        "read": ["zerg/git/rescue.py"]
+        "read": ["mahabharatha/git/rescue.py"]
       },
       "verification": {
-        "command": "python -m pytest tests/unit/test_git_rescue.py -v --timeout=30 && python -m pytest tests/unit/test_git_rescue.py --cov=zerg/git/rescue --cov-report=term-missing --timeout=30 2>&1 | grep 'rescue.py'",
+        "command": "python -m pytest tests/unit/test_git_rescue.py -v --timeout=30 && python -m pytest tests/unit/test_git_rescue.py --cov=mahabharatha/git/rescue --cov-report=term-missing --timeout=30 2>&1 | grep 'rescue.py'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 10,
       "skills_required": ["python", "pytest", "git"],
       "consumers": ["TASK-018"],
       "integration_test": null,
-      "context": "## Module: zerg/git/rescue.py\n185 lines, 55 uncovered. Git rescue operations for recovering from failed states. Uncovered: 128, 131-133, 214-216, 245, 254-255, 293, 345-370, 384-419, 440, 443-454."
+      "context": "## Module: mahabharatha/git/rescue.py\n185 lines, 55 uncovered. Git rescue operations for recovering from failed states. Uncovered: 128, 131-133, 214-216, 245, 254-255, 293, 345-370, 384-419, 440, 443-454."
     },
     {
       "id": "TASK-016",
@@ -347,17 +347,17 @@
       "files": {
         "create": ["tests/unit/test_launcher_base.py"],
         "modify": [],
-        "read": ["zerg/launchers/base.py"]
+        "read": ["mahabharatha/launchers/base.py"]
       },
       "verification": {
-        "command": "python -m pytest tests/unit/test_launcher_base.py -v --timeout=30 && python -m pytest tests/unit/test_launcher_base.py --cov=zerg/launchers/base --cov-report=term-missing --timeout=30 2>&1 | grep 'base.py'",
+        "command": "python -m pytest tests/unit/test_launcher_base.py -v --timeout=30 && python -m pytest tests/unit/test_launcher_base.py --cov=mahabharatha/launchers/base --cov-report=term-missing --timeout=30 2>&1 | grep 'base.py'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 8,
       "skills_required": ["python", "pytest"],
       "consumers": ["TASK-018"],
       "integration_test": null,
-      "context": "## Module: zerg/launchers/base.py\n93 lines, 25 uncovered. BaseLauncher abstract base class. Uncovered: 61, 73, 86, 99, 160-177, 385, 399-413."
+      "context": "## Module: mahabharatha/launchers/base.py\n93 lines, 25 uncovered. BaseLauncher abstract base class. Uncovered: 61, 73, 86, 99, 160-177, 385, 399-413."
     },
     {
       "id": "TASK-017",
@@ -369,7 +369,7 @@
       "files": {
         "create": ["tests/unit/test_small_modules.py"],
         "modify": [],
-        "read": ["zerg/render_utils.py", "zerg/json_utils.py", "zerg/retry_backoff.py", "zerg/performance/adapters/trivy_adapter.py"]
+        "read": ["mahabharatha/render_utils.py", "mahabharatha/json_utils.py", "mahabharatha/retry_backoff.py", "mahabharatha/performance/adapters/trivy_adapter.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_small_modules.py -v --timeout=30",
@@ -384,7 +384,7 @@
     {
       "id": "TASK-018",
       "title": "Update CHANGELOG.md and verify overall coverage >80%",
-      "description": "Add entry under [Unreleased] in CHANGELOG.md: 'Added - Comprehensive unit tests for 26 under-covered modules, raising overall coverage from 77% to >80%'. Run full coverage report to verify. Run: pytest tests/unit/ -m 'not slow' --cov=zerg --cov-fail-under=80 --timeout=120",
+      "description": "Add entry under [Unreleased] in CHANGELOG.md: 'Added - Comprehensive unit tests for 26 under-covered modules, raising overall coverage from 77% to >80%'. Run full coverage report to verify. Run: pytest tests/unit/ -m 'not slow' --cov=mahabharatha --cov-fail-under=80 --timeout=120",
       "phase": "quality",
       "level": 4,
       "dependencies": ["TASK-001", "TASK-002", "TASK-003", "TASK-004", "TASK-005", "TASK-006", "TASK-007", "TASK-008", "TASK-009", "TASK-010", "TASK-011", "TASK-012", "TASK-013", "TASK-014", "TASK-015", "TASK-016", "TASK-017", "TASK-019"],
@@ -394,7 +394,7 @@
         "read": []
       },
       "verification": {
-        "command": "python -m pytest tests/unit/ -m 'not slow' --cov=zerg --cov-fail-under=80 --timeout=120 -q",
+        "command": "python -m pytest tests/unit/ -m 'not slow' --cov=mahabharatha --cov-fail-under=80 --timeout=120 -q",
         "timeout_seconds": 300
       },
       "estimate_minutes": 10,
@@ -406,14 +406,14 @@
     {
       "id": "TASK-019",
       "title": "Fix flaky test_json_status_includes_metrics integration test",
-      "description": "Fix tests/integration/test_metrics_integration.py::TestStatusCommandMetrics::test_json_status_includes_metrics. Root cause: test creates StateManager with tmp_path but CLI status command creates a NEW StateManager with default .zerg/state/ dir. The if exit_code == 0 guard silently skips assertions. Fix by patching StateManager in the status command to use tmp_path and removing the conditional guard.",
+      "description": "Fix tests/integration/test_metrics_integration.py::TestStatusCommandMetrics::test_json_status_includes_metrics. Root cause: test creates StateManager with tmp_path but CLI status command creates a NEW StateManager with default .mahabharatha/state/ dir. The if exit_code == 0 guard silently skips assertions. Fix by patching StateManager in the status command to use tmp_path and removing the conditional guard.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
         "modify": ["tests/integration/test_metrics_integration.py"],
-        "read": ["zerg/commands/status.py", "zerg/state/manager.py"]
+        "read": ["mahabharatha/commands/status.py", "mahabharatha/state/manager.py"]
       },
       "verification": {
         "command": "python -m pytest tests/integration/test_metrics_integration.py::TestStatusCommandMetrics::test_json_status_includes_metrics -v --timeout=30",
@@ -423,7 +423,7 @@
       "skills_required": ["python", "pytest"],
       "consumers": ["TASK-018"],
       "integration_test": null,
-      "context": "## Bug: Flaky integration test\ntest_json_status_includes_metrics creates StateManager with tmp_path state_dir but the CLI status command (zerg/commands/status.py:193) creates its own StateManager with default state_dir. The test guard `if result.exit_code == 0:` silently skips assertions. Fix: monkeypatch the state dir or patch StateManager, and remove the conditional guard so the test asserts unconditionally."
+      "context": "## Bug: Flaky integration test\ntest_json_status_includes_metrics creates StateManager with tmp_path state_dir but the CLI status command (mahabharatha/commands/status.py:193) creates its own StateManager with default state_dir. The test guard `if result.exit_code == 0:` silently skips assertions. Fix: monkeypatch the state dir or patch StateManager, and remove the conditional guard so the test asserts unconditionally."
     }
   ],
 

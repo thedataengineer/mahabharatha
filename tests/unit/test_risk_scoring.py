@@ -1,4 +1,4 @@
-"""Unit tests for ZERG risk scoring."""
+"""Unit tests for MAHABHARATHA risk scoring."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-# ZERG CLI Commands + Unit Tests - BACKLOG
+# MAHABHARATHA CLI Commands + Unit Tests - BACKLOG
 
 **Status**: COMPLETE
 **Date**: 2026-01-26
@@ -8,7 +8,7 @@
 
 ## Summary
 
-Implemented 7 CLI commands + 22 test modules using ZERG methodology.
+Implemented 7 CLI commands + 22 test modules using MAHABHARATHA methodology.
 
 | Category | Tasks | Files | Tests |
 |----------|-------|-------|-------|
@@ -67,19 +67,19 @@ Implemented 7 CLI commands + 22 test modules using ZERG methodology.
 
 ### New Commands (7)
 ```
-zerg/commands/analyze.py
-zerg/commands/build.py
-zerg/commands/git_cmd.py
-zerg/commands/refactor.py
-zerg/commands/review.py
-zerg/commands/test_cmd.py
-zerg/commands/debug.py
+mahabharatha/commands/analyze.py
+mahabharatha/commands/build.py
+mahabharatha/commands/git_cmd.py
+mahabharatha/commands/refactor.py
+mahabharatha/commands/review.py
+mahabharatha/commands/test_cmd.py
+mahabharatha/commands/debug.py
 ```
 
 ### Modified Files (2)
 ```
-zerg/commands/__init__.py
-zerg/cli.py
+mahabharatha/commands/__init__.py
+mahabharatha/cli.py
 ```
 
 ### Integration Tests (7)
@@ -127,7 +127,7 @@ pytest tests/unit/test_cli.py tests/unit/test_validation.py tests/unit/test_cmd_
        tests/integration/test_debug.py -v
 
 # CLI commands available
-zerg --help | grep -E "(analyze|build|git|refactor|review|test|debug)"
+mahabharatha --help | grep -E "(analyze|build|git|refactor|review|test|debug)"
 ```
 
 ---

@@ -42,7 +42,7 @@ class TestAuthoringFlow:
         else:
             # Fallback: create minimal template for test isolation
             (commands_dir / "_template.md").write_text(
-                "# ZERG {CommandName}\n\n"
+                "# MAHABHARATHA {CommandName}\n\n"
                 "{Short description of the command's purpose.}\n\n"
                 "## Pre-flight\n\n"
                 "```bash\n# checks\n```\n\n"
@@ -63,7 +63,7 @@ class TestAuthoringFlow:
         commands_docs_dir.mkdir()
 
         # Create minimal index
-        (docs_dir / "commands.md").write_text("# ZERG Command Reference\n\n## Table of Contents\n\n")
+        (docs_dir / "commands.md").write_text("# MAHABHARATHA Command Reference\n\n## Table of Contents\n\n")
 
         return {"commands": commands_dir, "docs": docs_dir}
 

@@ -1,4 +1,4 @@
-"""Tests for ZERG JS/TS repo map extractor."""
+"""Tests for MAHABHARATHA JS/TS repo map extractor."""
 
 import textwrap
 from pathlib import Path

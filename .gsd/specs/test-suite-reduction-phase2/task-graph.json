@@ -68,7 +68,7 @@
           "tests/unit/test_doc_engine_misc.py"
         ],
         "read": [
-          "zerg/doc_engine.py"
+          "mahabharatha/doc_engine.py"
         ]
       },
       "acceptance_criteria": [
@@ -262,13 +262,13 @@
         "Coverage >= 80%"
       ],
       "verification": {
-        "command": "python -m pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow' --timeout=120 -q 2>&1 | tail -5 && python -m zerg.validate_commands && python -m pytest -m smoke -x --timeout=5 -q 2>&1 | tail -3 && grep -q 'gap-filling\\|doc engine\\|command test' CHANGELOG.md && echo 'ALL CHECKS PASSED'",
+        "command": "python -m pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow' --timeout=120 -q 2>&1 | tail -5 && python -m mahabharatha.validate_commands && python -m pytest -m smoke -x --timeout=5 -q 2>&1 | tail -3 && grep -q 'gap-filling\\|doc engine\\|command test' CHANGELOG.md && echo 'ALL CHECKS PASSED'",
         "timeout_seconds": 600
       },
       "estimate_minutes": 8,
       "consumers": [],
       "integration_test": null,
-      "context": "## Task Context\nFinal verification and documentation.\n\n### CHANGELOG entry (under [Unreleased]):\n#### Changed\n- Delete 14 gap-filling test files (_coverage, _extended, _full), removing ~649 redundant tests\n- Delete 4 doc engine test files and thin test_doc_engine.py from 89 to ~30 tests\n- Merge 8 test_cmd_* files into test_*_cmd counterparts and delete sources\n- Thin 18 command test files from ~1,399 to ~400 tests using systematic reduction rules\n\n### Commands:\n```bash\n# Regenerate durations\npython -m pytest tests/unit tests/integration --store-durations -q\n\n# Full suite\npython -m pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow' --timeout=120 -q\n\n# Validate wiring\npython -m zerg.validate_commands\n\n# Smoke check\npython -m pytest -m smoke -x --timeout=5 -q\n```"
+      "context": "## Task Context\nFinal verification and documentation.\n\n### CHANGELOG entry (under [Unreleased]):\n#### Changed\n- Delete 14 gap-filling test files (_coverage, _extended, _full), removing ~649 redundant tests\n- Delete 4 doc engine test files and thin test_doc_engine.py from 89 to ~30 tests\n- Merge 8 test_cmd_* files into test_*_cmd counterparts and delete sources\n- Thin 18 command test files from ~1,399 to ~400 tests using systematic reduction rules\n\n### Commands:\n```bash\n# Regenerate durations\npython -m pytest tests/unit tests/integration --store-durations -q\n\n# Full suite\npython -m pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m 'not slow' --timeout=120 -q\n\n# Validate wiring\npython -m mahabharatha.validate_commands\n\n# Smoke check\npython -m pytest -m smoke -x --timeout=5 -q\n```"
     }
   ],
 

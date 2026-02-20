@@ -1,5 +1,5 @@
 {
-  "name": "ZERG Worker",
+  "name": "MAHABHARATHA Worker",
   "image": "mcr.microsoft.com/devcontainers/python:3.12",
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
@@ -18,5 +18,5 @@
     "source=${localWorkspaceFolder},target=/workspace,type=bind"
   ],
   "workspaceFolder": "/workspace",
-  "postCreateCommand": "npm install -g @anthropic/claude-code || true && echo 'ZERG worker ready'"
+  "postCreateCommand": "npm install -g @anthropic/claude-code || true && echo 'MAHABHARATHA worker ready'"
 }

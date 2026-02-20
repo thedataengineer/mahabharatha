@@ -1,4 +1,4 @@
-"""Aggregate token usage across all ZERG workers."""
+"""Aggregate token usage across all MAHABHARATHA workers."""
 
 from __future__ import annotations
 

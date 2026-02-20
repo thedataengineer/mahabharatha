@@ -1,4 +1,4 @@
-"""Shared rendering utilities for ZERG status and dry-run displays.
+"""Shared rendering utilities for MAHABHARATHA status and dry-run displays.
 
 **Backward-compatibility shim** -- all functionality has moved to
 :mod:`mahabharatha.rendering.shared`.  This module re-exports the public API so

@@ -1,4 +1,4 @@
-"""Single-pass filesystem traversal utilities for ZERG.
+"""Single-pass filesystem traversal utilities for MAHABHARATHA.
 
 Provides a shared ``collect_files()`` function that walks a directory tree
 exactly once via ``rglob('*')`` and returns files grouped by extension.

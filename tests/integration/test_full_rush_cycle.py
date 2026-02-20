@@ -1,4 +1,4 @@
-"""Final integration tests for full rush cycle - OFX-012.
+"""Final integration tests for full kurukshetra cycle - OFX-012.
 
 End-to-end tests verifying the complete orchestrator-fixes feature works:
 - Schema validation rejects level 0

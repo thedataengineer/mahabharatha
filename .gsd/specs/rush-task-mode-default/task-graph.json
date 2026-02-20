@@ -1,5 +1,5 @@
 {
-  "feature": "rush-task-mode-default",
+  "feature": "kurukshetra-task-mode-default",
   "version": "2.0",
   "generated": "2026-02-04T00:00:00Z",
   "total_tasks": 2,
@@ -9,18 +9,18 @@
   "tasks": [
     {
       "id": "TASK-001",
-      "title": "Restructure rush.core.md for Task Tool Mode default",
-      "description": "Completely restructure rush.core.md to make Task Tool Mode the default execution path. Add mode detection at entry. Move container/subprocess logic to conditional section. Wire the level execution loop from rush.details.md as the primary path.",
+      "title": "Restructure kurukshetra.core.md for Task Tool Mode default",
+      "description": "Completely restructure kurukshetra.core.md to make Task Tool Mode the default execution path. Add mode detection at entry. Move container/subprocess logic to conditional section. Wire the level execution loop from kurukshetra.details.md as the primary path.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/rush.core.md"],
-        "read": ["zerg/data/commands/rush.details.md", ".gsd/specs/rush-task-mode-default/requirements.md", ".gsd/specs/rush-task-mode-default/design.md"]
+        "modify": ["mahabharatha/data/commands/kurukshetra.core.md"],
+        "read": ["mahabharatha/data/commands/kurukshetra.details.md", ".gsd/specs/kurukshetra-task-mode-default/requirements.md", ".gsd/specs/kurukshetra-task-mode-default/design.md"]
       },
       "verification": {
-        "command": "grep -q 'Step 1: Mode Detection' zerg/data/commands/rush.core.md && grep -q 'MODE=\"task\"' zerg/data/commands/rush.core.md && grep -q 'Task Tool Mode' zerg/data/commands/rush.core.md",
+        "command": "grep -q 'Step 1: Mode Detection' mahabharatha/data/commands/kurukshetra.core.md && grep -q 'MODE=\"task\"' mahabharatha/data/commands/kurukshetra.core.md && grep -q 'Task Tool Mode' mahabharatha/data/commands/kurukshetra.core.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
@@ -38,31 +38,31 @@
     },
     {
       "id": "TASK-002",
-      "title": "Sync rush.md with restructured core",
-      "description": "Update rush.md to match the restructured rush.core.md. Both files should have identical content for backward compatibility. The .md file is the entry point that skill resolution finds first.",
+      "title": "Sync kurukshetra.md with restructured core",
+      "description": "Update kurukshetra.md to match the restructured kurukshetra.core.md. Both files should have identical content for backward compatibility. The .md file is the entry point that skill resolution finds first.",
       "phase": "quality",
       "level": 2,
       "dependencies": ["TASK-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/rush.md"],
-        "read": ["zerg/data/commands/rush.core.md"]
+        "modify": ["mahabharatha/data/commands/kurukshetra.md"],
+        "read": ["mahabharatha/data/commands/kurukshetra.core.md"]
       },
       "verification": {
-        "command": "diff -q zerg/data/commands/rush.core.md zerg/data/commands/rush.md || echo 'Files differ - checking key sections' && grep -q 'Step 1: Mode Detection' zerg/data/commands/rush.md && grep -q 'MODE=\"task\"' zerg/data/commands/rush.md",
+        "command": "diff -q mahabharatha/data/commands/kurukshetra.core.md mahabharatha/data/commands/kurukshetra.md || echo 'Files differ - checking key sections' && grep -q 'Step 1: Mode Detection' mahabharatha/data/commands/kurukshetra.md && grep -q 'MODE=\"task\"' mahabharatha/data/commands/kurukshetra.md",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
       "skills_required": ["markdown", "documentation"],
       "acceptance_criteria": [
-        "Content matches rush.core.md",
+        "Content matches kurukshetra.core.md",
         "Mode detection present",
         "Task Tool Mode as default",
         "Help text consistent"
       ],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nrush.md must match rush.core.md for backward compatibility. The .md file is the skill entry point.\n\n## Dependencies\nTASK-001 restructures rush.core.md - this task copies that structure to rush.md."
+      "context": "## Spec Context\nrush.md must match kurukshetra.core.md for backward compatibility. The .md file is the skill entry point.\n\n## Dependencies\nTASK-001 restructures kurukshetra.core.md - this task copies that structure to kurukshetra.md."
     }
   ],
 

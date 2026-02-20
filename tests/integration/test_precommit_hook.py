@@ -1,4 +1,4 @@
-"""Integration tests for ZERG pre-commit hook.
+"""Integration tests for MAHABHARATHA pre-commit hook.
 
 These tests verify the full hook execution against a real git repository.
 """
@@ -15,7 +15,7 @@ import pytest
 
 @pytest.fixture
 def hook_test_repo(tmp_path: Path) -> Generator[Path, None, None]:
-    """Create a temporary git repo with ZERG hook installed.
+    """Create a temporary git repo with MAHABHARATHA hook installed.
 
     Yields:
         Path to the temporary repository
@@ -240,7 +240,7 @@ class TestPrecommitHookIntegration:
 
 
 class TestPrecommitHookZergSpecific:
-    """ZERG-specific hook tests."""
+    """MAHABHARATHA-specific hook tests."""
 
     @staticmethod
     def get_output(result: subprocess.CompletedProcess) -> str:
@@ -248,8 +248,8 @@ class TestPrecommitHookZergSpecific:
         return result.stdout + result.stderr
 
     def test_mahabharatha_branch_naming_valid(self, hook_test_repo: Path) -> None:
-        """Valid ZERG branch names should pass."""
-        # Create and checkout a valid ZERG branch
+        """Valid MAHABHARATHA branch names should pass."""
+        # Create and checkout a valid MAHABHARATHA branch
         subprocess.run(
             ["git", "checkout", "-b", "mahabharatha/feature/worker-1"],
             cwd=hook_test_repo,
@@ -266,11 +266,11 @@ class TestPrecommitHookZergSpecific:
             capture_output=True,
             text=True,
         )
-        assert result.returncode == 0, f"Valid ZERG branch should pass: {result.stderr}"
+        assert result.returncode == 0, f"Valid MAHABHARATHA branch should pass: {result.stderr}"
 
     def test_mahabharatha_branch_naming_invalid_warns(self, hook_test_repo: Path) -> None:
-        """Invalid ZERG branch names should warn."""
-        # Create and checkout an invalid ZERG branch
+        """Invalid MAHABHARATHA branch names should warn."""
+        # Create and checkout an invalid MAHABHARATHA branch
         subprocess.run(
             ["git", "checkout", "-b", "mahabharatha/feature"],  # Missing worker suffix
             cwd=hook_test_repo,
@@ -288,8 +288,8 @@ class TestPrecommitHookZergSpecific:
             text=True,
         )
         output = self.get_output(result)
-        # Should pass with warning (ZERG naming is a warning, not a block)
-        assert result.returncode == 0, f"Invalid ZERG branch should warn: {result.stderr}"
+        # Should pass with warning (MAHABHARATHA naming is a warning, not a block)
+        assert result.returncode == 0, f"Invalid MAHABHARATHA branch should warn: {result.stderr}"
         assert "WARNING" in output or "mahabharatha/{feature}/worker-{N}" in output
 
     def test_print_in_mahabharatha_dir_warns(self, hook_test_repo: Path) -> None:

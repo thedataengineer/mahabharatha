@@ -1,4 +1,4 @@
-"""Performance aggregator — main orchestrator for the ZERG performance analysis system."""
+"""Performance aggregator — main orchestrator for the MAHABHARATHA performance analysis system."""
 
 from __future__ import annotations
 

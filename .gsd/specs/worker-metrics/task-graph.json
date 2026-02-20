@@ -17,7 +17,7 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/types.py"],
+        "modify": ["mahabharatha/types.py"],
         "read": []
       },
       "acceptance_criteria": [
@@ -30,7 +30,7 @@
         "All dataclasses have to_dict() and from_dict() methods"
       ],
       "verification": {
-        "command": "python -c \"from zerg.types import WorkerMetrics, TaskMetrics, LevelMetrics, FeatureMetrics; print('Types OK')\"",
+        "command": "python -c \"from mahabharatha.types import WorkerMetrics, TaskMetrics, LevelMetrics, FeatureMetrics; print('Types OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
@@ -39,17 +39,17 @@
     {
       "id": "WM-002",
       "title": "Create MetricsCollector class",
-      "description": "Create new zerg/metrics.py module with MetricsCollector class. Include duration_ms() helper function to calculate milliseconds between timestamps. Include calculate_percentile() function for p50/p95 calculations. MetricsCollector should have methods: compute_worker_metrics(worker_id), compute_task_metrics(task_id), compute_level_metrics(level), compute_feature_metrics(), and export_json(path).",
+      "description": "Create new mahabharatha/metrics.py module with MetricsCollector class. Include duration_ms() helper function to calculate milliseconds between timestamps. Include calculate_percentile() function for p50/p95 calculations. MetricsCollector should have methods: compute_worker_metrics(worker_id), compute_task_metrics(task_id), compute_level_metrics(level), compute_feature_metrics(), and export_json(path).",
       "phase": "core",
       "level": 2,
       "dependencies": ["WM-001"],
       "files": {
-        "create": ["zerg/metrics.py"],
+        "create": ["mahabharatha/metrics.py"],
         "modify": [],
-        "read": ["zerg/types.py", "zerg/state.py"]
+        "read": ["mahabharatha/types.py", "mahabharatha/state.py"]
       },
       "acceptance_criteria": [
-        "zerg/metrics.py module exists",
+        "mahabharatha/metrics.py module exists",
         "duration_ms(start, end) function returns int | None",
         "calculate_percentile(values, percentile) function returns int",
         "MetricsCollector class with __init__(self, state: StateManager)",
@@ -60,7 +60,7 @@
         "export_json(path) writes metrics to JSON file"
       ],
       "verification": {
-        "command": "python -c \"from zerg.metrics import MetricsCollector, duration_ms, calculate_percentile; print('MetricsCollector OK')\"",
+        "command": "python -c \"from mahabharatha.metrics import MetricsCollector, duration_ms, calculate_percentile; print('MetricsCollector OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
@@ -75,8 +75,8 @@
       "dependencies": ["WM-001"],
       "files": {
         "create": [],
-        "modify": ["zerg/state.py"],
-        "read": ["zerg/types.py"]
+        "modify": ["mahabharatha/state.py"],
+        "read": ["mahabharatha/types.py"]
       },
       "acceptance_criteria": [
         "record_task_claimed(task_id, worker_id) method sets claimed_at timestamp",
@@ -87,7 +87,7 @@
         "State includes 'metrics' section after store_metrics called"
       ],
       "verification": {
-        "command": "python -c \"from zerg.state import StateManager; s = StateManager('test-metrics-check'); print('StateManager OK')\"",
+        "command": "python -c \"from mahabharatha.state import StateManager; s = StateManager('test-metrics-check'); print('StateManager OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
@@ -96,13 +96,13 @@
     {
       "id": "WM-004",
       "title": "Update state schema with metrics definitions",
-      "description": "Extend .zerg/schemas/state.schema.json to include metrics fields. Add claimed_at and duration_ms to task definition. Add ready_at and last_task_completed_at to worker definition. Add metrics section definition with computed_at, total_duration_ms, workers_used, tasks_total, tasks_completed, tasks_failed, worker_metrics array, level_metrics array.",
+      "description": "Extend .mahabharatha/schemas/state.schema.json to include metrics fields. Add claimed_at and duration_ms to task definition. Add ready_at and last_task_completed_at to worker definition. Add metrics section definition with computed_at, total_duration_ms, workers_used, tasks_total, tasks_completed, tasks_failed, worker_metrics array, level_metrics array.",
       "phase": "core",
       "level": 2,
       "dependencies": ["WM-001"],
       "files": {
         "create": [],
-        "modify": [".zerg/schemas/state.schema.json"],
+        "modify": [".mahabharatha/schemas/state.schema.json"],
         "read": []
       },
       "acceptance_criteria": [
@@ -112,7 +112,7 @@
         "Schema validates correctly with jsonschema"
       ],
       "verification": {
-        "command": "python -c \"import json; d = json.load(open('.zerg/schemas/state.schema.json')); assert 'metrics' in str(d); print('Schema OK')\"",
+        "command": "python -c \"import json; d = json.load(open('.mahabharatha/schemas/state.schema.json')); assert 'metrics' in str(d); print('Schema OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
@@ -127,8 +127,8 @@
       "dependencies": ["WM-002", "WM-003"],
       "files": {
         "create": [],
-        "modify": ["zerg/orchestrator.py"],
-        "read": ["zerg/metrics.py", "zerg/state.py"]
+        "modify": ["mahabharatha/orchestrator.py"],
+        "read": ["mahabharatha/metrics.py", "mahabharatha/state.py"]
       },
       "acceptance_criteria": [
         "Worker started_at recorded in _spawn_worker or equivalent",
@@ -139,7 +139,7 @@
         "Metrics stored to state via store_metrics()"
       ],
       "verification": {
-        "command": "python -c \"from zerg.orchestrator import Orchestrator; print('Orchestrator import OK')\"",
+        "command": "python -c \"from mahabharatha.orchestrator import Orchestrator; print('Orchestrator import OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
@@ -154,8 +154,8 @@
       "dependencies": ["WM-002"],
       "files": {
         "create": [],
-        "modify": ["zerg/commands/status.py"],
-        "read": ["zerg/metrics.py"]
+        "modify": ["mahabharatha/commands/status.py"],
+        "read": ["mahabharatha/metrics.py"]
       },
       "acceptance_criteria": [
         "Worker metrics table shows init time, tasks completed, avg duration, uptime",
@@ -165,7 +165,7 @@
         "Format durations as human-readable (1.2s, 4m30s)"
       ],
       "verification": {
-        "command": "python -c \"from zerg.commands.status import show_status; print('Status import OK')\"",
+        "command": "python -c \"from mahabharatha.commands.status import show_status; print('Status import OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
@@ -181,7 +181,7 @@
       "files": {
         "create": ["tests/unit/test_metrics.py"],
         "modify": [],
-        "read": ["zerg/metrics.py"]
+        "read": ["mahabharatha/metrics.py"]
       },
       "acceptance_criteria": [
         "test_duration_ms_valid_timestamps passes",
@@ -214,7 +214,7 @@
       "files": {
         "create": ["tests/integration/test_metrics_integration.py"],
         "modify": [],
-        "read": ["zerg/orchestrator.py", "zerg/commands/status.py"]
+        "read": ["mahabharatha/orchestrator.py", "mahabharatha/commands/status.py"]
       },
       "acceptance_criteria": [
         "test_metrics_persist_to_state passes",

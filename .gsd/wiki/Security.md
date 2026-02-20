@@ -1,6 +1,6 @@
 # Security
 
-This guide explains how ZERG keeps your development environment safe and why each protection matters.
+This guide explains how MAHABHARATHA keeps your development environment safe and why each protection matters.
 
 ---
 
@@ -20,7 +20,7 @@ This power comes with responsibility. Without guardrails, a mistake (or a clever
 - Install unwanted software
 - Leak proprietary code
 
-**ZERG adds layers of protection** so you can harness AI assistance confidently. The goal is not to limit what you can do, but to ensure you're always in control.
+**MAHABHARATHA adds layers of protection** so you can harness AI assistance confidently. The goal is not to limit what you can do, but to ensure you're always in control.
 
 ---
 
@@ -54,26 +54,26 @@ The severity depends on what's compromised:
 
 ---
 
-## How ZERG Addresses Each Threat
+## How MAHABHARATHA Addresses Each Threat
 
 ### 1. Shift-Left Security — Catch Issues Early
 
 **Threat addressed**: Vulnerabilities slip into production because they're found too late.
 
-**How it works**: ZERG embeds security guidance directly into your development workflow:
+**How it works**: MAHABHARATHA embeds security guidance directly into your development workflow:
 
 1. **Auto-detection** — Scans your project to detect languages, frameworks, and infrastructure
 2. **Intelligent rule fetching** — Downloads only rules relevant to your stack
 3. **Claude Code integration** — Rules are stored where Claude automatically reads them
 4. **Pre-commit enforcement** — Validates security on every commit
 
-**What you need to do**: Run `/zerg:init` once. ZERG handles the rest.
+**What you need to do**: Run `/mahabharatha:init` once. MAHABHARATHA handles the rest.
 
 ### 2. Stack-Aware Security Rules
 
 **Threat addressed**: Generic security advice doesn't catch language-specific vulnerabilities.
 
-**How it works**: ZERG detects your tech stack and fetches targeted rules:
+**How it works**: MAHABHARATHA detects your tech stack and fetches targeted rules:
 
 ```
 Your Project                    Rules Fetched
@@ -98,13 +98,13 @@ Rules are stored in `.claude/rules/security/` where Claude Code automatically lo
             └── docker/CLAUDE.md     # Docker security rules
 ```
 
-**What you need to do**: Run `zerg security-rules integrate` to fetch rules for your stack.
+**What you need to do**: Run `mahabharatha security-rules integrate` to fetch rules for your stack.
 
 ### 3. OWASP Top 10 Coverage
 
 **Threat addressed**: Common web vulnerabilities that affect most applications.
 
-**How it works**: ZERG includes comprehensive coverage of **OWASP Top 10:2025**, the industry standard for web application security risks.
+**How it works**: MAHABHARATHA includes comprehensive coverage of **OWASP Top 10:2025**, the industry standard for web application security risks.
 
 | Category | What It Prevents | Example Attack |
 |----------|-----------------|----------------|
@@ -133,7 +133,7 @@ Each rule has an enforcement level:
 
 **Threat addressed**: Accidentally committing API keys, passwords, or tokens to version control.
 
-**How it works**: ZERG scans for high-entropy strings and known secret patterns:
+**How it works**: MAHABHARATHA scans for high-entropy strings and known secret patterns:
 
 - API keys (AWS, Google, GitHub, etc.)
 - Passwords and tokens
@@ -149,7 +149,7 @@ Each rule has an enforcement level:
 
 **Threat addressed**: Using packages with known security holes.
 
-**How it works**: ZERG scans your dependency files for CVEs (Common Vulnerabilities and Exposures):
+**How it works**: MAHABHARATHA scans your dependency files for CVEs (Common Vulnerabilities and Exposures):
 
 | Package Manager | Files Scanned |
 |----------------|---------------|
@@ -158,13 +158,13 @@ Each rule has an enforcement level:
 | Rust | `Cargo.toml`, `Cargo.lock` |
 | Go | `go.mod`, `go.sum` |
 
-**What you need to do**: Run `/zerg:security` regularly and address flagged vulnerabilities.
+**What you need to do**: Run `/mahabharatha:security` regularly and address flagged vulnerabilities.
 
 ### 6. Container Security
 
 **Threat addressed**: Insecure Docker configurations that could compromise your system.
 
-**How it works**: ZERG enforces container security best practices:
+**How it works**: MAHABHARATHA enforces container security best practices:
 
 | Rule | Why It Matters |
 |------|---------------|
@@ -181,20 +181,20 @@ Each rule has an enforcement level:
 
 ## Security Commands
 
-### `/zerg:security` — Run Security Scan
+### `/mahabharatha:security` — Run Security Scan
 
 ```bash
 # Run OWASP vulnerability scan (default)
-/zerg:security
+/mahabharatha:security
 
 # Use specific compliance preset
-/zerg:security --preset pci
+/mahabharatha:security --preset pci
 
 # Enable auto-fix suggestions
-/zerg:security --autofix
+/mahabharatha:security --autofix
 
 # Output for IDE integration
-/zerg:security --format sarif > security.sarif
+/mahabharatha:security --format sarif > security.sarif
 ```
 
 | Preset | Purpose |
@@ -204,20 +204,20 @@ Each rule has an enforcement level:
 | `hipaa` | Healthcare data security |
 | `soc2` | Trust service criteria |
 
-### `zerg security-rules` — Manage Security Rules
+### `mahabharatha security-rules` — Manage Security Rules
 
 ```bash
-# See what stack ZERG detected
-zerg security-rules detect
+# See what stack MAHABHARATHA detected
+mahabharatha security-rules detect
 
 # Preview which rules would be fetched
-zerg security-rules list
+mahabharatha security-rules list
 
 # Download rules for your stack
-zerg security-rules fetch
+mahabharatha security-rules fetch
 
 # Full setup: detect, fetch, update CLAUDE.md
-zerg security-rules integrate
+mahabharatha security-rules integrate
 ```
 
 ---
@@ -243,7 +243,7 @@ The most important actions you can take:
 
 2. **Run security integration** — Fetch rules for your stack
    ```bash
-   zerg security-rules integrate
+   mahabharatha security-rules integrate
    ```
 
 3. **Create a secret baseline** — Avoid false positives
@@ -294,7 +294,7 @@ The most important actions you can take:
 
 ## Reporting Security Issues
 
-If you discover a vulnerability in ZERG:
+If you discover a vulnerability in MAHABHARATHA:
 
 1. **Do NOT** open a public GitHub issue
 2. Email security concerns to the maintainers privately
@@ -312,7 +312,7 @@ If you discover a vulnerability in ZERG:
 ## Related Pages
 
 - [Configuration](Configuration) — Security-related configuration options
-- [Command-Reference](Command-Reference) — Full `/zerg:security` documentation
+- [Command-Reference](Command-Reference) — Full `/mahabharatha:security` documentation
 - [Plugins](Plugins) — Security-focused quality gates
 - [Troubleshooting](Troubleshooting) — Security scanning issues
 

@@ -11,7 +11,7 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Replace 18 scattered `rglob` calls across 16 files with calls to `fs_utils.collect_files()`. This is a mechanical refactor — each call site gets the same result set via the shared single-pass traversal. Two call sites need a minor extension to `collect_files()` for name-based matching (Dockerfiles). Two sites are documented exceptions (rush.py tiny dir, ast_analyzer.py dynamic pattern).
+Replace 18 scattered `rglob` calls across 16 files with calls to `fs_utils.collect_files()`. This is a mechanical refactor — each call site gets the same result set via the shared single-pass traversal. Two call sites need a minor extension to `collect_files()` for name-based matching (Dockerfiles). Two sites are documented exceptions (kurukshetra.py tiny dir, ast_analyzer.py dynamic pattern).
 
 ### 1.2 Goals
 - Eliminate redundant directory traversals (Issue #134)
@@ -47,11 +47,11 @@ Each call site still invokes `collect_files()` independently (no shared cache), 
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| `fs_utils` | Single-pass file collection with extension and name filtering | `zerg/fs_utils.py` |
+| `fs_utils` | Single-pass file collection with extension and name filtering | `mahabharatha/fs_utils.py` |
 | Pattern A sites (10) | Single-extension rglob → `collect_files(root, {".py"})` | 8 files |
 | Pattern B sites (4) | Multi-extension loop → `collect_files(root, {".py", ".js", ...})` | 4 files |
 | Pattern C sites (3) | Wildcard rglob → `collect_files(root, extensions=None, names=...)` | 3 files |
-| Documented exceptions | rush.py, ast_analyzer.py — kept as-is | 2 files |
+| Documented exceptions | kurukshetra.py, ast_analyzer.py — kept as-is | 2 files |
 
 ### 2.3 Data Flow
 
@@ -92,7 +92,7 @@ When `names` is provided, files matching any name pattern are included in a `"_b
 py_files = sorted(root_dir.rglob("*.py"))
 
 # After:
-from zerg.fs_utils import collect_files
+from mahabharatha.fs_utils import collect_files
 grouped = collect_files(root_dir, extensions={".py"})
 py_files = grouped.get(".py", [])
 ```
@@ -105,7 +105,7 @@ for ext in ["*.py", "*.js", "*.ts", "*.go", "*.rs"]:
     files.extend(str(f) for f in target.rglob(ext))
 
 # After:
-from zerg.fs_utils import collect_files
+from mahabharatha.fs_utils import collect_files
 grouped = collect_files(target, extensions={".py", ".js", ".ts", ".go", ".rs"})
 files = [str(f) for ext in grouped for f in grouped[ext]]
 ```
@@ -120,7 +120,7 @@ for p in sorted(root.rglob("*")):
         results.append(p)
 
 # After:
-from zerg.fs_utils import collect_files
+from mahabharatha.fs_utils import collect_files
 grouped = collect_files(root, names={"Dockerfile"})
 dockerfiles = grouped.get("_by_name", [])
 ```
@@ -155,11 +155,11 @@ all_files = sorted(f for ext_files in grouped.values() for f in ext_files)
 
 ### 4.2 Document Exceptions vs Force-Migrate
 
-**Context**: `rush.py:323` scans `.gsd/` (tiny), `ast_analyzer.py:450` takes a dynamic pattern parameter.
+**Context**: `kurukshetra.py:323` scans `.gsd/` (tiny), `ast_analyzer.py:450` takes a dynamic pattern parameter.
 
 **Decision**: Document as exceptions.
 
-**Rationale**: rush.py scans ~20 files max. ast_analyzer.py's dynamic pattern doesn't map to `collect_files()` API without over-engineering. Cost of migration exceeds benefit.
+**Rationale**: kurukshetra.py scans ~20 files max. ast_analyzer.py's dynamic pattern doesn't map to `collect_files()` API without over-engineering. Cost of migration exceeds benefit.
 
 ### 4.3 Post-Filtering Responsibility
 
@@ -187,21 +187,21 @@ all_files = sorted(f for ext_files in grouped.values() for f in ext_files)
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/fs_utils.py` | TASK-001 | modify |
-| `zerg/doc_engine/dependencies.py` | TASK-002 | modify |
-| `zerg/validate_commands.py` | TASK-003 | modify |
-| `zerg/test_scope.py` | TASK-004 | modify |
-| `zerg/commands/analyze.py` | TASK-005 | modify |
-| `zerg/commands/wiki.py` | TASK-006 | modify |
-| `zerg/commands/refactor.py` | TASK-007 | modify |
-| `zerg/diagnostics/code_fixer.py` | TASK-008 | modify |
-| `zerg/commands/test_cmd.py` | TASK-009 | modify |
-| `zerg/security_rules.py` | TASK-010 | modify |
-| `zerg/commands/build.py` | TASK-011 | modify |
-| `zerg/commands/review.py` | TASK-012 | modify |
-| `zerg/doc_engine/detector.py` | TASK-013 | modify |
-| `zerg/performance/adapters/dive_adapter.py` | TASK-014 | modify |
-| `zerg/performance/adapters/hadolint_adapter.py` | TASK-015 | modify |
+| `mahabharatha/fs_utils.py` | TASK-001 | modify |
+| `mahabharatha/doc_engine/dependencies.py` | TASK-002 | modify |
+| `mahabharatha/validate_commands.py` | TASK-003 | modify |
+| `mahabharatha/test_scope.py` | TASK-004 | modify |
+| `mahabharatha/commands/analyze.py` | TASK-005 | modify |
+| `mahabharatha/commands/wiki.py` | TASK-006 | modify |
+| `mahabharatha/commands/refactor.py` | TASK-007 | modify |
+| `mahabharatha/diagnostics/code_fixer.py` | TASK-008 | modify |
+| `mahabharatha/commands/test_cmd.py` | TASK-009 | modify |
+| `mahabharatha/security_rules.py` | TASK-010 | modify |
+| `mahabharatha/commands/build.py` | TASK-011 | modify |
+| `mahabharatha/commands/review.py` | TASK-012 | modify |
+| `mahabharatha/doc_engine/detector.py` | TASK-013 | modify |
+| `mahabharatha/performance/adapters/dive_adapter.py` | TASK-014 | modify |
+| `mahabharatha/performance/adapters/hadolint_adapter.py` | TASK-015 | modify |
 
 ### 5.3 Dependency Graph
 
@@ -258,7 +258,7 @@ Each task runs the full test suite as verification.
 
 ### 7.3 Verification Commands
 - Per-task: `python -m pytest tests/ -x -q --tb=short` (fast fail)
-- Final: `ruff check zerg/` + `grep -r '\.rglob(' zerg/ --include='*.py'` to confirm only exceptions remain
+- Final: `ruff check mahabharatha/` + `grep -r '\.rglob(' mahabharatha/ --include='*.py'` to confirm only exceptions remain
 
 ---
 
@@ -287,10 +287,10 @@ These rglob calls are intentionally NOT migrated:
 
 | File | Line | Reason |
 |------|------|--------|
-| `zerg/fs_utils.py:58` | `root.rglob("*")` | Canonical implementation itself |
-| `zerg/security_rules.py:220` | `project_path.rglob("*")` | Already single-pass with inline filtering |
-| `zerg/commands/rush.py:323` | `Path(".gsd").rglob("task-graph.json")` | Tiny directory (~20 files), specialized pattern |
-| `zerg/ast_analyzer.py:450` | `directory.rglob(file_pattern)` | Dynamic pattern parameter; would require API redesign |
+| `mahabharatha/fs_utils.py:58` | `root.rglob("*")` | Canonical implementation itself |
+| `mahabharatha/security_rules.py:220` | `project_path.rglob("*")` | Already single-pass with inline filtering |
+| `mahabharatha/commands/kurukshetra.py:323` | `Path(".gsd").rglob("task-graph.json")` | Tiny directory (~20 files), specialized pattern |
+| `mahabharatha/ast_analyzer.py:450` | `directory.rglob(file_pattern)` | Dynamic pattern parameter; would require API redesign |
 
 ---
 

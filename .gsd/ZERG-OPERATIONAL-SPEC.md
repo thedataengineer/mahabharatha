@@ -1,4 +1,4 @@
-# ZERG Operational Specification v2.0
+# MAHABHARATHA Operational Specification v2.0
 
 > Zero-Effort Rapid Growth: Parallel Claude Code execution through Task orchestration, GSD methodology, and devcontainer isolation.
 
@@ -6,7 +6,7 @@
 
 ## Core Architecture
 
-ZERG combines three systems:
+MAHABHARATHA combines three systems:
 
 1. **Claude Code Tasks** — The tracking and coordination layer. Tasks persist across sessions, support dependencies, and enable parallel execution.
 2. **GSD Methodology** — Spec-driven development with fresh subagent contexts per task, eliminating context rot.
@@ -14,8 +14,8 @@ ZERG combines three systems:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    ZERG ORCHESTRATOR                        │
-│  (.zerg/orchestrator.py)                                    │
+│                    MAHABHARATHA ORCHESTRATOR                        │
+│  (.mahabharatha/orchestrator.py)                                    │
 ├─────────────────────────────────────────────────────────────┤
 │  Claude Code Task List (CLAUDE_CODE_TASK_LIST_ID)           │
 │  ├── Task: L0-001 (pending → in_progress → completed)       │
@@ -23,7 +23,7 @@ ZERG combines three systems:
 │  └── Task: L1-001 (pending, depends: L0-*)                  │
 ├─────────────────────────────────────────────────────────────┤
 │  Git Worktrees              │  Devcontainer Instances       │
-│  .zerg-worktrees/           │  worker-001 (port 49200)      │
+│  .mahabharatha-worktrees/           │  worker-001 (port 49200)      │
 │  ├── feature-x/worker-001/  │  worker-002 (port 49201)      │
 │  └── feature-x/worker-002/  │  worker-003 (port 49202)      │
 └─────────────────────────────────────────────────────────────┘
@@ -33,13 +33,13 @@ ZERG combines three systems:
 
 ## Directory Structure
 
-ZERG creates and manages these directories:
+MAHABHARATHA creates and manages these directories:
 
 ```
 project-root/
-├── .zerg/
+├── .mahabharatha/
 │   ├── orchestrator.py          # Worker fleet management
-│   ├── config.yaml              # ZERG configuration
+│   ├── config.yaml              # MAHABHARATHA configuration
 │   └── worktrees/               # Git worktree mount points
 │       └── {feature}/
 │           └── worker-{N}/      # Each worker's isolated checkout
@@ -60,12 +60,12 @@ project-root/
 │
 ├── .claude/
 │   ├── commands/
-│   │   ├── zerg:init.md         # Initialize ZERG infrastructure
-│   │   ├── zerg:plan.md         # Requirements elicitation
-│   │   ├── zerg:design.md       # Architecture and task generation
-│   │   ├── zerg:rush.md         # Launch parallel workers
-│   │   ├── zerg:status.md       # Check worker progress
-│   │   └── zerg:worker.md       # Worker execution protocol
+│   │   ├── mahabharatha:init.md         # Initialize MAHABHARATHA infrastructure
+│   │   ├── mahabharatha:plan.md         # Requirements elicitation
+│   │   ├── mahabharatha:design.md       # Architecture and task generation
+│   │   ├── mahabharatha:kurukshetra.md         # Launch parallel workers
+│   │   ├── mahabharatha:status.md       # Check worker progress
+│   │   └── mahabharatha:worker.md       # Worker execution protocol
 │   ├── agents/
 │   │   ├── scout.md             # Read-only reconnaissance
 │   │   ├── architect.md         # Design and task decomposition
@@ -84,14 +84,14 @@ project-root/
 
 ---
 
-## Phase 1: Initialization (`/zerg:init`)
+## Phase 1: Initialization (`/mahabharatha:init`)
 
 ### Purpose
-Initialize ZERG for a project. Operates in two modes based on directory state.
+Initialize MAHABHARATHA for a project. Operates in two modes based on directory state.
 
 ### Mode Detection
 
-The `is_empty_project()` function in `zerg/commands/init.py` determines the initialization mode:
+The `is_empty_project()` function in `mahabharatha/commands/init.py` determines the initialization mode:
 
 ```python
 # Project indicators that trigger Discovery Mode
@@ -107,7 +107,7 @@ def is_empty_project(path: Path | None = None) -> bool:
 
 ### Inception Mode (Empty Directory)
 
-When `is_empty_project()` returns `True`, ZERG runs the Inception Mode workflow:
+When `is_empty_project()` returns `True`, MAHABHARATHA runs the Inception Mode workflow:
 
 1. **Requirements Gathering** (`gather_requirements()`) - Interactive prompts via Rich console
 2. **Technology Selection** (`select_technology()`) - Recommends and confirms language/framework
@@ -115,10 +115,10 @@ When `is_empty_project()` returns `True`, ZERG runs the Inception Mode workflow:
 4. **Git Initialization** - Creates initial commit
 
 **Key files:**
-- `zerg/charter.py` - `ProjectCharter` dataclass, `gather_requirements()`, `write_project_md()`
-- `zerg/tech_selector.py` - `TechStack` dataclass, `recommend_stack()`, `select_technology()`
-- `zerg/inception.py` - `scaffold_project()`, `run_inception_mode()` orchestrator
-- `zerg/scaffolds/{language}/` - Template files for each supported language
+- `mahabharatha/charter.py` - `ProjectCharter` dataclass, `gather_requirements()`, `write_project_md()`
+- `mahabharatha/tech_selector.py` - `TechStack` dataclass, `recommend_stack()`, `select_technology()`
+- `mahabharatha/inception.py` - `scaffold_project()`, `run_inception_mode()` orchestrator
+- `mahabharatha/scaffolds/{language}/` - Template files for each supported language
 
 **Supported Languages:**
 - Python (fastapi, flask, typer, click)
@@ -128,7 +128,7 @@ When `is_empty_project()` returns `True`, ZERG runs the Inception Mode workflow:
 
 ### Discovery Mode (Existing Project)
 
-When `is_empty_project()` returns `False`, ZERG runs Discovery Mode.
+When `is_empty_project()` returns `False`, MAHABHARATHA runs Discovery Mode.
 
 ### Execution Model
 Spawn a **read-only scout subagent** using Claude's Task tool. The scout cannot modify files.
@@ -199,7 +199,7 @@ Spawn a **read-only scout subagent** using Claude's Task tool. The scout cannot 
 ### Verification
 ```bash
 # Devcontainer builds successfully
-docker build -f .devcontainer/Dockerfile -t zerg-worker .
+docker build -f .devcontainer/Dockerfile -t mahabharatha-worker .
 
 # Security rules present
 test -f .claude/rules/security-*.md
@@ -210,7 +210,7 @@ test -f .gsd/PROJECT.md || test -f .gsd/INFRASTRUCTURE.md
 
 ---
 
-## Phase 2: Planning (`/zerg:plan`)
+## Phase 2: Planning (`/mahabharatha:plan`)
 
 ### Purpose
 Transform a feature request into a precise specification with acceptance criteria and verification commands.
@@ -221,13 +221,13 @@ Spawn a **product owner subagent** for requirements elicitation.
 ```xml
 <subagent name="product-owner" tools="Read, Write" model="sonnet">
   You are a product owner conducting requirements elicitation.
-  
+
   Given the user's feature description:
   1. Ask clarifying questions to resolve ambiguity
   2. Identify edge cases and error conditions
   3. Extract measurable acceptance criteria
   4. Define verification commands that prove completion
-  
+
   Produce a REQUIREMENTS.md following the GSD specification format.
 </subagent>
 ```
@@ -282,7 +282,7 @@ grep -c "Verification:" .gsd/specs/{feature}/REQUIREMENTS.md
 
 ---
 
-## Phase 3: Design (`/zerg:design`)
+## Phase 3: Design (`/mahabharatha:design`)
 
 ### Purpose
 Transform requirements into a technical architecture and decompose into atomic, parallelizable tasks with exclusive file ownership.
@@ -293,14 +293,14 @@ Spawn an **architect subagent** to produce the design.
 ```xml
 <subagent name="architect" tools="Read, Write, Glob" model="sonnet">
   You are a software architect designing for parallel execution.
-  
+
   Given REQUIREMENTS.md:
   1. Determine file structure and component boundaries
   2. Define interfaces between components
   3. Generate stub files with signatures but no implementation
   4. Decompose into atomic tasks with exclusive file ownership
   5. Assign dependency levels (L0, L1, L2, L3, L4)
-  
+
   Critical constraint: No two tasks may modify the same file.
 </subagent>
 ```
@@ -325,19 +325,19 @@ Each task is a separate markdown file following GSD's XML structure:
   <level>{0-4}</level>
   <depends>{task-ids or empty}</depends>
   <files>{exclusive file list}</files>
-  
+
   <context>
     {What the worker needs to understand before implementing}
   </context>
-  
+
   <action>
     {Precise implementation instructions}
   </action>
-  
+
   <verify>
     {Bash command that returns 0 on success}
   </verify>
-  
+
   <done>
     {Human-readable completion criteria}
   </done>
@@ -373,11 +373,11 @@ from typing import Protocol
 
 class AuthService(Protocol):
     """Authentication service interface. Implementation in L1-003."""
-    
+
     async def authenticate(self, credentials: Credentials) -> AuthResult:
         """Validate credentials and return auth result."""
         ...
-    
+
     async def refresh_token(self, token: str) -> str:
         """Refresh an expired token."""
         ...
@@ -407,7 +407,7 @@ find .gsd/specs/{feature}/tasks/ -name "*.md" -exec grep -h "<files>" {} \; | \
 
 ---
 
-## Phase 4: Execution (`/zerg:rush`)
+## Phase 4: Execution (`/mahabharatha:kurukshetra`)
 
 ### Purpose
 Launch parallel workers to implement all tasks in a level, enforce quality gates at level boundaries, and merge completed work.
@@ -418,7 +418,7 @@ The orchestrator coordinates workers through Claude's Task tool and isolated dev
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  /zerg:rush {feature}                                       │
+│  /mahabharatha:kurukshetra {feature}                                       │
 ├─────────────────────────────────────────────────────────────┤
 │  1. Read task graph from .gsd/specs/{feature}/tasks/        │
 │  2. Identify all L0 tasks                                   │
@@ -440,8 +440,8 @@ For each task in the current level:
 
 ```bash
 # 1. Create git worktree
-git worktree add .zerg/worktrees/{feature}/worker-{N} \
-  -b zerg/{feature}/worker-{N}
+git worktree add .mahabharatha/worktrees/{feature}/worker-{N} \
+  -b mahabharatha/{feature}/worker-{N}
 
 # 2. Launch devcontainer with worker identity
 ZERG_WORKER_ID={N} \
@@ -464,7 +464,7 @@ Each worker follows this protocol (defined in `.claude/agents/worker.md`):
   <description>Implementation specialist executing atomic tasks</description>
   <tools>Read, Write, Edit, Bash, Grep, Glob</tools>
   <model>sonnet</model>
-  
+
   <protocol>
     1. Read task specification from .gsd/specs/{feature}/tasks/{task-id}.md
     2. Read any dependency stubs from the stub files
@@ -483,7 +483,7 @@ Each worker follows this protocol (defined in `.claude/agents/worker.md`):
        a. Update Claude Task status to "blocked"
        b. Write failure analysis to task file
   </protocol>
-  
+
   <constraints>
     - Modify ONLY files listed in task <files> section
     - Do NOT spawn subagents (no nesting allowed)
@@ -518,13 +518,13 @@ When all tasks in a level reach `completed` or `blocked`:
 ```bash
 # 1. Merge worker branches to staging
 git checkout -b staging/{feature}
-for branch in $(git branch --list "zerg/{feature}/worker-*"); do
+for branch in $(git branch --list "mahabharatha/{feature}/worker-*"); do
   git merge --no-ff $branch -m "Merge $branch"
 done
 
 # 2. Run quality checks
 npm run lint          # or: ruff check, cargo clippy
-npm run typecheck     # or: mypy, cargo check  
+npm run typecheck     # or: mypy, cargo check
 npm run test          # all tests, coverage threshold
 semgrep --config=auto # security scan
 
@@ -597,7 +597,7 @@ This enables:
 
 ### Task Creation
 
-The orchestrator creates Claude Tasks for each ZERG task:
+The orchestrator creates Claude Tasks for each MAHABHARATHA task:
 
 ```javascript
 // Conceptual - orchestrator creates tasks via Claude Code
@@ -648,23 +648,23 @@ Each worker runs in an isolated devcontainer:
 ```json
 // .devcontainer/devcontainer.json
 {
-  "name": "zerg-worker",
+  "name": "mahabharatha-worker",
   "dockerComposeFile": "docker-compose.yaml",
   "service": "worker",
   "workspaceFolder": "/workspace",
-  
+
   "containerEnv": {
     "ZERG_WORKER_ID": "${localEnv:ZERG_WORKER_ID}",
     "ZERG_FEATURE": "${localEnv:ZERG_FEATURE}",
     "ZERG_TASK_ID": "${localEnv:ZERG_TASK_ID}",
     "CLAUDE_CODE_TASK_LIST_ID": "${localEnv:CLAUDE_CODE_TASK_LIST_ID}"
   },
-  
+
   "mounts": [
     "source=${localWorkspaceFolder}/.gsd/specs,target=/specs,type=bind,readonly",
     "source=${localWorkspaceFolder}/.claude/rules,target=/rules,type=bind,readonly"
   ],
-  
+
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/node:1": {},
@@ -694,7 +694,7 @@ services:
       - ZERG_TASK_ID
       - CLAUDE_CODE_TASK_LIST_ID
     networks:
-      - zerg-net
+      - mahabharatha-net
     deploy:
       resources:
         limits:
@@ -702,7 +702,7 @@ services:
           memory: 4G
 
 networks:
-  zerg-net:
+  mahabharatha-net:
     driver: bridge
 
 volumes:
@@ -715,23 +715,23 @@ volumes:
 Workers requiring network access receive ports from the ephemeral range:
 
 ```python
-# .zerg/orchestrator.py (excerpt)
+# .mahabharatha/orchestrator.py (excerpt)
 import random
 
 class PortAllocator:
     EPHEMERAL_START = 49152
     EPHEMERAL_END = 65535
-    
+
     def __init__(self):
         self.allocated = set()
-    
+
     def allocate(self) -> int:
         while True:
             port = random.randint(self.EPHEMERAL_START, self.EPHEMERAL_END)
             if port not in self.allocated:
                 self.allocated.add(port)
                 return port
-    
+
     def release(self, port: int):
         self.allocated.discard(port)
 ```
@@ -742,7 +742,7 @@ class PortAllocator:
 
 ### Rule Injection
 
-During initialization, ZERG injects security rules based on detected stack:
+During initialization, MAHABHARATHA injects security rules based on detected stack:
 
 | Stack | Rules Source |
 |-------|--------------|
@@ -796,9 +796,9 @@ gitleaks detect --source .
 
 ### Hybrid State Architecture
 
-ZERG uses a hybrid approach for state management:
+MAHABHARATHA uses a hybrid approach for state management:
 
-1. **JSON State Files** (`.zerg/state/{feature}.json`): Source of truth for execution state
+1. **JSON State Files** (`.mahabharatha/state/{feature}.json`): Source of truth for execution state
    - Workers read/write via `StateManager`
    - Crash-safe, inspectable, git-friendly
    - Full task status, worker assignments, retry counts
@@ -860,10 +860,10 @@ If execution is interrupted:
 
 ```bash
 # Check current state
-claude "/zerg:status"
+claude "/mahabharatha:status"
 
 # Resume from last checkpoint
-claude "/zerg:rush {feature} --resume"
+claude "/mahabharatha:kurukshetra {feature} --resume"
 ```
 
 The orchestrator:
@@ -875,7 +875,7 @@ The orchestrator:
 ### STATE.md Format
 
 ```markdown
-# ZERG State: {feature}
+# MAHABHARATHA State: {feature}
 
 ## Current Phase
 - **Phase:** Execution
@@ -907,27 +907,27 @@ The orchestrator:
 
 ## Command Reference
 
-### `/zerg:init`
-Initialize ZERG infrastructure for a project.
+### `/mahabharatha:init`
+Initialize MAHABHARATHA infrastructure for a project.
 
 ```
-Usage: /zerg:init [--force]
+Usage: /mahabharatha:init [--force]
 
 Options:
-  --force    Reinitialize even if .zerg/ exists
+  --force    Reinitialize even if .mahabharatha/ exists
 
 Outputs:
-  .zerg/           Orchestrator and configuration
+  .mahabharatha/           Orchestrator and configuration
   .gsd/            Spec directory structure
   .claude/         Commands, agents, and rules
   .devcontainer/   Worker container configuration
 ```
 
-### `/zerg:plan`
+### `/mahabharatha:plan`
 Elicit requirements for a feature.
 
 ```
-Usage: /zerg:plan {feature-name}
+Usage: /mahabharatha:plan {feature-name}
 
 Arguments:
   feature-name    Identifier for the feature (kebab-case)
@@ -936,11 +936,11 @@ Outputs:
   .gsd/specs/{feature}/REQUIREMENTS.md
 ```
 
-### `/zerg:design`
+### `/mahabharatha:design`
 Generate architecture and task decomposition.
 
 ```
-Usage: /zerg:design {feature-name}
+Usage: /mahabharatha:design {feature-name}
 
 Arguments:
   feature-name    Feature to design (must have REQUIREMENTS.md)
@@ -951,11 +951,11 @@ Outputs:
   Stub files in source tree
 ```
 
-### `/zerg:rush`
+### `/mahabharatha:kurukshetra`
 Launch parallel workers for a feature.
 
 ```
-Usage: /zerg:rush {feature-name} [--level N] [--resume] [--dry-run]
+Usage: /mahabharatha:kurukshetra {feature-name} [--level N] [--resume] [--dry-run]
 
 Arguments:
   feature-name    Feature to execute
@@ -971,11 +971,11 @@ Outputs:
   .gsd/specs/{feature}/COMPLETION.md
 ```
 
-### `/zerg:status`
+### `/mahabharatha:status`
 Check worker and task status.
 
 ```
-Usage: /zerg:status [--feature {name}] [--verbose]
+Usage: /mahabharatha:status [--feature {name}] [--verbose]
 
 Options:
   --feature       Filter to specific feature
@@ -987,11 +987,11 @@ Outputs:
   Current level progress
 ```
 
-### `/zerg:worker`
+### `/mahabharatha:worker`
 Worker execution protocol (invoked by orchestrator, not directly).
 
 ```
-Usage: /zerg:worker {task-id}
+Usage: /mahabharatha:worker {task-id}
 
 Arguments:
   task-id    Task specification to execute
@@ -1052,4 +1052,4 @@ Before reporting a feature complete:
 
 - **Spec Version:** 2.0
 - **Last Updated:** 2026-01-26
-- **Maintainer:** ZERG Development Team
+- **Maintainer:** MAHABHARATHA Development Team

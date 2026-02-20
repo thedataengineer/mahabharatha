@@ -4,17 +4,17 @@
 - **Feature**: review-security-integration
 - **Status**: DRAFT
 - **Created**: 2026-02-15
-- **Author**: ZERG Design Mode
+- **Author**: MAHABHARATHA Design Mode
 
 ---
 
 ## 1. Overview
 
 ### 1.1 Summary
-Consolidate scattered security logic (`zerg/security.py`, `zerg/security_rules.py`, `CodeAnalyzer.hardcoded_secret`) into a unified `zerg/security/` package with 15 capability areas, and wire it as always-on Stage 3 in `/z:review`. Both the `/z:security` slash command and `/z:review` CLI call the same `run_security_scan()` engine.
+Consolidate scattered security logic (`mahabharatha/security.py`, `mahabharatha/security_rules.py`, `CodeAnalyzer.hardcoded_secret`) into a unified `mahabharatha/security/` package with 15 capability areas, and wire it as always-on Stage 3 in `/z:review`. Both the `/z:security` slash command and `/z:review` CLI call the same `run_security_scan()` engine.
 
 ### 1.2 Goals
-- Single `zerg/security/` package — zero duplication of security patterns
+- Single `mahabharatha/security/` package — zero duplication of security patterns
 - 15 scanning capability areas (secrets, injection, crypto, CVE, etc.)
 - Stage 3 in review pipeline (Spec -> Quality -> Security)
 - `--no-security` opt-out flag on review CLI and slash command
@@ -23,7 +23,7 @@ Consolidate scattered security logic (`zerg/security.py`, `zerg/security_rules.p
 ### 1.3 Non-Goals
 - Replacing external tools (Snyk, Semgrep, Trivy)
 - Runtime/dynamic security analysis
-- Modifying `/z:rush` or `/z:worker` pipelines
+- Modifying `/z:kurukshetra` or `/z:worker` pipelines
 
 ---
 
@@ -43,7 +43,7 @@ Consolidate scattered security logic (`zerg/security.py`, `zerg/security_rules.p
 └────────────────────┘  │
                         ▼
               ┌───────────────────┐
-              │ zerg/security/    │
+              │ mahabharatha/security/    │
               │   __init__.py     │◄── Public API
               │   scanner.py      │◄── Scan engine
               │   patterns.py     │◄── 15 capability patterns
@@ -62,13 +62,13 @@ Consolidate scattered security logic (`zerg/security.py`, `zerg/security_rules.p
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| Public API | Re-exports, backward compat | `zerg/security/__init__.py` |
-| Scanner Engine | Orchestrates all 15 capability scans | `zerg/security/scanner.py` |
-| Pattern Registry | Declarative pattern definitions per category | `zerg/security/patterns.py` |
-| CVE Scanner | Dependency vulnerability checking | `zerg/security/cve.py` |
-| Rules Manager | Stack detection, rule fetching, filtering | `zerg/security/rules.py` |
-| Hook Manager | Git hook install/uninstall | `zerg/security/hooks.py` |
-| Review Stage 3 | Security integration in review pipeline | `zerg/commands/review.py` |
+| Public API | Re-exports, backward compat | `mahabharatha/security/__init__.py` |
+| Scanner Engine | Orchestrates all 15 capability scans | `mahabharatha/security/scanner.py` |
+| Pattern Registry | Declarative pattern definitions per category | `mahabharatha/security/patterns.py` |
+| CVE Scanner | Dependency vulnerability checking | `mahabharatha/security/cve.py` |
+| Rules Manager | Stack detection, rule fetching, filtering | `mahabharatha/security/rules.py` |
+| Hook Manager | Git hook install/uninstall | `mahabharatha/security/hooks.py` |
+| Review Stage 3 | Security integration in review pipeline | `mahabharatha/commands/review.py` |
 
 ### 2.3 Data Flow
 
@@ -86,7 +86,7 @@ Consolidate scattered security logic (`zerg/security.py`, `zerg/security_rules.p
 ### 3.1 Data Models
 
 ```python
-# zerg/security/__init__.py
+# mahabharatha/security/__init__.py
 
 @dataclass
 class SecurityFinding:
@@ -112,7 +112,7 @@ class SecurityResult:
 ### 3.2 Pattern Registry Design
 
 ```python
-# zerg/security/patterns.py
+# mahabharatha/security/patterns.py
 
 @dataclass
 class SecurityPattern:
@@ -147,7 +147,7 @@ Capabilities 7 (CVE scanning) and 10 (git history) are handled by `cve.py` and `
 ### 3.3 CVE Scanning Design
 
 ```python
-# zerg/security/cve.py
+# mahabharatha/security/cve.py
 
 def scan_dependencies(project_path: Path) -> list[SecurityFinding]:
     """Scan project dependencies for known CVEs.
@@ -165,7 +165,7 @@ def scan_dependencies(project_path: Path) -> list[SecurityFinding]:
 ### 3.4 Review Integration
 
 ```python
-# Changes to zerg/commands/review.py
+# Changes to mahabharatha/commands/review.py
 
 @dataclass
 class ReviewResult:
@@ -199,11 +199,11 @@ def _run_security_review(self, files: list[str]) -> tuple[bool, str, SecurityRes
 
 ### 4.1 Package Migration Strategy
 
-**Context**: `zerg/security.py` (flat module) must become `zerg/security/` (package). Git doesn't allow a file and directory with the same name.
+**Context**: `mahabharatha/security.py` (flat module) must become `mahabharatha/security/` (package). Git doesn't allow a file and directory with the same name.
 
 **Options Considered**:
 1. Atomic migration in a single task — creates package, moves all functions, deletes flat module
-2. Gradual migration with temporary shim — create `zerg/security_v2/` then rename
+2. Gradual migration with temporary shim — create `mahabharatha/security_v2/` then rename
 3. In-place expansion — convert `.py` to `__init__.py` in package dir
 
 **Decision**: Option 1 — atomic migration in TASK-001
@@ -254,18 +254,18 @@ def _run_security_review(self, files: list[str]) -> tuple[bool, str, SecurityRes
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/security/__init__.py` | TASK-001 (create), TASK-004 (modify) | create+modify |
-| `zerg/security/scanner.py` | TASK-001 (create), TASK-004 (modify) | create+modify |
-| `zerg/security/hooks.py` | TASK-001 | create |
-| `zerg/security/rules.py` | TASK-001 | create |
-| `zerg/security.py` | TASK-001 | delete |
-| `zerg/security_rules.py` | TASK-001 | delete |
-| `zerg/security/patterns.py` | TASK-002 | create |
-| `zerg/security/cve.py` | TASK-003 | create |
-| `zerg/commands/security_rules_cmd.py` | TASK-005 | modify |
-| `zerg/context_plugin.py` | TASK-005 | modify |
-| `zerg/commands/init.py` | TASK-005 | modify |
-| `zerg/commands/review.py` | TASK-006 | modify |
+| `mahabharatha/security/__init__.py` | TASK-001 (create), TASK-004 (modify) | create+modify |
+| `mahabharatha/security/scanner.py` | TASK-001 (create), TASK-004 (modify) | create+modify |
+| `mahabharatha/security/hooks.py` | TASK-001 | create |
+| `mahabharatha/security/rules.py` | TASK-001 | create |
+| `mahabharatha/security.py` | TASK-001 | delete |
+| `mahabharatha/security_rules.py` | TASK-001 | delete |
+| `mahabharatha/security/patterns.py` | TASK-002 | create |
+| `mahabharatha/security/cve.py` | TASK-003 | create |
+| `mahabharatha/commands/security_rules_cmd.py` | TASK-005 | modify |
+| `mahabharatha/context_plugin.py` | TASK-005 | modify |
+| `mahabharatha/commands/init.py` | TASK-005 | modify |
+| `mahabharatha/commands/review.py` | TASK-006 | modify |
 | `tests/unit/test_security_engine.py` | TASK-007 | create |
 | `tests/unit/test_security.py` | TASK-008 | modify |
 | `tests/unit/test_security_path_traversal.py` | TASK-008 | modify |
@@ -273,8 +273,8 @@ def _run_security_review(self, files: list[str]) -> tuple[bool, str, SecurityRes
 | `tests/unit/test_security_rules_cmd.py` | TASK-008 | modify |
 | `tests/integration/test_review_security.py` | TASK-009 | create |
 | `tests/unit/test_review_cmd.py` | TASK-009 | modify |
-| `zerg/data/commands/review.md` | TASK-010 | modify |
-| `zerg/data/commands/security.md` | TASK-010 | modify |
+| `mahabharatha/data/commands/review.md` | TASK-010 | modify |
+| `mahabharatha/data/commands/security.md` | TASK-010 | modify |
 | `docs/commands-quick.md` | TASK-010 | modify |
 | `docs/commands-deep.md` | TASK-010 | modify |
 | `CHANGELOG.md` | TASK-010 | modify |
@@ -283,12 +283,12 @@ def _run_security_review(self, files: list[str]) -> tuple[bool, str, SecurityRes
 
 | Task | Creates | Consumed By | Integration Test |
 |------|---------|-------------|-----------------|
-| TASK-001 | `zerg/security/__init__.py` | TASK-004, TASK-005, TASK-006 | `tests/integration/test_review_security.py` |
-| TASK-001 | `zerg/security/scanner.py` | TASK-004 | `tests/unit/test_security_engine.py` |
-| TASK-001 | `zerg/security/hooks.py` | leaf (called by hooks CLI) | -- |
-| TASK-001 | `zerg/security/rules.py` | TASK-005 | `tests/unit/test_security_rules.py` |
-| TASK-002 | `zerg/security/patterns.py` | TASK-004 | `tests/unit/test_security_engine.py` |
-| TASK-003 | `zerg/security/cve.py` | TASK-004 | `tests/unit/test_security_engine.py` |
+| TASK-001 | `mahabharatha/security/__init__.py` | TASK-004, TASK-005, TASK-006 | `tests/integration/test_review_security.py` |
+| TASK-001 | `mahabharatha/security/scanner.py` | TASK-004 | `tests/unit/test_security_engine.py` |
+| TASK-001 | `mahabharatha/security/hooks.py` | leaf (called by hooks CLI) | -- |
+| TASK-001 | `mahabharatha/security/rules.py` | TASK-005 | `tests/unit/test_security_rules.py` |
+| TASK-002 | `mahabharatha/security/patterns.py` | TASK-004 | `tests/unit/test_security_engine.py` |
+| TASK-003 | `mahabharatha/security/cve.py` | TASK-004 | `tests/unit/test_security_engine.py` |
 | TASK-007 | `tests/unit/test_security_engine.py` | leaf | -- |
 | TASK-009 | `tests/integration/test_review_security.py` | leaf | -- |
 
@@ -335,24 +335,24 @@ graph TD
 
 ### 7.2 Integration Tests
 - `test_review_security.py`: Full review pipeline with Stage 3
-- CLI: `zerg review` shows 3-stage table
-- CLI: `zerg review --no-security` skips Stage 3
+- CLI: `mahabharatha review` shows 3-stage table
+- CLI: `mahabharatha review --no-security` skips Stage 3
 - Review JSON output includes security findings
 
 ### 7.3 Verification Commands
 
 | Task | Verification Command |
 |------|---------------------|
-| TASK-001 | `python -c "from zerg.security import run_security_scan, check_for_secrets, SECRET_PATTERNS, SENSITIVE_FILES, install_hooks; print('OK')"` |
-| TASK-002 | `python -c "from zerg.security.patterns import PATTERN_REGISTRY; assert len(PATTERN_REGISTRY) >= 13; print('OK')"` |
-| TASK-003 | `python -c "from zerg.security.cve import scan_dependencies; print('OK')"` |
-| TASK-004 | `python -c "from zerg.security import run_security_scan; r = run_security_scan('.'); assert hasattr(r, 'findings'); print('OK')"` |
-| TASK-005 | `python -c "from zerg.commands.security_rules_cmd import security_rules_group; from zerg.context_plugin import ContextEngineeringPlugin; print('OK')"` |
-| TASK-006 | `python -c "from zerg.commands.review import ReviewResult; r = ReviewResult(files_reviewed=0, items=[], spec_passed=True, quality_passed=True); assert hasattr(r, 'security_passed'); print('OK')"` |
+| TASK-001 | `python -c "from mahabharatha.security import run_security_scan, check_for_secrets, SECRET_PATTERNS, SENSITIVE_FILES, install_hooks; print('OK')"` |
+| TASK-002 | `python -c "from mahabharatha.security.patterns import PATTERN_REGISTRY; assert len(PATTERN_REGISTRY) >= 13; print('OK')"` |
+| TASK-003 | `python -c "from mahabharatha.security.cve import scan_dependencies; print('OK')"` |
+| TASK-004 | `python -c "from mahabharatha.security import run_security_scan; r = run_security_scan('.'); assert hasattr(r, 'findings'); print('OK')"` |
+| TASK-005 | `python -c "from mahabharatha.commands.security_rules_cmd import security_rules_group; from mahabharatha.context_plugin import ContextEngineeringPlugin; print('OK')"` |
+| TASK-006 | `python -c "from mahabharatha.commands.review import ReviewResult; r = ReviewResult(files_reviewed=0, items=[], spec_passed=True, quality_passed=True); assert hasattr(r, 'security_passed'); print('OK')"` |
 | TASK-007 | `python -m pytest tests/unit/test_security_engine.py -x -q` |
 | TASK-008 | `python -m pytest tests/unit/test_security.py tests/unit/test_security_rules.py tests/unit/test_security_path_traversal.py -x -q` |
 | TASK-009 | `python -m pytest tests/integration/test_review_security.py tests/unit/test_review_cmd.py -x -q` |
-| TASK-010 | `grep -q 'no-security' zerg/data/commands/review.md && grep -q 'Unreleased' CHANGELOG.md` |
+| TASK-010 | `grep -q 'no-security' mahabharatha/data/commands/review.md && grep -q 'Unreleased' CHANGELOG.md` |
 
 ---
 

@@ -1,4 +1,4 @@
-"""Task verification execution for ZERG."""
+"""Task verification execution for MAHABHARATHA."""
 
 import time
 from dataclasses import dataclass, field

@@ -1,4 +1,4 @@
-"""Tests for ZERG verification executor module."""
+"""Tests for MAHABHARATHA verification executor module."""
 
 from datetime import datetime
 from pathlib import Path

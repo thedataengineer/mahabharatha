@@ -1,19 +1,19 @@
-# DC-005: Update .zerg/devcontainer.py for Multi-Language
+# DC-005: Update .mahabharatha/devcontainer.py for Multi-Language
 
 **Level**: 3 | **Critical Path**: No | **Estimate**: 25 min
 **Dependencies**: DC-003
 
 ## Objective
 
-Update the `DevcontainerGenerator` class in `.zerg/devcontainer.py` to support multi-language projects via features, maintaining backwards compatibility with single-language usage.
+Update the `DevcontainerGenerator` class in `.mahabharatha/devcontainer.py` to support multi-language projects via features, maintaining backwards compatibility with single-language usage.
 
 ## Files Owned
 
-- `.zerg/devcontainer.py` (modify)
+- `.mahabharatha/devcontainer.py` (modify)
 
 ## Files to Read
 
-- `zerg/devcontainer_features.py` (reference feature mappings)
+- `mahabharatha/devcontainer_features.py` (reference feature mappings)
 
 ## Implementation
 
@@ -26,7 +26,7 @@ from pathlib import Path
 # Add parent to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from zerg.devcontainer_features import (
+from mahabharatha.devcontainer_features import (
     DEVCONTAINER_FEATURES,
     CUSTOM_INSTALL_COMMANDS,
     BASE_IMAGE,
@@ -37,7 +37,7 @@ from zerg.devcontainer_features import (
 
 
 class DevcontainerGenerator:
-    """Generate devcontainer configuration for ZERG workers."""
+    """Generate devcontainer configuration for MAHABHARATHA workers."""
 
     def __init__(self, project_path: Path, config: DevcontainerConfig | None = None):
         """Initialize generator.
@@ -108,13 +108,13 @@ class DevcontainerGenerator:
                 }
             },
             "forwardPorts": [],
-            "runArgs": ["--network=zerg-internal"],
+            "runArgs": ["--network=mahabharatha-internal"],
         }
 
         # Add postCreateCommand if needed
         post_commands = list(custom_commands)
         post_commands.extend(self.config.post_create_commands)
-        post_commands.append("echo 'ZERG worker ready'")
+        post_commands.append("echo 'MAHABHARATHA worker ready'")
 
         if post_commands:
             config["postCreateCommand"] = " && ".join(post_commands)
@@ -176,7 +176,7 @@ sys.path.insert(0, '.')
 from importlib.util import spec_from_file_location, module_from_spec
 from pathlib import Path
 
-spec = spec_from_file_location('devcontainer', '.zerg/devcontainer.py')
+spec = spec_from_file_location('devcontainer', '.mahabharatha/devcontainer.py')
 module = module_from_spec(spec)
 spec.loader.exec_module(module)
 
@@ -202,5 +202,5 @@ with TemporaryDirectory() as tmpdir:
 - [ ] Single language falls back to existing behavior
 - [ ] _generate_multi_language() creates proper features config
 - [ ] Post-create script installs deps for all languages
-- [ ] Import from zerg.devcontainer_features works
+- [ ] Import from mahabharatha.devcontainer_features works
 - [ ] No syntax errors in the module

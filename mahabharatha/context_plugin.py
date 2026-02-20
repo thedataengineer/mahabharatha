@@ -1,4 +1,4 @@
-"""Context engineering plugin for ZERG -- minimizes token usage across workers."""
+"""Context engineering plugin for MAHABHARATHA -- minimizes token usage across workers."""
 
 from __future__ import annotations
 

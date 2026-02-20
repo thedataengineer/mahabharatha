@@ -16,11 +16,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/git/pr_engine.py"],
+        "modify": ["mahabharatha/git/pr_engine.py"],
         "read": []
       },
       "verification": {
-        "command": "ruff check zerg/git/pr_engine.py",
+        "command": "ruff check mahabharatha/git/pr_engine.py",
         "timeout_seconds": 30
       },
       "estimate_minutes": 2,
@@ -38,11 +38,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/git/history_engine.py"],
+        "modify": ["mahabharatha/git/history_engine.py"],
         "read": []
       },
       "verification": {
-        "command": "ruff check zerg/git/history_engine.py",
+        "command": "ruff check mahabharatha/git/history_engine.py",
         "timeout_seconds": 30
       },
       "estimate_minutes": 2,
@@ -54,24 +54,24 @@
     {
       "id": "TASK-003",
       "title": "Run tests and verify CodeQL alerts",
-      "description": "Run full test suite: `python -m pytest tests/ --timeout=120`. Run lint: `ruff check zerg/git/pr_engine.py zerg/git/history_engine.py`. Verify FR-004: confirm 0 open CodeQL alerts for cyclic-import and undefined-export rules.",
+      "description": "Run full test suite: `python -m pytest tests/ --timeout=120`. Run lint: `ruff check mahabharatha/git/pr_engine.py mahabharatha/git/history_engine.py`. Verify FR-004: confirm 0 open CodeQL alerts for cyclic-import and undefined-export rules.",
       "phase": "testing",
       "level": 2,
       "dependencies": ["TASK-001", "TASK-002"],
       "files": {
         "create": [],
         "modify": [],
-        "read": ["zerg/git/pr_engine.py", "zerg/git/history_engine.py"]
+        "read": ["mahabharatha/git/pr_engine.py", "mahabharatha/git/history_engine.py"]
       },
       "verification": {
-        "command": "python -m pytest tests/ --timeout=120 && ruff check zerg/git/pr_engine.py zerg/git/history_engine.py",
+        "command": "python -m pytest tests/ --timeout=120 && ruff check mahabharatha/git/pr_engine.py mahabharatha/git/history_engine.py",
         "timeout_seconds": 180
       },
       "estimate_minutes": 3,
       "skills_required": ["python", "testing"],
       "consumers": ["TASK-004"],
       "integration_test": null,
-      "context": "## Spec Context\nFR-004: Confirm CodeQL cyclic-import/undefined-export alerts are resolved via `gh api repos/rocklambros/zerg/code-scanning/alerts`.\n\n## Acceptance Criteria\n- python -m pytest tests/ --timeout=120 — green\n- ruff check zerg/git/pr_engine.py zerg/git/history_engine.py — clean\n- CodeQL cyclic-import/undefined-export alerts confirmed at 0"
+      "context": "## Spec Context\nFR-004: Confirm CodeQL cyclic-import/undefined-export alerts are resolved via `gh api repos/rocklambros/mahabharatha/code-scanning/alerts`.\n\n## Acceptance Criteria\n- python -m pytest tests/ --timeout=120 — green\n- ruff check mahabharatha/git/pr_engine.py mahabharatha/git/history_engine.py — clean\n- CodeQL cyclic-import/undefined-export alerts confirmed at 0"
     },
     {
       "id": "TASK-004",

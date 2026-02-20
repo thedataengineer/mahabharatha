@@ -1,4 +1,4 @@
-"""Tests for ZERG step executor module."""
+"""Tests for MAHABHARATHA step executor module."""
 
 from pathlib import Path
 from unittest.mock import MagicMock

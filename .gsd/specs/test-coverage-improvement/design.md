@@ -280,7 +280,7 @@ Level 4 (Quality — depends on all above):
 Each task verifies with: `pytest {test_file} -v --timeout=30`
 
 ### 7.2 Final verification
-`pytest tests/unit/ -m "not slow" --cov=zerg --cov-fail-under=80 --timeout=120`
+`pytest tests/unit/ -m "not slow" --cov=mahabharatha --cov-fail-under=80 --timeout=120`
 
 ---
 

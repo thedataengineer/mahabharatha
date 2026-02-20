@@ -10,10 +10,10 @@ console = Console()
 
 @click.command()
 def health():
-    """Check the health and availability of ZERG components (LLM, Providers)."""
+    """Check the health and availability of MAHABHARATHA components (LLM, Providers)."""
     config = ZergConfig.load()
 
-    console.print("[bold blue]ZERG System Health Check[/bold blue]")
+    console.print("[bold blue]MAHABHARATHA System Health Check[/bold blue]")
     console.print(f"Active Provider: [bold green]{config.llm.provider}[/bold green]")
     console.print("-" * 40)
 

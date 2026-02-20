@@ -1,10 +1,10 @@
 # Architecture: State Management
 
-ZERG manages state across multiple concurrent processes. This page documents the state storage locations, the role of the Claude Code Task system as the source of truth, and how state flows between components.
+MAHABHARATHA manages state across multiple concurrent processes. This page documents the state storage locations, the role of the Claude Code Task system as the source of truth, and how state flows between components.
 
 ## State Hierarchy
 
-ZERG uses a layered state model. The Claude Code Task system is authoritative; JSON state files provide fast local access and act as a fallback when the Task system is unavailable.
+MAHABHARATHA uses a layered state model. The Claude Code Task system is authoritative; JSON state files provide fast local access and act as a fallback when the Task system is unavailable.
 
 ```mermaid
 graph TB
@@ -13,7 +13,7 @@ graph TB
     end
 
     subgraph "Local State"
-        JSON[".zerg/state/{feature}.json"]
+        JSON[".mahabharatha/state/{feature}.json"]
     end
 
     subgraph "Spec Artifacts"
@@ -25,12 +25,12 @@ graph TB
     end
 
     subgraph "Configuration"
-        CFG[".zerg/config.yaml"]
+        CFG[".mahabharatha/config.yaml"]
     end
 
     subgraph "Logs"
-        WLOG[".zerg/logs/workers/worker-{id}.jsonl"]
-        TLOG[".zerg/logs/tasks/{task-id}.jsonl"]
+        WLOG[".mahabharatha/logs/workers/worker-{id}.jsonl"]
+        TLOG[".mahabharatha/logs/tasks/{task-id}.jsonl"]
     end
 
     TASKS --> |"Authoritative"| JSON
@@ -48,13 +48,13 @@ This directory holds the design-time artifacts for a feature. These files are cr
 
 | File | Created By | Purpose |
 |------|-----------|---------|
-| `requirements.md` | `zerg plan` | Feature requirements in prose |
-| `design.md` | `zerg design` | Architecture document |
-| `task-graph.json` | `zerg design` | Task definitions, levels, dependencies, file ownership |
-| `worker-assignments.json` | `zerg rush` | Task-to-worker mapping with ports and worktree paths |
-| `design-tasks-manifest.json` | `zerg design` | Bridge file for Claude Task registration |
+| `requirements.md` | `mahabharatha plan` | Feature requirements in prose |
+| `design.md` | `mahabharatha design` | Architecture document |
+| `task-graph.json` | `mahabharatha design` | Task definitions, levels, dependencies, file ownership |
+| `worker-assignments.json` | `mahabharatha kurukshetra` | Task-to-worker mapping with ports and worktree paths |
+| `design-tasks-manifest.json` | `mahabharatha design` | Bridge file for Claude Task registration |
 
-### `.zerg/state/<feature>.json` -- Runtime State
+### `.mahabharatha/state/<feature>.json` -- Runtime State
 
 The `StateManager` class manages this file. It stores the current execution state for a feature, including task statuses, worker states, level completion, and timestamps.
 
@@ -90,7 +90,7 @@ The `StateManager` class manages this file. It stores the current execution stat
 }
 ```
 
-### `.zerg/config.yaml` -- Configuration
+### `.mahabharatha/config.yaml` -- Configuration
 
 Loaded by `ZergConfig` (Pydantic model) at startup. Controls all runtime behavior.
 
@@ -141,7 +141,7 @@ plugins:
 
 The Claude Code Task system is the authoritative coordination layer. Tasks persist across session restarts and are visible to all workers sharing the same `CLAUDE_CODE_TASK_LIST_ID`.
 
-**Task subject convention**: All ZERG tasks use bracketed prefixes for discoverability:
+**Task subject convention**: All MAHABHARATHA tasks use bracketed prefixes for discoverability:
 - `[Plan] Capture requirements: my-feature`
 - `[Design] Architecture for my-feature`
 - `[L1] Create data models`
@@ -159,14 +159,14 @@ stateDiagram-v2
     blocked --> pending: Manual retry
 ```
 
-### `.zerg/logs/` -- Structured Logs
+### `.mahabharatha/logs/` -- Structured Logs
 
 Workers write structured JSONL logs to individual files. The `LogAggregator` merges these at read time by timestamp, so there is no single aggregated file on disk.
 
 | Directory | File Pattern | Content |
 |-----------|-------------|---------|
-| `.zerg/logs/workers/` | `worker-{id}.jsonl` | Per-worker execution log |
-| `.zerg/logs/tasks/` | `{task-id}.jsonl` | Per-task detailed log |
+| `.mahabharatha/logs/workers/` | `worker-{id}.jsonl` | Per-worker execution log |
+| `.mahabharatha/logs/tasks/` | `{task-id}.jsonl` | Per-task detailed log |
 
 ## State Synchronization
 
@@ -184,7 +184,7 @@ The `StateSyncService` keeps the in-memory `LevelController` synchronized with o
 
 ### Conflict Resolution
 
-When the Claude Code Task system and state JSON disagree, the Task system wins. This is enforced in `zerg status` and the orchestrator's sync loop. The `status` command cross-references both sources and flags mismatches.
+When the Claude Code Task system and state JSON disagree, the Task system wins. This is enforced in `mahabharatha status` and the orchestrator's sync loop. The `status` command cross-references both sources and flags mismatches.
 
 ## State During Failure Scenarios
 
@@ -192,8 +192,8 @@ When the Claude Code Task system and state JSON disagree, the Task system wins. 
 |----------|-----------|--------------|----------|
 | Worker crash | Task remains `in_progress` | Task remains `in_progress` | `StateSyncService` detects stale worker, reassigns task |
 | Worker checkpoint | Task stays `in_progress` with checkpoint note | Task updated with `CHECKPOINT:` description | New worker reads checkpoint and continues |
-| Orchestrator restart | State file persists on disk | Tasks persist in `~/.claude/tasks/` | `zerg rush --resume` reads both, skips completed tasks |
-| Merge conflict | Level marked as failed | Tasks remain at current status | Manual resolution, then `zerg merge --retry` |
+| Orchestrator restart | State file persists on disk | Tasks persist in `~/.claude/tasks/` | `mahabharatha kurukshetra --resume` reads both, skips completed tasks |
+| Merge conflict | Level marked as failed | Tasks remain at current status | Manual resolution, then `mahabharatha merge --retry` |
 
 ## Related Pages
 

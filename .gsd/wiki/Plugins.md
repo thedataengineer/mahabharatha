@@ -1,22 +1,22 @@
 # Plugins
 
-Extend ZERG with custom quality gates, lifecycle hooks, and worker launchers.
+Extend MAHABHARATHA with custom quality gates, lifecycle hooks, and worker launchers.
 
 ---
 
-## Why Extend ZERG?
+## Why Extend MAHABHARATHA?
 
-ZERG handles parallel task execution beautifully out of the box. But every team has unique needs. Maybe you need to integrate with tools your organization already uses, or enforce policies specific to your codebase. The plugin system exists precisely for these real-world scenarios.
+MAHABHARATHA handles parallel task execution beautifully out of the box. But every team has unique needs. Maybe you need to integrate with tools your organization already uses, or enforce policies specific to your codebase. The plugin system exists precisely for these real-world scenarios.
 
 ### Real-World Use Cases
 
-**"My team uses SonarQube for code quality - I want ZERG to run it automatically"**
+**"My team uses SonarQube for code quality - I want MAHABHARATHA to run it automatically"**
 
-Your organization has invested in SonarQube for code analysis. Rather than running it manually after ZERG completes, you can create a quality gate plugin that checks SonarQube status after every merge. If the quality gate fails, ZERG stops before broken code propagates further.
+Your organization has invested in SonarQube for code analysis. Rather than running it manually after MAHABHARATHA completes, you can create a quality gate plugin that checks SonarQube status after every merge. If the quality gate fails, MAHABHARATHA stops before broken code propagates further.
 
 **"We need Slack notifications when workers finish"**
 
-Your distributed team wants visibility into build progress. A lifecycle hook can send Slack messages when levels complete, when quality gates pass or fail, or when the entire rush finishes. Everyone stays informed without watching terminals.
+Your distributed team wants visibility into build progress. A lifecycle hook can send Slack messages when levels complete, when quality gates pass or fail, or when the entire kurukshetra finishes. Everyone stays informed without watching terminals.
 
 **"Our CI requires specific test commands"**
 
@@ -24,17 +24,17 @@ Your project has custom test infrastructure - maybe integration tests that hit s
 
 **"We run workers on Kubernetes, not local Docker"**
 
-Your infrastructure team manages a Kubernetes cluster for builds. A launcher plugin lets ZERG spawn workers as Kubernetes pods instead of local containers, giving you the scaling and resource management you already have in place.
+Your infrastructure team manages a Kubernetes cluster for builds. A launcher plugin lets MAHABHARATHA spawn workers as Kubernetes pods instead of local containers, giving you the scaling and resource management you already have in place.
 
 ---
 
 ## Understanding Plugin Types
 
-ZERG provides three extension points. Each serves a distinct purpose, and choosing the right one depends on what you're trying to accomplish.
+MAHABHARATHA provides three extension points. Each serves a distinct purpose, and choosing the right one depends on what you're trying to accomplish.
 
 ### Quality Gates: Validating Code After Merges
 
-**What they are**: Quality gates run after ZERG merges completed tasks from a level. They're your checkpoint to verify the merged code meets your standards before workers start the next level.
+**What they are**: Quality gates run after MAHABHARATHA merges completed tasks from a level. They're your checkpoint to verify the merged code meets your standards before workers start the next level.
 
 **Why they matter**: Without quality gates, a bug in Level 1 could propagate through Levels 2, 3, and 4 before anyone notices. Quality gates catch problems early, when they're cheapest to fix.
 
@@ -44,11 +44,11 @@ ZERG provides three extension points. Each serves a distinct purpose, and choosi
 - Validating API contracts or schema migrations
 - Enforcing style guides or complexity limits
 
-**How they work**: After ZERG merges all branches from a level, it runs quality gates in order: built-in gates (lint, build, test) first, then your custom gates. If a required gate fails, the rush stops. If an optional gate fails, ZERG logs a warning and continues.
+**How they work**: After MAHABHARATHA merges all branches from a level, it runs quality gates in order: built-in gates (lint, build, test) first, then your custom gates. If a required gate fails, the kurukshetra stops. If an optional gate fails, MAHABHARATHA logs a warning and continues.
 
 ### Lifecycle Hooks: Observing Events
 
-**What they are**: Lifecycle hooks get notified when things happen in ZERG - a task starts, a worker spawns, a level completes. They observe without blocking.
+**What they are**: Lifecycle hooks get notified when things happen in MAHABHARATHA - a task starts, a worker spawns, a level completes. They observe without blocking.
 
 **Why they matter**: Visibility is crucial for distributed systems. When five workers are running in parallel, you need ways to track progress, collect metrics, and alert on problems.
 
@@ -58,11 +58,11 @@ ZERG provides three extension points. Each serves a distinct purpose, and choosi
 - Logging to external systems (Splunk, ELK)
 - Triggering downstream workflows
 
-**How they work**: ZERG emits events at key moments. Your hook receives the event and does something with it - send a message, increment a counter, write a log. The hook should be fast and never throw exceptions.
+**How they work**: MAHABHARATHA emits events at key moments. Your hook receives the event and does something with it - send a message, increment a counter, write a log. The hook should be fast and never throw exceptions.
 
 ### Custom Launchers: Running Workers Your Way
 
-**What they are**: Launchers control how ZERG spawns worker processes. The built-in launchers use subprocesses or Docker containers. Custom launchers let you use anything else.
+**What they are**: Launchers control how MAHABHARATHA spawns worker processes. The built-in launchers use subprocesses or Docker containers. Custom launchers let you use anything else.
 
 **Why they matter**: Different environments have different constraints. A local development machine runs workers differently than a production Kubernetes cluster or a fleet of EC2 instances.
 
@@ -72,7 +72,7 @@ ZERG provides three extension points. Each serves a distinct purpose, and choosi
 - Using cloud-specific compute (AWS Batch, GCP Cloud Run)
 - Integrating with job schedulers (SLURM, PBS)
 
-**How they work**: When ZERG needs a new worker, it asks the launcher to create one. Your launcher handles the specifics - spinning up a pod, SSHing to a host, whatever your infrastructure requires.
+**How they work**: When MAHABHARATHA needs a new worker, it asks the launcher to create one. Your launcher handles the specifics - spinning up a pod, SSHing to a host, whatever your infrastructure requires.
 
 ---
 
@@ -100,9 +100,9 @@ Open `my_zerg_plugins/gates.py` and add:
 """Custom quality gate that checks for TODO comments."""
 
 import subprocess
-from zerg.plugins import QualityGatePlugin, GateContext
-from zerg.types import GateRunResult
-from zerg.constants import GateResult
+from mahabharatha.plugins import QualityGatePlugin, GateContext
+from mahabharatha.types import GateRunResult
+from mahabharatha.constants import GateResult
 
 
 class TodoCheckGate(QualityGatePlugin):
@@ -176,7 +176,7 @@ class TodoCheckGate(QualityGatePlugin):
 
 ### Step 3: Register the Plugin
 
-ZERG discovers plugins through Python entry points. Create a `pyproject.toml` in your plugin directory:
+MAHABHARATHA discovers plugins through Python entry points. Create a `pyproject.toml` in your plugin directory:
 
 ```toml
 [build-system]
@@ -184,17 +184,17 @@ requires = ["setuptools>=45"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "my-zerg-plugins"
+name = "my-mahabharatha-plugins"
 version = "0.1.0"
-description = "Custom ZERG plugins for my team"
+description = "Custom MAHABHARATHA plugins for my team"
 requires-python = ">=3.10"
-dependencies = ["zerg"]
+dependencies = ["mahabharatha"]
 
-[project.entry-points."zerg.plugins"]
+[project.entry-points."mahabharatha.plugins"]
 todo-check = "my_zerg_plugins.gates:TodoCheckGate"
 ```
 
-**Why entry points?** Entry points let Python packages advertise functionality. When ZERG starts, it scans for packages that registered plugins under `"zerg.plugins"`. This means you can install plugins from anywhere - local directories, private PyPI servers, public packages.
+**Why entry points?** Entry points let Python packages advertise functionality. When MAHABHARATHA starts, it scans for packages that registered plugins under `"mahabharatha.plugins"`. This means you can install plugins from anywhere - local directories, private PyPI servers, public packages.
 
 ### Step 4: Install and Test
 
@@ -212,10 +212,10 @@ cd /tmp
 grep -r --include=*.py TODO .  # Should find the TODO
 ```
 
-Run ZERG on a feature. Your gate will run after each level merge.
+Run MAHABHARATHA on a feature. Your gate will run after each level merge.
 
 **Verifying it works**:
-1. Check ZERG startup logs - you should see your plugin discovered
+1. Check MAHABHARATHA startup logs - you should see your plugin discovered
 2. After a level merge, look for `todo-check` in the gate execution output
 3. If TODOs exist in the merged code, your gate should fail
 
@@ -245,7 +245,7 @@ class TodoCheckGate(QualityGatePlugin):
         # ... rest of the method
 ```
 
-Now users can configure the plugin in `.zerg/config.yaml`:
+Now users can configure the plugin in `.mahabharatha/config.yaml`:
 
 ```yaml
 todo_check_extensions:
@@ -260,11 +260,11 @@ todo_check_ignore:
 
 ## YAML Configuration: The Simple Path
 
-Not every plugin needs Python code. For straightforward shell commands, ZERG supports YAML-based configuration. This is often the fastest way to integrate existing tools.
+Not every plugin needs Python code. For straightforward shell commands, MAHABHARATHA supports YAML-based configuration. This is often the fastest way to integrate existing tools.
 
 ### YAML Quality Gates
 
-Add custom quality checks directly in `.zerg/config.yaml`:
+Add custom quality checks directly in `.mahabharatha/config.yaml`:
 
 ```yaml
 plugins:
@@ -310,7 +310,7 @@ plugins:
   hooks:
     # Log task completions to a file
     - event: task_completed
-      command: echo "Task {task_id} completed at $(date)" >> /var/log/zerg.log
+      command: echo "Task {task_id} completed at $(date)" >> /var/log/mahabharatha.log
       timeout: 10
 
     # Notify team when levels complete
@@ -324,7 +324,7 @@ plugins:
       timeout: 120
 ```
 
-**Variable substitution**: ZERG replaces `{variable}` placeholders with values from the event. Available variables depend on the event type:
+**Variable substitution**: MAHABHARATHA replaces `{variable}` placeholders with values from the event. Available variables depend on the event type:
 
 | Event | Available Variables |
 |-------|---------------------|
@@ -343,7 +343,7 @@ These examples show real-world plugin patterns you can adapt for your needs.
 
 ### Example 1: Slack Notifications
 
-**The story**: Your team uses Slack for communication. You want automatic updates in a `#builds` channel when ZERG makes progress.
+**The story**: Your team uses Slack for communication. You want automatic updates in a `#builds` channel when MAHABHARATHA makes progress.
 
 **Simple version (YAML with webhook)**:
 
@@ -361,7 +361,7 @@ plugins:
       command: |
         curl -X POST https://hooks.slack.com/services/YOUR/WEBHOOK/URL \
           -H 'Content-Type: application/json' \
-          -d '{"text":"Rush complete! {tasks_completed} tasks finished."}'
+          -d '{"text":"Kurukshetra complete! {tasks_completed} tasks finished."}'
       timeout: 30
 ```
 
@@ -370,18 +370,18 @@ plugins:
 ```python
 """Slack notification hook with rich formatting and OAuth."""
 
-from zerg.plugins import LifecycleHookPlugin, LifecycleEvent
+from mahabharatha.plugins import LifecycleHookPlugin, LifecycleEvent
 from slack_sdk import WebClient
 import os
 
 
 class SlackNotifier(LifecycleHookPlugin):
-    """Send formatted Slack messages for ZERG events."""
+    """Send formatted Slack messages for MAHABHARATHA events."""
 
     def __init__(self):
         # Initialize Slack client with bot token from environment
         self.client = WebClient(token=os.getenv("SLACK_BOT_TOKEN"))
-        self.channel = os.getenv("SLACK_CHANNEL", "#zerg-builds")
+        self.channel = os.getenv("SLACK_CHANNEL", "#mahabharatha-builds")
 
     @property
     def name(self) -> str:
@@ -440,7 +440,7 @@ class SlackNotifier(LifecycleHookPlugin):
         )
 
     def _notify_rush_complete(self, event: LifecycleEvent) -> None:
-        """Send rush completion summary."""
+        """Send kurukshetra completion summary."""
         feature = event.data["feature"]
         total_time = event.data["total_time"]
         tasks = event.data["tasks_completed"]
@@ -453,7 +453,7 @@ class SlackNotifier(LifecycleHookPlugin):
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": f":tada: *Rush Complete: {feature}*\n"
+                        "text": f":tada: *Kurukshetra Complete: {feature}*\n"
                                 f"{tasks} tasks completed in {total_time:.1f}s"
                     }
                 }
@@ -463,14 +463,14 @@ class SlackNotifier(LifecycleHookPlugin):
 
 ### Example 2: SonarQube Integration
 
-**The story**: Your organization uses SonarQube for code analysis. You want ZERG to check the quality gate status and block merges if SonarQube says the code isn't ready.
+**The story**: Your organization uses SonarQube for code analysis. You want MAHABHARATHA to check the quality gate status and block merges if SonarQube says the code isn't ready.
 
 ```python
 """SonarQube quality gate integration."""
 
-from zerg.plugins import QualityGatePlugin, GateContext
-from zerg.types import GateRunResult
-from zerg.constants import GateResult
+from mahabharatha.plugins import QualityGatePlugin, GateContext
+from mahabharatha.types import GateRunResult
+from mahabharatha.constants import GateResult
 import requests
 import os
 
@@ -562,19 +562,19 @@ class SonarQubeGate(QualityGatePlugin):
 ```python
 """Metrics collection hook for observability platforms."""
 
-from zerg.plugins import LifecycleHookPlugin, LifecycleEvent
+from mahabharatha.plugins import LifecycleHookPlugin, LifecycleEvent
 import statsd
 import os
 
 
 class MetricsHook(LifecycleHookPlugin):
-    """Send ZERG metrics to StatsD (compatible with Datadog, Prometheus, etc)."""
+    """Send MAHABHARATHA metrics to StatsD (compatible with Datadog, Prometheus, etc)."""
 
     def __init__(self):
         self.client = statsd.StatsClient(
             host=os.getenv("STATSD_HOST", "localhost"),
             port=int(os.getenv("STATSD_PORT", 8125)),
-            prefix="zerg"  # All metrics prefixed with "zerg."
+            prefix="mahabharatha"  # All metrics prefixed with "mahabharatha."
         )
 
     @property
@@ -614,26 +614,26 @@ class MetricsHook(LifecycleHookPlugin):
         self.client.incr(f"gate.{gate_name}.{result}")
 
     def _record_rush_metrics(self, event: LifecycleEvent) -> None:
-        """Record overall rush metrics."""
-        self.client.timing("rush.total_time", event.data["total_time"] * 1000)
-        self.client.gauge("rush.tasks_completed", event.data["tasks_completed"])
+        """Record overall kurukshetra metrics."""
+        self.client.timing("kurukshetra.total_time", event.data["total_time"] * 1000)
+        self.client.gauge("kurukshetra.tasks_completed", event.data["tasks_completed"])
 ```
 
 ### Example 4: Kubernetes Launcher
 
-**The story**: Your team runs builds on Kubernetes. You want ZERG workers to run as pods in your cluster, with proper resource limits and cleanup.
+**The story**: Your team runs builds on Kubernetes. You want MAHABHARATHA workers to run as pods in your cluster, with proper resource limits and cleanup.
 
 ```python
 """Kubernetes launcher for running workers as pods."""
 
-from zerg.plugins import LauncherPlugin
-from zerg.launcher import WorkerLauncher
+from mahabharatha.plugins import LauncherPlugin
+from mahabharatha.launcher import WorkerLauncher
 from kubernetes import client, config
 import time
 
 
 class K8sLauncher(WorkerLauncher):
-    """Spawn ZERG workers as Kubernetes pods."""
+    """Spawn MAHABHARATHA workers as Kubernetes pods."""
 
     def __init__(self, zerg_config):
         super().__init__(zerg_config)
@@ -644,17 +644,17 @@ class K8sLauncher(WorkerLauncher):
             config.load_kube_config()
 
         self.api = client.CoreV1Api()
-        self.namespace = zerg_config.get("k8s_namespace", "zerg")
+        self.namespace = zerg_config.get("k8s_namespace", "mahabharatha")
 
     def launch(self, worker_id: str, task_id: str) -> dict:
         """Create a pod for the worker."""
-        pod_name = f"zerg-worker-{worker_id}"
+        pod_name = f"mahabharatha-worker-{worker_id}"
 
         pod = client.V1Pod(
             metadata=client.V1ObjectMeta(
                 name=pod_name,
                 labels={
-                    "app": "zerg-worker",
+                    "app": "mahabharatha-worker",
                     "task": task_id,
                     "worker": worker_id
                 }
@@ -721,10 +721,10 @@ class K8sLauncherPlugin(LauncherPlugin):
 **Configuration**:
 
 ```yaml
-# .zerg/config.yaml
+# .mahabharatha/config.yaml
 launcher:
   mode: kubernetes
-  k8s_namespace: zerg-workers
+  k8s_namespace: mahabharatha-workers
 ```
 
 ---
@@ -737,13 +737,13 @@ Once you're comfortable with basic plugins, these patterns help build more sophi
 
 A complete integration often uses multiple plugin types together. For example, a CI/CD integration might:
 
-1. **Lifecycle hook** - Start a CI build when rush begins
+1. **Lifecycle hook** - Start a CI build when kurukshetra begins
 2. **Quality gate** - Check CI build status before allowing merge
 3. **Lifecycle hook** - Update CI with merge results
 
 ```python
 class CIBuildHook(LifecycleHookPlugin):
-    """Start CI builds on rush start."""
+    """Start CI builds on kurukshetra start."""
 
     def on_event(self, event: LifecycleEvent) -> None:
         if event.event_type == "rush_started":
@@ -764,7 +764,7 @@ class CIStatusGate(QualityGatePlugin):
 
 ### Stateful Plugins
 
-Plugins can maintain state across events within a single rush:
+Plugins can maintain state across events within a single kurukshetra:
 
 ```python
 class ProgressTracker(LifecycleHookPlugin):
@@ -820,7 +820,7 @@ Understanding the security boundaries helps you write safe plugins.
 
 ### Read-Only State Access
 
-Plugins cannot modify ZERG's internal state. They receive immutable views:
+Plugins cannot modify MAHABHARATHA's internal state. They receive immutable views:
 
 - **GateContext** - Read-only view of feature, level, working directory, and config
 - **LifecycleEvent** - Read-only view of event type, data, and timestamp
@@ -859,8 +859,8 @@ YAML commands are parsed with `shlex.split` and executed via `subprocess.run(she
 ### Writing Lifecycle Hooks
 
 - **Keep hooks fast** - Hooks block event processing; use async for slow operations
-- **Never throw exceptions** - Return gracefully; let ZERG continue
-- **Log internally** - If something fails, log it; don't rely on ZERG to surface it
+- **Never throw exceptions** - Return gracefully; let MAHABHARATHA continue
+- **Log internally** - If something fails, log it; don't rely on MAHABHARATHA to surface it
 - **Be selective** - Only process events you care about
 
 ### Writing Launchers
@@ -883,7 +883,7 @@ YAML commands are parsed with `shlex.split` and executed via `subprocess.run(she
 
 | Problem | What You See | How to Fix |
 |---------|--------------|------------|
-| Plugin not discovered | Not in startup logs | Check entry point group is `"zerg.plugins"`, reinstall with `pip install -e .` |
+| Plugin not discovered | Not in startup logs | Check entry point group is `"mahabharatha.plugins"`, reinstall with `pip install -e .` |
 | Hook command fails | Exception in logs | Verify command exists with `which <cmd>`, check file permissions |
 | Gate always returns ERROR | ERROR instead of PASS/FAIL | Test gate command manually, verify return value matches expected format |
 | Custom launcher ignored | Falls back to subprocess | Check launcher name matches config `mode` exactly |
@@ -896,10 +896,10 @@ YAML commands are parsed with `shlex.split` and executed via `subprocess.run(she
 
 | What | Where |
 |------|-------|
-| Plugin base classes | `zerg/plugins.py` |
-| Plugin registry and discovery | `zerg/plugins.py` |
-| Configuration models | `zerg/plugin_config.py` |
-| Event type constants | `zerg/constants.py` |
+| Plugin base classes | `mahabharatha/plugins.py` |
+| Plugin registry and discovery | `mahabharatha/plugins.py` |
+| Configuration models | `mahabharatha/plugin_config.py` |
+| Event type constants | `mahabharatha/constants.py` |
 | Integration tests | `tests/integration/test_plugin_lifecycle.py` |
 
 ---
@@ -907,5 +907,5 @@ YAML commands are parsed with `shlex.split` and executed via `subprocess.run(she
 ## See Also
 
 - [[Configuration]] - Full config.yaml reference including plugin settings
-- [[Command-Reference]] - `/zerg:plugins` command documentation
-- [[Home]] - ZERG overview and quick start
+- [[Command-Reference]] - `/mahabharatha:plugins` command documentation
+- [[Home]] - MAHABHARATHA overview and quick start

@@ -13,7 +13,7 @@ Workers communicate with the orchestrator through a defined protocol. This task 
 ## Files to Create
 
 ```
-.zerg/
+.mahabharatha/
 ├── protocol.py      # WorkerProtocol class and state machine
 └── messages.py      # Message type definitions
 ```
@@ -60,7 +60,7 @@ class HeartbeatMessage(Message):
     context_usage: float  # 0.0 - 1.0
     current_step: Optional[str]
 
-@dataclass  
+@dataclass
 class CompleteMessage(Message):
     """Task completion report."""
     task_id: str
@@ -97,7 +97,7 @@ class WorkerState(Enum):
 
 class WorkerProtocol:
     """Manages worker state transitions."""
-    
+
     VALID_TRANSITIONS = {
         WorkerState.IDLE: [WorkerState.ASSIGNED],
         WorkerState.ASSIGNED: [WorkerState.EXECUTING],
@@ -120,19 +120,19 @@ class WorkerProtocol:
         WorkerState.COMPLETE: [WorkerState.IDLE],
         WorkerState.FAILED: [WorkerState.IDLE]
     }
-    
+
     def __init__(self, worker_id: str):
         self.worker_id = worker_id
         self.state = WorkerState.IDLE
         self.current_task: Optional[str] = None
-        
+
     def transition(self, new_state: WorkerState) -> bool:
         """Attempt state transition. Returns success."""
         if new_state in self.VALID_TRANSITIONS.get(self.state, []):
             self.state = new_state
             return True
         return False
-    
+
     def can_accept_task(self) -> bool:
         """Check if worker can receive new task."""
         return self.state == WorkerState.IDLE
@@ -180,7 +180,7 @@ def create_checkpoint_signal(
 ## Verification
 
 ```bash
-cd .zerg && python -c "
+cd .mahabharatha && python -c "
 from protocol import WorkerProtocol, WorkerState
 from messages import MessageType, AssignMessage, CompleteMessage
 
@@ -209,7 +209,7 @@ print('OK: Protocol and messages work correctly')
 ## Test Cases
 
 ```python
-# .zerg/tests/test_protocol.py
+# .mahabharatha/tests/test_protocol.py
 import pytest
 from protocol import WorkerProtocol, WorkerState, CONTEXT_THRESHOLD
 from messages import MessageType, Message
@@ -253,5 +253,5 @@ def test_blocked_recovery():
 
 1. All acceptance criteria checked
 2. Verification command passes
-3. Unit tests pass: `pytest .zerg/tests/test_protocol.py`
+3. Unit tests pass: `pytest .mahabharatha/tests/test_protocol.py`
 4. State machine prevents invalid transitions

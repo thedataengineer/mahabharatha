@@ -1,4 +1,4 @@
-"""Architecture compliance checking for ZERG.
+"""Architecture compliance checking for MAHABHARATHA.
 
 Validates Python imports against layer definitions and import rules.
 Runs as a quality gate at ship/merge time to catch architectural violations.

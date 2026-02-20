@@ -1,1 +1,1 @@
-"""End-to-end tests for ZERG."""
+"""End-to-end tests for MAHABHARATHA."""

@@ -68,7 +68,7 @@ class StateRenderer:
         state = self._persistence.state
 
         # Header
-        lines.append(f"# ZERG State: {self._persistence.feature}")
+        lines.append(f"# MAHABHARATHA State: {self._persistence.feature}")
         lines.append("")
 
         # Current phase info

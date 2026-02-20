@@ -6,7 +6,7 @@
 
 ## Problem Statement
 
-ZERG merge process fails due to lint gate running `ruff check .` on a codebase with 943 pre-existing lint errors. Workers also don't run lint before committing, allowing new errors to slip through until merge time.
+MAHABHARATHA merge process fails due to lint gate running `ruff check .` on a codebase with 943 pre-existing lint errors. Workers also don't run lint before committing, allowing new errors to slip through until merge time.
 
 ## Goals
 
@@ -18,7 +18,7 @@ ZERG merge process fails due to lint gate running `ruff check .` on a codebase w
 
 ### R1: Ruff Configuration
 - Line length: 120 characters (up from 100)
-- Exclude paths: `.zerg/`, `tests/fixtures/`
+- Exclude paths: `.mahabharatha/`, `tests/fixtures/`
 - Select rules: E (errors), F (pyflakes), I (imports), UP (upgrades)
 - All rules auto-fixable where possible
 
@@ -35,7 +35,7 @@ ZERG merge process fails due to lint gate running `ruff check .` on a codebase w
 - Document setup in CONTRIBUTING.md or README
 
 ### R4: Merge Gate Alignment
-- Keep `ruff check .` as required gate in `.zerg/config.yaml`
+- Keep `ruff check .` as required gate in `.mahabharatha/config.yaml`
 - Gate should pass after cleanup (serves as safety net)
 - No changes to gate command needed
 
@@ -50,7 +50,7 @@ ZERG merge process fails due to lint gate running `ruff check .` on a codebase w
 1. `ruff check .` returns exit code 0 (no errors)
 2. `.pre-commit-config.yaml` exists with ruff hooks
 3. `pyproject.toml` contains ruff configuration
-4. `/zerg:merge` lint gate passes
+4. `/mahabharatha:merge` lint gate passes
 5. New commits automatically linted via pre-commit
 
 ## Technical Approach
@@ -60,7 +60,7 @@ Add to `pyproject.toml`:
 ```toml
 [tool.ruff]
 line-length = 120
-exclude = [".zerg", "tests/fixtures"]
+exclude = [".mahabharatha", "tests/fixtures"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]

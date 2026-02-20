@@ -1,4 +1,4 @@
-"""ZERG v2 Estimate Command - Development estimation with confidence intervals."""
+"""MAHABHARATHA v2 Estimate Command - Development estimation with confidence intervals."""
 
 import json
 from dataclasses import dataclass, field

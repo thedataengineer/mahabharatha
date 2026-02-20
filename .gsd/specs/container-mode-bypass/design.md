@@ -25,7 +25,7 @@ Remove the unimplemented "task" launcher mode from CLI choices, make unknown mod
 ### 2.1 Data Flow
 
 ```
-CLI (rush.py)                    Orchestrator._create_launcher()
+CLI (kurukshetra.py)                    Orchestrator._create_launcher()
   --mode {choice} ──────────────▶  mode dispatch:
   choices: subprocess,               subprocess → SubprocessLauncher
            container,                 container  → ContainerLauncher
@@ -45,16 +45,16 @@ CLI (rush.py)                    Orchestrator._create_launcher()
 
 | Phase | Tasks | Parallel | Files |
 |-------|-------|----------|-------|
-| L1: Fix | 2 tasks | Yes | rush.py, orchestrator.py |
-| L2: Docs + Tests | 2 tasks | Yes | rush.core.md, test files |
+| L1: Fix | 2 tasks | Yes | kurukshetra.py, orchestrator.py |
+| L2: Docs + Tests | 2 tasks | Yes | kurukshetra.core.md, test files |
 
 ### File Ownership
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| zerg/commands/rush.py | TASK-001 | modify |
-| zerg/orchestrator.py | TASK-002 | modify |
-| zerg/data/commands/rush.core.md | TASK-003 | modify |
+| mahabharatha/commands/kurukshetra.py | TASK-001 | modify |
+| mahabharatha/orchestrator.py | TASK-002 | modify |
+| mahabharatha/data/commands/kurukshetra.core.md | TASK-003 | modify |
 | tests/unit/test_orchestrator_container_mode.py | TASK-004 | modify |
 
 ## 4. Risk Assessment

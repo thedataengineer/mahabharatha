@@ -1,4 +1,4 @@
-"""Integration tests for ZERG rush flow."""
+"""Integration tests for MAHABHARATHA kurukshetra flow."""
 
 import json
 from pathlib import Path
@@ -10,7 +10,7 @@ from mahabharatha.levels import LevelController
 
 
 class TestRushFlowDryRun:
-    """Tests for rush command dry run mode."""
+    """Tests for kurukshetra command dry run mode."""
 
     def test_dry_run_shows_plan(self, tmp_repo: Path, sample_task_graph) -> None:
         """Test dry run displays execution plan without executing."""
@@ -38,7 +38,7 @@ class TestRushFlowDryRun:
 
 
 class TestRushFlowSingleLevel:
-    """Tests for rush flow with a single level."""
+    """Tests for kurukshetra flow with a single level."""
 
     def test_single_level_execution(self, sample_task_graph) -> None:
         """Test executing all tasks in a single level."""
@@ -71,7 +71,7 @@ class TestRushFlowSingleLevel:
 
 
 class TestRushFlowMultiLevel:
-    """Tests for rush flow with multiple levels."""
+    """Tests for kurukshetra flow with multiple levels."""
 
     def test_multi_level_progression(self, sample_task_graph) -> None:
         """Test progressing through multiple levels."""
@@ -126,7 +126,7 @@ class TestRushFlowMultiLevel:
 
 
 class TestRushFlowTaskFailure:
-    """Tests for rush flow handling task failures."""
+    """Tests for kurukshetra flow handling task failures."""
 
     def test_task_failure_blocks_level(self, sample_task_graph) -> None:
         """Test task failure prevents level completion."""
@@ -158,7 +158,7 @@ class TestRushFlowTaskFailure:
 
 
 class TestRushFlowCheckpoint:
-    """Tests for rush flow checkpoint/resume functionality."""
+    """Tests for kurukshetra flow checkpoint/resume functionality."""
 
     def test_state_can_be_serialized(self, sample_task_graph) -> None:
         """Test execution state can be serialized for checkpoint."""

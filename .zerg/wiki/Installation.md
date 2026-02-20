@@ -1,13 +1,13 @@
 # Installation
 
-This page covers everything needed to install ZERG and verify that it works. The process takes approximately 5 to 10 minutes.
+This page covers everything needed to install MAHABHARATHA and verify that it works. The process takes approximately 5 to 10 minutes.
 
 ---
 
 ## Table of Contents
 
 - [Requirements](#requirements)
-- [Install ZERG](#install-zerg)
+- [Install MAHABHARATHA](#install-mahabharatha)
 - [Claude Code Setup](#claude-code-setup)
 - [Docker Setup (Container Mode)](#docker-setup-container-mode)
 - [Verify Installation](#verify-installation)
@@ -30,33 +30,33 @@ This page covers everything needed to install ZERG and verify that it works. The
 
 ---
 
-## Install ZERG
+## Install MAHABHARATHA
 
 ### From Source (Recommended for Development)
 
 ```bash
-git clone https://github.com/your-org/zerg.git
-cd zerg
+git clone https://github.com/your-org/mahabharatha.git
+cd mahabharatha
 pip install -e .
 ```
 
 ### Verify the CLI
 
 ```bash
-zerg --help
+mahabharatha --help
 ```
 
-You should see output listing available commands including `init`, `plan`, `rush`, and `status`.
+You should see output listing available commands including `init`, `plan`, `kurukshetra`, and `status`.
 
 ---
 
 ## Claude Code Setup
 
-ZERG runs as a set of slash commands inside Claude Code. After installing the ZERG package, the commands become available automatically when you open Claude Code in a project that has been initialized with `/zerg:init`.
+MAHABHARATHA runs as a set of slash commands inside Claude Code. After installing the MAHABHARATHA package, the commands become available automatically when you open Claude Code in a project that has been initialized with `/mahabharatha:init`.
 
 ### Authentication
 
-ZERG workers need to authenticate with Anthropic's API. There are two methods:
+MAHABHARATHA workers need to authenticate with Anthropic's API. There are two methods:
 
 **Method 1: OAuth (Claude Pro/Team)**
 
@@ -71,18 +71,18 @@ export ANTHROPIC_API_KEY="sk-ant-..."
 claude
 ```
 
-Workers launched by `/zerg:rush` inherit this environment variable automatically.
+Workers launched by `/mahabharatha:kurukshetra` inherit this environment variable automatically.
 
 ### Slash Commands
 
-ZERG registers its commands in the `.claude/commands/` directory. After running `/zerg:init`, you can use any `/zerg:*` command inside a Claude Code session:
+MAHABHARATHA registers its commands in the `.claude/commands/` directory. After running `/mahabharatha:init`, you can use any `/mahabharatha:*` command inside a Claude Code session:
 
 ```
-/zerg:brainstorm <topic>   Discover features (optional)
-/zerg:plan <feature>       Plan a feature
-/zerg:design               Design architecture
-/zerg:rush                 Launch workers
-/zerg:status               Check progress
+/mahabharatha:brainstorm <topic>   Discover features (optional)
+/mahabharatha:plan <feature>       Plan a feature
+/mahabharatha:design               Design architecture
+/mahabharatha:kurukshetra                 Launch workers
+/mahabharatha:status               Check progress
 ```
 
 ---
@@ -110,7 +110,7 @@ sudo usermod -aG docker $USER
 
 ### Build the Devcontainer Image
 
-After running `/zerg:init`, ZERG generates a `.devcontainer/` directory with a Dockerfile and docker-compose configuration. Build the image:
+After running `/mahabharatha:init`, MAHABHARATHA generates a `.devcontainer/` directory with a Dockerfile and docker-compose configuration. Build the image:
 
 ```bash
 docker compose -f .devcontainer/docker-compose.yaml build
@@ -122,14 +122,14 @@ docker compose -f .devcontainer/docker-compose.yaml build
 
 ```bash
 # This happens automatically when using --mode container
-# ZERG mounts ~/.claude into the container
+# MAHABHARATHA mounts ~/.claude into the container
 ```
 
 **API key method** -- Pass the key as an environment variable:
 
 ```bash
 export ANTHROPIC_API_KEY="sk-ant-..."
-/zerg:rush --workers=5 --mode container
+/mahabharatha:kurukshetra --workers=5 --mode container
 ```
 
 ### Verify Container Setup
@@ -161,7 +161,7 @@ docker --version           # 20.10+ (optional)
 ### Step 2: Initialize a Test Project
 
 ```bash
-mkdir /tmp/zerg-test && cd /tmp/zerg-test
+mkdir /tmp/mahabharatha-test && cd /tmp/mahabharatha-test
 git init
 claude
 ```
@@ -169,17 +169,17 @@ claude
 Inside Claude Code:
 
 ```
-/zerg:init
+/mahabharatha:init
 ```
 
-You should see ZERG create the `.zerg/` directory structure and generate configuration files.
+You should see MAHABHARATHA create the `.mahabharatha/` directory structure and generate configuration files.
 
 ### Step 3: Verify Directory Structure
 
 After initialization, your project should contain:
 
 ```
-.zerg/
+.mahabharatha/
   config.yaml              # Worker limits, quality gates, resources
   state/                   # Runtime state files
   logs/                    # Worker log output
@@ -197,14 +197,14 @@ After initialization, your project should contain:
 ### Step 4: Clean Up
 
 ```bash
-rm -rf /tmp/zerg-test
+rm -rf /tmp/mahabharatha-test
 ```
 
 ---
 
 ## Configuration
 
-ZERG stores its configuration in `.zerg/config.yaml`. The file is generated during `/zerg:init` with sensible defaults. You can edit it at any time.
+MAHABHARATHA stores its configuration in `.mahabharatha/config.yaml`. The file is generated during `/mahabharatha:init` with sensible defaults. You can edit it at any time.
 
 ### Key Settings
 
@@ -242,9 +242,9 @@ See the Configuration reference page for the full list of options.
 
 ## Troubleshooting Installation
 
-### "Command not found: zerg"
+### "Command not found: mahabharatha"
 
-The ZERG package is not on your PATH. If you installed from source with `pip install -e .`, make sure your Python bin directory is in PATH:
+The MAHABHARATHA package is not on your PATH. If you installed from source with `pip install -e .`, make sure your Python bin directory is in PATH:
 
 ```bash
 python3 -m site --user-base
@@ -253,7 +253,7 @@ python3 -m site --user-base
 
 ### "No active feature" when running commands
 
-You need to run `/zerg:plan <feature>` before other commands. ZERG tracks the current feature in `.gsd/.current-feature`.
+You need to run `/mahabharatha:plan <feature>` before other commands. MAHABHARATHA tracks the current feature in `.gsd/.current-feature`.
 
 ### Docker permission denied
 
@@ -264,18 +264,18 @@ sudo usermod -aG docker $USER
 # Log out and back in
 ```
 
-### Claude Code does not recognize `/zerg:*` commands
+### Claude Code does not recognize `/mahabharatha:*` commands
 
-Run `/zerg:init` first. This creates the command files in `.claude/commands/`. If the commands still do not appear, check that the files exist:
+Run `/mahabharatha:init` first. This creates the command files in `.claude/commands/`. If the commands still do not appear, check that the files exist:
 
 ```bash
-ls .claude/commands/zerg:*.md
+ls .claude/commands/mahabharatha:*.md
 ```
 
 ---
 
 ## Next Steps
 
-- [[Quick Start]] -- Run through the full ZERG workflow.
-- [[Your First Feature]] -- Build something real with ZERG.
+- [[Quick Start]] -- Run through the full MAHABHARATHA workflow.
+- [[Your First Feature]] -- Build something real with MAHABHARATHA.
 - [[Getting Started]] -- Understand the core concepts.

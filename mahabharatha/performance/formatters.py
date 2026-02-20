@@ -90,7 +90,7 @@ def format_rich(report: PerformanceReport, console: Console) -> None:
     score_display = f"{report.overall_score:.0f}/100" if report.overall_score is not None else "N/A"
     style = _score_style(report.overall_score)
     header = Text(f"Performance Score: {score_display}", style=style)
-    console.print(Panel(header, title="ZERG Performance Analysis", border_style=style))
+    console.print(Panel(header, title="MAHABHARATHA Performance Analysis", border_style=style))
 
     # -- Tool availability panel --
     tool_table = Table(title="Tool Availability", show_lines=False)

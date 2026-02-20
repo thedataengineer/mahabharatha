@@ -1,4 +1,4 @@
-"""ZERG v2 Task Graph - Task dependency and execution order management."""
+"""MAHABHARATHA v2 Task Graph - Task dependency and execution order management."""
 
 import json
 from dataclasses import dataclass, field

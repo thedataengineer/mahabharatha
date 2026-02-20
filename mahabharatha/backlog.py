@@ -1,4 +1,4 @@
-"""Generate markdown backlog files from ZERG task graph data."""
+"""Generate markdown backlog files from MAHABHARATHA task graph data."""
 
 from __future__ import annotations
 
@@ -199,7 +199,7 @@ def _render_header(
     task_data: dict[str, Any],
 ) -> None:
     """Render the backlog header section."""
-    lines.append(f"# ZERG {feature} Task Backlog")
+    lines.append(f"# MAHABHARATHA {feature} Task Backlog")
     lines.append("")
     lines.append(f"**Created**: {date.today().isoformat()}")
     lines.append("**Status**: PENDING")
@@ -434,7 +434,7 @@ def generate_backlog_markdown(
     per-level task tables, critical path diagram, and progress tracking.
 
     Args:
-        task_data: A task-graph.json dict conforming to the ZERG task graph schema.
+        task_data: A task-graph.json dict conforming to the MAHABHARATHA task graph schema.
         feature: Feature name used for the filename and header.
         output_dir: Directory to write the backlog file into.
 

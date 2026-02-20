@@ -1,4 +1,4 @@
-"""State management package for ZERG."""
+"""State management package for MAHABHARATHA."""
 
 from mahabharatha.state.manager import StateManager
 

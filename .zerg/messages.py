@@ -1,4 +1,4 @@
-"""ZERG v2 Messages - Message type definitions for worker communication."""
+"""MAHABHARATHA v2 Messages - Message type definitions for worker communication."""
 
 from dataclasses import dataclass
 from datetime import datetime

@@ -1,11 +1,11 @@
-# /zerg:test
+# /mahabharatha:test
 
 Execute tests with coverage analysis, parallel execution, and test stub generation.
 
 ## Synopsis
 
 ```
-/zerg:test [--generate]
+/mahabharatha:test [--generate]
            [--coverage]
            [--watch]
            [--parallel N]
@@ -18,7 +18,7 @@ The `test` command runs the project test suite using an auto-detected or explici
 
 ### Framework Detection
 
-ZERG automatically detects the test framework from the project structure:
+MAHABHARATHA automatically detects the test framework from the project structure:
 
 - pytest
 - jest
@@ -46,31 +46,31 @@ When invoked with `--generate`, the command inspects the codebase for functions 
 Run all tests with default settings:
 
 ```
-/zerg:test
+/mahabharatha:test
 ```
 
 Run tests with coverage reporting:
 
 ```
-/zerg:test --coverage
+/mahabharatha:test --coverage
 ```
 
 Enable watch mode for continuous feedback:
 
 ```
-/zerg:test --watch
+/mahabharatha:test --watch
 ```
 
 Run tests in parallel with 8 workers:
 
 ```
-/zerg:test --parallel 8
+/mahabharatha:test --parallel 8
 ```
 
 Generate stubs for uncovered code:
 
 ```
-/zerg:test --generate
+/mahabharatha:test --generate
 ```
 
 ## Sample Output
@@ -101,6 +101,6 @@ This command creates a Claude Code Task with the subject prefix `[Test]` on invo
 
 ## See Also
 
-- [[zerg-build]] -- Build the project before testing
-- [[zerg-analyze]] -- Static analysis including coverage thresholds
-- [[zerg-review]] -- Code review with test verification
+- [[mahabharatha-build]] -- Build the project before testing
+- [[mahabharatha-analyze]] -- Static analysis including coverage thresholds
+- [[mahabharatha-review]] -- Code review with test verification

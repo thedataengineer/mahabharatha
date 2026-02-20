@@ -1,4 +1,4 @@
-"""Tests for ZERG v2 Init Generator."""
+"""Tests for MAHABHARATHA v2 Init Generator."""
 
 import json
 import sys
@@ -161,17 +161,17 @@ class TestInitGenerator:
     """Tests for InitGenerator class."""
 
     def test_init_generator_creates_structure(self, tmp_path):
-        """Test InitGenerator creates .zerg directory structure."""
+        """Test InitGenerator creates .mahabharatha directory structure."""
         from init_generator import InitGenerator
 
         gen = InitGenerator(tmp_path)
         gen.generate()
 
-        assert (tmp_path / ".zerg").is_dir()
-        assert (tmp_path / ".zerg" / "config.json").exists()
-        assert (tmp_path / ".zerg" / "schemas").is_dir()
-        assert (tmp_path / ".zerg" / "templates").is_dir()
-        assert (tmp_path / ".zerg" / "logs").is_dir()
+        assert (tmp_path / ".mahabharatha").is_dir()
+        assert (tmp_path / ".mahabharatha" / "config.json").exists()
+        assert (tmp_path / ".mahabharatha" / "schemas").is_dir()
+        assert (tmp_path / ".mahabharatha" / "templates").is_dir()
+        assert (tmp_path / ".mahabharatha" / "logs").is_dir()
 
     def test_init_generator_creates_valid_config(self, tmp_path):
         """Test InitGenerator creates valid JSON config."""
@@ -181,7 +181,7 @@ class TestInitGenerator:
         gen = InitGenerator(tmp_path)
         gen.generate()
 
-        config_path = tmp_path / ".zerg" / "config.json"
+        config_path = tmp_path / ".mahabharatha" / "config.json"
         config = json.loads(config_path.read_text())
         assert config["version"] == "2.0.0"
         assert config["project"]["language"] == "python"
@@ -193,7 +193,7 @@ class TestInitGenerator:
         gen = InitGenerator(tmp_path)
         gen.generate()
 
-        schemas_dir = tmp_path / ".zerg" / "schemas"
+        schemas_dir = tmp_path / ".mahabharatha" / "schemas"
         # Should have at least one schema file
         schema_files = list(schemas_dir.glob("*.json"))
         assert len(schema_files) >= 1
@@ -205,7 +205,7 @@ class TestInitGenerator:
         gen = InitGenerator(tmp_path)
         gen.generate()
 
-        templates_dir = tmp_path / ".zerg" / "templates"
+        templates_dir = tmp_path / ".mahabharatha" / "templates"
         # Should have at least one template file
         template_files = list(templates_dir.glob("*.md"))
         assert len(template_files) >= 1
@@ -218,7 +218,7 @@ class TestInitGenerator:
         gen.generate()
         gen.generate()  # Should not raise
 
-        assert (tmp_path / ".zerg" / "config.json").exists()
+        assert (tmp_path / ".mahabharatha" / "config.json").exists()
 
 
 class TestPackageManagerDetection:

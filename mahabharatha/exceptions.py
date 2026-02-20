@@ -1,4 +1,4 @@
-"""ZERG exception hierarchy."""
+"""MAHABHARATHA exception hierarchy."""
 
 from typing import Any
 
@@ -9,7 +9,7 @@ ErrorDetailValue = str | int | float | bool | list[str] | None
 
 
 class ZergError(Exception):
-    """Base exception for all ZERG errors."""
+    """Base exception for all MAHABHARATHA errors."""
 
     def __init__(self, message: str, details: dict[str, Any] | None = None) -> None:
         super().__init__(message)
@@ -23,7 +23,7 @@ class ZergError(Exception):
 
 
 class ConfigurationError(ZergError):
-    """Error in ZERG configuration."""
+    """Error in MAHABHARATHA configuration."""
 
     pass
 

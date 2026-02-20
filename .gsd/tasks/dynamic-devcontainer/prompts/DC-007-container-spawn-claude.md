@@ -5,20 +5,20 @@
 
 ## Objective
 
-Extend `ContainerLauncher` to execute Claude inside containers via a worker entry script. Create `.zerg/worker_entry.sh` that invokes `claude` with proper flags.
+Extend `ContainerLauncher` to execute Claude inside containers via a worker entry script. Create `.mahabharatha/worker_entry.sh` that invokes `claude` with proper flags.
 
 ## Files Owned
 
-- `zerg/launcher.py` (modify - add exec_claude method)
-- `.zerg/worker_entry.sh` (create)
+- `mahabharatha/launcher.py` (modify - add exec_claude method)
+- `.mahabharatha/worker_entry.sh` (create)
 
 ## Implementation
 
-### 1. Create `.zerg/worker_entry.sh`
+### 1. Create `.mahabharatha/worker_entry.sh`
 
 ```bash
 #!/bin/bash
-# ZERG Worker Entry Script
+# MAHABHARATHA Worker Entry Script
 # Invokes Claude Code CLI inside container
 
 set -e
@@ -28,7 +28,7 @@ FEATURE=${ZERG_FEATURE:-"unknown"}
 BRANCH=${ZERG_BRANCH:-"main"}
 
 echo "================================================"
-echo "ZERG Worker $WORKER_ID starting..."
+echo "MAHABHARATHA Worker $WORKER_ID starting..."
 echo "Feature: $FEATURE"
 echo "Branch: $BRANCH"
 echo "Workspace: $(pwd)"
@@ -48,7 +48,7 @@ if [ -z "$ANTHROPIC_API_KEY" ]; then
 fi
 
 # State file for communication with orchestrator
-STATE_FILE="/workspace/.zerg/state/worker-${WORKER_ID}.json"
+STATE_FILE="/workspace/.mahabharatha/state/worker-${WORKER_ID}.json"
 mkdir -p "$(dirname "$STATE_FILE")"
 
 # Write initial state
@@ -61,7 +61,7 @@ echo "Launching Claude Code..."
 
 claude --dangerously-skip-permissions \
     --output-format json \
-    2>&1 | tee "/workspace/.zerg/logs/worker-${WORKER_ID}.log"
+    2>&1 | tee "/workspace/.mahabharatha/logs/worker-${WORKER_ID}.log"
 
 EXIT_CODE=$?
 
@@ -72,7 +72,7 @@ echo "Worker $WORKER_ID exited with code $EXIT_CODE"
 exit $EXIT_CODE
 ```
 
-### 2. Update ContainerLauncher in `zerg/launcher.py`
+### 2. Update ContainerLauncher in `mahabharatha/launcher.py`
 
 Add method to execute claude in container:
 
@@ -106,7 +106,7 @@ class ContainerLauncher(WorkerLauncher):
             cmd = [
                 "docker", "exec", "-d",
                 container_id,
-                "/workspace/.zerg/worker_entry.sh",
+                "/workspace/.mahabharatha/worker_entry.sh",
             ]
 
             result = subprocess.run(
@@ -210,14 +210,14 @@ class ContainerLauncher(WorkerLauncher):
 
 ```bash
 # Check script exists and is executable
-test -x .zerg/worker_entry.sh && echo "Script executable: OK"
+test -x .mahabharatha/worker_entry.sh && echo "Script executable: OK"
 
 # Check script contains claude invocation
-grep -q 'claude --dangerously-skip-permissions' .zerg/worker_entry.sh && echo "Claude invocation: OK"
+grep -q 'claude --dangerously-skip-permissions' .mahabharatha/worker_entry.sh && echo "Claude invocation: OK"
 
 # Check ContainerLauncher has new methods
 python -c "
-from zerg.launcher import ContainerLauncher
+from mahabharatha.launcher import ContainerLauncher
 cl = ContainerLauncher()
 print('exec_claude:', hasattr(cl, 'exec_claude'))
 print('spawn_and_exec:', hasattr(cl, 'spawn_and_exec'))
@@ -227,9 +227,9 @@ print('wait_for_completion:', hasattr(cl, 'wait_for_completion'))
 
 ## Acceptance Criteria
 
-- [ ] `.zerg/worker_entry.sh` exists and is executable (chmod +x)
+- [ ] `.mahabharatha/worker_entry.sh` exists and is executable (chmod +x)
 - [ ] Script checks for Claude CLI, API key
-- [ ] Script writes state to `/workspace/.zerg/state/worker-{id}.json`
+- [ ] Script writes state to `/workspace/.mahabharatha/state/worker-{id}.json`
 - [ ] ContainerLauncher.exec_claude() runs script in container
 - [ ] ContainerLauncher.spawn_and_exec() combines spawn + exec
 - [ ] wait_for_completion() polls until done

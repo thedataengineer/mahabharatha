@@ -4,13 +4,13 @@
 - **Feature**: task-mode-default
 - **Status**: APPROVED
 - **Created**: 2026-02-05
-- **Author**: /zerg:plan
+- **Author**: /mahabharatha:plan
 
 ---
 
 ## 1. Problem Statement
 
-Currently, `/zerg:rush` uses auto-detection logic that selects container mode when a devcontainer is configured and built. The user wants:
+Currently, `/mahabharatha:kurukshetra` uses auto-detection logic that selects container mode when a devcontainer is configured and built. The user wants:
 
 1. **Task mode as the default** — always use Task tool subagents unless explicitly overridden
 2. **Container mode only when explicit** — `--mode container` must be passed; devcontainer presence is irrelevant
@@ -21,7 +21,7 @@ This simplifies the mental model: "task mode unless I say otherwise."
 
 ## 2. Current State Analysis
 
-### Documentation (`rush.details.md` lines 163-167)
+### Documentation (`kurukshetra.details.md` lines 163-167)
 ```
 Auto-detection logic:
 1. If `--mode` is explicitly set → use that mode
@@ -42,7 +42,7 @@ def _auto_detect_launcher_type(self) -> LauncherType:
     return LauncherType.SUBPROCESS
 ```
 
-### Config (`.zerg/config.yaml` line 13)
+### Config (`.mahabharatha/config.yaml` line 13)
 ```yaml
 launcher_type: subprocess
 ```
@@ -53,7 +53,7 @@ launcher_type: subprocess
 
 ### FR-1: Task Mode as Default in Documentation
 
-Update `rush.details.md` auto-detection logic to:
+Update `kurukshetra.details.md` auto-detection logic to:
 ```
 Auto-detection logic:
 1. If `--mode` is explicitly set → use that mode
@@ -62,7 +62,7 @@ Auto-detection logic:
 
 Remove rules 2-4 from current logic.
 
-### FR-2: Update rush.core.md / rush.md Help Text
+### FR-2: Update kurukshetra.core.md / kurukshetra.md Help Text
 
 Change:
 ```
@@ -101,7 +101,7 @@ Update `tests/integration/test_container_launcher.py`:
 
 ### FR-4: Update Config Default
 
-Change `.zerg/config.yaml`:
+Change `.mahabharatha/config.yaml`:
 ```yaml
 launcher_type: task  # or remove this line since task is now implicit default
 ```
@@ -112,11 +112,11 @@ launcher_type: task  # or remove this line since task is now implicit default
 
 | File | Change |
 |------|--------|
-| `zerg/data/commands/rush.details.md` | Simplify auto-detection to "task mode unless explicit" |
-| `zerg/data/commands/rush.core.md` | Update help text, remove container-first language |
-| `zerg/data/commands/rush.md` | Update help text (same as core) |
-| `zerg/launcher_configurator.py` | Remove devcontainer auto-detection, always return SUBPROCESS for auto mode |
-| `.zerg/config.yaml` | Update default launcher_type comment |
+| `mahabharatha/data/commands/kurukshetra.details.md` | Simplify auto-detection to "task mode unless explicit" |
+| `mahabharatha/data/commands/kurukshetra.core.md` | Update help text, remove container-first language |
+| `mahabharatha/data/commands/kurukshetra.md` | Update help text (same as core) |
+| `mahabharatha/launcher_configurator.py` | Remove devcontainer auto-detection, always return SUBPROCESS for auto mode |
+| `.mahabharatha/config.yaml` | Update default launcher_type comment |
 | `tests/unit/test_launcher_configurator.py` | Update TestAutoDetect tests to expect SUBPROCESS always |
 | `tests/integration/test_container_launcher.py` | Remove/update TestAutoDetectLauncherMode tests |
 
@@ -124,11 +124,11 @@ launcher_type: task  # or remove this line since task is now implicit default
 
 ## 5. Acceptance Criteria
 
-- [x] `rush.details.md` shows task mode as default
+- [x] `kurukshetra.details.md` shows task mode as default
 - [x] Help text shows `--mode MODE  Execution mode: task|container|subprocess (default: task)`
-- [x] Running `/zerg:rush --workers 4` uses task mode without checking devcontainer
-- [x] Running `/zerg:rush --mode container` uses container mode
-- [x] Running `/zerg:rush --mode subprocess` uses subprocess mode
+- [x] Running `/mahabharatha:kurukshetra --workers 4` uses task mode without checking devcontainer
+- [x] Running `/mahabharatha:kurukshetra --mode container` uses container mode
+- [x] Running `/mahabharatha:kurukshetra --mode subprocess` uses subprocess mode
 
 ---
 

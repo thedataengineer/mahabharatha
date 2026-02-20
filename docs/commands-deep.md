@@ -1,4 +1,4 @@
-# ZERG Command Guide
+# MAHABHARATHA Command Guide
 
 Complete documentation with explanations, diagrams, and examples. For quick lookup, see [Quick Reference](commands-quick.md).
 
@@ -14,96 +14,91 @@ This guide assumes you know basic programming and git (commit, branch, push) but
 ## Table of Contents
 
 - [Core Workflow](#core-workflow)
-  - [/zerg:init](#zerginit)
-  - [/zerg:brainstorm](#zergbrainstorm)
-  - [/zerg:plan](#zergplan)
-  - [/zerg:design](#zergdesign)
-  - [/zerg:rush](#zergrush)
+  - [/mahabharatha:init](#zerginit)
+  - [/mahabharatha:brainstorm](#zergbrainstorm)
+  - [/mahabharatha:plan](#zergplan)
+  - [/mahabharatha:design](#zergdesign)
+  - [/mahabharatha:kurukshetra](#zergrush)
 - [Monitoring and Control](#monitoring-and-control)
-  - [/zerg:status](#zergstatus)
-  - [/zerg:logs](#zerglogs)
-  - [/zerg:stop](#zergstop)
-  - [/zerg:retry](#zergretry)
-  - [/zerg:merge](#zergmerge)
-  - [/zerg:cleanup](#zergcleanup)
+  - [/mahabharatha:status](#zergstatus)
+  - [/mahabharatha:logs](#zerglogs)
+  - [/mahabharatha:stop](#zergstop)
+  - [/mahabharatha:retry](#zergretry)
+  - [/mahabharatha:merge](#zergmerge)
+  - [/mahabharatha:cleanup](#zergcleanup)
 - [Quality and Analysis](#quality-and-analysis)
-  - [/zerg:analyze](#zerganalyze)
-  - [/zerg:build](#zergbuild)
-  - [/zerg:test](#zergtest)
-  - [/zerg:review](#zergreview)
-  - [/zerg:refactor](#zergrefactor)
-  - [/zerg:security](#zergsecurity)
+  - [/mahabharatha:analyze](#zerganalyze)
+  - [/mahabharatha:build](#zergbuild)
+  - [/mahabharatha:test](#zergtest)
+  - [/mahabharatha:review](#zergreview)
+  - [/mahabharatha:refactor](#zergrefactor)
+  - [/mahabharatha:security](#zergsecurity)
 - [Utilities](#utilities)
-  - [/zerg:git](#zerggit)
-  - [/zerg:worker](#zergworker)
-  - [/zerg:plugins](#zergplugins)
-  - [/zerg:debug](#zergdebug)
-  - [/zerg:create-command](#zergcreate-command)
+  - [/mahabharatha:git](#zerggit)
+  - [/mahabharatha:worker](#zergworker)
+  - [/mahabharatha:plugins](#zergplugins)
+  - [/mahabharatha:debug](#zergdebug)
+  - [/mahabharatha:create-command](#zergcreate-command)
 - [Documentation and AI](#documentation-and-ai)
-  - [/zerg:document](#zergdocument)
-  - [/zerg:explain](#zergexplain)
-  - [/zerg:index](#zergindex)
-  - [/zerg:estimate](#zergestimate)
-  - [/zerg:select-tool](#zergselect-tool)
+  - [/mahabharatha:document](#zergdocument)
+  - [/mahabharatha:explain](#zergexplain)
+  - [/mahabharatha:index](#zergindex)
+  - [/mahabharatha:estimate](#zergestimate)
+  - [/mahabharatha:select-tool](#zergselect-tool)
 
 ---
 
 ## Core Workflow
 
-The core workflow commands are the backbone of ZERG. They take you from an empty idea to working code through a structured process: initialize your project, discover what to build, capture requirements, design the architecture, and execute with parallel workers.
+The core workflow commands are the backbone of MAHABHARATHA. They take you from an empty idea to working code through a structured process: initialize your project, discover what to build, capture requirements, design the architecture, and execute with parallel workers.
 
 ---
 
-### /zerg:init
+### /mahabharatha:init
 
 #### What Is It?
 
-The init command sets up ZERG for your project. Think of it as the foundation work before building a house - you need the infrastructure in place before construction can begin.
+The init command sets up MAHABHARATHA for your project. Think of it as the foundation work before building a house - you need the infrastructure in place before construction can begin.
 
-ZERG operates in one of two modes depending on what it finds. If you run it in an empty directory, it starts an interactive wizard to help you build a new project from scratch (Inception Mode). If you run it in an existing codebase, it analyzes what you have and configures ZERG to work with your stack (Discovery Mode).
+MAHABHARATHA operates in one of two modes depending on what it finds. If you run it in an empty directory, it starts an interactive wizard to help you build a new project from scratch (Inception Mode). If you run it in an existing codebase, it analyzes what you have and configures MAHABHARATHA to work with your stack (Discovery Mode).
 
 #### Why Use It?
 
-Without initialization, ZERG has no idea what your project looks like. It does not know which programming languages you use, what frameworks are involved, or how to run your build and test commands. The init command discovers all of this and creates configuration files so every other ZERG command works correctly.
+Without initialization, MAHABHARATHA has no idea what your project looks like. It does not know which programming languages you use, what frameworks are involved, or how to run your build and test commands. The init command discovers all of this and creates configuration files so every other MAHABHARATHA command works correctly.
 
 It also sets up security rules specific to your stack. If you are writing Python, you get Python security rules. If you are writing JavaScript, you get JavaScript rules. This means Claude Code automatically follows secure coding practices relevant to your actual codebase.
 
 #### How It Works
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                         /zerg:init                                  │
-└─────────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-                    ┌─────────────────┐
-                    │ Check directory │
-                    └─────────────────┘
-                              │
-              ┌───────────────┴───────────────┐
-              ▼                               ▼
-     ┌────────────────┐              ┌────────────────┐
-     │ Empty: Wizard  │              │ Existing: Scan │
-     │ - What to build│              │ - Find files   │
-     │ - Tech stack   │              │ - Detect lang  │
-     │ - Git init     │              │ - Find infra   │
-     └────────────────┘              └────────────────┘
-              │                               │
-              └───────────────┬───────────────┘
-                              ▼
-              ┌───────────────────────────────┐
-              │      Generate Files           │
-              │  - .zerg/config.yaml          │
-              │  - .devcontainer/             │
-              │  - .gsd/PROJECT.md            │
-              │  - .claude/rules/security/    │
-              └───────────────────────────────┘
+```mermaid
+graph TD
+    Start["/mahabharatha:init"] --> Check["Check directory"]
+    Check --> Empty{"Empty?"}
+
+    Empty -- "YES: Wizard" --> Wizard["- What to build<br/>- Tech stack<br/>- Git init"]
+    Empty -- "NO: Scan" --> Scan["- Find files<br/>- Detect lang<br/>- Find infra"]
+
+    Wizard --> Generate["Generate Files"]
+    Scan --> Generate
+
+    Generate --> Config[".mahabharatha/config.yaml"]
+    Generate --> DevContainer[".devcontainer/"]
+    Generate --> ProjectDoc[".gsd/PROJECT.md"]
+    Generate --> SecurityRules[".claude/rules/security/"]
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 **What the files mean:**
-- `.zerg/config.yaml` - Main configuration: worker counts, timeouts, quality gates
+- `.mahabharatha/config.yaml` - Main configuration: worker counts, timeouts, quality gates
 - `.devcontainer/` - Docker configuration for isolated worker execution
-- `.gsd/PROJECT.md` - High-level project description for ZERG to reference
+- `.gsd/PROJECT.md` - High-level project description for MAHABHARATHA to reference
 - `.claude/rules/security/` - Language-specific security rules that Claude Code auto-loads
 
 #### Using It
@@ -111,28 +106,28 @@ It also sets up security rules specific to your stack. If you are writing Python
 **New project (empty directory):**
 ```
 mkdir my-api && cd my-api
-zerg init
+mahabharatha init
 ```
 
-ZERG asks questions about what you want to build:
+MAHABHARATHA asks questions about what you want to build:
 ```
-ZERG: What kind of project are you creating?
+MAHABHARATHA: What kind of project are you creating?
 YOU:  A REST API for managing inventory
 
-ZERG: Which languages/frameworks?
+MAHABHARATHA: Which languages/frameworks?
 YOU:  Python with FastAPI
 
-ZERG: Any specific infrastructure needs?
+MAHABHARATHA: Any specific infrastructure needs?
 YOU:  PostgreSQL database, Redis for caching
 ```
 
 **Existing project:**
 ```
 cd my-existing-project
-zerg init
+mahabharatha init
 ```
 
-ZERG scans and reports:
+MAHABHARATHA scans and reports:
 ```
 Detected:
   Languages: Python 3.11, TypeScript 5.0
@@ -141,7 +136,7 @@ Detected:
   Build: pyproject.toml, package.json
 
 Created:
-  .zerg/config.yaml
+  .mahabharatha/config.yaml
   .gsd/PROJECT.md
   .gsd/INFRASTRUCTURE.md
   .claude/rules/security/languages/python/CLAUDE.md
@@ -151,18 +146,18 @@ Created:
 **With options:**
 ```
 # Skip security rules (faster, less secure)
-zerg init --no-security-rules
+mahabharatha init --no-security-rules
 
 # Set strict security and 3 workers
-zerg init --workers 3 --security strict
+mahabharatha init --workers 3 --security strict
 
 # Build Docker container after init
-zerg init --with-containers
+mahabharatha init --with-containers
 ```
 
 ---
 
-### /zerg:brainstorm
+### /mahabharatha:brainstorm
 
 #### What Is It?
 
@@ -178,48 +173,21 @@ The command also performs competitive research. It searches the web for how simi
 
 #### How It Works
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                      /zerg:brainstorm                               │
-└─────────────────────────────────────────────────────────────────────┘
-                              │
-        Phase 1               ▼
-    ┌─────────────────────────────────────┐
-    │           RESEARCH                   │
-    │  - Search competitors               │
-    │  - Find market gaps                 │
-    │  - Identify trends                  │
-    └─────────────────────────────────────┘
-                              │
-        Phase 2               ▼
-    ┌─────────────────────────────────────┐
-    │       SOCRATIC DISCOVERY            │
-    │  Round 1: Problem Space             │
-    │  Round 2: Solution Space            │
-    │  Round 3: Implementation Space      │
-    └─────────────────────────────────────┘
-                              │
-        Phase 2.5-2.7         ▼
-    ┌─────────────────────────────────────┐
-    │         VALIDATION                   │
-    │  - Trade-off exploration            │
-    │  - Design checkpoints               │
-    │  - YAGNI gate (filter extras)       │
-    └─────────────────────────────────────┘
-                              │
-        Phase 3               ▼
-    ┌─────────────────────────────────────┐
-    │       ISSUE GENERATION              │
-    │  - Create GitHub issues             │
-    │  - Add acceptance criteria          │
-    │  - Apply priority labels            │
-    └─────────────────────────────────────┘
-                              │
-                              ▼
-    ┌─────────────────────────────────────┐
-    │  Output: Ranked recommendations     │
-    │  → /zerg:plan for top pick          │
-    └─────────────────────────────────────┘
+```mermaid
+graph TD
+    Start["/mahabharatha:brainstorm"] --> P1["Phase 1: RESEARCH<br/>- Search competitors<br/>- Find market gaps<br/>- Identify trends"]
+    P1 --> P2["Phase 2: SOCRATIC DISCOVERY<br/>Round 1: Problem Space<br/>Round 2: Solution Space<br/>Round 3: Implementation Space"]
+    P2 --> P25["Phase 2.5-2.7: VALIDATION<br/>- Trade-off exploration<br/>- Design checkpoints<br/>- YAGNI gate"]
+    P25 --> P3["Phase 3: ISSUE GENERATION<br/>- Create GitHub issues<br/>- Add acceptance criteria<br/>- Apply priority labels"]
+    P3 --> Output["Output: Ranked recommendations<br/>→ /mahabharatha:plan for top pick"]
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 **What YAGNI gate means:** "You Aren't Gonna Need It" - features that sound nice but are not essential for the first version get deferred. This keeps scope tight.
@@ -228,45 +196,45 @@ The command also performs competitive research. It searches the web for how simi
 
 **Basic brainstorm:**
 ```
-/zerg:brainstorm user-authentication
+/mahabharatha:brainstorm user-authentication
 ```
 
-ZERG researches and then asks questions:
+MAHABHARATHA researches and then asks questions:
 ```
-ZERG: I found these patterns in competitor auth systems:
+MAHABHARATHA: I found these patterns in competitor auth systems:
       - OAuth 2.0 with social login (Google, GitHub)
       - Magic link authentication (passwordless)
       - Hardware key support (WebAuthn)
 
-ZERG: What authentication challenges are your users facing today?
+MAHABHARATHA: What authentication challenges are your users facing today?
 YOU:  Password fatigue - they forget passwords and reset flows are slow.
 
-ZERG: What's your user base like? Technical vs non-technical?
+MAHABHARATHA: What's your user base like? Technical vs non-technical?
 YOU:  Mix of both. Developers use our API directly, non-devs use the web app.
 
-ZERG: What compliance requirements do you have?
+MAHABHARATHA: What compliance requirements do you have?
 YOU:  SOC 2 certification is coming up. We need audit logs.
 ```
 
 **Single-question Socratic mode:**
 ```
-/zerg:brainstorm user-auth --socratic
+/mahabharatha:brainstorm user-auth --socratic
 ```
 
-Instead of multiple questions at once, ZERG asks one question at a time and goes deeper:
+Instead of multiple questions at once, MAHABHARATHA asks one question at a time and goes deeper:
 ```
-ZERG: Let's start with the problem. What specific authentication
+MAHABHARATHA: Let's start with the problem. What specific authentication
       issue is causing the most user friction right now?
 YOU:  Password resets. Users do 50+ resets per day.
 
-ZERG: That's significant. When users reset passwords, what's the
+MAHABHARATHA: That's significant. When users reset passwords, what's the
       longest step in your current flow?
 YOU:  Email delivery. Sometimes takes 5+ minutes.
 ```
 
 **Preview without creating issues:**
 ```
-/zerg:brainstorm api-redesign --skip-research --dry-run
+/mahabharatha:brainstorm api-redesign --skip-research --dry-run
 ```
 
 Output shows what would be created:
@@ -285,7 +253,7 @@ Would create 4 GitHub issues:
 
 ---
 
-### /zerg:plan
+### /mahabharatha:plan
 
 #### What Is It?
 
@@ -301,44 +269,21 @@ The output (requirements.md) becomes the single source of truth for the design a
 
 #### How It Works
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                         /zerg:plan                                  │
-└─────────────────────────────────────────────────────────────────────┘
-                              │
-        Phase 1               ▼
-    ┌─────────────────────────────────────┐
-    │        CONTEXT GATHERING            │
-    │  - Read PROJECT.md                  │
-    │  - Read INFRASTRUCTURE.md           │
-    │  - Search codebase for patterns     │
-    └─────────────────────────────────────┘
-                              │
-        Phase 2               ▼
-    ┌─────────────────────────────────────┐
-    │     REQUIREMENTS ELICITATION        │
-    │  - Problem space questions          │
-    │  - Functional requirements          │
-    │  - Non-functional requirements      │
-    │  - Scope boundaries                 │
-    │  - Acceptance criteria              │
-    └─────────────────────────────────────┘
-                              │
-        Phase 3               ▼
-    ┌─────────────────────────────────────┐
-    │      GENERATE requirements.md       │
-    │  → .gsd/specs/{feature}/            │
-    └─────────────────────────────────────┘
-                              │
-        Phase 4               ▼
-    ┌─────────────────────────────────────┐
-    │      APPROVAL CHECKPOINT            │
-    │  Status: DRAFT → REVIEW → APPROVED  │
-    └─────────────────────────────────────┘
-                              │
-                              ▼
-              User says "APPROVED"
-              → Ready for /zerg:design
+```mermaid
+graph TD
+    Start["/mahabharatha:plan"] --> P1["Phase 1: CONTEXT GATHERING<br/>- Read PROJECT.md<br/>- Read INFRASTRUCTURE.md<br/>- Search codebase"]
+    P1 --> P2["Phase 2: REQUIREMENTS ELICITATION<br/>- Problem space questions<br/>- Functional requirements<br/>- Scope boundaries<br/>- Acceptance criteria"]
+    P2 --> P3["Phase 3: GENERATE requirements.md<br/>→ .gsd/specs/{feature}/"]
+    P3 --> P4["Phase 4: APPROVAL CHECKPOINT<br/>Status: DRAFT → REVIEW → APPROVED"]
+    P4 --> Approved["User says 'APPROVED'<br/>→ Ready for /mahabharatha:design"]
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 **What the status markers mean:**
@@ -351,33 +296,33 @@ The output (requirements.md) becomes the single source of truth for the design a
 
 **Plan a feature:**
 ```
-/zerg:plan user-authentication
+/mahabharatha:plan user-authentication
 ```
 
-ZERG asks targeted questions:
+MAHABHARATHA asks targeted questions:
 ```
-ZERG: Let me understand the scope. What authentication methods should
+MAHABHARATHA: Let me understand the scope. What authentication methods should
       this feature support?
 YOU:  Email/password and OAuth with Google.
 
-ZERG: For the email/password flow:
+MAHABHARATHA: For the email/password flow:
       - Should users verify their email before accessing the app?
       - What are the password complexity requirements?
 YOU:  Yes, email verification required. Password must be 12+ chars
       with at least one number and symbol.
 
-ZERG: For OAuth:
+MAHABHARATHA: For OAuth:
       - Which Google scopes do you need (email, profile, etc)?
       - What happens if a Google user already has an email/password account?
 YOU:  Just email and profile. Link accounts if email matches.
 
-ZERG: Non-functional requirements:
+MAHABHARATHA: Non-functional requirements:
       - What's the expected login volume (logins per second)?
       - Session duration? Token refresh policy?
 YOU:  ~10 logins/sec peak. 1-hour sessions, refresh if active.
 ```
 
-ZERG generates `requirements.md` and asks for approval:
+MAHABHARATHA generates `requirements.md` and asks for approval:
 ```
 Requirements generated. Key points:
 
@@ -395,21 +340,21 @@ Please review and reply APPROVED or REJECTED with feedback.
 
 **Structured Socratic mode:**
 ```
-/zerg:plan user-authentication --socratic --rounds 5
+/mahabharatha:plan user-authentication --socratic --rounds 5
 ```
 
 Five structured rounds of one question at a time, going deeper into problem space, solution space, and implementation details.
 
 **Import from GitHub issue:**
 ```
-/zerg:plan --from-issue https://github.com/org/repo/issues/42
+/mahabharatha:plan --from-issue https://github.com/org/repo/issues/42
 ```
 
 Reads the issue title, body, labels, and comments to pre-populate requirements. You still review and approve before proceeding.
 
 ---
 
-### /zerg:design
+### /mahabharatha:design
 
 #### What Is It?
 
@@ -425,59 +370,24 @@ Parallel execution requires careful planning. If two workers try to edit the sam
 2. Assigning exclusive file ownership (no conflicts possible)
 3. Organizing tasks into dependency levels (Level 1 completes before Level 2 starts)
 
-The output (task-graph.json) is what `/zerg:rush` executes. Good design means smooth execution.
+The output (task-graph.json) is what `/mahabharatha:kurukshetra` executes. Good design means smooth execution.
 
 #### How It Works
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                         /zerg:design                                │
-└─────────────────────────────────────────────────────────────────────┘
-                              │
-        Phase 1               ▼
-    ┌─────────────────────────────────────┐
-    │      ARCHITECTURE DESIGN            │
-    │  - Component analysis               │
-    │  - Data flow mapping                │
-    │  - Interface definitions            │
-    │  - Key decisions documented         │
-    └─────────────────────────────────────┘
-                              │
-        Phase 2               ▼
-    ┌─────────────────────────────────────────────────────────────────┐
-    │                   IMPLEMENTATION PLAN                           │
-    │                                                                 │
-    │  Level 1: Foundation     Level 2: Core      Level 3: Integration│
-    │  ┌──────────────────┐   ┌──────────────┐   ┌─────────────────┐ │
-    │  │ types.ts         │   │ auth.service │   │ auth.routes     │ │
-    │  │ schema.py        │   │ user.service │   │ user.routes     │ │
-    │  │ config.ts        │   │ session.svc  │   │ middleware      │ │
-    │  └──────────────────┘   └──────────────┘   └─────────────────┘ │
-    │                                                                 │
-    │  Level 4: Testing        Level 5: Quality                       │
-    │  ┌──────────────────┐   ┌──────────────┐                       │
-    │  │ auth.test.ts     │   │ docs/auth.md │                       │
-    │  │ user.test.ts     │   │ cleanup      │                       │
-    │  │ e2e.test.ts      │   │              │                       │
-    │  └──────────────────┘   └──────────────┘                       │
-    └─────────────────────────────────────────────────────────────────┘
-                              │
-        Phase 3               ▼
-    ┌─────────────────────────────────────┐
-    │      TASK GRAPH GENERATION          │
-    │  - Exclusive file ownership         │
-    │  - Verification commands            │
-    │  - Dependency chains                │
-    │  → task-graph.json                  │
-    └─────────────────────────────────────┘
-                              │
-        Phase 4               ▼
-    ┌─────────────────────────────────────┐
-    │      VALIDATION                     │
-    │  - No circular dependencies         │
-    │  - No file ownership conflicts      │
-    │  - All files have exactly one owner │
-    └─────────────────────────────────────┘
+```mermaid
+graph TD
+    Start["/mahabharatha:design"] --> P1["Phase 1: ARCHITECTURE DESIGN<br/>- Component analysis<br/>- Data flow mapping<br/>- Interface definitions<br/>- Key decisions"]
+    P1 --> P2["Phase 2: IMPLEMENTATION PLAN<br/>Level 1: Foundation (types, schema, config)<br/>Level 2: Core (business logic)<br/>Level 3: Integration (API, routes)<br/>Level 4: Testing<br/>Level 5: Quality"]
+    P2 --> P3["Phase 3: TASK GRAPH GENERATION<br/>- Exclusive file ownership<br/>- Verification commands<br/>- Dependency chains<br/>→ task-graph.json"]
+    P3 --> P4["Phase 4: VALIDATION<br/>- No circular dependencies<br/>- No file ownership conflicts"]
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 **What exclusive file ownership means:** Each file can only be created or modified by one task per level. If `auth.service.ts` is assigned to TASK-005, no other task in Level 2 can touch it. This eliminates merge conflicts by design.
@@ -485,10 +395,10 @@ The output (task-graph.json) is what `/zerg:rush` executes. Good design means sm
 #### Using It
 
 ```
-/zerg:design
+/mahabharatha:design
 ```
 
-ZERG reads the approved requirements and generates architecture:
+MAHABHARATHA reads the approved requirements and generates architecture:
 ```
 Architecture Design:
 
@@ -511,7 +421,7 @@ KEY DECISIONS:
 - Password hashing with bcrypt cost factor 12
 
 Task graph validated: 12 tasks, 5 levels, no conflicts.
-Ready for /zerg:rush
+Ready for /mahabharatha:kurukshetra
 ```
 
 The task-graph.json includes everything workers need:
@@ -536,73 +446,67 @@ The task-graph.json includes everything workers need:
 
 ---
 
-### /zerg:rush
+### /mahabharatha:kurukshetra
 
 #### What Is It?
 
-The rush command is ZERG's execution engine. It takes your approved design and turns it into action by launching multiple Claude Code instances that work on different parts of your feature simultaneously.
+The kurukshetra command is MAHABHARATHA's execution engine. It takes your approved design and turns it into action by launching multiple Claude Code instances that work on different parts of your feature simultaneously.
 
-Think of it like a construction site manager: you have the blueprints (from /zerg:design), and now rush assigns workers to different rooms so they can all build at once instead of waiting for one worker to finish each room.
+Think of it like a construction site manager: you have the blueprints (from /mahabharatha:design), and now kurukshetra assigns workers to different rooms so they can all build at once instead of waiting for one worker to finish each room.
 
 #### Why Use It?
 
-Without parallelization, building a feature with 20 files takes a single Claude Code instance hours of sequential work. Rush spawns multiple workers, each handling their assigned files, reducing build time by 3-5x.
+Without parallelization, building a feature with 20 files takes a single Claude Code instance hours of sequential work. Kurukshetra spawns multiple workers, each handling their assigned files, reducing build time by 3-5x.
 
-The command also handles the complexity you would otherwise manage manually: coordinating workers, running quality checks between levels, retrying failed tasks, and merging changes back together. You launch rush and watch progress instead of babysitting individual tasks.
+The command also handles the complexity you would otherwise manage manually: coordinating workers, running quality checks between levels, retrying failed tasks, and merging changes back together. You launch kurukshetra and watch progress instead of babysitting individual tasks.
 
 #### How It Works
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        ORCHESTRATOR                                 │
-│  Reads task-graph.json, assigns tasks to workers by level          │
-└─────────────────────────────────────────────────────────────────────┘
-                              │
-                              │ Level 1 Start
-         ┌────────────────────┼────────────────────┐
-         ▼                    ▼                    ▼
-    ┌─────────┐          ┌─────────┐          ┌─────────┐
-    │ Worker 0│          │ Worker 1│          │ Worker 2│
-    │ TASK-001│          │ TASK-002│          │ TASK-003│
-    │ types.ts│          │ schema.ts│         │ config.ts│
-    └─────────┘          └─────────┘          └─────────┘
-         │                    │                    │
-         ▼                    ▼                    ▼
-    ┌─────────────────────────────────────────────────────┐
-    │                   LEVEL 1 COMPLETE                  │
-    │  Merge branches, run quality gates (lint, test)     │
-    └─────────────────────────────────────────────────────┘
-                              │
-                              │ Level 2 Start
-         ┌────────────────────┼────────────────────┐
-         ▼                    ▼                    ▼
-    ┌─────────┐          ┌─────────┐          ┌─────────┐
-    │ Worker 0│          │ Worker 1│          │ Worker 2│
-    │ TASK-004│          │ TASK-005│          │ TASK-006│
-    │ auth.svc│          │ user.svc│          │ session │
-    └─────────┘          └─────────┘          └─────────┘
-         │                    │                    │
-         ▼                    ▼                    ▼
-    ┌─────────────────────────────────────────────────────┐
-    │                   LEVEL 2 COMPLETE                  │
-    │  ... and so on through all levels ...               │
-    └─────────────────────────────────────────────────────┘
+#### How It Works
+
+```mermaid
+graph TD
+    Orch["ORCHESTRATOR: Reads task-graph.json, assigns tasks"] --> L1["Level 1 Start"]
+    L1 --> W10["Warrior 0: TASK-001"]
+    L1 --> W11["Warrior 1: TASK-002"]
+    L1 --> W12["Warrior 2: TASK-003"]
+
+    W10 --> L1C["LEVEL 1 COMPLETE: Merge, run quality gates"]
+    W11 --> L1C
+    W12 --> L1C
+
+    L1C --> L2["Level 2 Start"]
+    L2 --> W20["Warrior 0: TASK-004"]
+    L2 --> W21["Warrior 1: TASK-005"]
+    L2 --> W22["Warrior 2: TASK-006"]
+
+    W20 --> L2C["LEVEL 2 COMPLETE: ... and so on ..."]
+    W21 --> L2C
+    W22 --> L2C
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 **What "level by level" means:** All workers must complete Level 1 before any worker starts Level 2. This ensures that when workers build services (Level 2), the types they depend on (Level 1) already exist.
 
-**What quality gates mean:** Between levels, rush automatically runs lint, type checking, and tests. If anything fails, execution pauses so you can fix issues before they propagate.
+**What quality gates mean:** Between levels, kurukshetra automatically runs lint, type checking, and tests. If anything fails, execution pauses so you can fix issues before they propagate.
 
 #### Using It
 
 **Basic launch with 5 workers:**
 ```
-/zerg:rush --workers=5
+/mahabharatha:kurukshetra --workers=5
 ```
 
 Output shows real-time progress:
 ```
-Rush started: user-authentication
+Kurukshetra started: user-authentication
 Workers: 5 | Mode: task
 
 Level 1 (Foundation):
@@ -620,10 +524,10 @@ Level 2 (Core):
 
 **Resume after interruption:**
 ```
-/zerg:rush --resume
+/mahabharatha:kurukshetra --resume
 ```
 
-ZERG loads state from the checkpoint file and continues where it left off:
+MAHABHARATHA loads state from the checkpoint file and continues where it left off:
 ```
 Resuming user-authentication from Level 2
 Completed: 3/12 tasks
@@ -632,7 +536,7 @@ Remaining: 9 tasks across 4 levels
 
 **Preview execution plan:**
 ```
-/zerg:rush --dry-run
+/mahabharatha:kurukshetra --dry-run
 ```
 
 Shows what would happen without starting:
@@ -651,35 +555,35 @@ Estimated cost: ~$2.50 API credits
 
 **Container mode for full isolation:**
 ```
-/zerg:rush --mode container
+/mahabharatha:kurukshetra --mode container
 ```
 
 Each worker runs in its own Docker container with a separate git worktree. Complete isolation means no chance of workers interfering with each other.
 
 **Compare worker configurations before launching:**
 ```
-/zerg:rush --dry-run --what-if
+/mahabharatha:kurukshetra --dry-run --what-if
 ```
 
 Shows side-by-side comparison of different worker counts and modes so you can pick the optimal setup.
 
 **Assess risk in your task graph:**
 ```
-/zerg:rush --dry-run --risk
+/mahabharatha:kurukshetra --dry-run --risk
 ```
 
 Highlights risky tasks: large files, complex dependencies, or historically problematic patterns.
 
 **Pre-validate quality gates during dry-run:**
 ```
-/zerg:rush --dry-run --check-gates
+/mahabharatha:kurukshetra --dry-run --check-gates
 ```
 
 Runs lint, type check, and test gates against the current codebase before any workers start.
 
 **Skip test gates for faster iteration:**
 ```
-/zerg:rush --skip-tests
+/mahabharatha:kurukshetra --skip-tests
 ```
 
 Runs only lint gates between levels, deferring test execution to the final level. Useful during rapid prototyping.
@@ -692,7 +596,7 @@ These commands help you observe what is happening during execution and take acti
 
 ---
 
-### /zerg:status
+### /mahabharatha:status
 
 #### What Is It?
 
@@ -708,38 +612,34 @@ It also helps you catch problems early. If a worker has been stuck on the same t
 
 #### How It Works
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                         /zerg:status                                │
-└─────────────────────────────────────────────────────────────────────┘
-                              │
-         ┌────────────────────┼────────────────────┐
-         ▼                    ▼                    ▼
-    ┌─────────┐          ┌─────────┐          ┌─────────┐
-    │  Task   │          │  State  │          │   Git   │
-    │ System  │          │  JSON   │          │ Branches│
-    │(primary)│          │(backup) │          │ Commits │
-    └─────────┘          └─────────┘          └─────────┘
-         │                    │                    │
-         └────────────────────┼────────────────────┘
-                              ▼
-    ┌─────────────────────────────────────────────────────┐
-    │                    STATUS VIEW                       │
-    │                                                      │
-    │  FEATURE: user-authentication                        │
-    │  PROGRESS: [=========>          ] 45%  (5/12 tasks) │
-    │                                                      │
-    │  LEVEL 2 OF 5                                        │
-    │  ┌────────┬────────┬───────────┬──────────┐        │
-    │  │ Worker │ Status │   Task    │ Duration │        │
-    │  ├────────┼────────┼───────────┼──────────┤        │
-    │  │   0    │ RUNNING│ TASK-004  │  3:45    │        │
-    │  │   1    │ RUNNING│ TASK-005  │  2:30    │        │
-    │  │   2    │  DONE  │ TASK-006  │  4:12    │        │
-    │  └────────┴────────┴───────────┴──────────┘        │
-    │                                                      │
-    │  FAILED: 0 | BLOCKED: 0 | REMAINING: 7              │
-    └─────────────────────────────────────────────────────┘
+#### How It Works
+
+```mermaid
+graph TD
+    Start["/mahabharatha:status"] --> TaskSys["Task System (primary): Tracks work across sessions"]
+    Start --> StateJSON["State JSON (backup): Local checkpoint data"]
+    Start --> Git["Git Branches: Real code progress"]
+
+    TaskSys --> View["STATUS VIEW"]
+    StateJSON --> View
+    Git --> View
+
+    subgraph "View Content"
+        P["PROGRESS: 45% (5/12 tasks)"]
+        W["Warrior Status Table"]
+        F["FAILED / BLOCKED counts"]
+    end
+    View --> P
+    View --> W
+    View --> F
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 
 **Data sources explained:**
@@ -753,7 +653,7 @@ If Task System and State JSON disagree, status flags the mismatch so you can inv
 
 **Show overall status:**
 ```
-/zerg:status
+/mahabharatha:status
 ```
 
 Output:
@@ -779,12 +679,12 @@ ESTIMATED TIME: 25 minutes
 
 **Watch mode (auto-refresh every 5 seconds):**
 ```
-/zerg:status --watch --interval 5
+/mahabharatha:status --watch --interval 5
 ```
 
 **Show all tasks with details:**
 ```
-/zerg:status --tasks
+/mahabharatha:status --tasks
 ```
 
 Output includes task-level detail:
@@ -801,14 +701,14 @@ TASK-007 routes          ○ RUNNING   Worker 4   1:15
 
 **Live TUI dashboard (CLI only):**
 ```
-zerg status --dashboard
+mahabharatha status --dashboard
 ```
 
 Opens a terminal user interface with real-time updates, colored status indicators, and keyboard navigation.
 
 ---
 
-### /zerg:logs
+### /mahabharatha:logs
 
 #### What Is It?
 
@@ -826,7 +726,7 @@ Logs also help with optimization. If a task took much longer than expected, logs
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                          /zerg:logs                                 │
+│                          /mahabharatha:logs                                 │
 └─────────────────────────────────────────────────────────────────────┘
                               │
          ┌────────────────────┼────────────────────┐
@@ -850,7 +750,7 @@ Logs also help with optimization. If a task took much longer than expected, logs
     │  ...                                                │
     └─────────────────────────────────────────────────────┘
 
-    Task Artifacts (.zerg/logs/tasks/TASK-001/):
+    Task Artifacts (.mahabharatha/logs/tasks/TASK-001/):
     ├── execution.jsonl      # Step-by-step execution log
     ├── claude_output.txt    # Full Claude Code output
     ├── verification_output.txt  # Test/lint output
@@ -863,7 +763,7 @@ Logs also help with optimization. If a task took much longer than expected, logs
 
 **Recent logs from all workers:**
 ```
-zerg logs
+mahabharatha logs
 ```
 
 Output:
@@ -879,12 +779,12 @@ Output:
 
 **Logs from specific worker:**
 ```
-zerg logs 1
+mahabharatha logs 1
 ```
 
 **Filter by log level:**
 ```
-zerg logs --level error
+mahabharatha logs --level error
 ```
 
 Only shows errors:
@@ -896,7 +796,7 @@ Only shows errors:
 
 **Show task artifacts:**
 ```
-zerg logs --artifacts TASK-005
+mahabharatha logs --artifacts TASK-005
 ```
 
 Output shows the saved files:
@@ -923,14 +823,14 @@ Type 'string' is not assignable to type 'User'
 
 **Aggregate all logs by timestamp:**
 ```
-zerg logs --aggregate
+mahabharatha logs --aggregate
 ```
 
 Merges all worker logs into a single chronological timeline.
 
 ---
 
-### /zerg:stop
+### /mahabharatha:stop
 
 #### What Is It?
 
@@ -948,7 +848,7 @@ Graceful stop is important because it preserves work-in-progress. Workers commit
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                         /zerg:stop                                  │
+│                         /mahabharatha:stop                                  │
 └─────────────────────────────────────────────────────────────────────┘
                               │
               ┌───────────────┴───────────────┐
@@ -978,7 +878,7 @@ Graceful stop is important because it preserves work-in-progress. Workers commit
               │                               │
               └───────────────┬───────────────┘
                               ▼
-                    Resume with /zerg:rush --resume
+                    Resume with /mahabharatha:kurukshetra --resume
 ```
 
 **What WIP commit means:** Work-in-progress. The worker commits whatever code it has written so far, even if incomplete, so nothing is lost. The commit message notes the progress percentage.
@@ -987,7 +887,7 @@ Graceful stop is important because it preserves work-in-progress. Workers commit
 
 **Graceful stop (recommended):**
 ```
-zerg stop
+mahabharatha stop
 ```
 
 Output:
@@ -998,12 +898,12 @@ Stopping workers gracefully...
   Worker 2: Idle, stopping immediately
 
 All workers stopped. State saved.
-Resume with: zerg rush --resume
+Resume with: mahabharatha kurukshetra --resume
 ```
 
 **Stop specific worker:**
 ```
-zerg stop --worker 2
+mahabharatha stop --worker 2
 ```
 
 Only stops Worker 2; others continue:
@@ -1016,7 +916,7 @@ Worker 2 stopped. Other workers continuing.
 
 **Force stop (emergency):**
 ```
-zerg stop --force
+mahabharatha stop --force
 ```
 
 Immediate termination:
@@ -1032,7 +932,7 @@ Check task status before resuming.
 
 ---
 
-### /zerg:retry
+### /mahabharatha:retry
 
 #### What Is It?
 
@@ -1054,7 +954,7 @@ Retry also tracks attempt counts to prevent infinite loops - by default, a task 
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                         /zerg:retry                                 │
+│                         /mahabharatha:retry                                 │
 └─────────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -1093,7 +993,7 @@ Retry also tracks attempt counts to prevent infinite loops - by default, a task 
 
 **Retry specific task:**
 ```
-zerg retry TASK-005
+mahabharatha retry TASK-005
 ```
 
 Output:
@@ -1107,7 +1007,7 @@ Reassigned to Worker 0
 
 **Retry all failed tasks:**
 ```
-zerg retry --all
+mahabharatha retry --all
 ```
 
 Output:
@@ -1122,12 +1022,12 @@ Retrying all...
 
 **Retry all failed tasks in a level:**
 ```
-zerg retry --level 2
+mahabharatha retry --level 2
 ```
 
 **Force retry (bypass limit):**
 ```
-zerg retry --force TASK-005
+mahabharatha retry --force TASK-005
 ```
 
 Output:
@@ -1140,21 +1040,21 @@ Consider investigating root cause if this retry also fails.
 
 **Preview what would be retried:**
 ```
-zerg retry --dry-run
+mahabharatha retry --dry-run
 ```
 
 Shows the list without actually retrying.
 
 **Assign retry to specific worker:**
 ```
-zerg retry TASK-005 --worker 2
+mahabharatha retry TASK-005 --worker 2
 ```
 
 Forces TASK-005 to be retried by Worker 2 specifically, useful when a particular worker has the right context cached.
 
 ---
 
-### /zerg:merge
+### /mahabharatha:merge
 
 #### What Is It?
 
@@ -1164,7 +1064,7 @@ Think of it as combining work from multiple contractors into the final building.
 
 #### Why Use It?
 
-Normally, rush handles merging automatically after each level. But sometimes you need manual control - maybe automatic merge failed due to a conflict, or you want to skip quality gates temporarily, or you are debugging a merge issue.
+Normally, kurukshetra handles merging automatically after each level. But sometimes you need manual control - maybe automatic merge failed due to a conflict, or you want to skip quality gates temporarily, or you are debugging a merge issue.
 
 Merge gives you direct control over the level merge process when automatic handling is not enough.
 
@@ -1172,7 +1072,7 @@ Merge gives you direct control over the level merge process when automatic handl
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                         /zerg:merge                                 │
+│                         /mahabharatha:merge                                 │
 └─────────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -1184,15 +1084,15 @@ Merge gives you direct control over the level merge process when automatic handl
                               ▼
     ┌─────────────────────────────────────────────────────┐
     │         COLLECT WORKER BRANCHES                     │
-    │  zerg/{feature}/worker-0                            │
-    │  zerg/{feature}/worker-1                            │
-    │  zerg/{feature}/worker-2                            │
+    │  mahabharatha/{feature}/worker-0                            │
+    │  mahabharatha/{feature}/worker-1                            │
+    │  mahabharatha/{feature}/worker-2                            │
     └─────────────────────────────────────────────────────┘
                               │
                               ▼
     ┌─────────────────────────────────────────────────────┐
     │         CREATE STAGING BRANCH                       │
-    │  zerg/{feature}/staging-level-2                     │
+    │  mahabharatha/{feature}/staging-level-2                     │
     └─────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -1229,7 +1129,7 @@ Merge gives you direct control over the level merge process when automatic handl
 
 **Merge current level:**
 ```
-zerg merge
+mahabharatha merge
 ```
 
 Output:
@@ -1247,7 +1147,7 @@ Merging Level 2 (Core):
     Type check...... PASS
     Tests........... PASS
 
-  Tagging: zerg/user-auth/level-2-complete
+  Tagging: mahabharatha/user-auth/level-2-complete
   Rebasing worker branches onto merged result...
 
 Level 2 merged successfully.
@@ -1255,12 +1155,12 @@ Level 2 merged successfully.
 
 **Preview merge plan:**
 ```
-zerg merge --dry-run
+mahabharatha merge --dry-run
 ```
 
 **Force merge despite failures:**
 ```
-zerg merge --force
+mahabharatha merge --force
 ```
 
 Use when you know why gates are failing and want to proceed anyway:
@@ -1271,31 +1171,31 @@ Proceeding with merge...
 
 **Abort in-progress merge:**
 ```
-zerg merge --abort
+mahabharatha merge --abort
 ```
 
 Cleans up staging branch and resets state.
 
 **Merge to a specific branch:**
 ```
-zerg merge --target develop
+mahabharatha merge --target develop
 ```
 
 Merges level work into `develop` instead of the default `main` branch.
 
 ---
 
-### /zerg:cleanup
+### /mahabharatha:cleanup
 
 #### What Is It?
 
-The cleanup command removes ZERG artifacts after a feature is complete or when you want to start fresh. It cleans up worktrees, branches, containers, and state files while preserving your actual code and spec documents.
+The cleanup command removes MAHABHARATHA artifacts after a feature is complete or when you want to start fresh. It cleans up worktrees, branches, containers, and state files while preserving your actual code and spec documents.
 
 Think of it as clearing the construction site after building is done. Remove the scaffolding, clean up debris, but leave the finished building intact.
 
 #### Why Use It?
 
-ZERG creates many temporary artifacts: git worktrees for each worker, state files for checkpointing, log files for debugging, and Docker containers for isolation. After a feature is complete, these just take up space.
+MAHABHARATHA creates many temporary artifacts: git worktrees for each worker, state files for checkpointing, log files for debugging, and Docker containers for isolation. After a feature is complete, these just take up space.
 
 Cleanup also helps when something goes wrong. If state becomes corrupt or you want to restart fresh, cleanup resets everything to a clean state.
 
@@ -1303,7 +1203,7 @@ Cleanup also helps when something goes wrong. If state becomes corrupt or you wa
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                         /zerg:cleanup                               │
+│                         /mahabharatha:cleanup                               │
 └─────────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -1318,9 +1218,9 @@ Cleanup also helps when something goes wrong. If state becomes corrupt or you wa
                               ▼
     ┌─────────────────────────────────────────────────────┐
     │                     REMOVED                         │
-    │  - Worktrees (.zerg/worktrees/)                     │
-    │  - State files (.zerg/state/)                       │
-    │  - Log files (.zerg/logs/) [unless --keep-logs]     │
+    │  - Worktrees (.mahabharatha/worktrees/)                     │
+    │  - State files (.mahabharatha/state/)                       │
+    │  - Log files (.mahabharatha/logs/) [unless --keep-logs]     │
     │  - Git branches [unless --keep-branches]            │
     │  - Docker containers                                │
     └─────────────────────────────────────────────────────┘
@@ -1328,7 +1228,7 @@ Cleanup also helps when something goes wrong. If state becomes corrupt or you wa
                               ▼
     ┌─────────────────────────────────────────────────────┐
     │                 ARCHIVE TASK HISTORY                │
-    │  → .zerg/archive/{feature}/tasks-{timestamp}.json  │
+    │  → .mahabharatha/archive/{feature}/tasks-{timestamp}.json  │
     └─────────────────────────────────────────────────────┘
 ```
 
@@ -1338,14 +1238,14 @@ Cleanup also helps when something goes wrong. If state becomes corrupt or you wa
 
 **Clean specific feature:**
 ```
-zerg cleanup --feature user-auth
+mahabharatha cleanup --feature user-auth
 ```
 
 Output:
 ```
 Cleaning up user-auth:
 
-Archived task history to .zerg/archive/user-auth/tasks-20260204.json
+Archived task history to .mahabharatha/archive/user-auth/tasks-20260204.json
 
 Removing:
   [x] Worktrees: 5 removed
@@ -1367,19 +1267,19 @@ Cleanup complete.
 
 **Preview cleanup plan:**
 ```
-zerg cleanup --all --dry-run
+mahabharatha cleanup --all --dry-run
 ```
 
 Shows what would be deleted without actually deleting.
 
 **Keep logs for debugging:**
 ```
-zerg cleanup --feature user-auth --keep-logs
+mahabharatha cleanup --feature user-auth --keep-logs
 ```
 
 **Keep branches for inspection:**
 ```
-zerg cleanup --feature user-auth --keep-branches
+mahabharatha cleanup --feature user-auth --keep-branches
 ```
 
 ---
@@ -1390,7 +1290,7 @@ These commands help you maintain code quality through analysis, testing, review,
 
 ---
 
-### /zerg:analyze
+### /mahabharatha:analyze
 
 #### What Is It?
 
@@ -1408,7 +1308,7 @@ The SARIF output format integrates with IDEs and GitHub, so issues appear direct
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                         /zerg:analyze                               │
+│                         /mahabharatha:analyze                               │
 └─────────────────────────────────────────────────────────────────────┘
                               │
          ┌────────────────────┼────────────────────┐
@@ -1444,7 +1344,7 @@ The SARIF output format integrates with IDEs and GitHub, so issues appear direct
 
 **Run all checks:**
 ```
-/zerg:analyze --check all
+/mahabharatha:analyze --check all
 ```
 
 Output:
@@ -1474,29 +1374,29 @@ Summary: 2 errors require attention
 
 **Lint only with JSON output:**
 ```
-/zerg:analyze --check lint --format json
+/mahabharatha:analyze --check lint --format json
 ```
 
 **Custom thresholds:**
 ```
-/zerg:analyze --check complexity --threshold complexity=15
+/mahabharatha:analyze --check complexity --threshold complexity=15
 ```
 
 **SARIF for IDE integration:**
 ```
-/zerg:analyze --check all --format sarif > results.sarif
+/mahabharatha:analyze --check all --format sarif > results.sarif
 ```
 
 **Run comprehensive performance audit:**
 ```
-/zerg:analyze --performance
+/mahabharatha:analyze --performance
 ```
 
 Runs all 140 performance factors including bundle size, API latency, database query analysis, and memory profiling. Produces a detailed report with actionable recommendations.
 
 ---
 
-### /zerg:build
+### /mahabharatha:build
 
 #### What Is It?
 
@@ -1508,13 +1408,13 @@ Think of it as a smart build assistant that knows how to fix common problems. Mi
 
 Build errors are often recoverable. A missing package just needs to be installed. A network timeout just needs a retry. Build handles these automatically instead of failing and making you run commands manually.
 
-Auto-detection means you do not need to configure anything. ZERG looks at your project files and figures out which build commands to run.
+Auto-detection means you do not need to configure anything. MAHABHARATHA looks at your project files and figures out which build commands to run.
 
 #### How It Works
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                         /zerg:build                                 │
+│                         /mahabharatha:build                                 │
 └─────────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -1557,7 +1457,7 @@ Auto-detection means you do not need to configure anything. ZERG looks at your p
 
 **Build with defaults:**
 ```
-/zerg:build
+/mahabharatha:build
 ```
 
 Output:
@@ -1576,17 +1476,17 @@ Build successful in 23.4s
 
 **Production build:**
 ```
-/zerg:build --mode prod
+/mahabharatha:build --mode prod
 ```
 
 **Clean build (remove artifacts first):**
 ```
-/zerg:build --clean
+/mahabharatha:build --clean
 ```
 
 **Watch mode (rebuild on changes):**
 ```
-/zerg:build --watch
+/mahabharatha:build --watch
 ```
 
 Output:
@@ -1604,7 +1504,7 @@ Press Ctrl+C to stop
 
 ---
 
-### /zerg:test
+### /mahabharatha:test
 
 #### What Is It?
 
@@ -1622,7 +1522,7 @@ The stub generation feature is particularly useful - it creates test file skelet
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                          /zerg:test                                 │
+│                          /mahabharatha:test                                 │
 └─────────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -1654,7 +1554,7 @@ The stub generation feature is particularly useful - it creates test file skelet
 
 **Run all tests:**
 ```
-/zerg:test
+/mahabharatha:test
 ```
 
 Output:
@@ -1677,7 +1577,7 @@ test_get_user: AssertionError: expected User, got None
 
 **Run with coverage:**
 ```
-/zerg:test --coverage
+/mahabharatha:test --coverage
 ```
 
 Output:
@@ -1698,19 +1598,19 @@ Uncovered lines:
 
 **Watch mode:**
 ```
-/zerg:test --watch
+/mahabharatha:test --watch
 ```
 
 **Generate test stubs:**
 ```
-/zerg:test --generate
+/mahabharatha:test --generate
 ```
 
 Creates skeleton test files for uncovered functions.
 
 ---
 
-### /zerg:review
+### /mahabharatha:review
 
 #### What Is It?
 
@@ -1728,7 +1628,7 @@ The "receive" mode helps when you get feedback from reviewers. It parses their c
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                  /zerg:review [--no-security]                        │
+│                  /mahabharatha:review [--no-security]                        │
 └─────────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -1782,7 +1682,7 @@ The "receive" mode helps when you get feedback from reviewers. It parses their c
 
 **Full two-stage review:**
 ```
-/zerg:review
+/mahabharatha:review
 ```
 
 Output:
@@ -1814,24 +1714,24 @@ Issues: 3 items need attention before PR
 
 **Self-review checklist only:**
 ```
-/zerg:review --mode self
+/mahabharatha:review --mode self
 ```
 
 **Prepare PR summary:**
 ```
-/zerg:review --mode prepare
+/mahabharatha:review --mode prepare
 ```
 
 **Process review feedback:**
 ```
-/zerg:review --mode receive
+/mahabharatha:review --mode receive
 ```
 
 Helps track addressed feedback from reviewers.
 
 ---
 
-### /zerg:refactor
+### /mahabharatha:refactor
 
 #### What Is It?
 
@@ -1849,7 +1749,7 @@ Interactive mode lets you approve each change individually, which is important w
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                        /zerg:refactor                               │
+│                        /mahabharatha:refactor                               │
 └─────────────────────────────────────────────────────────────────────┘
                               │
          ┌────────────────────┼────────────────────┐
@@ -1896,7 +1796,7 @@ Interactive mode lets you approve each change individually, which is important w
 
 **Preview all transforms:**
 ```
-/zerg:refactor --dry-run
+/mahabharatha:refactor --dry-run
 ```
 
 Output:
@@ -1917,7 +1817,7 @@ src/user/user.service.py:
 
 **Interactive mode:**
 ```
-/zerg:refactor --interactive
+/mahabharatha:refactor --interactive
 ```
 
 Each change requires approval:
@@ -1933,12 +1833,12 @@ src/auth/auth.service.py:23
 
 **Specific transforms only:**
 ```
-/zerg:refactor --transforms dead-code,simplify
+/mahabharatha:refactor --transforms dead-code,simplify
 ```
 
 ---
 
-### /zerg:security
+### /mahabharatha:security
 
 #### What Is It?
 
@@ -1946,19 +1846,19 @@ The security command scans your code for vulnerabilities: hardcoded secrets, inj
 
 Think of it as a security auditor that never sleeps. It checks your code against known vulnerability patterns and reports issues with specific remediation guidance.
 
-**Shared Engine**: `/zerg:security` and `/zerg:review` (Stage 3) share the same consolidated security engine. The common API is `run_security_scan()` from the `zerg/security/` package, which covers 15 capability areas and returns structured `SecurityResult`/`SecurityFinding` types. The `zerg/security/` package is the single source of truth for all security scanning logic.
+**Shared Engine**: `/mahabharatha:security` and `/mahabharatha:review` (Stage 3) share the same consolidated security engine. The common API is `run_security_scan()` from the `mahabharatha/security/` package, which covers 15 capability areas and returns structured `SecurityResult`/`SecurityFinding` types. The `mahabharatha/security/` package is the single source of truth for all security scanning logic.
 
 #### Why Use It?
 
 Security vulnerabilities are easy to introduce accidentally. A hardcoded API key, an unparameterized SQL query, a weak password hash - these mistakes happen even to experienced developers. Security catches them before they reach production.
 
-The preset compliance frameworks are valuable for regulated industries. If you need SOC 2 certification, running `/zerg:security --preset soc2` tells you exactly which controls need attention.
+The preset compliance frameworks are valuable for regulated industries. If you need SOC 2 certification, running `/mahabharatha:security --preset soc2` tells you exactly which controls need attention.
 
 #### How It Works
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                        /zerg:security                               │
+│                        /mahabharatha:security                               │
 └─────────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -2013,7 +1913,7 @@ The preset compliance frameworks are valuable for regulated industries. If you n
 
 **Run OWASP scan:**
 ```
-/zerg:security
+/mahabharatha:security
 ```
 
 Output:
@@ -2042,12 +1942,12 @@ Summary: 23 findings (1 critical, 3 high, 7 medium, 12 low)
 
 **PCI compliance check:**
 ```
-/zerg:security --preset pci
+/mahabharatha:security --preset pci
 ```
 
 **With auto-fix suggestions:**
 ```
-/zerg:security --autofix
+/mahabharatha:security --autofix
 ```
 
 Each finding includes a code suggestion for how to fix it.
@@ -2060,11 +1960,11 @@ These commands provide supporting functionality for git operations, debugging, p
 
 ---
 
-### /zerg:git
+### /mahabharatha:git
 
 #### What Is It?
 
-The git command provides intelligent git operations: commit with auto-generated messages, branch management, PR creation, releases, and even AI-powered bug bisection. It wraps common git workflows with ZERG intelligence.
+The git command provides intelligent git operations: commit with auto-generated messages, branch management, PR creation, releases, and even AI-powered bug bisection. It wraps common git workflows with MAHABHARATHA intelligence.
 
 Think of it as git with a co-pilot. It writes commit messages based on your changes, creates PRs with full context, and can even binary-search through history to find when a bug was introduced.
 
@@ -2078,7 +1978,7 @@ The bisect feature is particularly powerful - it uses AI to determine if each co
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                          /zerg:git                                  │
+│                          /mahabharatha:git                                  │
 └─────────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -2111,10 +2011,10 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
 **Intelligent commit:**
 ```
-/zerg:git --action commit
+/mahabharatha:git --action commit
 ```
 
-ZERG analyzes your changes and generates a message:
+MAHABHARATHA analyzes your changes and generates a message:
 ```
 Detected changes:
   - New file: src/auth/oauth.ts
@@ -2133,12 +2033,12 @@ Commit? [Y/n]: y
 
 **Create and push:**
 ```
-/zerg:git --action commit --push
+/mahabharatha:git --action commit --push
 ```
 
 **Create PR with reviewer:**
 ```
-/zerg:git --action pr --reviewer octocat
+/mahabharatha:git --action pr --reviewer octocat
 ```
 
 Output:
@@ -2166,10 +2066,10 @@ PR created: https://github.com/user/repo/pull/57
 
 **AI-powered bisect:**
 ```
-/zerg:git --action bisect --symptom "login returns 500 error" --test-cmd "pytest tests/auth" --good v1.0.0
+/mahabharatha:git --action bisect --symptom "login returns 500 error" --test-cmd "pytest tests/auth" --good v1.0.0
 ```
 
-ZERG binary-searches through commits:
+MAHABHARATHA binary-searches through commits:
 ```
 Bisecting between v1.0.0 and HEAD (47 commits)
 
@@ -2190,17 +2090,17 @@ This commit likely introduced the regression.
 
 ---
 
-### /zerg:worker
+### /mahabharatha:worker
 
 #### What Is It?
 
 The worker command is the internal protocol that each parallel worker follows. You do not invoke this directly - the orchestrator launches workers with this command automatically.
 
-Understanding the worker protocol helps you debug issues and understand what is happening during `/zerg:rush` execution.
+Understanding the worker protocol helps you debug issues and understand what is happening during `/mahabharatha:kurukshetra` execution.
 
 #### Why Use It?
 
-You typically do not invoke `/zerg:worker` directly. The orchestrator does this automatically when you run `/zerg:rush`. However, understanding the protocol helps when debugging stuck workers or investigating failures.
+You typically do not invoke `/mahabharatha:worker` directly. The orchestrator does this automatically when you run `/mahabharatha:kurukshetra`. However, understanding the protocol helps when debugging stuck workers or investigating failures.
 
 #### How It Works
 
@@ -2260,7 +2160,7 @@ You typically do not invoke `/zerg:worker` directly. The orchestrator does this 
 Workers are invoked automatically by the orchestrator:
 ```bash
 # This is what the orchestrator runs (you don't do this)
-ZERG_WORKER_ID=0 ZERG_FEATURE=user-auth claude /zerg:worker
+ZERG_WORKER_ID=0 ZERG_FEATURE=user-auth claude /mahabharatha:worker
 ```
 
 **Exit codes explained:**
@@ -2270,17 +2170,17 @@ ZERG_WORKER_ID=0 ZERG_FEATURE=user-auth claude /zerg:worker
 
 ---
 
-### /zerg:plugins
+### /mahabharatha:plugins
 
 #### What Is It?
 
-The plugins command documents ZERG's extension system. Plugins let you add custom quality gates (run after merges), lifecycle hooks (react to events), and launcher plugins (custom execution environments).
+The plugins command documents MAHABHARATHA's extension system. Plugins let you add custom quality gates (run after merges), lifecycle hooks (react to events), and launcher plugins (custom execution environments).
 
-Think of plugins as the ability to customize ZERG's behavior without modifying core code. Want to post a Slack message when a level completes? Add a webhook hook. Want to require security scans before merge? Add a quality gate.
+Think of plugins as the ability to customize MAHABHARATHA's behavior without modifying core code. Want to post a Slack message when a level completes? Add a webhook hook. Want to require security scans before merge? Add a quality gate.
 
 #### Why Use It?
 
-Every team has unique requirements. Maybe you need to run proprietary security tools, post to internal chat, or execute workers on Kubernetes instead of Docker. Plugins let you integrate ZERG with your specific environment.
+Every team has unique requirements. Maybe you need to run proprietary security tools, post to internal chat, or execute workers on Kubernetes instead of Docker. Plugins let you integrate MAHABHARATHA with your specific environment.
 
 The plugin system is designed to be safe - plugins cannot mutate orchestrator state, and failures are logged but never crash the main process.
 
@@ -2316,10 +2216,10 @@ The plugin system is designed to be safe - plugins cannot mutate orchestrator st
 
 View plugin documentation:
 ```
-/zerg:plugins
+/mahabharatha:plugins
 ```
 
-**Configure YAML hook in `.zerg/config.yaml`:**
+**Configure YAML hook in `.mahabharatha/config.yaml`:**
 ```yaml
 plugins:
   hooks:
@@ -2356,13 +2256,13 @@ plugins:
 
 ---
 
-### /zerg:debug
+### /mahabharatha:debug
 
 #### What Is It?
 
 The debug command provides deep diagnostic investigation when things go wrong. It correlates logs, analyzes errors, tests hypotheses, and generates recovery plans. This is your tool when standard troubleshooting fails.
 
-Think of it as a detective for ZERG problems. It gathers evidence from multiple sources, classifies the problem, and proposes solutions based on what it finds.
+Think of it as a detective for MAHABHARATHA problems. It gathers evidence from multiple sources, classifies the problem, and proposes solutions based on what it finds.
 
 #### Why Use It?
 
@@ -2374,13 +2274,13 @@ The `--fix` flag is particularly useful - debug not only diagnoses but can also 
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                         /zerg:debug                                 │
+│                         /mahabharatha:debug                                 │
 └─────────────────────────────────────────────────────────────────────┘
                               │
     Phase 1                   ▼
     ┌─────────────────────────────────────────────────────┐
     │              GATHER EVIDENCE                        │
-    │  - ZERG state files                                 │
+    │  - MAHABHARATHA state files                                 │
     │  - Worker logs                                      │
     │  - Task-graph.json                                  │
     │  - Git state                                        │
@@ -2421,7 +2321,7 @@ The `--fix` flag is particularly useful - debug not only diagnoses but can also 
 
 **Auto-detect and diagnose:**
 ```
-/zerg:debug
+/mahabharatha:debug
 ```
 
 Output:
@@ -2446,42 +2346,42 @@ Analysis:
 
 Recovery Plan:
   [SAFE] 1. Add 'requests' to requirements.txt
-  [SAFE] 2. Rebuild container: zerg init --with-containers
-  [SAFE] 3. Retry task: zerg retry TASK-005
+  [SAFE] 2. Rebuild container: mahabharatha init --with-containers
+  [SAFE] 3. Retry task: mahabharatha retry TASK-005
 
 Execute plan? [y/N]:
 ```
 
 **Describe the problem:**
 ```
-/zerg:debug workers keep timing out
+/mahabharatha:debug workers keep timing out
 ```
 
 **Focus on specific worker:**
 ```
-/zerg:debug --worker 2
+/mahabharatha:debug --worker 2
 ```
 
 **Full diagnostics with auto-fix:**
 ```
-/zerg:debug --deep --env --fix
+/mahabharatha:debug --deep --env --fix
 ```
 
 Runs comprehensive checks and executes approved recovery steps.
 
 ---
 
-### /zerg:create-command
+### /mahabharatha:create-command
 
 #### What Is It?
 
-The create-command scaffolds new ZERG slash commands with all required components: the command file, tests, and documentation. It ensures new commands follow ZERG conventions and integrate properly with the Task ecosystem.
+The create-command scaffolds new MAHABHARATHA slash commands with all required components: the command file, tests, and documentation. It ensures new commands follow MAHABHARATHA conventions and integrate properly with the Task ecosystem.
 
 Think of it as a command generator that enforces best practices. Instead of copying and modifying an existing command (and potentially missing required pieces), create-command generates a complete, correct skeleton.
 
 #### Why Use It?
 
-ZERG commands have specific requirements: Task ecosystem integration, proper help text, pre-flight checks. Missing any of these causes issues. Create-command generates all the required pieces so you just fill in the logic.
+MAHABHARATHA commands have specific requirements: Task ecosystem integration, proper help text, pre-flight checks. Missing any of these causes issues. Create-command generates all the required pieces so you just fill in the logic.
 
 The scaffolded tests are particularly valuable - they ensure your command works under various conditions before you ship it.
 
@@ -2489,7 +2389,7 @@ The scaffolded tests are particularly valuable - they ensure your command works 
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                     /zerg:create-command                            │
+│                     /mahabharatha:create-command                            │
 └─────────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -2504,7 +2404,7 @@ The scaffolded tests are particularly valuable - they ensure your command works 
     ┌─────────────────────────────────────────────────────┐
     │             GENERATE FILES                          │
     │                                                     │
-    │  zerg/data/commands/{name}.md                       │
+    │  mahabharatha/data/commands/{name}.md                       │
     │    - Pre-flight checks                              │
     │    - Task tracking (TaskCreate, TaskUpdate)         │
     │    - Help section                                   │
@@ -2532,7 +2432,7 @@ The scaffolded tests are particularly valuable - they ensure your command works 
 
 **Quick scaffold:**
 ```
-/zerg:create-command my-command
+/mahabharatha:create-command my-command
 ```
 
 Output:
@@ -2540,7 +2440,7 @@ Output:
 Creating command: my-command
 
 Generated:
-  zerg/data/commands/my-command.md
+  mahabharatha/data/commands/my-command.md
   tests/pressure/test_my_command.py
   docs/commands/my-command.md
 
@@ -2548,14 +2448,14 @@ Updated:
   docs/commands-quick.md (added index entry)
 
 Next steps:
-  1. Edit zerg/data/commands/my-command.md with your logic
+  1. Edit mahabharatha/data/commands/my-command.md with your logic
   2. Run tests: pytest tests/pressure/test_my_command.py
-  3. Validate: python -m zerg.validate_commands
+  3. Validate: python -m mahabharatha.validate_commands
 ```
 
 **Interactive wizard:**
 ```
-/zerg:create-command my-command --interactive
+/mahabharatha:create-command my-command --interactive
 ```
 
 Prompts for description and flags:
@@ -2578,7 +2478,7 @@ These commands help you generate documentation, understand code, and estimate ef
 
 ---
 
-### /zerg:document
+### /mahabharatha:document
 
 #### What Is It?
 
@@ -2596,14 +2496,14 @@ The depth levels let you control how much detail is included - shallow for quick
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                        /zerg:document                               │
+│                        /mahabharatha:document                               │
 └─────────────────────────────────────────────────────────────────────┘
                               │
                               ▼
     ┌─────────────────────────────────────────────────────┐
     │            DETECT COMPONENT TYPE                    │
     │  - module (Python/JS files)                         │
-    │  - command (ZERG command files)                     │
+    │  - command (MAHABHARATHA command files)                     │
     │  - config (YAML/TOML/JSON)                          │
     │  - api (route definitions)                          │
     │  - types (type definitions)                         │
@@ -2648,14 +2548,14 @@ The depth levels let you control how much detail is included - shallow for quick
 
 **Document a module:**
 ```
-/zerg:document zerg/launcher.py
+/mahabharatha:document mahabharatha/launcher.py
 ```
 
 Output:
 ```markdown
 # launcher.py
 
-Spawns and manages ZERG worker processes.
+Spawns and manages MAHABHARATHA worker processes.
 
 ## Classes
 
@@ -2680,31 +2580,39 @@ graph TD
     launcher --> docker_client
     launcher --> subprocess
     launcher --> task_system
+
+
+    %% Visual Styles
+    classDef default fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,color:#111827;
+    classDef highlight fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1D4ED8;
+    classDef success fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#047857;
+    classDef warning fill:#FFFBEB,stroke:#F59E0B,stroke-width:2px,color:#B45309;
+    classDef error fill:#FEF2F2,stroke:#EF4444,stroke-width:2px,color:#B91C1C;
 ```
 ```
 
 **With tone control:**
 ```
-/zerg:document zerg/launcher.py --tone educational   # Concept-first docs (default)
-/zerg:document zerg/launcher.py --tone reference     # Terse API reference
-/zerg:document zerg/launcher.py --tone tutorial       # Step-by-step walkthrough
+/mahabharatha:document mahabharatha/launcher.py --tone educational   # Concept-first docs (default)
+/mahabharatha:document mahabharatha/launcher.py --tone reference     # Terse API reference
+/mahabharatha:document mahabharatha/launcher.py --tone tutorial       # Step-by-step walkthrough
 ```
 
 **Deep documentation to file:**
 ```
-/zerg:document zerg/launcher.py --depth deep --output docs/launcher.md
+/mahabharatha:document mahabharatha/launcher.py --depth deep --output docs/launcher.md
 ```
 
 **Update existing docs:**
 ```
-/zerg:document zerg/launcher.py --output docs/launcher.md --update
+/mahabharatha:document mahabharatha/launcher.py --output docs/launcher.md --update
 ```
 
 Preserves manual edits outside auto-generated sections.
 
 ---
 
-### /zerg:explain
+### /mahabharatha:explain
 
 #### What Is It?
 
@@ -2716,13 +2624,13 @@ Think of it as having a senior developer walk you through unfamiliar code. It do
 
 Understanding code is often harder than writing it. Explain breaks down complex code into digestible layers: what it does, how it flows, implementation details, and design decisions.
 
-This is different from `/zerg:document` which produces reference documentation. Explain produces teaching content that helps you truly understand the code.
+This is different from `/mahabharatha:document` which produces reference documentation. Explain produces teaching content that helps you truly understand the code.
 
 #### How It Works
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                         /zerg:explain                               │
+│                         /mahabharatha:explain                               │
 └─────────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -2770,7 +2678,7 @@ This is different from `/zerg:document` which produces reference documentation. 
 
 **Explain a file:**
 ```
-/zerg:explain zerg/launcher.py
+/mahabharatha:explain mahabharatha/launcher.py
 ```
 
 Output:
@@ -2779,16 +2687,16 @@ Output:
 
 ## Layer 1: Summary
 
-The launcher module is ZERG's process manager. Its job is to start Claude Code
+The launcher module is MAHABHARATHA's process manager. Its job is to start Claude Code
 instances (called "workers"), monitor their health, and cleanly shut them down.
 
 The orchestrator calls the launcher when it needs workers. Workers call back to
-report their status. When rush completes or stops, the launcher terminates all
+report their status. When kurukshetra completes or stops, the launcher terminates all
 workers.
 
 ## Layer 2: Logic Flow
 
-When you run `/zerg:rush --workers=5`, here's what happens:
+When you run `/mahabharatha:kurukshetra --workers=5`, here's what happens:
 
 1. Orchestrator calls `launcher.spawn_workers(5)`
 2. For each worker:
@@ -2839,25 +2747,25 @@ components easier to understand and test.
 
 **Explain a specific function:**
 ```
-/zerg:explain zerg/launcher.py:spawn_worker
+/mahabharatha:explain mahabharatha/launcher.py:spawn_worker
 ```
 
 **Save explanation:**
 ```
-/zerg:explain zerg/launcher.py --save
+/mahabharatha:explain mahabharatha/launcher.py --save
 ```
 
 Saves to `claudedocs/explanations/launcher.md`
 
 ---
 
-### /zerg:index
+### /mahabharatha:index
 
 #### What Is It?
 
 The index command generates a complete documentation wiki for your project. It discovers all documentable components, generates pages for each, builds cross-references, and creates navigation.
 
-Think of it as running `/zerg:document` on every file and then assembling the results into a navigable wiki with a sidebar and search-friendly structure.
+Think of it as running `/mahabharatha:document` on every file and then assembling the results into a navigable wiki with a sidebar and search-friendly structure.
 
 #### Why Use It?
 
@@ -2875,7 +2783,7 @@ The `--push` option even pushes the wiki to GitHub's wiki repository.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                          /zerg:index                                │
+│                          /mahabharatha:index                                │
 └─────────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -2919,7 +2827,7 @@ The `--push` option even pushes the wiki to GitHub's wiki repository.
 
 **Generate full wiki:**
 ```
-/zerg:index --full
+/mahabharatha:index --full
 ```
 
 Output:
@@ -2947,24 +2855,24 @@ Generated 50 pages to .gsd/wiki/
 
 **Preview changes:**
 ```
-/zerg:index --dry-run
+/mahabharatha:index --dry-run
 ```
 
 **Generate and push to GitHub Wiki:**
 ```
-/zerg:index --full --push
+/mahabharatha:index --full --push
 ```
 
 **Incremental update (only changed files):**
 ```
-/zerg:index
+/mahabharatha:index
 ```
 
 Faster than `--full` for routine updates.
 
 ---
 
-### /zerg:estimate
+### /mahabharatha:estimate
 
 #### What Is It?
 
@@ -2982,7 +2890,7 @@ Post-execution comparison is equally valuable. When estimates were off, you lear
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                        /zerg:estimate                               │
+│                        /mahabharatha:estimate                               │
 └─────────────────────────────────────────────────────────────────────┘
                               │
               ┌───────────────┴───────────────┐
@@ -3020,7 +2928,7 @@ Post-execution comparison is equally valuable. When estimates were off, you lear
 
 **Estimate before launching:**
 ```
-/zerg:estimate user-auth
+/mahabharatha:estimate user-auth
 ```
 
 Output:
@@ -3051,7 +2959,7 @@ Per-Level Breakdown:
 
 **Compare after execution:**
 ```
-/zerg:estimate user-auth --post
+/mahabharatha:estimate user-auth --post
 ```
 
 Output:
@@ -3077,14 +2985,14 @@ Calibration updated. Future Level 4 estimates +40%.
 
 **Historical calibration:**
 ```
-/zerg:estimate --calibrate
+/mahabharatha:estimate --calibrate
 ```
 
 Shows accuracy across all past features and computes bias corrections.
 
 ---
 
-### /zerg:select-tool
+### /mahabharatha:select-tool
 
 #### What Is It?
 
@@ -3094,7 +3002,7 @@ Think of it as a tool advisor. Before starting work, ask it what tools would be 
 
 #### Why Use It?
 
-ZERG has many tools: native file operations, MCP servers for specialized tasks, Task agents for parallel work. Choosing the right combination improves efficiency. Select-tool analyzes your task and recommends based on:
+MAHABHARATHA has many tools: native file operations, MCP servers for specialized tasks, Task agents for parallel work. Choosing the right combination improves efficiency. Select-tool analyzes your task and recommends based on:
 
 - How many files are involved
 - How deep the analysis needs to be
@@ -3106,7 +3014,7 @@ ZERG has many tools: native file operations, MCP servers for specialized tasks, 
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                       /zerg:select-tool                             │
+│                       /mahabharatha:select-tool                             │
 └─────────────────────────────────────────────────────────────────────┘
                               │
                               ▼
@@ -3159,7 +3067,7 @@ ZERG has many tools: native file operations, MCP servers for specialized tasks, 
 
 **Get recommendations:**
 ```
-/zerg:select-tool "refactor the authentication module across 12 files"
+/mahabharatha:select-tool "refactor the authentication module across 12 files"
 ```
 
 Output:
@@ -3198,28 +3106,28 @@ WORKFLOW:
 
 **Detailed scoring:**
 ```
-/zerg:select-tool "refactor the auth module" --verbose
+/mahabharatha:select-tool "refactor the auth module" --verbose
 ```
 
 Shows per-dimension scores for transparency.
 
 **Force domain:**
 ```
-/zerg:select-tool "optimize query performance" --domain perf
+/mahabharatha:select-tool "optimize query performance" --domain perf
 ```
 
 ---
 
 ## Exit Codes
 
-All ZERG commands follow consistent exit codes:
+All MAHABHARATHA commands follow consistent exit codes:
 
 | Code | Meaning | What to Do |
 |------|---------|------------|
 | 0 | Success | Proceed to next step |
 | 1 | Failure | Check output for details, fix issue, retry |
 | 2 | Configuration error | Check config files, environment variables |
-| 4 | Worker escalation | Human decision needed, see `/zerg:debug` |
+| 4 | Worker escalation | Human decision needed, see `/mahabharatha:debug` |
 
 ---
 
@@ -3227,10 +3135,10 @@ All ZERG commands follow consistent exit codes:
 
 Now that you understand all 26 commands:
 
-1. **Start with init**: Set up your project with `zerg init`
-2. **Plan your feature**: Capture requirements with `/zerg:plan feature-name`
-3. **Design the architecture**: Generate task graph with `/zerg:design`
-4. **Execute in parallel**: Launch workers with `/zerg:rush --workers=5`
-5. **Monitor progress**: Watch execution with `/zerg:status --watch`
+1. **Start with init**: Set up your project with `mahabharatha init`
+2. **Plan your feature**: Capture requirements with `/mahabharatha:plan feature-name`
+3. **Design the architecture**: Generate task graph with `/mahabharatha:design`
+4. **Execute in parallel**: Launch workers with `/mahabharatha:kurukshetra --workers=5`
+5. **Monitor progress**: Watch execution with `/mahabharatha:status --watch`
 
 For quick command lookup without explanations, see [Quick Reference](commands-quick.md).

@@ -14,8 +14,8 @@
 Fix quality gate failures by documenting existing TYPE_CHECKING guards and adding explicit `__all__` exports to clarify public APIs. The circular imports are already correctly mitigated at runtime.
 
 ### 1.2 Goals
-- Document the lazy import pattern in `zerg/verify.py`
-- Add `__all__` to `zerg/config.py` and `zerg/types.py`
+- Document the lazy import pattern in `mahabharatha/verify.py`
+- Add `__all__` to `mahabharatha/config.py` and `mahabharatha/types.py`
 - Verify import-chain quality gate score improves
 
 ### 1.3 Non-Goals
@@ -43,7 +43,7 @@ Three potential circular imports were detected by the quality gate:
 ```python
 def store_artifact(self, ...):
     # Lazy import to avoid circular dependency with verification_gates
-    from zerg.verification_gates import ArtifactStore
+    from mahabharatha.verification_gates import ArtifactStore
 ```
 
 **2. Add `__all__` to config.py**
@@ -68,7 +68,7 @@ def store_artifact(
 ) -> Path:
     """Store verification result as artifact."""
     # Lazy import to avoid circular dependency with verification_gates
-    from zerg.verification_gates import ArtifactStore
+    from mahabharatha.verification_gates import ArtifactStore
 
     store = ArtifactStore(base_dir=artifact_dir)
     return store.store("verification", result.task_id, result)
@@ -190,9 +190,9 @@ __all__ = [
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| zerg/verify.py | TASK-001 | modify |
-| zerg/config.py | TASK-002 | modify |
-| zerg/types.py | TASK-003 | modify |
+| mahabharatha/verify.py | TASK-001 | modify |
+| mahabharatha/config.py | TASK-002 | modify |
+| mahabharatha/types.py | TASK-003 | modify |
 | — | TASK-004 | verify |
 
 ### 5.3 Dependency Graph
@@ -220,10 +220,10 @@ Level 1 (Foundation):
 ### 7.1 Verification Commands
 
 Each task has a verification command:
-- TASK-001: `python -c "from zerg.verify import VerificationExecutor"`
-- TASK-002: `python -c "from zerg.config import ZergConfig"`
-- TASK-003: `python -c "from zerg.types import Task"`
-- TASK-004: `pytest tests/ -x && python -m zerg.validate_commands`
+- TASK-001: `python -c "from mahabharatha.verify import VerificationExecutor"`
+- TASK-002: `python -c "from mahabharatha.config import ZergConfig"`
+- TASK-003: `python -c "from mahabharatha.types import Task"`
+- TASK-004: `pytest tests/ -x && python -m mahabharatha.validate_commands`
 
 ---
 

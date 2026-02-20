@@ -1,4 +1,4 @@
-"""Verification script for ZERG Sentient Expansion."""
+"""Verification script for MAHABHARATHA Sentient Expansion."""
 
 import sys
 from pathlib import Path
@@ -6,10 +6,10 @@ from pathlib import Path
 # Add repo to path
 sys.path.append(str(Path.cwd()))
 
-from zerg.charter import TeamCharter, write_team_charter_md
-from zerg.heartbeat import Heartbeat
-from zerg.knowledge import KnowledgeService
-from zerg.persona import get_theme
+from mahabharatha.charter import TeamCharter, write_team_charter_md
+from mahabharatha.heartbeat import Heartbeat
+from mahabharatha.knowledge import KnowledgeService
+from mahabharatha.persona import get_theme
 
 
 def verify():
@@ -22,7 +22,7 @@ def verify():
     print("\n--- Verifying Knowledge Service ---")
     ks = KnowledgeService(".")
     ks.sync()
-    print("Knowledge synced (Check .zerg/state/knowledge/structural_graph.json)")
+    print("Knowledge synced (Check .mahabharatha/state/knowledge/structural_graph.json)")
     ks.add_decision("Sentient Expansion", "Integrated Pandava Theme", "User requested character-driven orchestration")
     print("Decision stored.")
 

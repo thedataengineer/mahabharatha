@@ -1,4 +1,4 @@
-"""Integration tests for ZERG plan→design workflow."""
+"""Integration tests for MAHABHARATHA plan→design workflow."""
 
 import json
 from pathlib import Path

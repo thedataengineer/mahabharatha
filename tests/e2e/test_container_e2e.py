@@ -1,4 +1,4 @@
-"""End-to-end tests for ZERG container mode (TC-016).
+"""End-to-end tests for MAHABHARATHA container mode (TC-016).
 
 Tests the complete workflow of container-based worker execution.
 """

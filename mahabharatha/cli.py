@@ -1,4 +1,4 @@
-"""ZERG command-line interface."""
+"""MAHABHARATHA command-line interface."""
 
 import click
 from rich.console import Console
@@ -15,13 +15,13 @@ from mahabharatha.commands import (
     health,
     init,
     install_commands,
+    kurukshetra,
     logs,
     merge_cmd,
     plan,
     refactor,
     retry,
     review,
-    rush,
     security_rules_group,
     status,
     stop,
@@ -64,7 +64,7 @@ def cli(
     no_loop: bool,
     iterations: int | None,
 ) -> None:
-    """ZERG - Parallel Claude Code execution system.
+    """MAHABHARATHA - Parallel Claude Code execution system.
 
     Overwhelm features with coordinated worker instances.
     """
@@ -107,7 +107,7 @@ cli.add_command(plan)
 cli.add_command(refactor)
 cli.add_command(retry)
 cli.add_command(review)
-cli.add_command(rush)
+cli.add_command(kurukshetra)
 cli.add_command(security_rules_group)
 cli.add_command(status)
 cli.add_command(stop)

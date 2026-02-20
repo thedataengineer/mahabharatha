@@ -1,4 +1,4 @@
-"""Tests for ZERG CircuitBreaker module."""
+"""Tests for MAHABHARATHA CircuitBreaker module."""
 
 import time
 

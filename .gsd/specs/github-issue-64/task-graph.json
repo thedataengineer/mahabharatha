@@ -16,11 +16,11 @@
       "dependencies": ["TASK-002", "TASK-003"],
       "files": {
         "create": [],
-        "modify": ["zerg/validate_commands.py"],
-        "read": ["zerg/data/commands/_template.md", "zerg/command_splitter.py"]
+        "modify": ["mahabharatha/validate_commands.py"],
+        "read": ["mahabharatha/data/commands/_template.md", "mahabharatha/command_splitter.py"]
       },
       "verification": {
-        "command": "python -c \"from zerg.validate_commands import ScaffoldGenerator; print('OK')\"",
+        "command": "python -c \"from mahabharatha.validate_commands import ScaffoldGenerator; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 25,
@@ -38,11 +38,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/validate_commands.py"],
+        "modify": ["mahabharatha/validate_commands.py"],
         "read": []
       },
       "verification": {
-        "command": "python -c \"from zerg.validate_commands import validate_required_sections; print('OK')\"",
+        "command": "python -c \"from mahabharatha.validate_commands import validate_required_sections; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
@@ -60,11 +60,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/validate_commands.py"],
+        "modify": ["mahabharatha/validate_commands.py"],
         "read": []
       },
       "verification": {
-        "command": "python -c \"from zerg.validate_commands import validate_task_patterns; print('OK')\"",
+        "command": "python -c \"from mahabharatha.validate_commands import validate_task_patterns; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
@@ -82,11 +82,11 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/validate_commands.py"],
+        "modify": ["mahabharatha/validate_commands.py"],
         "read": ["docs/commands.md"]
       },
       "verification": {
-        "command": "python -c \"from zerg.validate_commands import DocGenerator; print('OK')\"",
+        "command": "python -c \"from mahabharatha.validate_commands import DocGenerator; print('OK')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
@@ -97,18 +97,18 @@
     },
     {
       "id": "TASK-005",
-      "title": "Create /zerg:create-command slash command",
-      "description": "Create zerg/data/commands/create-command.md implementing the scaffold command. Supports quick mode (default) and --interactive wizard. Uses ScaffoldGenerator, SectionValidator, TaskPatternChecker, and DocGenerator.",
+      "title": "Create /mahabharatha:create-command slash command",
+      "description": "Create mahabharatha/data/commands/create-command.md implementing the scaffold command. Supports quick mode (default) and --interactive wizard. Uses ScaffoldGenerator, SectionValidator, TaskPatternChecker, and DocGenerator.",
       "phase": "integration",
       "level": 3,
       "dependencies": ["TASK-001", "TASK-004"],
       "files": {
-        "create": ["zerg/data/commands/create-command.md"],
+        "create": ["mahabharatha/data/commands/create-command.md"],
         "modify": [],
-        "read": ["zerg/data/commands/_template.md"]
+        "read": ["mahabharatha/data/commands/_template.md"]
       },
       "verification": {
-        "command": "python -m zerg.validate_commands --commands-dir zerg/data/commands",
+        "command": "python -m mahabharatha.validate_commands --commands-dir mahabharatha/data/commands",
         "timeout_seconds": 60
       },
       "estimate_minutes": 30,
@@ -127,7 +127,7 @@
       "files": {
         "create": ["tests/pressure/test_create_command.py"],
         "modify": [],
-        "read": ["zerg/data/commands/create-command.md"]
+        "read": ["mahabharatha/data/commands/create-command.md"]
       },
       "verification": {
         "command": "python -m pytest tests/pressure/test_create_command.py -v --collect-only",
@@ -149,7 +149,7 @@
       "files": {
         "create": ["docs/commands/create-command.md"],
         "modify": ["docs/commands.md"],
-        "read": ["zerg/data/commands/create-command.md"]
+        "read": ["mahabharatha/data/commands/create-command.md"]
       },
       "verification": {
         "command": "test -f docs/commands/create-command.md && grep -q 'create-command' docs/commands.md",
@@ -171,7 +171,7 @@
       "files": {
         "create": ["tests/unit/test_scaffold_generator.py"],
         "modify": [],
-        "read": ["zerg/validate_commands.py"]
+        "read": ["mahabharatha/validate_commands.py"]
       },
       "verification": {
         "command": "python -m pytest tests/unit/test_scaffold_generator.py -v",
@@ -193,7 +193,7 @@
       "files": {
         "create": ["tests/integration/test_authoring_flow.py"],
         "modify": [],
-        "read": ["zerg/validate_commands.py", "zerg/data/commands/create-command.md"]
+        "read": ["mahabharatha/validate_commands.py", "mahabharatha/data/commands/create-command.md"]
       },
       "verification": {
         "command": "python -m pytest tests/integration/test_authoring_flow.py -v",
@@ -203,7 +203,7 @@
       "skills_required": ["python", "pytest"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nIntegration tests for full authoring flow: scaffold → validate → generate docs. Generated command must pass python -m zerg.validate_commands.\n\n## Dependencies\nTASK-005 creates the command, TASK-001/004 provide the authoring functions"
+      "context": "## Spec Context\nIntegration tests for full authoring flow: scaffold → validate → generate docs. Generated command must pass python -m mahabharatha.validate_commands.\n\n## Dependencies\nTASK-005 creates the command, TASK-001/004 provide the authoring functions"
     }
   ],
 
@@ -242,7 +242,7 @@
     "conflicts": [
       {
         "tasks": ["TASK-001", "TASK-002", "TASK-003"],
-        "reason": "All modify zerg/validate_commands.py",
+        "reason": "All modify mahabharatha/validate_commands.py",
         "resolution": "TASK-002 and TASK-003 run first (L1), then TASK-001 (L2)"
       }
     ]

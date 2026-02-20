@@ -1,6 +1,6 @@
-"""Dry-run simulation for ZERG rush command.
+"""Dry-run simulation for MAHABHARATHA kurukshetra command.
 
-Validates everything a real rush would validate, shows timeline estimates,
+Validates everything a real kurukshetra would validate, shows timeline estimates,
 worker load balance, risk assessment, pre-flight checks, and optionally
 pre-runs quality gates.
 """
@@ -41,7 +41,7 @@ class LevelTimeline:
 
 @dataclass
 class TimelineEstimate:
-    """Overall timeline estimate for the rush."""
+    """Overall timeline estimate for the kurukshetra."""
 
     total_sequential_minutes: int
     estimated_wall_minutes: int
@@ -107,7 +107,7 @@ class DryRunReport:
 
 
 class DryRunSimulator:
-    """Simulate a full rush pipeline without executing tasks."""
+    """Simulate a full kurukshetra pipeline without executing tasks."""
 
     def __init__(
         self,

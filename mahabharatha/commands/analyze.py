@@ -1,4 +1,4 @@
-"""ZERG analyze command - static analysis and quality assessment."""
+"""MAHABHARATHA analyze command - static analysis and quality assessment."""
 
 import contextlib
 import json
@@ -938,7 +938,7 @@ def analyze(
         is_machine_output = output_format in ("json", "sarif")
 
         if not is_machine_output:
-            console.print("\n[bold cyan]ZERG Analyze[/bold cyan]\n")
+            console.print("\n[bold cyan]MAHABHARATHA Analyze[/bold cyan]\n")
 
         # Parse thresholds
         thresholds = _parse_thresholds(threshold)

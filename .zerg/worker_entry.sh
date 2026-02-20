@@ -1,5 +1,5 @@
 #!/bin/bash
-# ZERG Worker Entry - Invokes worker_main to execute assigned tasks
+# MAHABHARATHA Worker Entry - Invokes worker_main to execute assigned tasks
 set -e
 
 WORKER_ID=${ZERG_WORKER_ID:-0}
@@ -9,7 +9,7 @@ BRANCH=${ZERG_BRANCH}
 SPEC_DIR=${ZERG_SPEC_DIR}
 
 echo "========================================"
-echo "ZERG Worker $WORKER_ID starting..."
+echo "MAHABHARATHA Worker $WORKER_ID starting..."
 echo "Feature: $FEATURE"
 echo "Worktree: $WORKTREE"
 echo "Branch: $BRANCH"
@@ -43,16 +43,16 @@ if [ -n "$ZERG_GIT_WORKTREE_DIR" ] && [ -d "$ZERG_GIT_WORKTREE_DIR" ]; then
     echo "Git worktree configured: LOCAL_GIT_DIR=$LOCAL_GIT_DIR"
 
     # Configure git user identity for commits
-    git config user.email "zerg-worker@local"
-    git config user.name "ZERG Worker $WORKER_ID"
+    git config user.email "mahabharatha-worker@local"
+    git config user.name "MAHABHARATHA Worker $WORKER_ID"
 fi
 
 # Create healthcheck marker file (checked by Dockerfile HEALTHCHECK)
-touch /tmp/.zerg-alive
+touch /tmp/.mahabharatha-alive
 
 # Remove marker on exit to signal unhealthy state
 cleanup() {
-    rm -f /tmp/.zerg-alive
+    rm -f /tmp/.mahabharatha-alive
 }
 trap cleanup EXIT
 
@@ -64,9 +64,9 @@ if ! command -v python &>/dev/null && command -v python3 &>/dev/null; then
     { mkdir -p /tmp/bin && ln -sf "$(command -v python3)" /tmp/bin/python && export PATH="/tmp/bin:$PATH"; }
 fi
 
-# Install ZERG dependencies if not already installed
+# Install MAHABHARATHA dependencies if not already installed
 if ! python3 -c "import pydantic" 2>/dev/null || ! python3 -c "import pytest" 2>/dev/null; then
-    echo "Installing ZERG dependencies..."
+    echo "Installing MAHABHARATHA dependencies..."
     pip3 install -q --break-system-packages -e ".[dev]" 2>/dev/null || \
         pip3 install -q --break-system-packages pydantic click rich jsonschema pytest
 fi
@@ -76,10 +76,10 @@ USER_BIN="$(python3 -m site --user-base 2>/dev/null)/bin"
 [ -d "$USER_BIN" ] && export PATH="$USER_BIN:$PATH"
 export PATH="/usr/local/bin:$HOME/.local/bin:$PATH"
 
-# Run the ZERG worker main
+# Run the MAHABHARATHA worker main
 # Note: Do NOT use 'exec' here -- the container CMD has a fallback sleep
 # after this script to keep the container alive for debugging if worker exits.
-python3 -m zerg.worker_main \
+python3 -m mahabharatha.worker_main \
      --worker-id "$WORKER_ID" \
      --feature "$FEATURE" \
      --worktree "$WORKTREE" \

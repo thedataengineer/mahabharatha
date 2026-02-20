@@ -190,8 +190,8 @@ class TestTaskIdValidation:
 
     def test_valid_task_id_with_level(self) -> None:
         """Task IDs with level indicator should be valid."""
-        is_valid, error = validate_task_id("ZERG-L1-001")
-        assert is_valid, f"ZERG-L1-001 should be valid, got: {error}"
+        is_valid, error = validate_task_id("MAHABHARATHA-L1-001")
+        assert is_valid, f"MAHABHARATHA-L1-001 should be valid, got: {error}"
 
     def test_valid_task_id_alphanumeric(self) -> None:
         """Alphanumeric task IDs should be valid."""

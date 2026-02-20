@@ -1,4 +1,4 @@
-"""Persistent Knowledge Service for ZERG.
+"""Persistent Knowledge Service for MAHABHARATHA.
 
 Aggregates code-level structural data and high-level requirements/decisions.
 """

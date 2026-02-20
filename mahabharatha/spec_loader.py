@@ -1,4 +1,4 @@
-"""Spec loader utility for ZERG GSD integration.
+"""Spec loader utility for MAHABHARATHA GSD integration.
 
 Loads feature specifications (requirements.md, design.md) and formats them
 for injection into worker prompts.

@@ -1,5 +1,5 @@
 {
-  "feature": "zerg-website",
+  "feature": "mahabharatha-website",
   "version": "2.0",
   "generated": "2026-02-07T14:30:00Z",
   "total_tasks": 9,
@@ -32,46 +32,46 @@
     {
       "id": "TASK-002",
       "title": "Optimize logo and generate OG image",
-      "description": "Resize logo/zerg_logo.png (7.3MB) to max 400px width as docs/assets/img/zerg-logo-web.png (under 200KB). Generate docs/assets/img/og-image.png (1200x630) with dark background (#0f172a) and centered logo for Open Graph social sharing. Use macOS sips for resizing and Python PIL/Pillow for OG image generation. Create docs/assets/img/ directory structure.",
+      "description": "Resize logo/zerg_logo.png (7.3MB) to max 400px width as docs/assets/img/mahabharatha-logo-web.png (under 200KB). Generate docs/assets/img/og-image.png (1200x630) with dark background (#0f172a) and centered logo for Open Graph social sharing. Use macOS sips for resizing and Python PIL/Pillow for OG image generation. Create docs/assets/img/ directory structure.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
-        "create": ["docs/assets/img/zerg-logo-web.png", "docs/assets/img/og-image.png"],
+        "create": ["docs/assets/img/mahabharatha-logo-web.png", "docs/assets/img/og-image.png"],
         "modify": [],
         "read": ["logo/zerg_logo.png"]
       },
       "verification": {
-        "command": "test -f docs/assets/img/zerg-logo-web.png && test $(stat -f%z docs/assets/img/zerg-logo-web.png) -lt 204800 && test -f docs/assets/img/og-image.png && echo 'Logo optimized and OG image created'",
+        "command": "test -f docs/assets/img/mahabharatha-logo-web.png && test $(stat -f%z docs/assets/img/mahabharatha-logo-web.png) -lt 204800 && test -f docs/assets/img/og-image.png && echo 'Logo optimized and OG image created'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 10,
       "skills_required": ["image-processing"],
       "consumers": ["TASK-003"],
       "integration_test": null,
-      "context": "## Spec Context\nLogo Optimization: Source: logo/zerg_logo.png (7.6MB). Target: docs/assets/img/zerg-logo-web.png (under 200KB). Resize to max 400px width. Generate separate OG image (1200x630) for social sharing.\n\n## Tool Availability\nmacOS sips is available at /usr/bin/sips. Python3 with PIL/Pillow may be available. Fallback: use sips for resize, create simple OG with Python.\n\n## Dependencies\nNone — foundation task."
+      "context": "## Spec Context\nLogo Optimization: Source: logo/zerg_logo.png (7.6MB). Target: docs/assets/img/mahabharatha-logo-web.png (under 200KB). Resize to max 400px width. Generate separate OG image (1200x630) for social sharing.\n\n## Tool Availability\nmacOS sips is available at /usr/bin/sips. Python3 with PIL/Pillow may be available. Fallback: use sips for resize, create simple OG with Python.\n\n## Dependencies\nNone — foundation task."
     },
     {
       "id": "TASK-003",
       "title": "Build HTML landing page with all 9 sections",
-      "description": "Create docs/index.html — the complete single-page landing site. Includes: (1) SEO meta tags + Open Graph tags (canonical: zerg-ai.com), (2) Tailwind Play CDN pinned to v3.4.17 with darkMode class config, (3) custom.css link, (4) Sticky nav with logo, section links (Why, How, Commands, Quick Start, FAQ), dark/light toggle icon, prominent GitHub link (icon + text), mobile hamburger, (5) Hero with commanding Zerg-themed headline, gradient text, subheadline, pip install CTA with copy button, 4 glass pillar cards (Secure by Default, Run Anywhere, Massively Parallel, Token Smart), (6) Why ZERG with 4 pain-to-solution pairs, (7) How It Works pipeline (Plan to Design to Rush to Merge) horizontal on desktop/vertical on mobile, (8) Commands cheat sheet table with all 26 /zerg:* commands grouped by category, link to wiki, (9) Quick Start 4-step code block with copy button, (10) Stats section with 3 counter cards (26 commands, 3 exec modes, 30-50% token savings), (11) FAQ accordion with 6 Q&A pairs using details/summary, (12) Footer with GitHub, Wiki, Sponsor, License links and attribution. All sections use .fade-in class for scroll animations. Tailwind utility classes for layout. References custom.css for theming and main.js (deferred script) for interactivity.",
+      "description": "Create docs/index.html — the complete single-page landing site. Includes: (1) SEO meta tags + Open Graph tags (canonical: mahabharatha-ai.com), (2) Tailwind Play CDN pinned to v3.4.17 with darkMode class config, (3) custom.css link, (4) Sticky nav with logo, section links (Why, How, Commands, Quick Start, FAQ), dark/light toggle icon, prominent GitHub link (icon + text), mobile hamburger, (5) Hero with commanding Mahabharatha-themed headline, gradient text, subheadline, pip install CTA with copy button, 4 glass pillar cards (Secure by Default, Run Anywhere, Massively Parallel, Token Smart), (6) Why MAHABHARATHA with 4 pain-to-solution pairs, (7) How It Works pipeline (Plan to Design to Kurukshetra to Merge) horizontal on desktop/vertical on mobile, (8) Commands cheat sheet table with all 26 /mahabharatha:* commands grouped by category, link to wiki, (9) Quick Start 4-step code block with copy button, (10) Stats section with 3 counter cards (26 commands, 3 exec modes, 30-50% token savings), (11) FAQ accordion with 6 Q&A pairs using details/summary, (12) Footer with GitHub, Wiki, Sponsor, License links and attribution. All sections use .fade-in class for scroll animations. Tailwind utility classes for layout. References custom.css for theming and main.js (deferred script) for interactivity.",
       "phase": "core",
       "level": 2,
       "dependencies": ["TASK-001", "TASK-002"],
       "files": {
         "create": ["docs/index.html"],
         "modify": [],
-        "read": ["docs/assets/css/custom.css", "docs/assets/img/zerg-logo-web.png", "docs/commands-quick.md"]
+        "read": ["docs/assets/css/custom.css", "docs/assets/img/mahabharatha-logo-web.png", "docs/commands-quick.md"]
       },
       "verification": {
-        "command": "python3 -c \"from html.parser import HTMLParser; HTMLParser().feed(open('docs/index.html').read()); print('Valid HTML')\" && test $(grep -c '/zerg:' docs/index.html) -ge 26 && echo 'All 26 commands present'",
+        "command": "python3 -c \"from html.parser import HTMLParser; HTMLParser().feed(open('docs/index.html').read()); print('Valid HTML')\" && test $(grep -c '/mahabharatha:' docs/index.html) -ge 26 && echo 'All 26 commands present'",
         "timeout_seconds": 60
       },
       "estimate_minutes": 40,
       "skills_required": ["html", "tailwind", "design"],
       "consumers": ["TASK-004", "TASK-005", "TASK-007", "TASK-008"],
       "integration_test": null,
-      "context": "## Spec Context\nSections: (1) Sticky nav bar — fixed top, semi-transparent + backdrop blur, logo + wordmark left, section anchors center, dark/light toggle + GitHub link right, hamburger on mobile. (2) Hero — playful Zerg-themed headline, gradient text, subheadline explaining ZERG, pip install CTA with copy button, 4 glass pillar cards. (3) Why ZERG — 4 bullet pairs pain-to-solution. (4) How It Works — Plan-Design-Rush-Merge pipeline, horizontal desktop, vertical mobile. (5) Commands — all 26 commands in table, grouped by category. (6) Quick Start — 4-step code block. (7) Stats — animated counters. (8) FAQ — details/summary accordion. (9) Footer.\n\nVisual: Dark navy #0f172a, purple #7c3aed, green #22c55e accents. Glassmorphism cards. Gradient headline text. System font stack, monospace for code.\n\nThe 26 commands: brainstorm, design, init, plan, rush, cleanup, logs, merge, retry, status, stop, analyze, build, refactor, review, security, test, create-command, debug, git, plugins, worker, document, estimate, explain, index, select-tool.\n\nCanonical URL: https://zerg-ai.com (future domain). OG URL should use this.\n\n## Implementation Notes (from issue validation)\n- HERO HEADLINE: Issue #206 suggests: 'The only Claude Code orchestrator that auto-secures, containerizes, and parallelizes your entire feature.' Use this or a close variant incorporating the swarm metaphor.\n- LICENSE: Footer must say 'Apache 2.0' (NOT MIT). The repo license is Apache 2.0.\n- LAZY LOADING: Add loading='lazy' to all images below the fold (logo in nav can be eager, everything else lazy). Required for <2s load target per #209.\n\n## Dependencies\nTASK-001 creates custom.css with .glass-card, .fade-in, theme variables.\nTASK-002 creates optimized logo at docs/assets/img/zerg-logo-web.png and OG image."
+      "context": "## Spec Context\nSections: (1) Sticky nav bar — fixed top, semi-transparent + backdrop blur, logo + wordmark left, section anchors center, dark/light toggle + GitHub link right, hamburger on mobile. (2) Hero — playful Mahabharatha-themed headline, gradient text, subheadline explaining MAHABHARATHA, pip install CTA with copy button, 4 glass pillar cards. (3) Why MAHABHARATHA — 4 bullet pairs pain-to-solution. (4) How It Works — Plan-Design-Kurukshetra-Merge pipeline, horizontal desktop, vertical mobile. (5) Commands — all 26 commands in table, grouped by category. (6) Quick Start — 4-step code block. (7) Stats — animated counters. (8) FAQ — details/summary accordion. (9) Footer.\n\nVisual: Dark navy #0f172a, purple #7c3aed, green #22c55e accents. Glassmorphism cards. Gradient headline text. System font stack, monospace for code.\n\nThe 26 commands: brainstorm, design, init, plan, kurukshetra, cleanup, logs, merge, retry, status, stop, analyze, build, refactor, review, security, test, create-command, debug, git, plugins, worker, document, estimate, explain, index, select-tool.\n\nCanonical URL: https://mahabharatha-ai.com (future domain). OG URL should use this.\n\n## Implementation Notes (from issue validation)\n- HERO HEADLINE: Issue #206 suggests: 'The only Claude Code orchestrator that auto-secures, containerizes, and parallelizes your entire feature.' Use this or a close variant incorporating the akshauhini metaphor.\n- LICENSE: Footer must say 'Apache 2.0' (NOT MIT). The repo license is Apache 2.0.\n- LAZY LOADING: Add loading='lazy' to all images below the fold (logo in nav can be eager, everything else lazy). Required for <2s load target per #209.\n\n## Dependencies\nTASK-001 creates custom.css with .glass-card, .fade-in, theme variables.\nTASK-002 creates optimized logo at docs/assets/img/mahabharatha-logo-web.png and OG image."
     },
     {
       "id": "TASK-004",
@@ -165,7 +165,7 @@
     {
       "id": "TASK-008",
       "title": "Polish SEO, Open Graph tags, and final content",
-      "description": "Final polish pass on index.html: (1) Verify/fix all Open Graph meta tags (og:title, og:description, og:image, og:url with zerg-ai.com canonical), (2) Add Twitter Card meta tags (twitter:card, twitter:title, twitter:description, twitter:image), (3) Verify canonical URL set to https://zerg-ai.com, (4) Add structured data (JSON-LD for SoftwareApplication), (5) Verify favicon reference, (6) Add cache-busting query params to CSS/JS links (?v=1.0), (7) Final copy review on hero headline and subheadline, (8) Verify all external links open in new tab with rel='noopener noreferrer'.",
+      "description": "Final polish pass on index.html: (1) Verify/fix all Open Graph meta tags (og:title, og:description, og:image, og:url with mahabharatha-ai.com canonical), (2) Add Twitter Card meta tags (twitter:card, twitter:title, twitter:description, twitter:image), (3) Verify canonical URL set to https://mahabharatha-ai.com, (4) Add structured data (JSON-LD for SoftwareApplication), (5) Verify favicon reference, (6) Add cache-busting query params to CSS/JS links (?v=1.0), (7) Final copy review on hero headline and subheadline, (8) Verify all external links open in new tab with rel='noopener noreferrer'.",
       "phase": "quality",
       "level": 5,
       "dependencies": ["TASK-006"],
@@ -182,7 +182,7 @@
       "skills_required": ["seo", "html"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nSEO meta tags + Open Graph. Canonical URL: zerg-ai.com (planned custom domain). OG image: docs/assets/img/og-image.png (1200x630). Site title: ZERG — Parallel Claude Code Execution. Description: Overwhelm features with coordinated AI workers.\n\n## Security\n- All external links must have rel='noopener noreferrer'\n- No sensitive data in meta tags\n- Canonical URL uses HTTPS\n\n## Dependencies\nTASK-006 produces validation report with specific SEO issues to fix."
+      "context": "## Spec Context\nSEO meta tags + Open Graph. Canonical URL: mahabharatha-ai.com (planned custom domain). OG image: docs/assets/img/og-image.png (1200x630). Site title: MAHABHARATHA — Parallel Claude Code Execution. Description: Overwhelm features with coordinated AI workers.\n\n## Security\n- All external links must have rel='noopener noreferrer'\n- No sensitive data in meta tags\n- Canonical URL uses HTTPS\n\n## Dependencies\nTASK-006 produces validation report with specific SEO issues to fix."
     },
     {
       "id": "TASK-009",

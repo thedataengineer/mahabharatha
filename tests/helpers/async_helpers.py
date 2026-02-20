@@ -1,13 +1,13 @@
-"""Async testing utilities for ZERG.
+"""Async testing utilities for MAHABHARATHA.
 
-This module provides utilities for testing async code in ZERG, including:
+This module provides utilities for testing async code in MAHABHARATHA, including:
 - AsyncMockContextManager: Mock async context managers
 - async_subprocess_mock: Simulate async subprocess execution
 - timeout_helper: Configurable timeout wrapper for async operations
 - event_loop_fixture: pytest fixture for event loop management
 - async_file_mock: Simulate async file operations
 
-Async Testing Best Practices for ZERG:
+Async Testing Best Practices for MAHABHARATHA:
 --------------------------------------
 1. Use `pytest.mark.asyncio` for async tests (auto mode enabled in pyproject.toml)
 2. Prefer real async operations over threading when possible
@@ -241,7 +241,7 @@ class AsyncSubprocessMock:
     """Mock for async subprocess operations.
 
     Simulates asyncio.subprocess.Process for testing subprocess spawning
-    and management in ZERG launcher and orchestrator.
+    and management in MAHABHARATHA launcher and orchestrator.
 
     Attributes:
         stdout: Simulated stdout content
@@ -900,7 +900,7 @@ class ConcurrentTestResult:
 class ConcurrentTestRunner:
     """Runner for concurrent async test operations.
 
-    Provides utilities for testing concurrent behavior in ZERG orchestrator
+    Provides utilities for testing concurrent behavior in MAHABHARATHA orchestrator
     and launcher components.
 
     Example:
@@ -1097,14 +1097,14 @@ async def wait_for_condition(
 
 
 # =============================================================================
-# Mock Factory for ZERG-specific patterns
+# Mock Factory for MAHABHARATHA-specific patterns
 # =============================================================================
 
 
 class ZergAsyncMockFactory:
-    """Factory for creating ZERG-specific async mocks.
+    """Factory for creating MAHABHARATHA-specific async mocks.
 
-    Provides pre-configured mocks for common ZERG patterns like
+    Provides pre-configured mocks for common MAHABHARATHA patterns like
     worker spawning, task execution, and orchestration.
 
     Example:
@@ -1223,6 +1223,6 @@ __all__ = [
     "ConcurrentTestRunner",
     "run_with_delay",
     "wait_for_condition",
-    # ZERG-specific
+    # MAHABHARATHA-specific
     "ZergAsyncMockFactory",
 ]

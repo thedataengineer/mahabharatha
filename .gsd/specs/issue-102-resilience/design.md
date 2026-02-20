@@ -12,7 +12,7 @@
 
 ### 1.1 Summary
 
-Build comprehensive resilience into ZERG's container mode execution. Add spawn retry with exponential backoff, task timeout watchdog, enhanced heartbeat monitoring, state reconciliation, worker crash recovery with automatic task reassignment, auto-respawn of failed workers, container mount fixes for task-graph.json, and structured resilience logging.
+Build comprehensive resilience into MAHABHARATHA's container mode execution. Add spawn retry with exponential backoff, task timeout watchdog, enhanced heartbeat monitoring, state reconciliation, worker crash recovery with automatic task reassignment, auto-respawn of failed workers, container mount fixes for task-graph.json, and structured resilience logging.
 
 ### 1.2 Goals
 - Auto-recover from transient Docker/spawn failures without manual intervention
@@ -63,7 +63,7 @@ Build comprehensive resilience into ZERG's container mode execution. Add spawn r
          └──────────────┴──────────────┴──────────────┘
                               │
                     ┌─────────▼─────────┐
-                    │ .zerg/monitor.log │
+                    │ .mahabharatha/monitor.log │
                     │ (resilience events)│
                     └───────────────────┘
 ```
@@ -72,16 +72,16 @@ Build comprehensive resilience into ZERG's container mode execution. Add spawn r
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| ResilienceConfig | New config fields for resilience tuning | `zerg/config.py` |
-| SpawnRetry | Retry logic with exponential backoff for launcher.spawn() | `zerg/launcher.py` |
-| StaleTaskWatchdog | Detect and fail tasks stuck in_progress | `zerg/task_retry_manager.py` |
-| EnhancedHeartbeat | Progress percentage and unified monitoring | `zerg/heartbeat.py` |
-| StateReconciler | Periodic + level-transition state reconciliation | `zerg/state_reconciler.py` |
-| LevelCompleteFix | Fix is_level_complete() to check actual states | `zerg/levels.py` |
-| WorkerCrashHandler | Task reassignment on worker exit | `zerg/orchestrator.py` |
-| WorkerRespawner | Auto-spawn replacement workers | `zerg/orchestrator.py` |
-| ContainerMountFix | Mount spec dir into containers | `zerg/launcher.py` |
-| MonitorLogWriter | Structured resilience event logging | `zerg/log_writer.py` |
+| ResilienceConfig | New config fields for resilience tuning | `mahabharatha/config.py` |
+| SpawnRetry | Retry logic with exponential backoff for launcher.spawn() | `mahabharatha/launcher.py` |
+| StaleTaskWatchdog | Detect and fail tasks stuck in_progress | `mahabharatha/task_retry_manager.py` |
+| EnhancedHeartbeat | Progress percentage and unified monitoring | `mahabharatha/heartbeat.py` |
+| StateReconciler | Periodic + level-transition state reconciliation | `mahabharatha/state_reconciler.py` |
+| LevelCompleteFix | Fix is_level_complete() to check actual states | `mahabharatha/levels.py` |
+| WorkerCrashHandler | Task reassignment on worker exit | `mahabharatha/orchestrator.py` |
+| WorkerRespawner | Auto-spawn replacement workers | `mahabharatha/orchestrator.py` |
+| ContainerMountFix | Mount spec dir into containers | `mahabharatha/launcher.py` |
+| MonitorLogWriter | Structured resilience event logging | `mahabharatha/log_writer.py` |
 
 ### 2.3 Data Flow
 
@@ -98,7 +98,7 @@ Build comprehensive resilience into ZERG's container mode execution. Add spawn r
 ### 3.1 Configuration Schema
 
 ```python
-# zerg/config.py additions
+# mahabharatha/config.py additions
 
 class ResilienceConfig(BaseModel):
     """Resilience configuration."""
@@ -126,7 +126,7 @@ class WorkersConfig(BaseModel):  # Extended
 ### 3.2 Spawn Retry API
 
 ```python
-# zerg/launcher.py
+# mahabharatha/launcher.py
 
 def spawn_with_retry(
     self,
@@ -161,7 +161,7 @@ def spawn_with_retry(
 ### 3.3 Stale Task Detection API
 
 ```python
-# zerg/task_retry_manager.py
+# mahabharatha/task_retry_manager.py
 
 def check_stale_tasks(self, timeout_seconds: int = 600) -> list[str]:
     """Check for tasks stuck in in_progress beyond timeout.
@@ -177,7 +177,7 @@ def check_stale_tasks(self, timeout_seconds: int = 600) -> list[str]:
 ### 3.4 State Reconciler API
 
 ```python
-# zerg/state_reconciler.py
+# mahabharatha/state_reconciler.py
 
 class StateReconciler:
     """Detect and fix state inconsistencies."""
@@ -202,7 +202,7 @@ class StateReconciler:
 ### 3.5 Monitor Log Format
 
 ```python
-# Log entry format for .zerg/monitor.log
+# Log entry format for .mahabharatha/monitor.log
 {
     "ts": "2026-02-03T05:41:55.123Z",
     "level": "INFO",
@@ -261,7 +261,7 @@ class StateReconciler:
 
 **Options**:
 1. Existing worker JSONL files: Keeps all logs together
-2. New `.zerg/monitor.log`: Separate resilience events for easy filtering
+2. New `.mahabharatha/monitor.log`: Separate resilience events for easy filtering
 3. Both: Redundant but comprehensive
 
 **Decision**: Option 2 — New monitor.log file
@@ -288,17 +288,17 @@ class StateReconciler:
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/config.py` | RES-L1-001 | modify |
-| `zerg/constants.py` | RES-L1-002 | modify |
-| `zerg/launcher.py` | RES-L2-001 | modify |
-| `zerg/task_retry_manager.py` | RES-L2-002 | modify |
-| `zerg/heartbeat.py` | RES-L2-003 | modify |
-| `zerg/levels.py` | RES-L2-004 | modify |
-| `zerg/state_reconciler.py` | RES-L2-005 | create |
-| `zerg/log_writer.py` | RES-L3-001 | modify |
-| `zerg/orchestrator.py` | RES-L3-002 | modify |
-| `zerg/state_sync_service.py` | RES-L3-003 | modify |
-| `zerg/validate_commands.py` | RES-L3-004 | modify |
+| `mahabharatha/config.py` | RES-L1-001 | modify |
+| `mahabharatha/constants.py` | RES-L1-002 | modify |
+| `mahabharatha/launcher.py` | RES-L2-001 | modify |
+| `mahabharatha/task_retry_manager.py` | RES-L2-002 | modify |
+| `mahabharatha/heartbeat.py` | RES-L2-003 | modify |
+| `mahabharatha/levels.py` | RES-L2-004 | modify |
+| `mahabharatha/state_reconciler.py` | RES-L2-005 | create |
+| `mahabharatha/log_writer.py` | RES-L3-001 | modify |
+| `mahabharatha/orchestrator.py` | RES-L3-002 | modify |
+| `mahabharatha/state_sync_service.py` | RES-L3-003 | modify |
+| `mahabharatha/validate_commands.py` | RES-L3-004 | modify |
 | `tests/unit/test_resilience_config.py` | RES-L4-001 | create |
 | `tests/unit/test_state_reconciler.py` | RES-L4-002 | create |
 | `tests/integration/test_resilience_e2e.py` | RES-L4-003 | create |
@@ -391,12 +391,12 @@ graph TD
 ### 7.3 Verification Commands
 | Task | Verification |
 |------|--------------|
-| Config | `python -c "from zerg.config import ZergConfig; c=ZergConfig(); assert c.resilience.enabled"` |
+| Config | `python -c "from mahabharatha.config import ZergConfig; c=ZergConfig(); assert c.resilience.enabled"` |
 | Spawn retry | `pytest tests/unit/test_launcher.py -k spawn_with_retry -v` |
 | Stale tasks | `pytest tests/unit/test_task_retry_manager.py -k stale -v` |
 | StateReconciler | `pytest tests/unit/test_state_reconciler.py -v` |
 | Integration | `pytest tests/integration/test_resilience_e2e.py -v` |
-| Wiring | `python -m zerg.validate_commands --check-wiring` |
+| Wiring | `python -m mahabharatha.validate_commands --check-wiring` |
 
 ---
 

@@ -1,4 +1,4 @@
-"""Tests for ZERG security rules module."""
+"""Tests for MAHABHARATHA security rules module."""
 
 import json
 from pathlib import Path

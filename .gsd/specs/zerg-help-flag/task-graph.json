@@ -1,5 +1,5 @@
 {
-  "feature": "zerg-help-flag",
+  "feature": "mahabharatha-help-flag",
   "version": "2.0",
   "generated": "2026-01-31T23:45:00Z",
   "total_tasks": 7,
@@ -17,12 +17,12 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/zerg:analyze.md", "zerg/data/commands/zerg:build.md", "zerg/data/commands/zerg:cleanup.md", "zerg/data/commands/zerg:debug.core.md", "zerg/data/commands/zerg:design.core.md"],
+        "modify": ["mahabharatha/data/commands/mahabharatha:analyze.md", "mahabharatha/data/commands/mahabharatha:build.md", "mahabharatha/data/commands/mahabharatha:cleanup.md", "mahabharatha/data/commands/mahabharatha:debug.core.md", "mahabharatha/data/commands/mahabharatha:design.core.md"],
         "read": []
       },
       "acceptance_criteria": ["All 5 files contain --help flag", "All 5 files have help check in pre-flight"],
       "verification": {
-        "command": "for f in zerg/data/commands/zerg:analyze.md zerg/data/commands/zerg:build.md zerg/data/commands/zerg:cleanup.md zerg/data/commands/zerg:debug.core.md zerg/data/commands/zerg:design.core.md; do grep -q '\\-\\-help' \"$f\" || echo \"MISSING: $f\"; done",
+        "command": "for f in mahabharatha/data/commands/mahabharatha:analyze.md mahabharatha/data/commands/mahabharatha:build.md mahabharatha/data/commands/mahabharatha:cleanup.md mahabharatha/data/commands/mahabharatha:debug.core.md mahabharatha/data/commands/mahabharatha:design.core.md; do grep -q '\\-\\-help' \"$f\" || echo \"MISSING: $f\"; done",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5,
@@ -37,12 +37,12 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/zerg:document.md", "zerg/data/commands/zerg:estimate.core.md", "zerg/data/commands/zerg:explain.core.md", "zerg/data/commands/zerg:git.md", "zerg/data/commands/zerg:index.md"],
+        "modify": ["mahabharatha/data/commands/mahabharatha:document.md", "mahabharatha/data/commands/mahabharatha:estimate.core.md", "mahabharatha/data/commands/mahabharatha:explain.core.md", "mahabharatha/data/commands/mahabharatha:git.md", "mahabharatha/data/commands/mahabharatha:index.md"],
         "read": []
       },
       "acceptance_criteria": ["All 5 files contain --help flag", "All 5 files have help check in pre-flight"],
       "verification": {
-        "command": "for f in zerg/data/commands/zerg:document.md zerg/data/commands/zerg:estimate.core.md zerg/data/commands/zerg:explain.core.md zerg/data/commands/zerg:git.md zerg/data/commands/zerg:index.md; do grep -q '\\-\\-help' \"$f\" || echo \"MISSING: $f\"; done",
+        "command": "for f in mahabharatha/data/commands/mahabharatha:document.md mahabharatha/data/commands/mahabharatha:estimate.core.md mahabharatha/data/commands/mahabharatha:explain.core.md mahabharatha/data/commands/mahabharatha:git.md mahabharatha/data/commands/mahabharatha:index.md; do grep -q '\\-\\-help' \"$f\" || echo \"MISSING: $f\"; done",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5,
@@ -57,12 +57,12 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/zerg:init.core.md", "zerg/data/commands/zerg:logs.md", "zerg/data/commands/zerg:merge.core.md", "zerg/data/commands/zerg:plan.core.md", "zerg/data/commands/zerg:plugins.core.md"],
+        "modify": ["mahabharatha/data/commands/mahabharatha:init.core.md", "mahabharatha/data/commands/mahabharatha:logs.md", "mahabharatha/data/commands/mahabharatha:merge.core.md", "mahabharatha/data/commands/mahabharatha:plan.core.md", "mahabharatha/data/commands/mahabharatha:plugins.core.md"],
         "read": []
       },
       "acceptance_criteria": ["All 5 files contain --help flag", "All 5 files have help check in pre-flight"],
       "verification": {
-        "command": "for f in zerg/data/commands/zerg:init.core.md zerg/data/commands/zerg:logs.md zerg/data/commands/zerg:merge.core.md zerg/data/commands/zerg:plan.core.md zerg/data/commands/zerg:plugins.core.md; do grep -q '\\-\\-help' \"$f\" || echo \"MISSING: $f\"; done",
+        "command": "for f in mahabharatha/data/commands/mahabharatha:init.core.md mahabharatha/data/commands/mahabharatha:logs.md mahabharatha/data/commands/mahabharatha:merge.core.md mahabharatha/data/commands/mahabharatha:plan.core.md mahabharatha/data/commands/mahabharatha:plugins.core.md; do grep -q '\\-\\-help' \"$f\" || echo \"MISSING: $f\"; done",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5,
@@ -70,19 +70,19 @@
     },
     {
       "id": "HELP-L1-004",
-      "title": "Add --help to batch 4: refactor, retry, review, rush, security",
-      "description": "Add --help flag documentation and pre-flight help check to 5 commands. For split commands (rush), modify .core.md. For standalone (refactor, retry, review, security), modify .md.",
+      "title": "Add --help to batch 4: refactor, retry, review, kurukshetra, security",
+      "description": "Add --help flag documentation and pre-flight help check to 5 commands. For split commands (kurukshetra), modify .core.md. For standalone (refactor, retry, review, security), modify .md.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/zerg:refactor.md", "zerg/data/commands/zerg:retry.md", "zerg/data/commands/zerg:review.md", "zerg/data/commands/zerg:rush.core.md", "zerg/data/commands/zerg:security.md"],
+        "modify": ["mahabharatha/data/commands/mahabharatha:refactor.md", "mahabharatha/data/commands/mahabharatha:retry.md", "mahabharatha/data/commands/mahabharatha:review.md", "mahabharatha/data/commands/mahabharatha:kurukshetra.core.md", "mahabharatha/data/commands/mahabharatha:security.md"],
         "read": []
       },
       "acceptance_criteria": ["All 5 files contain --help flag", "All 5 files have help check in pre-flight"],
       "verification": {
-        "command": "for f in zerg/data/commands/zerg:refactor.md zerg/data/commands/zerg:retry.md zerg/data/commands/zerg:review.md zerg/data/commands/zerg:rush.core.md zerg/data/commands/zerg:security.md; do grep -q '\\-\\-help' \"$f\" || echo \"MISSING: $f\"; done",
+        "command": "for f in mahabharatha/data/commands/mahabharatha:refactor.md mahabharatha/data/commands/mahabharatha:retry.md mahabharatha/data/commands/mahabharatha:review.md mahabharatha/data/commands/mahabharatha:kurukshetra.core.md mahabharatha/data/commands/mahabharatha:security.md; do grep -q '\\-\\-help' \"$f\" || echo \"MISSING: $f\"; done",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5,
@@ -97,12 +97,12 @@
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/zerg:select-tool.core.md", "zerg/data/commands/zerg:status.core.md", "zerg/data/commands/zerg:stop.md", "zerg/data/commands/zerg:test.md", "zerg/data/commands/zerg:worker.core.md"],
+        "modify": ["mahabharatha/data/commands/mahabharatha:select-tool.core.md", "mahabharatha/data/commands/mahabharatha:status.core.md", "mahabharatha/data/commands/mahabharatha:stop.md", "mahabharatha/data/commands/mahabharatha:test.md", "mahabharatha/data/commands/mahabharatha:worker.core.md"],
         "read": []
       },
       "acceptance_criteria": ["All 5 files contain --help flag", "All 5 files have help check in pre-flight"],
       "verification": {
-        "command": "for f in zerg/data/commands/zerg:select-tool.core.md zerg/data/commands/zerg:status.core.md zerg/data/commands/zerg:stop.md zerg/data/commands/zerg:test.md zerg/data/commands/zerg:worker.core.md; do grep -q '\\-\\-help' \"$f\" || echo \"MISSING: $f\"; done",
+        "command": "for f in mahabharatha/data/commands/mahabharatha:select-tool.core.md mahabharatha/data/commands/mahabharatha:status.core.md mahabharatha/data/commands/mahabharatha:stop.md mahabharatha/data/commands/mahabharatha:test.md mahabharatha/data/commands/mahabharatha:worker.core.md; do grep -q '\\-\\-help' \"$f\" || echo \"MISSING: $f\"; done",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5,
@@ -111,18 +111,18 @@
     {
       "id": "HELP-L2-001",
       "title": "Regenerate parent files for split commands",
-      "description": "For all 12 split commands (debug, design, estimate, explain, init, merge, plan, plugins, rush, select-tool, status, worker), copy the updated .core.md content to the parent .md file, replacing the top split marker from 'core, parent:' to 'core=X details=Y'.",
+      "description": "For all 12 split commands (debug, design, estimate, explain, init, merge, plan, plugins, kurukshetra, select-tool, status, worker), copy the updated .core.md content to the parent .md file, replacing the top split marker from 'core, parent:' to 'core=X details=Y'.",
       "phase": "integration",
       "level": 2,
       "dependencies": ["HELP-L1-001", "HELP-L1-002", "HELP-L1-003", "HELP-L1-004", "HELP-L1-005"],
       "files": {
         "create": [],
-        "modify": ["zerg/data/commands/zerg:debug.md", "zerg/data/commands/zerg:design.md", "zerg/data/commands/zerg:estimate.md", "zerg/data/commands/zerg:explain.md", "zerg/data/commands/zerg:init.md", "zerg/data/commands/zerg:merge.md", "zerg/data/commands/zerg:plan.md", "zerg/data/commands/zerg:plugins.md", "zerg/data/commands/zerg:rush.md", "zerg/data/commands/zerg:select-tool.md", "zerg/data/commands/zerg:status.md", "zerg/data/commands/zerg:worker.md"],
-        "read": ["zerg/data/commands/zerg:debug.core.md", "zerg/data/commands/zerg:design.core.md", "zerg/data/commands/zerg:estimate.core.md", "zerg/data/commands/zerg:explain.core.md", "zerg/data/commands/zerg:init.core.md", "zerg/data/commands/zerg:merge.core.md", "zerg/data/commands/zerg:plan.core.md", "zerg/data/commands/zerg:plugins.core.md", "zerg/data/commands/zerg:rush.core.md", "zerg/data/commands/zerg:select-tool.core.md", "zerg/data/commands/zerg:status.core.md", "zerg/data/commands/zerg:worker.core.md"]
+        "modify": ["mahabharatha/data/commands/mahabharatha:debug.md", "mahabharatha/data/commands/mahabharatha:design.md", "mahabharatha/data/commands/mahabharatha:estimate.md", "mahabharatha/data/commands/mahabharatha:explain.md", "mahabharatha/data/commands/mahabharatha:init.md", "mahabharatha/data/commands/mahabharatha:merge.md", "mahabharatha/data/commands/mahabharatha:plan.md", "mahabharatha/data/commands/mahabharatha:plugins.md", "mahabharatha/data/commands/mahabharatha:kurukshetra.md", "mahabharatha/data/commands/mahabharatha:select-tool.md", "mahabharatha/data/commands/mahabharatha:status.md", "mahabharatha/data/commands/mahabharatha:worker.md"],
+        "read": ["mahabharatha/data/commands/mahabharatha:debug.core.md", "mahabharatha/data/commands/mahabharatha:design.core.md", "mahabharatha/data/commands/mahabharatha:estimate.core.md", "mahabharatha/data/commands/mahabharatha:explain.core.md", "mahabharatha/data/commands/mahabharatha:init.core.md", "mahabharatha/data/commands/mahabharatha:merge.core.md", "mahabharatha/data/commands/mahabharatha:plan.core.md", "mahabharatha/data/commands/mahabharatha:plugins.core.md", "mahabharatha/data/commands/mahabharatha:kurukshetra.core.md", "mahabharatha/data/commands/mahabharatha:select-tool.core.md", "mahabharatha/data/commands/mahabharatha:status.core.md", "mahabharatha/data/commands/mahabharatha:worker.core.md"]
       },
       "acceptance_criteria": ["All 12 parent files updated with --help content matching their core files"],
       "verification": {
-        "command": "for cmd in debug design estimate explain init merge plan plugins rush select-tool status worker; do grep -q '\\-\\-help' \"zerg/data/commands/zerg:${cmd}.md\" || echo \"MISSING: $cmd\"; done",
+        "command": "for cmd in debug design estimate explain init merge plan plugins kurukshetra select-tool status worker; do grep -q '\\-\\-help' \"mahabharatha/data/commands/mahabharatha:${cmd}.md\" || echo \"MISSING: $cmd\"; done",
         "timeout_seconds": 30
       },
       "estimate_minutes": 5,
@@ -142,7 +142,7 @@
       },
       "acceptance_criteria": ["All 25 command files contain --help", "No test regressions"],
       "verification": {
-        "command": "count=$(grep -rl '\\-\\-help' zerg/data/commands/zerg:*.md | grep -v '\\.core\\.\\.\\|\\.details\\.' | wc -l); echo \"$count/25 commands have --help\" && python -m pytest tests/ -x -q --ignore=tests/test_doc_engine.py 2>&1 | tail -5",
+        "command": "count=$(grep -rl '\\-\\-help' mahabharatha/data/commands/mahabharatha:*.md | grep -v '\\.core\\.\\.\\|\\.details\\.' | wc -l); echo \"$count/25 commands have --help\" && python -m pytest tests/ -x -q --ignore=tests/test_doc_engine.py 2>&1 | tail -5",
         "timeout_seconds": 600
       },
       "estimate_minutes": 5,

@@ -1,4 +1,4 @@
-"""Plugin configuration models for ZERG."""
+"""Plugin configuration models for MAHABHARATHA."""
 
 from pydantic import BaseModel, Field
 

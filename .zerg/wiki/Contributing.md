@@ -1,6 +1,6 @@
 # Contributing
 
-This guide covers how to contribute to the ZERG project: setting up your development environment, understanding the project structure, following coding standards, and submitting changes.
+This guide covers how to contribute to the MAHABHARATHA project: setting up your development environment, understanding the project structure, following coding standards, and submitting changes.
 
 ---
 
@@ -23,13 +23,13 @@ This guide covers how to contribute to the ZERG project: setting up your develop
 - Python 3.10 or later
 - Git
 - Docker (required for container mode development and testing)
-- Claude Code (for running ZERG commands during development)
+- Claude Code (for running MAHABHARATHA commands during development)
 
 ### Clone and Install
 
 ```bash
 git clone <repository-url>
-cd ZERG
+cd MAHABHARATHA
 python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
@@ -42,10 +42,10 @@ pip install -e ".[dev]"
 pytest
 
 # Run with coverage
-pytest --cov=zerg --cov-report=term-missing
+pytest --cov=mahabharatha --cov-report=term-missing
 
 # Check types (if configured)
-# mypy zerg/
+# mypy mahabharatha/
 ```
 
 ### Docker Setup (for container mode)
@@ -61,8 +61,8 @@ docker info   # Verify Docker is running
 ## Project Structure
 
 ```
-ZERG/
-├── zerg/                       # Main package
+MAHABHARATHA/
+├── mahabharatha/                       # Main package
 │   ├── __init__.py
 │   ├── __main__.py             # Entry point
 │   ├── cli.py                  # CLI argument parsing
@@ -85,15 +85,15 @@ ZERG/
 │   ├── exceptions.py           # Custom exceptions
 │   ├── data/
 │   │   └── commands/           # Slash command definitions (26 commands)
-│   │       ├── zerg:init.md
-│   │       ├── zerg:plan.md
-│   │       ├── zerg:design.md
-│   │       ├── zerg:rush.md
-│   │       ├── zerg:worker.md
-│   │       ├── zerg:merge.md
-│   │       ├── zerg:status.md
-│   │       ├── zerg:debug.md
-│   │       ├── zerg:test.md
+│   │       ├── mahabharatha:init.md
+│   │       ├── mahabharatha:plan.md
+│   │       ├── mahabharatha:design.md
+│   │       ├── mahabharatha:kurukshetra.md
+│   │       ├── mahabharatha:worker.md
+│   │       ├── mahabharatha:merge.md
+│   │       ├── mahabharatha:status.md
+│   │       ├── mahabharatha:debug.md
+│   │       ├── mahabharatha:test.md
 │   │       └── ...
 │   ├── diagnostics/            # Debug and diagnostic tools
 │   ├── doc_engine/             # Documentation generation
@@ -108,7 +108,7 @@ ZERG/
 │   ├── mocks/                  # Shared mock objects
 │   ├── conftest.py             # Root pytest configuration
 │   └── test_*.py               # Legacy/core tests
-├── .zerg/
+├── .mahabharatha/
 │   ├── config.yaml             # Runtime configuration
 │   ├── state/                  # Runtime state files
 │   ├── logs/                   # Worker and merge logs
@@ -124,13 +124,13 @@ ZERG/
 
 | Module | Responsibility |
 |--------|---------------|
-| `orchestrator.py` | Coordinates the full rush workflow: level iteration, worker dispatch, merge triggers |
+| `orchestrator.py` | Coordinates the full kurukshetra workflow: level iteration, worker dispatch, merge triggers |
 | `launcher.py` | Spawns workers as subprocesses or Docker containers. Handles authentication passthrough |
-| `state.py` | Manages task and worker state. Reads/writes `.zerg/state/` files |
+| `state.py` | Manages task and worker state. Reads/writes `.mahabharatha/state/` files |
 | `levels.py` | Controls level advancement. Determines when all tasks at a level are complete |
 | `merge.py` | Merges worker branches after each level. Runs quality gates |
 | `worktree.py` | Creates and cleans up git worktrees for each worker |
-| `config.py` | Loads and validates `.zerg/config.yaml` |
+| `config.py` | Loads and validates `.mahabharatha/config.yaml` |
 | `verify.py` | Runs task verification commands and reports results |
 | `context_plugin.py` | Context engineering: command splitting, task-scoped context, security rule filtering |
 
@@ -176,7 +176,7 @@ def get_task_status(task_id: str, feature: str) -> TaskStatus:
 
 ### Error Handling
 
-- Define custom exceptions in `zerg/exceptions.py`.
+- Define custom exceptions in `mahabharatha/exceptions.py`.
 - Raise specific exceptions, not generic `Exception`.
 - Log errors before re-raising when context would be lost.
 - Never expose stack traces or internal paths in user-facing output.
@@ -248,7 +248,7 @@ Types: `feat`, `fix`, `test`, `docs`, `refactor`, `chore`, `perf`.
 
 2. **Run tests with coverage** and verify no regressions:
    ```bash
-   pytest --cov=zerg --cov-report=term-missing
+   pytest --cov=mahabharatha --cov-report=term-missing
    ```
 
 3. **Check for lint issues** if a linter is configured.
@@ -311,7 +311,7 @@ pytest -n auto
 
 ## Command File Guidelines
 
-ZERG slash commands are defined as markdown files in `zerg/data/commands/`. These files have specific requirements that must be maintained.
+MAHABHARATHA slash commands are defined as markdown files in `mahabharatha/data/commands/`. These files have specific requirements that must be maintained.
 
 ### Task Ecosystem Integration
 
@@ -340,18 +340,18 @@ Five commands have deeper Task integration requirements beyond the minimum. Do n
 
 | Command | Additional Requirements |
 |---------|------------------------|
-| `zerg:worker.md` | TaskUpdate to claim tasks, TaskUpdate for failures/checkpoints, TaskList at completion |
-| `zerg:status.md` | TaskList as primary data source, cross-reference with state JSON, flag mismatches |
-| `zerg:merge.md` | TaskUpdate after quality gates per level, TaskList verification at finalize |
-| `zerg:stop.md` | TaskUpdate with PAUSED/FORCE STOPPED annotations |
-| `zerg:retry.md` | TaskGet to read state, TaskUpdate to reset to pending, TaskUpdate on reassignment |
+| `mahabharatha:worker.md` | TaskUpdate to claim tasks, TaskUpdate for failures/checkpoints, TaskList at completion |
+| `mahabharatha:status.md` | TaskList as primary data source, cross-reference with state JSON, flag mismatches |
+| `mahabharatha:merge.md` | TaskUpdate after quality gates per level, TaskList verification at finalize |
+| `mahabharatha:stop.md` | TaskUpdate with PAUSED/FORCE STOPPED annotations |
+| `mahabharatha:retry.md` | TaskGet to read state, TaskUpdate to reset to pending, TaskUpdate on reassignment |
 
 ### Command Splitting
 
 Large command files (over 300 lines) are split into two files:
 
-- `zerg:<command>.core.md` -- Essential instructions (~30% of content)
-- `zerg:<command>.details.md` -- Reference material (~70% of content)
+- `mahabharatha:<command>.core.md` -- Essential instructions (~30% of content)
+- `mahabharatha:<command>.details.md` -- Reference material (~70% of content)
 
 The original file retains core content for backward compatibility. If you are modifying a split command, update both the core and details files.
 
@@ -361,7 +361,7 @@ Before committing changes to any command file, run the drift detection checklist
 
 ```bash
 # All 26 command files must reference Task tools
-grep -rL "TaskCreate\|TaskUpdate\|TaskList\|TaskGet" zerg/data/commands/zerg:*.md
+grep -rL "TaskCreate\|TaskUpdate\|TaskList\|TaskGet" mahabharatha/data/commands/mahabharatha:*.md
 
 # Expected output: empty (no files missing Task references)
 ```
@@ -373,6 +373,6 @@ If any command file is missing Task references, add them before committing.
 ## See Also
 
 - [[Testing]] -- Detailed testing approach and guidelines
-- [[Debug Guide]] -- Debugging ZERG during development
+- [[Debug Guide]] -- Debugging MAHABHARATHA during development
 - [[Troubleshooting]] -- Common issues and solutions
 - [[Command Reference]] -- Full command documentation

@@ -2,9 +2,9 @@
 
 ## Core Constraint: Context Management
 
-Every ZERG feature must prioritize context management and minimize token utilization. This is not a suggestion — it is the primary design constraint that shapes all architectural decisions.
+Every MAHABHARATHA feature must prioritize context management and minimize token utilization. This is not a suggestion — it is the primary design constraint that shapes all architectural decisions.
 
-Workers (parallel Claude Code instances) have finite context windows. Every unnecessary token loaded into a worker reduces its capacity for actual work. ZERG's architecture exists to solve this problem.
+Workers (parallel Claude Code instances) have finite context windows. Every unnecessary token loaded into a worker reduces its capacity for actual work. MAHABHARATHA's architecture exists to solve this problem.
 
 ## Token Budget Guidelines
 
@@ -23,7 +23,7 @@ Workers read spec files (`requirements.md`, `design.md`, `task-graph.json`), not
 
 ### 2. Command Splitting
 
-Command files over 300 lines are split into `.core.md` and `.details.md`. Workers receive only the core file by default. The details file is loaded on-demand when reference material is needed. Currently 10 commands are split: brainstorm, init, design, rush, plugins, debug, plan, worker, merge, status.
+Command files over 300 lines are split into `.core.md` and `.details.md`. Workers receive only the core file by default. The details file is loaded on-demand when reference material is needed. Currently 10 commands are split: brainstorm, init, design, kurukshetra, plugins, debug, plan, worker, merge, status.
 
 ### 3. Task-Scoped Context
 
@@ -37,7 +37,7 @@ This replaces loading full spec files into every worker, saving 2,000-5,000 toke
 
 ### 4. Security Rule Filtering
 
-Instead of loading all security rules into every worker, ZERG filters by file extension:
+Instead of loading all security rules into every worker, MAHABHARATHA filters by file extension:
 
 - `.py` files get Python security rules
 - `.js`/`.ts` files get JavaScript rules
@@ -54,7 +54,7 @@ Tasks are grouped into levels by dependency. All tasks in Level N must complete 
 
 ## Anti-Patterns
 
-These patterns violate ZERG's design principles. Avoid them.
+These patterns violate MAHABHARATHA's design principles. Avoid them.
 
 | Anti-Pattern | Why It's Wrong | Do This Instead |
 |-------------|----------------|-----------------|

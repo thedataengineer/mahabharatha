@@ -1,14 +1,14 @@
 # Architecture: Execution Flow
 
-This page describes the complete lifecycle of a ZERG feature, from initial planning through parallel execution and final merge. Each phase produces artifacts that feed into the next.
+This page describes the complete lifecycle of a MAHABHARATHA feature, from initial planning through parallel execution and final merge. Each phase produces artifacts that feed into the next.
 
 ## Phase Overview
 
 ```mermaid
 graph LR
     PLAN["1. Plan"] --> DESIGN["2. Design"]
-    DESIGN --> RUSH["3. Rush"]
-    RUSH --> EXEC["4. Level Execution"]
+    DESIGN --> KURUKSHETRA["3. Kurukshetra"]
+    KURUKSHETRA --> EXEC["4. Level Execution"]
     EXEC --> MERGE["5. Merge"]
     MERGE --> |"Next level"| EXEC
     MERGE --> |"All levels done"| DONE["6. Complete"]
@@ -16,11 +16,11 @@ graph LR
 
 | Phase | Command | Input | Output |
 |-------|---------|-------|--------|
-| Plan | `zerg plan <feature>` | User description | `requirements.md` |
-| Design | `zerg design` | Requirements | `design.md`, `task-graph.json` |
-| Rush | `zerg rush` | Task graph | Worker assignments, worktrees |
+| Plan | `mahabharatha plan <feature>` | User description | `requirements.md` |
+| Design | `mahabharatha design` | Requirements | `design.md`, `task-graph.json` |
+| Kurukshetra | `mahabharatha kurukshetra` | Task graph | Worker assignments, worktrees |
 | Execute | (workers) | Assignments | Code changes, commits |
-| Merge | `zerg merge` / auto | Worker branches | Merged staging branch |
+| Merge | `mahabharatha merge` / auto | Worker branches | Merged staging branch |
 
 ## Sequence Diagram
 
@@ -35,13 +35,13 @@ sequenceDiagram
     participant StateManager
     participant GitOps
 
-    User->>CLI: zerg plan my-feature
+    User->>CLI: mahabharatha plan my-feature
     CLI->>CLI: Create .gsd/specs/my-feature/requirements.md
 
-    User->>CLI: zerg design
+    User->>CLI: mahabharatha design
     CLI->>CLI: Create design.md + task-graph.json
 
-    User->>CLI: zerg rush --workers=2
+    User->>CLI: mahabharatha kurukshetra --workers=2
     CLI->>Orchestrator: Initialize with task graph
     Orchestrator->>StateManager: Create feature state
     Orchestrator->>GitOps: Create base branch
@@ -122,23 +122,23 @@ The `design` command reads the requirements and produces an architecture documen
 }
 ```
 
-### 3. Rush (Launch)
+### 3. Kurukshetra (Launch)
 
-The `rush` command is the main entry point for parallel execution. It performs several steps in sequence:
+The `kurukshetra` command is the main entry point for parallel execution. It performs several steps in sequence:
 
 1. **Pre-flight checks** (`preflight.py`): Validates Docker availability, authentication, ports, disk space, and git worktree support.
 2. **Task graph parsing** (`parser.py`): Loads and validates the task graph. Checks file ownership uniqueness, dependency correctness, and structural integrity.
 3. **Worker assignment** (`assign.py`): Distributes tasks across workers. Balances load by estimated duration and respects level boundaries.
-4. **Worktree creation** (`worktree.py`): Creates isolated git worktrees, one per worker, each on a dedicated branch (`zerg/<feature>/worker-N`).
+4. **Worktree creation** (`worktree.py`): Creates isolated git worktrees, one per worker, each on a dedicated branch (`mahabharatha/<feature>/worker-N`).
 5. **Port allocation** (`ports.py`): Assigns available ports to workers to avoid conflicts.
-6. **State initialization** (`state.py`): Creates the feature state file in `.zerg/state/<feature>.json`.
+6. **State initialization** (`state.py`): Creates the feature state file in `.mahabharatha/state/<feature>.json`.
 7. **Task registration** (`task_sync.py`): Registers all tasks in the Claude Code Task system with `[L<level>] <title>` subject prefixes.
 8. **Worker spawning** (`launcher.py`): Launches workers via the configured backend (subprocess or container).
 9. **Orchestration loop** (`orchestrator.py`): Monitors workers, coordinates level transitions, triggers merges.
 
 ### 4. Level Execution (Workers)
 
-Each worker follows the protocol defined in `zerg:worker.core.md`:
+Each worker follows the protocol defined in `mahabharatha:worker.core.md`:
 
 1. **Load context**: Read requirements, design, task graph, and worker assignments.
 2. **Identify tasks**: Filter assigned tasks for the current level.
@@ -155,7 +155,7 @@ Workers monitor their context usage and checkpoint at 70% capacity, allowing the
 When all tasks at a level complete, the `LevelCoordinator` triggers the merge flow:
 
 1. **Collect branches**: Identify all worker branches with commits for this level.
-2. **Sequential merge**: Merge each worker branch into the staging branch (`zerg/<feature>/staging`).
+2. **Sequential merge**: Merge each worker branch into the staging branch (`mahabharatha/<feature>/staging`).
 3. **Conflict resolution**: If a merge conflict occurs (should not happen with correct file ownership), the merge is aborted and the level is marked as failed.
 4. **Quality gates**: Run configured quality gate commands (lint, typecheck, test) against the merged staging branch.
 5. **Distribute**: Workers pull the merged staging branch and rebase before starting the next level.

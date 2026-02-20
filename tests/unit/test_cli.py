@@ -1,4 +1,4 @@
-"""Unit tests for ZERG CLI module."""
+"""Unit tests for MAHABHARATHA CLI module."""
 
 import pytest
 from click.testing import CliRunner
@@ -16,7 +16,7 @@ class TestCliGroup:
         result = runner.invoke(cli, ["--help"])
 
         assert result.exit_code == 0
-        assert "ZERG" in result.output
+        assert "MAHABHARATHA" in result.output
         assert "Parallel Claude Code" in result.output
 
     @pytest.mark.smoke
@@ -64,7 +64,7 @@ class TestCommandRegistration:
             "refactor",
             "retry",
             "review",
-            "rush",
+            "kurukshetra",
             "security-rules",
             "status",
             "stop",

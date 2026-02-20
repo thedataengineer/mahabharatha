@@ -159,11 +159,11 @@ class TestTaskSyncBridge:
         assert created[0].active_form == "Executing Build API"
 
     def test_sync_state_updates_status(self, bridge: TaskSyncBridge, state_manager: StateManager) -> None:
-        """Test sync_state updates task statuses from ZERG state."""
+        """Test sync_state updates task statuses from MAHABHARATHA state."""
         # Create tasks
         bridge.create_level_tasks(0, [{"id": "L0-001", "title": "Task 1"}])
 
-        # Update ZERG state
+        # Update MAHABHARATHA state
         state_manager.load()
         state_manager.set_task_status("L0-001", TaskStatus.IN_PROGRESS, worker_id=2)
 
@@ -319,7 +319,7 @@ class TestTaskSyncBridge:
 
 
 class TestTaskSyncBridgeStatusMapping:
-    """Tests for status mapping between ZERG and Claude Tasks."""
+    """Tests for status mapping between MAHABHARATHA and Claude Tasks."""
 
     def test_status_map_pending(self) -> None:
         """Test pending status maps correctly."""

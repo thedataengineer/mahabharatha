@@ -1,6 +1,6 @@
 # Troubleshooting
 
-Common issues encountered when running ZERG, organized by symptom. Each entry follows a Problem / Cause / Solution format.
+Common issues encountered when running MAHABHARATHA, organized by symptom. Each entry follows a Problem / Cause / Solution format.
 
 For deeper investigation of complex failures, see [[Debug Guide]].
 
@@ -23,7 +23,7 @@ For deeper investigation of complex failures, see [[Debug Guide]].
 
 ### Workers launch but immediately exit
 
-**Problem:** `/zerg:rush` reports that workers were spawned, but they terminate within seconds. No task progress is recorded.
+**Problem:** `/mahabharatha:kurukshetra` reports that workers were spawned, but they terminate within seconds. No task progress is recorded.
 
 **Cause:** The worker cannot find the spec files or task graph it needs to execute. Workers are stateless and rely entirely on spec files for their instructions.
 
@@ -39,13 +39,13 @@ For deeper investigation of complex failures, see [[Debug Guide]].
    ```
 3. Check the worker logs for the specific error:
    ```bash
-   cat .zerg/logs/worker-*.stderr.log | tail -20
+   cat .mahabharatha/logs/worker-*.stderr.log | tail -20
    ```
-4. Re-run `/zerg:design` if the spec files are missing or corrupt.
+4. Re-run `/mahabharatha:design` if the spec files are missing or corrupt.
 
 ### Workers hang on "in_progress" without producing output
 
-**Problem:** `/zerg:status` shows workers as `in_progress`, but no files are being created or modified. The workers appear stalled.
+**Problem:** `/mahabharatha:status` shows workers as `in_progress`, but no files are being created or modified. The workers appear stalled.
 
 **Cause:** Workers may be waiting on a dependency that was not properly resolved, or Claude Code itself may have hit a context limit.
 
@@ -57,9 +57,9 @@ For deeper investigation of complex failures, see [[Debug Guide]].
    ```
 2. Review the worker logs for context-related errors:
    ```bash
-   cat .zerg/logs/worker-*.stderr.log
+   cat .mahabharatha/logs/worker-*.stderr.log
    ```
-3. Stop the stalled workers with `/zerg:stop` and retry with `/zerg:rush --resume`.
+3. Stop the stalled workers with `/mahabharatha:stop` and retry with `/mahabharatha:kurukshetra --resume`.
 
 ### Workers fail to claim tasks
 
@@ -70,8 +70,8 @@ For deeper investigation of complex failures, see [[Debug Guide]].
 **Solution:**
 
 1. Verify the task list ID matches across all workers. All workers for a feature must share the same `CLAUDE_CODE_TASK_LIST_ID`.
-2. Run `/zerg:status` to check for mismatches between the Task system and `.zerg/state/` files.
-3. If state is corrupted, stop all workers and re-launch with `/zerg:rush --resume`, which calls `TaskList` first to reconcile state.
+2. Run `/mahabharatha:status` to check for mismatches between the Task system and `.mahabharatha/state/` files.
+3. If state is corrupted, stop all workers and re-launch with `/mahabharatha:kurukshetra --resume`, which calls `TaskList` first to reconcile state.
 
 ---
 
@@ -79,7 +79,7 @@ For deeper investigation of complex failures, see [[Debug Guide]].
 
 ### Docker daemon not running
 
-**Problem:** `/zerg:rush --mode container` fails with "Cannot connect to the Docker daemon."
+**Problem:** `/mahabharatha:kurukshetra --mode container` fails with "Cannot connect to the Docker daemon."
 
 **Cause:** The Docker Desktop application or Docker daemon service is not running.
 
@@ -97,7 +97,7 @@ For deeper investigation of complex failures, see [[Debug Guide]].
    ```bash
    docker info
    ```
-3. Retry the rush command.
+3. Retry the kurukshetra command.
 
 ### Container authentication failure
 
@@ -124,7 +124,7 @@ For API key:
 
 ### Container image build fails
 
-**Problem:** ZERG cannot build the worker container image. Errors occur during the Docker build step.
+**Problem:** MAHABHARATHA cannot build the worker container image. Errors occur during the Docker build step.
 
 **Cause:** Network issues preventing package downloads, or missing Dockerfile context.
 
@@ -132,7 +132,7 @@ For API key:
 
 1. Try building the image manually to see full error output:
    ```bash
-   docker build -t zerg-worker .
+   docker build -t mahabharatha-worker .
    ```
 2. If packages fail to download, check your network and any proxy settings.
 3. Clear the Docker build cache and retry:
@@ -144,14 +144,14 @@ For API key:
 
 **Problem:** You specified `--mode container` but workers are running as subprocesses instead of Docker containers.
 
-**Cause:** ZERG may fall back to subprocess mode if Docker is unavailable. Container mode is a first-class execution path and should not be silently substituted.
+**Cause:** MAHABHARATHA may fall back to subprocess mode if Docker is unavailable. Container mode is a first-class execution path and should not be silently substituted.
 
 **Solution:**
 
 1. Verify Docker is running (see above).
-2. Check `.zerg/config.yaml` for the execution mode setting.
-3. Re-run with explicit container mode: `/zerg:rush --mode container --workers=5`.
-4. If the fallback persists, run `/zerg:debug --deep` to diagnose infrastructure issues.
+2. Check `.mahabharatha/config.yaml` for the execution mode setting.
+3. Re-run with explicit container mode: `/mahabharatha:kurukshetra --mode container --workers=5`.
+4. If the fallback persists, run `/mahabharatha:debug --deep` to diagnose infrastructure issues.
 
 ---
 
@@ -161,7 +161,7 @@ For API key:
 
 **Problem:** Workers fail immediately with an authentication error mentioning a missing API key.
 
-**Cause:** The `ANTHROPIC_API_KEY` environment variable is not set in the shell where ZERG is running.
+**Cause:** The `ANTHROPIC_API_KEY` environment variable is not set in the shell where MAHABHARATHA is running.
 
 **Solution:**
 
@@ -185,10 +185,10 @@ For API key:
 
 1. Reduce the number of parallel workers:
    ```
-   /zerg:rush --workers=3
+   /mahabharatha:kurukshetra --workers=3
    ```
 2. Check your API plan's rate limits and adjust the worker count accordingly.
-3. ZERG has built-in retry with backoff for transient rate limit errors, but sustained over-limit usage requires fewer workers.
+3. MAHABHARATHA has built-in retry with backoff for transient rate limit errors, but sustained over-limit usage requires fewer workers.
 
 ---
 
@@ -204,33 +204,33 @@ For API key:
 
 1. Check which task failed and its verification command:
    ```bash
-   /zerg:status
+   /mahabharatha:status
    ```
 2. Run the verification command manually to see the full error:
    ```bash
    # Example: the verify command from the task definition
    python -m py_compile path/to/file.py
    ```
-3. If the code has errors, use `/zerg:retry <task-id>` to re-attempt the task.
+3. If the code has errors, use `/mahabharatha:retry <task-id>` to re-attempt the task.
 4. If the verification command is wrong, fix it in `task-graph.json` and retry.
 
 ### Tasks stuck in "pending" after level completion
 
 **Problem:** All tasks at the current level are complete, but the next level's tasks remain pending.
 
-**Cause:** The merge step between levels may have failed, blocking level advancement. ZERG requires all tasks at level N to complete and merge before level N+1 begins.
+**Cause:** The merge step between levels may have failed, blocking level advancement. MAHABHARATHA requires all tasks at level N to complete and merge before level N+1 begins.
 
 **Solution:**
 
 1. Check if the merge is pending or failed:
    ```
-   /zerg:status
+   /mahabharatha:status
    ```
 2. If the merge failed, check the quality gate output:
    ```bash
-   cat .zerg/logs/merge-*.log
+   cat .mahabharatha/logs/merge-*.log
    ```
-3. Manually trigger the merge: `/zerg:merge`.
+3. Manually trigger the merge: `/mahabharatha:merge`.
 4. Fix any quality gate failures (lint, typecheck, test errors) and retry.
 
 ### Dependency errors in generated code
@@ -253,7 +253,7 @@ For API key:
 
 **Problem:** Workers or services fail to start because a required port is already in use.
 
-**Cause:** Another process (or a previous ZERG run that did not clean up) is occupying the port.
+**Cause:** Another process (or a previous MAHABHARATHA run that did not clean up) is occupying the port.
 
 **Solution:**
 
@@ -261,24 +261,24 @@ For API key:
    ```bash
    lsof -i :<port-number>
    ```
-2. Stop the conflicting process, or configure ZERG to use a different port range in `.zerg/config.yaml`.
-3. If leftover from a previous run, clean up with `/zerg:cleanup`.
+2. Stop the conflicting process, or configure MAHABHARATHA to use a different port range in `.mahabharatha/config.yaml`.
+3. If leftover from a previous run, clean up with `/mahabharatha:cleanup`.
 
 ### Port allocation exhaustion
 
-**Problem:** ZERG reports it cannot allocate ports for new workers.
+**Problem:** MAHABHARATHA reports it cannot allocate ports for new workers.
 
 **Cause:** The configured port range has been exhausted by active or orphaned workers.
 
 **Solution:**
 
-1. Stop all workers: `/zerg:stop`.
+1. Stop all workers: `/mahabharatha:stop`.
 2. Verify no orphaned processes remain:
    ```bash
    ps aux | grep claude
    ```
-3. Expand the port range in `.zerg/config.yaml` if running many workers.
-4. Run `/zerg:cleanup` to release any held resources.
+3. Expand the port range in `.mahabharatha/config.yaml` if running many workers.
+4. Run `/mahabharatha:cleanup` to release any held resources.
 
 ---
 
@@ -286,14 +286,14 @@ For API key:
 
 ### State JSON and Task system disagree
 
-**Problem:** `/zerg:status` reports mismatches between `.zerg/state/<feature>.json` and the Claude Code Task system.
+**Problem:** `/mahabharatha:status` reports mismatches between `.mahabharatha/state/<feature>.json` and the Claude Code Task system.
 
 **Cause:** A worker crashed or was killed before it could update both state stores. The Task system is the source of truth; state JSON files are supplementary.
 
 **Solution:**
 
-1. Trust the Task system output from `/zerg:status`.
-2. Run `/zerg:rush --resume` to reconcile. The resume flag calls `TaskList` first and only creates tasks that do not already exist.
+1. Trust the Task system output from `/mahabharatha:status`.
+2. Run `/mahabharatha:kurukshetra --resume` to reconcile. The resume flag calls `TaskList` first and only creates tasks that do not already exist.
 3. If corruption is severe, stop all workers, back up the state directory, and re-launch.
 
 ### Orphaned worktrees
@@ -317,7 +317,7 @@ For API key:
    git worktree unlock <path>
    git worktree remove <path>
    ```
-4. Run `/zerg:cleanup` to automate this process.
+4. Run `/mahabharatha:cleanup` to automate this process.
 
 ---
 
@@ -335,8 +335,8 @@ For API key:
    ```bash
    git diff --name-only --diff-filter=U
    ```
-2. Resolve conflicts manually or use `/zerg:merge` with manual resolution.
-3. If the task graph has overlapping file assignments, fix the design with `/zerg:design`.
+2. Resolve conflicts manually or use `/mahabharatha:merge` with manual resolution.
+3. If the task graph has overlapping file assignments, fix the design with `/mahabharatha:design`.
 
 ### Worktree creation fails
 
@@ -352,9 +352,9 @@ For API key:
    ```
 2. Delete leftover branches:
    ```bash
-   git branch -D zerg-worker-<id>
+   git branch -D mahabharatha-worker-<id>
    ```
-3. Run `/zerg:cleanup` before starting a new rush.
+3. Run `/mahabharatha:cleanup` before starting a new kurukshetra.
 
 ---
 
@@ -374,7 +374,7 @@ For API key:
    df -h .
    ```
 2. Reduce the number of parallel workers to decrease resource contention.
-3. Enable context engineering in `.zerg/config.yaml` to reduce token usage:
+3. Enable context engineering in `.mahabharatha/config.yaml` to reduce token usage:
    ```yaml
    plugins:
      context_engineering:
@@ -395,7 +395,7 @@ For API key:
    ```bash
    df -h .
    ```
-2. Clean up completed worktrees: `/zerg:cleanup`.
+2. Clean up completed worktrees: `/mahabharatha:cleanup`.
 3. Reduce the number of simultaneous workers.
 4. Consider using container mode, which isolates filesystem usage.
 
@@ -405,7 +405,7 @@ For API key:
 
 If none of the above solutions resolve your issue:
 
-1. Run a full diagnostic: `/zerg:debug --deep --env`
+1. Run a full diagnostic: `/mahabharatha:debug --deep --env`
 2. Check the generated report in `claudedocs/debug-<timestamp>.md`
 3. See [[Debug Guide]] for advanced investigation techniques
 4. Review the [[Command Reference]] for correct syntax and flags

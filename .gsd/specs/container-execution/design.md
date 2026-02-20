@@ -4,21 +4,21 @@
 - **Feature**: container-execution
 - **Status**: REVIEW
 - **Created**: 2026-01-28
-- **Author**: ZERG Design Mode
+- **Author**: MAHABHARATHA Design Mode
 
 ---
 
 ## 1. Overview
 
 ### 1.1 Summary
-Wire resource limits into the ContainerLauncher docker run command, harden the Dockerfile for multi-platform builds, add orphan cleanup and health checks to the orchestrator, add container log support to the logs command, remove privileged mode from docker-compose.yaml, and add a `zerg build --docker` flag to build the worker image. All changes preserve the existing ContainerLauncher API and SubprocessLauncher path.
+Wire resource limits into the ContainerLauncher docker run command, harden the Dockerfile for multi-platform builds, add orphan cleanup and health checks to the orchestrator, add container log support to the logs command, remove privileged mode from docker-compose.yaml, and add a `mahabharatha build --docker` flag to build the worker image. All changes preserve the existing ContainerLauncher API and SubprocessLauncher path.
 
 ### 1.2 Goals
 - Container workers execute with memory/CPU limits from config
 - Docker image builds and runs on macOS ARM64 and Linux x86_64
 - Orchestrator cleans up orphan containers on startup and detects stuck workers
-- `zerg logs` shows container worker output
-- `zerg build --docker` builds the worker image
+- `mahabharatha logs` shows container worker output
+- `mahabharatha build --docker` builds the worker image
 - Security hardened (no privileged, non-root, constrained mounts)
 
 ### 1.3 Non-Goals
@@ -34,7 +34,7 @@ Wire resource limits into the ContainerLauncher docker run command, harden the D
 ### 2.1 Data Flow
 
 ```
-User: zerg rush --mode container --workers 3
+User: mahabharatha kurukshetra --mode container --workers 3
   |
   v
 Orchestrator._create_launcher(mode="container")
@@ -47,7 +47,7 @@ ContainerLauncher.spawn(worker_id, feature, worktree, branch)
   |
   +--> _start_container(name, worktree, env, resource_limits)
   |      |
-  |      +--> docker run -d --memory 4g --cpus 2 ... zerg-worker
+  |      +--> docker run -d --memory 4g --cpus 2 ... mahabharatha-worker
   |      +--> _wait_ready() -> container running
   |      +--> _exec_worker_entry() -> worker_entry.sh
   |      +--> _verify_worker_process() -> pgrep worker_main
@@ -62,7 +62,7 @@ Orchestrator._poll_workers()
   v
 Orchestrator._cleanup_containers()  [on exit or startup]
   |
-  +--> docker ps -a --filter name=zerg-worker -> orphans
+  +--> docker ps -a --filter name=mahabharatha-worker -> orphans
   +--> docker rm -f <orphans>
 ```
 
@@ -70,14 +70,14 @@ Orchestrator._cleanup_containers()  [on exit or startup]
 
 | Component | File | Change |
 |-----------|------|--------|
-| Resource limits | `zerg/launcher.py` | Pass --memory/--cpus to docker run |
-| Config schema | `zerg/config.py` | Add container resource fields to ResourcesConfig |
-| Orchestrator | `zerg/orchestrator.py` | Orphan cleanup on init, health check in poll |
+| Resource limits | `mahabharatha/launcher.py` | Pass --memory/--cpus to docker run |
+| Config schema | `mahabharatha/config.py` | Add container resource fields to ResourcesConfig |
+| Orchestrator | `mahabharatha/orchestrator.py` | Orphan cleanup on init, health check in poll |
 | Dockerfile | `.devcontainer/Dockerfile` | Multi-platform, layer optimization |
 | docker-compose | `.devcontainer/docker-compose.yaml` | Remove privileged: true |
-| Logs command | `zerg/commands/logs.py` | Add docker logs fallback |
-| Build command | `zerg/commands/build.py` | Add --docker flag |
-| worker_entry.sh | `.zerg/worker_entry.sh` | Add healthcheck marker file |
+| Logs command | `mahabharatha/commands/logs.py` | Add docker logs fallback |
+| Build command | `mahabharatha/commands/build.py` | Add --docker flag |
+| worker_entry.sh | `.mahabharatha/worker_entry.sh` | Add healthcheck marker file |
 
 ---
 
@@ -89,7 +89,7 @@ Add `resource_limits` to `__init__` and pass to `_start_container`:
 
 ```python
 # launcher.py - ContainerLauncher.__init__
-def __init__(self, config=None, image_name="zerg-worker", network=None,
+def __init__(self, config=None, image_name="mahabharatha-worker", network=None,
              memory_limit="4g", cpu_limit=2.0):
     ...
     self.memory_limit = memory_limit
@@ -123,10 +123,10 @@ def __init__(self, ...):
 
 # New method
 def _cleanup_orphan_containers(self):
-    """Remove leftover zerg-worker containers from previous runs."""
+    """Remove leftover mahabharatha-worker containers from previous runs."""
     try:
         result = subprocess.run(
-            ["docker", "ps", "-a", "--filter", "name=zerg-worker",
+            ["docker", "ps", "-a", "--filter", "name=mahabharatha-worker",
              "--format", "{{.ID}}"],
             capture_output=True, text=True, timeout=10)
         for cid in result.stdout.strip().split("\n"):
@@ -158,7 +158,7 @@ def _check_container_health(self):
 # logs.py - add container log fetching
 def _get_container_logs(worker_id: int) -> str | None:
     """Fetch logs from a running or stopped container."""
-    name = f"zerg-worker-{worker_id}"
+    name = f"mahabharatha-worker-{worker_id}"
     try:
         result = subprocess.run(
             ["docker", "logs", name],
@@ -172,7 +172,7 @@ def _get_container_logs(worker_id: int) -> str | None:
 
 ```python
 # build.py - add docker build support
-@click.option("--docker", is_flag=True, help="Build the zerg-worker Docker image")
+@click.option("--docker", is_flag=True, help="Build the mahabharatha-worker Docker image")
 def build(docker, ...):
     if docker:
         _build_docker_image()
@@ -180,15 +180,15 @@ def build(docker, ...):
     ...
 
 def _build_docker_image():
-    """Build the zerg-worker Docker image."""
+    """Build the mahabharatha-worker Docker image."""
     dockerfile = Path(".devcontainer/Dockerfile")
     if not dockerfile.exists():
         console.print("[red]No .devcontainer/Dockerfile found[/red]")
         raise SystemExit(1)
-    cmd = ["docker", "build", "-t", "zerg-worker", "-f", str(dockerfile), "."]
+    cmd = ["docker", "build", "-t", "mahabharatha-worker", "-f", str(dockerfile), "."]
     result = subprocess.run(cmd, timeout=600)
     if result.returncode == 0:
-        console.print("[green]Image built: zerg-worker[/green]")
+        console.print("[green]Image built: mahabharatha-worker[/green]")
     else:
         console.print("[red]Build failed[/red]")
         raise SystemExit(1)
@@ -201,7 +201,7 @@ def _build_docker_image():
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/devcontainers/base:ubuntu AS base
 # ... existing content ...
 # Add HEALTHCHECK
-HEALTHCHECK --interval=30s --timeout=5s CMD test -f /tmp/.zerg-alive || exit 1
+HEALTHCHECK --interval=30s --timeout=5s CMD test -f /tmp/.mahabharatha-alive || exit 1
 ```
 
 ### 3.8 docker-compose.yaml Security Fix
@@ -214,10 +214,10 @@ Remove `privileged: true` from workspace service. Add explicit capabilities only
 
 ### Decision: docker run with --memory/--cpus vs ResourceLimits dataclass
 
-**Context**: ContainerLauncher needs resource limits. A ResourceLimits dataclass exists in `.zerg/container.py` but isn't wired to the active launcher.
+**Context**: ContainerLauncher needs resource limits. A ResourceLimits dataclass exists in `.mahabharatha/container.py` but isn't wired to the active launcher.
 
 **Options**:
-1. Reuse `.zerg/container.py` ResourceLimits — adds import dependency on inactive module
+1. Reuse `.mahabharatha/container.py` ResourceLimits — adds import dependency on inactive module
 2. Add fields directly to ContainerLauncher — simpler, self-contained
 3. Add to config.py ResourcesConfig — centralized, matches existing pattern
 
@@ -231,7 +231,7 @@ Remove `privileged: true` from workspace service. Add explicit capabilities only
 
 **Options**:
 1. Cleanup at orchestrator init — catches all orphans before starting
-2. Cleanup at rush start — only when explicitly launching
+2. Cleanup at kurukshetra start — only when explicitly launching
 3. Both
 
 **Decision**: Option 1 — cleanup at orchestrator init. Any time the orchestrator starts, it should ensure a clean state.
@@ -254,15 +254,15 @@ Remove `privileged: true` from workspace service. Add explicit capabilities only
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `zerg/config.py` | CE-L1-001 | modify |
-| `.zerg/config.yaml` | CE-L1-001 | modify |
+| `mahabharatha/config.py` | CE-L1-001 | modify |
+| `.mahabharatha/config.yaml` | CE-L1-001 | modify |
 | `.devcontainer/Dockerfile` | CE-L1-002 | modify |
 | `.devcontainer/docker-compose.yaml` | CE-L1-003 | modify |
-| `zerg/launcher.py` | CE-L2-001 | modify |
-| `zerg/orchestrator.py` | CE-L2-002 | modify |
-| `zerg/commands/logs.py` | CE-L2-003 | modify |
-| `zerg/commands/build.py` | CE-L3-001 | modify |
-| `.zerg/worker_entry.sh` | CE-L3-002 | modify |
+| `mahabharatha/launcher.py` | CE-L2-001 | modify |
+| `mahabharatha/orchestrator.py` | CE-L2-002 | modify |
+| `mahabharatha/commands/logs.py` | CE-L2-003 | modify |
+| `mahabharatha/commands/build.py` | CE-L3-001 | modify |
+| `.mahabharatha/worker_entry.sh` | CE-L3-002 | modify |
 | `tests/unit/test_container_resources.py` | CE-L4-001 | create |
 | `tests/integration/test_container_e2e_live.py` | CE-L4-002 | create |
 
@@ -294,7 +294,7 @@ L5:              CE-L5-001 (full suite + lint)
 | Git worktree paths break in container | Medium | High | worker_entry.sh already handles; add integration test |
 | OAuth token format changes between host/container | Low | High | Mount ~/.claude read-write; test explicitly |
 | Resource limits too restrictive for Claude Code | Low | Medium | Default 4G/2CPU is generous; make configurable |
-| Orphan cleanup removes containers from other tools | Low | Medium | Filter by name prefix zerg-worker |
+| Orphan cleanup removes containers from other tools | Low | Medium | Filter by name prefix mahabharatha-worker |
 
 ---
 

@@ -1,1 +1,1 @@
-"""Unit tests for ZERG modules."""
+"""Unit tests for MAHABHARATHA modules."""

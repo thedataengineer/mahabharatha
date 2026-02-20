@@ -31,14 +31,14 @@
     {
       "id": "FIX-002",
       "title": "Fix MetricsCollector patch location in orchestrator test",
-      "description": "test_metrics_computed_after_level_completion patches 'zerg.orchestrator.MetricsCollector' but _on_level_complete_handler delegates to LevelCoordinator.handle_level_complete() which calls MetricsCollector from zerg.level_coordinator (line 238). Fix: patch 'zerg.level_coordinator.MetricsCollector'.",
+      "description": "test_metrics_computed_after_level_completion patches 'mahabharatha.orchestrator.MetricsCollector' but _on_level_complete_handler delegates to LevelCoordinator.handle_level_complete() which calls MetricsCollector from mahabharatha.level_coordinator (line 238). Fix: patch 'mahabharatha.level_coordinator.MetricsCollector'.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
         "modify": ["tests/integration/test_orchestrator_integration.py"],
-        "read": ["zerg/orchestrator.py", "zerg/level_coordinator.py"]
+        "read": ["mahabharatha/orchestrator.py", "mahabharatha/level_coordinator.py"]
       },
       "acceptance_criteria": [
         "tests/integration/test_orchestrator_integration.py::TestMetricsCollectionThroughFailures::test_metrics_computed_after_level_completion passes",
@@ -52,13 +52,13 @@
     {
       "id": "FIX-003",
       "title": "Fix is_level_complete semantics for failed tasks",
-      "description": "LevelController.is_level_complete() at zerg/levels.py:220-223 counts failed tasks as resolved (completed + failed == total). This is wrong: is_level_complete should mean ALL tasks completed successfully. Add is_level_resolved() for the 'all terminal' check. Update internal callers (can_advance, mark_task_complete line 154) and orchestrator callers (lines 560, 815) to use is_level_resolved. Fix test_is_level_complete_with_failures to test is_level_resolved instead.",
+      "description": "LevelController.is_level_complete() at mahabharatha/levels.py:220-223 counts failed tasks as resolved (completed + failed == total). This is wrong: is_level_complete should mean ALL tasks completed successfully. Add is_level_resolved() for the 'all terminal' check. Update internal callers (can_advance, mark_task_complete line 154) and orchestrator callers (lines 560, 815) to use is_level_resolved. Fix test_is_level_complete_with_failures to test is_level_resolved instead.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
       "files": {
         "create": [],
-        "modify": ["zerg/levels.py", "zerg/orchestrator.py", "tests/unit/test_levels_extended.py"],
+        "modify": ["mahabharatha/levels.py", "mahabharatha/orchestrator.py", "tests/unit/test_levels_extended.py"],
         "read": ["tests/integration/test_rush_flow.py"]
       },
       "acceptance_criteria": [

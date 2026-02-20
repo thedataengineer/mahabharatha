@@ -1,4 +1,4 @@
-"""ZERG diagnostics package - deep debugging with state introspection."""
+"""MAHABHARATHA diagnostics package - deep debugging with state introspection."""
 
 from mahabharatha.diagnostics.code_fixer import (
     CodeAwareFixer,

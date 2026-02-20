@@ -39,13 +39,13 @@
       "level": 1,
       "title": "Update init.py to use ProjectStack for multi-language detection",
       "description": "Replace single-type detect_project_type() with ProjectStack from security_rules.py. Display all detected languages, frameworks, and databases in init output.",
-      "files_owned": ["zerg/commands/init.py"],
-      "files_read": ["zerg/security_rules.py"],
+      "files_owned": ["mahabharatha/commands/init.py"],
+      "files_read": ["mahabharatha/security_rules.py"],
       "dependencies": [],
       "estimate_minutes": 20,
       "critical_path": false,
       "verification": {
-        "command": "cd /tmp && rm -rf test-dc && mkdir test-dc && cd test-dc && touch requirements.txt package.json go.mod && python -m zerg.commands.init 2>&1 | grep -E 'python|javascript|go'",
+        "command": "cd /tmp && rm -rf test-dc && mkdir test-dc && cd test-dc && touch requirements.txt package.json go.mod && python -m mahabharatha.commands.init 2>&1 | grep -E 'python|javascript|go'",
         "expected": "Shows multiple languages detected"
       },
       "acceptance_criteria": [
@@ -59,13 +59,13 @@
       "level": 1,
       "title": "Create devcontainer_features.py with feature mapping",
       "description": "Create new module with DEVCONTAINER_FEATURES dict mapping languages to ghcr.io feature URLs and CUSTOM_INSTALL_COMMANDS for unsupported languages.",
-      "files_owned": ["zerg/devcontainer_features.py"],
+      "files_owned": ["mahabharatha/devcontainer_features.py"],
       "files_read": [],
       "dependencies": [],
       "estimate_minutes": 15,
       "critical_path": true,
       "verification": {
-        "command": "python -c \"from zerg.devcontainer_features import DEVCONTAINER_FEATURES, CUSTOM_INSTALL_COMMANDS; print(len(DEVCONTAINER_FEATURES), len(CUSTOM_INSTALL_COMMANDS))\"",
+        "command": "python -c \"from mahabharatha.devcontainer_features import DEVCONTAINER_FEATURES, CUSTOM_INSTALL_COMMANDS; print(len(DEVCONTAINER_FEATURES), len(CUSTOM_INSTALL_COMMANDS))\"",
         "expected": "Prints counts without import error"
       },
       "acceptance_criteria": [
@@ -79,20 +79,20 @@
       "level": 1,
       "title": "Implement ContainerLauncher base class in launcher.py",
       "description": "Add ContainerLauncher class inheriting from WorkerLauncher. Implement spawn(), monitor(), terminate(), get_output() methods with Docker CLI commands.",
-      "files_owned": ["zerg/launcher.py"],
+      "files_owned": ["mahabharatha/launcher.py"],
       "files_read": [],
       "dependencies": [],
       "estimate_minutes": 45,
       "critical_path": false,
       "verification": {
-        "command": "python -c \"from zerg.launcher import ContainerLauncher, LauncherType; print(ContainerLauncher.__bases__, LauncherType.CONTAINER.value)\"",
+        "command": "python -c \"from mahabharatha.launcher import ContainerLauncher, LauncherType; print(ContainerLauncher.__bases__, LauncherType.CONTAINER.value)\"",
         "expected": "ContainerLauncher inherits WorkerLauncher"
       },
       "acceptance_criteria": [
         "ContainerLauncher implements all abstract methods",
         "Uses docker CLI for container operations",
         "Proper error handling for missing Docker",
-        "Container naming follows zerg-worker-{id} pattern"
+        "Container naming follows mahabharatha-worker-{id} pattern"
       ]
     },
     {
@@ -100,13 +100,13 @@
       "level": 2,
       "title": "Create DynamicDevcontainerGenerator using features",
       "description": "Add DynamicDevcontainerGenerator class that takes ProjectStack and generates devcontainer.json with appropriate features from DEVCONTAINER_FEATURES mapping.",
-      "files_owned": ["zerg/devcontainer_features.py"],
-      "files_read": ["zerg/security_rules.py"],
+      "files_owned": ["mahabharatha/devcontainer_features.py"],
+      "files_read": ["mahabharatha/security_rules.py"],
       "dependencies": ["DC-002"],
       "estimate_minutes": 30,
       "critical_path": true,
       "verification": {
-        "command": "python -c \"from zerg.devcontainer_features import DynamicDevcontainerGenerator; from zerg.security_rules import ProjectStack; g = DynamicDevcontainerGenerator(ProjectStack(languages={'python','go'})); print(g.generate_config())\"",
+        "command": "python -c \"from mahabharatha.devcontainer_features import DynamicDevcontainerGenerator; from mahabharatha.security_rules import ProjectStack; g = DynamicDevcontainerGenerator(ProjectStack(languages={'python','go'})); print(g.generate_config())\"",
         "expected": "Returns dict with features for python and go"
       },
       "acceptance_criteria": [
@@ -121,13 +121,13 @@
       "level": 2,
       "title": "Add container spawn with claude execution",
       "description": "Extend ContainerLauncher spawn() to mount worktree, set env vars, and execute claude --dangerously-skip-permissions inside container. Create worker_entry.sh script.",
-      "files_owned": ["zerg/launcher.py", ".zerg/worker_entry.sh"],
+      "files_owned": ["mahabharatha/launcher.py", ".mahabharatha/worker_entry.sh"],
       "files_read": [],
       "dependencies": ["DC-006"],
       "estimate_minutes": 40,
       "critical_path": false,
       "verification": {
-        "command": "test -x .zerg/worker_entry.sh && grep -q 'claude' .zerg/worker_entry.sh && echo 'OK'",
+        "command": "test -x .mahabharatha/worker_entry.sh && grep -q 'claude' .mahabharatha/worker_entry.sh && echo 'OK'",
         "expected": "OK"
       },
       "acceptance_criteria": [
@@ -142,13 +142,13 @@
       "level": 3,
       "title": "Update create_devcontainer() to use dynamic generator",
       "description": "Modify create_devcontainer() in init.py to use DynamicDevcontainerGenerator with detected ProjectStack instead of static single-language config.",
-      "files_owned": ["zerg/commands/init.py"],
-      "files_read": ["zerg/devcontainer_features.py"],
+      "files_owned": ["mahabharatha/commands/init.py"],
+      "files_read": ["mahabharatha/devcontainer_features.py"],
       "dependencies": ["DC-001", "DC-003"],
       "estimate_minutes": 25,
       "critical_path": true,
       "verification": {
-        "command": "cd /tmp && rm -rf test-dc2 && mkdir test-dc2 && cd test-dc2 && touch requirements.txt package.json && zerg init --no-security-rules && cat .devcontainer/devcontainer.json | python -c \"import sys,json; d=json.load(sys.stdin); print('python' in str(d.get('features',{})) and 'node' in str(d.get('features',{})))\"",
+        "command": "cd /tmp && rm -rf test-dc2 && mkdir test-dc2 && cd test-dc2 && touch requirements.txt package.json && mahabharatha init --no-security-rules && cat .devcontainer/devcontainer.json | python -c \"import sys,json; d=json.load(sys.stdin); print('python' in str(d.get('features',{})) and 'node' in str(d.get('features',{})))\"",
         "expected": "True"
       },
       "acceptance_criteria": [
@@ -160,15 +160,15 @@
     {
       "id": "DC-005",
       "level": 3,
-      "title": "Update .zerg/devcontainer.py for multi-language",
-      "description": "Update DevcontainerGenerator in .zerg/devcontainer.py to support multi-language via features parameter. Maintain backwards compatibility.",
-      "files_owned": [".zerg/devcontainer.py"],
-      "files_read": ["zerg/devcontainer_features.py"],
+      "title": "Update .mahabharatha/devcontainer.py for multi-language",
+      "description": "Update DevcontainerGenerator in .mahabharatha/devcontainer.py to support multi-language via features parameter. Maintain backwards compatibility.",
+      "files_owned": [".mahabharatha/devcontainer.py"],
+      "files_read": ["mahabharatha/devcontainer_features.py"],
       "dependencies": ["DC-003"],
       "estimate_minutes": 25,
       "critical_path": false,
       "verification": {
-        "command": "python -c \"from importlib.util import spec_from_file_location, module_from_spec; spec = spec_from_file_location('dc', '.zerg/devcontainer.py'); m = module_from_spec(spec); spec.loader.exec_module(m); print(hasattr(m.DevcontainerGenerator, 'generate'))\"",
+        "command": "python -c \"from importlib.util import spec_from_file_location, module_from_spec; spec = spec_from_file_location('dc', '.mahabharatha/devcontainer.py'); m = module_from_spec(spec); spec.loader.exec_module(m); print(hasattr(m.DevcontainerGenerator, 'generate'))\"",
         "expected": "True"
       },
       "acceptance_criteria": [
@@ -182,13 +182,13 @@
       "level": 3,
       "title": "Add auto-detect launcher mode in orchestrator",
       "description": "Update _create_launcher() in orchestrator.py to auto-detect: use ContainerLauncher if .devcontainer exists and image is built, otherwise SubprocessLauncher.",
-      "files_owned": ["zerg/orchestrator.py"],
-      "files_read": ["zerg/launcher.py"],
+      "files_owned": ["mahabharatha/orchestrator.py"],
+      "files_read": ["mahabharatha/launcher.py"],
       "dependencies": ["DC-006"],
       "estimate_minutes": 20,
       "critical_path": false,
       "verification": {
-        "command": "python -c \"from zerg.orchestrator import Orchestrator; from zerg.config import ZergConfig; c = ZergConfig(); print(hasattr(Orchestrator, '_create_launcher'))\"",
+        "command": "python -c \"from mahabharatha.orchestrator import Orchestrator; from mahabharatha.config import ZergConfig; c = ZergConfig(); print(hasattr(Orchestrator, '_create_launcher'))\"",
         "expected": "True"
       },
       "acceptance_criteria": [
@@ -202,13 +202,13 @@
       "level": 4,
       "title": "Wire ContainerLauncher to orchestrator",
       "description": "Complete orchestrator integration: _spawn_worker uses ContainerLauncher when mode=container, _poll_workers monitors containers, _terminate_worker stops containers.",
-      "files_owned": ["zerg/orchestrator.py"],
-      "files_read": ["zerg/launcher.py"],
+      "files_owned": ["mahabharatha/orchestrator.py"],
+      "files_read": ["mahabharatha/launcher.py"],
       "dependencies": ["DC-007", "DC-008"],
       "estimate_minutes": 35,
       "critical_path": true,
       "verification": {
-        "command": "python -c \"from zerg.orchestrator import Orchestrator; from zerg.launcher import ContainerLauncher; print('ContainerLauncher' in str(Orchestrator._create_launcher.__code__.co_consts if hasattr(Orchestrator._create_launcher, '__code__') else 'ContainerLauncher'))\"",
+        "command": "python -c \"from mahabharatha.orchestrator import Orchestrator; from mahabharatha.launcher import ContainerLauncher; print('ContainerLauncher' in str(Orchestrator._create_launcher.__code__.co_consts if hasattr(Orchestrator._create_launcher, '__code__') else 'ContainerLauncher'))\"",
         "expected": "True or shows ContainerLauncher reference"
       },
       "acceptance_criteria": [
@@ -220,15 +220,15 @@
     {
       "id": "DC-010",
       "level": 4,
-      "title": "Add --mode flag to rush command",
-      "description": "Add --mode subprocess|container|auto option to zerg rush. Pass mode to orchestrator config. Default to 'auto'.",
-      "files_owned": ["zerg/commands/rush.py"],
-      "files_read": ["zerg/config.py"],
+      "title": "Add --mode flag to kurukshetra command",
+      "description": "Add --mode subprocess|container|auto option to mahabharatha kurukshetra. Pass mode to orchestrator config. Default to 'auto'.",
+      "files_owned": ["mahabharatha/commands/kurukshetra.py"],
+      "files_read": ["mahabharatha/config.py"],
       "dependencies": ["DC-009"],
       "estimate_minutes": 15,
       "critical_path": false,
       "verification": {
-        "command": "zerg rush --help | grep -E '\\-\\-mode'",
+        "command": "mahabharatha kurukshetra --help | grep -E '\\-\\-mode'",
         "expected": "Shows --mode option in help"
       },
       "acceptance_criteria": [
@@ -241,19 +241,19 @@
       "id": "DC-011",
       "level": 5,
       "title": "Update skill files with container mode docs",
-      "description": "Update zerg:init.md and zerg:rush.md skill files to document multi-language detection and container mode options.",
-      "files_owned": [".claude/commands/zerg:init.md", ".claude/commands/zerg:rush.md"],
+      "description": "Update mahabharatha:init.md and mahabharatha:kurukshetra.md skill files to document multi-language detection and container mode options.",
+      "files_owned": [".claude/commands/mahabharatha:init.md", ".claude/commands/mahabharatha:kurukshetra.md"],
       "files_read": [],
       "dependencies": ["DC-010"],
       "estimate_minutes": 20,
       "critical_path": false,
       "verification": {
-        "command": "grep -l 'container' .claude/commands/zerg:*.md | wc -l",
+        "command": "grep -l 'container' .claude/commands/mahabharatha:*.md | wc -l",
         "expected": "2 or more files mention container"
       },
       "acceptance_criteria": [
-        "zerg:init.md documents multi-language detection",
-        "zerg:rush.md documents --mode flag",
+        "mahabharatha:init.md documents multi-language detection",
+        "mahabharatha:kurukshetra.md documents --mode flag",
         "Examples show container mode usage"
       ]
     },
@@ -261,7 +261,7 @@
       "id": "DC-012",
       "level": 5,
       "title": "Integration test: full container flow",
-      "description": "Create integration test that: inits multi-lang project, builds devcontainer, runs rush --mode container --dry-run, verifies correct launcher selection.",
+      "description": "Create integration test that: inits multi-lang project, builds devcontainer, runs kurukshetra --mode container --dry-run, verifies correct launcher selection.",
       "files_owned": ["tests/integration/test_container_flow.py"],
       "files_read": [],
       "dependencies": ["DC-009", "DC-010", "DC-011"],
@@ -272,7 +272,7 @@
         "expected": "Tests pass or skip if no Docker"
       },
       "acceptance_criteria": [
-        "Test covers init → devcontainer → rush flow",
+        "Test covers init → devcontainer → kurukshetra flow",
         "Skips gracefully if Docker unavailable",
         "Verifies multi-language detection"
       ]

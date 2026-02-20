@@ -26,10 +26,10 @@ jobs:
         run: ruff check . && ruff format --check .
 
       - name: Type check
-        run: mypy zerg/
+        run: mypy mahabharatha/
 
       - name: Validate command files
-        run: python -m zerg.validate_commands
+        run: python -m mahabharatha.validate_commands
 
       - name: Check CHANGELOG.md updated
         if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'skip-changelog')
@@ -87,7 +87,7 @@ jobs:
         run: pip install -e ".[dev]"
 
       - name: Run tests (py${{ matrix.python-version }}, shard ${{ matrix.shard }}/2)
-        run: pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m "not slow and not docker" --cov=zerg --cov-fail-under=50 -v --tb=short --timeout=120 --splits 2 --group ${{ matrix.shard }}
+        run: pytest tests/ --ignore=tests/e2e --ignore=tests/pressure -m "not slow and not docker" --cov=mahabharatha --cov-fail-under=50 -v --tb=short --timeout=120 --splits 2 --group ${{ matrix.shard }}
 
   audit:
     runs-on: ubuntu-latest
@@ -107,7 +107,7 @@ jobs:
 
       - name: Audit dependencies
         run: |
-          # Run pip-audit without --strict since local package (zerg) isn't on PyPI
+          # Run pip-audit without --strict since local package (mahabharatha) isn't on PyPI
           # This still catches actual vulnerabilities in dependencies
           pip-audit --desc
 

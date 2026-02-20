@@ -11,10 +11,10 @@
 ## 1. Problem Statement
 
 ### 1.1 Background
-ZERG has never been tested end-to-end against a real feature build. All existing E2E tests are heavily mocked.
+MAHABHARATHA has never been tested end-to-end against a real feature build. All existing E2E tests are heavily mocked.
 
 ### 1.2 Problem
-No confidence that the full plan -> design -> rush -> merge pipeline works in production conditions.
+No confidence that the full plan -> design -> kurukshetra -> merge pipeline works in production conditions.
 
 ### 1.3 Impact
 Bugs in orchestration, state IPC, merge coordination, and worker lifecycle remain undiscovered.
@@ -29,9 +29,9 @@ Bugs in orchestration, state IPC, merge coordination, and worker lifecycle remai
 - Mock mode (CI-safe, no API key) and real mode (Claude API)
 - 5 workers, multi-level task graphs
 
-### Deliverable 2: Plugin System (built by ZERG dogfooding itself)
+### Deliverable 2: Plugin System (built by MAHABHARATHA dogfooding itself)
 - QualityGatePlugin ABC — custom lint/test/check after merge
-- LifecycleHookPlugin ABC — react to task/level/merge/rush events
+- LifecycleHookPlugin ABC — react to task/level/merge/kurukshetra events
 - LauncherPlugin ABC — custom worker launchers (K8s, SSH, cloud VMs)
 - PluginRegistry — loads from YAML config + Python entry_points
 - Security: strictly additive, read-only state views, timeout enforcement
@@ -50,7 +50,7 @@ Bugs in orchestration, state IPC, merge coordination, and worker lifecycle remai
 ### Out of Scope
 - Actual K8s/SSH launcher implementations (just the plugin interface)
 - Plugin marketplace or distribution
-- Hot-reload of plugins during rush
+- Hot-reload of plugins during kurukshetra
 
 ---
 

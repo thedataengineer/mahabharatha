@@ -1,7 +1,7 @@
-# Technical Design: rush-performance-optimization
+# Technical Design: kurukshetra-performance-optimization
 
 ## Metadata
-- **Feature**: rush-performance-optimization
+- **Feature**: kurukshetra-performance-optimization
 - **Status**: APPROVED
 - **Created**: 2026-02-03
 - **Author**: Factory Design Mode
@@ -11,11 +11,11 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Optimize ZERG rush execution by reducing redundant gate runs, reusing post-merge results in improvement loops, adding a --skip-tests flag for development iterations, and marking slow tests to enable test filtering.
+Optimize MAHABHARATHA kurukshetra execution by reducing redundant gate runs, reusing post-merge results in improvement loops, adding a --skip-tests flag for development iterations, and marking slow tests to enable test filtering.
 
 ### 1.2 Goals
-- Reduce gate runs from 15-30 per rush to 2-5
-- Reduce rush time from ~6 hours to ~45 minutes
+- Reduce gate runs from 15-30 per kurukshetra to 2-5
+- Reduce kurukshetra time from ~6 hours to ~45 minutes
 - Maintain security and quality guarantees (pre/post merge gates still run)
 - Enable faster development iteration with --skip-tests flag
 
@@ -32,7 +32,7 @@ Optimize ZERG rush execution by reducing redundant gate runs, reusing post-merge
 
 ```
 ┌──────────────┐     ┌─────────────────┐     ┌──────────────────┐
-│  rush.py     │────▶│  Orchestrator   │────▶│  MergeCoordinator│
+│  kurukshetra.py     │────▶│  Orchestrator   │────▶│  MergeCoordinator│
 │  (CLI)       │     │                 │     │                  │
 └──────────────┘     └─────────────────┘     └──────────────────┘
        │                    │                        │
@@ -53,16 +53,16 @@ Optimize ZERG rush execution by reducing redundant gate runs, reusing post-merge
 
 | Component | Responsibility | Files |
 |-----------|---------------|-------|
-| Config | Staleness threshold, loop iterations | `.zerg/config.yaml` |
-| Orchestrator | Reuse gate results in loop | `zerg/orchestrator.py` |
-| Rush CLI | --skip-tests flag | `zerg/commands/rush.py` |
-| MergeCoordinator | Respect skip-tests flag | `zerg/merge.py` |
+| Config | Staleness threshold, loop iterations | `.mahabharatha/config.yaml` |
+| Orchestrator | Reuse gate results in loop | `mahabharatha/orchestrator.py` |
+| Kurukshetra CLI | --skip-tests flag | `mahabharatha/commands/kurukshetra.py` |
+| MergeCoordinator | Respect skip-tests flag | `mahabharatha/merge.py` |
 | Test Suite | @pytest.mark.slow markers | `tests/unit/test_resilience_*.py`, `tests/unit/test_state_reconciler.py`, `tests/integration/test_resilience_e2e.py` |
 
 ### 2.3 Data Flow
 
-1. User invokes `zerg rush --skip-tests`
-2. rush.py passes `skip_tests=True` to Orchestrator
+1. User invokes `mahabharatha kurukshetra --skip-tests`
+2. kurukshetra.py passes `skip_tests=True` to Orchestrator
 3. Orchestrator passes flag to MergeCoordinator
 4. MergeCoordinator runs only lint gates (skips test gate)
 5. After merge, MergeFlowResult.gate_results passed to LoopController
@@ -76,7 +76,7 @@ Optimize ZERG rush execution by reducing redundant gate runs, reusing post-merge
 ### 3.1 Config Changes
 
 ```yaml
-# .zerg/config.yaml additions
+# .mahabharatha/config.yaml additions
 verification:
   staleness_threshold_seconds: 1800  # 30 min cache (was 300s)
 
@@ -88,7 +88,7 @@ improvement_loops:
 ### 3.2 Orchestrator Gate Result Reuse
 
 ```python
-# zerg/orchestrator.py - _run_level_loop modification
+# mahabharatha/orchestrator.py - _run_level_loop modification
 def _run_level_loop(self, level: int, merge_result: MergeFlowResult | None = None) -> None:
     """Run improvement loop for a completed level.
 
@@ -110,7 +110,7 @@ def _run_level_loop(self, level: int, merge_result: MergeFlowResult | None = Non
 ### 3.3 --skip-tests Flag
 
 ```python
-# zerg/commands/rush.py
+# mahabharatha/commands/kurukshetra.py
 @click.option("--skip-tests", is_flag=True, help="Skip test gates (lint only) until final level")
 
 # Pass to Orchestrator
@@ -120,7 +120,7 @@ orchestrator = Orchestrator(feature, config, launcher_mode=mode, skip_tests=skip
 ### 3.4 MergeCoordinator Skip Tests
 
 ```python
-# zerg/merge.py - run_pre_merge_gates / run_post_merge_gates
+# mahabharatha/merge.py - run_pre_merge_gates / run_post_merge_gates
 def run_pre_merge_gates(
     self,
     cwd: str | Path | None = None,
@@ -196,10 +196,10 @@ class TestResilienceConfig:
 
 | File | Task ID | Operation |
 |------|---------|-----------|
-| `.zerg/config.yaml` | TASK-001 | modify |
-| `zerg/orchestrator.py` | TASK-003 | modify |
-| `zerg/commands/rush.py` | TASK-004 | modify |
-| `zerg/merge.py` | TASK-004 | modify |
+| `.mahabharatha/config.yaml` | TASK-001 | modify |
+| `mahabharatha/orchestrator.py` | TASK-003 | modify |
+| `mahabharatha/commands/kurukshetra.py` | TASK-004 | modify |
+| `mahabharatha/merge.py` | TASK-004 | modify |
 | `tests/unit/test_resilience_config.py` | TASK-005 | modify |
 | `tests/unit/test_state_reconciler.py` | TASK-005 | modify |
 | `tests/integration/test_resilience_e2e.py` | TASK-005 | modify |
@@ -238,14 +238,14 @@ graph TD
 - Test config loading with new fields
 
 ### 7.2 Integration Tests
-- Test full rush with --skip-tests flag
+- Test full kurukshetra with --skip-tests flag
 - Verify slow markers work with pytest -m slow
 
 ### 7.3 Verification Commands
 ```bash
 pytest tests/ -x                           # No regressions
 pytest -m slow --collect-only              # Markers applied
-zerg rush --skip-tests --dry-run           # Flag recognized
+mahabharatha kurukshetra --skip-tests --dry-run           # Flag recognized
 ```
 
 ---

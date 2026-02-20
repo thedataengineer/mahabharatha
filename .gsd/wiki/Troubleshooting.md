@@ -1,6 +1,6 @@
 # Troubleshooting
 
-This guide helps you diagnose and resolve ZERG issues. Each section explains not just *what* to do, but *why* problems occur and how to prevent them in the future.
+This guide helps you diagnose and resolve MAHABHARATHA issues. Each section explains not just *what* to do, but *why* problems occur and how to prevent them in the future.
 
 ---
 
@@ -27,7 +27,7 @@ What's happening?
     |       --> Section 1.5: OAuth mount or API key configuration
     |
     +-- No idea what's wrong?
-            --> Run /zerg:debug --deep --env for full analysis
+            --> Run /mahabharatha:debug --deep --env for full analysis
 ```
 
 ---
@@ -37,7 +37,7 @@ What's happening?
 ### 1.1 Workers Not Starting
 
 **Symptoms:**
-- `/zerg:rush` hangs without spawning workers
+- `/mahabharatha:kurukshetra` hangs without spawning workers
 - "Failed to spawn worker" errors in output
 - Workers spawn but immediately exit with no logs
 
@@ -47,7 +47,7 @@ Workers are Claude Code instances that need several things to function:
 
 1. **Container environment** (in container mode) — Docker must be running and accessible
 2. **API access** — Either OAuth credentials or an `ANTHROPIC_API_KEY`
-3. **Available ports** — ZERG uses ports 49152+ for worker communication
+3. **Available ports** — MAHABHARATHA uses ports 49152+ for worker communication
 4. **Disk space** — Each worker creates a git worktree (~500MB overhead)
 
 When any of these prerequisites is missing or misconfigured, workers either fail to start or exit immediately because they can't establish the environment they need to execute tasks.
@@ -65,7 +65,7 @@ docker info
 echo $ANTHROPIC_API_KEY | head -c 10
 # Should show something like "sk-ant-api"
 
-# 3. Check that ZERG's port range is available
+# 3. Check that MAHABHARATHA's port range is available
 lsof -i :49152-49200
 # If ports are busy: Kill the processes or reconfigure port range
 
@@ -74,7 +74,7 @@ df -h .
 # Need at least 500MB per worker for worktrees
 
 # 5. Run comprehensive environment diagnostics
-/zerg:debug --env
+/mahabharatha:debug --env
 # This checks everything automatically
 ```
 
@@ -117,7 +117,7 @@ if [ -z "$ANTHROPIC_API_KEY" ]; then
 fi
 ```
 
-Run `/zerg:debug --env` before starting a multi-hour rush to catch issues early.
+Run `/mahabharatha:debug --env` before starting a multi-hour kurukshetra to catch issues early.
 
 ---
 
@@ -130,7 +130,7 @@ Run `/zerg:debug --env` before starting a multi-hour rush to catch issues early.
 
 **Why This Happens:**
 
-Each task in ZERG has a verification command that must pass for the task to be considered complete. Task failures usually stem from one of these root causes:
+Each task in MAHABHARATHA has a verification command that must pass for the task to be considered complete. Task failures usually stem from one of these root causes:
 
 1. **Verification command issues** — The command itself has wrong paths, missing dependencies, or incorrect assumptions about the environment
 2. **Dependency ordering** — The task depends on files created by tasks in a previous level that haven't merged yet
@@ -146,7 +146,7 @@ First, identify which task failed and why:
 ```bash
 # 1. List all failed tasks with their details
 jq '.tasks | to_entries[] | select(.value.status == "failed")' \
-  .zerg/state/$FEATURE.json
+  .mahabharatha/state/$FEATURE.json
 
 # 2. Get the verification command for a specific failed task
 jq '.tasks[] | select(.id == "TASK-001") | .verification' \
@@ -156,10 +156,10 @@ jq '.tasks[] | select(.id == "TASK-001") | .verification' \
 # (Copy the command from step 2 and run it yourself)
 
 # 4. Check what artifacts the task produced
-ls .zerg/logs/tasks/TASK-001/
+ls .mahabharatha/logs/tasks/TASK-001/
 
 # 5. Search worker logs for context about the failure
-grep "TASK-001" .zerg/logs/worker-*.log
+grep "TASK-001" .mahabharatha/logs/worker-*.log
 ```
 
 **Match the error to the cause:**
@@ -168,7 +168,7 @@ grep "TASK-001" .zerg/logs/worker-*.log
 |---------------|--------------|----------|
 | "File not found" in verification | Wrong path in task-graph.json | Fix the path — it should be relative to project root |
 | Import/module errors | Missing dependency | Task depends on code from an earlier level; check dependencies |
-| Test failures | Code bug | Run `/zerg:debug --error "error message"` for analysis |
+| Test failures | Code bug | Run `/mahabharatha:debug --error "error message"` for analysis |
 | "File already exists" | Ownership conflict | Two tasks at same level own the file; fix in task-graph.json |
 | Timeout | Task took too long | Increase timeout or split into smaller tasks |
 
@@ -176,20 +176,20 @@ grep "TASK-001" .zerg/logs/worker-*.log
 
 ```bash
 # Retry a specific task
-/zerg:retry TASK-001
+/mahabharatha:retry TASK-001
 
 # Retry all failed tasks in a level
-/zerg:retry --level 2
+/mahabharatha:retry --level 2
 
 # Force retry if you've hit the retry limit
-/zerg:retry --force TASK-001
+/mahabharatha:retry --force TASK-001
 ```
 
 **Prevention:**
 
-Before running `/zerg:rush`:
+Before running `/mahabharatha:kurukshetra`:
 
-1. **Validate the task graph:** Run `/zerg:design --validate` to check for dependency issues and file ownership conflicts
+1. **Validate the task graph:** Run `/mahabharatha:design --validate` to check for dependency issues and file ownership conflicts
 2. **Review verification commands:** Ensure they're testing the right thing and use correct paths
 3. **Check dependency ordering:** Tasks that depend on other tasks' output should be in later levels
 
@@ -198,13 +198,13 @@ Before running `/zerg:rush`:
 ### 1.3 Merge Conflicts
 
 **Symptoms:**
-- `/zerg:merge` fails with git conflict errors
+- `/mahabharatha:merge` fails with git conflict errors
 - Workers report they can't pull the latest changes
 - Warnings about "file modified by multiple tasks"
 
 **Why This Happens:**
 
-ZERG's parallel execution model depends on **exclusive file ownership**. Each task owns specific files, and tasks at the same level execute simultaneously. Merge conflicts occur when this isolation breaks down:
+MAHABHARATHA's parallel execution model depends on **exclusive file ownership**. Each task owns specific files, and tasks at the same level execute simultaneously. Merge conflicts occur when this isolation breaks down:
 
 1. **Duplicate file ownership** — Two tasks at the same level both claim ownership of the same file. When they both modify it, git can't automatically merge their changes.
 
@@ -212,7 +212,7 @@ ZERG's parallel execution model depends on **exclusive file ownership**. Each ta
 
 3. **Uncommitted changes** — Manual changes were made in a worktree directory that weren't committed, blocking the merge.
 
-The ZERG design phase is supposed to prevent (1), but mistakes happen, especially with complex features.
+The MAHABHARATHA design phase is supposed to prevent (1), but mistakes happen, especially with complex features.
 
 **How to Fix:**
 
@@ -228,7 +228,7 @@ git worktree list
 # Orphaned entries indicate cleanup is needed
 
 # 3. Check status in a specific worker's worktree
-git -C .zerg/worktrees/worker-0 status
+git -C .mahabharatha/worktrees/worker-0 status
 # Uncommitted changes here can block merges
 
 # 4. Identify file ownership overlaps in task graph
@@ -242,9 +242,9 @@ jq '.tasks[] | {id: .id, level: .level, files: .files}' \
 | Cause | Solution |
 |-------|----------|
 | Duplicate ownership | Edit task-graph.json to give each file a single owner at each level |
-| Diverged worktree | `git -C .zerg/worktrees/worker-N reset --hard origin/main` |
+| Diverged worktree | `git -C .mahabharatha/worktrees/worker-N reset --hard origin/main` |
 | Orphaned worktree | `git worktree prune` cleans up stale references |
-| Uncommitted changes | `git -C .zerg/worktrees/worker-N stash` or discard them |
+| Uncommitted changes | `git -C .mahabharatha/worktrees/worker-N stash` or discard them |
 
 **If things are really broken, do a full recovery:**
 
@@ -254,10 +254,10 @@ git merge --abort
 
 # 2. Clean up all worktrees
 git worktree prune
-rm -rf .zerg/worktrees/*
+rm -rf .mahabharatha/worktrees/*
 
-# 3. Resume — ZERG will recreate worktrees as needed
-/zerg:rush --resume
+# 3. Resume — MAHABHARATHA will recreate worktrees as needed
+/mahabharatha:kurukshetra --resume
 ```
 
 **Prevention:**
@@ -266,7 +266,7 @@ The key is catching ownership conflicts before execution begins:
 
 ```bash
 # Always validate before rushing
-/zerg:design --validate
+/mahabharatha:design --validate
 
 # This command specifically checks for:
 # - Files owned by multiple tasks at the same level
@@ -288,17 +288,17 @@ Any output means you have duplicates that will cause merge conflicts.
 ### 1.4 State Corruption
 
 **Symptoms:**
-- "Invalid JSON" errors when ZERG reads state files
-- `/zerg:status` shows different data than you expect
+- "Invalid JSON" errors when MAHABHARATHA reads state files
+- `/mahabharatha:status` shows different data than you expect
 - Tasks appear "stuck" in states that don't match reality
 - Orphaned tasks that don't exist in the task-graph
 
 **Why This Happens:**
 
-ZERG maintains state in two places:
+MAHABHARATHA maintains state in two places:
 
 1. **Claude Code Task system** (authoritative) — The real source of truth, stored in `~/.claude/tasks/`
-2. **State JSON files** (supplementary) — Local cache in `.zerg/state/`, used for fast lookups
+2. **State JSON files** (supplementary) — Local cache in `.mahabharatha/state/`, used for fast lookups
 
 Corruption happens when these get out of sync, typically from:
 
@@ -314,15 +314,15 @@ First, determine what's actually wrong:
 
 ```bash
 # 1. Check if the state JSON is valid syntax
-python -m json.tool .zerg/state/$FEATURE.json
+python -m json.tool .mahabharatha/state/$FEATURE.json
 # Syntax errors will be reported here
 
 # 2. Look for backups
-ls -la .zerg/state/$FEATURE.json*
+ls -la .mahabharatha/state/$FEATURE.json*
 # .bak files are created before risky operations
 
 # 3. Compare state file tasks vs task-graph tasks
-jq '.tasks | keys' .zerg/state/$FEATURE.json > /tmp/state_tasks.txt
+jq '.tasks | keys' .mahabharatha/state/$FEATURE.json > /tmp/state_tasks.txt
 jq '.tasks[].id' .gsd/specs/$FEATURE/task-graph.json > /tmp/graph_tasks.txt
 diff /tmp/state_tasks.txt /tmp/graph_tasks.txt
 # Differences indicate orphaned or missing tasks
@@ -332,34 +332,34 @@ diff /tmp/state_tasks.txt /tmp/graph_tasks.txt
 
 ```bash
 # Option 1: Restore from backup (if available)
-cp .zerg/state/$FEATURE.json.bak .zerg/state/$FEATURE.json
+cp .mahabharatha/state/$FEATURE.json.bak .mahabharatha/state/$FEATURE.json
 
-# Option 2: Let ZERG rebuild from the authoritative Task system
+# Option 2: Let MAHABHARATHA rebuild from the authoritative Task system
 # The Task system has the real state — this reconciles them:
-/zerg:status  # Reads from Tasks and updates state file
+/mahabharatha:status  # Reads from Tasks and updates state file
 
 # Option 3: Full state reset (starts fresh but preserves completed work)
-rm .zerg/state/$FEATURE.json
-/zerg:rush --resume
+rm .mahabharatha/state/$FEATURE.json
+/mahabharatha:kurukshetra --resume
 # This rebuilds state from task-graph + Task system
 ```
 
 **Recognizing state/Task mismatches:**
 
-When `/zerg:status` shows something like:
+When `/mahabharatha:status` shows something like:
 
 ```
 State file: 5 completed, 2 failed
 Task system: 3 completed, 1 in_progress, 3 pending
 ```
 
-**Trust the Task system**. The state file is stale. Run `/zerg:debug` to reconcile them — it uses `TaskList`/`TaskGet` as the authoritative source.
+**Trust the Task system**. The state file is stale. Run `/mahabharatha:debug` to reconcile them — it uses `TaskList`/`TaskGet` as the authoritative source.
 
 **Prevention:**
 
-1. **Never manually edit state JSON files** — Use ZERG commands instead
-2. **Don't force-quit during operations** — Use `/zerg:stop` for clean shutdown
-3. **Run `/zerg:status`** regularly during long runs — it detects and reports mismatches
+1. **Never manually edit state JSON files** — Use MAHABHARATHA commands instead
+2. **Don't force-quit during operations** — Use `/mahabharatha:stop` for clean shutdown
+3. **Run `/mahabharatha:status`** regularly during long runs — it detects and reports mismatches
 
 ---
 
@@ -409,7 +409,7 @@ docker run --rm your-devcontainer-image \
 
 **Authentication setup:**
 
-ZERG supports two authentication methods:
+MAHABHARATHA supports two authentication methods:
 
 | Method | How It Works | Best For |
 |--------|--------------|----------|
@@ -424,7 +424,7 @@ claude auth status
 # If not authenticated, run: claude auth login
 
 # Container mode automatically mounts ~/.claude
-/zerg:rush --mode container --workers=5
+/mahabharatha:kurukshetra --mode container --workers=5
 ```
 
 **API key setup:**
@@ -434,7 +434,7 @@ claude auth status
 export ANTHROPIC_API_KEY=sk-ant-...
 
 # Or specify in config for all container runs
-# .zerg/config.yaml:
+# .mahabharatha/config.yaml:
 workers:
   container:
     env:
@@ -446,7 +446,7 @@ workers:
 If workers are getting killed for using too much memory:
 
 ```yaml
-# .zerg/config.yaml
+# .mahabharatha/config.yaml
 workers:
   container:
     memory: "4g"      # Increase if seeing OOM errors
@@ -460,38 +460,38 @@ Before starting container-mode execution:
 
 1. Run `claude auth status` to verify authentication works
 2. Check Docker has enough resources allocated (Docker Desktop > Settings > Resources)
-3. Test one container manually before launching the full swarm
+3. Test one container manually before launching the full akshauhini
 
 ---
 
 ## 2. Diagnostic Commands
 
-### 2.1 `/zerg:debug` — Deep Diagnostics
+### 2.1 `/mahabharatha:debug` — Deep Diagnostics
 
 This is your primary troubleshooting tool. It uses Bayesian hypothesis testing to identify the most likely cause of issues, with multi-language error parsing and code-aware recovery suggestions.
 
-**Why it exists:** Instead of manually checking logs, state files, and system conditions, `/zerg:debug` analyzes everything automatically and tells you what's probably wrong and how to fix it.
+**Why it exists:** Instead of manually checking logs, state files, and system conditions, `/mahabharatha:debug` analyzes everything automatically and tells you what's probably wrong and how to fix it.
 
 **Basic usage:**
 
 ```bash
 # Auto-detect and diagnose current issues
-/zerg:debug
+/mahabharatha:debug
 
 # Diagnose a specific error message
-/zerg:debug --error "ModuleNotFoundError: No module named 'requests'"
+/mahabharatha:debug --error "ModuleNotFoundError: No module named 'requests'"
 
 # Focus analysis on a specific worker
-/zerg:debug --worker 2
+/mahabharatha:debug --worker 2
 
 # Run comprehensive system-level checks
-/zerg:debug --deep --env
+/mahabharatha:debug --deep --env
 
 # Generate recovery plan and execute it (with confirmation prompts)
-/zerg:debug --fix
+/mahabharatha:debug --fix
 
 # Save a detailed report for sharing or later reference
-/zerg:debug --report diagnostics.md
+/mahabharatha:debug --report diagnostics.md
 ```
 
 **Available flags:**
@@ -527,21 +527,21 @@ This is your primary troubleshooting tool. It uses Bayesian hypothesis testing t
 
 ---
 
-### 2.2 `/zerg:status` — Progress Monitoring
+### 2.2 `/mahabharatha:status` — Progress Monitoring
 
-**Why it exists:** During a rush, you need visibility into what's happening across workers without digging through logs. Status provides a real-time dashboard.
+**Why it exists:** During a kurukshetra, you need visibility into what's happening across workers without digging through logs. Status provides a real-time dashboard.
 
 **Usage:**
 
 ```bash
 # One-time status check
-/zerg:status
+/mahabharatha:status
 
 # Watch mode — refreshes automatically
-/zerg:status --watch
+/mahabharatha:status --watch
 
 # Include detailed task-by-task information
-/zerg:status --verbose
+/mahabharatha:status --verbose
 ```
 
 **What the sections mean:**
@@ -554,7 +554,7 @@ This is your primary troubleshooting tool. It uses Bayesian hypothesis testing t
 
 ---
 
-### 2.3 `/zerg:logs` — Worker Output
+### 2.3 `/mahabharatha:logs` — Worker Output
 
 **Why it exists:** When you need to see exactly what a worker did, logs provide the detailed execution trace.
 
@@ -562,28 +562,28 @@ This is your primary troubleshooting tool. It uses Bayesian hypothesis testing t
 
 ```bash
 # Stream all worker logs (combined)
-/zerg:logs
+/mahabharatha:logs
 
 # View one specific worker's output
-/zerg:logs --worker 2
+/mahabharatha:logs --worker 2
 
 # Filter to logs mentioning a specific task
-/zerg:logs --task TASK-001
+/mahabharatha:logs --task TASK-001
 
 # Aggregate and summarize across all workers
-/zerg:logs --aggregate
+/mahabharatha:logs --aggregate
 
 # Show only error-level messages
-/zerg:logs --level error
+/mahabharatha:logs --level error
 
 # View artifacts a task produced
-/zerg:logs --artifacts TASK-001
+/mahabharatha:logs --artifacts TASK-001
 ```
 
 **Log directory structure:**
 
 ```
-.zerg/logs/
+.mahabharatha/logs/
   workers/
     worker-0.log          # Main output from worker 0
     worker-0.stderr.log   # Errors and warnings
@@ -610,8 +610,8 @@ git worktree list
 git worktree list --porcelain  # Machine-parseable format
 
 # Check status in a specific worktree
-git -C .zerg/worktrees/worker-0 status
-git -C .zerg/worktrees/worker-0 log -3 --oneline
+git -C .mahabharatha/worktrees/worker-0 status
+git -C .mahabharatha/worktrees/worker-0 log -3 --oneline
 
 # Clean up orphaned worktrees (references to deleted directories)
 git worktree prune
@@ -631,8 +631,8 @@ For container-mode issues, these Docker commands reveal what's happening:
 docker info
 docker version
 
-# List ZERG-related containers
-docker ps -a --filter "name=zerg"
+# List MAHABHARATHA-related containers
+docker ps -a --filter "name=mahabharatha"
 
 # Check resource usage across containers
 docker stats --no-stream
@@ -654,17 +654,17 @@ docker volume prune -f
 
 ### 3.1 Resume After Crash
 
-**Why this works:** ZERG is designed to be crash-safe. State is preserved in the Claude Code Task system (authoritative) and `.zerg/state/` (cache). You can always pick up where you left off.
+**Why this works:** MAHABHARATHA is designed to be crash-safe. State is preserved in the Claude Code Task system (authoritative) and `.mahabharatha/state/` (cache). You can always pick up where you left off.
 
 ```bash
 # Resume from the last known state
-/zerg:rush --resume
+/mahabharatha:kurukshetra --resume
 ```
 
 **What `--resume` does internally:**
 
 1. Queries Claude Tasks via `TaskList` to get authoritative task states
-2. Cross-references with `.zerg/state/` for any additional context
+2. Cross-references with `.mahabharatha/state/` for any additional context
 3. Identifies tasks that are pending or were in-progress when the crash happened
 4. Spawns workers for those tasks only
 5. Skips tasks already marked completed
@@ -680,27 +680,27 @@ No data is lost in a crash — you just resume.
 
 ```bash
 # Retry all failed tasks
-/zerg:retry
+/mahabharatha:retry
 
 # Retry one specific task
-/zerg:retry TASK-001
+/mahabharatha:retry TASK-001
 
 # Retry all failed tasks in a specific level
-/zerg:retry --level 2
+/mahabharatha:retry --level 2
 
 # Force retry even if retry limit is exceeded
-/zerg:retry --force TASK-001
+/mahabharatha:retry --force TASK-001
 
 # Reset all retry counters to zero
-/zerg:retry --reset
+/mahabharatha:retry --reset
 
 # Preview what would be retried without doing it
-/zerg:retry --dry-run
+/mahabharatha:retry --dry-run
 ```
 
 **Retry limits:**
 
-By default, each task can be retried 3 times. After that, you need `--force`. Configure in `.zerg/config.yaml`:
+By default, each task can be retried 3 times. After that, you need `--force`. Configure in `.mahabharatha/config.yaml`:
 
 ```yaml
 workers:
@@ -711,32 +711,32 @@ workers:
 
 ### 3.3 Cleanup Stale State
 
-**Why you'd need this:** After completing a feature or abandoning one, cleanup removes ZERG artifacts so they don't interfere with future work.
+**Why you'd need this:** After completing a feature or abandoning one, cleanup removes MAHABHARATHA artifacts so they don't interfere with future work.
 
 ```bash
-# Full cleanup of all ZERG artifacts
-/zerg:cleanup
+# Full cleanup of all MAHABHARATHA artifacts
+/mahabharatha:cleanup
 
 # Cleanup just one feature's artifacts
-/zerg:cleanup --feature user-auth
+/mahabharatha:cleanup --feature user-auth
 
 # Cleanup only worktrees (keep logs and state)
-/zerg:cleanup --worktrees
+/mahabharatha:cleanup --worktrees
 
 # Cleanup only logs (keep worktrees and state)
-/zerg:cleanup --logs
+/mahabharatha:cleanup --logs
 
 # Preview what would be deleted
-/zerg:cleanup --dry-run
+/mahabharatha:cleanup --dry-run
 ```
 
 **What gets removed:**
 
-- `.zerg/state/<feature>.json` — State cache
-- `.zerg/worktrees/` — Git worktree directories
-- `.zerg/logs/` — Worker and task logs
-- Worker branches in git (branches starting with `zerg-`)
-- Claude Tasks with ZERG prefixes (`[L*]`, `[Plan]`, etc.)
+- `.mahabharatha/state/<feature>.json` — State cache
+- `.mahabharatha/worktrees/` — Git worktree directories
+- `.mahabharatha/logs/` — Worker and task logs
+- Worker branches in git (branches starting with `mahabharatha-`)
+- Claude Tasks with MAHABHARATHA prefixes (`[L*]`, `[Plan]`, etc.)
 
 ---
 
@@ -748,44 +748,44 @@ When automated recovery doesn't work, these manual steps get you back to a clean
 
 ```bash
 # 1. Stop all workers gracefully (or forcefully)
-/zerg:stop --force
+/mahabharatha:stop --force
 
 # 2. Clean up all worktrees
 git worktree prune
-rm -rf .zerg/worktrees/*
+rm -rf .mahabharatha/worktrees/*
 
 # 3. Remove the state file
-rm .zerg/state/$FEATURE.json
+rm .mahabharatha/state/$FEATURE.json
 
-# 4. Delete all ZERG branches
-git branch | grep "^  zerg-" | xargs git branch -D
+# 4. Delete all MAHABHARATHA branches
+git branch | grep "^  mahabharatha-" | xargs git branch -D
 
 # 5. Reset to clean main
 git checkout main
 git reset --hard origin/main
 
 # 6. Start fresh
-/zerg:rush
+/mahabharatha:kurukshetra
 ```
 
 **Recover a specific stuck worker:**
 
 ```bash
 # 1. Find which worker is stuck
-/zerg:status --verbose
+/mahabharatha:status --verbose
 
 # 2. Kill its process if still running
 pkill -f "claude.*worker-N"
 
 # 3. Remove its worktree
-rm -rf .zerg/worktrees/worker-N
+rm -rf .mahabharatha/worktrees/worker-N
 git worktree prune
 
 # 4. Mark its task as failed
 # (Use TaskUpdate in your Claude Code session)
 
-# 5. Resume — ZERG will reassign the task
-/zerg:rush --resume
+# 5. Resume — MAHABHARATHA will reassign the task
+/mahabharatha:kurukshetra --resume
 ```
 
 **Fix a corrupted task graph:**
@@ -801,19 +801,19 @@ jq -r '.tasks[] | .files.create[]?, .files.modify[]?' \
 # Edit task-graph.json to remove duplicates
 
 # 3. If task-graph is beyond repair, regenerate from design
-/zerg:design --regenerate
+/mahabharatha:design --regenerate
 ```
 
 ---
 
 ## 4. Configuration Reference
 
-These settings control ZERG's resilience and recovery behavior.
+These settings control MAHABHARATHA's resilience and recovery behavior.
 
 ### Resilience Settings
 
 ```yaml
-# .zerg/config.yaml
+# .mahabharatha/config.yaml
 resilience:
   enabled: true  # Master toggle for resilience features
 
@@ -854,14 +854,14 @@ logging:
 
 If you've tried the above and are still stuck:
 
-1. **Run full diagnostics:** `/zerg:debug --deep --env --report debug-report.md`
+1. **Run full diagnostics:** `/mahabharatha:debug --deep --env --report debug-report.md`
 2. **Check the [FAQ](FAQ)** for answers to common questions
-3. **Search existing issues:** [GitHub Issues](https://github.com/rocklambros/zerg/issues)
+3. **Search existing issues:** [GitHub Issues](https://github.com/rocklambros/mahabharatha/issues)
 4. **Open a new issue** including:
-   - ZERG version (`zerg --version`)
+   - MAHABHARATHA version (`mahabharatha --version`)
    - The full command that failed
    - The diagnostic report from step 1
-   - Relevant log snippets from `.zerg/logs/`
+   - Relevant log snippets from `.mahabharatha/logs/`
 
 Good bug reports include the error message, what you expected to happen, and what actually happened.
 
@@ -869,7 +869,7 @@ Good bug reports include the error message, what you expected to happen, and wha
 
 ## See Also
 
-- [Command-Reference](Command-Reference) — Full documentation of all ZERG commands
+- [Command-Reference](Command-Reference) — Full documentation of all MAHABHARATHA commands
 - [Configuration](Configuration) — Complete config file reference
-- [Architecture](Architecture) — How ZERG works internally
+- [Architecture](Architecture) — How MAHABHARATHA works internally
 - [FAQ](FAQ) — Frequently asked questions and quick answers

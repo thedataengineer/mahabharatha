@@ -1,18 +1,18 @@
-# /zerg:design
+# /mahabharatha:design
 
 Generate technical architecture and a task graph for parallel execution.
 
 ## Synopsis
 
 ```
-/zerg:design
+/mahabharatha:design
 ```
 
 ## Description
 
-`/zerg:design` reads the approved requirements for the active feature and produces two key artifacts: a technical design document (`design.md`) and a task graph (`task-graph.json`). Together, these define the architecture and break the work into parallelizable tasks with exclusive file ownership.
+`/mahabharatha:design` reads the approved requirements for the active feature and produces two key artifacts: a technical design document (`design.md`) and a task graph (`task-graph.json`). Together, these define the architecture and break the work into parallelizable tasks with exclusive file ownership.
 
-The command requires that `/zerg:plan` has been run and that the resulting `requirements.md` has been marked as `APPROVED`.
+The command requires that `/mahabharatha:plan` has been run and that the resulting `requirements.md` has been marked as `APPROVED`.
 
 ### Design Phases
 
@@ -64,15 +64,15 @@ This command takes no options. It operates on the active feature detected from `
 
 ## Prerequisites
 
-- `/zerg:init` must have been run
-- `/zerg:plan <feature>` must have been run
+- `/mahabharatha:init` must have been run
+- `/mahabharatha:plan <feature>` must have been run
 - `requirements.md` must exist with `Status: APPROVED`
 
 ## Examples
 
 ```bash
 # Generate design for the active feature
-/zerg:design
+/mahabharatha:design
 ```
 
 ## Output
@@ -98,6 +98,6 @@ Tasks are also registered in the Claude Code Task system with subjects following
 
 ## See Also
 
-- [[zerg-plan]] -- Must complete before design
-- [[zerg-rush]] -- Next step after design is approved
-- [[zerg-Reference]] -- Full command index
+- [[mahabharatha-plan]] -- Must complete before design
+- [[mahabharatha-kurukshetra]] -- Next step after design is approved
+- [[mahabharatha-Reference]] -- Full command index
