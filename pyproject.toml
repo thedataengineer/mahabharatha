@@ -10,7 +10,7 @@ readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.12"
 authors = [
-    {name = "rocklambros", email = "rocklambros@users.noreply.github.com"}
+    {name = "thedataengineer", email = "21700785+thedataengineer@users.noreply.github.com"}
 ]
 keywords = ["mahabharatha", "warrior", "orchestration", "devcontainer", "workflow"]
 classifiers = [

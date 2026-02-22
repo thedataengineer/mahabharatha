@@ -7,8 +7,8 @@
 <p align="center">
   <a href="https://pypi.org/project/mahabharatha-ai/"><img src="https://img.shields.io/pypi/v/mahabharatha-ai" alt="PyPI version"></a>
   <a href="https://pypi.org/project/mahabharatha-ai/"><img src="https://img.shields.io/pypi/pyversions/mahabharatha-ai" alt="Python"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/rocklambros/mahabharatha" alt="License"></a>
-  <a href="https://github.com/rocklambros/mahabharatha/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/rocklambros/mahabharatha/ci.yml?branch=main&label=CI" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/thedataengineer/mahabharatha" alt="License"></a>
+  <a href="https://github.com/thedataengineer/mahabharatha/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/thedataengineer/mahabharatha/ci.yml?branch=main&label=CI" alt="CI"></a>
   <a href="#"><img src="https://img.shields.io/badge/coverage-50%25-yellow" alt="Coverage"></a>
 </p>
 
@@ -42,27 +42,7 @@ The goal was simple: stop repeating myself and start shipping faster. Mahabharat
 
 ---
 
-## Quick Start (5 minutes)
-
-```bash
-# Install Mahabharatha
-pip install mahabharatha-ai
-
-# Or install from source (contributors)
-git clone https://github.com/rocklambros/mahabharatha.git && cd mahabharatha
-pip install -e ".[dev]"
-mahabharatha install  # Install slash commands into your project
-
-# Inside Claude Code:
-/mahabharatha:init                    # Initialize project
-/mahabharatha:plan my-feature         # Capture requirements
-/mahabharatha:design                  # Generate architecture
-/mahabharatha:Kurukshetra --workers=5        # Launch the Akshauhini
-```
-
----
-
-## Installation
+## Setup & Installation
 
 ### Prerequisites
 
@@ -73,46 +53,40 @@ mahabharatha install  # Install slash commands into your project
 | Claude Code CLI | `claude --version` | Worker instances |
 | Docker 20.x+ | `docker info` | Container mode (optional) |
 
-### Step 1: Install
+### 1. Install Mahabharatha
 
+**Option A: Standard Installation (Recommended)**
 ```bash
 pip install mahabharatha-ai
 ```
 
-### Step 1b: Install from Source (Contributors)
-
+**Option B: Install from Source (Contributors)**
 ```bash
-git clone https://github.com/rocklambros/mahabharatha.git
+git clone https://github.com/thedataengineer/mahabharatha.git
 cd mahabharatha
 pip install -e ".[dev]"
+pre-commit install  # Optional: for contributors
 ```
 
-### Step 2: Install Pre-commit Hooks (Contributors)
-
-```bash
-pre-commit install
-```
-
-### Step 3: Verify Installation
-
+Verify the installation:
 ```bash
 mahabharatha --help
 ```
 
-### Step 4: Install Slash Commands
+### 2. Install Slash Commands into Your Project
 
-Mahabharatha ships with 26 slash commands. Install them into your project:
+Mahabharatha ships with 26 slash commands. To use them, you must install them into the project where you plan to run Claude Code:
 
 ```bash
-cd your-project
-mahabharatha install          # Install to .claude/commands/
+mkdir my-new-project && cd my-new-project
+mahabharatha install          # Installs commands to .claude/commands/
 ```
 
-Once installed, use `/mahabharatha:*` commands inside any Claude Code session. Every command also has a `/z:` shortcut (e.g., `/z:plan`, `/z:Kurukshetra`).
+Once installed, use `/mahabharatha:*` commands inside any Claude Code session in that directory. Every command also has a `/z:` shortcut (e.g., `/z:plan`, `/z:Kurukshetra`).
 
 ---
 
-## Tutorial: Your First Mahabharatha Project
+## Tutorial: Your First Mahabharatha Project (5 minutes)
 
 This tutorial walks through building a "Minerals Store" — a Starcraft 2 themed ecommerce API — using all Mahabharatha phases. You'll learn why each phase exists and see what the conversations with Mahabharatha actually look like.
 
@@ -510,7 +484,7 @@ Other git operations available:
 | `/mahabharatha:explain` | Educational code explanations |
 | `/mahabharatha:select-tool` | Intelligent MCP tool routing |
 
-[Full Command Reference](https://github.com/rocklambros/mahabharatha/wiki/Command-Reference)
+[Full Command Reference](https://github.com/thedataengineer/mahabharatha/wiki/Command-Reference)
 
 ---
 
@@ -541,7 +515,7 @@ plugins:
     command_splitting: true
 ```
 
-[Full Configuration Guide](https://github.com/rocklambros/mahabharatha/wiki/Configuration)
+[Full Configuration Guide](https://github.com/thedataengineer/mahabharatha/wiki/Configuration)
 
 ---
 
@@ -549,18 +523,18 @@ plugins:
 
 | Resource | Description |
 |----------|-------------|
-| [Wiki: Home](https://github.com/rocklambros/mahabharatha/wiki/Home) | Overview and quick navigation |
-| [Wiki: Command Reference](https://github.com/rocklambros/mahabharatha/wiki/Command-Reference) | All 26 commands with flags and examples |
-| [Wiki: Tutorial](https://github.com/rocklambros/mahabharatha/wiki/Tutorial) | Complete minerals-store walkthrough |
-| [Wiki: Configuration](https://github.com/rocklambros/mahabharatha/wiki/Configuration) | Config files and tuning options |
-| [Wiki: Architecture](https://github.com/rocklambros/mahabharatha/wiki/Architecture) | System design and module reference |
-| [Wiki: Plugins](https://github.com/rocklambros/mahabharatha/wiki/Plugins) | Quality gates, hooks, custom launchers |
-| [Wiki: Context Engineering](https://github.com/rocklambros/mahabharatha/wiki/Context-Engineering) | Token optimization techniques |
-| [Wiki: Troubleshooting](https://github.com/rocklambros/mahabharatha/wiki/Troubleshooting) | Common issues and solutions |
+| [Wiki: Home](https://github.com/thedataengineer/mahabharatha/wiki/Home) | Overview and quick navigation |
+| [Wiki: Command Reference](https://github.com/thedataengineer/mahabharatha/wiki/Command-Reference) | All 26 commands with flags and examples |
+| [Wiki: Tutorial](https://github.com/thedataengineer/mahabharatha/wiki/Tutorial) | Complete minerals-store walkthrough |
+| [Wiki: Configuration](https://github.com/thedataengineer/mahabharatha/wiki/Configuration) | Config files and tuning options |
+| [Wiki: Architecture](https://github.com/thedataengineer/mahabharatha/wiki/Architecture) | System design and module reference |
+| [Wiki: Plugins](https://github.com/thedataengineer/mahabharatha/wiki/Plugins) | Quality gates, hooks, custom launchers |
+| [Wiki: Context Engineering](https://github.com/thedataengineer/mahabharatha/wiki/Context-Engineering) | Token optimization techniques |
+| [Wiki: Troubleshooting](https://github.com/thedataengineer/mahabharatha/wiki/Troubleshooting) | Common issues and solutions |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Detailed system architecture |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Development setup and PR process |
 | [SECURITY.md](SECURITY.md) | Vulnerability reporting |
-| [Discussions](https://github.com/rocklambros/mahabharatha/discussions) | Questions, ideas, and community chat |
+| [Discussions](https://github.com/thedataengineer/mahabharatha/discussions) | Questions, ideas, and community chat |
 
 ---
 
@@ -620,7 +594,7 @@ Single-epic users do not need to change anything. The `Mahabharatha_FEATURE` env
 | Task stuck | `/mahabharatha:debug` to diagnose, `/mahabharatha:retry` to retry |
 | Need to restart | `/mahabharatha:Kurukshetra --resume` continues from checkpoint |
 
-[Full Troubleshooting Guide](https://github.com/rocklambros/mahabharatha/wiki/Troubleshooting)
+[Full Troubleshooting Guide](https://github.com/thedataengineer/mahabharatha/wiki/Troubleshooting)
 
 ---
 
