@@ -21,7 +21,7 @@
 Mahabharatha is built upon the brilliant foundation of [Zerg](https://github.com/TikiTribe/zerg). The original Zerg project introduced the phenomenal concept of parallel Claude Code execution. However, I wanted to take it in a different direction and build upon it with new aesthetics and extra capabilities.
 
 **Why this fork was built:**
-1. **Expanding Beyond Claude**: The original Zerg project was tightly coupled to Claude Code. I forked the project because I wanted to expand this powerful parallel orchestration model to support other LLMs and tools, breaking free from a single-provider ecosystem.
+1. **Expanding Beyond Claude**: The original Zerg project was tightly coupled to Claude Code. I forked the project because I wanted to expand this powerful parallel orchestration model to support other LLMs and tools, breaking free from a single-provider ecosystem. In the future, this will enable heterogeneous orchestration and intelligent selection of different models and agents tailored for specific tasks.
 2. **Epic Theming**: I completely rebranded the Starcraft "Zerg" terminology into the epic "Mahabharatha" theme (e.g., launching an *Akshauhini* of warriors into *Kurukshetra* instead of a "Zerg rush").
 3. **Publishing to PyPI**: I packaged and published this tool to PyPI as `mahabharatha-ai` so that anyone can install it instantly via `pip install mahabharatha-ai` without needing to clone the source.
 
