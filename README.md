@@ -12,13 +12,20 @@
   <a href="#"><img src="https://img.shields.io/badge/coverage-50%25-yellow" alt="Coverage"></a>
 </p>
 
-**Zero-Effort Rapid Growth** — A parallel Claude Code execution system that coordinates multiple Claude Code instances to build software features simultaneously. Mahabharatha auto-detects your tech stack, fetches security rules, generates dev containers, breaks features into atomic tasks with exclusive file ownership, and launches an Akshauhini of warriors to execute them in parallel.
+**Mahabharatha** (a rebranded and extended fork of [Zerg](https://github.com/TikiTribe/zerg)) is a parallel Claude Code execution system that coordinates multiple Claude Code instances to build software features simultaneously. It auto-detects your tech stack, fetches security rules, generates dev containers, breaks features into atomic tasks with exclusive file ownership, and launches an Akshauhini of warriors to execute them in parallel.
 
 ---
 
-## Why I Built This
+## Why This Exists (The Fork from Zerg)
 
-Every time I started a new project with Claude Code, I found myself doing the same setup work over and over:
+Mahabharatha is built upon the brilliant foundation of [Zerg](https://github.com/TikiTribe/zerg). The original Zerg project introduced the phenomenal concept of parallel Claude Code execution. However, I wanted to take it in a different direction and build upon it with new aesthetics and extra capabilities.
+
+**Why I forked and built this:**
+1. **Epic Theming**: I completely rebranded the Starcraft "Zerg" terminology into the epic "Mahabharatha" theme (e.g., launching an *Akshauhini* of warriors into *Kurukshetra* instead of a "Zerg rush").
+2. **Publishing to PyPI**: I packaged and published this tool to PyPI as `mahabharatha-ai` so that anyone can install it instantly via `pip install mahabharatha-ai` without needing to clone the source.
+3. **Extensibility & Independence**: Forking allowed me to take ownership of the project's direction, customize the documentation, and tweak internal environment variables to fit my workflow and vision.
+
+The core motivation remains the same: Every time I started a new project with Claude Code, I found myself doing the same setup work over and over:
 
 - **Secure coding rules.** Manually writing OWASP guidelines, language-specific security patterns, and Docker hardening rules into CLAUDE.md so Claude would actually follow them. Every. Single. Time.
 - **Dev containers.** Configuring Dockerfiles, devcontainer.json, MCP servers, and post-create scripts so workers could run in isolated environments.

@@ -62,10 +62,10 @@ Changelog = "https://github.com/thedataengineer/mahabharatha/blob/main/CHANGELOG
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["zerg*"]
+include = ["mahabharatha*"]
 
 [tool.setuptools.package-data]
-zerg = ["py.typed", "schemas/*.json", "data/commands/*.md"]
+mahabharatha = ["py.typed", "schemas/*.json", "data/commands/*.md"]
 
 [tool.mypy]
 python_version = "3.12"
@@ -80,7 +80,7 @@ exclude = ["tests/fixtures"]
 [tool.ruff]
 target-version = "py312"
 line-length = 120
-exclude = [".zerg", "tests/fixtures"]
+exclude = [".mahabharatha", "tests/fixtures"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "BLE001"]
