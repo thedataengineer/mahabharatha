@@ -302,17 +302,17 @@ echo ""
 # =============================================================================
 echo -e "${BLUE}MAHABHARATHA Checks${NC}"
 
-# 11. MAHABHARATHA branch naming (only on zerg/* branches)
+# 11. MAHABHARATHA branch naming (only on mahabharatha/* branches)
 echo -n "  Branch naming... "
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
 
-if echo "$CURRENT_BRANCH" | grep -q '^zerg/'; then
+if echo "$CURRENT_BRANCH" | grep -q '^mahabharatha/'; then
     # On a MAHABHARATHA branch - validate naming convention
-    if echo "$CURRENT_BRANCH" | grep -qE '^zerg/[a-z0-9-]+/worker-[0-9]+$'; then
+    if echo "$CURRENT_BRANCH" | grep -qE '^mahabharatha/[a-z0-9-]+/worker-[0-9]+$'; then
         echo -e "${GREEN}OK${NC}"
     else
         echo -e "${YELLOW}WARNING${NC}"
-        echo "    Warning: MAHABHARATHA branch should follow pattern: zerg/{feature}/worker-{N}"
+        echo "    Warning: MAHABHARATHA branch should follow pattern: mahabharatha/{feature}/worker-{N}"
         echo "    Current: $CURRENT_BRANCH"
         WARNINGS=$((WARNINGS + 1))
     fi
@@ -320,11 +320,11 @@ else
     echo -e "${GREEN}OK${NC} (not a MAHABHARATHA worker branch)"
 fi
 
-# 12. Print statement detection (zerg/ directory only)
+# 12. Print statement detection (mahabharatha/ directory only)
 echo -n "  Print statements... "
 PRINT_FOUND=0
 
-MAHABHARATHA_PYTHON=$(echo "$STAGED_PYTHON" | grep -E '^zerg/' || true)
+MAHABHARATHA_PYTHON=$(echo "$STAGED_PYTHON" | grep -E '^mahabharatha/' || true)
 
 if [ -n "$MAHABHARATHA_PYTHON" ]; then
     for file in $MAHABHARATHA_PYTHON; do

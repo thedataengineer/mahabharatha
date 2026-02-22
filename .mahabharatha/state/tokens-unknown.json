@@ -10,13 +10,13 @@
       },
       "total": 638,
       "mode": "estimated",
-      "timestamp": "2026-02-22T00:25:36.583668+00:00"
+      "timestamp": "2026-02-22T00:30:46.661149+00:00"
     },
     "T-2": {
       "breakdown": {},
       "total": 0,
       "mode": "estimated",
-      "timestamp": "2026-02-22T00:25:36.588500+00:00"
+      "timestamp": "2026-02-22T00:30:46.666023+00:00"
     },
     "T-3": {
       "breakdown": {
@@ -26,7 +26,7 @@
       },
       "total": 872,
       "mode": "estimated",
-      "timestamp": "2026-02-22T00:25:37.123198+00:00"
+      "timestamp": "2026-02-22T00:30:47.236384+00:00"
     },
     "T-4": {
       "breakdown": {
@@ -36,21 +36,21 @@
       },
       "total": 222,
       "mode": "estimated",
-      "timestamp": "2026-02-22T00:25:37.656342+00:00"
+      "timestamp": "2026-02-22T00:30:47.815425+00:00"
     },
     "1-1": {
       "breakdown": {
         "engineering_rules": 417,
         "mcp_hints": 12,
-        "repo_map": 399
+        "repo_map": 394
       },
-      "total": 828,
+      "total": 823,
       "mode": "estimated",
-      "timestamp": "2026-02-16T21:01:54.626882+00:00"
+      "timestamp": "2026-02-22T00:51:01.901184+00:00"
     }
   },
   "cumulative": {
-    "total_tokens": 2560,
+    "total_tokens": 2555,
     "tasks_completed": 5
   }
 }

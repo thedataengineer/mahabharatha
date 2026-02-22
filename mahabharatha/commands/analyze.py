@@ -365,7 +365,7 @@ class DeadCodeChecker(BaseChecker):
                 score = max(0.0, 100.0 - len(issues) * 5)
                 return AnalysisResult(
                     check_type=CheckType.DEAD_CODE,
-                    passed=len(issues) == 0,
+                    passed=not issues,
                     issues=issues,
                     score=score,
                 )
@@ -475,7 +475,7 @@ class ConventionsChecker(BaseChecker):
         score = max(0.0, 100.0 - len(issues) * 5)
         return AnalysisResult(
             check_type=CheckType.CONVENTIONS,
-            passed=len(issues) == 0,
+            passed=not issues,
             issues=issues,
             score=score,
         )
@@ -603,7 +603,7 @@ class CrossFileChecker(BaseChecker):
         score = max(0.0, 100.0 - len(issues) * 3)
         return AnalysisResult(
             check_type=CheckType.CROSS_FILE,
-            passed=len(issues) == 0,
+            passed=not issues,
             issues=issues,
             score=score,
         )
@@ -688,7 +688,7 @@ class ImportChainChecker(BaseChecker):
         score = max(0.0, 100.0 - len(issues) * 10)
         return AnalysisResult(
             check_type=CheckType.IMPORT_CHAIN,
-            passed=len(issues) == 0,
+            passed=not issues,
             issues=issues,
             score=score,
         )
