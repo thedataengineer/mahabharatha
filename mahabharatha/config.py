@@ -219,6 +219,10 @@ class RulesConfig(BaseModel):
     custom_rules: bool = True
     disabled_rules: list[str] = Field(default_factory=list)
     inject_into_workers: bool = True
+    repository: str = Field(
+        default="TikiTribe/claude-secure-coding-rules",
+        description="GitHub repository (owner/repo) to fetch secure coding rules from",
+    )
 
 
 class CircuitBreakerConfig(BaseModel):

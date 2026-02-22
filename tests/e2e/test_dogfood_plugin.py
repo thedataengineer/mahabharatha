@@ -182,7 +182,7 @@ def _plugin_task_graph() -> list[dict]:
         {
             "id": "DF-L2-005",
             "title": "Integrate plugins into MahabharathaConfig",
-            "description": "Add plugins field to MahabharathaConfig in mahabharatha/config.py (optional PluginsConfig).",
+            "description": "Add plugins field to MahabharathaConfig in config.py (optional PluginsConfig).",
             "phase": "core",
             "level": 2,
             "dependencies": ["DF-L1-004"],

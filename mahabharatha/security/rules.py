@@ -13,14 +13,11 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.fs_utils import collect_files
 from mahabharatha.logging import get_logger
 
 logger = get_logger(__name__)
-
-# GitHub repository for secure coding rules
-RULES_REPO = "TikiTribe/claude-secure-coding-rules"
-RULES_RAW_URL = f"https://raw.githubusercontent.com/{RULES_REPO}/main"
 
 
 @dataclass
@@ -538,6 +535,10 @@ def fetch_rules(
 
     fetched: dict[str, Path] = {}
 
+    config = MahabharathaConfig.load()
+    rules_repo = config.rules.repository
+    rules_raw_url = f"https://raw.githubusercontent.com/{rules_repo}/main"
+
     for rule_path in rule_paths:
         # Create local path preserving directory structure
         local_path = output_dir / rule_path.replace("rules/", "")
@@ -549,7 +550,7 @@ def fetch_rules(
             continue
 
         # Fetch from GitHub
-        url = f"{RULES_RAW_URL}/{rule_path}"
+        url = f"{rules_raw_url}/{rule_path}"
         try:
             result = subprocess.run(
                 ["curl", "-fsSL", url],
@@ -584,10 +585,13 @@ def generate_claude_md_section(
     Returns:
         Markdown content for CLAUDE.md
     """
+    config = MahabharathaConfig.load()
+    rules_repo = config.rules.repository
+
     lines = [
         "# Security Rules",
         "",
-        f"Auto-generated from [TikiTribe/claude-secure-coding-rules](https://github.com/{RULES_REPO})",
+        f"Auto-generated from [{rules_repo}](https://github.com/{rules_repo})",
         "",
         "## Detected Stack",
         "",

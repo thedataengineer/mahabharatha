@@ -25,7 +25,7 @@ mahabharatha security-rules integrate   # Full integration with CLAUDE.md
 
 ## Secure Coding Rules
 
-Mahabharatha integrates with [TikiTribe/claude-secure-coding-rules](https://github.com/TikiTribe/claude-secure-coding-rules) to provide stack-specific security guidance.
+Mahabharatha integrates with your configured security rules repository (default: [TikiTribe/claude-secure-coding-rules](https://github.com/TikiTribe/claude-secure-coding-rules)) to provide stack-specific security guidance.
 
 ### Automatic Stack Detection
 

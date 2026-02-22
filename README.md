@@ -35,7 +35,7 @@ The core motivation remains the same: Every time I started a new project with Cl
 
 I got tired of the repetition. So I built a system that handles all of it:
 
-**Mahabharatha auto-detects your stack** and fetches stack-specific security rules (OWASP Top 10 2025, Python, JavaScript, Docker) from [TikiTribe/claude-secure-coding-rules](https://github.com/TikiTribe/claude-secure-coding-rules) — no manual CLAUDE.md maintenance.
+**Mahabharatha auto-detects your stack** and fetches stack-specific security rules (OWASP Top 10 2025, Python, JavaScript, Docker). By default, it uses the excellent [TikiTribe/claude-secure-coding-rules](https://github.com/TikiTribe/claude-secure-coding-rules), but it is designed to be extensible so you can configure it to pull from your own internal enterprise rule registries or other open-source repositories — no manual CLAUDE.md maintenance.
 
 **Mahabharatha generates dev containers** with your detected languages, MCP server configs, and authentication baked in — workers spin up in isolated Docker environments with a single flag.
 

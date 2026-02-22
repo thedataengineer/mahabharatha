@@ -343,7 +343,7 @@ Starcraft 2 themed ecommerce API for trading minerals and vespene gas.
 <!-- SECURITY_RULES_START -->
 # Security Rules
 
-Auto-generated from TikiTribe/claude-secure-coding-rules
+Auto-generated from configured rules repository
 
 ## Detected Stack
 - **Languages**: python

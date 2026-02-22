@@ -315,7 +315,7 @@ DATABASE_URL=
 
 ## Phase 6: Integrate Secure Coding Rules
 
-Automatically fetch relevant security rules from [TikiTribe/claude-secure-coding-rules](https://github.com/TikiTribe/claude-secure-coding-rules) based on detected project stack.
+Automatically fetch relevant security rules from your configured repository (default: [TikiTribe/claude-secure-coding-rules](https://github.com/TikiTribe/claude-secure-coding-rules)) based on detected project stack.
 
 ### Step 1: Detect Project Stack
 
@@ -373,7 +373,7 @@ The integration updates `CLAUDE.md` with an informational section (no imports ne
 <!-- SECURITY_RULES_START -->
 # Security Rules
 
-Auto-generated from TikiTribe/claude-secure-coding-rules
+Auto-generated from configured rules repository
 
 ## Detected Stack
 - **Languages**: python
