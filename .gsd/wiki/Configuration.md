@@ -991,13 +991,13 @@ These are set automatically by the orchestrator. You do not configure them, but 
 
 | Variable | Description |
 |----------|-------------|
-| `ZERG_WORKER_ID` | Worker identifier (0-N) |
-| `ZERG_FEATURE` | Current feature name |
-| `ZERG_BRANCH` | Worker's git branch |
-| `ZERG_WORKTREE` | Worker's git worktree path |
-| `ZERG_ANALYSIS_DEPTH` | Analysis tier setting |
-| `ZERG_COMPACT_MODE` | Compact output mode flag |
-| `ZERG_MCP_HINT` | Recommended MCP servers |
+| `MAHABHARATHA_WORKER_ID` | Worker identifier (0-N) |
+| `MAHABHARATHA_FEATURE` | Current feature name |
+| `MAHABHARATHA_BRANCH` | Worker's git branch |
+| `MAHABHARATHA_WORKTREE` | Worker's git worktree path |
+| `MAHABHARATHA_ANALYSIS_DEPTH` | Analysis tier setting |
+| `MAHABHARATHA_COMPACT_MODE` | Compact output mode flag |
+| `MAHABHARATHA_MCP_HINT` | Recommended MCP servers |
 | `CLAUDE_CODE_TASK_LIST_ID` | Shared task list for coordination |
 
 ### Optional Variables
@@ -1018,7 +1018,7 @@ MAHABHARATHA intentionally blocks certain variables from passing to workers:
 - `HOME`, `USER`, `SHELL` — Identity information
 
 **Allowed:**
-- `ZERG_*` — All MAHABHARATHA-specific variables
+- `MAHABHARATHA_*` — All MAHABHARATHA-specific variables
 - `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` — API credentials
 - `CI`, `DEBUG`, `LOG_LEVEL` — Environment flags
 

@@ -10,7 +10,7 @@
     },
     {
       "subject": "[L1] Add PlanningConfig to config.py",
-      "description": "Extend ZergConfig with PlanningConfig section. Fields: default_detail (standard|medium|high), include_code_snippets (bool), include_test_first (bool), step_verification (bool), adaptive_detail (bool), adaptive_familiarity_threshold (int), adaptive_success_threshold (float). Add to config.yaml schema.\nFiles \u2014 modify: mahabharatha/config.py\nVerify: python -c \"from mahabharatha.config import ZergConfig; c = ZergConfig.load(); print(c.planning)\"",
+      "description": "Extend MahabharathaConfig with PlanningConfig section. Fields: default_detail (standard|medium|high), include_code_snippets (bool), include_test_first (bool), step_verification (bool), adaptive_detail (bool), adaptive_familiarity_threshold (int), adaptive_success_threshold (float). Add to config.yaml schema.\nFiles \u2014 modify: mahabharatha/config.py\nVerify: python -c \"from mahabharatha.config import MahabharathaConfig; c = MahabharathaConfig.load(); print(c.planning)\"",
       "active_form": "Executing Add PlanningConfig to config.py",
       "dependencies": []
     },

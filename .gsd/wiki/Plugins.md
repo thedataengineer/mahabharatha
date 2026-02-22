@@ -85,16 +85,16 @@ Let's build a simple quality gate plugin together. We'll create a plugin that ch
 First, create a directory structure for your plugins. This keeps them organized and makes packaging easier later.
 
 ```bash
-mkdir -p my_zerg_plugins
-touch my_zerg_plugins/__init__.py
-touch my_zerg_plugins/gates.py
+mkdir -p my_mahabharatha_plugins
+touch my_mahabharatha_plugins/__init__.py
+touch my_mahabharatha_plugins/gates.py
 ```
 
 **Why this structure?** Python packages need an `__init__.py` file. Putting gates in their own module keeps things organized as you add more plugins.
 
 ### Step 2: Write the Plugin Class
 
-Open `my_zerg_plugins/gates.py` and add:
+Open `my_mahabharatha_plugins/gates.py` and add:
 
 ```python
 """Custom quality gate that checks for TODO comments."""
@@ -191,7 +191,7 @@ requires-python = ">=3.10"
 dependencies = ["mahabharatha"]
 
 [project.entry-points."mahabharatha.plugins"]
-todo-check = "my_zerg_plugins.gates:TodoCheckGate"
+todo-check = "my_mahabharatha_plugins.gates:TodoCheckGate"
 ```
 
 **Why entry points?** Entry points let Python packages advertise functionality. When MAHABHARATHA starts, it scans for packages that registered plugins under `"mahabharatha.plugins"`. This means you can install plugins from anywhere - local directories, private PyPI servers, public packages.
@@ -201,7 +201,7 @@ todo-check = "my_zerg_plugins.gates:TodoCheckGate"
 Install your plugin in development mode so changes take effect immediately:
 
 ```bash
-pip install -e ./my_zerg_plugins
+pip install -e ./my_mahabharatha_plugins
 ```
 
 Now test it! Create a test file with a TODO:

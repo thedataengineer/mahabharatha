@@ -13,27 +13,27 @@ logger = get_logger("env_validator")
 # Allowlisted environment variables that can be set from config
 ALLOWED_ENV_VARS = {
     # MAHABHARATHA-specific
-    "ZERG_WORKER_ID",
-    "ZERG_FEATURE",
-    "ZERG_WORKTREE",
-    "ZERG_BRANCH",
-    "ZERG_TASK_ID",
-    "ZERG_SPEC_DIR",
-    "ZERG_STATE_DIR",
-    "ZERG_REPO_PATH",
-    "ZERG_LOG_LEVEL",
-    "ZERG_DEBUG",
-    "ZERG_ANALYSIS_DEPTH",
-    "ZERG_COMPACT_MODE",
-    "ZERG_MCP_HINT",
-    "ZERG_TOKEN_BUDGET",
-    "ZERG_BEHAVIORAL_MODE",
-    "ZERG_TDD_MODE",
-    "ZERG_RULES_ENABLED",
-    "ZERG_LOOP_ENABLED",
-    "ZERG_LOOP_ITERATIONS",
-    "ZERG_VERIFICATION_GATES",
-    "ZERG_STALENESS_THRESHOLD",
+    "MAHABHARATHA_WORKER_ID",
+    "MAHABHARATHA_FEATURE",
+    "MAHABHARATHA_WORKTREE",
+    "MAHABHARATHA_BRANCH",
+    "MAHABHARATHA_TASK_ID",
+    "MAHABHARATHA_SPEC_DIR",
+    "MAHABHARATHA_STATE_DIR",
+    "MAHABHARATHA_REPO_PATH",
+    "MAHABHARATHA_LOG_LEVEL",
+    "MAHABHARATHA_DEBUG",
+    "MAHABHARATHA_ANALYSIS_DEPTH",
+    "MAHABHARATHA_COMPACT_MODE",
+    "MAHABHARATHA_MCP_HINT",
+    "MAHABHARATHA_TOKEN_BUDGET",
+    "MAHABHARATHA_BEHAVIORAL_MODE",
+    "MAHABHARATHA_TDD_MODE",
+    "MAHABHARATHA_RULES_ENABLED",
+    "MAHABHARATHA_LOOP_ENABLED",
+    "MAHABHARATHA_LOOP_ITERATIONS",
+    "MAHABHARATHA_VERIFICATION_GATES",
+    "MAHABHARATHA_STALENESS_THRESHOLD",
     # Claude Code cross-session coordination
     "CLAUDE_CODE_TASK_LIST_ID",
     # Common development env vars
@@ -93,8 +93,8 @@ def validate_env_vars(env: dict[str, str]) -> dict[str, str]:
             logger.warning(f"Blocked dangerous environment variable: {key}")
             continue
 
-        # Check if in allowlist or is a ZERG_ prefixed var
-        if key.upper() in ALLOWED_ENV_VARS or key.upper().startswith("ZERG_"):
+        # Check if in allowlist or is a MAHABHARATHA_ prefixed var
+        if key.upper() in ALLOWED_ENV_VARS or key.upper().startswith("MAHABHARATHA_"):
             # Validate value doesn't contain shell metacharacters
             if any(c in value for c in [";", "|", "&", "`", "$", "(", ")", "<", ">"]):
                 logger.warning(f"Blocked env var with shell metacharacters: {key}")

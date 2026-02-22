@@ -4,7 +4,7 @@ import time
 from pathlib import Path
 
 from mahabharatha.command_executor import CommandExecutor, CommandValidationError
-from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.config import MahabharathaConfig, QualityGate
 from mahabharatha.constants import GateResult
 from mahabharatha.exceptions import GateFailureError, GateTimeoutError
 from mahabharatha.logging import get_logger
@@ -19,7 +19,7 @@ class GateRunner:
 
     def __init__(
         self,
-        config: ZergConfig | None = None,
+        config: MahabharathaConfig | None = None,
         plugin_registry: PluginRegistry | None = None,
     ) -> None:
         """Initialize gate runner.
@@ -28,7 +28,7 @@ class GateRunner:
             config: MAHABHARATHA configuration (loads default if not provided)
             plugin_registry: Optional plugin registry for plugin gates
         """
-        self.config = config or ZergConfig.load()
+        self.config = config or MahabharathaConfig.load()
         self._results: list[GateRunResult] = []
         self._plugin_registry = plugin_registry
 

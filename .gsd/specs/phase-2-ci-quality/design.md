@@ -74,7 +74,7 @@ root/
 No runtime data flow — all components are CI/CD configuration:
 1. **PR opened** → `ci.yml` runs quality (lint + mypy + validate), smoke, test (3.12 + 3.13), audit
 2. **PR opened** → `codeql.yml` runs Python security analysis (advisory, non-blocking)
-3. **PR opened** → CODEOWNERS auto-assigns @rocklambros
+3. **PR opened** → CODEOWNERS auto-assigns @thedataengineer
 4. **Push to main** → `docs.yml` builds mkdocs and deploys to GitHub Pages
 
 ---
@@ -101,16 +101,16 @@ Changes to existing file:
 
 ```
 # Default
-* @rocklambros
+* @thedataengineer
 
 # Core orchestrator
-/mahabharatha/ @rocklambros
+/mahabharatha/ @thedataengineer
 
 # CI/CD
-/.github/ @rocklambros
+/.github/ @thedataengineer
 
 # Documentation
-/docs/ @rocklambros
+/docs/ @thedataengineer
 ```
 
 ### 3.4 MkDocs Configuration (`mkdocs.yml`)

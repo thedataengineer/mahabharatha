@@ -93,7 +93,7 @@
       "skills_required": ["documentation"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Task Context\n\nRewrite tutorial with simulated dialogues.\n\n## FR-3 Dialogue Format\nPlanning phases MUST include dialogues:\n```\nZERG: What problem does the minerals store solve for users?\nYOU:  Users need to browse and purchase mineral products through a REST API.\n\nZERG: What are the core entities and their relationships?\nYOU:  Products, Cart, Orders. A cart becomes an order at checkout.\n```\n\n## Phase Treatment\n- Discovery phases (brainstorm, plan, design): Simulated dialogues\n- Execution phases (kurukshetra, merge, status): Real command output\n\n## FR-1 Structure\nEach step: CONCEPT → NARRATIVE → DIAGRAM → COMMAND"
+      "context": "## Task Context\n\nRewrite tutorial with simulated dialogues.\n\n## FR-3 Dialogue Format\nPlanning phases MUST include dialogues:\n```\nMAHABHARATHA: What problem does the minerals store solve for users?\nYOU:  Users need to browse and purchase mineral products through a REST API.\n\nMAHABHARATHA: What are the core entities and their relationships?\nYOU:  Products, Cart, Orders. A cart becomes an order at checkout.\n```\n\n## Phase Treatment\n- Discovery phases (brainstorm, plan, design): Simulated dialogues\n- Execution phases (kurukshetra, merge, status): Real command output\n\n## FR-1 Structure\nEach step: CONCEPT → NARRATIVE → DIAGRAM → COMMAND"
     },
     {
       "id": "TASK-005",

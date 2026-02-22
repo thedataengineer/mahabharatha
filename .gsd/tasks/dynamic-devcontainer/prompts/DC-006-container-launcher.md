@@ -61,9 +61,9 @@ class ContainerLauncher(WorkerLauncher):
 
             # Build environment
             container_env = {
-                "ZERG_WORKER_ID": str(worker_id),
-                "ZERG_FEATURE": feature,
-                "ZERG_BRANCH": branch,
+                "MAHABHARATHA_WORKER_ID": str(worker_id),
+                "MAHABHARATHA_FEATURE": feature,
+                "MAHABHARATHA_BRANCH": branch,
             }
 
             # Add API key if available

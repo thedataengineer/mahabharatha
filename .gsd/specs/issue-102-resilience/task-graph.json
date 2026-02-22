@@ -20,7 +20,7 @@
         "read": [".gsd/specs/issue-102-resilience/requirements.md"]
       },
       "verification": {
-        "command": "python -c \"from mahabharatha.config import ZergConfig; c=ZergConfig(); assert hasattr(c, 'resilience'); assert c.workers.spawn_retry_attempts == 3; assert c.workers.task_stale_timeout_seconds == 600\"",
+        "command": "python -c \"from mahabharatha.config import MahabharathaConfig; c=MahabharathaConfig(); assert hasattr(c, 'resilience'); assert c.workers.spawn_retry_attempts == 3; assert c.workers.task_stale_timeout_seconds == 600\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,

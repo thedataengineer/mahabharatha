@@ -34,7 +34,7 @@ class MyCustomGate(QualityGatePlugin):
         # ctx.feature: str — feature name
         # ctx.level: int — level just merged
         # ctx.cwd: Path — working directory
-        # ctx.config: ZergConfig — full config
+        # ctx.config: MahabharathaConfig — full config
 
         # Run validation logic...
 

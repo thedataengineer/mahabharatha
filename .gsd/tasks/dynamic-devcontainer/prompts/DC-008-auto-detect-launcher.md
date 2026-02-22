@@ -136,11 +136,11 @@ def container_mode_available(self) -> tuple[bool, str]:
 ```bash
 python -c "
 from mahabharatha.orchestrator import Orchestrator
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.launcher import SubprocessLauncher, ContainerLauncher
 
 # Test with default config (should auto-detect)
-config = ZergConfig()
+config = MahabharathaConfig()
 orch = Orchestrator('test-feature', config)
 
 print(f'Launcher type: {type(orch.launcher).__name__}')

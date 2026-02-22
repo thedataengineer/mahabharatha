@@ -181,7 +181,7 @@ class TestContainerLauncherImpl:
             result = launcher._start_container(
                 container_name="test-container",
                 worktree_path=Path("/fake/worktree"),
-                env={"ZERG_WORKER_ID": "1"},
+                env={"MAHABHARATHA_WORKER_ID": "1"},
             )
             assert result == "abc123"
             mock_impl.assert_called_once()

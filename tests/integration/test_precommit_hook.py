@@ -239,7 +239,7 @@ class TestPrecommitHookIntegration:
         assert result.returncode == 0, f"Test files should be exempt: {result.stderr}"
 
 
-class TestPrecommitHookZergSpecific:
+class TestPrecommitHookMahabharathaSpecific:
     """MAHABHARATHA-specific hook tests."""
 
     @staticmethod

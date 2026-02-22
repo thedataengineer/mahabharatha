@@ -71,7 +71,7 @@ No runtime data flow — all components are static config consumed by GitHub or 
 
 ```yaml
 # .github/FUNDING.yml
-github: rocklambros
+github: thedataengineer
 # buy_me_a_coffee:
 # open_collective:
 ```
@@ -203,7 +203,7 @@ graph TD
 ## 7. Testing Strategy
 
 ### 7.1 Verification Commands
-- TASK-001: `test -f .github/FUNDING.yml && grep -q 'github: rocklambros' .github/FUNDING.yml`
+- TASK-001: `test -f .github/FUNDING.yml && grep -q 'github: thedataengineer' .github/FUNDING.yml`
 - TASK-002: `test -f .github/release.yml && python -c "import yaml; d=yaml.safe_load(open('.github/release.yml')); assert len(d['changelog']['categories']) == 5"`
 - TASK-003: `python -c "import yaml; ci=yaml.safe_load(open('.github/workflows/ci.yml')); assert 'link-check' in ci['jobs']"`
 - TASK-004: `grep -c 'id:' .pre-commit-config.yaml | grep -q '8'`

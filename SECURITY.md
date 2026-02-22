@@ -11,7 +11,7 @@
 
 **Do not file public GitHub issues for security vulnerabilities.**
 
-Report vulnerabilities privately through [GitHub Security Advisories](https://github.com/rocklambros/mahabharatha/security/advisories/new).
+Report vulnerabilities privately through [GitHub Security Advisories](https://github.com/thedataengineer/mahabharatha/security/advisories/new).
 
 ### What to Include
 
@@ -239,4 +239,4 @@ All dependencies are pinned to exact versions in lockfiles. Updates validated th
 
 ## Questions or Concerns?
 
-For security clarification (non-disclosure), file a discussion in [GitHub Discussions](https://github.com/rocklambros/mahabharatha/discussions).
+For security clarification (non-disclosure), file a discussion in [GitHub Discussions](https://github.com/thedataengineer/mahabharatha/discussions).

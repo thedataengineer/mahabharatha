@@ -2,7 +2,7 @@
 
 All final LinkedIn posts and tweets for the Mahabharatha open source launch week. Content is ordered chronologically by publish day. Each post has been optimized for LinkedIn algorithm performance (360Brew model, January 2026), reading level B1 English, and Rock's "grumpy security uncle" voice.
 
-Project: github.com/rocklambros/mahabharatha
+Project: github.com/thedataengineer/mahabharatha
 Blog: rockcybermusings.com
 Version: 0.2.0 (MIT License)
 
@@ -46,7 +46,7 @@ Tomorrow. The akshauhini launches.
 
 **Purpose:** Full announcement. Drive stars, clones, blog reads. Anchor post for the week.
 
-**First Comment:** Full technical breakdown on how the architecture works, why I made the security decisions I did, and how to get started in 5 minutes. [BLOG URL] | Repo: github.com/rocklambros/mahabharatha
+**First Comment:** Full technical breakdown on how the architecture works, why I made the security decisions I did, and how to get started in 5 minutes. [BLOG URL] | Repo: github.com/thedataengineer/mahabharatha
 
 ---
 
@@ -234,15 +234,15 @@ Link to the repo in comments.
 
 ### Tweet 1 — Launch Day (Tuesday)
 
-Mahabharatha is live. Parallel Claude Code orchestration with security built in from day one. Not bolted on. Not "phase two." Open source, MIT license. github.com/rocklambros/mahabharatha
+Mahabharatha is live. Parallel Claude Code orchestration with security built in from day one. Not bolted on. Not "phase two." Open source, MIT license. github.com/thedataengineer/mahabharatha
 
 ### Tweet 2 — IDEsaster Angle (Tuesday)
 
-100% of tested AI IDEs were vulnerable to prompt injection last year. Then people started running five of them in parallel. I built Mahabharatha because that math scared me. github.com/rocklambros/mahabharatha
+100% of tested AI IDEs were vulnerable to prompt injection last year. Then people started running five of them in parallel. I built Mahabharatha because that math scared me. github.com/thedataengineer/mahabharatha
 
 ### Tweet 3 — Starcraft Hook (Wednesday)
 
-Named it Mahabharatha for a reason. Spawn workers. Overwhelm the problem. Win through coordinated aggression. Except these warriors write secure code and don't die to siege tanks. github.com/rocklambros/mahabharatha
+Named it Mahabharatha for a reason. Spawn workers. Overwhelm the problem. Win through coordinated aggression. Except these warriors write secure code and don't die to siege tanks. github.com/thedataengineer/mahabharatha
 
 ### Tweet 4 — Context Engineering (Wednesday)
 
@@ -266,7 +266,7 @@ The agentic AI industry is obsessed with autonomy. It should be obsessed with re
 
 ### Tweet 9 — Open Source CTA (Saturday)
 
-Mahabharatha v0.2.0. 26 slash commands. Three kurukshetra modes. OWASP security rules fetched from external repos. Pre-commit secret detection. Open source. Star it. Clone it. Break it. Tell me what fails. github.com/rocklambros/mahabharatha
+Mahabharatha v0.2.0. 26 slash commands. Three kurukshetra modes. OWASP security rules fetched from external repos. Pre-commit secret detection. Open source. Star it. Clone it. Break it. Tell me what fails. github.com/thedataengineer/mahabharatha
 
 ### Tweet 10 — Closing Zinger (Sunday)
 

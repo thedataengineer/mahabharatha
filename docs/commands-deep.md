@@ -2110,8 +2110,8 @@ You typically do not invoke `/mahabharatha:worker` directly. The orchestrator do
 └─────────────────────────────────────────────────────────────────────┘
                               │
     Environment variables:    │
-    ZERG_WORKER_ID=0         │
-    ZERG_FEATURE=user-auth    │
+    MAHABHARATHA_WORKER_ID=0         │
+    MAHABHARATHA_FEATURE=user-auth    │
                               ▼
     ┌─────────────────────────────────────────────────────┐
     │            STEP 1: LOAD CONTEXT                     │
@@ -2160,7 +2160,7 @@ You typically do not invoke `/mahabharatha:worker` directly. The orchestrator do
 Workers are invoked automatically by the orchestrator:
 ```bash
 # This is what the orchestrator runs (you don't do this)
-ZERG_WORKER_ID=0 ZERG_FEATURE=user-auth claude /mahabharatha:worker
+MAHABHARATHA_WORKER_ID=0 MAHABHARATHA_FEATURE=user-auth claude /mahabharatha:worker
 ```
 
 **Exit codes explained:**

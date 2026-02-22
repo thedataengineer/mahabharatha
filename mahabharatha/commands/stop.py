@@ -7,7 +7,7 @@ import click
 from rich.console import Console
 from rich.table import Table
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.constants import WorkerStatus
 from mahabharatha.containers import ContainerManager
 from mahabharatha.logging import get_logger
@@ -64,7 +64,7 @@ def stop(
         state.load()
 
         # Load config
-        config = ZergConfig.load()
+        config = MahabharathaConfig.load()
 
         # Get workers to stop
         workers = state.get_all_workers()
@@ -148,7 +148,7 @@ def show_workers_to_stop(workers: dict[int, Any], force: bool) -> None:
 def stop_workers_graceful(
     workers: dict[int, Any],
     state: StateManager,
-    config: ZergConfig,
+    config: MahabharathaConfig,
     timeout: int,
 ) -> None:
     """Stop workers gracefully with checkpoint.
@@ -220,7 +220,7 @@ def stop_workers_graceful(
 def stop_workers_force(
     workers: dict[int, Any],
     state: StateManager,
-    config: ZergConfig,
+    config: MahabharathaConfig,
 ) -> None:
     """Force stop workers immediately.
 

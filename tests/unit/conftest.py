@@ -9,7 +9,7 @@ import pytest
 def _bypass_rush_preflight():
     """Auto-patch kurukshetra preflight for all unit tests.
 
-    Kurukshetra command tests use mocked ZergConfig whose ports attributes are
+    Kurukshetra command tests use mocked MahabharathaConfig whose ports attributes are
     MagicMock objects, causing PreflightChecker to fail on port binding.
     Since preflight is tested separately in test_preflight.py, bypass it here.
     """

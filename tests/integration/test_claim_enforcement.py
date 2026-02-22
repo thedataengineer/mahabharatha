@@ -220,11 +220,11 @@ class TestWorkerProtocolIntegration:
         (tmp_path / ".git").mkdir()
 
         # Set up environment
-        monkeypatch.setenv("ZERG_WORKER_ID", "0")
-        monkeypatch.setenv("ZERG_FEATURE", "test-feature")
-        monkeypatch.setenv("ZERG_WORKTREE", str(tmp_path))
-        monkeypatch.setenv("ZERG_STATE_DIR", str(tmp_path))
-        monkeypatch.setenv("ZERG_TASK_GRAPH", str(task_graph_path))
+        monkeypatch.setenv("MAHABHARATHA_WORKER_ID", "0")
+        monkeypatch.setenv("MAHABHARATHA_FEATURE", "test-feature")
+        monkeypatch.setenv("MAHABHARATHA_WORKTREE", str(tmp_path))
+        monkeypatch.setenv("MAHABHARATHA_STATE_DIR", str(tmp_path))
+        monkeypatch.setenv("MAHABHARATHA_TASK_GRAPH", str(task_graph_path))
 
         # Create WorkerProtocol
         protocol = WorkerProtocol()
@@ -280,11 +280,11 @@ def _setup_protocol_for_level_tests(
         git_dir.mkdir()
 
     # Set up environment
-    monkeypatch.setenv("ZERG_WORKER_ID", "0")  # type: ignore[union-attr]
-    monkeypatch.setenv("ZERG_FEATURE", "test-feature")  # type: ignore[union-attr]
-    monkeypatch.setenv("ZERG_WORKTREE", str(tmp_path))  # type: ignore[union-attr]
-    monkeypatch.setenv("ZERG_STATE_DIR", str(tmp_path))  # type: ignore[union-attr]
-    monkeypatch.setenv("ZERG_TASK_GRAPH", str(task_graph_path))  # type: ignore[union-attr]
+    monkeypatch.setenv("MAHABHARATHA_WORKER_ID", "0")  # type: ignore[union-attr]
+    monkeypatch.setenv("MAHABHARATHA_FEATURE", "test-feature")  # type: ignore[union-attr]
+    monkeypatch.setenv("MAHABHARATHA_WORKTREE", str(tmp_path))  # type: ignore[union-attr]
+    monkeypatch.setenv("MAHABHARATHA_STATE_DIR", str(tmp_path))  # type: ignore[union-attr]
+    monkeypatch.setenv("MAHABHARATHA_TASK_GRAPH", str(task_graph_path))  # type: ignore[union-attr]
 
     return WorkerProtocol()
 

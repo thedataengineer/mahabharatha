@@ -7,7 +7,7 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.constants import WorkerStatus
 from mahabharatha.exceptions import ContainerError
 from mahabharatha.logging import get_logger
@@ -32,7 +32,7 @@ class ContainerManager:
 
     def __init__(
         self,
-        config: ZergConfig | None = None,
+        config: MahabharathaConfig | None = None,
         compose_file: str | Path | None = None,
     ) -> None:
         """Initialize container manager.
@@ -41,7 +41,7 @@ class ContainerManager:
             config: MAHABHARATHA configuration
             compose_file: Path to docker-compose.yaml
         """
-        self.config = config or ZergConfig.load()
+        self.config = config or MahabharathaConfig.load()
         self.compose_file = Path(compose_file or ".devcontainer/docker-compose.yaml")
         self._containers: dict[int, ContainerInfo] = {}
         self._check_docker()
@@ -183,10 +183,10 @@ class ContainerManager:
 
         # Environment for docker-compose
         env = {
-            "ZERG_WORKER_ID": str(worker_id),
-            "ZERG_FEATURE": feature,
-            "ZERG_BRANCH": branch,
-            "ZERG_WORKTREE": str(worktree_path),
+            "MAHABHARATHA_WORKER_ID": str(worker_id),
+            "MAHABHARATHA_FEATURE": feature,
+            "MAHABHARATHA_BRANCH": branch,
+            "MAHABHARATHA_WORKTREE": str(worktree_path),
         }
 
         # Stop existing container if any

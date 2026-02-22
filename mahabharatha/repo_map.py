@@ -44,7 +44,7 @@ class Symbol:
 class SymbolEdge:
     """A relationship between two symbols."""
 
-    source: str  # "mahabharatha.config.ZergConfig"
+    source: str  # "mahabharatha.config.MahabharathaConfig"
     target: str  # "mahabharatha.heartbeat.HeartbeatConfig"
     kind: str  # "imports", "calls", "inherits"
 

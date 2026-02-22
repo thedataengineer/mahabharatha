@@ -55,7 +55,7 @@ from mahabharatha.config import (
     LoggingConfig,
     ProjectConfig,
     WorkersConfig,
-    ZergConfig,
+    MahabharathaConfig,
 )
 from mahabharatha.constants import (
     LevelMergeStatus,
@@ -234,13 +234,13 @@ def mock_orchestrator_deps() -> Generator[dict[str, MagicMock], None, None]:
 
 
 @pytest.fixture
-def merge_timeout_config() -> ZergConfig:
-    """Create ZergConfig with short merge timeout for testing.
+def merge_timeout_config() -> MahabharathaConfig:
+    """Create MahabharathaConfig with short merge timeout for testing.
 
     Returns:
-        ZergConfig with 1 second merge timeout and 2 retries
+        MahabharathaConfig with 1 second merge timeout and 2 retries
     """
-    config = ZergConfig(
+    config = MahabharathaConfig(
         project=ProjectConfig(name="timeout-test", description="Timeout testing"),
         workers=WorkersConfig(
             max_concurrent=3,
@@ -354,13 +354,13 @@ def merge_retry_scenario(
 
 
 @pytest.fixture
-def recoverable_error_config() -> ZergConfig:
-    """Create ZergConfig for testing recoverable errors.
+def recoverable_error_config() -> MahabharathaConfig:
+    """Create MahabharathaConfig for testing recoverable errors.
 
     Returns:
-        ZergConfig with standard recovery settings
+        MahabharathaConfig with standard recovery settings
     """
-    return ZergConfig(
+    return MahabharathaConfig(
         project=ProjectConfig(name="recovery-test", description="Recovery testing"),
         workers=WorkersConfig(
             max_concurrent=3,
@@ -556,13 +556,13 @@ def worker_crash_scenario(
 
 
 @pytest.fixture
-def container_mode_config() -> ZergConfig:
-    """Create ZergConfig for container mode testing.
+def container_mode_config() -> MahabharathaConfig:
+    """Create MahabharathaConfig for container mode testing.
 
     Returns:
-        ZergConfig configured for container launcher
+        MahabharathaConfig configured for container launcher
     """
-    return ZergConfig(
+    return MahabharathaConfig(
         project=ProjectConfig(name="container-test", description="Container testing"),
         workers=WorkersConfig(
             max_concurrent=5,
@@ -790,14 +790,14 @@ def orchestrator_factory(
     def _create_orchestrator(
         feature: str = "test-feature",
         launcher_mode: str | None = None,
-        config: ZergConfig | None = None,
+        config: MahabharathaConfig | None = None,
     ) -> Orchestrator:
         """Create an Orchestrator with mocked dependencies.
 
         Args:
             feature: Feature name
             launcher_mode: Launcher mode (subprocess, container, auto)
-            config: Optional ZergConfig override
+            config: Optional MahabharathaConfig override
 
         Returns:
             Configured Orchestrator instance

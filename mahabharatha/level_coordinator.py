@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
 
 from mahabharatha.assign import WorkerAssignment
-from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.config import MahabharathaConfig, QualityGate
 from mahabharatha.constants import (
     LevelMergeStatus,
     LogEvent,
@@ -57,7 +57,7 @@ class LevelCoordinator:
     def __init__(
         self,
         feature: str,
-        config: ZergConfig,
+        config: MahabharathaConfig,
         state: StateManager,
         levels: LevelController,
         parser: TaskParser,

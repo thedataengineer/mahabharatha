@@ -11,7 +11,7 @@
 ## Problem Statement
 
 MAHABHARATHA orchestration suffers from significant I/O overhead due to:
-1. **Config loading**: `ZergConfig.load()` reads disk on every call (14+ callsites)
+1. **Config loading**: `MahabharathaConfig.load()` reads disk on every call (14+ callsites)
 2. **Log aggregation**: `LogAggregator._read_all_entries()` reads ALL log files per query
 3. **Directory traversal**: Multiple `rglob()` calls traverse directory tree repeatedly
 4. **Repository mapping**: `build_map()` parses AST on every call without caching
@@ -28,11 +28,11 @@ MAHABHARATHA orchestration suffers from significant I/O overhead due to:
 
 ## Functional Requirements
 
-### FR-1: ZergConfig Singleton with mtime Invalidation
+### FR-1: MahabharathaConfig Singleton with mtime Invalidation
 
 **Affected file**: `mahabharatha/config.py`
 
-Add caching to `ZergConfig.load()`:
+Add caching to `MahabharathaConfig.load()`:
 - Use class-level `_cached_instance` and `_cache_mtime` variables
 - On load, check file mtime against cached mtime
 - Return cached instance if mtime unchanged
@@ -43,7 +43,7 @@ Add caching to `ZergConfig.load()`:
 ```python
 # Signature change
 @classmethod
-def load(cls, config_path: str | Path | None = None, force_reload: bool = False) -> "ZergConfig":
+def load(cls, config_path: str | Path | None = None, force_reload: bool = False) -> "MahabharathaConfig":
 ```
 
 ### FR-2: LogAggregator Per-File Caching
@@ -111,7 +111,7 @@ Prevent unbounded memory growth:
 - LogAggregator: max 100 cached files (LRU eviction)
 - TokenCounter: max 10000 cached entries (LRU eviction)
 - RepoMap: single cached SymbolGraph (no eviction needed)
-- ZergConfig: single cached instance (no eviction needed)
+- MahabharathaConfig: single cached instance (no eviction needed)
 
 ### NFR-3: Observability
 
@@ -132,7 +132,7 @@ All changes must be backward compatible:
 ## Acceptance Criteria
 
 ### From Issue #133
-- [ ] ZergConfig uses singleton with mtime-based invalidation
+- [ ] MahabharathaConfig uses singleton with mtime-based invalidation
 - [ ] LogAggregator caches entries with file modification tracking
 - [ ] TokenCounter maintains in-memory cache
 
@@ -164,7 +164,7 @@ All changes must be backward compatible:
 - `test_single_traversal.py`: Verify single rglob pattern
 
 ### Benchmark Tests
-- `benchmark_config_load.py`: Measure before/after for ZergConfig
+- `benchmark_config_load.py`: Measure before/after for MahabharathaConfig
 - `benchmark_log_query.py`: Measure before/after for LogAggregator
 - `benchmark_directory_scan.py`: Measure before/after for rglob optimization
 - `benchmark_repo_map.py`: Measure before/after for build_map

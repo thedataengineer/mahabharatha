@@ -8,7 +8,7 @@ import subprocess as sp
 from datetime import datetime
 from pathlib import Path
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.constants import WorkerStatus
 from mahabharatha.launcher_types import LauncherConfig, LauncherType
 from mahabharatha.launchers import (
@@ -34,7 +34,7 @@ class LauncherConfigurator:
 
     def __init__(
         self,
-        config: ZergConfig,
+        config: MahabharathaConfig,
         repo_path: Path,
         plugin_registry: PluginRegistry,
     ) -> None:

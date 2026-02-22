@@ -148,7 +148,7 @@ class TestWorkerProtocolInit:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_init_with_explicit_args(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test initialization with explicit arguments."""
         protocol = _make_protocol(mock_config_cls, mock_spec_loader_cls, *mocks, worker_id=3, feature="my-feature")
@@ -158,10 +158,10 @@ class TestWorkerProtocolInit:
     @patch.dict(
         os.environ,
         {
-            "ZERG_WORKER_ID": "5",
-            "ZERG_FEATURE": "env-feature",
-            "ZERG_BRANCH": "mahabharatha/env-feature/worker-5",
-            "ZERG_WORKTREE": "/tmp/test-worktree",
+            "MAHABHARATHA_WORKER_ID": "5",
+            "MAHABHARATHA_FEATURE": "env-feature",
+            "MAHABHARATHA_BRANCH": "mahabharatha/env-feature/worker-5",
+            "MAHABHARATHA_WORKTREE": "/tmp/test-worktree",
         },
         clear=False,
     )
@@ -170,7 +170,7 @@ class TestWorkerProtocolInit:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_init_from_environment(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test initialization from environment variables."""
         # Set up mocks for WorkerProtocol() call below
@@ -193,7 +193,7 @@ class TestWorkerProtocolInit:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_init_defaults_when_no_env(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test initialization defaults when no environment vars set."""
         # Set up mocks for WorkerProtocol() call below
@@ -222,7 +222,7 @@ class TestWorkerProtocolInit:
             patch("mahabharatha.protocol_state.GitOps"),
             patch("mahabharatha.protocol_state.ContextTracker"),
             patch("mahabharatha.protocol_state.SpecLoader") as mock_spec_loader_cls,
-            patch("mahabharatha.protocol_state.ZergConfig") as mock_config_cls,
+            patch("mahabharatha.protocol_state.MahabharathaConfig") as mock_config_cls,
         ):
             mock_parser = MagicMock()
             mock_parser.parse.side_effect = Exception("Parse error")
@@ -240,7 +240,7 @@ class TestWorkerProtocolSignalReady:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_signal_ready(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test signaling ready status."""
         mock_state = MagicMock()
@@ -259,7 +259,7 @@ class TestWorkerProtocolClaimTask:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_claim_next_task_success(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test successfully claiming a task."""
         mock_state = MagicMock()
@@ -277,7 +277,7 @@ class TestWorkerProtocolClaimTask:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_claim_next_task_no_pending(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test claiming when no pending tasks."""
         mock_state = MagicMock()
@@ -297,7 +297,7 @@ class TestWorkerProtocolBuildTaskPrompt:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_build_task_prompt_basic(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test building basic task prompt."""
         protocol = _make_protocol(mock_config_cls, mock_spec_loader_cls, *mocks)
@@ -311,7 +311,7 @@ class TestWorkerProtocolBuildTaskPrompt:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_build_task_prompt_with_files_and_verification(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test building prompt with file specs and verification."""
         protocol = _make_protocol(mock_config_cls, mock_spec_loader_cls, *mocks)
@@ -338,7 +338,7 @@ class TestWorkerProtocolInvokeClaudeCode:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_invoke_llm_success(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test successful Claude Code invocation."""
         mock_subprocess_run = mocks[4]
@@ -357,7 +357,7 @@ class TestWorkerProtocolInvokeClaudeCode:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_invoke_llm_errors(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test Claude Code invocation error handling for timeout, not found, and generic errors."""
         mock_subprocess_run = mocks[4]
@@ -388,7 +388,7 @@ class TestWorkerProtocolRunVerification:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_run_verification_success(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test successful verification."""
         mock_verifier = MagicMock()
@@ -408,7 +408,7 @@ class TestWorkerProtocolRunVerification:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_run_verification_no_spec_auto_passes(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test verification auto-passes when no spec."""
         protocol = _make_protocol(mock_config_cls, mock_spec_loader_cls, *mocks)
@@ -425,7 +425,7 @@ class TestWorkerProtocolCommitTaskChanges:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_commit_task_changes_success(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test successful commit."""
         mock_git = MagicMock()
@@ -443,7 +443,7 @@ class TestWorkerProtocolCommitTaskChanges:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_commit_task_changes_no_changes(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test commit when no changes."""
         mock_git = MagicMock()
@@ -464,7 +464,7 @@ class TestWorkerProtocolExecuteTask:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_execute_task_success(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test successful task execution."""
         protocol = _make_protocol(mock_config_cls, mock_spec_loader_cls, *mocks)
@@ -485,7 +485,7 @@ class TestWorkerProtocolExecuteTask:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_execute_task_claude_failure(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test task execution when Claude Code fails."""
         protocol = _make_protocol(mock_config_cls, mock_spec_loader_cls, *mocks)
@@ -508,7 +508,7 @@ class TestWorkerProtocolReporting:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_report_complete(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test reporting task completion."""
         mock_state = MagicMock()
@@ -527,7 +527,7 @@ class TestWorkerProtocolReporting:
     @patch("mahabharatha.protocol_state.GitOps")
     @patch("mahabharatha.protocol_state.ContextTracker")
     @patch("mahabharatha.protocol_state.SpecLoader")
-    @patch("mahabharatha.protocol_state.ZergConfig")
+    @patch("mahabharatha.protocol_state.MahabharathaConfig")
     def test_report_failed(self, mock_config_cls, mock_spec_loader_cls, *mocks) -> None:
         """Test reporting task failure."""
         mock_state = MagicMock()

@@ -59,7 +59,7 @@ class DepthContext:
     tier: DepthTier
     token_budget: int
     recommended_mcp: list[str]
-    env_value: str  # Value to pass via ZERG_ANALYSIS_DEPTH env var
+    env_value: str  # Value to pass via MAHABHARATHA_ANALYSIS_DEPTH env var
 
     @classmethod
     def from_tier(cls, tier: DepthTier) -> DepthContext:
@@ -184,4 +184,4 @@ class DepthRouter:
         Returns:
             Dict of environment variable name to value.
         """
-        return {"ZERG_ANALYSIS_DEPTH": context.env_value}
+        return {"MAHABHARATHA_ANALYSIS_DEPTH": context.env_value}

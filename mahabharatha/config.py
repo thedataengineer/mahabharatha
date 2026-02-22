@@ -2,7 +2,7 @@
 
 __all__ = [
     # Main config
-    "ZergConfig",
+    "MahabharathaConfig",
     # Sub-configs
     "ProjectConfig",
     "WorkersConfig",
@@ -411,11 +411,11 @@ class LLMConfig(BaseModel):
     max_concurrency: int = Field(default=1, ge=1)
 
 
-class ZergConfig(BaseModel):
+class MahabharathaConfig(BaseModel):
     """Complete MAHABHARATHA configuration."""
 
     # Class-level cache for singleton pattern with mtime invalidation
-    _cached_instance: ClassVar["ZergConfig | None"] = None
+    _cached_instance: ClassVar["MahabharathaConfig | None"] = None
     _cache_mtime: ClassVar[float | None] = None
     _cache_path: ClassVar[Path | None] = None
     _cache_lock: ClassVar[threading.Lock] = threading.Lock()
@@ -449,7 +449,7 @@ class ZergConfig(BaseModel):
     llm: LLMConfig = Field(default_factory=LLMConfig)
 
     @classmethod
-    def load(cls, config_path: str | Path | None = None, force_reload: bool = False) -> "ZergConfig":
+    def load(cls, config_path: str | Path | None = None, force_reload: bool = False) -> "MahabharathaConfig":
         """Load configuration from YAML file with mtime-based caching.
 
         Uses a singleton pattern with mtime-based invalidation for performance.
@@ -461,7 +461,7 @@ class ZergConfig(BaseModel):
             force_reload: Bypass cache and force reload from disk
 
         Returns:
-            ZergConfig instance (cached if valid)
+            MahabharathaConfig instance (cached if valid)
         """
         config_path = Path(".mahabharatha/config.yaml") if config_path is None else Path(config_path)
 
@@ -472,16 +472,16 @@ class ZergConfig(BaseModel):
                     try:
                         current_mtime: float | None = config_path.stat().st_mtime
                         if current_mtime == cls._cache_mtime:
-                            logger.debug("Cache hit for ZergConfig")
+                            logger.debug("Cache hit for MahabharathaConfig")
                             return cls._cached_instance
                     except FileNotFoundError:
                         # File was deleted - cache still valid for non-existent file
                         if cls._cache_mtime is None:
-                            logger.debug("Cache hit for ZergConfig (no file)")
+                            logger.debug("Cache hit for MahabharathaConfig (no file)")
                             return cls._cached_instance
 
             # Cache miss or invalid
-            logger.debug("Cache miss for ZergConfig, loading from %s", config_path)
+            logger.debug("Cache miss for MahabharathaConfig, loading from %s", config_path)
 
             if not config_path.exists():
                 instance = cls()
@@ -510,17 +510,17 @@ class ZergConfig(BaseModel):
             cls._cached_instance = None
             cls._cache_mtime = None
             cls._cache_path = None
-            logger.debug("Invalidating cache for ZergConfig")
+            logger.debug("Invalidating cache for MahabharathaConfig")
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "ZergConfig":
+    def from_dict(cls, data: dict[str, Any]) -> "MahabharathaConfig":
         """Create configuration from dictionary.
 
         Args:
             data: Configuration dictionary
 
         Returns:
-            ZergConfig instance
+            MahabharathaConfig instance
         """
         return cls(**data)
 

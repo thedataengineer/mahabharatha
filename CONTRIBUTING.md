@@ -11,7 +11,7 @@ Thank you for your interest in contributing to Mahabharatha, the parallel Claude
 ## Development Setup
 
 ```bash
-git clone https://github.com/rocklambros/mahabharatha.git
+git clone https://github.com/thedataengineer/mahabharatha.git
 cd mahabharatha
 python -m venv .venv
 source .venv/bin/activate

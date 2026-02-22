@@ -42,10 +42,10 @@ class TestParseArgs:
     def test_parse_with_env_defaults(self) -> None:
         """Test parsing with environment variable defaults."""
         env_patch = {
-            "ZERG_WORKER_ID": "3",
-            "ZERG_FEATURE": "test-feature",
-            "ZERG_WORKTREE": "/env/worktree",
-            "ZERG_BRANCH": "mahabharatha/test/worker-3",
+            "MAHABHARATHA_WORKER_ID": "3",
+            "MAHABHARATHA_FEATURE": "test-feature",
+            "MAHABHARATHA_WORKTREE": "/env/worktree",
+            "MAHABHARATHA_BRANCH": "mahabharatha/test/worker-3",
         }
         with patch("sys.argv", ["worker_main"]), patch.dict(os.environ, env_patch, clear=False):
             args = parse_args()
@@ -60,14 +60,14 @@ class TestSetupEnvironment:
         """Test basic environment setup."""
         args = argparse.Namespace(worker_id=1, feature="test-feature", worktree=tmp_path, branch="")
         env = setup_environment(args)
-        assert env["ZERG_WORKER_ID"] == "1"
-        assert env["ZERG_FEATURE"] == "test-feature"
+        assert env["MAHABHARATHA_WORKER_ID"] == "1"
+        assert env["MAHABHARATHA_FEATURE"] == "test-feature"
 
     def test_setup_auto_branch(self, tmp_path: Path) -> None:
         """Test environment setup with auto-generated branch."""
         args = argparse.Namespace(worker_id=2, feature="user-auth", worktree=tmp_path, branch="")
         env = setup_environment(args)
-        assert "mahabharatha/user-auth/worker-2" in env["ZERG_BRANCH"]
+        assert "mahabharatha/user-auth/worker-2" in env["MAHABHARATHA_BRANCH"]
 
 
 class TestValidateSetup:

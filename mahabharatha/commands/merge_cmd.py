@@ -6,7 +6,7 @@ import click
 from rich.console import Console
 from rich.table import Table
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.constants import GateResult
 from mahabharatha.gates import GateRunner
 from mahabharatha.logging import get_logger
@@ -70,7 +70,7 @@ def merge_cmd(
             raise SystemExit(1)
 
         state.load()
-        config = ZergConfig.load()
+        config = MahabharathaConfig.load()
 
         # Determine level to merge
         if not level:
@@ -240,7 +240,7 @@ def show_merge_plan(plan: dict[str, Any], dry_run: bool) -> None:
         console.print(f"  {icon} {branch_info['branch']}")
 
 
-def run_quality_gates(config: ZergConfig, feature: str, level: int) -> GateResult:
+def run_quality_gates(config: MahabharathaConfig, feature: str, level: int) -> GateResult:
     """Run quality gates.
 
     Args:

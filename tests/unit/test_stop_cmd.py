@@ -195,7 +195,7 @@ class TestStopCommand:
         assert result.exit_code != 0
 
     @patch("mahabharatha.commands.stop.StateManager")
-    @patch("mahabharatha.commands.stop.ZergConfig")
+    @patch("mahabharatha.commands.stop.MahabharathaConfig")
     def test_stop_no_workers(self, mock_config_cls, mock_state_cls, tmp_path: Path, monkeypatch) -> None:
         """Test returns early when no workers running."""
         monkeypatch.chdir(tmp_path)
@@ -210,7 +210,7 @@ class TestStopCommand:
         assert "No workers running" in result.output
 
     @patch("mahabharatha.commands.stop.StateManager")
-    @patch("mahabharatha.commands.stop.ZergConfig")
+    @patch("mahabharatha.commands.stop.MahabharathaConfig")
     @patch("mahabharatha.commands.stop.stop_workers_force")
     @patch("mahabharatha.commands.stop.show_workers_to_stop")
     def test_stop_force_skips_confirmation(
@@ -230,7 +230,7 @@ class TestStopCommand:
         assert "Stop complete" in result.output
 
     @patch("mahabharatha.commands.stop.StateManager")
-    @patch("mahabharatha.commands.stop.ZergConfig")
+    @patch("mahabharatha.commands.stop.MahabharathaConfig")
     @patch("mahabharatha.commands.stop.stop_workers_graceful")
     @patch("mahabharatha.commands.stop.show_workers_to_stop")
     def test_stop_confirmation_declined_aborts(

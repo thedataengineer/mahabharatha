@@ -9,7 +9,7 @@ __author__ = "MAHABHARATHA Team"
 from mahabharatha.architecture import ArchitectureChecker, ArchitectureConfig
 from mahabharatha.architecture_gate import ArchitectureGate
 from mahabharatha.constants import GateResult, Level, TaskStatus, WorkerStatus
-from mahabharatha.exceptions import ZergError
+from mahabharatha.exceptions import MahabharathaError
 from mahabharatha.worker_metrics import (
     LevelMetrics,
     TaskExecutionMetrics,
@@ -24,7 +24,7 @@ __all__ = [
     "TaskStatus",
     "GateResult",
     "WorkerStatus",
-    "ZergError",
+    "MahabharathaError",
     # Architecture
     "ArchitectureChecker",
     "ArchitectureConfig",

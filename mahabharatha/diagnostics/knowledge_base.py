@@ -351,7 +351,7 @@ _PYTHON_PATTERNS: list[KnownPattern] = [
 # Known patterns: MAHABHARATHA-specific
 # ---------------------------------------------------------------------------
 
-_ZERG_PATTERNS: list[KnownPattern] = [
+_MAHABHARATHA_PATTERNS: list[KnownPattern] = [
     KnownPattern(
         name="worker_crash",
         category="mahabharatha",
@@ -749,7 +749,7 @@ _GENERAL_PATTERNS: list[KnownPattern] = [
 # Combined list
 # ---------------------------------------------------------------------------
 
-KNOWN_PATTERNS: list[KnownPattern] = _PYTHON_PATTERNS + _ZERG_PATTERNS + _GENERAL_PATTERNS
+KNOWN_PATTERNS: list[KnownPattern] = _PYTHON_PATTERNS + _MAHABHARATHA_PATTERNS + _GENERAL_PATTERNS
 
 
 # ---------------------------------------------------------------------------

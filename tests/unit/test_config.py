@@ -7,13 +7,13 @@ import yaml
 
 from mahabharatha.config import (
     LoggingConfig,
+    MahabharathaConfig,
     PortsConfig,
     ProjectConfig,
     QualityGate,
     ResourcesConfig,
     SecurityConfig,
     WorkersConfig,
-    ZergConfig,
 )
 from mahabharatha.launcher_types import LauncherType
 
@@ -145,13 +145,13 @@ class TestSecurityConfig:
             assert SecurityConfig(level=level).level == level
 
 
-class TestZergConfig:
-    """Tests for ZergConfig model."""
+class TestMahabharathaConfig:
+    """Tests for MahabharathaConfig model."""
 
     @pytest.mark.smoke
     def test_default_values(self) -> None:
-        """Test default ZergConfig values."""
-        config = ZergConfig()
+        """Test default MahabharathaConfig values."""
+        config = MahabharathaConfig()
         assert config.project.name == "mahabharatha"
         assert config.workers.max_concurrent == 5
         assert config.ports.range_start == 49152
@@ -165,7 +165,7 @@ class TestZergConfig:
             "workers": {"max_concurrent": 3},
             "quality_gates": [{"name": "lint", "command": "ruff check", "required": True}],
         }
-        config = ZergConfig.from_dict(data)
+        config = MahabharathaConfig.from_dict(data)
         assert config.project.name == "test-project"
         assert config.workers.max_concurrent == 3
         assert len(config.quality_gates) == 1
@@ -173,7 +173,7 @@ class TestZergConfig:
     @pytest.mark.smoke
     def test_to_dict(self) -> None:
         """Test converting config to dictionary."""
-        config = ZergConfig()
+        config = MahabharathaConfig()
         data = config.to_dict()
         assert isinstance(data, dict)
         assert data["project"]["name"] == "mahabharatha"
@@ -181,28 +181,28 @@ class TestZergConfig:
     @pytest.mark.smoke
     def test_context_threshold_property(self) -> None:
         """Test context_threshold property conversion."""
-        config = ZergConfig()
+        config = MahabharathaConfig()
         config.workers.context_threshold_percent = 70
         assert config.context_threshold == 0.7
 
     def test_get_gate(self) -> None:
         """Test getting quality gate by name (found and not found)."""
-        config = ZergConfig()
+        config = MahabharathaConfig()
         config.quality_gates = [QualityGate(name="lint", command="ruff check")]
         assert config.get_gate("lint") is not None
         assert config.get_gate("nonexistent") is None
 
     def test_get_launcher_type(self) -> None:
         """Test getting launcher type."""
-        config = ZergConfig()
+        config = MahabharathaConfig()
         config.workers.launcher_type = "subprocess"
         assert config.get_launcher_type() == LauncherType.SUBPROCESS
         config.workers.launcher_type = "container"
         assert config.get_launcher_type() == LauncherType.CONTAINER
 
 
-class TestZergConfigLoad:
-    """Tests for ZergConfig.load method."""
+class TestMahabharathaConfigLoad:
+    """Tests for MahabharathaConfig.load method."""
 
     def test_load_from_file(self, tmp_path: Path) -> None:
         """Test loading config from YAML file."""
@@ -214,22 +214,22 @@ class TestZergConfigLoad:
         with open(config_file, "w") as f:
             yaml.dump(config_data, f)
 
-        config = ZergConfig.load(config_file)
+        config = MahabharathaConfig.load(config_file)
         assert config.project.name == "loaded-project"
         assert config.workers.max_concurrent == 8
 
     def test_load_nonexistent_returns_defaults(self, tmp_path: Path) -> None:
         """Test loading with non-existent path returns defaults."""
-        config = ZergConfig.load(tmp_path / "nonexistent.yaml")
+        config = MahabharathaConfig.load(tmp_path / "nonexistent.yaml")
         assert config.project.name == "mahabharatha"
 
 
-class TestZergConfigSave:
-    """Tests for ZergConfig.save method."""
+class TestMahabharathaConfigSave:
+    """Tests for MahabharathaConfig.save method."""
 
     def test_save_custom_path(self, tmp_path: Path) -> None:
         """Test saving to custom path."""
-        config = ZergConfig()
+        config = MahabharathaConfig()
         config.project.name = "custom-saved"
         custom_path = tmp_path / "custom" / "config.yaml"
         config.save(custom_path)
@@ -241,7 +241,7 @@ class TestZergConfigSave:
 
     def test_save_full_config_round_trip(self, tmp_path: Path) -> None:
         """Test saving full config and reloading."""
-        config = ZergConfig()
+        config = MahabharathaConfig()
         config.project.name = "full-project"
         config.workers.max_concurrent = 8
         config.quality_gates = [QualityGate(name="lint", command="ruff", required=True)]
@@ -250,7 +250,7 @@ class TestZergConfigSave:
         config_file = tmp_path / "full-config.yaml"
         config.save(config_file)
 
-        loaded = ZergConfig.load(config_file)
+        loaded = MahabharathaConfig.load(config_file)
         assert loaded.project.name == "full-project"
         assert loaded.workers.max_concurrent == 8
         assert loaded.security.level == "strict"

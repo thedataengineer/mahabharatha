@@ -7,7 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.constants import GateResult, MergeStatus
 from mahabharatha.exceptions import MergeConflictError
 from mahabharatha.gates import GateRunner
@@ -55,7 +55,7 @@ class MergeCoordinator:
     def __init__(
         self,
         feature: str,
-        config: ZergConfig | None = None,
+        config: MahabharathaConfig | None = None,
         repo_path: str | Path = ".",
         gate_pipeline: GatePipeline | None = None,
     ) -> None:
@@ -68,7 +68,7 @@ class MergeCoordinator:
             gate_pipeline: Optional GatePipeline for cached gate execution
         """
         self.feature = feature
-        self.config = config or ZergConfig.load()
+        self.config = config or MahabharathaConfig.load()
         self.repo_path = Path(repo_path).resolve()
         self.git = GitOps(repo_path)
         self.gates = GateRunner(self.config)

@@ -266,8 +266,8 @@ class MCPRouter:
             decision: Routing decision to encode.
 
         Returns:
-            Dict with ZERG_MCP_HINT env var, or empty dict.
+            Dict with MAHABHARATHA_MCP_HINT env var, or empty dict.
         """
         if decision.recommended_servers:
-            return {"ZERG_MCP_HINT": ",".join(decision.server_names)}
+            return {"MAHABHARATHA_MCP_HINT": ",".join(decision.server_names)}
         return {}

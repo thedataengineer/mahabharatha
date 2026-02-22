@@ -1,4 +1,4 @@
-> """ZERG worker launcher abstraction.
+> """MAHABHARATHA worker launcher abstraction.
 
 > Provides pluggable launcher backends for spawning and managing worker processes.
 > """
@@ -21,15 +21,15 @@
 
   # Allowlisted environment variables that can be set from config
 > ALLOWED_ENV_VARS = {
-      # ZERG-specific
->     "ZERG_WORKER_ID",
->     "ZERG_FEATURE",
->     "ZERG_WORKTREE",
->     "ZERG_BRANCH",
->     "ZERG_TASK_ID",
->     "ZERG_SPEC_DIR",
->     "ZERG_LOG_LEVEL",
->     "ZERG_DEBUG",
+      # MAHABHARATHA-specific
+>     "MAHABHARATHA_WORKER_ID",
+>     "MAHABHARATHA_FEATURE",
+>     "MAHABHARATHA_WORKTREE",
+>     "MAHABHARATHA_BRANCH",
+>     "MAHABHARATHA_TASK_ID",
+>     "MAHABHARATHA_SPEC_DIR",
+>     "MAHABHARATHA_LOG_LEVEL",
+>     "MAHABHARATHA_DEBUG",
       # Common development env vars
 >     "CI",
 >     "DEBUG",
@@ -83,8 +83,8 @@
 >             logger.warning(f"Blocked dangerous environment variable: {key}")
 >             continue
 
-          # Check if in allowlist or is a ZERG_ prefixed var
->         if key.upper() in ALLOWED_ENV_VARS or key.upper().startswith("ZERG_"):
+          # Check if in allowlist or is a MAHABHARATHA_ prefixed var
+>         if key.upper() in ALLOWED_ENV_VARS or key.upper().startswith("MAHABHARATHA_"):
               # Validate value doesn't contain shell metacharacters
 >             if any(c in value for c in [";", "|", "&", "`", "$", "(", ")", "<", ">"]):
 >                 logger.warning(f"Blocked env var with shell metacharacters: {key}")
@@ -313,14 +313,14 @@
 >             SpawnResult with handle or error
 >         """
 >         try:
-              # Build environment with ZERG-specific vars (always allowed)
+              # Build environment with MAHABHARATHA-specific vars (always allowed)
 >             worker_env = os.environ.copy()
 >             worker_env.update({
->                 "ZERG_WORKER_ID": str(worker_id),
->                 "ZERG_FEATURE": feature,
->                 "ZERG_WORKTREE": str(worktree_path),
->                 "ZERG_BRANCH": branch,
->                 "ZERG_SPEC_DIR": str(worktree_path / ".gsd" / "specs" / feature),
+>                 "MAHABHARATHA_WORKER_ID": str(worker_id),
+>                 "MAHABHARATHA_FEATURE": feature,
+>                 "MAHABHARATHA_WORKTREE": str(worktree_path),
+>                 "MAHABHARATHA_BRANCH": branch,
+>                 "MAHABHARATHA_SPEC_DIR": str(worktree_path / ".gsd" / "specs" / feature),
 >             })
               # Validate additional env vars from config
 >             if self.config.env_vars:
@@ -600,11 +600,11 @@
 
               # Build environment
 !             container_env = {
-!                 "ZERG_WORKER_ID": str(worker_id),
-!                 "ZERG_FEATURE": feature,
-!                 "ZERG_WORKTREE": "/workspace",
-!                 "ZERG_BRANCH": branch,
-!                 "ZERG_SPEC_DIR": f"/workspace/.gsd/specs/{feature}",
+!                 "MAHABHARATHA_WORKER_ID": str(worker_id),
+!                 "MAHABHARATHA_FEATURE": feature,
+!                 "MAHABHARATHA_WORKTREE": "/workspace",
+!                 "MAHABHARATHA_BRANCH": branch,
+!                 "MAHABHARATHA_SPEC_DIR": f"/workspace/.gsd/specs/{feature}",
 !             }
 
               # Add API key from environment

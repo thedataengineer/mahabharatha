@@ -11,7 +11,7 @@
 ## 1. Problem Statement
 
 ### 1.1 Background
-GitHub CodeQL scanning on `rocklambros/mahabharatha` reports 115 open alerts. CodeQL runs on every push/PR and these alerts create noise, mask real issues, and block adoption of branch protection rules requiring zero alerts.
+GitHub CodeQL scanning on `thedataengineer/mahabharatha` reports 115 open alerts. CodeQL runs on every push/PR and these alerts create noise, mask real issues, and block adoption of branch protection rules requiring zero alerts.
 
 Additionally, the `/z:plan` command has a recurring bug where it fails to generate its primary output (`requirements.md`) due to an overbroad WORKFLOW BOUNDARY guard that prohibits the Write tool entirely — including for spec files which are the command's intended output.
 

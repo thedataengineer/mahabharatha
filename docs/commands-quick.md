@@ -365,9 +365,9 @@ Internal worker protocol. Invoked by orchestrator.
 
 | Env Var | Default | Description |
 |---------|---------|-------------|
-| `ZERG_WORKER_ID` | 0 | Worker ID |
-| `ZERG_FEATURE` | unknown | Feature name |
-| `ZERG_BRANCH` | main | Base branch |
+| `MAHABHARATHA_WORKER_ID` | 0 | Worker ID |
+| `MAHABHARATHA_FEATURE` | unknown | Feature name |
+| `MAHABHARATHA_BRANCH` | main | Base branch |
 
 ---
 

@@ -12,7 +12,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from mahabharatha.config import RushConfig, ZergConfig
+from mahabharatha.config import MahabharathaConfig, RushConfig
 from mahabharatha.constants import LevelMergeStatus, WorkerStatus
 from mahabharatha.types import WorkerState
 
@@ -21,16 +21,16 @@ class TestDeferMergeToShip:
     """Tests for defer_merge_to_ship config flag."""
 
     @pytest.fixture
-    def config_with_deferred_merge(self) -> ZergConfig:
+    def config_with_deferred_merge(self) -> MahabharathaConfig:
         """Create config with deferred merge enabled."""
-        config = ZergConfig()
+        config = MahabharathaConfig()
         config.kurukshetra = RushConfig(defer_merge_to_ship=True, gates_at_ship_only=True)
         return config
 
     @pytest.fixture
-    def config_without_deferred_merge(self) -> ZergConfig:
+    def config_without_deferred_merge(self) -> MahabharathaConfig:
         """Create config with deferred merge disabled."""
-        config = ZergConfig()
+        config = MahabharathaConfig()
         config.kurukshetra = RushConfig(defer_merge_to_ship=False, gates_at_ship_only=False)
         return config
 
@@ -51,7 +51,7 @@ class TestDeferMergeToShip:
         }
 
     def test_level_complete_skips_merge_when_deferred(
-        self, config_with_deferred_merge: ZergConfig, mock_workers: dict, tmp_path: Path
+        self, config_with_deferred_merge: MahabharathaConfig, mock_workers: dict, tmp_path: Path
     ) -> None:
         """When defer_merge_to_ship=True, level complete should not merge to main."""
         from mahabharatha.level_coordinator import LevelCoordinator
@@ -102,7 +102,7 @@ class TestDeferMergeToShip:
         assert result is True
 
     def test_level_complete_merges_when_not_deferred(
-        self, config_without_deferred_merge: ZergConfig, mock_workers: dict, tmp_path: Path
+        self, config_without_deferred_merge: MahabharathaConfig, mock_workers: dict, tmp_path: Path
     ) -> None:
         """When defer_merge_to_ship=False, level complete should merge immediately."""
         from mahabharatha.level_coordinator import LevelCoordinator
@@ -162,16 +162,16 @@ class TestGatesAtShipOnly:
     """Tests for gates_at_ship_only config flag."""
 
     @pytest.fixture
-    def config_gates_at_ship(self) -> ZergConfig:
+    def config_gates_at_ship(self) -> MahabharathaConfig:
         """Create config with gates only at ship time."""
-        config = ZergConfig()
+        config = MahabharathaConfig()
         config.kurukshetra = RushConfig(defer_merge_to_ship=False, gates_at_ship_only=True)
         return config
 
     @pytest.fixture
-    def config_gates_every_level(self) -> ZergConfig:
+    def config_gates_every_level(self) -> MahabharathaConfig:
         """Create config with gates at every level."""
-        config = ZergConfig()
+        config = MahabharathaConfig()
         config.kurukshetra = RushConfig(defer_merge_to_ship=False, gates_at_ship_only=False)
         return config
 
@@ -187,7 +187,7 @@ class TestGatesAtShipOnly:
         }
 
     def test_merge_skips_gates_when_gates_at_ship_only(
-        self, config_gates_at_ship: ZergConfig, mock_workers: dict
+        self, config_gates_at_ship: MahabharathaConfig, mock_workers: dict
     ) -> None:
         """When gates_at_ship_only=True, merge should pass skip_gates=True."""
         from mahabharatha.level_coordinator import LevelCoordinator
@@ -243,7 +243,7 @@ class TestGatesAtShipOnly:
         assert result.success is True
 
     def test_merge_runs_gates_when_not_gates_at_ship_only(
-        self, config_gates_every_level: ZergConfig, mock_workers: dict
+        self, config_gates_every_level: MahabharathaConfig, mock_workers: dict
     ) -> None:
         """When gates_at_ship_only=False, merge should not skip gates."""
         from mahabharatha.level_coordinator import LevelCoordinator

@@ -93,10 +93,10 @@ class TestOrchestratorCapabilityWiring:
 
 
 class TestWorkerManagerSpawnEnv:
-    """Verify WorkerManager.spawn_worker() passes ZERG_* env to launcher.spawn()."""
+    """Verify WorkerManager.spawn_worker() passes MAHABHARATHA_* env to launcher.spawn()."""
 
     def test_worker_manager_spawn_passes_env(self):
-        """spawn_worker() calls launcher.spawn with env= containing ZERG_* vars."""
+        """spawn_worker() calls launcher.spawn with env= containing MAHABHARATHA_* vars."""
         from mahabharatha.worker_manager import WorkerManager
 
         caps = ResolvedCapabilities(tdd=True, compact=True, depth_tier="think")
@@ -139,17 +139,17 @@ class TestWorkerManagerSpawnEnv:
 
         wm.spawn_worker(worker_id=1)
 
-        # Verify launcher.spawn was called with env= containing ZERG_* keys
+        # Verify launcher.spawn was called with env= containing MAHABHARATHA_* keys
         launcher.spawn.assert_called_once()
         call_kwargs = launcher.spawn.call_args
         env_arg = call_kwargs.kwargs.get("env") or call_kwargs[1].get("env")
         assert env_arg is not None, "launcher.spawn was not called with env="
-        assert "ZERG_TDD_MODE" in env_arg
-        assert env_arg["ZERG_TDD_MODE"] == "1"
-        assert "ZERG_COMPACT_MODE" in env_arg
-        assert env_arg["ZERG_COMPACT_MODE"] == "1"
-        assert "ZERG_ANALYSIS_DEPTH" in env_arg
-        assert env_arg["ZERG_ANALYSIS_DEPTH"] == "think"
+        assert "MAHABHARATHA_TDD_MODE" in env_arg
+        assert env_arg["MAHABHARATHA_TDD_MODE"] == "1"
+        assert "MAHABHARATHA_COMPACT_MODE" in env_arg
+        assert env_arg["MAHABHARATHA_COMPACT_MODE"] == "1"
+        assert "MAHABHARATHA_ANALYSIS_DEPTH" in env_arg
+        assert env_arg["MAHABHARATHA_ANALYSIS_DEPTH"] == "think"
 
 
 # ---------------------------------------------------------------------------
@@ -158,48 +158,48 @@ class TestWorkerManagerSpawnEnv:
 
 
 class TestContextPluginDepthSection:
-    """Verify _build_depth_section reads ZERG_ANALYSIS_DEPTH env var."""
+    """Verify _build_depth_section reads MAHABHARATHA_ANALYSIS_DEPTH env var."""
 
     def test_depth_section_contains_tier(self, monkeypatch):
-        monkeypatch.setenv("ZERG_ANALYSIS_DEPTH", "think")
+        monkeypatch.setenv("MAHABHARATHA_ANALYSIS_DEPTH", "think")
         plugin = ContextEngineeringPlugin(ContextEngineeringConfig())
         section = plugin._build_depth_section(max_tokens=500)
         assert "think" in section.lower()
 
     def test_depth_section_empty_for_standard(self, monkeypatch):
-        monkeypatch.setenv("ZERG_ANALYSIS_DEPTH", "standard")
+        monkeypatch.setenv("MAHABHARATHA_ANALYSIS_DEPTH", "standard")
         plugin = ContextEngineeringPlugin(ContextEngineeringConfig())
         section = plugin._build_depth_section(max_tokens=500)
         assert section == ""
 
 
 class TestContextPluginTddSection:
-    """Verify _build_tdd_section reads ZERG_TDD_MODE env var."""
+    """Verify _build_tdd_section reads MAHABHARATHA_TDD_MODE env var."""
 
     def test_tdd_section_contains_red(self, monkeypatch):
-        monkeypatch.setenv("ZERG_TDD_MODE", "1")
+        monkeypatch.setenv("MAHABHARATHA_TDD_MODE", "1")
         plugin = ContextEngineeringPlugin(ContextEngineeringConfig())
         section = plugin._build_tdd_section(max_tokens=500)
         assert "RED" in section
 
     def test_tdd_section_empty_when_off(self, monkeypatch):
-        monkeypatch.setenv("ZERG_TDD_MODE", "0")
+        monkeypatch.setenv("MAHABHARATHA_TDD_MODE", "0")
         plugin = ContextEngineeringPlugin(ContextEngineeringConfig())
         section = plugin._build_tdd_section(max_tokens=500)
         assert section == ""
 
 
 class TestContextPluginEfficiencySection:
-    """Verify _build_efficiency_section reads ZERG_COMPACT_MODE env var."""
+    """Verify _build_efficiency_section reads MAHABHARATHA_COMPACT_MODE env var."""
 
     def test_efficiency_section_contains_compact(self, monkeypatch):
-        monkeypatch.setenv("ZERG_COMPACT_MODE", "1")
+        monkeypatch.setenv("MAHABHARATHA_COMPACT_MODE", "1")
         plugin = ContextEngineeringPlugin(ContextEngineeringConfig())
         section = plugin._build_efficiency_section()
         assert "Compact" in section
 
     def test_efficiency_section_empty_when_off(self, monkeypatch):
-        monkeypatch.setenv("ZERG_COMPACT_MODE", "0")
+        monkeypatch.setenv("MAHABHARATHA_COMPACT_MODE", "0")
         plugin = ContextEngineeringPlugin(ContextEngineeringConfig())
         section = plugin._build_efficiency_section()
         assert section == ""

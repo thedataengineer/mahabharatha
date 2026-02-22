@@ -9,7 +9,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.config import MahabharathaConfig, QualityGate
 from mahabharatha.repo_map import invalidate_cache as invalidate_repo_map_cache
 from mahabharatha.types import Task, TaskGraph
 
@@ -22,15 +22,15 @@ def reset_caches() -> Generator[None, None, None]:
     doesn't persist state across tests, which could cause test isolation issues.
 
     Caches reset:
-    - ZergConfig singleton (TASK-001)
+    - MahabharathaConfig singleton (TASK-001)
     - RepoMap TTL cache (TASK-004)
     """
     # Clear caches before test
-    ZergConfig.invalidate_cache()
+    MahabharathaConfig.invalidate_cache()
     invalidate_repo_map_cache()
     yield
     # Clear caches after test
-    ZergConfig.invalidate_cache()
+    MahabharathaConfig.invalidate_cache()
     invalidate_repo_map_cache()
 
 
@@ -70,13 +70,13 @@ def tmp_repo(tmp_path: Path) -> Generator[Path, None, None]:
 
 
 @pytest.fixture
-def sample_config() -> ZergConfig:
+def sample_config() -> MahabharathaConfig:
     """Create a sample MAHABHARATHA configuration.
 
     Returns:
-        Sample ZergConfig instance
+        Sample MahabharathaConfig instance
     """
-    config = ZergConfig()
+    config = MahabharathaConfig()
     config.quality_gates = [
         QualityGate(name="lint", command="echo lint", required=True),
         QualityGate(name="test", command="echo test", required=True),

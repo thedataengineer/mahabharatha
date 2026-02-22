@@ -10,7 +10,7 @@
     {
       "id": "TASK-001",
       "title": "Create GitHub FUNDING.yml",
-      "description": "Create .github/FUNDING.yml with github: rocklambros. Comment out buy_me_a_coffee and open_collective as placeholders.",
+      "description": "Create .github/FUNDING.yml with github: thedataengineer. Comment out buy_me_a_coffee and open_collective as placeholders.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
@@ -20,14 +20,14 @@
         "read": []
       },
       "verification": {
-        "command": "test -f .github/FUNDING.yml && grep -q 'github: rocklambros' .github/FUNDING.yml",
+        "command": "test -f .github/FUNDING.yml && grep -q 'github: thedataengineer' .github/FUNDING.yml",
         "timeout_seconds": 10
       },
       "estimate_minutes": 3,
       "skills_required": ["yaml"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nCreate `.github/FUNDING.yml` with `github: rocklambros`. Comment out `buy_me_a_coffee` and `open_collective` as placeholders. Verify Sponsor button appears on repo page.\n\n## File Content\n```yaml\ngithub: rocklambros\n# buy_me_a_coffee:\n# open_collective:\n```"
+      "context": "## Spec Context\nCreate `.github/FUNDING.yml` with `github: thedataengineer`. Comment out `buy_me_a_coffee` and `open_collective` as placeholders. Verify Sponsor button appears on repo page.\n\n## File Content\n```yaml\ngithub: thedataengineer\n# buy_me_a_coffee:\n# open_collective:\n```"
     },
     {
       "id": "TASK-002",

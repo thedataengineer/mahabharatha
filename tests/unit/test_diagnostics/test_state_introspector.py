@@ -1,16 +1,16 @@
-"""Tests for ZergStateIntrospector and ZergHealthReport."""
+"""Tests for MahabharathaStateIntrospector and MahabharathaHealthReport."""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
 
-from mahabharatha.diagnostics.state_introspector import ZergHealthReport, ZergStateIntrospector
+from mahabharatha.diagnostics.state_introspector import MahabharathaHealthReport, MahabharathaStateIntrospector
 
 
-class TestZergHealthReport:
+class TestMahabharathaHealthReport:
     def test_to_dict(self) -> None:
-        report = ZergHealthReport(
+        report = MahabharathaHealthReport(
             feature="auth",
             state_exists=True,
             total_tasks=5,
@@ -24,9 +24,9 @@ class TestZergHealthReport:
         assert d["current_level"] == 2
 
 
-class TestZergStateIntrospector:
+class TestMahabharathaStateIntrospector:
     def test_find_latest_feature_no_dir(self, tmp_path: Path) -> None:
-        introspector = ZergStateIntrospector(state_dir=tmp_path / "nonexistent")
+        introspector = MahabharathaStateIntrospector(state_dir=tmp_path / "nonexistent")
         assert introspector.find_latest_feature() is None
 
     def test_find_latest_feature(self, tmp_path: Path) -> None:
@@ -34,13 +34,13 @@ class TestZergStateIntrospector:
         state_dir.mkdir()
         (state_dir / "old-feature.json").write_text("{}")
         (state_dir / "new-feature.json").write_text("{}")
-        introspector = ZergStateIntrospector(state_dir=state_dir)
+        introspector = MahabharathaStateIntrospector(state_dir=state_dir)
         result = introspector.find_latest_feature()
         assert result is not None
         assert result in ("old-feature", "new-feature")
 
     def test_get_health_report_missing_file(self, tmp_path: Path) -> None:
-        introspector = ZergStateIntrospector(state_dir=tmp_path)
+        introspector = MahabharathaStateIntrospector(state_dir=tmp_path)
         report = introspector.get_health_report("missing")
         assert report.state_exists is False
         assert report.total_tasks == 0
@@ -62,7 +62,7 @@ class TestZergStateIntrospector:
             "paused": False,
         }
         (state_dir / "feat.json").write_text(json.dumps(state))
-        introspector = ZergStateIntrospector(state_dir=state_dir)
+        introspector = MahabharathaStateIntrospector(state_dir=state_dir)
         report = introspector.get_health_report("feat")
 
         assert report.state_exists is True
@@ -84,7 +84,7 @@ class TestZergStateIntrospector:
             "workers": {},
         }
         (state_dir / "feat.json").write_text(json.dumps(state))
-        introspector = ZergStateIntrospector(state_dir=state_dir)
+        introspector = MahabharathaStateIntrospector(state_dir=state_dir)
         report = introspector.get_health_report("feat")
         assert len(report.stale_tasks) == 2
 
@@ -99,7 +99,7 @@ class TestZergStateIntrospector:
             "workers": {},
         }
         (state_dir / "feat.json").write_text(json.dumps(state))
-        introspector = ZergStateIntrospector(state_dir=state_dir)
+        introspector = MahabharathaStateIntrospector(state_dir=state_dir)
         details = introspector.get_failed_task_details("feat")
         assert len(details) == 1
         assert details[0]["error"] == "err1"
@@ -109,14 +109,14 @@ class TestZergStateIntrospector:
         logs_dir.mkdir()
         (logs_dir / "worker-1.stdout.log").write_text("line1\nline2\nline3")
         (logs_dir / "worker-1.stderr.log").write_text("err1\nerr2")
-        introspector = ZergStateIntrospector(state_dir=tmp_path, logs_dir=logs_dir)
+        introspector = MahabharathaStateIntrospector(state_dir=tmp_path, logs_dir=logs_dir)
         logs = introspector.get_worker_logs(1, lines=2)
         assert "line2" in logs["stdout"]
         assert "err1" in logs["stderr"]
 
     def test_detect_state_corruption_corrupt_json(self, tmp_path: Path) -> None:
         (tmp_path / "bad.json").write_text("{{bad")
-        introspector = ZergStateIntrospector(state_dir=tmp_path)
+        introspector = MahabharathaStateIntrospector(state_dir=tmp_path)
         issues = introspector.detect_state_corruption("bad")
         assert any("parse" in i.lower() for i in issues)
 
@@ -130,7 +130,7 @@ class TestZergStateIntrospector:
         graph_file = graph_dir / "task-graph.json"
         try:
             graph_file.write_text(json.dumps({"tasks": [{"id": "T1"}, {"id": "T3"}]}))
-            introspector = ZergStateIntrospector(state_dir=state_dir)
+            introspector = MahabharathaStateIntrospector(state_dir=state_dir)
             issues = introspector.detect_state_corruption("feat")
             assert any("T2" in i for i in issues)
             assert any("T3" in i for i in issues)

@@ -10,7 +10,7 @@ import logging
 from dataclasses import dataclass
 from typing import Any
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.depth_tiers import DepthRouter, DepthTier
 from mahabharatha.mcp_router import MCPRouter
 from mahabharatha.modes import BehavioralMode, ModeDetector
@@ -63,21 +63,21 @@ class ResolvedCapabilities:
     staleness_threshold: int = 300
 
     def to_env_vars(self) -> dict[str, str]:
-        """Convert to flat ZERG_* env var dict for worker injection."""
+        """Convert to flat MAHABHARATHA_* env var dict for worker injection."""
         env: dict[str, str] = {
-            "ZERG_ANALYSIS_DEPTH": self.depth_tier,
-            "ZERG_TOKEN_BUDGET": str(self.token_budget),
-            "ZERG_COMPACT_MODE": "1" if self.compact else "0",
-            "ZERG_BEHAVIORAL_MODE": self.mode,
-            "ZERG_TDD_MODE": "1" if self.tdd else "0",
-            "ZERG_RULES_ENABLED": "1" if self.rules_enabled else "0",
-            "ZERG_LOOP_ENABLED": "1" if self.loop_enabled else "0",
-            "ZERG_LOOP_ITERATIONS": str(self.loop_iterations),
-            "ZERG_VERIFICATION_GATES": "1" if self.gates_enabled else "0",
-            "ZERG_STALENESS_THRESHOLD": str(self.staleness_threshold),
+            "MAHABHARATHA_ANALYSIS_DEPTH": self.depth_tier,
+            "MAHABHARATHA_TOKEN_BUDGET": str(self.token_budget),
+            "MAHABHARATHA_COMPACT_MODE": "1" if self.compact else "0",
+            "MAHABHARATHA_BEHAVIORAL_MODE": self.mode,
+            "MAHABHARATHA_TDD_MODE": "1" if self.tdd else "0",
+            "MAHABHARATHA_RULES_ENABLED": "1" if self.rules_enabled else "0",
+            "MAHABHARATHA_LOOP_ENABLED": "1" if self.loop_enabled else "0",
+            "MAHABHARATHA_LOOP_ITERATIONS": str(self.loop_iterations),
+            "MAHABHARATHA_VERIFICATION_GATES": "1" if self.gates_enabled else "0",
+            "MAHABHARATHA_STALENESS_THRESHOLD": str(self.staleness_threshold),
         }
         if self.mcp_hint:
-            env["ZERG_MCP_HINT"] = self.mcp_hint
+            env["MAHABHARATHA_MCP_HINT"] = self.mcp_hint
         return env
 
     def to_dict(self) -> dict[str, Any]:
@@ -115,7 +115,7 @@ class CapabilityResolver:
     def resolve(
         self,
         cli_flags: dict[str, Any],
-        config: ZergConfig,
+        config: MahabharathaConfig,
         task_graph: dict[str, Any] | None = None,
         command: str | None = None,
     ) -> ResolvedCapabilities:
@@ -123,7 +123,7 @@ class CapabilityResolver:
 
         Args:
             cli_flags: ctx.obj dict from Click (depth, compact, mode, tdd, etc.)
-            config: ZergConfig instance
+            config: MahabharathaConfig instance
             task_graph: Parsed task-graph.json dict (optional)
             command: Active command name (e.g. "kurukshetra") for loop applicability
 
@@ -211,7 +211,7 @@ class CapabilityResolver:
     def _resolve_mode(
         self,
         cli_flags: dict[str, Any],
-        config: ZergConfig,
+        config: MahabharathaConfig,
         depth_tier: str,
     ) -> str:
         """Resolve behavioral mode."""
@@ -224,7 +224,7 @@ class CapabilityResolver:
         )
         return mode_ctx.mode.value
 
-    def _resolve_mcp(self, config: ZergConfig, depth_tier: str) -> str:
+    def _resolve_mcp(self, config: MahabharathaConfig, depth_tier: str) -> str:
         """Resolve MCP server hint from depth tier."""
         decision = self._mcp_router.route(depth_tier=depth_tier)
         if decision.recommended_servers:

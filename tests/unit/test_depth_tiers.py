@@ -126,7 +126,7 @@ class TestDepthRouterGetEnvVars:
         for tier in DepthTier:
             ctx = DepthContext.from_tier(tier)
             env_vars = router.get_env_vars(ctx)
-            assert env_vars["ZERG_ANALYSIS_DEPTH"] == tier.value
+            assert env_vars["MAHABHARATHA_ANALYSIS_DEPTH"] == tier.value
 
 
 class TestCliDepthFlags:

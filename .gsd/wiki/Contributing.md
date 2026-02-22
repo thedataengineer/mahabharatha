@@ -99,7 +99,7 @@ mahabharatha/
 
 ```bash
 # Clone the repository
-git clone https://github.com/rocklambros/mahabharatha.git
+git clone https://github.com/thedataengineer/mahabharatha.git
 cd mahabharatha
 
 # Create and activate virtual environment
@@ -494,12 +494,12 @@ Do **not** open public issues. See [Security](Security) for private reporting in
 - [Architecture](Architecture) — System design and module reference
 - [Command-Reference](Command-Reference) — All 26 commands with usage examples
 - [Context-Engineering](Context-Engineering) — Token optimization techniques
-- [CLAUDE.md](https://github.com/rocklambros/mahabharatha/blob/main/CLAUDE.md) — Anti-drift rules and Task ecosystem details
+- [CLAUDE.md](https://github.com/thedataengineer/mahabharatha/blob/main/CLAUDE.md) — Anti-drift rules and Task ecosystem details
 
 ---
 
 ## License
 
-By contributing to MAHABHARATHA, you agree that your contributions will be licensed under the [MIT License](https://github.com/rocklambros/mahabharatha/blob/main/LICENSE).
+By contributing to MAHABHARATHA, you agree that your contributions will be licensed under the [MIT License](https://github.com/thedataengineer/mahabharatha/blob/main/LICENSE).
 
 **Why MIT?** It's simple, permissive, and widely understood. Contributors know their code can be used commercially. Users know they can use MAHABHARATHA without legal complexity.

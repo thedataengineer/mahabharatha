@@ -21,7 +21,7 @@ MAHABHARATHA is ready for public release but the PyPI package name `mahabharatha
 - Close all 5 issues via `gh issue close`
 
 ### Out of Scope
-- Renaming the GitHub repo (stays `rocklambros/mahabharatha`)
+- Renaming the GitHub repo (stays `thedataengineer/mahabharatha`)
 - Changing Python imports (`import mahabharatha` unchanged)
 - Changing CLI command (`mahabharatha --help` unchanged)
 - Phase 1-3 community/CI/polish work

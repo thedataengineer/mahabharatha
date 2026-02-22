@@ -56,7 +56,7 @@ plugins:
 For complex logic, authentication, or API calls, create Python plugin classes:
 
 ```python
-# my_zerg_plugins/gates.py
+# my_mahabharatha_plugins/gates.py
 from mahabharatha.plugins import QualityGatePlugin, GateContext
 from mahabharatha.types import GateRunResult
 from mahabharatha.constants import GateResult
@@ -81,7 +81,7 @@ Register in `pyproject.toml`:
 
 ```toml
 [project.entry-points."mahabharatha.plugins"]
-sonarqube = "my_zerg_plugins.gates:SonarQubeGate"
+sonarqube = "my_mahabharatha_plugins.gates:SonarQubeGate"
 ```
 
 Install and run:
@@ -113,7 +113,7 @@ class MyCustomGate(QualityGatePlugin):
         # ctx.feature: str — feature name
         # ctx.level: int — level just merged
         # ctx.cwd: Path — working directory
-        # ctx.config: ZergConfig — full config
+        # ctx.config: MahabharathaConfig — full config
 
         return GateRunResult(
             gate_name=self.name,
@@ -227,9 +227,9 @@ Register plugin classes in your package's `pyproject.toml`:
 
 ```toml
 [project.entry-points."mahabharatha.plugins"]
-sonarqube = "my_zerg_plugins.gates:SonarQubeGate"
-k8s-launcher = "my_zerg_plugins.launchers:K8sLauncherPlugin"
-slack-hooks = "my_zerg_plugins.hooks:SlackNotificationHook"
+sonarqube = "my_mahabharatha_plugins.gates:SonarQubeGate"
+k8s-launcher = "my_mahabharatha_plugins.launchers:K8sLauncherPlugin"
+slack-hooks = "my_mahabharatha_plugins.hooks:SlackNotificationHook"
 ```
 
 Discovery happens automatically via `PluginRegistry.load_entry_points("mahabharatha.plugins")` on orchestrator startup.

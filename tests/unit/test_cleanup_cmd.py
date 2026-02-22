@@ -18,7 +18,7 @@ from mahabharatha.commands.cleanup import (
 
 @pytest.fixture
 def mock_config() -> MagicMock:
-    """Create a mock ZergConfig."""
+    """Create a mock MahabharathaConfig."""
     config = MagicMock()
     config.workers = MagicMock()
     config.workers.max_concurrent = 5
@@ -331,7 +331,7 @@ class TestCleanupCLI:
         result = runner.invoke(cli, ["cleanup"])
         assert result.exit_code == 1
 
-    @patch("mahabharatha.commands.cleanup.ZergConfig")
+    @patch("mahabharatha.commands.cleanup.MahabharathaConfig")
     @patch("mahabharatha.commands.cleanup.discover_features")
     @patch("mahabharatha.commands.cleanup.create_cleanup_plan")
     @patch("mahabharatha.commands.cleanup.show_cleanup_plan")
@@ -360,7 +360,7 @@ class TestCleanupCLI:
         assert result.exit_code == 0
         assert "dry run" in result.output.lower()
 
-    @patch("mahabharatha.commands.cleanup.ZergConfig")
+    @patch("mahabharatha.commands.cleanup.MahabharathaConfig")
     def test_cleanup_handles_exception(self, mock_config_cls: MagicMock) -> None:
         """Test cleanup handles unexpected exceptions."""
         mock_config_cls.load.side_effect = Exception("Config error")

@@ -30,13 +30,13 @@
 ### Completed This Session
 - MAHABHARATHA-L1-001: Python Package Structure (mahabharatha/__init__.py, pyproject.toml, requirements.txt)
 - MAHABHARATHA-L1-004: Constants and Enums (Level, TaskStatus, GateResult, WorkerStatus)
-- MAHABHARATHA-L1-006: Exception Hierarchy (ZergError and 15 specific exceptions)
+- MAHABHARATHA-L1-006: Exception Hierarchy (MahabharathaError and 15 specific exceptions)
 - MAHABHARATHA-L1-002: Type Definitions (Task, TaskGraph, WorkerState, LevelStatus, etc.)
 
 ### Verifications Passed
 - `python -c "import mahabharatha; print(mahabharatha.__version__)"` -> 0.1.0
 - `python -c "from mahabharatha.constants import Level, TaskStatus, GateResult"` -> OK
-- `python -c "from mahabharatha.exceptions import ZergError, TaskVerificationFailed, MergeConflict"` -> OK
+- `python -c "from mahabharatha.exceptions import MahabharathaError, TaskVerificationFailed, MergeConflict"` -> OK
 - `python -c "from mahabharatha.types import TaskGraph, WorkerState, LevelStatus"` -> OK
 
 ### Next Session Target (SESSION 2)

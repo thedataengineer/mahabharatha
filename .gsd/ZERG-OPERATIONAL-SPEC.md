@@ -444,9 +444,9 @@ git worktree add .mahabharatha/worktrees/{feature}/worker-{N} \
   -b mahabharatha/{feature}/worker-{N}
 
 # 2. Launch devcontainer with worker identity
-ZERG_WORKER_ID={N} \
-ZERG_FEATURE={feature} \
-ZERG_TASK_ID={task-id} \
+MAHABHARATHA_WORKER_ID={N} \
+MAHABHARATHA_FEATURE={feature} \
+MAHABHARATHA_TASK_ID={task-id} \
 CLAUDE_CODE_TASK_LIST_ID={feature} \
 docker-compose -f .devcontainer/docker-compose.yaml up -d worker-{N}
 
@@ -654,9 +654,9 @@ Each worker runs in an isolated devcontainer:
   "workspaceFolder": "/workspace",
 
   "containerEnv": {
-    "ZERG_WORKER_ID": "${localEnv:ZERG_WORKER_ID}",
-    "ZERG_FEATURE": "${localEnv:ZERG_FEATURE}",
-    "ZERG_TASK_ID": "${localEnv:ZERG_TASK_ID}",
+    "MAHABHARATHA_WORKER_ID": "${localEnv:MAHABHARATHA_WORKER_ID}",
+    "MAHABHARATHA_FEATURE": "${localEnv:MAHABHARATHA_FEATURE}",
+    "MAHABHARATHA_TASK_ID": "${localEnv:MAHABHARATHA_TASK_ID}",
     "CLAUDE_CODE_TASK_LIST_ID": "${localEnv:CLAUDE_CODE_TASK_LIST_ID}"
   },
 
@@ -689,9 +689,9 @@ services:
       - specs:/specs:ro
       - rules:/rules:ro
     environment:
-      - ZERG_WORKER_ID
-      - ZERG_FEATURE
-      - ZERG_TASK_ID
+      - MAHABHARATHA_WORKER_ID
+      - MAHABHARATHA_FEATURE
+      - MAHABHARATHA_TASK_ID
       - CLAUDE_CODE_TASK_LIST_ID
     networks:
       - mahabharatha-net
@@ -848,11 +848,11 @@ Workers receive context via environment:
 
 | Variable | Purpose |
 |----------|---------|
-| `ZERG_WORKER_ID` | Worker identifier |
-| `ZERG_FEATURE` | Feature name |
-| `ZERG_WORKTREE` | Path to worker's git worktree |
-| `ZERG_BRANCH` | Worker's git branch |
-| `ZERG_SPEC_DIR` | Path to feature spec directory |
+| `MAHABHARATHA_WORKER_ID` | Worker identifier |
+| `MAHABHARATHA_FEATURE` | Feature name |
+| `MAHABHARATHA_WORKTREE` | Path to worker's git worktree |
+| `MAHABHARATHA_BRANCH` | Worker's git branch |
+| `MAHABHARATHA_SPEC_DIR` | Path to feature spec directory |
 
 ### Session Resumption
 

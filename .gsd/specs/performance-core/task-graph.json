@@ -9,8 +9,8 @@
   "tasks": [
     {
       "id": "TASK-001",
-      "title": "Add mtime-based singleton caching to ZergConfig",
-      "description": "Implement caching for ZergConfig.load() using class-level variables. Check file mtime against cached mtime, return cached instance if unchanged. Add force_reload parameter, thread-safe with threading.Lock, DEBUG logging for cache hits/misses.",
+      "title": "Add mtime-based singleton caching to MahabharathaConfig",
+      "description": "Implement caching for MahabharathaConfig.load() using class-level variables. Check file mtime against cached mtime, return cached instance if unchanged. Add force_reload parameter, thread-safe with threading.Lock, DEBUG logging for cache hits/misses.",
       "phase": "core",
       "level": 1,
       "dependencies": [],
@@ -20,14 +20,14 @@
         "read": [".gsd/specs/performance-core/requirements.md", ".gsd/specs/performance-core/design.md"]
       },
       "verification": {
-        "command": "python -c \"from mahabharatha.config import ZergConfig; c1=ZergConfig.load(); c2=ZergConfig.load(); assert c1 is c2, 'Cache miss'; print('ZergConfig singleton verified')\"",
+        "command": "python -c \"from mahabharatha.config import MahabharathaConfig; c1=MahabharathaConfig.load(); c2=MahabharathaConfig.load(); assert c1 is c2, 'Cache miss'; print('MahabharathaConfig singleton verified')\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 15,
       "skills_required": ["python"],
       "consumers": ["TASK-006"],
       "integration_test": "tests/test_config_caching.py",
-      "context": "## Spec Context\nFR-1: ZergConfig Singleton with mtime Invalidation\n- Use class-level _cached_instance and _cache_mtime variables\n- On load, check file mtime against cached mtime\n- Return cached instance if mtime unchanged\n- Support force_reload=True parameter to bypass cache\n- Thread-safe using threading.Lock\n- Log cache hits/misses at DEBUG level\n\nSignature: @classmethod def load(cls, config_path: str | Path | None = None, force_reload: bool = False) -> \"ZergConfig\"\n\n## Security Rules (Python)\n- Use safe YAML loading (yaml.safe_load) - already in place\n- Avoid unsafe deserialization\n- Thread-safe access patterns with Lock"
+      "context": "## Spec Context\nFR-1: MahabharathaConfig Singleton with mtime Invalidation\n- Use class-level _cached_instance and _cache_mtime variables\n- On load, check file mtime against cached mtime\n- Return cached instance if mtime unchanged\n- Support force_reload=True parameter to bypass cache\n- Thread-safe using threading.Lock\n- Log cache hits/misses at DEBUG level\n\nSignature: @classmethod def load(cls, config_path: str | Path | None = None, force_reload: bool = False) -> \"MahabharathaConfig\"\n\n## Security Rules (Python)\n- Use safe YAML loading (yaml.safe_load) - already in place\n- Avoid unsafe deserialization\n- Thread-safe access patterns with Lock"
     },
     {
       "id": "TASK-002",
@@ -119,8 +119,8 @@
     },
     {
       "id": "TASK-006",
-      "title": "Create unit tests for ZergConfig caching",
-      "description": "Write comprehensive tests for ZergConfig singleton caching: cache hit on unchanged file, cache miss on mtime change, force_reload bypasses cache, thread safety under concurrent access, invalidate_cache works.",
+      "title": "Create unit tests for MahabharathaConfig caching",
+      "description": "Write comprehensive tests for MahabharathaConfig singleton caching: cache hit on unchanged file, cache miss on mtime change, force_reload bypasses cache, thread safety under concurrent access, invalidate_cache works.",
       "phase": "testing",
       "level": 2,
       "dependencies": ["TASK-001"],

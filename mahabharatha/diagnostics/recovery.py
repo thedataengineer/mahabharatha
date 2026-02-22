@@ -12,7 +12,7 @@ from mahabharatha.logging import get_logger
 
 if TYPE_CHECKING:
     from mahabharatha.commands.debug import DiagnosticResult
-    from mahabharatha.diagnostics.state_introspector import ZergHealthReport
+    from mahabharatha.diagnostics.state_introspector import MahabharathaHealthReport
 
 logger = get_logger("diagnostics.recovery")
 
@@ -188,7 +188,7 @@ class RecoveryPlanner:
     def plan(
         self,
         result: DiagnosticResult,
-        health: ZergHealthReport | None = None,
+        health: MahabharathaHealthReport | None = None,
     ) -> RecoveryPlan:
         """Generate a recovery plan from diagnostic result and health report."""
         category = self._classify_error(result, health)
@@ -215,7 +215,7 @@ class RecoveryPlanner:
     def _classify_error(
         self,
         result: DiagnosticResult,
-        health: ZergHealthReport | None,
+        health: MahabharathaHealthReport | None,
     ) -> str:
         """Classify the error into a recovery category."""
         symptom_lower = result.symptom.lower()
@@ -251,7 +251,7 @@ class RecoveryPlanner:
         self,
         category: str,
         result: DiagnosticResult,
-        health: ZergHealthReport | None,
+        health: MahabharathaHealthReport | None,
     ) -> list[RecoveryStep]:
         """Get recovery steps for a category, with variable substitution."""
         template = RECOVERY_TEMPLATES.get(category, RECOVERY_TEMPLATES["task_failure"])
@@ -310,7 +310,7 @@ class RecoveryPlanner:
         self,
         category: str,
         result: DiagnosticResult,
-        health: ZergHealthReport | None,
+        health: MahabharathaHealthReport | None,
         threshold: int = DESIGN_ESCALATION_TASK_THRESHOLD,
     ) -> tuple[bool, str]:
         """Check if diagnosed issues need architectural redesign via /mahabharatha:design.

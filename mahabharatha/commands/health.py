@@ -2,7 +2,7 @@ import click
 from rich.console import Console
 from rich.table import Table
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.llm import ClaudeProvider, OllamaProvider
 
 console = Console()
@@ -11,7 +11,7 @@ console = Console()
 @click.command()
 def health():
     """Check the health and availability of MAHABHARATHA components (LLM, Providers)."""
-    config = ZergConfig.load()
+    config = MahabharathaConfig.load()
 
     console.print("[bold blue]MAHABHARATHA System Health Check[/bold blue]")
     console.print(f"Active Provider: [bold green]{config.llm.provider}[/bold green]")

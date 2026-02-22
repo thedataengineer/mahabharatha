@@ -22,16 +22,16 @@ class TestEnvVarValidation:
     def test_allowed_env_vars_pass(self) -> None:
         """Test allowed environment variables pass validation."""
         env = {
-            "ZERG_WORKER_ID": "1",
-            "ZERG_FEATURE": "test",
+            "MAHABHARATHA_WORKER_ID": "1",
+            "MAHABHARATHA_FEATURE": "test",
             "ANTHROPIC_API_KEY": "sk-test",
             "CI": "true",
         }
 
         validated = validate_env_vars(env)
 
-        assert "ZERG_WORKER_ID" in validated
-        assert "ZERG_FEATURE" in validated
+        assert "MAHABHARATHA_WORKER_ID" in validated
+        assert "MAHABHARATHA_FEATURE" in validated
         assert "ANTHROPIC_API_KEY" in validated
         assert "CI" in validated
 
@@ -40,40 +40,40 @@ class TestEnvVarValidation:
         env = {
             "LD_PRELOAD": "/evil.so",
             "PATH": "/malicious",
-            "ZERG_WORKER_ID": "1",
+            "MAHABHARATHA_WORKER_ID": "1",
         }
 
         validated = validate_env_vars(env)
 
         assert "LD_PRELOAD" not in validated
         assert "PATH" not in validated
-        assert "ZERG_WORKER_ID" in validated
+        assert "MAHABHARATHA_WORKER_ID" in validated
 
     def test_shell_metacharacters_blocked(self) -> None:
         """Test env vars with shell metacharacters are blocked."""
         env = {
             "BAD_VAR": "value; rm -rf /",
             "ANOTHER_BAD": "$(whoami)",
-            "ZERG_WORKER_ID": "1",
+            "MAHABHARATHA_WORKER_ID": "1",
         }
 
         validated = validate_env_vars(env)
 
         assert "BAD_VAR" not in validated
         assert "ANOTHER_BAD" not in validated
-        assert "ZERG_WORKER_ID" in validated
+        assert "MAHABHARATHA_WORKER_ID" in validated
 
     def test_mahabharatha_prefixed_vars_allowed(self) -> None:
-        """Test ZERG_ prefixed vars are always allowed."""
+        """Test MAHABHARATHA_ prefixed vars are always allowed."""
         env = {
-            "ZERG_CUSTOM_VAR": "value",
-            "ZERG_ANOTHER": "test",
+            "MAHABHARATHA_CUSTOM_VAR": "value",
+            "MAHABHARATHA_ANOTHER": "test",
         }
 
         validated = validate_env_vars(env)
 
-        assert "ZERG_CUSTOM_VAR" in validated
-        assert "ZERG_ANOTHER" in validated
+        assert "MAHABHARATHA_CUSTOM_VAR" in validated
+        assert "MAHABHARATHA_ANOTHER" in validated
 
     def test_unlisted_vars_skipped(self) -> None:
         """Test unlisted environment variables are skipped."""
@@ -232,7 +232,7 @@ class TestContainerSpawn:
             feature="test-feature",
             worktree_path=tmp_path,
             branch="test",
-            env={"LD_PRELOAD": "/evil.so", "ZERG_CUSTOM": "ok"},  # LD_PRELOAD should be blocked
+            env={"LD_PRELOAD": "/evil.so", "MAHABHARATHA_CUSTOM": "ok"},  # LD_PRELOAD should be blocked
         )
 
         # Find the docker run call (skip the docker rm -f call)

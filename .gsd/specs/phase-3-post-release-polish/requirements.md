@@ -31,7 +31,7 @@ v0.2.0 is live on PyPI. The repo needs post-release polish: sponsorship setup, r
 
 ### 3.1 FUNDING.yml
 
-- Create `.github/FUNDING.yml` with `github: rocklambros`
+- Create `.github/FUNDING.yml` with `github: thedataengineer`
 - Comment out `buy_me_a_coffee` and `open_collective` as placeholders
 - Verify Sponsor button appears on repo page
 

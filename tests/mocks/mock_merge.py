@@ -62,7 +62,7 @@ class MockMergeCoordinator:
 
         Args:
             feature: Feature name (default: "test-feature")
-            config: ZergConfig (ignored in mock)
+            config: MahabharathaConfig (ignored in mock)
             repo_path: Repository path (ignored in mock)
         """
         self.feature = feature

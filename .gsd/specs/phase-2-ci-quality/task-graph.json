@@ -32,7 +32,7 @@
     {
       "id": "TASK-002",
       "title": "Create CODEOWNERS file",
-      "description": "Create CODEOWNERS file at repo root. Default owner: @rocklambros for all files (*). Specific paths: /mahabharatha/ for core orchestrator, /.github/ for CI/CD, /docs/ for documentation. Follow GitHub CODEOWNERS syntax.",
+      "description": "Create CODEOWNERS file at repo root. Default owner: @thedataengineer for all files (*). Specific paths: /mahabharatha/ for core orchestrator, /.github/ for CI/CD, /docs/ for documentation. Follow GitHub CODEOWNERS syntax.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
@@ -42,14 +42,14 @@
         "read": []
       },
       "verification": {
-        "command": "test -f CODEOWNERS && grep -q '@rocklambros' CODEOWNERS && echo 'CODEOWNERS valid'",
+        "command": "test -f CODEOWNERS && grep -q '@thedataengineer' CODEOWNERS && echo 'CODEOWNERS valid'",
         "timeout_seconds": 10
       },
       "estimate_minutes": 3,
       "skills_required": ["github"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nFR-004: CODEOWNERS file — Default @rocklambros, specific paths for core, CI, docs.\nBusiness rule: CODEOWNERS uses @rocklambros as default owner."
+      "context": "## Spec Context\nFR-004: CODEOWNERS file — Default @thedataengineer, specific paths for core, CI, docs.\nBusiness rule: CODEOWNERS uses @thedataengineer as default owner."
     },
     {
       "id": "TASK-003",
@@ -142,7 +142,7 @@
     {
       "id": "TASK-007",
       "title": "Update README with Discussions link and coverage badge",
-      "description": "Modify README.md: (1) Add coverage badge after the CI badge in the badges section: shields.io badge pointing to codecov or a static badge. Use a static 50% badge for now since no coverage service is integrated: https://img.shields.io/badge/coverage-50%25-yellow. (2) Add a Discussions link row to the Documentation table: '| [Discussions](https://github.com/rocklambros/mahabharatha/discussions) | Questions, ideas, and community chat |'. Keep all existing content unchanged.",
+      "description": "Modify README.md: (1) Add coverage badge after the CI badge in the badges section: shields.io badge pointing to codecov or a static badge. Use a static 50% badge for now since no coverage service is integrated: https://img.shields.io/badge/coverage-50%25-yellow. (2) Add a Discussions link row to the Documentation table: '| [Discussions](https://github.com/thedataengineer/mahabharatha/discussions) | Questions, ideas, and community chat |'. Keep all existing content unchanged.",
       "phase": "integration",
       "level": 2,
       "dependencies": [],
@@ -164,7 +164,7 @@
     {
       "id": "TASK-008",
       "title": "Update CHANGELOG with Phase 2 entries",
-      "description": "Modify CHANGELOG.md: Add Phase 2 entries under the existing [Unreleased] → Added section. Entries to add:\n- CodeQL security scanning workflow for automated vulnerability detection on PRs and weekly schedule (#189)\n- mypy type checking enforced in CI quality job (#189)\n- Python 3.13 added to CI test matrix alongside 3.12 (#189)\n- CODEOWNERS file with @rocklambros as default reviewer (#189)\n- MkDocs documentation site with Material theme and GitHub Pages deployment (#190)\n- `docs` optional dependency group for mkdocs and mkdocs-material (#190)\n- Python 3.13 classifier in pyproject.toml (#189)\n- Coverage badge and GitHub Discussions link in README (#189, #190)\n\nPlace these entries AFTER the existing Phase 1 entries under [Unreleased] → Added.",
+      "description": "Modify CHANGELOG.md: Add Phase 2 entries under the existing [Unreleased] → Added section. Entries to add:\n- CodeQL security scanning workflow for automated vulnerability detection on PRs and weekly schedule (#189)\n- mypy type checking enforced in CI quality job (#189)\n- Python 3.13 added to CI test matrix alongside 3.12 (#189)\n- CODEOWNERS file with @thedataengineer as default reviewer (#189)\n- MkDocs documentation site with Material theme and GitHub Pages deployment (#190)\n- `docs` optional dependency group for mkdocs and mkdocs-material (#190)\n- Python 3.13 classifier in pyproject.toml (#189)\n- Coverage badge and GitHub Discussions link in README (#189, #190)\n\nPlace these entries AFTER the existing Phase 1 entries under [Unreleased] → Added.",
       "phase": "quality",
       "level": 3,
       "dependencies": ["TASK-001", "TASK-002", "TASK-003", "TASK-004", "TASK-005", "TASK-006", "TASK-007"],

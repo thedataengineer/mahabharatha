@@ -36,7 +36,7 @@ Without Phase 1:
 - Developers evaluating MAHABHARATHA from the GitHub repo page
 
 ### 2.2 Secondary Users
-- Maintainer (rocklambros) — benefits from structured issue reports and consistent PRs
+- Maintainer (thedataengineer) — benefits from structured issue reports and consistent PRs
 
 ### 2.3 User Stories
 - As a contributor, I want issue templates so that I provide the right information in bug reports
@@ -200,7 +200,7 @@ N/A — static files
 
 | Role | Name | Date | Signature |
 |------|------|------|-----------|
-| Product | rocklambros | | PENDING |
+| Product | thedataengineer | | PENDING |
 
 ---
 

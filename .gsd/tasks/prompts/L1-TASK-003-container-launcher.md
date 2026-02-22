@@ -63,7 +63,7 @@ class ContainerLauncher:
 
         # Build environment
         env = {
-            'ZERG_WORKER_ID': worker_id,
+            'MAHABHARATHA_WORKER_ID': worker_id,
             **config.env_vars
         }
 
@@ -169,11 +169,11 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ${ZERG_WORKTREE_PATH:-./workspace}:/workspace
+      - ${MAHABHARATHA_WORKTREE_PATH:-./workspace}:/workspace
       - ${HOME}/.claude:/home/claude/.claude:ro
     environment:
-      - ZERG_WORKER_ID=${ZERG_WORKER_ID:-default}
-      - ZERG_TASK_ID=${ZERG_TASK_ID:-}
+      - MAHABHARATHA_WORKER_ID=${MAHABHARATHA_WORKER_ID:-default}
+      - MAHABHARATHA_TASK_ID=${MAHABHARATHA_TASK_ID:-}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
     working_dir: /workspace
     networks:
@@ -211,7 +211,7 @@ class ResourceLimits:
 
 - [ ] Launch worker containers from devcontainer spec
 - [ ] Mount worktree as workspace volume
-- [ ] Inject environment variables (ZERG_WORKER_ID, ZERG_TASK_ID)
+- [ ] Inject environment variables (MAHABHARATHA_WORKER_ID, MAHABHARATHA_TASK_ID)
 - [ ] Network isolation on internal bridge
 - [ ] Resource limits (memory, CPU)
 - [ ] Graceful shutdown with timeout

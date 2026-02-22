@@ -40,7 +40,7 @@ RUN npm install -g \
 # Create worker home directory with write access for non-root users
 RUN mkdir -p /home/worker/.claude && chmod -R 777 /home/worker
 
-# Install Python dependencies for ZERG (separate layer for caching)
+# Install Python dependencies for MAHABHARATHA (separate layer for caching)
 RUN pip3 install --break-system-packages \
     pyyaml \
     requests \
@@ -55,7 +55,7 @@ RUN mkdir -p /root/.claude/tasks /workspace
 # Configure git user identity for automated commits
 # Set in system config so it applies to all users (including non-root)
 RUN git config --system user.email "zerg-worker@local" && \
-    git config --system user.name "ZERG Worker"
+    git config --system user.name "MAHABHARATHA Worker"
 
 # Switch to non-root user (provided by devcontainers base image)
 USER vscode

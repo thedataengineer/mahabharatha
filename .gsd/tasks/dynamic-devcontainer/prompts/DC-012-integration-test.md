@@ -205,11 +205,11 @@ class TestOrchestratorModeSelection:
 
     def test_auto_detect_without_devcontainer(self, tmp_path: Path) -> None:
         """Test auto-detect falls back to subprocess without devcontainer."""
-        from mahabharatha.config import ZergConfig
+        from mahabharatha.config import MahabharathaConfig
         from mahabharatha.launcher import SubprocessLauncher
         from mahabharatha.orchestrator import Orchestrator
 
-        config = ZergConfig()
+        config = MahabharathaConfig()
         orch = Orchestrator("test", config, repo_path=tmp_path)
 
         # Should use subprocess
@@ -218,10 +218,10 @@ class TestOrchestratorModeSelection:
 
     def test_container_mode_available_check(self, tmp_path: Path) -> None:
         """Test container_mode_available() returns proper info."""
-        from mahabharatha.config import ZergConfig
+        from mahabharatha.config import MahabharathaConfig
         from mahabharatha.orchestrator import Orchestrator
 
-        config = ZergConfig()
+        config = MahabharathaConfig()
         orch = Orchestrator("test", config, repo_path=tmp_path)
 
         available, reason = orch.container_mode_available()

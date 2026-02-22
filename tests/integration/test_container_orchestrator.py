@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.launchers import SubprocessLauncher
 from mahabharatha.orchestrator import Orchestrator
 
@@ -46,7 +46,7 @@ class TestOrchestratorModeSelection:
         (tmp_path / ".git").mkdir()
         (tmp_path / ".mahabharatha").mkdir()
 
-        config = ZergConfig()
+        config = MahabharathaConfig()
         orch = Orchestrator(
             feature="test",
             config=config,
@@ -91,7 +91,7 @@ class TestOrchestratorModeSelection:
         devcontainer_dir.mkdir()
         (devcontainer_dir / "devcontainer.json").write_text('{"name": "test"}')
 
-        config = ZergConfig()
+        config = MahabharathaConfig()
         orch = Orchestrator(
             feature="test",
             config=config,

@@ -71,7 +71,7 @@
       "skills_required": ["python", "testing"],
       "consumers": ["TASK-004"],
       "integration_test": null,
-      "context": "## Spec Context\nFR-004: Confirm CodeQL cyclic-import/undefined-export alerts are resolved via `gh api repos/rocklambros/mahabharatha/code-scanning/alerts`.\n\n## Acceptance Criteria\n- python -m pytest tests/ --timeout=120 — green\n- ruff check mahabharatha/git/pr_engine.py mahabharatha/git/history_engine.py — clean\n- CodeQL cyclic-import/undefined-export alerts confirmed at 0"
+      "context": "## Spec Context\nFR-004: Confirm CodeQL cyclic-import/undefined-export alerts are resolved via `gh api repos/thedataengineer/mahabharatha/code-scanning/alerts`.\n\n## Acceptance Criteria\n- python -m pytest tests/ --timeout=120 — green\n- ruff check mahabharatha/git/pr_engine.py mahabharatha/git/history_engine.py — clean\n- CodeQL cyclic-import/undefined-export alerts confirmed at 0"
     },
     {
       "id": "TASK-004",

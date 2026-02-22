@@ -42,14 +42,14 @@
         "read": []
       },
       "verification": {
-        "command": "python -c \"from mahabharatha.config import ZergConfig; print('__all__' in dir(__import__('mahabharatha.config')))\"",
+        "command": "python -c \"from mahabharatha.config import MahabharathaConfig; print('__all__' in dir(__import__('mahabharatha.config')))\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,
       "skills_required": ["python"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Task Context\n\nAdd __all__ to mahabharatha/config.py to declare public exports:\n\n```python\n__all__ = [\n    \"ZergConfig\",\n    \"ProjectConfig\",\n    \"WorkersConfig\",\n    \"PortsConfig\",\n    \"QualityGate\",\n    \"ResourcesConfig\",\n    \"LoggingConfig\",\n    \"SecurityConfig\",\n    \"ResilienceConfig\",\n    \"EfficiencyConfig\",\n    \"RulesConfig\",\n    \"CircuitBreakerConfig\",\n    \"BackpressureConfig\",\n    \"ErrorRecoveryConfig\",\n    \"LoopConfig\",\n    \"VerificationConfig\",\n    \"ModeConfig\",\n    \"MCPRoutingConfig\",\n    \"TDDConfig\",\n    \"HeartbeatConfig\",\n    \"EscalationConfig\",\n    \"VerificationTiersConfig\",\n    \"RepoMapConfig\",\n    \"TokenMetricsConfig\",\n    \"PlanningConfig\",\n    \"RushConfig\",\n]\n```\n\n## Why\nClarifies the public API for the config module. Place after imports, before first class definition."
+      "context": "## Task Context\n\nAdd __all__ to mahabharatha/config.py to declare public exports:\n\n```python\n__all__ = [\n    \"MahabharathaConfig\",\n    \"ProjectConfig\",\n    \"WorkersConfig\",\n    \"PortsConfig\",\n    \"QualityGate\",\n    \"ResourcesConfig\",\n    \"LoggingConfig\",\n    \"SecurityConfig\",\n    \"ResilienceConfig\",\n    \"EfficiencyConfig\",\n    \"RulesConfig\",\n    \"CircuitBreakerConfig\",\n    \"BackpressureConfig\",\n    \"ErrorRecoveryConfig\",\n    \"LoopConfig\",\n    \"VerificationConfig\",\n    \"ModeConfig\",\n    \"MCPRoutingConfig\",\n    \"TDDConfig\",\n    \"HeartbeatConfig\",\n    \"EscalationConfig\",\n    \"VerificationTiersConfig\",\n    \"RepoMapConfig\",\n    \"TokenMetricsConfig\",\n    \"PlanningConfig\",\n    \"RushConfig\",\n]\n```\n\n## Why\nClarifies the public API for the config module. Place after imports, before first class definition."
     },
     {
       "id": "TASK-003",

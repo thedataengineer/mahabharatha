@@ -20,7 +20,7 @@
         "read": []
       },
       "verification": {
-        "command": "python -c \"from mahabharatha.config import ZergConfig; c = ZergConfig(); print(c.kurukshetra.defer_merge_to_ship, c.kurukshetra.gates_at_ship_only)\"",
+        "command": "python -c \"from mahabharatha.config import MahabharathaConfig; c = MahabharathaConfig(); print(c.kurukshetra.defer_merge_to_ship, c.kurukshetra.gates_at_ship_only)\"",
         "timeout_seconds": 60
       },
       "estimate_minutes": 15,

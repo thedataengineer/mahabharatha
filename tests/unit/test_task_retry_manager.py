@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.constants import TaskStatus
 from mahabharatha.levels import LevelController
 from mahabharatha.state import StateManager
@@ -13,7 +13,7 @@ from mahabharatha.task_retry_manager import TaskRetryManager
 
 @pytest.fixture
 def mock_config():
-    config = MagicMock(spec=ZergConfig)
+    config = MagicMock(spec=MahabharathaConfig)
     config.workers = MagicMock()
     config.workers.retry_attempts = 3
     config.workers.backoff_strategy = "exponential"

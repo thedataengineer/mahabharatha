@@ -271,7 +271,7 @@ graph TD
 | Task | Verification Command |
 |------|---------------------|
 | TASK-001 | `pytest --markers \| grep -E "smoke\|slow"` |
-| TASK-002 | `python -c "from mahabharatha.config import ZergConfig; c=ZergConfig(); print([g.name for g in c.quality_gates])"` |
+| TASK-002 | `python -c "from mahabharatha.config import MahabharathaConfig; c=MahabharathaConfig(); print([g.name for g in c.quality_gates])"` |
 | TASK-003 | `grep -q "smoke" .github/workflows/pytest.yml && echo "OK"` |
 | TASK-004 | `pytest -m smoke --collect-only \| grep "test session starts"` |
 | TASK-005 | `pytest tests/unit/test_debug_cmd.py -v --collect-only \| grep -c "test_analyze"` |

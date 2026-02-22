@@ -13,15 +13,15 @@ services:
       - mahabharatha-claude-tasks:/root/.claude/tasks
       - mahabharatha-claude-config:/root/.claude
     environment:
-      - CLAUDE_CODE_TASK_LIST_ID=${ZERG_FEATURE:-default}
-      - ZERG_WORKER_ID=${ZERG_WORKER_ID:-0}
-      - ZERG_FEATURE=${ZERG_FEATURE:-unknown}
-      - ZERG_BRANCH=${ZERG_BRANCH:-main}
-      - ZERG_PORT=${ZERG_PORT:-49152}
+      - CLAUDE_CODE_TASK_LIST_ID=${MAHABHARATHA_FEATURE:-default}
+      - MAHABHARATHA_WORKER_ID=${MAHABHARATHA_WORKER_ID:-0}
+      - MAHABHARATHA_FEATURE=${MAHABHARATHA_FEATURE:-unknown}
+      - MAHABHARATHA_BRANCH=${MAHABHARATHA_BRANCH:-main}
+      - MAHABHARATHA_PORT=${MAHABHARATHA_PORT:-49152}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
     ports:
-      - "${ZERG_PORT:-49152}:${ZERG_PORT:-49152}"
+      - "${MAHABHARATHA_PORT:-49152}:${MAHABHARATHA_PORT:-49152}"
     networks:
       - factory-network
     stdin_open: true
@@ -34,7 +34,7 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: ${ZERG_FEATURE:-factory}_db
+      POSTGRES_DB: ${MAHABHARATHA_FEATURE:-factory}_db
       POSTGRES_USER: factory
       POSTGRES_PASSWORD: factory_dev
     volumes:
@@ -58,11 +58,11 @@ services:
       context: ..
       dockerfile: .devcontainer/Dockerfile
     volumes:
-      - ${ZERG_WORKTREE_PATH:-./workspace}:/workspace
+      - ${MAHABHARATHA_WORKTREE_PATH:-./workspace}:/workspace
       - ${HOME}/.claude:/home/claude/.claude:ro
     environment:
-      - ZERG_WORKER_ID=${ZERG_WORKER_ID:-default}
-      - ZERG_TASK_ID=${ZERG_TASK_ID:-}
+      - MAHABHARATHA_WORKER_ID=${MAHABHARATHA_WORKER_ID:-default}
+      - MAHABHARATHA_TASK_ID=${MAHABHARATHA_TASK_ID:-}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
     working_dir: /workspace
     networks:
@@ -77,16 +77,16 @@ services:
 
 volumes:
   mahabharatha-claude-tasks:
-    name: mahabharatha-claude-tasks-${ZERG_FEATURE:-default}
+    name: mahabharatha-claude-tasks-${MAHABHARATHA_FEATURE:-default}
   mahabharatha-claude-config:
     name: mahabharatha-claude-config
   postgres-data:
-    name: factory-postgres-${ZERG_FEATURE:-default}
+    name: factory-postgres-${MAHABHARATHA_FEATURE:-default}
 
 networks:
   factory-network:
     driver: bridge
-    name: factory-network-${ZERG_FEATURE:-default}
+    name: factory-network-${MAHABHARATHA_FEATURE:-default}
   mahabharatha-internal:
     driver: bridge
     internal: true

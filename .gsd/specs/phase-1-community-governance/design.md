@@ -118,14 +118,14 @@ N/A — static configuration files. No runtime data flow.
 - `directory: "/"`
 - `schedule.interval: weekly`
 - `labels: ["dependencies"]`
-- `reviewers: ["rocklambros"]`
+- `reviewers: ["thedataengineer"]`
 
 ### 3.7 Secret Scanning + Push Protection (FR-007, FR-008)
 
 Enable via `gh api` commands:
 ```bash
-gh api repos/rocklambros/mahabharatha -X PATCH -f security_and_analysis[secret_scanning][status]=enabled
-gh api repos/rocklambros/mahabharatha -X PATCH -f security_and_analysis[secret_scanning_push_protection][status]=enabled
+gh api repos/thedataengineer/mahabharatha -X PATCH -f security_and_analysis[secret_scanning][status]=enabled
+gh api repos/thedataengineer/mahabharatha -X PATCH -f security_and_analysis[secret_scanning_push_protection][status]=enabled
 ```
 
 ### 3.8 README Badges (FR-009)
@@ -133,14 +133,14 @@ gh api repos/rocklambros/mahabharatha -X PATCH -f security_and_analysis[secret_s
 Add badge row after the logo block:
 - PyPI version: `https://img.shields.io/pypi/v/mahabharatha-ai`
 - Python version: `https://img.shields.io/pypi/pyversions/mahabharatha-ai`
-- License: `https://img.shields.io/github/license/rocklambros/mahabharatha`
-- CI status: `https://img.shields.io/github/actions/workflow/status/rocklambros/mahabharatha/ci.yml?branch=main`
+- License: `https://img.shields.io/github/license/thedataengineer/mahabharatha`
+- CI status: `https://img.shields.io/github/actions/workflow/status/thedataengineer/mahabharatha/ci.yml?branch=main`
 
 ### 3.9 GitHub Topics (FR-010)
 
 Set via `gh api`:
 ```bash
-gh api repos/rocklambros/mahabharatha/topics -X PUT -f names='["claude-code","parallel-execution","ai-coding","cli","python","developer-tools","automation","code-generation","llm"]'
+gh api repos/thedataengineer/mahabharatha/topics -X PUT -f names='["claude-code","parallel-execution","ai-coding","cli","python","developer-tools","automation","code-generation","llm"]'
 ```
 
 ### 3.10 SECURITY.md Update (FR-012)
@@ -187,7 +187,7 @@ Verify all runtime dependencies are MIT/BSD/Apache compatible:
 
 **Rationale**: No personal email exposure. GitHub provides private reporting infrastructure.
 
-**Consequences**: Enforcement section links to `https://github.com/rocklambros/mahabharatha/security/advisories/new`.
+**Consequences**: Enforcement section links to `https://github.com/thedataengineer/mahabharatha/security/advisories/new`.
 
 ---
 

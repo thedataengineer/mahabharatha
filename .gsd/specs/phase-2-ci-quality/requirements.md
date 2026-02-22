@@ -39,7 +39,7 @@ Without Phase 2:
 - Developers evaluating MAHABHARATHA (benefit from docs site)
 
 ### 2.2 Secondary Users
-- Maintainer (rocklambros) — benefits from automated security scanning and type enforcement
+- Maintainer (thedataengineer) — benefits from automated security scanning and type enforcement
 - Community members — benefit from structured Discussions categories
 
 ---
@@ -53,7 +53,7 @@ Without Phase 2:
 | FR-001 | CodeQL security scanning workflow | Must | #189 | Python, security-and-quality suite, push + PR + weekly schedule |
 | FR-002 | mypy in CI quality job | Must | #189 | Use existing pyproject.toml config, block merge on failure |
 | FR-003 | Python 3.12 + 3.13 test matrix | Must | #189 | Add 3.13 to matrix, update pyproject.toml classifiers |
-| FR-004 | CODEOWNERS file | Must | #189 | Default @rocklambros, specific paths for core, CI, docs |
+| FR-004 | CODEOWNERS file | Must | #189 | Default @thedataengineer, specific paths for core, CI, docs |
 | FR-005 | mkdocs.yml config | Must | #190 | Material theme, navigation tabs, search |
 | FR-006 | docs/index.md | Must | #190 | Landing page for docs site (can adapt from README) |
 | FR-007 | GitHub Pages deployment workflow | Must | #190 | .github/workflows/docs.yml, deploy on push to main |
@@ -82,7 +82,7 @@ Without Phase 2:
 - Python 3.13 tests use same test suite — no special handling
 - Docs site uses Material for MkDocs theme
 - Docs site deploys automatically on push to main
-- CODEOWNERS uses @rocklambros as default owner
+- CODEOWNERS uses @thedataengineer as default owner
 
 ---
 
@@ -163,7 +163,7 @@ Without Phase 2:
 - [ ] CodeQL workflow runs on PRs and weekly
 - [ ] mypy passes in CI quality job
 - [ ] Tests pass on Python 3.12 and 3.13
-- [ ] CODEOWNERS assigns @rocklambros as default reviewer
+- [ ] CODEOWNERS assigns @thedataengineer as default reviewer
 - [ ] `mkdocs build --strict` passes
 - [ ] Docs workflow deploys on push to main
 - [ ] Discussions has 4 categories (Q&A, Ideas, Show and Tell, General)
@@ -179,7 +179,7 @@ Without Phase 2:
 | TC-002 | mypy in CI | mypy step in quality | PR with type error | quality job fails |
 | TC-003 | Python 3.13 | Matrix includes 3.13 | Tests run | All tests pass on 3.13 |
 | TC-004 | Docs build | mkdocs.yml exists | `mkdocs build --strict` | Build succeeds |
-| TC-005 | CODEOWNERS | File exists | PR touches mahabharatha/*.py | @rocklambros auto-requested |
+| TC-005 | CODEOWNERS | File exists | PR touches mahabharatha/*.py | @thedataengineer auto-requested |
 
 ---
 
@@ -196,7 +196,7 @@ Without Phase 2:
 
 | Role | Name | Date | Signature |
 |------|------|------|-----------|
-| Product | rocklambros | | PENDING |
+| Product | thedataengineer | | PENDING |
 
 ---
 

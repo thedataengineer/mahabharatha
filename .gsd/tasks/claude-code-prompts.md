@@ -19,8 +19,8 @@ Execute in order:
 2. MAHABHARATHA-L1-004: Create mahabharatha/constants.py with Level(IntEnum), TaskStatus(Enum), GateResult(Enum), WorkerStatus(Enum)
    Verify: python -c "from mahabharatha.constants import Level, TaskStatus, GateResult"
 
-3. MAHABHARATHA-L1-006: Create mahabharatha/exceptions.py with ZergError, ConfigurationError, TaskVerificationFailed, MergeConflict, WorkerError, GateFailure, WorktreeError
-   Verify: python -c "from mahabharatha.exceptions import ZergError, TaskVerificationFailed, MergeConflict"
+3. MAHABHARATHA-L1-006: Create mahabharatha/exceptions.py with MahabharathaError, ConfigurationError, TaskVerificationFailed, MergeConflict, WorkerError, GateFailure, WorktreeError
+   Verify: python -c "from mahabharatha.exceptions import MahabharathaError, TaskVerificationFailed, MergeConflict"
 
 4. MAHABHARATHA-L1-002: Create mahabharatha/types.py with TypedDict/dataclass: Task, TaskGraph, WorkerState, LevelStatus, GateConfig, MergeResult
    Verify: python -c "from mahabharatha.types import TaskGraph, WorkerState, LevelStatus"
@@ -37,8 +37,8 @@ Update .gsd/tasks/session-tracker.md marking these COMPLETE. --ultrathink
 
 Execute in order:
 
-1. MAHABHARATHA-L1-003: Create mahabharatha/config.py with Pydantic models matching .mahabharatha/config.yaml structure. Include ZergConfig.load() classmethod.
-   Verify: python -c "from mahabharatha.config import ZergConfig; c = ZergConfig.load(); print(c.workers.max_concurrent)"
+1. MAHABHARATHA-L1-003: Create mahabharatha/config.py with Pydantic models matching .mahabharatha/config.yaml structure. Include MahabharathaConfig.load() classmethod.
+   Verify: python -c "from mahabharatha.config import MahabharathaConfig; c = MahabharathaConfig.load(); print(c.workers.max_concurrent)"
 
 2. MAHABHARATHA-L1-007: Create mahabharatha/schemas/__init__.py, mahabharatha/schemas/task_graph.json (JSON Schema), mahabharatha/validation.py with validate_task_graph(), validate_file_ownership(), validate_dependencies()
    Verify: python -c "from mahabharatha.validation import validate_task_graph"

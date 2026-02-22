@@ -64,7 +64,7 @@ class TestBuildContainerCmd:
     def test_basic_command_structure(self, tmp_path: Path) -> None:
         wt = _fake_worktree(tmp_path)
         launcher = _launcher()
-        env: dict[str, str] = {"ZERG_WORKER_ID": "0"}
+        env: dict[str, str] = {"MAHABHARATHA_WORKER_ID": "0"}
 
         cmd = launcher._build_container_cmd("mahabharatha-worker-0", wt, env)
 
@@ -128,8 +128,8 @@ class TestBuildContainerCmd:
         git_mounts = [v for v in volume_args if "/repo/.git" in v]
         assert len(git_mounts) >= 1, "Expected .git mount"
         # Also check env vars were added
-        assert env.get("ZERG_GIT_WORKTREE_DIR") == "/workspace/.git-worktree"
-        assert env.get("ZERG_GIT_MAIN_DIR") == "/repo/.git"
+        assert env.get("MAHABHARATHA_GIT_WORKTREE_DIR") == "/workspace/.git-worktree"
+        assert env.get("MAHABHARATHA_GIT_MAIN_DIR") == "/repo/.git"
 
     def test_claude_config_mount(self, tmp_path: Path) -> None:
         wt = _fake_worktree(tmp_path)
@@ -163,15 +163,15 @@ class TestBuildContainerCmd:
     def test_env_vars_in_command(self, tmp_path: Path) -> None:
         wt = _fake_worktree(tmp_path)
         launcher = _launcher()
-        env = {"ZERG_WORKER_ID": "5", "ZERG_FEATURE": "test"}
+        env = {"MAHABHARATHA_WORKER_ID": "5", "MAHABHARATHA_FEATURE": "test"}
 
         cmd = launcher._build_container_cmd("w0", wt, env)
 
         # Collect -e flags
         env_args = [cmd[i + 1] for i, v in enumerate(cmd) if v == "-e"]
         env_keys = [a.split("=")[0] for a in env_args]
-        assert "ZERG_WORKER_ID" in env_keys
-        assert "ZERG_FEATURE" in env_keys
+        assert "MAHABHARATHA_WORKER_ID" in env_keys
+        assert "MAHABHARATHA_FEATURE" in env_keys
 
     def test_network_in_command(self, tmp_path: Path) -> None:
         wt = _fake_worktree(tmp_path)
@@ -323,7 +323,7 @@ class TestSpawn:
     def test_spawn_env_vars_from_config_and_extra(self, mock_run: MagicMock, tmp_path: Path) -> None:
         """Lines 133-137: config.env_vars and extra env both validated."""
         wt = _fake_worktree(tmp_path)
-        config = LauncherConfig(env_vars={"ZERG_DEBUG": "1"})
+        config = LauncherConfig(env_vars={"MAHABHARATHA_DEBUG": "1"})
         launcher = ContainerLauncher(config=config, image_name="test-image")
 
         call_count = 0
@@ -350,7 +350,7 @@ class TestSpawn:
                 "feat",
                 wt,
                 "branch-x",
-                env={"ZERG_LOG_LEVEL": "debug"},
+                env={"MAHABHARATHA_LOG_LEVEL": "debug"},
             )
 
         # Verify the docker run command included the env vars
@@ -358,8 +358,8 @@ class TestSpawn:
         assert len(docker_run_calls) >= 1
         run_cmd = docker_run_calls[0][0][0]
         cmd_str = " ".join(run_cmd)
-        assert "ZERG_DEBUG=1" in cmd_str
-        assert "ZERG_LOG_LEVEL=debug" in cmd_str
+        assert "MAHABHARATHA_DEBUG=1" in cmd_str
+        assert "MAHABHARATHA_LOG_LEVEL=debug" in cmd_str
 
     @patch("subprocess.run")
     def test_spawn_reads_api_key_from_env_file(self, mock_run: MagicMock, tmp_path: Path) -> None:

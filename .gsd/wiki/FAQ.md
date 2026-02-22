@@ -24,7 +24,7 @@ MAHABHARATHA installation involves two steps: installing the Python package and 
 
 ```bash
 # Clone and install the package
-git clone https://github.com/rocklambros/mahabharatha.git
+git clone https://github.com/thedataengineer/mahabharatha.git
 cd mahabharatha
 pip install -e ".[dev]"
 pre-commit install

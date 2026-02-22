@@ -103,7 +103,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CodeQL security scanning workflow for automated vulnerability detection on PRs and weekly schedule (#189)
 - mypy type checking enforced in CI quality job (#189)
 - Python 3.13 added to CI test matrix alongside 3.12 (#189)
-- CODEOWNERS file with @rocklambros as default reviewer (#189)
+- CODEOWNERS file with @thedataengineer as default reviewer (#189)
 - MkDocs documentation site with Material theme and GitHub Pages deployment (#190)
 - `docs` optional dependency group for mkdocs and mkdocs-material (#190)
 - Python 3.13 classifier in pyproject.toml (#189)
@@ -302,7 +302,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Escalation protocol: workers report ambiguous failures to orchestrator with terminal alerts (#67)
 - Structured progress reporting per worker with tier-level granularity (#67)
 - Repository symbol map: Python AST + JS/TS regex extractor injected into worker context prompts (#67)
-- New config sections: `heartbeat`, `escalation`, `verification_tiers`, `repo_map` in ZergConfig (#67)
+- New config sections: `heartbeat`, `escalation`, `verification_tiers`, `repo_map` in MahabharathaConfig (#67)
 - Documentation updates for worker intelligence: `docs/commands.md`, `docs/configuration.md`, `README.md`, wiki pages (#67)
 - `STALLED` worker status and `ESCALATION` exit code (4) for worker state machine (#67)
 - Worker health dashboard in `/mahabharatha:status` with per-worker HEALTH table showing status, task, step, progress, restarts (#27)
@@ -371,7 +371,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Behavioral Mode Auto-Trigger** (`mahabharatha/modes.py`): 5 modes (PRECISION, SPEED, EXPLORATION, REFACTOR, DEBUG) with `--mode` CLI flag; priority-based detection from keywords, efficiency zones, and depth tiers
   - **MCP Auto-Routing** (`mahabharatha/mcp_router.py`, `mahabharatha/mcp_telemetry.py`): Capability-based server matching with cost optimization, `--mcp`/`--no-mcp` CLI flags, routing telemetry
   - **TDD Enforcement** (`mahabharatha/tdd.py`): Red-green-refactor protocol with `--tdd` CLI flag; anti-pattern detection (mock_heavy, testing_impl, no_assertions, large_tests)
-- 8 new config sections in `ZergConfig`: `rules`, `efficiency`, `improvement_loops`, `verification`, `behavioral_modes`, `mcp_routing`, `tdd`, `error_recovery`
+- 8 new config sections in `MahabharathaConfig`: `rules`, `efficiency`, `improvement_loops`, `verification`, `behavioral_modes`, `mcp_routing`, `tdd`, `error_recovery`
 - Context engineering plugin now injects MCP routing hints and engineering rules into task-scoped context (budget: 15% rules, 15% security, 35% spec, 15% MCP)
 - ~490 new tests across 8 test files for cross-cutting capabilities
 - `mahabharatha/git/` package with 7 engine modules: commit, rescue, PR, release, history, pre-review, bisect
@@ -451,9 +451,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show human-friendly launcher mode and worker count in Kurukshetra output
 - Audit skipped tests and convert unconditional skips to conditional skipif decorators
 
-[Unreleased]: https://github.com/rocklambros/mahabharatha/compare/v0.2.3...HEAD
-[0.2.3]: https://github.com/rocklambros/mahabharatha/compare/v0.2.2...v0.2.3
-[0.3.0]: https://github.com/rocklambros/mahabharatha/compare/v0.2.1...v0.3.0
-[0.2.1]: https://github.com/rocklambros/mahabharatha/compare/v0.2.0...v0.2.1
-[0.2.0]: https://github.com/rocklambros/mahabharatha/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/rocklambros/mahabharatha/releases/tag/v0.1.0
+[Unreleased]: https://github.com/thedataengineer/mahabharatha/compare/v0.2.3...HEAD
+[0.2.3]: https://github.com/thedataengineer/mahabharatha/compare/v0.2.2...v0.2.3
+[0.3.0]: https://github.com/thedataengineer/mahabharatha/compare/v0.2.1...v0.3.0
+[0.2.1]: https://github.com/thedataengineer/mahabharatha/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/thedataengineer/mahabharatha/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/thedataengineer/mahabharatha/releases/tag/v0.1.0

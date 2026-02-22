@@ -60,7 +60,7 @@
         "read": [".mahabharatha/config.yaml", "mahabharatha/types.py"]
       },
       "verification": {
-        "command": "python -c \"from mahabharatha.config import ZergConfig; c = ZergConfig.load(); print(c.workers.max_concurrent)\"",
+        "command": "python -c \"from mahabharatha.config import MahabharathaConfig; c = MahabharathaConfig.load(); print(c.workers.max_concurrent)\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 20,
@@ -108,7 +108,7 @@
     {
       "id": "MAHABHARATHA-L1-006",
       "title": "Exception Hierarchy",
-      "description": "Define ZergError base and specific exceptions for each failure mode",
+      "description": "Define MahabharathaError base and specific exceptions for each failure mode",
       "level": 1,
       "dependencies": ["MAHABHARATHA-L1-001"],
       "files": {
@@ -117,7 +117,7 @@
         "read": []
       },
       "verification": {
-        "command": "python -c \"from mahabharatha.exceptions import ZergError, TaskVerificationFailed, MergeConflict\"",
+        "command": "python -c \"from mahabharatha.exceptions import MahabharathaError, TaskVerificationFailed, MergeConflict\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 10,

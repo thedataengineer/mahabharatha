@@ -52,7 +52,7 @@ mahabharatha/git/
 └── bisect_engine.py     ◄── CommitRanker, SemanticTester, BisectRunner
 
 mahabharatha/commands/git_cmd.py ◄── Thin router: action → engine.run()
-mahabharatha/config.py           ◄── ZergConfig.git: GitConfig (added field)
+mahabharatha/config.py           ◄── MahabharathaConfig.git: GitConfig (added field)
 ```
 
 ### 2.2 Component Breakdown

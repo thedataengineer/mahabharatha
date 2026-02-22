@@ -11,7 +11,7 @@ import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.constants import WorkerStatus
 from mahabharatha.launchers import SubprocessLauncher
 from mahabharatha.validation import (
@@ -257,13 +257,13 @@ class TestConfigIntegration:
     """Verify configuration integration."""
 
     def test_mahabharatha_config_loads_successfully(self) -> None:
-        """ZergConfig should load without error."""
-        config = ZergConfig()
+        """MahabharathaConfig should load without error."""
+        config = MahabharathaConfig()
         assert config is not None
 
     def test_mahabharatha_config_has_workers_setting(self) -> None:
-        """ZergConfig should have workers configuration."""
-        config = ZergConfig()
+        """MahabharathaConfig should have workers configuration."""
+        config = MahabharathaConfig()
         assert hasattr(config, "workers")
         assert hasattr(config.workers, "max_concurrent")
         assert config.workers.max_concurrent > 0
@@ -290,7 +290,7 @@ class TestTaskIdValidation:
 
     def test_valid_task_id_accepted(self) -> None:
         """Valid task IDs should be accepted."""
-        valid_ids = ["TEST-001", "OFX-L1-001", "ZERG001"]
+        valid_ids = ["TEST-001", "OFX-L1-001", "MAHABHARATHA001"]
         for task_id in valid_ids:
             is_valid, error = validate_task_id(task_id)
             assert is_valid, f"Valid task ID '{task_id}' should be accepted: {error}"

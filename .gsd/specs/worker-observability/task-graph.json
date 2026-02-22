@@ -8,7 +8,7 @@
     {
       "id": "TASK-001",
       "title": "Add anthropic optional dependency + TokenMetricsConfig",
-      "description": "Add anthropic>=0.40.0 as optional dependency (pip install mahabharatha[metrics]). Add TokenMetricsConfig to config.py with fields: enabled (bool, default True), api_counting (bool, default False), cache_enabled (bool, default True), cache_ttl_seconds (int, default 3600), fallback_chars_per_token (float, default 4.0). Register in ZergConfig.",
+      "description": "Add anthropic>=0.40.0 as optional dependency (pip install mahabharatha[metrics]). Add TokenMetricsConfig to config.py with fields: enabled (bool, default True), api_counting (bool, default False), cache_enabled (bool, default True), cache_ttl_seconds (int, default 3600), fallback_chars_per_token (float, default 4.0). Register in MahabharathaConfig.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
@@ -18,12 +18,12 @@
         "read": []
       },
       "verification": {
-        "command": "pip install -e . && python -c \"from mahabharatha.config import ZergConfig; c = ZergConfig(); assert hasattr(c, 'token_metrics'); print('PASS')\"",
+        "command": "pip install -e . && python -c \"from mahabharatha.config import MahabharathaConfig; c = MahabharathaConfig(); assert hasattr(c, 'token_metrics'); print('PASS')\"",
         "timeout_seconds": 60
       },
       "consumers": ["TASK-003", "TASK-008"],
       "integration_test": "tests/integration/test_token_metrics_wiring.py",
-      "context": "## Spec Context\nAdd TokenMetricsConfig following existing pattern (HeartbeatConfig at line 196, RepoMapConfig at line 222). Register in ZergConfig (line 233+). Fields: enabled=True, api_counting=False, cache_enabled=True, cache_ttl_seconds=3600, fallback_chars_per_token=4.0. Add anthropic as optional dep in pyproject.toml [project.optional-dependencies] metrics = [\"anthropic>=0.40.0\"]. Update requirements.txt with comment noting optional.\n\n## Dependencies\nNone — foundation task."
+      "context": "## Spec Context\nAdd TokenMetricsConfig following existing pattern (HeartbeatConfig at line 196, RepoMapConfig at line 222). Register in MahabharathaConfig (line 233+). Fields: enabled=True, api_counting=False, cache_enabled=True, cache_ttl_seconds=3600, fallback_chars_per_token=4.0. Add anthropic as optional dep in pyproject.toml [project.optional-dependencies] metrics = [\"anthropic>=0.40.0\"]. Update requirements.txt with comment noting optional.\n\n## Dependencies\nNone — foundation task."
     },
     {
       "id": "TASK-002",

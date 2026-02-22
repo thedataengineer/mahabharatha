@@ -10,6 +10,7 @@ from mahabharatha.exceptions import (
     GateTimeoutError,
     GitError,
     LevelError,
+    MahabharathaError,
     MergeConflictError,
     OrchestratorError,
     StateError,
@@ -22,17 +23,16 @@ from mahabharatha.exceptions import (
     WorkerError,
     WorkerStartupError,
     WorktreeError,
-    ZergError,
 )
 
 
-class TestZergError:
-    """Tests for base ZergError."""
+class TestMahabharathaError:
+    """Tests for base MahabharathaError."""
 
     @pytest.mark.smoke
     def test_basic_error(self) -> None:
         """Test basic error creation."""
-        error = ZergError("Test error")
+        error = MahabharathaError("Test error")
         assert str(error) == "Test error"
         assert error.message == "Test error"
         assert error.details == {}
@@ -40,17 +40,17 @@ class TestZergError:
     @pytest.mark.smoke
     def test_error_with_details(self) -> None:
         """Test error with details."""
-        error = ZergError("Error", details={"key": "value"})
+        error = MahabharathaError("Error", details={"key": "value"})
         assert error.details == {"key": "value"}
         assert "key" in str(error)
 
     @pytest.mark.smoke
     def test_error_is_exception(self) -> None:
         """Test error is an exception."""
-        error = ZergError("Test")
+        error = MahabharathaError("Test")
         assert isinstance(error, Exception)
 
-        with pytest.raises(ZergError):
+        with pytest.raises(MahabharathaError):
             raise error
 
 
@@ -60,7 +60,7 @@ class TestConfigurationError:
     def test_configuration_error(self) -> None:
         """Test ConfigurationError creation."""
         error = ConfigurationError("Invalid config")
-        assert isinstance(error, ZergError)
+        assert isinstance(error, MahabharathaError)
         assert "Invalid config" in str(error)
 
 
@@ -271,7 +271,7 @@ class TestStateError:
     def test_state_error(self) -> None:
         """Test StateError creation."""
         error = StateError("State corrupted")
-        assert isinstance(error, ZergError)
+        assert isinstance(error, MahabharathaError)
 
 
 class TestLevelError:
@@ -289,4 +289,4 @@ class TestOrchestratorError:
     def test_orchestrator_error(self) -> None:
         """Test OrchestratorError creation."""
         error = OrchestratorError("Orchestration failed")
-        assert isinstance(error, ZergError)
+        assert isinstance(error, MahabharathaError)

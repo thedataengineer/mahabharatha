@@ -23,9 +23,9 @@ Extend `ContainerLauncher` to execute Claude inside containers via a worker entr
 
 set -e
 
-WORKER_ID=${ZERG_WORKER_ID:-0}
-FEATURE=${ZERG_FEATURE:-"unknown"}
-BRANCH=${ZERG_BRANCH:-"main"}
+WORKER_ID=${MAHABHARATHA_WORKER_ID:-0}
+FEATURE=${MAHABHARATHA_FEATURE:-"unknown"}
+BRANCH=${MAHABHARATHA_BRANCH:-"main"}
 
 echo "================================================"
 echo "MAHABHARATHA Worker $WORKER_ID starting..."

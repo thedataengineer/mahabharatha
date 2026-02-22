@@ -19,7 +19,7 @@ from mahabharatha.logging import get_logger
 if TYPE_CHECKING:
     from mahabharatha.diagnostics.log_analyzer import LogPattern
     from mahabharatha.diagnostics.recovery import RecoveryPlan
-    from mahabharatha.diagnostics.state_introspector import ZergHealthReport
+    from mahabharatha.diagnostics.state_introspector import MahabharathaHealthReport
     from mahabharatha.diagnostics.system_diagnostics import SystemHealthReport
     from mahabharatha.diagnostics.types import (
         ErrorFingerprint,
@@ -104,7 +104,7 @@ class DiagnosticResult:
     confidence: float = 0.8
     parsed_error: ParsedError | None = None
     # Deep diagnostics fields (optional, backward compatible)
-    mahabharatha_health: ZergHealthReport | None = None
+    mahabharatha_health: MahabharathaHealthReport | None = None
     system_health: SystemHealthReport | None = None
     recovery_plan: RecoveryPlan | None = None
     evidence: list[str] = field(default_factory=list)
@@ -555,10 +555,10 @@ class DebugCommand:
     ) -> DiagnosticResult:
         """Run MAHABHARATHA state introspection and log analysis."""
         from mahabharatha.diagnostics.log_analyzer import LogAnalyzer
-        from mahabharatha.diagnostics.state_introspector import ZergStateIntrospector
+        from mahabharatha.diagnostics.state_introspector import MahabharathaStateIntrospector
 
         try:
-            introspector = ZergStateIntrospector()
+            introspector = MahabharathaStateIntrospector()
             result.mahabharatha_health = introspector.get_health_report(feature)
 
             # Add evidence from health report
@@ -990,10 +990,10 @@ def _resolve_inputs(
     if not feature and (deep or auto_fix):
         try:
             from mahabharatha.diagnostics.state_introspector import (
-                ZergStateIntrospector,
+                MahabharathaStateIntrospector,
             )
 
-            introspector = ZergStateIntrospector()
+            introspector = MahabharathaStateIntrospector()
             feature = introspector.find_latest_feature()
             if feature:
                 console.print(f"[dim]Auto-detected feature: {feature}[/dim]")

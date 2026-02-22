@@ -28,7 +28,7 @@ from mahabharatha.verify import VerificationExecutionResult
 
 
 def _make_config(**overrides: Any) -> MagicMock:
-    """Create a minimal ZergConfig mock."""
+    """Create a minimal MahabharathaConfig mock."""
     cfg = MagicMock()
     cfg.logging = MagicMock()
     cfg.logging.ephemeral_retain_on_success = False
@@ -338,8 +338,8 @@ class TestInvokeClaudeCode:
 
         _, kwargs = mock_run.call_args
         env = kwargs["env"]
-        assert env["ZERG_TASK_ID"] == "TASK-001"
-        assert env["ZERG_WORKER_ID"] == "1"
+        assert env["MAHABHARATHA_TASK_ID"] == "TASK-001"
+        assert env["MAHABHARATHA_WORKER_ID"] == "1"
 
 
 # ===================================================================
@@ -461,7 +461,7 @@ class TestCommitTaskChanges:
         assert result is True
         handler.git.commit.assert_called_once()
         commit_msg = handler.git.commit.call_args[0][0]
-        assert "MAHABHARATHA [1]" in commit_msg
+        assert "Mahabharatha [1]" in commit_msg
         assert "Implement auth module" in commit_msg
         assert "Task-ID: TASK-001" in commit_msg
 

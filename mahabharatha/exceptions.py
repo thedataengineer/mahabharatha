@@ -8,7 +8,7 @@ from typing import Any
 ErrorDetailValue = str | int | float | bool | list[str] | None
 
 
-class ZergError(Exception):
+class MahabharathaError(Exception):
     """Base exception for all MAHABHARATHA errors."""
 
     def __init__(self, message: str, details: dict[str, Any] | None = None) -> None:
@@ -22,13 +22,13 @@ class ZergError(Exception):
         return self.message
 
 
-class ConfigurationError(ZergError):
+class ConfigurationError(MahabharathaError):
     """Error in MAHABHARATHA configuration."""
 
     pass
 
 
-class TaskError(ZergError):
+class TaskError(MahabharathaError):
     """Base error for task-related issues."""
 
     def __init__(self, message: str, task_id: str | None = None, details: dict[str, Any] | None = None) -> None:
@@ -71,7 +71,7 @@ class TaskTimeoutError(TaskError):
         self.timeout_seconds = timeout_seconds
 
 
-class WorkerError(ZergError):
+class WorkerError(MahabharathaError):
     """Base error for worker-related issues."""
 
     def __init__(self, message: str, worker_id: int | None = None, details: dict[str, Any] | None = None) -> None:
@@ -91,7 +91,7 @@ class WorkerCommunicationError(WorkerError):
     pass
 
 
-class WorktreeError(ZergError):
+class WorktreeError(MahabharathaError):
     """Error in worktree operations."""
 
     def __init__(self, message: str, worktree_path: str | None = None, details: dict[str, Any] | None = None) -> None:
@@ -99,7 +99,7 @@ class WorktreeError(ZergError):
         self.worktree_path = worktree_path
 
 
-class GitError(ZergError):
+class GitError(MahabharathaError):
     """Error in git operations."""
 
     def __init__(
@@ -137,7 +137,7 @@ class MergeConflictError(GitError):
         self.conflicting_files = conflicting_files or []
 
 
-class GateError(ZergError):
+class GateError(MahabharathaError):
     """Base error for quality gate issues."""
 
     def __init__(self, message: str, gate_name: str | None = None, details: dict[str, Any] | None = None) -> None:
@@ -172,7 +172,7 @@ class GateTimeoutError(GateError):
         self.timeout_seconds = timeout_seconds
 
 
-class ContainerError(ZergError):
+class ContainerError(MahabharathaError):
     """Error in container operations."""
 
     def __init__(
@@ -185,7 +185,7 @@ class ContainerError(ZergError):
         self.container_id = container_id
 
 
-class ValidationError(ZergError):
+class ValidationError(MahabharathaError):
     """Error in data validation."""
 
     def __init__(self, message: str, field: str | None = None, details: dict[str, Any] | None = None) -> None:
@@ -193,13 +193,13 @@ class ValidationError(ZergError):
         self.field = field
 
 
-class StateError(ZergError):
+class StateError(MahabharathaError):
     """Error in state management."""
 
     pass
 
 
-class LevelError(ZergError):
+class LevelError(MahabharathaError):
     """Error in level management."""
 
     def __init__(self, message: str, level: int | None = None, details: dict[str, Any] | None = None) -> None:
@@ -207,7 +207,7 @@ class LevelError(ZergError):
         self.level = level
 
 
-class OrchestratorError(ZergError):
+class OrchestratorError(MahabharathaError):
     """Error in orchestrator operations."""
 
     pass

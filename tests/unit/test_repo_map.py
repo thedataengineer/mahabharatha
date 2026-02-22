@@ -41,13 +41,20 @@ class TestSymbolGraph:
         graph = SymbolGraph(
             modules={
                 "mahabharatha.config": [
-                    Symbol("ZergConfig", "class", "class ZergConfig(BaseModel)", "Config", 1, "mahabharatha.config"),
+                    Symbol(
+                        "MahabharathaConfig",
+                        "class",
+                        "class MahabharathaConfig(BaseModel)",
+                        "Config",
+                        1,
+                        "mahabharatha.config",
+                    ),
                 ],
             },
         )
         result = graph.query(["mahabharatha/config.py"], [])
-        assert "ZergConfig" in result
-        assert "class ZergConfig" in result
+        assert "MahabharathaConfig" in result
+        assert "class MahabharathaConfig" in result
 
     def test_query_with_keyword_match(self) -> None:
         graph = SymbolGraph(

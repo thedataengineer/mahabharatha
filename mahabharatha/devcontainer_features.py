@@ -372,9 +372,9 @@ class DynamicDevcontainerGenerator:
 # MAHABHARATHA Worker Entry - Invokes Claude with native task list
 set -e
 
-WORKER_ID=${ZERG_WORKER_ID:-0}
-TASK_LIST_ID=${ZERG_TASK_LIST_ID}
-WORKTREE=${ZERG_WORKTREE:-/workspace}
+WORKER_ID=${MAHABHARATHA_WORKER_ID:-0}
+TASK_LIST_ID=${MAHABHARATHA_TASK_LIST_ID}
+WORKTREE=${MAHABHARATHA_WORKTREE:-/workspace}
 
 echo "========================================"
 echo "MAHABHARATHA Worker $WORKER_ID starting..."
@@ -393,7 +393,7 @@ fi
 # Launch Claude Code with task list (native feature)
 exec claude --task-list "$TASK_LIST_ID" \\
      --dangerously-skip-permissions \\
-     --env ZERG_WORKER_ID="$WORKER_ID"
+     --env MAHABHARATHA_WORKER_ID="$WORKER_ID"
 """
 
         script_path = output_dir / "worker_entry.sh"

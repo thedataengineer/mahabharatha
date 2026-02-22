@@ -1,11 +1,11 @@
 # Default owner for all files
-* @rocklambros
+* @thedataengineer
 
 # Core orchestrator
-/zerg/ @rocklambros
+/zerg/ @thedataengineer
 
 # CI/CD
-/.github/ @rocklambros
+/.github/ @thedataengineer
 
 # Documentation
-/docs/ @rocklambros
+/docs/ @thedataengineer

@@ -110,7 +110,7 @@ env["GIT_SEQUENCE_EDITOR"] = f"python3 {shlex.quote(script_path)}"
 
 ### 3.3 FR-004: Verify CodeQL dismissals
 
-Run `gh api repos/rocklambros/mahabharatha/code-scanning/alerts` and confirm 0 open alerts for `cyclic-import` and `undefined-export` rules. No code changes.
+Run `gh api repos/thedataengineer/mahabharatha/code-scanning/alerts` and confirm 0 open alerts for `cyclic-import` and `undefined-export` rules. No code changes.
 
 ---
 

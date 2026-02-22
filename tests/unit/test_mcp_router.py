@@ -165,7 +165,7 @@ class TestMCPRouterGetEnvHint:
         )
         router = MCPRouter()
         hint = router.get_env_hint(decision)
-        assert hint["ZERG_MCP_HINT"] == "sequential,context7"
+        assert hint["MAHABHARATHA_MCP_HINT"] == "sequential,context7"
 
     def test_env_hint_empty_when_no_servers(self) -> None:
         """Test env hint is empty when no servers recommended."""

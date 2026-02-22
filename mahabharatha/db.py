@@ -10,7 +10,7 @@ from mahabharatha.logging import get_logger
 logger = get_logger("db")
 
 
-class ZergDB:
+class MahabharathaDB:
     """Interface for FalkorDB operations."""
 
     def __init__(
@@ -57,8 +57,8 @@ class ZergDB:
             raise
 
 
-def get_db(graph_name: str = "mahabharatha") -> ZergDB:
-    """Helper to get a ZergDB instance with a default graph selected."""
-    db = ZergDB()
+def get_db(graph_name: str = "mahabharatha") -> MahabharathaDB:
+    """Helper to get a MahabharathaDB instance with a default graph selected."""
+    db = MahabharathaDB()
     db.select_graph(graph_name)
     return db

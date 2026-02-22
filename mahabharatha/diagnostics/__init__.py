@@ -37,7 +37,7 @@ from mahabharatha.diagnostics.log_correlator import (
     TimelineBuilder,
 )
 from mahabharatha.diagnostics.recovery import RecoveryPlan, RecoveryPlanner, RecoveryStep
-from mahabharatha.diagnostics.state_introspector import ZergHealthReport, ZergStateIntrospector
+from mahabharatha.diagnostics.state_introspector import MahabharathaHealthReport, MahabharathaStateIntrospector
 from mahabharatha.diagnostics.system_diagnostics import SystemDiagnostics, SystemHealthReport
 from mahabharatha.diagnostics.types import (
     DiagnosticContext,
@@ -91,6 +91,6 @@ __all__ = [
     "TemporalClusterer",
     "TimelineBuilder",
     "TimelineEvent",
-    "ZergHealthReport",
-    "ZergStateIntrospector",
+    "MahabharathaHealthReport",
+    "MahabharathaStateIntrospector",
 ]

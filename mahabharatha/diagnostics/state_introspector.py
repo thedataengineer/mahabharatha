@@ -14,7 +14,7 @@ logger = get_logger("diagnostics.state")
 
 
 @dataclass
-class ZergHealthReport:
+class MahabharathaHealthReport:
     """Health report from MAHABHARATHA state introspection."""
 
     feature: str
@@ -46,7 +46,7 @@ class ZergHealthReport:
         }
 
 
-class ZergStateIntrospector:
+class MahabharathaStateIntrospector:
     """Introspect MAHABHARATHA state for diagnostic analysis."""
 
     def __init__(
@@ -73,11 +73,11 @@ class ZergStateIntrospector:
             return None
         return state_files[0].stem
 
-    def get_health_report(self, feature: str) -> ZergHealthReport:
+    def get_health_report(self, feature: str) -> MahabharathaHealthReport:
         """Generate a health report for a feature."""
         state_file = self.state_dir / f"{feature}.json"
         if not state_file.exists():
-            return ZergHealthReport(
+            return MahabharathaHealthReport(
                 feature=feature,
                 state_exists=False,
                 total_tasks=0,
@@ -87,7 +87,7 @@ class ZergStateIntrospector:
             state = json_loads(state_file.read_text(encoding="utf-8"))
         except (json.JSONDecodeError, OSError) as e:
             logger.warning(f"Failed to read state file: {e}")
-            return ZergHealthReport(
+            return MahabharathaHealthReport(
                 feature=feature,
                 state_exists=True,
                 total_tasks=0,
@@ -150,7 +150,7 @@ class ZergStateIntrospector:
         is_paused = state.get("paused", False)
         global_error = state.get("error")
 
-        return ZergHealthReport(
+        return MahabharathaHealthReport(
             feature=feature,
             state_exists=True,
             total_tasks=total,

@@ -9,7 +9,7 @@
     {
       "id": "CE-L1-001",
       "title": "Add container resource config fields",
-      "description": "Extend ResourcesConfig in config.py with container_memory_limit (str, default '4g') and container_cpu_limit (float, default 2.0). Update .mahabharatha/config.yaml with new fields under resources section. Ensure ZergConfig.load() populates defaults correctly.",
+      "description": "Extend ResourcesConfig in config.py with container_memory_limit (str, default '4g') and container_cpu_limit (float, default 2.0). Update .mahabharatha/config.yaml with new fields under resources section. Ensure MahabharathaConfig.load() populates defaults correctly.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
@@ -22,10 +22,10 @@
         "ResourcesConfig has container_memory_limit: str = '4g' field",
         "ResourcesConfig has container_cpu_limit: float = 2.0 field",
         ".mahabharatha/config.yaml has container_memory_limit and container_cpu_limit under resources",
-        "ZergConfig.load() returns correct defaults"
+        "MahabharathaConfig.load() returns correct defaults"
       ],
       "verification": {
-        "command": "python -c \"from mahabharatha.config import ZergConfig; c = ZergConfig.load(); print(c.resources.container_memory_limit, c.resources.container_cpu_limit)\"",
+        "command": "python -c \"from mahabharatha.config import MahabharathaConfig; c = MahabharathaConfig.load(); print(c.resources.container_memory_limit, c.resources.container_cpu_limit)\"",
         "timeout_seconds": 30
       },
       "critical_path": true

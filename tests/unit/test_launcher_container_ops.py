@@ -33,7 +33,7 @@ class TestNetworkConfiguration:
     def test_network_used_in_docker_run(self, mock_run: MagicMock, tmp_path: Path) -> None:
         mock_run.return_value = MagicMock(returncode=0, stdout="cid\n", stderr="")
         launcher = ContainerLauncher(network="custom-net")
-        launcher._start_container("mahabharatha-worker-0", tmp_path, {"ZERG_WORKER_ID": "0"})
+        launcher._start_container("mahabharatha-worker-0", tmp_path, {"MAHABHARATHA_WORKER_ID": "0"})
         call_args = mock_run.call_args[0][0]
         idx = call_args.index("--network")
         assert call_args[idx + 1] == "custom-net"

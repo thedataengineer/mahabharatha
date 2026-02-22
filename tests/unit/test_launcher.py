@@ -25,22 +25,22 @@ class TestValidateEnvVars:
     """Tests for environment variable validation."""
 
     def test_allowed_var_passes(self) -> None:
-        env = {"ZERG_WORKER_ID": "1", "ANTHROPIC_API_KEY": "sk-test"}
+        env = {"MAHABHARATHA_WORKER_ID": "1", "ANTHROPIC_API_KEY": "sk-test"}
         result = validate_env_vars(env)
-        assert "ZERG_WORKER_ID" in result
+        assert "MAHABHARATHA_WORKER_ID" in result
         assert "ANTHROPIC_API_KEY" in result
 
     def test_mixed_vars_filtered_correctly(self) -> None:
         """Covers: dangerous blocked, metachar blocked, unknown skipped, allowed passed."""
         env = {
-            "ZERG_WORKER_ID": "1",
+            "MAHABHARATHA_WORKER_ID": "1",
             "PATH": "/bad",
             "ANTHROPIC_API_KEY": "sk-xxx",
-            "ZERG_BAD": "value; rm",
+            "MAHABHARATHA_BAD": "value; rm",
             "UNKNOWN": "val",
         }
         result = validate_env_vars(env)
-        assert result == {"ZERG_WORKER_ID": "1", "ANTHROPIC_API_KEY": "sk-xxx"}
+        assert result == {"MAHABHARATHA_WORKER_ID": "1", "ANTHROPIC_API_KEY": "sk-xxx"}
 
 
 # =============================================================================
@@ -129,7 +129,7 @@ class TestSubprocessLauncherSpawn:
         assert result.success is True
         assert result.handle.pid == 12345
         env = mock_popen.call_args[1]["env"]
-        assert env["ZERG_WORKER_ID"] == "0"
+        assert env["MAHABHARATHA_WORKER_ID"] == "0"
 
     @patch("subprocess.Popen")
     def test_spawn_failure(self, mock_popen: MagicMock, tmp_path: Path) -> None:

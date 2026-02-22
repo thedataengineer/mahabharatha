@@ -114,7 +114,7 @@ Verify and update the `/mahabharatha:document` section in `docs/commands-deep.md
 
 ### FR-6: Push Wiki Changes to GitHub
 
-After all wiki files are updated, the changes must be pushed to the GitHub wiki repo so they appear at `https://github.com/rocklambros/mahabharatha/wiki/`.
+After all wiki files are updated, the changes must be pushed to the GitHub wiki repo so they appear at `https://github.com/thedataengineer/mahabharatha/wiki/`.
 
 ### FR-7: Update CHANGELOG.md
 

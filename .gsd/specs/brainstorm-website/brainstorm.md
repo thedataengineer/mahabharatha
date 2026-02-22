@@ -34,4 +34,4 @@ Custom single-page landing site replacing the broken MkDocs deployment. Pure HTM
 - superclaude.netlify.app — nav bar, light/dark toggle, clean card grid, quick start
 
 ## Epic
-#204 — https://github.com/rocklambros/mahabharatha/issues/204
+#204 — https://github.com/thedataengineer/mahabharatha/issues/204

@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.constants import WorkerStatus
 from mahabharatha.containers import ContainerInfo, ContainerManager
 from mahabharatha.exceptions import ContainerError
@@ -16,11 +16,11 @@ pytestmark = pytest.mark.docker
 
 @pytest.fixture(autouse=True)
 def mock_mahabharatha_config():
-    """Mock ZergConfig.load() for all container tests."""
-    mock_config = MagicMock(spec=ZergConfig)
+    """Mock MahabharathaConfig.load() for all container tests."""
+    mock_config = MagicMock(spec=MahabharathaConfig)
     mock_config.workers = MagicMock()
     mock_config.workers.max_workers = 5
-    with patch.object(ZergConfig, "load", return_value=mock_config):
+    with patch.object(MahabharathaConfig, "load", return_value=mock_config):
         yield mock_config
 
 

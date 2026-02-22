@@ -1,0 +1,209 @@
+{"ts": "2026-02-12T07:40:49.367028Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to set up structured logging: attribute name must be string, not 'MagicMock'"}
+{"ts": "2026-02-12T07:40:49.370810Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to set up structured logging: attribute name must be string, not 'MagicMock'"}
+{"ts": "2026-02-12T07:40:49.373245Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to load task graph: Parse error"}
+{"ts": "2026-02-12T07:40:49.374662Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Worker 1 signaling ready"}
+{"ts": "2026-02-12T07:40:49.379189Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 not found in graph, using stub"}
+{"ts": "2026-02-12T07:40:49.379556Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Claimed task TASK-001: Task TASK-001"}
+{"ts": "2026-02-12T07:40:49.384951Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No tasks found after 0.0s of polling"}
+{"ts": "2026-02-12T07:40:49.390676Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:40:49.390991Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:40:49.393279Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:40:49.393553Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:40:49.393762Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:40:49.393891Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:40:49.394008Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:40:49.394101Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:40:49.395608Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Running verification for TASK-001: pytest tests/"}
+{"ts": "2026-02-12T07:40:49.395909Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Verification passed for TASK-001"}
+{"ts": "2026-02-12T07:40:49.471269Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No verification for TASK-001 - auto-pass"}
+{"ts": "2026-02-12T07:40:49.473187Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Committed changes for TASK-001: def456"}
+{"ts": "2026-02-12T07:40:49.474751Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No changes to commit for TASK-001"}
+{"ts": "2026-02-12T07:40:49.476275Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Executing task TASK-001: Test"}
+{"ts": "2026-02-12T07:40:49.476519Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:40:49.476828Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:40:49.499261Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "LLM invocation failed for TASK-001 using claude"}
+{"ts": "2026-02-12T07:40:49.514058Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Executing task TASK-001: Test"}
+{"ts": "2026-02-12T07:40:49.514967Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:40:49.515377Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:40:49.544264Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "LLM invocation failed for TASK-001 using claude"}
+{"ts": "2026-02-12T07:40:49.548321Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 complete"}
+{"ts": "2026-02-12T07:40:49.553150Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 failed: Something went wrong"}
+{"ts": "2026-02-12T07:40:49.559092Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "Worker failed: Init failed"}
+{"ts": "2026-02-12T07:41:55.843950Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to set up structured logging: attribute name must be string, not 'MagicMock'"}
+{"ts": "2026-02-12T07:41:55.848276Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to set up structured logging: attribute name must be string, not 'MagicMock'"}
+{"ts": "2026-02-12T07:41:55.852152Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to load task graph: Parse error"}
+{"ts": "2026-02-12T07:41:55.856202Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Worker 1 signaling ready"}
+{"ts": "2026-02-12T07:41:55.858913Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 not found in graph, using stub"}
+{"ts": "2026-02-12T07:41:55.859148Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Claimed task TASK-001: Task TASK-001"}
+{"ts": "2026-02-12T07:41:55.865477Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No tasks found after 0.0s of polling"}
+{"ts": "2026-02-12T07:41:55.873995Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:41:55.874364Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:41:55.882222Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:41:55.882567Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:41:55.882804Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:41:55.883321Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:41:55.883714Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:41:55.884390Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:41:55.888166Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Running verification for TASK-001: pytest tests/"}
+{"ts": "2026-02-12T07:41:55.889087Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Verification passed for TASK-001"}
+{"ts": "2026-02-12T07:41:55.936543Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No verification for TASK-001 - auto-pass"}
+{"ts": "2026-02-12T07:41:55.938781Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Committed changes for TASK-001: def456"}
+{"ts": "2026-02-12T07:41:55.940326Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No changes to commit for TASK-001"}
+{"ts": "2026-02-12T07:41:55.941833Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Executing task TASK-001: Test"}
+{"ts": "2026-02-12T07:41:55.949384Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Executing task TASK-001: Test"}
+{"ts": "2026-02-12T07:41:55.950955Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "LLM invocation failed for TASK-001 using claude"}
+{"ts": "2026-02-12T07:41:55.983119Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 complete"}
+{"ts": "2026-02-12T07:41:55.990377Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 failed: Something went wrong"}
+{"ts": "2026-02-12T07:41:55.994661Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "Worker failed: Init failed"}
+{"ts": "2026-02-12T07:42:14.594552Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to set up structured logging: attribute name must be string, not 'MagicMock'"}
+{"ts": "2026-02-12T07:42:14.606633Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to set up structured logging: attribute name must be string, not 'MagicMock'"}
+{"ts": "2026-02-12T07:42:14.612646Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to load task graph: Parse error"}
+{"ts": "2026-02-12T07:42:14.620576Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Worker 1 signaling ready"}
+{"ts": "2026-02-12T07:42:14.629397Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 not found in graph, using stub"}
+{"ts": "2026-02-12T07:42:14.629491Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Claimed task TASK-001: Task TASK-001"}
+{"ts": "2026-02-12T07:42:14.636681Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No tasks found after 0.0s of polling"}
+{"ts": "2026-02-12T07:42:14.649728Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:42:14.652288Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:42:14.655660Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:42:14.656130Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:42:14.656378Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:42:14.656518Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:42:14.656650Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:42:14.656751Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:42:14.658524Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Running verification for TASK-001: pytest tests/"}
+{"ts": "2026-02-12T07:42:14.658850Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Verification passed for TASK-001"}
+{"ts": "2026-02-12T07:42:14.713968Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No verification for TASK-001 - auto-pass"}
+{"ts": "2026-02-12T07:42:14.715600Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Committed changes for TASK-001: def456"}
+{"ts": "2026-02-12T07:42:14.717073Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No changes to commit for TASK-001"}
+{"ts": "2026-02-12T07:42:14.718842Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Executing task TASK-001: Test"}
+{"ts": "2026-02-12T07:42:14.721887Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Executing task TASK-001: Test"}
+{"ts": "2026-02-12T07:42:14.722267Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "LLM invocation failed for TASK-001 using claude"}
+{"ts": "2026-02-12T07:42:14.723988Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 complete"}
+{"ts": "2026-02-12T07:42:14.727497Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 failed: Something went wrong"}
+{"ts": "2026-02-12T07:42:14.732352Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "Worker failed: Init failed"}
+{"ts": "2026-02-12T07:43:46.212736Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to set up structured logging: attribute name must be string, not 'MagicMock'"}
+{"ts": "2026-02-12T07:43:46.219664Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to set up structured logging: attribute name must be string, not 'MagicMock'"}
+{"ts": "2026-02-12T07:43:46.222671Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to load task graph: Parse error"}
+{"ts": "2026-02-12T07:43:46.224541Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Worker 1 signaling ready"}
+{"ts": "2026-02-12T07:43:46.230418Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No tasks available yet, polling (max 120.0s)..."}
+{"ts": "2026-02-12T07:45:08.985989Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to set up structured logging: attribute name must be string, not 'MagicMock'"}
+{"ts": "2026-02-12T07:45:08.994854Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to set up structured logging: attribute name must be string, not 'MagicMock'"}
+{"ts": "2026-02-12T07:45:09.034725Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Worker 1 signaling ready"}
+{"ts": "2026-02-12T07:45:09.039844Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No tasks available yet, polling (max 120.0s)..."}
+{"ts": "2026-02-12T07:45:34.785546Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to set up structured logging: attribute name must be string, not 'MagicMock'"}
+{"ts": "2026-02-12T07:45:34.792316Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to set up structured logging: attribute name must be string, not 'MagicMock'"}
+{"ts": "2026-02-12T07:45:34.795437Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to load task graph: Parse error"}
+{"ts": "2026-02-12T07:45:34.797706Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Worker 1 signaling ready"}
+{"ts": "2026-02-12T07:45:34.802701Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No tasks available yet, polling (max 120.0s)..."}
+{"ts": "2026-02-12T07:45:46.307853Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No tasks found after 0.0s of polling"}
+{"ts": "2026-02-12T07:45:46.318823Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:45:46.319214Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:45:46.322367Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:45:46.322753Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:45:46.323047Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:45:46.323192Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:45:46.323326Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:45:46.323433Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:45:46.326200Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Running verification for TASK-001: pytest tests/"}
+{"ts": "2026-02-12T07:45:46.326566Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Verification passed for TASK-001"}
+{"ts": "2026-02-12T07:45:46.347000Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No verification for TASK-001 - auto-pass"}
+{"ts": "2026-02-12T07:45:46.349276Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No changes to commit for TASK-001"}
+{"ts": "2026-02-12T07:45:46.351924Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No changes to commit for TASK-001"}
+{"ts": "2026-02-12T07:45:46.354889Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Executing task TASK-001: Test"}
+{"ts": "2026-02-12T07:45:46.357998Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Executing task TASK-001: Test"}
+{"ts": "2026-02-12T07:45:46.358539Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "LLM invocation failed for TASK-001 using claude"}
+{"ts": "2026-02-12T07:45:46.360807Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 complete"}
+{"ts": "2026-02-12T07:45:46.398625Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 failed: Something went wrong"}
+{"ts": "2026-02-12T07:45:46.428408Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "Worker failed: Init failed"}
+{"ts": "2026-02-12T07:47:09.096953Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No tasks found after 0.0s of polling"}
+{"ts": "2026-02-12T07:47:09.111152Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:47:09.111923Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:47:09.116935Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:47:09.117560Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:47:09.118280Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:47:09.118637Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:47:09.118840Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:47:09.118955Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:47:09.123048Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Running verification for TASK-001: pytest tests/"}
+{"ts": "2026-02-12T07:47:09.123407Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Verification passed for TASK-001"}
+{"ts": "2026-02-12T07:47:09.144971Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No verification for TASK-001 - auto-pass"}
+{"ts": "2026-02-12T07:47:09.147020Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No changes to commit for TASK-001"}
+{"ts": "2026-02-12T07:47:09.148902Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No changes to commit for TASK-001"}
+{"ts": "2026-02-12T07:47:09.152625Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Executing task TASK-001: Test"}
+{"ts": "2026-02-12T07:47:09.161530Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Executing task TASK-001: Test"}
+{"ts": "2026-02-12T07:47:09.162517Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "LLM invocation failed for TASK-001 using claude"}
+{"ts": "2026-02-12T07:47:09.166413Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 complete"}
+{"ts": "2026-02-12T07:47:09.197370Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 failed: Something went wrong"}
+{"ts": "2026-02-12T07:47:09.229738Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "Worker failed: Init failed"}
+{"ts": "2026-02-12T07:47:34.890112Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No tasks found after 0.0s of polling"}
+{"ts": "2026-02-12T07:47:34.899251Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:47:34.899588Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:47:34.902370Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:47:34.902702Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:47:34.902937Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:47:34.903102Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:47:34.903236Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T07:47:34.903342Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T07:47:34.905293Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Running verification for TASK-001: pytest tests/"}
+{"ts": "2026-02-12T07:47:34.905597Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Verification passed for TASK-001"}
+{"ts": "2026-02-12T07:47:34.923940Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No verification for TASK-001 - auto-pass"}
+{"ts": "2026-02-12T07:47:34.926586Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No changes to commit for TASK-001"}
+{"ts": "2026-02-12T07:47:34.930951Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No changes to commit for TASK-001"}
+{"ts": "2026-02-12T07:47:34.935168Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Executing task TASK-001: Test"}
+{"ts": "2026-02-12T07:47:34.939122Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Executing task TASK-001: Test"}
+{"ts": "2026-02-12T07:47:34.939586Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "LLM invocation failed for TASK-001 using claude"}
+{"ts": "2026-02-12T07:47:34.942995Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 complete"}
+{"ts": "2026-02-12T07:47:34.971712Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 failed: Something went wrong"}
+{"ts": "2026-02-12T07:47:35.012922Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "Worker failed: Init failed"}
+{"ts": "2026-02-12T08:07:51.438922Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to set up structured logging: attribute name must be string, not 'MagicMock'"}
+{"ts": "2026-02-12T08:07:51.442726Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to set up structured logging: attribute name must be string, not 'MagicMock'"}
+{"ts": "2026-02-12T08:07:51.446799Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to load task graph: Parse error"}
+{"ts": "2026-02-12T08:07:51.449219Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Worker 1 signaling ready"}
+{"ts": "2026-02-12T08:07:51.451537Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 not found in graph, using stub"}
+{"ts": "2026-02-12T08:07:51.451720Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Claimed task TASK-001: Task TASK-001"}
+{"ts": "2026-02-12T08:07:51.455809Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No tasks found after 0.0s of polling"}
+{"ts": "2026-02-12T08:07:51.462580Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T08:07:51.462892Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T08:07:51.464682Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T08:07:51.464953Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T08:07:51.465143Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T08:07:51.465233Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T08:07:51.465342Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T08:07:51.465428Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T08:07:51.467965Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Running verification for TASK-001: pytest tests/"}
+{"ts": "2026-02-12T08:07:51.468256Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Verification passed for TASK-001"}
+{"ts": "2026-02-12T08:07:51.502242Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No verification for TASK-001 - auto-pass"}
+{"ts": "2026-02-12T08:07:51.504743Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Committed changes for TASK-001: def456"}
+{"ts": "2026-02-12T08:07:51.506776Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No changes to commit for TASK-001"}
+{"ts": "2026-02-12T08:07:51.508664Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Executing task TASK-001: Test"}
+{"ts": "2026-02-12T08:07:51.513164Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Executing task TASK-001: Test"}
+{"ts": "2026-02-12T08:07:51.513614Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "LLM invocation failed for TASK-001 using claude"}
+{"ts": "2026-02-12T08:07:51.515943Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 complete"}
+{"ts": "2026-02-12T08:07:51.518243Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 failed: Something went wrong"}
+{"ts": "2026-02-12T08:07:51.522016Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "Worker failed: Init failed"}
+{"ts": "2026-02-12T08:09:43.443577Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to set up structured logging: attribute name must be string, not 'MagicMock'"}
+{"ts": "2026-02-12T08:09:43.446896Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to set up structured logging: attribute name must be string, not 'MagicMock'"}
+{"ts": "2026-02-12T08:09:43.449508Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Failed to load task graph: Parse error"}
+{"ts": "2026-02-12T08:09:43.451778Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Worker 1 signaling ready"}
+{"ts": "2026-02-12T08:09:43.454067Z", "level": "warning", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 not found in graph, using stub"}
+{"ts": "2026-02-12T08:09:43.454135Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Claimed task TASK-001: Task TASK-001"}
+{"ts": "2026-02-12T08:09:43.456001Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No tasks found after 0.0s of polling"}
+{"ts": "2026-02-12T08:09:43.461784Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T08:09:43.462128Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T08:09:43.464035Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T08:09:43.464315Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T08:09:43.464514Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T08:09:43.464608Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T08:09:43.464726Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking claude for task TASK-001"}
+{"ts": "2026-02-12T08:09:43.464813Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Invoking Claude Code for worker 1"}
+{"ts": "2026-02-12T08:09:43.467064Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Running verification for TASK-001: pytest tests/"}
+{"ts": "2026-02-12T08:09:43.467163Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Verification passed for TASK-001"}
+{"ts": "2026-02-12T08:09:43.469107Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No verification for TASK-001 - auto-pass"}
+{"ts": "2026-02-12T08:09:43.471143Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Committed changes for TASK-001: def456"}
+{"ts": "2026-02-12T08:09:43.473472Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "No changes to commit for TASK-001"}
+{"ts": "2026-02-12T08:09:43.475636Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Executing task TASK-001: Test"}
+{"ts": "2026-02-12T08:09:43.478213Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Executing task TASK-001: Test"}
+{"ts": "2026-02-12T08:09:43.479018Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "LLM invocation failed for TASK-001 using claude"}
+{"ts": "2026-02-12T08:09:43.481643Z", "level": "info", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 complete"}
+{"ts": "2026-02-12T08:09:43.483962Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "Task TASK-001 failed: Something went wrong"}
+{"ts": "2026-02-12T08:09:43.486243Z", "level": "error", "worker_id": 3, "feature": "my-feature", "message": "Worker failed: Init failed"}

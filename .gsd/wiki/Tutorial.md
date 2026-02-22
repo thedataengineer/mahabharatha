@@ -35,7 +35,7 @@ Before starting, let's verify your environment. Each tool serves a specific purp
 **Install MAHABHARATHA:**
 
 ```bash
-git clone https://github.com/rocklambros/mahabharatha.git
+git clone https://github.com/thedataengineer/mahabharatha.git
 cd mahabharatha && pip install -e ".[dev]"
 mahabharatha --help
 ```

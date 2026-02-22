@@ -76,7 +76,7 @@
     {
       "id": "TASK-004",
       "title": "Push wiki changes to GitHub",
-      "description": "After wiki files are updated (TASK-002, TASK-003), push .gsd/wiki/ changes to the GitHub wiki repository so they appear at https://github.com/rocklambros/mahabharatha/wiki/. Use gh or git to push wiki changes.",
+      "description": "After wiki files are updated (TASK-002, TASK-003), push .gsd/wiki/ changes to the GitHub wiki repository so they appear at https://github.com/thedataengineer/mahabharatha/wiki/. Use gh or git to push wiki changes.",
       "phase": "integration",
       "level": 2,
       "dependencies": ["TASK-002", "TASK-003"],
@@ -93,7 +93,7 @@
       "skills_required": ["git"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nPush updated wiki files to GitHub wiki repository.\nWiki files live in .gsd/wiki/ and are pushed to https://github.com/rocklambros/mahabharatha/wiki/.\nUse gh CLI or git push to the wiki repo."
+      "context": "## Spec Context\nPush updated wiki files to GitHub wiki repository.\nWiki files live in .gsd/wiki/ and are pushed to https://github.com/thedataengineer/mahabharatha/wiki/.\nUse gh CLI or git push to the wiki repo."
     },
     {
       "id": "TASK-005",

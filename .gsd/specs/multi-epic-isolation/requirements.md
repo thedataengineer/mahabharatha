@@ -67,14 +67,14 @@ MAHABHARATHA cannot safely run two independent epics in parallel across separate
 ## 3. Functional Requirements
 
 ### FR1: Environment-based feature context (fixes RC1)
-**Replace `.current-feature` singleton with `ZERG_FEATURE` environment variable as primary source.**
+**Replace `.current-feature` singleton with `MAHABHARATHA_FEATURE` environment variable as primary source.**
 
 - `detect_feature()` in `mahabharatha/commands/_utils.py` priority order becomes:
-  1. `ZERG_FEATURE` env var (terminal-session-scoped, cannot be stomped by other terminals)
+  1. `MAHABHARATHA_FEATURE` env var (terminal-session-scoped, cannot be stomped by other terminals)
   2. `--feature` CLI flag (explicit override)
   3. `.gsd/.current-feature` file (fallback for backward compat, last resort)
-- `/z:plan` MUST set `ZERG_FEATURE` via instructing user to export, AND still write `.current-feature` for backward compat
-- All 15 command markdown files update pre-flight to: `FEATURE=${ZERG_FEATURE:-$(cat .gsd/.current-feature 2>/dev/null)}`
+- `/z:plan` MUST set `MAHABHARATHA_FEATURE` via instructing user to export, AND still write `.current-feature` for backward compat
+- All 15 command markdown files update pre-flight to: `FEATURE=${MAHABHARATHA_FEATURE:-$(cat .gsd/.current-feature 2>/dev/null)}`
 - All 5 Python CLI modules already use `detect_feature()` — updating the one function fixes them all
 
 ### FR2: Feature-scoped git ship (fixes RC2)
@@ -126,12 +126,12 @@ Three changes to `plan.core.md` and `plan.md`:
 
 ### NFR1: Backward Compatibility
 - `.current-feature` file continues to work as fallback
-- Users who don't export `ZERG_FEATURE` get same behavior as today
+- Users who don't export `MAHABHARATHA_FEATURE` get same behavior as today
 - Existing task-graph.json format unchanged
 
 ### NFR2: Zero-Config for Single-Epic Usage
 - Single-epic users see no behavior change
-- Multi-epic isolation is automatic when `ZERG_FEATURE` is set per terminal
+- Multi-epic isolation is automatic when `MAHABHARATHA_FEATURE` is set per terminal
 
 ### NFR3: Minimal Blast Radius
 - RC4 fix (level enforcement) is a one-line change
@@ -164,7 +164,7 @@ Three changes to `plan.core.md` and `plan.md`:
 
 ## 6. Acceptance Criteria
 
-- [ ] Two terminals can run `/z:plan epic-1` and `/z:plan epic-2` without overwriting each other's context (when `ZERG_FEATURE` is exported)
+- [ ] Two terminals can run `/z:plan epic-1` and `/z:plan epic-2` without overwriting each other's context (when `MAHABHARATHA_FEATURE` is exported)
 - [ ] `/z:design` reads correct feature from env var, not stomped `.current-feature`
 - [ ] `/z:kurukshetra` workers cannot claim Level 2 tasks while Level 1 is incomplete
 - [ ] `/z:git --action ship` only includes commits from the active feature's branches
@@ -180,7 +180,7 @@ Three changes to `plan.core.md` and `plan.md`:
 ### Python Source
 | File | Change |
 |------|--------|
-| `mahabharatha/commands/_utils.py` | Add `ZERG_FEATURE` env var as priority 1 in `detect_feature()` |
+| `mahabharatha/commands/_utils.py` | Add `MAHABHARATHA_FEATURE` env var as priority 1 in `detect_feature()` |
 | `mahabharatha/protocol_state.py` | Add `current_level=self.state.get_current_level()` to `claim_task()` call |
 
 ### Command Markdown (15 files)
@@ -188,7 +188,7 @@ Three changes to `plan.core.md` and `plan.md`:
 |------|--------|
 | `mahabharatha/data/commands/plan.core.md` | Restructure Phase 5 approval gate, add AskUserQuestion |
 | `mahabharatha/data/commands/plan.md` | Same as plan.core.md |
-| `mahabharatha/data/commands/design.core.md` | Update pre-flight: `FEATURE=${ZERG_FEATURE:-$(cat ...)}` |
+| `mahabharatha/data/commands/design.core.md` | Update pre-flight: `FEATURE=${MAHABHARATHA_FEATURE:-$(cat ...)}` |
 | `mahabharatha/data/commands/design.md` | Same |
 | `mahabharatha/data/commands/kurukshetra.core.md` | Update pre-flight + add lock check |
 | `mahabharatha/data/commands/kurukshetra.md` | Same |
@@ -249,7 +249,7 @@ Three changes to `plan.core.md` and `plan.md`:
 
 | Document | Update Needed |
 |----------|--------------|
-| `CLAUDE.md` | Add `ZERG_FEATURE` env var documentation |
+| `CLAUDE.md` | Add `MAHABHARATHA_FEATURE` env var documentation |
 | `ARCHITECTURE.md` | Update "State Management" section re: feature detection priority |
 | `CHANGELOG.md` | Add entries under [Unreleased] for all fixes |
 | `README.md` | Add multi-epic usage section |

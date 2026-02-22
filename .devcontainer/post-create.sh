@@ -3,8 +3,8 @@ set -e
 
 echo "═══════════════════════════════════════════════════"
 echo "  Factory Worker Post-Create Setup"
-echo "  Worker ID: ${ZERG_WORKER_ID:-0}"
-echo "  Feature: ${ZERG_FEATURE:-unknown}"
+echo "  Worker ID: ${MAHABHARATHA_WORKER_ID:-0}"
+echo "  Feature: ${MAHABHARATHA_FEATURE:-unknown}"
 echo "═══════════════════════════════════════════════════"
 
 # Install project dependencies
@@ -38,8 +38,8 @@ fi
 
 # Setup git identity for commits
 echo "Configuring git..."
-git config --global user.email "mahabharatha-worker-${ZERG_WORKER_ID:-0}@agentic.local"
-git config --global user.name "Factory Worker ${ZERG_WORKER_ID:-0}"
+git config --global user.email "mahabharatha-worker-${MAHABHARATHA_WORKER_ID:-0}@agentic.local"
+git config --global user.name "Factory Worker ${MAHABHARATHA_WORKER_ID:-0}"
 git config --global init.defaultBranch main
 git config --global pull.rebase true
 

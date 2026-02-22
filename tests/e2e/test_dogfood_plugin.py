@@ -14,7 +14,7 @@ def _plugin_task_graph() -> list[dict]:
 
     Returns task list matching the production-dogfooding design with:
     - Level 1: Foundation (5 tasks) - MockWorker, E2EHarness, Plugin ABCs, Config, HookEvent
-    - Level 2: Core (5 tasks) - E2E conftest, pipeline test, plugin tests, config, ZergConfig
+    - Level 2: Core (5 tasks) - E2E conftest, pipeline test, plugin tests, config, MahabharathaConfig
     - Level 3: Integration (5 tasks) - Orchestrator hooks, worker hooks, gate hooks, launcher
     - Level 4: Testing (5 tasks) - Plugin lifecycle, dogfood E2E, pytest markers, docs
 
@@ -181,8 +181,8 @@ def _plugin_task_graph() -> list[dict]:
         },
         {
             "id": "DF-L2-005",
-            "title": "Integrate plugins into ZergConfig",
-            "description": "Add plugins field to ZergConfig in mahabharatha/config.py (optional PluginsConfig).",
+            "title": "Integrate plugins into MahabharathaConfig",
+            "description": "Add plugins field to MahabharathaConfig in mahabharatha/config.py (optional PluginsConfig).",
             "phase": "core",
             "level": 2,
             "dependencies": ["DF-L1-004"],
@@ -192,7 +192,7 @@ def _plugin_task_graph() -> list[dict]:
                 "read": ["mahabharatha/config.py", "mahabharatha/plugin_config.py"],
             },
             "verification": {
-                "command": "python -c 'from mahabharatha.config import ZergConfig; ZergConfig()'",
+                "command": "python -c 'from mahabharatha.config import MahabharathaConfig; MahabharathaConfig()'",
                 "timeout_seconds": 30,
             },
         },

@@ -102,11 +102,11 @@ class ContainerLauncher(WorkerLauncher):
 
             # Build environment
             container_env = {
-                "ZERG_WORKER_ID": str(worker_id),
-                "ZERG_FEATURE": feature,
-                "ZERG_WORKTREE": "/workspace",
-                "ZERG_BRANCH": branch,
-                "ZERG_SPEC_DIR": f"/workspace/.gsd/specs/{feature}",
+                "MAHABHARATHA_WORKER_ID": str(worker_id),
+                "MAHABHARATHA_FEATURE": feature,
+                "MAHABHARATHA_WORKTREE": "/workspace",
+                "MAHABHARATHA_BRANCH": branch,
+                "MAHABHARATHA_SPEC_DIR": f"/workspace/.gsd/specs/{feature}",
                 **(
                     {"CLAUDE_CODE_TASK_LIST_ID": os.environ["CLAUDE_CODE_TASK_LIST_ID"]}
                     if "CLAUDE_CODE_TASK_LIST_ID" in os.environ
@@ -250,8 +250,8 @@ class ContainerLauncher(WorkerLauncher):
             # Mount the worktree metadata
             cmd.extend(["-v", f"{git_worktree_dir.absolute()}:/workspace/.git-worktree"])
             # Pass env vars so entry script can fix the git paths
-            env["ZERG_GIT_WORKTREE_DIR"] = "/workspace/.git-worktree"
-            env["ZERG_GIT_MAIN_DIR"] = "/repo/.git"
+            env["MAHABHARATHA_GIT_WORKTREE_DIR"] = "/workspace/.git-worktree"
+            env["MAHABHARATHA_GIT_MAIN_DIR"] = "/repo/.git"
 
         # Add Claude config mount for OAuth authentication (needs write for debug logs)
         if claude_config_dir.exists():
@@ -794,11 +794,11 @@ class ContainerLauncher(WorkerLauncher):
 
             # Build environment
             container_env: dict[str, str] = {
-                "ZERG_WORKER_ID": str(worker_id),
-                "ZERG_FEATURE": feature,
-                "ZERG_WORKTREE": "/workspace",
-                "ZERG_BRANCH": branch,
-                "ZERG_SPEC_DIR": f"/workspace/.gsd/specs/{feature}",
+                "MAHABHARATHA_WORKER_ID": str(worker_id),
+                "MAHABHARATHA_FEATURE": feature,
+                "MAHABHARATHA_WORKTREE": "/workspace",
+                "MAHABHARATHA_BRANCH": branch,
+                "MAHABHARATHA_SPEC_DIR": f"/workspace/.gsd/specs/{feature}",
                 **(
                     {"CLAUDE_CODE_TASK_LIST_ID": os.environ["CLAUDE_CODE_TASK_LIST_ID"]}
                     if "CLAUDE_CODE_TASK_LIST_ID" in os.environ

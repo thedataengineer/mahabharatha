@@ -22,7 +22,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.config import MahabharathaConfig, QualityGate
 from mahabharatha.constants import GateResult, MergeStatus
 from mahabharatha.exceptions import MergeConflictError
 from mahabharatha.merge import MergeCoordinator, MergeFlowResult
@@ -34,9 +34,9 @@ from mahabharatha.types import GateRunResult
 
 
 @pytest.fixture
-def mock_config() -> ZergConfig:
-    """ZergConfig with two required quality gates."""
-    cfg = ZergConfig()
+def mock_config() -> MahabharathaConfig:
+    """MahabharathaConfig with two required quality gates."""
+    cfg = MahabharathaConfig()
     cfg.quality_gates = [
         QualityGate(name="lint", command="ruff check .", required=True),
         QualityGate(name="test", command="pytest", required=True),
@@ -75,7 +75,7 @@ def coordinator(mock_config, mock_git, mock_gates):
     with (
         patch("mahabharatha.merge.GitOps", return_value=mock_git),
         patch("mahabharatha.merge.GateRunner", return_value=mock_gates),
-        patch("mahabharatha.merge.ZergConfig.load", return_value=mock_config),
+        patch("mahabharatha.merge.MahabharathaConfig.load", return_value=mock_config),
     ):
         mc = MergeCoordinator(feature="my-feat", config=mock_config, repo_path="/tmp/repo")
     # Replace internal objects with our mocks (GitOps/GateRunner already set via patch)
@@ -163,7 +163,7 @@ class TestMergeCoordinatorInit:
     """Tests for MergeCoordinator construction."""
 
     def test_init_with_explicit_config(self, mock_config):
-        """Accepts explicit config without calling ZergConfig.load()."""
+        """Accepts explicit config without calling MahabharathaConfig.load()."""
         with patch("mahabharatha.merge.GitOps") as mock_git_cls, patch("mahabharatha.merge.GateRunner"):
             mc = MergeCoordinator(feature="feat", config=mock_config, repo_path="/tmp")
         assert mc.feature == "feat"
@@ -172,13 +172,13 @@ class TestMergeCoordinatorInit:
         mock_git_cls.assert_called_once_with("/tmp")
 
     def test_init_loads_default_config_when_none(self):
-        """Calls ZergConfig.load() when config is None."""
+        """Calls MahabharathaConfig.load() when config is None."""
         with (
             patch("mahabharatha.merge.GitOps"),
             patch("mahabharatha.merge.GateRunner"),
-            patch("mahabharatha.merge.ZergConfig.load") as mock_load,
+            patch("mahabharatha.merge.MahabharathaConfig.load") as mock_load,
         ):
-            mock_load.return_value = ZergConfig()
+            mock_load.return_value = MahabharathaConfig()
             mc = MergeCoordinator(feature="feat")
         mock_load.assert_called_once()
         assert mc.config is mock_load.return_value

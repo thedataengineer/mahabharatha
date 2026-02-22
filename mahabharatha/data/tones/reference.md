@@ -90,7 +90,7 @@ Spawns and manages parallel Claude Code worker processes.
 
 ## Public API
 
-### `Launcher(config: ZergConfig)`
+### `Launcher(config: MahabharathaConfig)`
 
 Process manager for Mahabharatha worker instances.
 

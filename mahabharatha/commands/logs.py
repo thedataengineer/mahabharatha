@@ -282,9 +282,9 @@ def _get_launcher_type() -> str:
         'container' or 'subprocess'
     """
     try:
-        from mahabharatha.config import ZergConfig
+        from mahabharatha.config import MahabharathaConfig
 
-        config = ZergConfig.load()
+        config = MahabharathaConfig.load()
         return config.workers.launcher_type
     except Exception as e:  # noqa: BLE001 — intentional: launcher type detection is best-effort, defaults to subprocess
         logger.debug(f"Mode detection failed: {e}")

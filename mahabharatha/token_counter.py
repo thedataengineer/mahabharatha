@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from mahabharatha.config import TokenMetricsConfig, ZergConfig
+from mahabharatha.config import MahabharathaConfig, TokenMetricsConfig
 from mahabharatha.constants import STATE_DIR
 
 logger = logging.getLogger(__name__)
@@ -37,10 +37,10 @@ class TokenCounter:
             self._config = config
         else:
             try:
-                mahabharatha_config = ZergConfig.load()
+                mahabharatha_config = MahabharathaConfig.load()
                 self._config = mahabharatha_config.token_metrics
             except Exception:  # noqa: BLE001 — intentional: config load spans I/O, YAML, Pydantic; safe fallback to defaults
-                logger.debug("Failed to load ZergConfig for token metrics; using defaults", exc_info=True)
+                logger.debug("Failed to load MahabharathaConfig for token metrics; using defaults", exc_info=True)
                 self._config = TokenMetricsConfig()
 
         self._cache_path = Path(STATE_DIR) / "token-cache.json"

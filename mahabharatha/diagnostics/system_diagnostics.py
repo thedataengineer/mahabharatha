@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, Any
 from mahabharatha.logging import get_logger
 
 if TYPE_CHECKING:
-    from mahabharatha.config import ZergConfig
+    from mahabharatha.config import MahabharathaConfig
 
 logger = get_logger("diagnostics.system")
 
@@ -51,7 +51,7 @@ class SystemHealthReport:
 class SystemDiagnostics:
     """Run system-level diagnostic checks."""
 
-    def __init__(self, config: ZergConfig | None = None) -> None:
+    def __init__(self, config: MahabharathaConfig | None = None) -> None:
         self.config = config
 
     def _run_cmd(self, cmd: list[str]) -> tuple[str, bool]:

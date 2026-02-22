@@ -216,7 +216,7 @@ class RecoveryPlanner:
     def __init__(self) -> None:
         self._executor = get_executor()
 
-    def _get_steps(self, category: str, result: DiagnosticResult, health: ZergHealthReport | None) -> list[RecoveryStep]:
+    def _get_steps(self, category: str, result: DiagnosticResult, health: MahabharathaHealthReport | None) -> list[RecoveryStep]:
         # ... existing code ...
 
         for tmpl in template:

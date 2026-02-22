@@ -1,4 +1,4 @@
-"""Tests for ZergConfig singleton caching with mtime invalidation.
+"""Tests for MahabharathaConfig singleton caching with mtime invalidation.
 
 Tests cover:
 - Singleton pattern returns same instance
@@ -15,15 +15,15 @@ from pathlib import Path
 
 import pytest
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 
 
 @pytest.fixture(autouse=True)
 def reset_cache() -> None:
-    """Reset ZergConfig cache before and after each test."""
-    ZergConfig.invalidate_cache()
+    """Reset MahabharathaConfig cache before and after each test."""
+    MahabharathaConfig.invalidate_cache()
     yield
-    ZergConfig.invalidate_cache()
+    MahabharathaConfig.invalidate_cache()
 
 
 @pytest.fixture
@@ -49,7 +49,7 @@ workers:
 
 
 class TestSingletonPattern:
-    """Tests for singleton behavior of ZergConfig.load()."""
+    """Tests for singleton behavior of MahabharathaConfig.load()."""
 
     def test_singleton_returns_same_instance(
         self, tmp_path: Path, config_file: Path, monkeypatch: pytest.MonkeyPatch
@@ -57,15 +57,15 @@ class TestSingletonPattern:
         """Test that consecutive calls to load() return the same instance."""
         monkeypatch.chdir(tmp_path)
 
-        c1 = ZergConfig.load()
-        c2 = ZergConfig.load()
+        c1 = MahabharathaConfig.load()
+        c2 = MahabharathaConfig.load()
 
         assert c1 is c2, "load() should return cached singleton instance"
 
     def test_singleton_with_explicit_path(self, config_file: Path) -> None:
         """Test singleton behavior with explicit config path."""
-        c1 = ZergConfig.load(config_path=config_file)
-        c2 = ZergConfig.load(config_path=config_file)
+        c1 = MahabharathaConfig.load(config_path=config_file)
+        c2 = MahabharathaConfig.load(config_path=config_file)
 
         assert c1 is c2, "load() with explicit path should use cache"
 
@@ -78,11 +78,11 @@ class TestSingletonPattern:
         config2 = tmp_path / "other_config.yaml"
         config2.write_text("workers:\n  max_concurrent: 10\n")
 
-        c1 = ZergConfig.load(config_path=config1)
+        c1 = MahabharathaConfig.load(config_path=config1)
 
         # Invalidate to switch paths
-        ZergConfig.invalidate_cache()
-        c2 = ZergConfig.load(config_path=config2)
+        MahabharathaConfig.invalidate_cache()
+        c2 = MahabharathaConfig.load(config_path=config2)
 
         assert c1 is not c2, "Different paths should produce different instances"
         assert c1.workers.max_concurrent == 5
@@ -99,7 +99,7 @@ class TestMtimeInvalidation:
         monkeypatch.chdir(tmp_path)
 
         # Load initial config
-        c1 = ZergConfig.load()
+        c1 = MahabharathaConfig.load()
         assert c1.workers.max_concurrent == 5
 
         # Wait a bit to ensure mtime changes (some filesystems have 1s resolution)
@@ -119,7 +119,7 @@ workers:
         os.utime(config_file, (current_time, current_time))
 
         # Load again - should get new instance due to mtime change
-        c2 = ZergConfig.load()
+        c2 = MahabharathaConfig.load()
 
         assert c1 is not c2, "Changed mtime should invalidate cache"
         assert c2.workers.max_concurrent == 10
@@ -130,22 +130,22 @@ workers:
         """Test that unchanged file returns cached instance."""
         monkeypatch.chdir(tmp_path)
 
-        c1 = ZergConfig.load()
+        c1 = MahabharathaConfig.load()
 
         # Don't modify the file, just load again
-        c2 = ZergConfig.load()
+        c2 = MahabharathaConfig.load()
 
         assert c1 is c2, "Unchanged file should return cached instance"
 
     def test_mtime_uses_utime_manipulation(self, config_file: Path) -> None:
         """Test that os.utime can be used to simulate file changes."""
-        c1 = ZergConfig.load(config_path=config_file)
+        c1 = MahabharathaConfig.load(config_path=config_file)
 
         # Use os.utime to change mtime without modifying content
         future_time = time.time() + 100
         os.utime(config_file, (future_time, future_time))
 
-        c2 = ZergConfig.load(config_path=config_file)
+        c2 = MahabharathaConfig.load(config_path=config_file)
 
         assert c1 is not c2, "os.utime mtime change should invalidate cache"
 
@@ -159,8 +159,8 @@ class TestForceReload:
         """Test that force_reload=True returns a new instance."""
         monkeypatch.chdir(tmp_path)
 
-        c1 = ZergConfig.load()
-        c2 = ZergConfig.load(force_reload=True)
+        c1 = MahabharathaConfig.load()
+        c2 = MahabharathaConfig.load(force_reload=True)
 
         assert c1 is not c2, "force_reload=True should bypass cache"
 
@@ -170,9 +170,9 @@ class TestForceReload:
         """Test that force_reload updates the cached instance."""
         monkeypatch.chdir(tmp_path)
 
-        c1 = ZergConfig.load()
-        c2 = ZergConfig.load(force_reload=True)
-        c3 = ZergConfig.load()  # Should use the new cached instance
+        c1 = MahabharathaConfig.load()
+        c2 = MahabharathaConfig.load(force_reload=True)
+        c3 = MahabharathaConfig.load()  # Should use the new cached instance
 
         assert c1 is not c2
         assert c2 is c3, "Subsequent load should use newly cached instance"
@@ -183,14 +183,14 @@ class TestForceReload:
         """Test force_reload picks up file changes immediately."""
         monkeypatch.chdir(tmp_path)
 
-        c1 = ZergConfig.load()
+        c1 = MahabharathaConfig.load()
         assert c1.workers.max_concurrent == 5
 
         # Modify file (max_concurrent must be <= 10 per WorkersConfig validation)
         config_file.write_text("workers:\n  max_concurrent: 8\n")
 
         # Force reload to pick up changes
-        c2 = ZergConfig.load(force_reload=True)
+        c2 = MahabharathaConfig.load(force_reload=True)
 
         assert c2.workers.max_concurrent == 8
 
@@ -204,13 +204,13 @@ class TestThreadSafety:
         """Test that concurrent loads all return the same instance."""
         monkeypatch.chdir(tmp_path)
 
-        results: list[ZergConfig] = []
+        results: list[MahabharathaConfig] = []
         errors: list[Exception] = []
         lock = threading.Lock()
 
         def load_config() -> None:
             try:
-                config = ZergConfig.load()
+                config = MahabharathaConfig.load()
                 with lock:
                     results.append(config)
             except Exception as e:  # noqa: BLE001 — intentional: concurrency test; thread safety validation
@@ -240,13 +240,13 @@ class TestThreadSafety:
         """Test concurrent access with some force_reload calls."""
         monkeypatch.chdir(tmp_path)
 
-        results: list[ZergConfig] = []
+        results: list[MahabharathaConfig] = []
         errors: list[Exception] = []
         lock = threading.Lock()
 
         def load_config(force: bool = False) -> None:
             try:
-                config = ZergConfig.load(force_reload=force)
+                config = MahabharathaConfig.load(force_reload=force)
                 with lock:
                     results.append(config)
             except Exception as e:  # noqa: BLE001 — intentional: concurrency test; thread safety validation
@@ -268,9 +268,9 @@ class TestThreadSafety:
         assert not errors, f"Errors during concurrent access: {errors}"
         assert len(results) == 10, "All threads should complete successfully"
 
-        # All results should be valid ZergConfig instances
+        # All results should be valid MahabharathaConfig instances
         for config in results:
-            assert isinstance(config, ZergConfig)
+            assert isinstance(config, MahabharathaConfig)
             assert config.workers.max_concurrent == 5
 
     def test_no_race_conditions_in_cache_update(
@@ -285,7 +285,7 @@ class TestThreadSafety:
         def stress_test() -> None:
             try:
                 for _ in range(50):
-                    config = ZergConfig.load()
+                    config = MahabharathaConfig.load()
                     # Verify config is valid
                     _ = config.workers.max_concurrent
                     _ = config.to_dict()
@@ -313,24 +313,24 @@ class TestInvalidateCache:
         """Test that invalidate_cache() causes next load to create new instance."""
         monkeypatch.chdir(tmp_path)
 
-        c1 = ZergConfig.load()
-        ZergConfig.invalidate_cache()
-        c2 = ZergConfig.load()
+        c1 = MahabharathaConfig.load()
+        MahabharathaConfig.invalidate_cache()
+        c2 = MahabharathaConfig.load()
 
         assert c1 is not c2, "invalidate_cache should clear singleton"
 
     def test_invalidate_cache_resets_all_state(self, config_file: Path) -> None:
         """Test that invalidate_cache resets path and mtime tracking."""
         # Load with explicit path to populate cache
-        _ = ZergConfig.load(config_path=config_file)
+        _ = MahabharathaConfig.load(config_path=config_file)
 
         # Invalidate
-        ZergConfig.invalidate_cache()
+        MahabharathaConfig.invalidate_cache()
 
         # Verify internal state is cleared
-        assert ZergConfig._cached_instance is None
-        assert ZergConfig._cache_mtime is None
-        assert ZergConfig._cache_path is None
+        assert MahabharathaConfig._cached_instance is None
+        assert MahabharathaConfig._cache_mtime is None
+        assert MahabharathaConfig._cache_path is None
 
     def test_invalidate_cache_is_thread_safe(
         self, tmp_path: Path, config_file: Path, monkeypatch: pytest.MonkeyPatch
@@ -344,9 +344,9 @@ class TestInvalidateCache:
         def load_and_invalidate() -> None:
             try:
                 for _ in range(20):
-                    config = ZergConfig.load()
+                    config = MahabharathaConfig.load()
                     _ = config.workers.max_concurrent
-                    ZergConfig.invalidate_cache()
+                    MahabharathaConfig.invalidate_cache()
             except Exception as e:  # noqa: BLE001 — intentional: concurrency test; thread safety validation
                 with lock:
                     errors.append(e)
@@ -370,7 +370,7 @@ class TestEdgeCases:
         monkeypatch.chdir(tmp_path)
 
         # No .mahabharatha directory or config file
-        config = ZergConfig.load()
+        config = MahabharathaConfig.load()
 
         assert config is not None
         assert config.workers.max_concurrent == 5  # Default value
@@ -379,8 +379,8 @@ class TestEdgeCases:
         """Test that default config is cached when file doesn't exist."""
         monkeypatch.chdir(tmp_path)
 
-        c1 = ZergConfig.load()
-        c2 = ZergConfig.load()
+        c1 = MahabharathaConfig.load()
+        c2 = MahabharathaConfig.load()
 
         assert c1 is c2, "Default config should be cached"
 
@@ -391,7 +391,7 @@ class TestEdgeCases:
         monkeypatch.chdir(tmp_path)
 
         # Load and cache
-        c1 = ZergConfig.load()
+        c1 = MahabharathaConfig.load()
         assert c1.workers.max_concurrent == 5
 
         # Delete the file
@@ -399,8 +399,8 @@ class TestEdgeCases:
 
         # Cache should still be valid for now (file was deleted, mtime check fails)
         # But invalidate and reload should create default
-        ZergConfig.invalidate_cache()
-        c2 = ZergConfig.load()
+        MahabharathaConfig.invalidate_cache()
+        c2 = MahabharathaConfig.load()
 
         # c2 should be a default config since file is gone
         assert c2.workers.max_concurrent == 5  # Default value
@@ -412,7 +412,7 @@ class TestEdgeCases:
         config_file = config_dir / "config.yaml"
         config_file.write_text("")
 
-        config = ZergConfig.load()
+        config = MahabharathaConfig.load()
 
         assert config is not None
         # Should use defaults for all values
@@ -425,7 +425,7 @@ class TestEdgeCases:
         config_file = config_dir / "config.yaml"
         config_file.write_text("workers:\n  max_concurrent: 8\n")
 
-        config = ZergConfig.load()
+        config = MahabharathaConfig.load()
 
         assert config.workers.max_concurrent == 8
         assert config.workers.timeout_minutes == 30  # Default
@@ -448,11 +448,11 @@ class TestCacheWithDifferentPaths:
         config2.write_text("workers:\n  max_concurrent: 7\n")
 
         # Load first config
-        c1 = ZergConfig.load(config_path=config1)
+        c1 = MahabharathaConfig.load(config_path=config1)
         assert c1.workers.max_concurrent == 3
 
         # Load second config (different path)
-        c2 = ZergConfig.load(config_path=config2)
+        c2 = MahabharathaConfig.load(config_path=config2)
 
         # Should get new instance since path changed
         assert c2 is not c1
@@ -468,10 +468,10 @@ class TestCacheWithDifferentPaths:
         config_file.write_text("workers:\n  max_concurrent: 6\n")
 
         # Load with relative path (default)
-        c1 = ZergConfig.load()
+        c1 = MahabharathaConfig.load()
 
         # Load with absolute path
-        c2 = ZergConfig.load(config_path=config_file.resolve())
+        c2 = MahabharathaConfig.load(config_path=config_file.resolve())
 
         # Both should work and have correct values
         assert c1.workers.max_concurrent == 6

@@ -442,7 +442,7 @@ def action_ship(git: GitOps, base: str, draft: bool, reviewer: str | None, no_me
     """Ship: commit -> push -> PR -> merge -> cleanup in one shot."""
     import subprocess as _subprocess
 
-    from mahabharatha.config import ZergConfig
+    from mahabharatha.config import MahabharathaConfig
     from mahabharatha.merge import MergeCoordinator
 
     current = git.current_branch()
@@ -482,7 +482,7 @@ def action_ship(git: GitOps, base: str, draft: bool, reviewer: str | None, no_me
     console.print("\n[bold]Step 3/5: Merge PR[/bold]")
 
     # Check if we should use MAHABHARATHA merge with gates
-    config = ZergConfig.load()
+    config = MahabharathaConfig.load()
     feature = _detect_mahabharatha_feature(current)
     use_mahabharatha_merge = feature is not None and config.kurukshetra.gates_at_ship_only
 

@@ -9,7 +9,7 @@
     {
       "id": "DOC-001",
       "title": "Create LICENSE file (MIT)",
-      "description": "Create LICENSE at repository root with full MIT license text. Copyright: 2026 Kyriakos Lambros. pyproject.toml already declares MIT — no changes needed there.",
+      "description": "Create LICENSE at repository root with full MIT license text. Copyright: 2026 Karteek Yadavilli. pyproject.toml already declares MIT — no changes needed there.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
@@ -19,10 +19,10 @@
         "read": ["pyproject.toml"]
       },
       "verification": {
-        "command": "grep -q 'Kyriakos Lambros' LICENSE && grep -q 'MIT' LICENSE && grep -q 'Permission is hereby granted' LICENSE",
+        "command": "grep -q 'Karteek Yadavilli' LICENSE && grep -q 'MIT' LICENSE && grep -q 'Permission is hereby granted' LICENSE",
         "timeout_seconds": 30
       },
-      "context": "## Task Context\nCreate standard MIT license file. Copyright holder: Kyriakos Lambros, Year: 2026.\npyproject.toml line 10 already has: license = {text = \"MIT\"}\npyproject.toml line 19 already has: License :: OSI Approved :: MIT License\nNo changes to pyproject.toml needed."
+      "context": "## Task Context\nCreate standard MIT license file. Copyright holder: Karteek Yadavilli, Year: 2026.\npyproject.toml line 10 already has: license = {text = \"MIT\"}\npyproject.toml line 19 already has: License :: OSI Approved :: MIT License\nNo changes to pyproject.toml needed."
     },
     {
       "id": "DOC-002",
@@ -58,7 +58,7 @@
         "command": "test -f SECURITY.md && grep -qi 'security advisory\\|security advisories' SECURITY.md && grep -q 'v0.1' SECURITY.md",
         "timeout_seconds": 30
       },
-      "context": "## Security Context\nZERG executes subprocess commands, spawns Docker containers, and mounts host directories.\nAttack surface: subprocess execution (mahabharatha/launcher.py), Docker container management, host filesystem via git worktrees, credential handling (ANTHROPIC_API_KEY, OAuth tokens in ~/.claude).\nExisting security: OWASP Top 10 2025 rules auto-fetched, language-specific rules (Python, JS, Docker), security rule filtering per file type.\nRepository: github.com/rocklambros/mahabharatha"
+      "context": "## Security Context\nMAHABHARATHA executes subprocess commands, spawns Docker containers, and mounts host directories.\nAttack surface: subprocess execution (mahabharatha/launcher.py), Docker container management, host filesystem via git worktrees, credential handling (ANTHROPIC_API_KEY, OAuth tokens in ~/.claude).\nExisting security: OWASP Top 10 2025 rules auto-fetched, language-specific rules (Python, JS, Docker), security rule filtering per file type.\nRepository: github.com/thedataengineer/mahabharatha"
     },
     {
       "id": "DOC-004",

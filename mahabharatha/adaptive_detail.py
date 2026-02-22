@@ -13,7 +13,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
-from mahabharatha.config import PlanningConfig, ZergConfig
+from mahabharatha.config import MahabharathaConfig, PlanningConfig
 from mahabharatha.logging import get_logger
 
 logger = get_logger("adaptive_detail")
@@ -80,7 +80,7 @@ class AdaptiveDetailManager:
 
         Args:
             state_file: Path to state file (defaults to .mahabharatha/state/adaptive-detail.json)
-            config: Planning configuration (loads from ZergConfig if not provided)
+            config: Planning configuration (loads from MahabharathaConfig if not provided)
         """
         self._state_file = Path(state_file) if state_file else DEFAULT_STATE_FILE
         self._lock = threading.RLock()
@@ -89,7 +89,7 @@ class AdaptiveDetailManager:
         # Load or use provided config
         if config is None:
             try:
-                mahabharatha_config = ZergConfig.load()
+                mahabharatha_config = MahabharathaConfig.load()
                 self._config = mahabharatha_config.planning
             except Exception:  # noqa: BLE001 — intentional: config loading is best-effort, falls back to defaults
                 # Use defaults if config can't be loaded

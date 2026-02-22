@@ -10,7 +10,7 @@ import click
 from rich.console import Console
 from rich.table import Table
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.constants import GSD_DIR, SPECS_DIR
 from mahabharatha.containers import ContainerManager
 from mahabharatha.git_ops import GitOps
@@ -60,7 +60,7 @@ def cleanup(
     try:
         # Handle --logs mode (standalone log cleanup)
         if logs_only:
-            config = ZergConfig.load()
+            config = MahabharathaConfig.load()
             cleanup_structured_logs(config, dry_run)
             return
 
@@ -72,7 +72,7 @@ def cleanup(
         console.print("\n[bold cyan]MAHABHARATHA Cleanup[/bold cyan]\n")
 
         # Load config
-        config = ZergConfig.load()
+        config = MahabharathaConfig.load()
 
         # Get features to clean
         features = discover_features() if all_features else [feature] if feature else []
@@ -151,7 +151,7 @@ def create_cleanup_plan(
     features: list[str],
     keep_logs: bool,
     keep_branches: bool,
-    config: ZergConfig,
+    config: MahabharathaConfig,
 ) -> dict[str, Any]:
     """Create cleanup plan.
 
@@ -268,7 +268,7 @@ def show_cleanup_plan(plan: dict[str, Any], dry_run: bool) -> None:
     console.print(table)
 
 
-def execute_cleanup(plan: dict[str, Any], config: ZergConfig) -> None:
+def execute_cleanup(plan: dict[str, Any], config: MahabharathaConfig) -> None:
     """Execute cleanup plan.
 
     Args:
@@ -378,14 +378,14 @@ def execute_cleanup(plan: dict[str, Any], config: ZergConfig) -> None:
         console.print(f"\n[yellow]Completed with {len(errors)} error(s)[/yellow]")
 
 
-def cleanup_structured_logs(config: ZergConfig, dry_run: bool = False) -> None:
+def cleanup_structured_logs(config: MahabharathaConfig, dry_run: bool = False) -> None:
     """Clean up structured log artifacts based on retention policy.
 
     Prunes task artifact directories based on config.logging retention settings.
     Rotates/removes old worker JSONL files based on retain_days.
 
     Args:
-        config: ZergConfig with logging settings
+        config: MahabharathaConfig with logging settings
         dry_run: If True, only show what would be cleaned
     """
     console.print("\n[bold cyan]MAHABHARATHA Log Cleanup[/bold cyan]\n")

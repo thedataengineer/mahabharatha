@@ -42,8 +42,8 @@ class ClaudeProvider(LLMProvider):
                 timeout=timeout,
                 env={
                     **os.environ,
-                    "Mahabharatha_TASK_ID": task_id,
-                    "Mahabharatha_WORKER_ID": str(self.worker_id),
+                    "MAHABHARATHA_TASK_ID": task_id,
+                    "MAHABHARATHA_WORKER_ID": str(self.worker_id),
                 },
             )
 

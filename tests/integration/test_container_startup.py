@@ -28,7 +28,7 @@ class TestContainerStartupFlow:
             feature="test-feature",
             worktree_path=Path("/workspace/worktree-0"),
             branch="mahabharatha/test-feature/worker-0",
-            env={"ZERG_FEATURE": "test-feature"},
+            env={"MAHABHARATHA_FEATURE": "test-feature"},
         )
 
         # Verify success

@@ -13,7 +13,7 @@
 2. Start with L0 tasks (no dependencies)
 3. Copy the task prompt into Claude Code
 4. Follow TDD and verification protocols
-5. Mark task complete in `ZERG_V2_BACKLOG.md`
+5. Mark task complete in `MAHABHARATHA_V2_BACKLOG.md`
 
 ---
 
@@ -173,7 +173,7 @@ Before marking a task complete:
 
 ## Tracking Progress
 
-Update `ZERG_V2_BACKLOG.md` after each session:
+Update `MAHABHARATHA_V2_BACKLOG.md` after each session:
 
 1. Mark tasks complete: `- [x]`
 2. Log session in Session Log table

@@ -391,7 +391,7 @@ graph TD
 ### 7.3 Verification Commands
 | Task | Verification |
 |------|--------------|
-| Config | `python -c "from mahabharatha.config import ZergConfig; c=ZergConfig(); assert c.resilience.enabled"` |
+| Config | `python -c "from mahabharatha.config import MahabharathaConfig; c=MahabharathaConfig(); assert c.resilience.enabled"` |
 | Spawn retry | `pytest tests/unit/test_launcher.py -k spawn_with_retry -v` |
 | Stale tasks | `pytest tests/unit/test_task_retry_manager.py -k stale -v` |
 | StateReconciler | `pytest tests/unit/test_state_reconciler.py -v` |

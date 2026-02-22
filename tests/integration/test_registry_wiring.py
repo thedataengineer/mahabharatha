@@ -414,10 +414,10 @@ class TestFullOrchestratorInitWithRegistry:
 
     def test_orchestrator_init_with_custom_config(self) -> None:
         """Orchestrator init with custom config still uses WorkerRegistry."""
-        from mahabharatha.config import ZergConfig
+        from mahabharatha.config import MahabharathaConfig
 
         with _patch_orchestrator_deps():
-            config = ZergConfig()
+            config = MahabharathaConfig()
             orch = Orchestrator("test-feature", config=config)
             assert isinstance(orch.registry, WorkerRegistry)
 

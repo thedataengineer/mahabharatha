@@ -171,7 +171,7 @@ class TestDynamicDevcontainerGenerator:
         # Check content
         content = script_path.read_text()
         assert "#!/bin/bash" in content
-        assert "ZERG_WORKER_ID" in content
+        assert "MAHABHARATHA_WORKER_ID" in content
         assert "claude" in content
 
         # Check executable
@@ -371,7 +371,7 @@ class TestAutoDetectLauncherMode:
         """Test that auto-detect always selects subprocess mode."""
         from unittest.mock import MagicMock
 
-        from mahabharatha.config import ZergConfig
+        from mahabharatha.config import MahabharathaConfig
         from mahabharatha.launcher_configurator import LauncherConfigurator
         from mahabharatha.launcher_types import LauncherType
         from mahabharatha.plugins import PluginRegistry
@@ -381,7 +381,7 @@ class TestAutoDetectLauncherMode:
         devcontainer_dir.mkdir(parents=True)
         (devcontainer_dir / "devcontainer.json").write_text("{}")
 
-        config = MagicMock(spec=ZergConfig)
+        config = MagicMock(spec=MahabharathaConfig)
         config.workers = MagicMock()
         config.workers.timeout_minutes = 30
         config.logging = MagicMock()

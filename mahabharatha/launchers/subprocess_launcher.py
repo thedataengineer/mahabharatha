@@ -82,14 +82,14 @@ class SubprocessLauncher(WorkerLauncher):
             log_dir = repo_path / LOGS_WORKERS_DIR.rsplit("/", 1)[0]  # .mahabharatha/logs
             worker_env.update(
                 {
-                    "ZERG_WORKER_ID": str(worker_id),
-                    "ZERG_FEATURE": feature,
-                    "ZERG_WORKTREE": str(worktree_path),
-                    "ZERG_BRANCH": branch,
-                    "ZERG_SPEC_DIR": str(worktree_path / ".gsd" / "specs" / feature),
-                    "ZERG_STATE_DIR": str(repo_path / ".mahabharatha" / "state"),
-                    "ZERG_REPO_PATH": str(repo_path),
-                    "ZERG_LOG_DIR": str(log_dir),
+                    "MAHABHARATHA_WORKER_ID": str(worker_id),
+                    "MAHABHARATHA_FEATURE": feature,
+                    "MAHABHARATHA_WORKTREE": str(worktree_path),
+                    "MAHABHARATHA_BRANCH": branch,
+                    "MAHABHARATHA_SPEC_DIR": str(worktree_path / ".gsd" / "specs" / feature),
+                    "MAHABHARATHA_STATE_DIR": str(repo_path / ".mahabharatha" / "state"),
+                    "MAHABHARATHA_REPO_PATH": str(repo_path),
+                    "MAHABHARATHA_LOG_DIR": str(log_dir),
                 }
             )
 
@@ -365,14 +365,14 @@ class SubprocessLauncher(WorkerLauncher):
             log_dir = repo_path / LOGS_WORKERS_DIR.rsplit("/", 1)[0]
             worker_env.update(
                 {
-                    "ZERG_WORKER_ID": str(worker_id),
-                    "ZERG_FEATURE": feature,
-                    "ZERG_WORKTREE": str(worktree_path),
-                    "ZERG_BRANCH": branch,
-                    "ZERG_SPEC_DIR": str(worktree_path / ".gsd" / "specs" / feature),
-                    "ZERG_STATE_DIR": str(repo_path / ".mahabharatha" / "state"),
-                    "ZERG_REPO_PATH": str(repo_path),
-                    "ZERG_LOG_DIR": str(log_dir),
+                    "MAHABHARATHA_WORKER_ID": str(worker_id),
+                    "MAHABHARATHA_FEATURE": feature,
+                    "MAHABHARATHA_WORKTREE": str(worktree_path),
+                    "MAHABHARATHA_BRANCH": branch,
+                    "MAHABHARATHA_SPEC_DIR": str(worktree_path / ".gsd" / "specs" / feature),
+                    "MAHABHARATHA_STATE_DIR": str(repo_path / ".mahabharatha" / "state"),
+                    "MAHABHARATHA_REPO_PATH": str(repo_path),
+                    "MAHABHARATHA_LOG_DIR": str(log_dir),
                 }
             )
 

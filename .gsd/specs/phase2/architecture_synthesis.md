@@ -523,12 +523,12 @@ flowchart TB
 **`.devcontainer/devcontainer.json`**:
 ```json
 {
-  "name": "mahabharatha-worker-${localEnv:ZERG_WORKER_ID}",
+  "name": "mahabharatha-worker-${localEnv:MAHABHARATHA_WORKER_ID}",
   "build": {
     "dockerfile": "Dockerfile",
     "context": "..",
     "args": {
-      "WORKER_ID": "${localEnv:ZERG_WORKER_ID:-0}"
+      "WORKER_ID": "${localEnv:MAHABHARATHA_WORKER_ID:-0}"
     }
   },
   "mounts": [
@@ -539,26 +539,26 @@ flowchart TB
       "consistency": "cached"
     },
     {
-      "source": "mahabharatha-tasks-${localEnv:ZERG_FEATURE}",
+      "source": "mahabharatha-tasks-${localEnv:MAHABHARATHA_FEATURE}",
       "target": "/root/.claude/tasks",
       "type": "volume"
     },
     {
-      "source": "${localWorkspaceFolder}/.mahabharatha-worktrees/${localEnv:ZERG_FEATURE}/worker-${localEnv:ZERG_WORKER_ID}",
+      "source": "${localWorkspaceFolder}/.mahabharatha-worktrees/${localEnv:MAHABHARATHA_FEATURE}/worker-${localEnv:MAHABHARATHA_WORKER_ID}",
       "target": "/workspace",
       "type": "bind"
     }
   ],
   "containerEnv": {
-    "ZERG_WORKER_ID": "${localEnv:ZERG_WORKER_ID}",
-    "ZERG_FEATURE": "${localEnv:ZERG_FEATURE}",
-    "ZERG_BRANCH": "${localEnv:ZERG_BRANCH}",
-    "CLAUDE_CODE_TASK_LIST_ID": "${localEnv:ZERG_FEATURE}"
+    "MAHABHARATHA_WORKER_ID": "${localEnv:MAHABHARATHA_WORKER_ID}",
+    "MAHABHARATHA_FEATURE": "${localEnv:MAHABHARATHA_FEATURE}",
+    "MAHABHARATHA_BRANCH": "${localEnv:MAHABHARATHA_BRANCH}",
+    "CLAUDE_CODE_TASK_LIST_ID": "${localEnv:MAHABHARATHA_FEATURE}"
   },
   "runArgs": [
     "--init",
     "--network=mahabharatha-net",
-    "--name=mahabharatha-worker-${localEnv:ZERG_WORKER_ID}",
+    "--name=mahabharatha-worker-${localEnv:MAHABHARATHA_WORKER_ID}",
     "--security-opt=no-new-privileges:true",
     "--read-only",
     "--tmpfs=/tmp:rw,noexec,nosuid,size=1g"
@@ -613,17 +613,17 @@ services:
       context: ..
       dockerfile: .devcontainer/Dockerfile
       args:
-        WORKER_ID: ${ZERG_WORKER_ID:-0}
+        WORKER_ID: ${MAHABHARATHA_WORKER_ID:-0}
     environment:
-      - ZERG_WORKER_ID=${ZERG_WORKER_ID:-0}
-      - ZERG_FEATURE=${ZERG_FEATURE}
-      - ZERG_BRANCH=${ZERG_BRANCH:-main}
-      - CLAUDE_CODE_TASK_LIST_ID=${ZERG_FEATURE}
+      - MAHABHARATHA_WORKER_ID=${MAHABHARATHA_WORKER_ID:-0}
+      - MAHABHARATHA_FEATURE=${MAHABHARATHA_FEATURE}
+      - MAHABHARATHA_BRANCH=${MAHABHARATHA_BRANCH:-main}
+      - CLAUDE_CODE_TASK_LIST_ID=${MAHABHARATHA_FEATURE}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
     volumes:
       - ../.gsd:/workspace/.gsd:ro
       - mahabharatha-tasks:/home/mahabharatha/.claude/tasks
-      - ../.mahabharatha-worktrees/${ZERG_FEATURE}/worker-${ZERG_WORKER_ID:-0}:/workspace
+      - ../.mahabharatha-worktrees/${MAHABHARATHA_FEATURE}/worker-${MAHABHARATHA_WORKER_ID:-0}:/workspace
     networks:
       - mahabharatha-net
     security_opt:
@@ -639,11 +639,11 @@ services:
 
 volumes:
   mahabharatha-tasks:
-    name: mahabharatha-tasks-${ZERG_FEATURE}
+    name: mahabharatha-tasks-${MAHABHARATHA_FEATURE}
 
 networks:
   mahabharatha-net:
-    name: mahabharatha-${ZERG_FEATURE}-net
+    name: mahabharatha-${MAHABHARATHA_FEATURE}-net
 ```
 
 ### 3.3 Worktree Management
@@ -699,7 +699,7 @@ MAHABHARATHA uses Claude Native Tasks as the persistence layer. Tasks are regist
 
 **Task Metadata Schema**:
 ```typescript
-interface ZergTaskMetadata {
+interface MahabharathaTaskMetadata {
   // MAHABHARATHA-specific fields stored in task description/metadata
   zerg_version: "1.0";
   feature: string;

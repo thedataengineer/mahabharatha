@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 
 from mahabharatha.assign import WorkerAssignment
 from mahabharatha.capability_resolver import ResolvedCapabilities
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.constants import (
     PluginHookEvent,
     TaskStatus,
@@ -62,7 +62,7 @@ class WorkerManager:
     def __init__(
         self,
         feature: str,
-        config: ZergConfig,
+        config: MahabharathaConfig,
         state: StateManager,
         levels: LevelController,
         parser: TaskParser,
@@ -157,7 +157,7 @@ class WorkerManager:
                 enforcer = CharterEnforcer(charter_path)
                 if enforcer._principles:
                     principles_str = "\n".join([f"- {p}" for p in enforcer._principles])
-                    capability_env["ZERG_CHARTER_PRINCIPLES"] = principles_str
+                    capability_env["MAHABHARATHA_CHARTER_PRINCIPLES"] = principles_str
                     logger.debug(f"Injected {len(enforcer._principles)} charter principles into worker {worker_id}")
         except Exception:  # noqa: BLE001 — intentional: charter injection is best-effort
             logger.debug("Failed to inject charter principles", exc_info=True)

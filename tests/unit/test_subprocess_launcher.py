@@ -140,9 +140,9 @@ class TestSpawn:
 
         call_kwargs = mock_popen.call_args[1]
         env = call_kwargs["env"]
-        assert env["ZERG_WORKER_ID"] == "7"
-        assert env["ZERG_FEATURE"] == "my-feature"
-        assert env["ZERG_BRANCH"] == "br-7"
+        assert env["MAHABHARATHA_WORKER_ID"] == "7"
+        assert env["MAHABHARATHA_FEATURE"] == "my-feature"
+        assert env["MAHABHARATHA_BRANCH"] == "br-7"
 
     @patch("mahabharatha.launchers.subprocess_launcher.subprocess.Popen")
     def test_spawn_with_task_list_id(self, mock_popen: MagicMock, launcher: SubprocessLauncher, worktree: Path) -> None:
@@ -158,24 +158,24 @@ class TestSpawn:
     @patch("mahabharatha.launchers.subprocess_launcher.subprocess.Popen")
     def test_spawn_with_config_env_vars(self, mock_popen: MagicMock, worktree: Path) -> None:
         """Lines 105-107: validate and apply config env_vars."""
-        config = LauncherConfig(env_vars={"ZERG_DEBUG": "1"})
+        config = LauncherConfig(env_vars={"MAHABHARATHA_DEBUG": "1"})
         launcher = SubprocessLauncher(config=config)
         mock_popen.return_value = _make_mock_process()
 
         launcher.spawn(1, "feat", worktree, "br")
 
         env = mock_popen.call_args[1]["env"]
-        assert env["ZERG_DEBUG"] == "1"
+        assert env["MAHABHARATHA_DEBUG"] == "1"
 
     @patch("mahabharatha.launchers.subprocess_launcher.subprocess.Popen")
     def test_spawn_with_extra_env(self, mock_popen: MagicMock, launcher: SubprocessLauncher, worktree: Path) -> None:
         """Lines 109-111: validate and apply caller-supplied env."""
         mock_popen.return_value = _make_mock_process()
 
-        launcher.spawn(1, "feat", worktree, "br", env={"ZERG_LOG_LEVEL": "DEBUG"})
+        launcher.spawn(1, "feat", worktree, "br", env={"MAHABHARATHA_LOG_LEVEL": "DEBUG"})
 
         env = mock_popen.call_args[1]["env"]
-        assert env["ZERG_LOG_LEVEL"] == "DEBUG"
+        assert env["MAHABHARATHA_LOG_LEVEL"] == "DEBUG"
 
     @patch("mahabharatha.launchers.subprocess_launcher.subprocess.Popen")
     def test_spawn_with_log_dir(
@@ -579,7 +579,7 @@ class TestSpawnAsync:
     @pytest.mark.asyncio
     async def test_spawn_async_with_config_env_vars(self, worktree: Path) -> None:
         """Lines 389-391: config env_vars validated in async spawn."""
-        config = LauncherConfig(env_vars={"ZERG_DEBUG": "true"})
+        config = LauncherConfig(env_vars={"MAHABHARATHA_DEBUG": "true"})
         launcher = SubprocessLauncher(config=config)
         mock_proc = AsyncMock()
         mock_proc.pid = 2222
@@ -596,7 +596,7 @@ class TestSpawnAsync:
         mock_proc.pid = 3333
 
         with patch("asyncio.create_subprocess_exec", return_value=mock_proc):
-            result = await launcher.spawn_async(1, "feat", worktree, "br", env={"ZERG_LOG_LEVEL": "INFO"})
+            result = await launcher.spawn_async(1, "feat", worktree, "br", env={"MAHABHARATHA_LOG_LEVEL": "INFO"})
 
         assert result.success is True
 

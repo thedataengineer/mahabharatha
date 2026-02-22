@@ -11,7 +11,7 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Fix 6 root causes that prevent MAHABHARATHA from safely running two independent epics in parallel across terminal sessions. The primary fix replaces the global `.current-feature` singleton with a `ZERG_FEATURE` environment variable as the primary feature detection source, adds level-aware task claiming, restructures the plan approval gate, scopes git ship to feature branches, adds advisory lockfiles, and auto-scopes task lists.
+Fix 6 root causes that prevent MAHABHARATHA from safely running two independent epics in parallel across terminal sessions. The primary fix replaces the global `.current-feature` singleton with a `MAHABHARATHA_FEATURE` environment variable as the primary feature detection source, adds level-aware task claiming, restructures the plan approval gate, scopes git ship to feature branches, adds advisory lockfiles, and auto-scopes task lists.
 
 ### 1.2 Goals
 - Two terminals can run independent epics without cross-stomping
@@ -36,7 +36,7 @@ Fix 6 root causes that prevent MAHABHARATHA from safely running two independent 
 Terminal 1                          Terminal 2
 ┌──────────────────┐               ┌──────────────────┐
 │ export            │               │ export            │
-│ ZERG_FEATURE=epic1│               │ ZERG_FEATURE=epic2│
+│ MAHABHARATHA_FEATURE=epic1│               │ MAHABHARATHA_FEATURE=epic2│
 │                  │               │                  │
 │ detect_feature() │               │ detect_feature() │
 │   1. env var ✓   │               │   1. env var ✓   │
@@ -66,7 +66,7 @@ Terminal 1                          Terminal 2
 ### 2.3 Data Flow
 
 **Feature Detection (updated priority):**
-1. `ZERG_FEATURE` env var (process-scoped, terminal-isolated)
+1. `MAHABHARATHA_FEATURE` env var (process-scoped, terminal-isolated)
 2. `--feature` CLI flag (explicit override, already supported in some commands)
 3. `.gsd/.current-feature` file (backward compat fallback)
 4. `.mahabharatha/state/*.json` (most recent, last resort)
@@ -94,12 +94,12 @@ def detect_feature() -> str | None:
     """Detect active feature from project state.
 
     Priority order:
-    1. ZERG_FEATURE env var (terminal-session-scoped)
+    1. MAHABHARATHA_FEATURE env var (terminal-session-scoped)
     2. .gsd/.current-feature (explicit user intent from /mahabharatha:plan)
     3. .mahabharatha/state/*.json (most recently modified state file)
     """
     # Primary: env var (terminal-scoped, multi-epic safe)
-    env_feature = os.environ.get("ZERG_FEATURE", "").strip()
+    env_feature = os.environ.get("MAHABHARATHA_FEATURE", "").strip()
     if env_feature:
         return env_feature
 
@@ -202,7 +202,7 @@ FEATURE=$(cat .gsd/.current-feature 2>/dev/null)
 
 To:
 ```bash
-FEATURE=${ZERG_FEATURE:-$(cat .gsd/.current-feature 2>/dev/null)}
+FEATURE=${MAHABHARATHA_FEATURE:-$(cat .gsd/.current-feature 2>/dev/null)}
 ```
 
 ### 3.5 Plan Approval Gate (RC6)
@@ -245,7 +245,7 @@ In `git.details.md`, the ship action pipeline step 1 (Commit) adds feature-scopi
 
 ## 4. Key Decisions
 
-### Decision: ZERG_FEATURE env var as primary detection
+### Decision: MAHABHARATHA_FEATURE env var as primary detection
 
 **Context**: `.gsd/.current-feature` is a global singleton that Terminal 2 overwrites when planning a new epic.
 
@@ -256,7 +256,7 @@ In `git.details.md`, the ship action pipeline step 1 (Commit) adds feature-scopi
 
 **Decision**: Environment variable (Option 1)
 
-**Rationale**: Shell env vars are inherently process-scoped. Each terminal has its own `ZERG_FEATURE`. No filesystem contention. Zero new infrastructure. Backward compatible (falls through to file if not set).
+**Rationale**: Shell env vars are inherently process-scoped. Each terminal has its own `MAHABHARATHA_FEATURE`. No filesystem contention. Zero new infrastructure. Backward compatible (falls through to file if not set).
 
 **Consequences**: Single-epic users see no change. Multi-epic users export one env var.
 
@@ -363,7 +363,7 @@ graph TD
 ## 7. Testing Strategy
 
 ### 7.1 Unit Tests
-- `detect_feature()` priority: ZERG_FEATURE > .current-feature > state JSON
+- `detect_feature()` priority: MAHABHARATHA_FEATURE > .current-feature > state JSON
 - `detect_feature()` edge cases: empty env var, whitespace
 - Lockfile acquire/release/check/stale expiry
 - Level-aware claiming: task rejected when level > current_level
@@ -379,7 +379,7 @@ graph TD
 - `pytest tests/integration/test_claim_enforcement.py -v`
 - `pytest tests/integration/test_concurrent_features.py -v`
 - `python -m mahabharatha.validate_commands`
-- `grep -c 'ZERG_FEATURE' mahabharatha/data/commands/*.md` (expect 15+ matches)
+- `grep -c 'MAHABHARATHA_FEATURE' mahabharatha/data/commands/*.md` (expect 15+ matches)
 
 ---
 

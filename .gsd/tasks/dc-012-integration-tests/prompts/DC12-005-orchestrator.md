@@ -25,7 +25,7 @@ import pytest
 
 from mahabharatha.orchestrator import Orchestrator
 from mahabharatha.launcher import SubprocessLauncher
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 
 
 class TestOrchestratorModeSelection:
@@ -53,7 +53,7 @@ class TestOrchestratorModeSelection:
         mock_task_graph.return_value.tasks = {}
         mock_task_graph.return_value.get_level_tasks.return_value = []
 
-        config = ZergConfig(max_workers=2)
+        config = MahabharathaConfig(max_workers=2)
         orch = Orchestrator(
             feature="test",
             config=config,
@@ -86,7 +86,7 @@ class TestOrchestratorModeSelection:
         mock_task_graph.return_value.tasks = {}
         mock_task_graph.return_value.get_level_tasks.return_value = []
 
-        config = ZergConfig(max_workers=2)
+        config = MahabharathaConfig(max_workers=2)
         orch = Orchestrator(
             feature="test",
             config=config,

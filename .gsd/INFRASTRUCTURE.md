@@ -53,9 +53,9 @@
 | Variable | Description | Default |
 |----------|-------------|---------|
 | GITHUB_TOKEN | GitHub API access | (none) |
-| ZERG_FEATURE | Current feature name | unknown |
-| ZERG_WORKER_ID | Worker instance ID | 0 |
-| ZERG_BRANCH | Git branch to use | main |
+| MAHABHARATHA_FEATURE | Current feature name | unknown |
+| MAHABHARATHA_WORKER_ID | Worker instance ID | 0 |
+| MAHABHARATHA_BRANCH | Git branch to use | main |
 
 ---
 

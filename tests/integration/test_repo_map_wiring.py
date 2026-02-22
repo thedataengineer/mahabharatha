@@ -100,7 +100,7 @@ class TestRepoMapContextPluginWiring:
             "files": {"create": ["mod.py"], "modify": []},
         }
 
-        with patch("mahabharatha.context_plugin.os.environ", {"ZERG_COMPACT_MODE": ""}):
+        with patch("mahabharatha.context_plugin.os.environ", {"MAHABHARATHA_COMPACT_MODE": ""}):
             from mahabharatha.context_plugin import ContextEngineeringPlugin
             from mahabharatha.plugin_config import ContextEngineeringConfig
 

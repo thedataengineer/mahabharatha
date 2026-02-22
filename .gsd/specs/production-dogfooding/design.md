@@ -18,7 +18,7 @@ Level 1 (foundation)     Level 2 (core)            Level 3 (integration)      Le
 │ E2EHarness        │───▶│ Full pipeline test │     │ Worker hooks          │   │ Dogfood E2E test     │
 │ Plugin ABCs       │───▶│ Plugin unit tests  │───▶ │ GateRunner hooks      │──▶│ Pytest markers       │
 │ Config models     │───▶│ Config unit tests  │     │ Launcher plugin       │   │ Plugin docs          │
-│ HookEvent enum    │    │ ZergConfig integr. │     │ Real execution test   │   │ Bug tracking         │
+│ HookEvent enum    │    │ MahabharathaConfig integr. │     │ Real execution test   │   │ Bug tracking         │
 └───────────────────┘    └───────────────────┘     └───────────────────────┘   └──────────────────────┘
 ```
 

@@ -202,9 +202,9 @@ class TestWorkerProtocolStateWrites:
         mock_git_ops: MagicMock,
         monkeypatch: pytest.MonkeyPatch,
     ) -> WorkerProtocol:
-        monkeypatch.setenv("ZERG_WORKER_ID", "0")
-        monkeypatch.setenv("ZERG_FEATURE", "test-feature")
-        monkeypatch.setenv("ZERG_WORKTREE", str(tmp_path))
+        monkeypatch.setenv("MAHABHARATHA_WORKER_ID", "0")
+        monkeypatch.setenv("MAHABHARATHA_FEATURE", "test-feature")
+        monkeypatch.setenv("MAHABHARATHA_WORKTREE", str(tmp_path))
         monkeypatch.chdir(tmp_path)
         (tmp_path / ".mahabharatha").mkdir()
 

@@ -18,7 +18,7 @@ Implemented DC-012 integration tests for the dynamic devcontainer feature using 
    - 9 prompt files for worker execution
 
 2. **Fixed configuration**:
-   - Updated `.mahabharatha/config.yaml` to match new ZergConfig schema
+   - Updated `.mahabharatha/config.yaml` to match new MahabharathaConfig schema
    - quality_gates as list of QualityGate objects
    - mcp_servers as list of strings
 
@@ -57,7 +57,7 @@ pytest tests/integration/test_container_*.py -v
 
 ## Technical Learnings
 
-### ZergConfig Schema
+### MahabharathaConfig Schema
 ```yaml
 quality_gates:
   - name: lint

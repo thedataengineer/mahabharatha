@@ -217,11 +217,11 @@ def status(self) -> dict[str, Any]:
 ```bash
 python -c "
 from mahabharatha.orchestrator import Orchestrator
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.launcher import ContainerLauncher
 
 # Check orchestrator has updated methods
-orch = Orchestrator('test', ZergConfig())
+orch = Orchestrator('test', MahabharathaConfig())
 
 # Check status includes launcher_mode
 import inspect

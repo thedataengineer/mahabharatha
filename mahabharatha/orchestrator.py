@@ -13,7 +13,7 @@ from mahabharatha.assign import WorkerAssignment
 from mahabharatha.backpressure import BackpressureController
 from mahabharatha.capability_resolver import ResolvedCapabilities
 from mahabharatha.circuit_breaker import CircuitBreaker
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.constants import (
     LOGS_TASKS_DIR,
     LOGS_WORKERS_DIR,
@@ -69,12 +69,12 @@ class Orchestrator:
     """Thin coordinator delegating to WorkerManager, LevelCoordinator, etc."""
 
     def __init__(
-        self, feature: str, config: ZergConfig | None = None, repo_path: str | Path = ".",
+        self, feature: str, config: MahabharathaConfig | None = None, repo_path: str | Path = ".",
         launcher_mode: str | None = None, capabilities: ResolvedCapabilities | None = None,
         skip_tests: bool = False,
     ) -> None:
         self.feature = feature
-        self.config = config or ZergConfig.load()
+        self.config = config or MahabharathaConfig.load()
         self.repo_path = Path(repo_path).resolve()
         self._launcher_mode = launcher_mode
         self._capabilities = capabilities

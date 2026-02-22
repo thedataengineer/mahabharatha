@@ -25,7 +25,7 @@ from mahabharatha.commands.merge_cmd import (
     run_quality_gates,
     show_merge_plan,
 )
-from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.config import MahabharathaConfig, QualityGate
 from mahabharatha.constants import GateResult
 from mahabharatha.merge import MergeFlowResult
 
@@ -153,7 +153,7 @@ class TestRunQualityGates:
 
     def test_all_pass(self) -> None:
         """Test when all gates pass."""
-        config = ZergConfig()
+        config = MahabharathaConfig()
         config.quality_gates = [QualityGate(name="lint", command="ruff check .", required=True)]
         with patch("mahabharatha.commands.merge_cmd.GateRunner") as mock_runner_cls:
             mock_runner = MagicMock()
@@ -165,7 +165,7 @@ class TestRunQualityGates:
 
     def test_one_fails(self) -> None:
         """Test when one gate fails."""
-        config = ZergConfig()
+        config = MahabharathaConfig()
         config.quality_gates = [
             QualityGate(name="lint", command="ruff check .", required=True),
             QualityGate(name="test", command="pytest", required=True),
@@ -182,7 +182,7 @@ class TestRunQualityGates:
 
     def test_empty_gates(self) -> None:
         """Test with no gates configured."""
-        config = ZergConfig()
+        config = MahabharathaConfig()
         config.quality_gates = []
         with patch("mahabharatha.commands.merge_cmd.GateRunner"):
             assert run_quality_gates(config, "test", 1) == GateResult.PASS

@@ -12,7 +12,7 @@ from mahabharatha.diagnostics.recovery import (
     RecoveryPlanner,
     RecoveryStep,
 )
-from mahabharatha.diagnostics.state_introspector import ZergHealthReport
+from mahabharatha.diagnostics.state_introspector import MahabharathaHealthReport
 
 
 class TestRecoveryStep:
@@ -58,8 +58,8 @@ class TestRecoveryPlanner:
         feature: str = "test",
         failed: list[dict] | None = None,
         global_error: str | None = None,
-    ) -> ZergHealthReport:
-        return ZergHealthReport(
+    ) -> MahabharathaHealthReport:
+        return MahabharathaHealthReport(
             feature=feature,
             state_exists=True,
             total_tasks=5,
@@ -163,8 +163,8 @@ class TestDesignEscalation:
         feature: str = "test",
         failed: list[dict] | None = None,
         global_error: str | None = None,
-    ) -> ZergHealthReport:
-        return ZergHealthReport(
+    ) -> MahabharathaHealthReport:
+        return MahabharathaHealthReport(
             feature=feature,
             state_exists=True,
             total_tasks=10,

@@ -2,7 +2,7 @@
 
 This module provides comprehensive fixtures for testing:
 - Task graphs with multiple levels
-- ZergState objects in various configurations
+- MahabharathaState objects in various configurations
 - Worker states (idle, running, completed, failed)
 - Level completion scenarios
 - Feature configurations
@@ -58,7 +58,7 @@ from mahabharatha.config import (
     ResourcesConfig,
     SecurityConfig,
     WorkersConfig,
-    ZergConfig,
+    MahabharathaConfig,
 )
 from mahabharatha.constants import (
     Level,
@@ -421,7 +421,7 @@ def task_graph_factory() -> Callable[..., TaskGraph]:
 
 
 # =============================================================================
-# ZergState / OrchestratorState Fixtures
+# MahabharathaState / OrchestratorState Fixtures
 # =============================================================================
 
 
@@ -1022,13 +1022,13 @@ def all_levels_complete() -> dict[int, LevelStatus]:
 
 
 @pytest.fixture
-def minimal_config() -> ZergConfig:
-    """Create a minimal ZergConfig with defaults.
+def minimal_config() -> MahabharathaConfig:
+    """Create a minimal MahabharathaConfig with defaults.
 
     Returns:
-        ZergConfig with minimal settings
+        MahabharathaConfig with minimal settings
     """
-    return ZergConfig(
+    return MahabharathaConfig(
         project=ProjectConfig(name="minimal", description="Minimal config"),
         workers=WorkersConfig(max_concurrent=2, timeout_minutes=15),
         quality_gates=[],
@@ -1036,13 +1036,13 @@ def minimal_config() -> ZergConfig:
 
 
 @pytest.fixture
-def standard_config() -> ZergConfig:
-    """Create a standard ZergConfig for typical usage.
+def standard_config() -> MahabharathaConfig:
+    """Create a standard MahabharathaConfig for typical usage.
 
     Returns:
-        ZergConfig with standard development settings
+        MahabharathaConfig with standard development settings
     """
-    return ZergConfig(
+    return MahabharathaConfig(
         project=ProjectConfig(name="standard", description="Standard config"),
         workers=WorkersConfig(
             max_concurrent=5,
@@ -1060,13 +1060,13 @@ def standard_config() -> ZergConfig:
 
 
 @pytest.fixture
-def production_config() -> ZergConfig:
-    """Create a production-grade ZergConfig.
+def production_config() -> MahabharathaConfig:
+    """Create a production-grade MahabharathaConfig.
 
     Returns:
-        ZergConfig with strict production settings
+        MahabharathaConfig with strict production settings
     """
-    return ZergConfig(
+    return MahabharathaConfig(
         project=ProjectConfig(
             name="production",
             description="Production deployment configuration",
@@ -1109,7 +1109,7 @@ def production_config() -> ZergConfig:
 
 
 @pytest.fixture
-def config_yaml_file(tmp_path: Path, standard_config: ZergConfig) -> Path:
+def config_yaml_file(tmp_path: Path, standard_config: MahabharathaConfig) -> Path:
     """Write a standard config to a YAML file.
 
     Args:
@@ -1130,11 +1130,11 @@ def config_yaml_file(tmp_path: Path, standard_config: ZergConfig) -> Path:
 
 
 @pytest.fixture
-def config_factory() -> Callable[..., ZergConfig]:
-    """Factory fixture for creating custom ZergConfig instances.
+def config_factory() -> Callable[..., MahabharathaConfig]:
+    """Factory fixture for creating custom MahabharathaConfig instances.
 
     Returns:
-        Callable that creates ZergConfig with custom configuration
+        Callable that creates MahabharathaConfig with custom configuration
     """
 
     def _create_config(
@@ -1143,8 +1143,8 @@ def config_factory() -> Callable[..., ZergConfig]:
         timeout_minutes: int = 30,
         gates: list[tuple[str, str, bool]] | None = None,
         launcher_type: str = "subprocess",
-    ) -> ZergConfig:
-        """Create a custom ZergConfig.
+    ) -> MahabharathaConfig:
+        """Create a custom MahabharathaConfig.
 
         Args:
             name: Project name
@@ -1154,7 +1154,7 @@ def config_factory() -> Callable[..., ZergConfig]:
             launcher_type: Worker launcher type
 
         Returns:
-            Custom ZergConfig instance
+            Custom MahabharathaConfig instance
         """
         quality_gates = []
         if gates:
@@ -1163,7 +1163,7 @@ def config_factory() -> Callable[..., ZergConfig]:
                     QualityGate(name=gate_name, command=command, required=required)
                 )
 
-        return ZergConfig(
+        return MahabharathaConfig(
             project=ProjectConfig(name=name, description=f"{name} configuration"),
             workers=WorkersConfig(
                 max_concurrent=max_workers,

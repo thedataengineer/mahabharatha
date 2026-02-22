@@ -15,7 +15,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.constants import (
     ExitCode,
     TaskStatus,
@@ -57,7 +57,7 @@ class WorkerProtocol:
         self,
         worker_id: int | None = None,
         feature: str | None = None,
-        config: ZergConfig | None = None,
+        config: MahabharathaConfig | None = None,
         task_graph_path: Path | str | None = None,
         plugin_registry: PluginRegistry | None = None,
     ) -> None:
@@ -71,25 +71,25 @@ class WorkerProtocol:
             plugin_registry: Optional plugin registry for lifecycle hooks
         """
         # Get from environment if not provided
-        self.worker_id = worker_id or int(os.environ.get("ZERG_WORKER_ID", "0"))
-        self.feature = feature or os.environ.get("ZERG_FEATURE", "unknown")
-        self.branch = os.environ.get("ZERG_BRANCH", f"mahabharatha/{self.feature}/worker-{self.worker_id}")
-        self.worktree_path = Path(os.environ.get("ZERG_WORKTREE", ".")).resolve()
+        self.worker_id = worker_id or int(os.environ.get("MAHABHARATHA_WORKER_ID", "0"))
+        self.feature = feature or os.environ.get("MAHABHARATHA_FEATURE", "unknown")
+        self.branch = os.environ.get("MAHABHARATHA_BRANCH", f"mahabharatha/{self.feature}/worker-{self.worker_id}")
+        self.worktree_path = Path(os.environ.get("MAHABHARATHA_WORKTREE", ".")).resolve()
 
         # Task graph path from arg or env
         self.task_graph_path: Path | None
         if task_graph_path:
             self.task_graph_path = Path(task_graph_path)
         else:
-            env_path = os.environ.get("ZERG_TASK_GRAPH")
+            env_path = os.environ.get("MAHABHARATHA_TASK_GRAPH")
             self.task_graph_path = Path(env_path) if env_path else None
 
-        self.config = config or ZergConfig.load()
+        self.config = config or MahabharathaConfig.load()
         self.context_threshold = self.config.context_threshold
 
         # Initialize components
-        # Use ZERG_STATE_DIR from env if set (workers run in worktrees, need main repo state)
-        state_dir = os.environ.get("ZERG_STATE_DIR")
+        # Use MAHABHARATHA_STATE_DIR from env if set (workers run in worktrees, need main repo state)
+        state_dir = os.environ.get("MAHABHARATHA_STATE_DIR")
         self.state = StateManager(self.feature, state_dir=state_dir)
         self.verifier = VerificationExecutor()
         self.git = GitOps(self.worktree_path)
@@ -113,7 +113,7 @@ class WorkerProtocol:
             logger.debug("Initialized DependencyChecker for task claiming")
 
         # Spec loader for feature context injection
-        spec_dir = os.environ.get("ZERG_SPEC_DIR")
+        spec_dir = os.environ.get("MAHABHARATHA_SPEC_DIR")
         if spec_dir:
             # Use parent of spec_dir as GSD root (spec_dir is .gsd/specs/{feature})
             gsd_root = Path(spec_dir).parent.parent
@@ -137,7 +137,7 @@ class WorkerProtocol:
         set_worker_context(worker_id=self.worker_id, feature=self.feature)
 
         # Set up structured JSONL logging
-        log_dir = os.environ.get("ZERG_LOG_DIR", ".mahabharatha/logs")
+        log_dir = os.environ.get("MAHABHARATHA_LOG_DIR", ".mahabharatha/logs")
         self._structured_writer = None
         try:
             self._structured_writer = setup_structured_logging(

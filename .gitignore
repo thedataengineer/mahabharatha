@@ -1,9 +1,9 @@
-# ZERG Factory
-.zerg-worktrees/
-.zerg/worktrees/
-.zerg/logs/
-.zerg/*.pid
-.zerg/.current-feature
+# MAHABHARATHA Factory
+.mahabharatha-worktrees/
+.mahabharatha/worktrees/
+.mahabharatha/logs/
+.mahabharatha/*.pid
+.mahabharatha/.current-feature
 .zerg/schemas/archived/
 .gsd/specs/test-feat/worker-assignments.json
 .factory/temp/
@@ -63,7 +63,7 @@ yarn-error.log*
 # Archives
 *.zip
 *.tar.gz
-.zerg/state/
+.mahabharatha/state/
 .git-worktree/
 .git-local/
 .claude/settings.json

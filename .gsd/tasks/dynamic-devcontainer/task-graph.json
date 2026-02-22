@@ -188,7 +188,7 @@
       "estimate_minutes": 20,
       "critical_path": false,
       "verification": {
-        "command": "python -c \"from mahabharatha.orchestrator import Orchestrator; from mahabharatha.config import ZergConfig; c = ZergConfig(); print(hasattr(Orchestrator, '_create_launcher'))\"",
+        "command": "python -c \"from mahabharatha.orchestrator import Orchestrator; from mahabharatha.config import MahabharathaConfig; c = MahabharathaConfig(); print(hasattr(Orchestrator, '_create_launcher'))\"",
         "expected": "True"
       },
       "acceptance_criteria": [

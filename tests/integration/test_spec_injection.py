@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 import pytest
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.protocol_state import WorkerProtocol
 from mahabharatha.spec_loader import SpecLoader
 
@@ -16,9 +16,9 @@ class TestSpecInjection:
     """Integration tests for GSD spec injection into worker prompts."""
 
     @pytest.fixture
-    def mock_config(self) -> ZergConfig:
-        """Create a mock ZergConfig for testing."""
-        return ZergConfig()
+    def mock_config(self) -> MahabharathaConfig:
+        """Create a mock MahabharathaConfig for testing."""
+        return MahabharathaConfig()
 
     @pytest.fixture
     def temp_workspace(self, tmp_path: Path) -> Path:
@@ -99,15 +99,15 @@ class TestSpecInjection:
         assert "---" in context
 
     def test_worker_protocol_loads_specs(
-        self, temp_workspace: Path, feature_specs: Path, mock_config: ZergConfig
+        self, temp_workspace: Path, feature_specs: Path, mock_config: MahabharathaConfig
     ) -> None:
         """Test that WorkerProtocol loads specs on initialization."""
         env = {
-            "ZERG_WORKER_ID": "1",
-            "ZERG_FEATURE": "test-feature",
-            "ZERG_WORKTREE": str(temp_workspace),
-            "ZERG_BRANCH": "mahabharatha/test-feature/worker-1",
-            "ZERG_SPEC_DIR": str(feature_specs),
+            "MAHABHARATHA_WORKER_ID": "1",
+            "MAHABHARATHA_FEATURE": "test-feature",
+            "MAHABHARATHA_WORKTREE": str(temp_workspace),
+            "MAHABHARATHA_BRANCH": "mahabharatha/test-feature/worker-1",
+            "MAHABHARATHA_SPEC_DIR": str(feature_specs),
         }
 
         with patch.dict(os.environ, env, clear=False):
@@ -122,15 +122,15 @@ class TestSpecInjection:
             assert "# Feature Context: test-feature" in protocol._spec_context
 
     def test_worker_prompt_includes_spec_context(
-        self, temp_workspace: Path, feature_specs: Path, mock_config: ZergConfig
+        self, temp_workspace: Path, feature_specs: Path, mock_config: MahabharathaConfig
     ) -> None:
         """Test that worker prompts include spec context as prefix."""
         env = {
-            "ZERG_WORKER_ID": "1",
-            "ZERG_FEATURE": "test-feature",
-            "ZERG_WORKTREE": str(temp_workspace),
-            "ZERG_BRANCH": "mahabharatha/test-feature/worker-1",
-            "ZERG_SPEC_DIR": str(feature_specs),
+            "MAHABHARATHA_WORKER_ID": "1",
+            "MAHABHARATHA_FEATURE": "test-feature",
+            "MAHABHARATHA_WORKTREE": str(temp_workspace),
+            "MAHABHARATHA_BRANCH": "mahabharatha/test-feature/worker-1",
+            "MAHABHARATHA_SPEC_DIR": str(feature_specs),
         }
 
         with patch.dict(os.environ, env, clear=False):
@@ -163,7 +163,7 @@ class TestSpecInjection:
             assert "Design Decisions" in prompt
             assert "Create auth service" in prompt
 
-    def test_worker_prompt_without_specs(self, tmp_path: Path, mock_config: ZergConfig) -> None:
+    def test_worker_prompt_without_specs(self, tmp_path: Path, mock_config: MahabharathaConfig) -> None:
         """Test that prompts work when no specs exist."""
         workspace = tmp_path / "workspace"
         workspace.mkdir()
@@ -180,10 +180,10 @@ class TestSpecInjection:
         (mahabharatha / "state").mkdir()
 
         env = {
-            "ZERG_WORKER_ID": "1",
-            "ZERG_FEATURE": "no-specs-feature",
-            "ZERG_WORKTREE": str(workspace),
-            "ZERG_BRANCH": "mahabharatha/no-specs/worker-1",
+            "MAHABHARATHA_WORKER_ID": "1",
+            "MAHABHARATHA_FEATURE": "no-specs-feature",
+            "MAHABHARATHA_WORKTREE": str(workspace),
+            "MAHABHARATHA_BRANCH": "mahabharatha/no-specs/worker-1",
         }
 
         with patch.dict(os.environ, env, clear=False):
@@ -204,21 +204,21 @@ class TestSpecInjection:
             assert prompt.strip().startswith("# Task:")
 
     def test_spec_dir_env_variable_used(
-        self, temp_workspace: Path, feature_specs: Path, mock_config: ZergConfig
+        self, temp_workspace: Path, feature_specs: Path, mock_config: MahabharathaConfig
     ) -> None:
-        """Test that ZERG_SPEC_DIR environment variable is used."""
+        """Test that MAHABHARATHA_SPEC_DIR environment variable is used."""
         env = {
-            "ZERG_WORKER_ID": "1",
-            "ZERG_FEATURE": "test-feature",
-            "ZERG_WORKTREE": str(temp_workspace),
-            "ZERG_BRANCH": "mahabharatha/test-feature/worker-1",
-            "ZERG_SPEC_DIR": str(feature_specs),
+            "MAHABHARATHA_WORKER_ID": "1",
+            "MAHABHARATHA_FEATURE": "test-feature",
+            "MAHABHARATHA_WORKTREE": str(temp_workspace),
+            "MAHABHARATHA_BRANCH": "mahabharatha/test-feature/worker-1",
+            "MAHABHARATHA_SPEC_DIR": str(feature_specs),
         }
 
         with patch.dict(os.environ, env, clear=False):
             protocol = WorkerProtocol(config=mock_config)
 
-            # Spec loader should have been configured from ZERG_SPEC_DIR
+            # Spec loader should have been configured from MAHABHARATHA_SPEC_DIR
             assert protocol.spec_loader is not None
             assert protocol._spec_context != ""
 
@@ -292,23 +292,23 @@ class TestSpecInjectionEdgeCases:
 
 
 class TestLauncherSpecDirEnv:
-    """Test that launcher passes ZERG_SPEC_DIR to workers."""
+    """Test that launcher passes MAHABHARATHA_SPEC_DIR to workers."""
 
     def test_subprocess_launcher_sets_spec_dir(self) -> None:
-        """Verify SubprocessLauncher includes ZERG_SPEC_DIR in env."""
+        """Verify SubprocessLauncher includes MAHABHARATHA_SPEC_DIR in env."""
         from mahabharatha.env_validator import ALLOWED_ENV_VARS
 
-        assert "ZERG_SPEC_DIR" in ALLOWED_ENV_VARS
+        assert "MAHABHARATHA_SPEC_DIR" in ALLOWED_ENV_VARS
 
     def test_subprocess_launcher_spawn_env(self) -> None:
-        """Verify spawn builds correct ZERG_SPEC_DIR path."""
+        """Verify spawn builds correct MAHABHARATHA_SPEC_DIR path."""
         from pathlib import Path
 
         # We can't actually spawn, but we can verify the env building logic
         # by checking the code path in _build_task_prompt
 
         # The launcher should construct:
-        # ZERG_SPEC_DIR = worktree_path / ".gsd" / "specs" / feature
+        # MAHABHARATHA_SPEC_DIR = worktree_path / ".gsd" / "specs" / feature
         worktree = Path("/test/worktree")
         feature = "my-feature"
         expected = str(worktree / ".gsd" / "specs" / feature)

@@ -43,8 +43,8 @@ class ContextEngineeringPlugin(ContextPlugin):
 
     @staticmethod
     def _init_formatter() -> CompactFormatter | None:
-        """Create a CompactFormatter when ZERG_COMPACT_MODE is active."""
-        compact = os.environ.get("ZERG_COMPACT_MODE", "")
+        """Create a CompactFormatter when MAHABHARATHA_COMPACT_MODE is active."""
+        compact = os.environ.get("MAHABHARATHA_COMPACT_MODE", "")
         if compact in ("1", "true"):
             return CompactFormatter(use_symbols=True, use_abbreviations=True)
         return None
@@ -201,7 +201,7 @@ class ContextEngineeringPlugin(ContextPlugin):
 
         assembled = "\n\n".join(sections)
 
-        # Apply compact formatting when ZERG_COMPACT_MODE is active
+        # Apply compact formatting when MAHABHARATHA_COMPACT_MODE is active
         if self._formatter is not None:
             try:
                 assembled = self._formatter.abbreviate(assembled)
@@ -229,7 +229,7 @@ class ContextEngineeringPlugin(ContextPlugin):
             counter = TokenCounter()
             tracker = TokenTracker()
 
-            worker_id = os.environ.get("ZERG_WORKER_ID", "unknown")
+            worker_id = os.environ.get("MAHABHARATHA_WORKER_ID", "unknown")
             task_id = task.get("id", "unknown")
 
             breakdown: dict[str, int] = {}
@@ -244,8 +244,8 @@ class ContextEngineeringPlugin(ContextPlugin):
             logger.debug("Token metric recording failed", exc_info=True)
 
     def _build_depth_section(self, max_tokens: int) -> str:
-        """Inject analysis depth guidance from ZERG_ANALYSIS_DEPTH env var."""
-        depth = os.environ.get("ZERG_ANALYSIS_DEPTH", "")
+        """Inject analysis depth guidance from MAHABHARATHA_ANALYSIS_DEPTH env var."""
+        depth = os.environ.get("MAHABHARATHA_ANALYSIS_DEPTH", "")
         if not depth or depth == "standard":
             return ""
 
@@ -268,8 +268,8 @@ class ContextEngineeringPlugin(ContextPlugin):
         return f"## Analysis Depth: {depth}\n\nToken budget: {budget}\n{hint}"
 
     def _build_mode_section(self, max_tokens: int) -> str:
-        """Inject behavioral mode instructions from ZERG_BEHAVIORAL_MODE env var."""
-        mode = os.environ.get("ZERG_BEHAVIORAL_MODE", "")
+        """Inject behavioral mode instructions from MAHABHARATHA_BEHAVIORAL_MODE env var."""
+        mode = os.environ.get("MAHABHARATHA_BEHAVIORAL_MODE", "")
         if not mode or mode == "precision":
             return ""
 
@@ -286,8 +286,8 @@ class ContextEngineeringPlugin(ContextPlugin):
         return f"## Behavioral Mode: {mode}\n\n{instruction}"
 
     def _build_tdd_section(self, max_tokens: int) -> str:
-        """Inject TDD enforcement workflow from ZERG_TDD_MODE env var."""
-        tdd = os.environ.get("ZERG_TDD_MODE", "")
+        """Inject TDD enforcement workflow from MAHABHARATHA_TDD_MODE env var."""
+        tdd = os.environ.get("MAHABHARATHA_TDD_MODE", "")
         if tdd != "1":
             return ""
 
@@ -301,8 +301,8 @@ class ContextEngineeringPlugin(ContextPlugin):
         )
 
     def _build_efficiency_section(self) -> str:
-        """Inject token efficiency hints from ZERG_COMPACT_MODE env var."""
-        compact = os.environ.get("ZERG_COMPACT_MODE", "")
+        """Inject token efficiency hints from MAHABHARATHA_COMPACT_MODE env var."""
+        compact = os.environ.get("MAHABHARATHA_COMPACT_MODE", "")
         if compact != "1":
             return ""
 
@@ -416,7 +416,7 @@ class ContextEngineeringPlugin(ContextPlugin):
             extensions = list({Path(f).suffix for f in file_paths if Path(f).suffix})
 
             # Use resolved depth tier if available
-            depth_tier = os.environ.get("ZERG_ANALYSIS_DEPTH")
+            depth_tier = os.environ.get("MAHABHARATHA_ANALYSIS_DEPTH")
 
             decision = router.route(
                 task_description=task.get("description", ""),

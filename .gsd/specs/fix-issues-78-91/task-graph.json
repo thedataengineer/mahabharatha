@@ -199,7 +199,7 @@
     {
       "id": "T-010",
       "title": "Wire CompactFormatter into context_plugin (#78 part 2)",
-      "description": "Import CompactFormatter, apply when ZERG_COMPACT_MODE is true to compress task context output.",
+      "description": "Import CompactFormatter, apply when MAHABHARATHA_COMPACT_MODE is true to compress task context output.",
       "phase": "capability-wiring",
       "level": 2,
       "dependencies": ["T-006", "T-007", "T-008"],

@@ -54,11 +54,11 @@ all = ["mahabharatha-ai[dev]", "mahabharatha-ai[metrics]", "mahabharatha-ai[perf
 mahabharatha = "mahabharatha.cli:cli"
 
 [project.urls]
-Homepage = "https://github.com/rocklambros/mahabharatha"
-Documentation = "https://github.com/rocklambros/mahabharatha/wiki"
-Repository = "https://github.com/rocklambros/mahabharatha"
-Issues = "https://github.com/rocklambros/mahabharatha/issues"
-Changelog = "https://github.com/rocklambros/mahabharatha/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/thedataengineer/mahabharatha"
+Documentation = "https://github.com/thedataengineer/mahabharatha/wiki"
+Repository = "https://github.com/thedataengineer/mahabharatha"
+Issues = "https://github.com/thedataengineer/mahabharatha/issues"
+Changelog = "https://github.com/thedataengineer/mahabharatha/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 where = ["."]

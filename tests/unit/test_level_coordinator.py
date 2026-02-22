@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.config import MahabharathaConfig, QualityGate
 from mahabharatha.constants import GateResult, LevelMergeStatus
 from mahabharatha.gates import GateRunner
 from mahabharatha.level_coordinator import GatePipeline, LevelCoordinator
@@ -22,7 +22,7 @@ from mahabharatha.types import GateRunResult, WorkerState
 
 @pytest.fixture
 def mock_config():
-    config = MagicMock(spec=ZergConfig)
+    config = MagicMock(spec=MahabharathaConfig)
     config.merge_timeout_seconds = 10
     config.merge_max_retries = 2
     # Set kurukshetra config for immediate merge behavior (tests expect this)

@@ -11,7 +11,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.config import MahabharathaConfig, QualityGate
 from mahabharatha.constants import GateResult
 from mahabharatha.dryrun import (
     DryRunReport,
@@ -73,15 +73,15 @@ def valid_task_graph() -> dict[str, Any]:
 
 
 @pytest.fixture
-def default_config() -> ZergConfig:
-    """A default ZergConfig with no quality gates."""
-    return ZergConfig()
+def default_config() -> MahabharathaConfig:
+    """A default MahabharathaConfig with no quality gates."""
+    return MahabharathaConfig()
 
 
 @pytest.fixture
-def config_with_gates() -> ZergConfig:
-    """A ZergConfig with quality gates configured."""
-    return ZergConfig(
+def config_with_gates() -> MahabharathaConfig:
+    """A MahabharathaConfig with quality gates configured."""
+    return MahabharathaConfig(
         quality_gates=[
             QualityGate(name="lint", command="ruff check .", required=True),
             QualityGate(name="typecheck", command="mypy .", required=False),
@@ -97,7 +97,7 @@ def config_with_gates() -> ZergConfig:
 class TestBasicSimulation:
     """Tests for the happy-path simulation."""
 
-    def test_basic_simulation(self, valid_task_graph: dict[str, Any], default_config: ZergConfig) -> None:
+    def test_basic_simulation(self, valid_task_graph: dict[str, Any], default_config: MahabharathaConfig) -> None:
         """A valid task graph produces a report with no errors."""
         sim = DryRunSimulator(
             task_data=valid_task_graph,
@@ -132,7 +132,7 @@ class TestBasicSimulation:
 class TestLevelStructureValidation:
     """Tests for _validate_level_structure."""
 
-    def test_level_gap_warning(self, default_config: ZergConfig) -> None:
+    def test_level_gap_warning(self, default_config: MahabharathaConfig) -> None:
         """Non-contiguous levels produce a warning."""
         task_data = {
             "feature": "gap-test",
@@ -179,7 +179,7 @@ class TestLevelStructureValidation:
 class TestFileOwnershipValidation:
     """Tests for _validate_file_ownership."""
 
-    def test_file_ownership_conflict(self, default_config: ZergConfig) -> None:
+    def test_file_ownership_conflict(self, default_config: MahabharathaConfig) -> None:
         """Duplicate file claims are detected."""
         task_data = {
             "feature": "conflict-test",
@@ -224,7 +224,7 @@ class TestFileOwnershipValidation:
 class TestDependencyValidation:
     """Tests for _validate_dependencies."""
 
-    def test_dependency_cycle(self, default_config: ZergConfig) -> None:
+    def test_dependency_cycle(self, default_config: MahabharathaConfig) -> None:
         """Cycle in dependencies is detected."""
         task_data = {
             "feature": "cycle-test",
@@ -269,7 +269,7 @@ class TestDependencyValidation:
 class TestMissingVerifications:
     """Tests for _check_missing_verifications."""
 
-    def test_missing_verification(self, default_config: ZergConfig) -> None:
+    def test_missing_verification(self, default_config: MahabharathaConfig) -> None:
         """Tasks without verification command produce warnings."""
         task_data = {
             "feature": "no-verify",
@@ -314,7 +314,7 @@ class TestMissingVerifications:
 class TestTimeline:
     """Tests for _compute_timeline."""
 
-    def test_timeline_single_level(self, default_config: ZergConfig) -> None:
+    def test_timeline_single_level(self, default_config: MahabharathaConfig) -> None:
         """Wall time for a single level equals max worker load."""
         task_data = {
             "feature": "single-level",
@@ -356,7 +356,7 @@ class TestTimeline:
         assert timeline.estimated_wall_minutes == 20
         assert timeline.total_sequential_minutes == 30
 
-    def test_timeline_multi_level(self, valid_task_graph: dict[str, Any], default_config: ZergConfig) -> None:
+    def test_timeline_multi_level(self, valid_task_graph: dict[str, Any], default_config: MahabharathaConfig) -> None:
         """Wall time across levels sums per-level max."""
         sim = DryRunSimulator(
             task_data=valid_task_graph,
@@ -375,7 +375,7 @@ class TestTimeline:
         assert timeline.estimated_wall_minutes == 35
         assert timeline.total_sequential_minutes == 45
 
-    def test_timeline_efficiency(self, default_config: ZergConfig) -> None:
+    def test_timeline_efficiency(self, default_config: MahabharathaConfig) -> None:
         """Efficiency is sequential / (wall * workers)."""
         task_data = {
             "feature": "efficiency",
@@ -427,7 +427,7 @@ class TestResourceChecks:
 
     def test_resource_no_git(
         self,
-        default_config: ZergConfig,
+        default_config: MahabharathaConfig,
         tmp_path: Path,
         monkeypatch: pytest.MonkeyPatch,
     ) -> None:
@@ -453,7 +453,7 @@ class TestResourceChecks:
 class TestQualityGates:
     """Tests for _check_quality_gates."""
 
-    def test_gates_not_run(self, config_with_gates: ZergConfig) -> None:
+    def test_gates_not_run(self, config_with_gates: MahabharathaConfig) -> None:
         """Default (run_gates=False) lists gates as not_run."""
         task_data = {"feature": "gates", "tasks": [], "levels": {}}
         sim = DryRunSimulator(
@@ -472,7 +472,7 @@ class TestQualityGates:
         assert results[1].required is False
 
     @patch("mahabharatha.dryrun.GateRunner")
-    def test_gates_run(self, mock_runner_cls: MagicMock, config_with_gates: ZergConfig) -> None:
+    def test_gates_run(self, mock_runner_cls: MagicMock, config_with_gates: MahabharathaConfig) -> None:
         """run_gates=True calls GateRunner."""
         mock_runner = MagicMock()
         mock_runner_cls.return_value = mock_runner
@@ -590,7 +590,7 @@ class TestRender:
     def test_render_sections(
         self,
         valid_task_graph: dict[str, Any],
-        default_config: ZergConfig,
+        default_config: MahabharathaConfig,
         capsys: pytest.CaptureFixture[str],
     ) -> None:
         """Output contains panel headers for all sections."""
@@ -613,7 +613,7 @@ class TestRender:
     def test_render_includes_preflight(
         self,
         valid_task_graph: dict[str, Any],
-        default_config: ZergConfig,
+        default_config: MahabharathaConfig,
         capsys: pytest.CaptureFixture[str],
     ) -> None:
         """Output contains Pre-flight panel."""
@@ -631,7 +631,7 @@ class TestRender:
     def test_render_includes_risk(
         self,
         valid_task_graph: dict[str, Any],
-        default_config: ZergConfig,
+        default_config: MahabharathaConfig,
         capsys: pytest.CaptureFixture[str],
     ) -> None:
         """Output contains Risk Assessment panel."""
@@ -649,7 +649,7 @@ class TestRender:
     def test_render_includes_gantt(
         self,
         valid_task_graph: dict[str, Any],
-        default_config: ZergConfig,
+        default_config: MahabharathaConfig,
         capsys: pytest.CaptureFixture[str],
     ) -> None:
         """Output contains Gantt Timeline panel."""
@@ -667,7 +667,7 @@ class TestRender:
     def test_render_includes_snapshots(
         self,
         valid_task_graph: dict[str, Any],
-        default_config: ZergConfig,
+        default_config: MahabharathaConfig,
         capsys: pytest.CaptureFixture[str],
     ) -> None:
         """Output contains Projected Snapshots panel."""
@@ -694,7 +694,7 @@ class TestPreflightIntegration:
     def test_preflight_report_included(
         self,
         valid_task_graph: dict[str, Any],
-        default_config: ZergConfig,
+        default_config: MahabharathaConfig,
     ) -> None:
         """Simulator populates preflight report."""
         sim = DryRunSimulator(
@@ -734,7 +734,7 @@ class TestRiskIntegration:
     def test_risk_report_included(
         self,
         valid_task_graph: dict[str, Any],
-        default_config: ZergConfig,
+        default_config: MahabharathaConfig,
     ) -> None:
         """Simulator populates risk report."""
         sim = DryRunSimulator(

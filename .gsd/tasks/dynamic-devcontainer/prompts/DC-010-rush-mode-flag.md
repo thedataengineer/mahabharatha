@@ -69,7 +69,7 @@ def kurukshetra(
 ```python
     try:
         # Load configuration
-        config = ZergConfig.load()
+        config = MahabharathaConfig.load()
 
         # Override launcher type if mode specified
         if mode != "auto":
@@ -134,8 +134,8 @@ def show_dry_run(task_data: dict, workers: int, feature: str, mode: str = "auto"
     # Show mode status
     if mode == "auto" or mode == "container":
         from mahabharatha.orchestrator import Orchestrator
-        from mahabharatha.config import ZergConfig
-        orch = Orchestrator(feature, ZergConfig())
+        from mahabharatha.config import MahabharathaConfig
+        orch = Orchestrator(feature, MahabharathaConfig())
         available, reason = orch.container_mode_available()
         if mode == "container" and not available:
             console.print(f"[yellow]Warning:[/yellow] Container mode requested but: {reason}")

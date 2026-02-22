@@ -24,7 +24,7 @@ from mahabharatha.commands.debug import (
 )
 from mahabharatha.diagnostics.log_analyzer import LogPattern
 from mahabharatha.diagnostics.recovery import RecoveryPlan, RecoveryStep
-from mahabharatha.diagnostics.state_introspector import ZergHealthReport
+from mahabharatha.diagnostics.state_introspector import MahabharathaHealthReport
 from mahabharatha.diagnostics.system_diagnostics import SystemHealthReport
 
 
@@ -143,7 +143,7 @@ class TestDiagnosticResultExtended:
             hypotheses=[],
             root_cause="C",
             recommendation="F",
-            mahabharatha_health=ZergHealthReport(feature="test", state_exists=True, total_tasks=5),
+            mahabharatha_health=MahabharathaHealthReport(feature="test", state_exists=True, total_tasks=5),
             system_health=SystemHealthReport(git_clean=False, git_branch="main"),
             recovery_plan=RecoveryPlan(
                 problem="P", root_cause="C", steps=[RecoveryStep(description="S", command="cmd")]

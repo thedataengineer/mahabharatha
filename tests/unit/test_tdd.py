@@ -6,7 +6,7 @@ import pytest
 from click.testing import CliRunner
 
 from mahabharatha.cli import cli
-from mahabharatha.config import TDDConfig, ZergConfig
+from mahabharatha.config import MahabharathaConfig, TDDConfig
 from mahabharatha.tdd import (
     TDDAntiPattern,
     TDDCycleResult,
@@ -249,10 +249,10 @@ class TestTDDConfig:
         assert "mock_heavy" in config.anti_patterns
 
     def test_mahabharatha_config_tdd_roundtrip(self) -> None:
-        config = ZergConfig()
+        config = MahabharathaConfig()
         config.tdd.enabled = True
         d = config.to_dict()
-        loaded = ZergConfig.from_dict(d)
+        loaded = MahabharathaConfig.from_dict(d)
         assert loaded.tdd.enabled is True
 
 

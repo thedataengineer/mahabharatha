@@ -13,11 +13,11 @@
 
 ### 1.1 Summary
 
-This feature adds caching layers to MAHABHARATHA's four most I/O-intensive subsystems: ZergConfig loading, LogAggregator file reads, TokenCounter lookups, and RepoMap AST parsing. Each cache uses mtime or TTL invalidation, thread-safe access via `threading.Lock`, and bounded memory via LRU eviction where appropriate.
+This feature adds caching layers to MAHABHARATHA's four most I/O-intensive subsystems: MahabharathaConfig loading, LogAggregator file reads, TokenCounter lookups, and RepoMap AST parsing. Each cache uses mtime or TTL invalidation, thread-safe access via `threading.Lock`, and bounded memory via LRU eviction where appropriate.
 
 ### 1.2 Goals
 
-- Reduce ZergConfig load time from 250ms+ to <5ms (cached)
+- Reduce MahabharathaConfig load time from 250ms+ to <5ms (cached)
 - Reduce LogAggregator query time from 500ms+ to <10ms (cached)
 - Reduce directory traversal from 600ms-3s to 100-500ms via single-pass collection
 - Reduce RepoMap build time from 2-5s to <100ms (cached)
@@ -44,7 +44,7 @@ This feature adds caching layers to MAHABHARATHA's four most I/O-intensive subsy
          │                    │                    │
          ▼                    ▼                    ▼
 ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-│   ZergConfig    │  │  LogAggregator  │  │    RepoMap      │
+│   MahabharathaConfig    │  │  LogAggregator  │  │    RepoMap      │
 │   (Singleton)   │  │  (Per-file LRU) │  │   (TTL Cache)   │
 ├─────────────────┤  ├─────────────────┤  ├─────────────────┤
 │ • mtime check   │  │ • mtime/file    │  │ • 30s TTL       │
@@ -81,7 +81,7 @@ This feature adds caching layers to MAHABHARATHA's four most I/O-intensive subsy
 
 | Component | Responsibility | Files |
 |-----------|----------------|-------|
-| ZergConfig Singleton | Cache config with mtime invalidation | `mahabharatha/config.py` |
+| MahabharathaConfig Singleton | Cache config with mtime invalidation | `mahabharatha/config.py` |
 | LogAggregator Cache | Per-file mtime cache with LRU | `mahabharatha/log_aggregator.py` |
 | TokenCounter Memory | In-memory cache with LRU, file persist | `mahabharatha/token_counter.py` |
 | RepoMap TTL Cache | 30s TTL cache for SymbolGraph | `mahabharatha/repo_map.py` |
@@ -89,7 +89,7 @@ This feature adds caching layers to MAHABHARATHA's four most I/O-intensive subsy
 
 ### 2.3 Data Flow
 
-**ZergConfig:**
+**MahabharathaConfig:**
 ```
 load() → check _cache_mtime vs file mtime → hit: return cached | miss: parse YAML, store
 ```
@@ -113,20 +113,20 @@ build_map() → check _cache_time vs now - TTL → hit: return cached | miss: bu
 
 ## 3. Detailed Design
 
-### 3.1 ZergConfig Singleton (FR-1)
+### 3.1 MahabharathaConfig Singleton (FR-1)
 
 ```python
 # mahabharatha/config.py additions
 
-class ZergConfig(BaseModel):
+class MahabharathaConfig(BaseModel):
     # Class-level cache
-    _cached_instance: ClassVar["ZergConfig | None"] = None
+    _cached_instance: ClassVar["MahabharathaConfig | None"] = None
     _cache_mtime: ClassVar[float | None] = None
     _cache_path: ClassVar[Path | None] = None
     _cache_lock: ClassVar[threading.Lock] = threading.Lock()
 
     @classmethod
-    def load(cls, config_path: str | Path | None = None, force_reload: bool = False) -> "ZergConfig":
+    def load(cls, config_path: str | Path | None = None, force_reload: bool = False) -> "MahabharathaConfig":
         """Load configuration with mtime-based caching.
 
         Args:
@@ -134,7 +134,7 @@ class ZergConfig(BaseModel):
             force_reload: Bypass cache and force reload from disk
 
         Returns:
-            ZergConfig instance (cached if valid)
+            MahabharathaConfig instance (cached if valid)
         """
         config_path = Path(".mahabharatha/config.yaml") if config_path is None else Path(config_path)
 
@@ -145,13 +145,13 @@ class ZergConfig(BaseModel):
                     try:
                         current_mtime = config_path.stat().st_mtime
                         if current_mtime == cls._cache_mtime:
-                            logger.debug("Cache hit for ZergConfig")
+                            logger.debug("Cache hit for MahabharathaConfig")
                             return cls._cached_instance
                     except FileNotFoundError:
                         pass
 
             # Cache miss or invalid
-            logger.debug("Cache miss for ZergConfig, loading from %s", config_path)
+            logger.debug("Cache miss for MahabharathaConfig, loading from %s", config_path)
 
             if not config_path.exists():
                 instance = cls()
@@ -177,7 +177,7 @@ class ZergConfig(BaseModel):
             cls._cached_instance = None
             cls._cache_mtime = None
             cls._cache_path = None
-            logger.debug("Invalidating cache for ZergConfig")
+            logger.debug("Invalidating cache for MahabharathaConfig")
 ```
 
 ### 3.2 LogAggregator Per-File Cache (FR-2)
@@ -566,7 +566,7 @@ def _collect_files(root: Path, languages: list[str]) -> list[Path]:
 
 ```mermaid
 graph TD
-    T001[TASK-001: ZergConfig Caching] --> T006[TASK-006: Config Tests]
+    T001[TASK-001: MahabharathaConfig Caching] --> T006[TASK-006: Config Tests]
     T002[TASK-002: LogAggregator Caching] --> T007[TASK-007: LogAgg Tests]
     T003[TASK-003: TokenCounter Memory] --> T008[TASK-008: TokenCounter Tests]
     T004[TASK-004: RepoMap Caching] --> T009[TASK-009: RepoMap Tests]
@@ -610,7 +610,7 @@ graph TD
 
 | Task | Command |
 |------|---------|
-| TASK-001 | `python -c "from mahabharatha.config import ZergConfig; c1=ZergConfig.load(); c2=ZergConfig.load(); assert c1 is c2"` |
+| TASK-001 | `python -c "from mahabharatha.config import MahabharathaConfig; c1=MahabharathaConfig.load(); c2=MahabharathaConfig.load(); assert c1 is c2"` |
 | TASK-002 | `python -c "from mahabharatha.log_aggregator import LogAggregator; la=LogAggregator('.mahabharatha/logs'); la.query(); la.query()"` |
 | TASK-003 | `python -c "from mahabharatha.token_counter import TokenCounter; tc=TokenCounter(); tc.count('test'); tc.count('test')"` |
 | TASK-004 | `python -c "from mahabharatha.repo_map import build_map, invalidate_cache; build_map('.'); invalidate_cache()"` |

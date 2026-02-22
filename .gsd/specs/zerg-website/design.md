@@ -12,7 +12,7 @@
 ## 1. Overview
 
 ### 1.1 Summary
-Single-page landing site replacing the MkDocs homepage at `rocklambros.github.io/mahabharatha/`. Pure HTML + Tailwind CDN + vanilla JS. Dark-first with light mode toggle. 9 sections (sticky nav, hero + 4 glass pillars, why, how, commands, quick start, stats, FAQ, footer). Deployed via modified GitHub Actions workflow. Existing markdown docs preserved at sub-paths.
+Single-page landing site replacing the MkDocs homepage at `thedataengineer.github.io/mahabharatha/`. Pure HTML + Tailwind CDN + vanilla JS. Dark-first with light mode toggle. 9 sections (sticky nav, hero + 4 glass pillars, why, how, commands, quick start, stats, FAQ, footer). Deployed via modified GitHub Actions workflow. Existing markdown docs preserved at sub-paths.
 
 ### 1.2 Goals
 - Visually compelling landing page communicating MAHABHARATHA's value proposition
@@ -57,7 +57,7 @@ docs/
 ```
 ┌──────────────────────────────────────────────────────┐
 │                  GitHub Pages CDN                     │
-│    rocklambros.github.io/mahabharatha/                       │
+│    thedataengineer.github.io/mahabharatha/                       │
 ├──────────────────────────────────────────────────────┤
 │  index.html ──→ Tailwind Play CDN (pinned v3.4.17)  │
 │       │                                               │
@@ -82,7 +82,7 @@ docs/
 
 ### 2.3 Data Flow
 
-1. User visits `rocklambros.github.io/mahabharatha/` → GitHub Pages serves `docs/index.html`
+1. User visits `thedataengineer.github.io/mahabharatha/` → GitHub Pages serves `docs/index.html`
 2. Browser loads Tailwind Play CDN (pinned version) → applies utility classes
 3. Browser loads `custom.css` → applies glassmorphism, CSS variables, animations
 4. Browser loads `main.js` → initializes dark/light from localStorage, registers IntersectionObservers, binds event listeners

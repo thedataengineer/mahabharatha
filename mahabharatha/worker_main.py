@@ -24,29 +24,29 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--worker-id",
         type=int,
-        default=int(os.environ.get("ZERG_WORKER_ID", "0")),
-        help="Worker identifier (default: from ZERG_WORKER_ID env)",
+        default=int(os.environ.get("MAHABHARATHA_WORKER_ID", "0")),
+        help="Worker identifier (default: from MAHABHARATHA_WORKER_ID env)",
     )
 
     parser.add_argument(
         "--feature",
         type=str,
-        default=os.environ.get("ZERG_FEATURE", ""),
-        help="Feature name (default: from ZERG_FEATURE env)",
+        default=os.environ.get("MAHABHARATHA_FEATURE", ""),
+        help="Feature name (default: from MAHABHARATHA_FEATURE env)",
     )
 
     parser.add_argument(
         "--worktree",
         type=Path,
-        default=Path(os.environ.get("ZERG_WORKTREE", ".")),
-        help="Path to git worktree (default: from ZERG_WORKTREE env or current dir)",
+        default=Path(os.environ.get("MAHABHARATHA_WORKTREE", ".")),
+        help="Path to git worktree (default: from MAHABHARATHA_WORKTREE env or current dir)",
     )
 
     parser.add_argument(
         "--branch",
         type=str,
-        default=os.environ.get("ZERG_BRANCH", ""),
-        help="Git branch name (default: from ZERG_BRANCH env)",
+        default=os.environ.get("MAHABHARATHA_BRANCH", ""),
+        help="Git branch name (default: from MAHABHARATHA_BRANCH env)",
     )
 
     parser.add_argument(
@@ -104,14 +104,14 @@ def setup_environment(args: argparse.Namespace) -> dict[str, str]:
     env = os.environ.copy()
 
     # Set MAHABHARATHA-specific environment
-    env["ZERG_WORKER_ID"] = str(args.worker_id)
-    env["ZERG_FEATURE"] = args.feature
-    env["ZERG_WORKTREE"] = str(args.worktree.resolve())
+    env["MAHABHARATHA_WORKER_ID"] = str(args.worker_id)
+    env["MAHABHARATHA_FEATURE"] = args.feature
+    env["MAHABHARATHA_WORKTREE"] = str(args.worktree.resolve())
 
     if args.branch:
-        env["ZERG_BRANCH"] = args.branch
-    elif not env.get("ZERG_BRANCH"):
-        env["ZERG_BRANCH"] = f"mahabharatha/{args.feature}/worker-{args.worker_id}"
+        env["MAHABHARATHA_BRANCH"] = args.branch
+    elif not env.get("MAHABHARATHA_BRANCH"):
+        env["MAHABHARATHA_BRANCH"] = f"mahabharatha/{args.feature}/worker-{args.worker_id}"
 
     return env
 
@@ -128,7 +128,7 @@ def validate_setup(args: argparse.Namespace) -> list[str]:
     errors = []
 
     if not args.feature:
-        errors.append("Feature name required (--feature or ZERG_FEATURE env)")
+        errors.append("Feature name required (--feature or MAHABHARATHA_FEATURE env)")
 
     if not args.worktree.exists():
         errors.append(f"Worktree path does not exist: {args.worktree}")
@@ -160,25 +160,25 @@ def main() -> int:
     # Set up environment
     env = setup_environment(args)
     for key, value in env.items():
-        if key.startswith("ZERG_"):
+        if key.startswith("MAHABHARATHA_"):
             os.environ[key] = value
 
     # Log cross-cutting capability env vars at startup
     capability_vars = {
         k: v
         for k, v in os.environ.items()
-        if k.startswith("ZERG_")
+        if k.startswith("MAHABHARATHA_")
         and k
         not in (
-            "ZERG_WORKER_ID",
-            "ZERG_FEATURE",
-            "ZERG_WORKTREE",
-            "ZERG_BRANCH",
-            "ZERG_TASK_GRAPH",
-            "ZERG_SPEC_DIR",
-            "ZERG_STATE_DIR",
-            "ZERG_LOG_DIR",
-            "ZERG_PORT",
+            "MAHABHARATHA_WORKER_ID",
+            "MAHABHARATHA_FEATURE",
+            "MAHABHARATHA_WORKTREE",
+            "MAHABHARATHA_BRANCH",
+            "MAHABHARATHA_TASK_GRAPH",
+            "MAHABHARATHA_SPEC_DIR",
+            "MAHABHARATHA_STATE_DIR",
+            "MAHABHARATHA_LOG_DIR",
+            "MAHABHARATHA_PORT",
         )
     }
     if capability_vars:
@@ -190,7 +190,7 @@ def main() -> int:
         print(f"Worker {args.worker_id} validated successfully")
         print(f"  Feature: {args.feature}")
         print(f"  Worktree: {args.worktree}")
-        print(f"  Branch: {env.get('ZERG_BRANCH', 'unknown')}")
+        print(f"  Branch: {env.get('MAHABHARATHA_BRANCH', 'unknown')}")
         return 0
 
     # Import and run worker protocol
@@ -201,11 +201,11 @@ def main() -> int:
         # Resolve task graph path: explicit arg > env > auto-detect from spec dir
         task_graph_path = args.task_graph
         if not task_graph_path:
-            env_tg = os.environ.get("ZERG_TASK_GRAPH")
+            env_tg = os.environ.get("MAHABHARATHA_TASK_GRAPH")
             if env_tg:
                 task_graph_path = Path(env_tg)
             else:
-                spec_dir = os.environ.get("ZERG_SPEC_DIR")
+                spec_dir = os.environ.get("MAHABHARATHA_SPEC_DIR")
                 if spec_dir:
                     candidate = Path(spec_dir) / "task-graph.json"
                     if candidate.exists():

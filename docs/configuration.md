@@ -344,7 +344,7 @@ security:
 MAHABHARATHA controls which environment variables are passed to workers:
 
 **Allowed**:
-- `ZERG_WORKER_ID`, `ZERG_FEATURE`, `ZERG_WORKTREE`
+- `MAHABHARATHA_WORKER_ID`, `MAHABHARATHA_FEATURE`, `MAHABHARATHA_WORKTREE`
 - `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`
 - `CI`, `DEBUG`, `LOG_LEVEL`
 
@@ -564,12 +564,12 @@ error_recovery:
 
 | Variable | Description |
 |----------|-------------|
-| `ZERG_WORKER_ID` | Worker identifier (0-N) |
-| `ZERG_FEATURE` | Current feature name |
-| `ZERG_BRANCH` | Worker's git branch |
-| `ZERG_ANALYSIS_DEPTH` | Analysis depth tier (quick/standard/think/think_hard/ultrathink) |
-| `ZERG_COMPACT_MODE` | Compact output mode (true/false) |
-| `ZERG_MCP_HINT` | Recommended MCP servers for the task |
+| `MAHABHARATHA_WORKER_ID` | Worker identifier (0-N) |
+| `MAHABHARATHA_FEATURE` | Current feature name |
+| `MAHABHARATHA_BRANCH` | Worker's git branch |
+| `MAHABHARATHA_ANALYSIS_DEPTH` | Analysis depth tier (quick/standard/think/think_hard/ultrathink) |
+| `MAHABHARATHA_COMPACT_MODE` | Compact output mode (true/false) |
+| `MAHABHARATHA_MCP_HINT` | Recommended MCP servers for the task |
 | `CLAUDE_CODE_TASK_LIST_ID` | Shared task list for coordination |
 
 ### Optional
@@ -622,8 +622,8 @@ The devcontainer is configured at `.devcontainer/devcontainer.json`:
     "source=mahabharatha-claude-tasks,target=/root/.claude/tasks,type=volume"
   ],
   "containerEnv": {
-    "CLAUDE_CODE_TASK_LIST_ID": "${localEnv:ZERG_FEATURE}",
-    "ZERG_WORKER_ID": "${localEnv:ZERG_WORKER_ID:-0}"
+    "CLAUDE_CODE_TASK_LIST_ID": "${localEnv:MAHABHARATHA_FEATURE}",
+    "MAHABHARATHA_WORKER_ID": "${localEnv:MAHABHARATHA_WORKER_ID:-0}"
   }
 }
 ```

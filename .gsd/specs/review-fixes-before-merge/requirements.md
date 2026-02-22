@@ -68,7 +68,7 @@ env["GIT_SEQUENCE_EDITOR"] = f"python3 {shlex.quote(script_path)}"
 Requires `import shlex` at top of file (or verify existing).
 
 **FR-004 (verification only):**
-- `gh api repos/rocklambros/mahabharatha/code-scanning/alerts` confirms 0 open alerts for `cyclic-import` and `undefined-export` rules.
+- `gh api repos/thedataengineer/mahabharatha/code-scanning/alerts` confirms 0 open alerts for `cyclic-import` and `undefined-export` rules.
 - No code changes needed. Document as verified in CHANGELOG.
 
 ### 3.2 Business Rules

@@ -29,7 +29,7 @@ from mahabharatha.protocol_types import CLAUDE_CLI_DEFAULT_TIMEOUT
 from mahabharatha.types import Task
 
 if TYPE_CHECKING:
-    from mahabharatha.config import ZergConfig
+    from mahabharatha.config import MahabharathaConfig
     from mahabharatha.context_tracker import ContextTracker
     from mahabharatha.git_ops import GitOps
     from mahabharatha.log_writer import StructuredLogWriter
@@ -65,7 +65,7 @@ class ProtocolHandler:
         git: GitOps,
         verifier: VerificationExecutor,
         context_tracker: ContextTracker,
-        config: ZergConfig,
+        config: MahabharathaConfig,
         spec_context: str = "",
         structured_writer: StructuredLogWriter | None = None,
         plugin_registry: PluginRegistry | None = None,
@@ -142,7 +142,7 @@ class ProtocolHandler:
         task_start_time = time.time()
 
         # Set up artifact capture
-        log_dir = os.environ.get("Mahabharatha_LOG_DIR", ".mahabharatha/logs")
+        log_dir = os.environ.get("MAHABHARATHA_LOG_DIR", ".mahabharatha/logs")
         artifact = TaskArtifactCapture(log_dir, task_id)
 
         # Emit structured event

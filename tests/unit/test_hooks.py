@@ -8,7 +8,7 @@ Tests are organized by check category:
 - TestRuffLint: Ruff integration
 - TestDebugger: Debugger statement detection
 - TestMergeMarkers: Merge conflict marker detection
-- TestZergBranch: MAHABHARATHA branch naming validation
+- TestMahabharathaBranch: MAHABHARATHA branch naming validation
 - TestNoPrint: Print statement detection
 """
 
@@ -57,7 +57,7 @@ PATTERNS = {
 }
 
 # MAHABHARATHA branch naming pattern
-ZERG_BRANCH_PATTERN = re.compile(r"^mahabharatha/[a-z0-9-]+/worker-[0-9]+$")
+MAHABHARATHA_BRANCH_PATTERN = re.compile(r"^mahabharatha/[a-z0-9-]+/worker-[0-9]+$")
 
 
 # =============================================================================
@@ -119,7 +119,7 @@ class TestHooksBase:
         Returns:
             True if branch name is valid
         """
-        return bool(ZERG_BRANCH_PATTERN.match(branch))
+        return bool(MAHABHARATHA_BRANCH_PATTERN.match(branch))
 
 
 # =============================================================================
@@ -261,7 +261,7 @@ class TestMergeMarkers(TestHooksBase):
 # =============================================================================
 
 
-class TestZergBranch(TestHooksBase):
+class TestMahabharathaBranch(TestHooksBase):
     """Tests for MAHABHARATHA branch naming validation."""
 
     def test_valid_branch_names(self) -> None:

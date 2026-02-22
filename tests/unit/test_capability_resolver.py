@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from mahabharatha.capability_resolver import CapabilityResolver, ResolvedCapabilities
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 
 # ---------------------------------------------------------------------------
 # ResolvedCapabilities dataclass tests
@@ -34,20 +34,20 @@ class TestResolvedCapabilitiesToEnvVars:
     """Verify to_env_vars() key presence, value formatting, and conditional keys."""
 
     EXPECTED_KEYS = {
-        "ZERG_ANALYSIS_DEPTH",
-        "ZERG_TOKEN_BUDGET",
-        "ZERG_COMPACT_MODE",
-        "ZERG_BEHAVIORAL_MODE",
-        "ZERG_TDD_MODE",
-        "ZERG_RULES_ENABLED",
-        "ZERG_LOOP_ENABLED",
-        "ZERG_LOOP_ITERATIONS",
-        "ZERG_VERIFICATION_GATES",
-        "ZERG_STALENESS_THRESHOLD",
+        "MAHABHARATHA_ANALYSIS_DEPTH",
+        "MAHABHARATHA_TOKEN_BUDGET",
+        "MAHABHARATHA_COMPACT_MODE",
+        "MAHABHARATHA_BEHAVIORAL_MODE",
+        "MAHABHARATHA_TDD_MODE",
+        "MAHABHARATHA_RULES_ENABLED",
+        "MAHABHARATHA_LOOP_ENABLED",
+        "MAHABHARATHA_LOOP_ITERATIONS",
+        "MAHABHARATHA_VERIFICATION_GATES",
+        "MAHABHARATHA_STALENESS_THRESHOLD",
     }
 
     def test_to_env_vars_keys(self):
-        """to_env_vars() returns all expected ZERG_* keys (no mcp_hint by default)."""
+        """to_env_vars() returns all expected MAHABHARATHA_* keys (no mcp_hint by default)."""
         env = ResolvedCapabilities().to_env_vars()
         assert set(env.keys()) == self.EXPECTED_KEYS
 
@@ -66,27 +66,27 @@ class TestResolvedCapabilitiesToEnvVars:
         env = rc.to_env_vars()
 
         # Booleans -> "0" / "1"
-        assert env["ZERG_COMPACT_MODE"] == "1"
-        assert env["ZERG_TDD_MODE"] == "0"
-        assert env["ZERG_RULES_ENABLED"] == "1"
-        assert env["ZERG_LOOP_ENABLED"] == "0"
-        assert env["ZERG_VERIFICATION_GATES"] == "1"
+        assert env["MAHABHARATHA_COMPACT_MODE"] == "1"
+        assert env["MAHABHARATHA_TDD_MODE"] == "0"
+        assert env["MAHABHARATHA_RULES_ENABLED"] == "1"
+        assert env["MAHABHARATHA_LOOP_ENABLED"] == "0"
+        assert env["MAHABHARATHA_VERIFICATION_GATES"] == "1"
 
         # Ints -> str
-        assert env["ZERG_TOKEN_BUDGET"] == "4000"
-        assert env["ZERG_LOOP_ITERATIONS"] == "10"
-        assert env["ZERG_STALENESS_THRESHOLD"] == "600"
+        assert env["MAHABHARATHA_TOKEN_BUDGET"] == "4000"
+        assert env["MAHABHARATHA_LOOP_ITERATIONS"] == "10"
+        assert env["MAHABHARATHA_STALENESS_THRESHOLD"] == "600"
 
     def test_to_env_vars_mcp_hint_omitted_when_empty(self):
-        """ZERG_MCP_HINT is not present when mcp_hint is empty string."""
+        """MAHABHARATHA_MCP_HINT is not present when mcp_hint is empty string."""
         env = ResolvedCapabilities(mcp_hint="").to_env_vars()
-        assert "ZERG_MCP_HINT" not in env
+        assert "MAHABHARATHA_MCP_HINT" not in env
 
     def test_to_env_vars_mcp_hint_included(self):
-        """ZERG_MCP_HINT is present when mcp_hint is set."""
+        """MAHABHARATHA_MCP_HINT is present when mcp_hint is set."""
         env = ResolvedCapabilities(mcp_hint="sequential,context7").to_env_vars()
-        assert "ZERG_MCP_HINT" in env
-        assert env["ZERG_MCP_HINT"] == "sequential,context7"
+        assert "MAHABHARATHA_MCP_HINT" in env
+        assert env["MAHABHARATHA_MCP_HINT"] == "sequential,context7"
 
 
 # ---------------------------------------------------------------------------
@@ -103,7 +103,7 @@ class TestCapabilityResolverResolve:
 
     @pytest.fixture
     def default_config(self):
-        return ZergConfig()
+        return MahabharathaConfig()
 
     def test_resolve_defaults(self, resolver, default_config):
         """resolve({}) produces sensible defaults."""
@@ -169,9 +169,9 @@ class TestCapabilityResolverResolve:
 
     def test_resolve_with_config(self, resolver):
         """Config values (e.g. rules, verification) are picked up."""
-        config = ZergConfig()
+        config = MahabharathaConfig()
         rc = resolver.resolve(cli_flags={}, config=config)
-        # ZergConfig defaults should flow through
+        # MahabharathaConfig defaults should flow through
         assert rc.rules_enabled == config.rules.enabled
         assert rc.gates_enabled == config.verification.require_before_completion
         assert rc.staleness_threshold == config.verification.staleness_threshold_seconds

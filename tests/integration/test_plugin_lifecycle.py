@@ -6,7 +6,7 @@ import subprocess
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.config import MahabharathaConfig, QualityGate
 from mahabharatha.constants import GateResult, PluginHookEvent
 from mahabharatha.gates import GateRunner
 from mahabharatha.plugins import (
@@ -205,7 +205,7 @@ class TestPluginLifecycle:
         registry.register_gate(plugin_gate)
 
         # Create a config with one regular gate
-        config = ZergConfig(
+        config = MahabharathaConfig(
             feature="test-feature",
             quality_gates=[
                 QualityGate(

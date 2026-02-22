@@ -1,5 +1,5 @@
 /**
- * ZERG Landing Page — Interactive Features
+ * MAHABHARATHA Landing Page — Interactive Features
  * All features wrapped in an IIFE to avoid global scope pollution.
  * Each feature initializer is wrapped in try/catch for graceful degradation.
  */
@@ -470,7 +470,7 @@
       } catch (e) {
         // Graceful degradation: log but don't break other features
         if (typeof console !== 'undefined' && console.error) {
-          console.error('ZERG: Failed to init ' + features[i].name, e);
+          console.error('MAHABHARATHA: Failed to init ' + features[i].name, e);
         }
       }
     }

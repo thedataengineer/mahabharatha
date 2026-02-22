@@ -6,7 +6,7 @@ import time
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.constants import LogEvent, TaskStatus
 from mahabharatha.levels import LevelController
 from mahabharatha.log_writer import StructuredLogWriter
@@ -28,7 +28,7 @@ class TaskRetryManager:
 
     def __init__(
         self,
-        config: ZergConfig,
+        config: MahabharathaConfig,
         state: StateManager,
         levels: LevelController,
         repo_path: Path,

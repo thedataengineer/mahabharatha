@@ -18,10 +18,10 @@ from mahabharatha.logging import get_logger
 logger = get_logger("claude_tasks_reader")
 
 # Pattern for MAHABHARATHA execution tasks: [L1] Title, [L2] Title, etc.
-ZERG_TASK_RE = re.compile(r"^\[L(\d+)\]\s+(.+)")
+MAHABHARATHA_TASK_RE = re.compile(r"^\[L(\d+)\]\s+(.+)")
 
 # Pattern for MAHABHARATHA meta tasks: [Plan], [Design], [Kurukshetra], etc.
-ZERG_META_RE = re.compile(r"^\[(Plan|Design|Kurukshetra|Debug|Init|Cleanup|Review|Build|Test|Status)\]")
+MAHABHARATHA_META_RE = re.compile(r"^\[(Plan|Design|Kurukshetra|Debug|Init|Cleanup|Review|Build|Test|Status)\]")
 
 # Claude Task status → MAHABHARATHA TaskStatus mapping
 _STATUS_MAP_NO_BLOCKERS = {
@@ -144,7 +144,7 @@ class ClaudeTasksReader:
                 continue
 
             subject = data.get("subject", "")
-            match = ZERG_TASK_RE.match(subject)
+            match = MAHABHARATHA_TASK_RE.match(subject)
             if not match:
                 continue  # Skip non-level tasks ([Plan], [Design], etc.)
 
@@ -230,7 +230,7 @@ class ClaudeTasksReader:
             subject = data.get("subject", "")
             description = data.get("description", "")
 
-            if ZERG_TASK_RE.match(subject):
+            if MAHABHARATHA_TASK_RE.match(subject):
                 mahabharatha_count += 1
 
             # Check for feature name in description or meta tasks

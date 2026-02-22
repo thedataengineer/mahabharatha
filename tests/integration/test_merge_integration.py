@@ -10,7 +10,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.config import MahabharathaConfig, QualityGate
 from mahabharatha.constants import GateResult, MergeStatus
 from mahabharatha.exceptions import MergeConflictError
 from mahabharatha.merge import MergeCoordinator, MergeFlowResult
@@ -18,9 +18,9 @@ from tests.mocks.mock_merge import MockMergeCoordinator
 
 
 @pytest.fixture
-def sample_config() -> ZergConfig:
+def sample_config() -> MahabharathaConfig:
     """Create sample configuration for tests."""
-    config = ZergConfig()
+    config = MahabharathaConfig()
     config.quality_gates = [
         QualityGate(name="lint", command="echo lint", required=True),
         QualityGate(name="test", command="pytest tests/", required=True),
@@ -357,7 +357,7 @@ class TestRealMergeCoordinatorIntegration:
         self,
         mock_git_ops,
         mock_gate_runner,
-        sample_config: ZergConfig,
+        sample_config: MahabharathaConfig,
         tmp_path: Path,
     ) -> None:
         """Test real MergeCoordinator full merge flow."""
@@ -378,7 +378,7 @@ class TestRealMergeCoordinatorIntegration:
         self,
         mock_git_ops,
         mock_gate_runner,
-        sample_config: ZergConfig,
+        sample_config: MahabharathaConfig,
         tmp_path: Path,
     ) -> None:
         """Test real coordinator handles gate failure."""
@@ -398,7 +398,7 @@ class TestRealMergeCoordinatorIntegration:
         self,
         mock_git_ops,
         mock_gate_runner,
-        sample_config: ZergConfig,
+        sample_config: MahabharathaConfig,
         tmp_path: Path,
     ) -> None:
         """Test real coordinator handles merge conflict."""

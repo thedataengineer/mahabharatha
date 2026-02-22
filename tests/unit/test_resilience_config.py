@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from mahabharatha.config import ResilienceConfig, WorkersConfig, ZergConfig
+from mahabharatha.config import MahabharathaConfig, ResilienceConfig, WorkersConfig
 
 # Mark all tests in this module as slow (PR #115 added 550+ lines)
 pytestmark = pytest.mark.slow
@@ -27,8 +27,8 @@ class TestResilienceConfig:
         assert config2.enabled is False
 
     def test_resilience_config_in_mahabharatha_config(self) -> None:
-        """Test that ZergConfig has resilience attribute."""
-        config = ZergConfig()
+        """Test that MahabharathaConfig has resilience attribute."""
+        config = MahabharathaConfig()
         assert isinstance(config.resilience, ResilienceConfig)
         assert config.resilience.enabled is True
 
@@ -122,7 +122,7 @@ class TestResilienceConfigYAMLAndSerialization:
         with open(config_file, "w") as f:
             yaml.dump(config_data, f)
 
-        config = ZergConfig.load(config_file)
+        config = MahabharathaConfig.load(config_file)
 
         assert config.resilience.enabled is True
         assert config.workers.spawn_retry_attempts == 4
@@ -144,8 +144,8 @@ class TestResilienceConfigYAMLAndSerialization:
         assert data["auto_respawn"] is False
 
     def test_mahabharatha_config_resilience_roundtrip(self, tmp_path: Path) -> None:
-        """Test ZergConfig with resilience settings survives save/load roundtrip."""
-        original = ZergConfig()
+        """Test MahabharathaConfig with resilience settings survives save/load roundtrip."""
+        original = MahabharathaConfig()
         original.resilience.enabled = True
         original.workers.spawn_retry_attempts = 7
         original.workers.task_stale_timeout_seconds = 800
@@ -153,7 +153,7 @@ class TestResilienceConfigYAMLAndSerialization:
 
         config_file = tmp_path / "config.yaml"
         original.save(config_file)
-        loaded = ZergConfig.load(config_file)
+        loaded = MahabharathaConfig.load(config_file)
 
         assert loaded.resilience.enabled is True
         assert loaded.workers.spawn_retry_attempts == 7

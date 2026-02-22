@@ -63,7 +63,7 @@ This backlog contained 42 atomic tasks to build MAHABHARATHA from the Phase 2 ar
 |-----------|-------|
 | **Description** | Config loader with Pydantic validation, defaults from config.yaml |
 | **Files Create** | `mahabharatha/config.py` |
-| **Verification** | `python -c "from mahabharatha.config import ZergConfig; c = ZergConfig.load(); print(c.workers.max_concurrent)"` |
+| **Verification** | `python -c "from mahabharatha.config import MahabharathaConfig; c = MahabharathaConfig.load(); print(c.workers.max_concurrent)"` |
 | **Status** | DONE |
 
 ---
@@ -94,9 +94,9 @@ This backlog contained 42 atomic tasks to build MAHABHARATHA from the Phase 2 ar
 
 | Attribute | Value |
 |-----------|-------|
-| **Description** | Define ZergError base and specific exceptions for each failure mode |
+| **Description** | Define MahabharathaError base and specific exceptions for each failure mode |
 | **Files Create** | `mahabharatha/exceptions.py` |
-| **Verification** | `python -c "from mahabharatha.exceptions import ZergError, TaskVerificationFailed, MergeConflict"` |
+| **Verification** | `python -c "from mahabharatha.exceptions import MahabharathaError, TaskVerificationFailed, MergeConflict"` |
 | **Status** | DONE |
 
 ---

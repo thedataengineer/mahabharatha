@@ -1,0 +1,56 @@
+{
+  "worker_id": "unknown",
+  "tasks": {
+    "T-1": {
+      "breakdown": {
+        "engineering_rules": 417,
+        "security_rules": 77,
+        "spec_excerpt": 6,
+        "repo_map": 138
+      },
+      "total": 638,
+      "mode": "estimated",
+      "timestamp": "2026-02-22T00:25:36.583668+00:00"
+    },
+    "T-2": {
+      "breakdown": {},
+      "total": 0,
+      "mode": "estimated",
+      "timestamp": "2026-02-22T00:25:36.588500+00:00"
+    },
+    "T-3": {
+      "breakdown": {
+        "engineering_rules": 417,
+        "security_rules": 61,
+        "repo_map": 394
+      },
+      "total": 872,
+      "mode": "estimated",
+      "timestamp": "2026-02-22T00:25:37.123198+00:00"
+    },
+    "T-4": {
+      "breakdown": {
+        "engineering_rules": 115,
+        "mcp_hints": 13,
+        "repo_map": 94
+      },
+      "total": 222,
+      "mode": "estimated",
+      "timestamp": "2026-02-22T00:25:37.656342+00:00"
+    },
+    "1-1": {
+      "breakdown": {
+        "engineering_rules": 417,
+        "mcp_hints": 12,
+        "repo_map": 399
+      },
+      "total": 828,
+      "mode": "estimated",
+      "timestamp": "2026-02-16T21:01:54.626882+00:00"
+    }
+  },
+  "cumulative": {
+    "total_tokens": 2560,
+    "tasks_completed": 5
+  }
+}

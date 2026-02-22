@@ -7,7 +7,7 @@ updates:
     labels:
       - "dependencies"
     reviewers:
-      - "rocklambros"
+      - "thedataengineer"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -16,4 +16,4 @@ updates:
       - "dependencies"
       - "ci-cd"
     reviewers:
-      - "rocklambros"
+      - "thedataengineer"

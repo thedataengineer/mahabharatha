@@ -79,7 +79,7 @@ def store_artifact(
 ```python
 __all__ = [
     # Main config
-    "ZergConfig",
+    "MahabharathaConfig",
     # Sub-configs
     "ProjectConfig",
     "WorkersConfig",
@@ -221,7 +221,7 @@ Level 1 (Foundation):
 
 Each task has a verification command:
 - TASK-001: `python -c "from mahabharatha.verify import VerificationExecutor"`
-- TASK-002: `python -c "from mahabharatha.config import ZergConfig"`
+- TASK-002: `python -c "from mahabharatha.config import MahabharathaConfig"`
 - TASK-003: `python -c "from mahabharatha.types import Task"`
 - TASK-004: `pytest tests/ -x && python -m mahabharatha.validate_commands`
 

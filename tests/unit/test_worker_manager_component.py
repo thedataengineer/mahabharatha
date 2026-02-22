@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.constants import WorkerStatus
 from mahabharatha.launchers import WorkerLauncher
 from mahabharatha.levels import LevelController
@@ -19,7 +19,7 @@ from mahabharatha.worktree import WorktreeManager
 
 @pytest.fixture
 def mock_config():
-    config = MagicMock(spec=ZergConfig)
+    config = MagicMock(spec=MahabharathaConfig)
     config.workers = MagicMock()
     config.workers.timeout_minutes = 30
     config.workers.retry_attempts = 3

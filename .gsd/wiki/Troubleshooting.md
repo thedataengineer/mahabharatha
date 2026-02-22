@@ -856,7 +856,7 @@ If you've tried the above and are still stuck:
 
 1. **Run full diagnostics:** `/mahabharatha:debug --deep --env --report debug-report.md`
 2. **Check the [FAQ](FAQ)** for answers to common questions
-3. **Search existing issues:** [GitHub Issues](https://github.com/rocklambros/mahabharatha/issues)
+3. **Search existing issues:** [GitHub Issues](https://github.com/thedataengineer/mahabharatha/issues)
 4. **Open a new issue** including:
    - MAHABHARATHA version (`mahabharatha --version`)
    - The full command that failed

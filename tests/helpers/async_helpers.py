@@ -1101,7 +1101,7 @@ async def wait_for_condition(
 # =============================================================================
 
 
-class ZergAsyncMockFactory:
+class MahabharathaAsyncMockFactory:
     """Factory for creating MAHABHARATHA-specific async mocks.
 
     Provides pre-configured mocks for common MAHABHARATHA patterns like
@@ -1109,7 +1109,7 @@ class ZergAsyncMockFactory:
 
     Example:
         ```python
-        factory = ZergAsyncMockFactory()
+        factory = MahabharathaAsyncMockFactory()
 
         # Create mock worker process
         worker_mock = factory.create_worker_process(
@@ -1224,5 +1224,5 @@ __all__ = [
     "run_with_delay",
     "wait_for_condition",
     # MAHABHARATHA-specific
-    "ZergAsyncMockFactory",
+    "MahabharathaAsyncMockFactory",
 ]

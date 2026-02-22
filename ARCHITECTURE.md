@@ -468,7 +468,7 @@ Mahabharatha is composed of 80+ Python modules organized into functional groups.
 | `dryrun.py` | Dry-run simulation for `/mahabharatha:Kurukshetra --dry-run` |
 | `worker_main.py` | Worker process entry point |
 | `ports.py` | Port allocation for worker processes (range 49152-65535) |
-| `exceptions.py` | Exception hierarchy (ZergError -> Task/Worker/Git/Gate errors) |
+| `exceptions.py` | Exception hierarchy (MahabharathaError -> Task/Worker/Git/Gate errors) |
 | `state_sync_service.py` | State synchronization across distributed workers |
 | `state_reconciler.py` | Reconcile state conflicts between workers |
 | `adaptive_detail.py` | Adaptive detail levels based on context pressure |

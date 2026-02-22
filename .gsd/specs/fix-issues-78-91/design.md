@@ -56,7 +56,7 @@ orchestrator.py:
 
 context_plugin.py:
   - Import CompactFormatter from efficiency
-  - When ZERG_COMPACT_MODE=true, apply CompactFormatter to task context output
+  - When MAHABHARATHA_COMPACT_MODE=true, apply CompactFormatter to task context output
 
 mcp_router.py:
   - Import RoutingTelemetry from mcp_telemetry
@@ -219,7 +219,7 @@ L3: T-011 → T-012                               [sequential, depends on L2]
 
 ### T-010: Wire CompactFormatter into context_plugin (#78 part 2)
 - Import CompactFormatter from efficiency
-- When ZERG_COMPACT_MODE env var is true, apply CompactFormatter to built context
+- When MAHABHARATHA_COMPACT_MODE env var is true, apply CompactFormatter to built context
 - Verify: `pytest tests/unit/test_context_plugin*.py -v` passes
 
 ### T-011: CHANGELOG + documentation update
@@ -229,7 +229,7 @@ L3: T-011 → T-012                               [sequential, depends on L2]
 
 ### T-012: Push wiki + final validation
 - Run `mahabharatha wiki --push` to publish updated wiki to GitHub
-- Verify live wiki at github.com/rocklambros/mahabharatha/wiki shows /mahabharatha: prefix format
+- Verify live wiki at github.com/thedataengineer/mahabharatha/wiki shows /mahabharatha: prefix format
 - Close issues #78, #79, #81, #84, #85, #87, #88, #90, #91 via `gh issue close`
 
 ---

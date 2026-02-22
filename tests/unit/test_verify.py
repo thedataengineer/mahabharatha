@@ -320,12 +320,12 @@ class TestWithEnvironment:
 
         # Create a script that reads env var (avoid semicolons in command)
         script = tmp_path / "test_env.py"
-        script.write_text('import os\nprint(os.environ.get("ZERG_TEST_VAR", ""))')
+        script.write_text('import os\nprint(os.environ.get("MAHABHARATHA_TEST_VAR", ""))')
 
         result = executor.verify(
             f"python {script}",
             "TASK-001",
-            env={"ZERG_TEST_VAR": "hello"},
+            env={"MAHABHARATHA_TEST_VAR": "hello"},
             cwd=tmp_path,
         )
 

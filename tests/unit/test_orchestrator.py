@@ -15,7 +15,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.constants import LevelMergeStatus, TaskStatus, WorkerStatus
 from mahabharatha.orchestrator import Orchestrator
 
@@ -163,7 +163,7 @@ class TestLauncherCreation:
         monkeypatch.chdir(tmp_path)
         (tmp_path / ".mahabharatha").mkdir()
 
-        config = ZergConfig()
+        config = MahabharathaConfig()
         with pytest.raises(ValueError, match="Unsupported launcher mode"):
             Orchestrator("test-feature", config=config, launcher_mode="unknown_mode")
 
@@ -187,7 +187,7 @@ class TestGetWorkerImageName:
         monkeypatch.chdir(tmp_path)
         (tmp_path / ".mahabharatha").mkdir()
 
-        config = MagicMock(spec=ZergConfig)
+        config = MagicMock(spec=MahabharathaConfig)
         config.container_image = "custom-image:latest"
         config.ports = MagicMock()
         config.ports.range_start = 49152

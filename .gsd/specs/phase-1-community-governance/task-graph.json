@@ -98,7 +98,7 @@
     {
       "id": "TASK-005",
       "title": "Create Dependabot config",
-      "description": "Create .github/dependabot.yml for pip ecosystem, weekly schedule, root directory, labels: dependencies, reviewer: rocklambros.",
+      "description": "Create .github/dependabot.yml for pip ecosystem, weekly schedule, root directory, labels: dependencies, reviewer: thedataengineer.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
@@ -115,12 +115,12 @@
       "skills_required": ["yaml", "github"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nFR-006: Dependabot config. pip ecosystem, weekly schedule, directory '/', labels: ['dependencies'], reviewers: ['rocklambros'].\n\n## Dependencies\nNone — standalone file creation."
+      "context": "## Spec Context\nFR-006: Dependabot config. pip ecosystem, weekly schedule, directory '/', labels: ['dependencies'], reviewers: ['thedataengineer'].\n\n## Dependencies\nNone — standalone file creation."
     },
     {
       "id": "TASK-006",
       "title": "Create Code of Conduct",
-      "description": "Create CODE_OF_CONDUCT.md using Contributor Covenant v2.1. Enforcement contact: GitHub Security Advisories (https://github.com/rocklambros/mahabharatha/security/advisories/new). No personal email.",
+      "description": "Create CODE_OF_CONDUCT.md using Contributor Covenant v2.1. Enforcement contact: GitHub Security Advisories (https://github.com/thedataengineer/mahabharatha/security/advisories/new). No personal email.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
@@ -137,12 +137,12 @@
       "skills_required": ["markdown"],
       "consumers": ["TASK-009"],
       "integration_test": null,
-      "context": "## Spec Context\nFR-005: CODE_OF_CONDUCT.md. Must use Contributor Covenant v2.1. Per Q-002 resolution: enforcement contact is GitHub Security Advisories link, not personal email. URL: https://github.com/rocklambros/mahabharatha/security/advisories/new\n\n## Dependencies\nNone — standalone file creation."
+      "context": "## Spec Context\nFR-005: CODE_OF_CONDUCT.md. Must use Contributor Covenant v2.1. Per Q-002 resolution: enforcement contact is GitHub Security Advisories link, not personal email. URL: https://github.com/thedataengineer/mahabharatha/security/advisories/new\n\n## Dependencies\nNone — standalone file creation."
     },
     {
       "id": "TASK-007",
       "title": "Add README badges",
-      "description": "Add badge row to README.md after the logo block (after closing </p> tag, before the bold description). Badges: PyPI version (mahabharatha-ai), Python versions (mahabharatha-ai), License (rocklambros/mahabharatha), CI status (rocklambros/mahabharatha/ci.yml). Use shields.io URLs. Badges will show 'not found' while repo is private — that's expected.",
+      "description": "Add badge row to README.md after the logo block (after closing </p> tag, before the bold description). Badges: PyPI version (mahabharatha-ai), Python versions (mahabharatha-ai), License (thedataengineer/mahabharatha), CI status (thedataengineer/mahabharatha/ci.yml). Use shields.io URLs. Badges will show 'not found' while repo is private — that's expected.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
@@ -159,7 +159,7 @@
       "skills_required": ["markdown"],
       "consumers": [],
       "integration_test": null,
-      "context": "## Spec Context\nFR-009: README badges. PyPI version, Python version, License, CI status. Use shields.io. Package name on PyPI is 'mahabharatha-ai'. Repo is rocklambros/mahabharatha. CI workflow file is ci.yml. Insert after logo </p> tag, before the bold description paragraph.\n\n## Dependencies\nNone — modifies existing file independently."
+      "context": "## Spec Context\nFR-009: README badges. PyPI version, Python version, License, CI status. Use shields.io. Package name on PyPI is 'mahabharatha-ai'. Repo is thedataengineer/mahabharatha. CI workflow file is ci.yml. Insert after logo </p> tag, before the bold description paragraph.\n\n## Dependencies\nNone — modifies existing file independently."
     },
     {
       "id": "TASK-008",
@@ -263,13 +263,13 @@
       {
         "id": "API-001",
         "title": "Enable secret scanning and push protection",
-        "command": "gh api repos/rocklambros/mahabharatha -X PATCH -f security_and_analysis[secret_scanning][status]=enabled -f security_and_analysis[secret_scanning_push_protection][status]=enabled",
+        "command": "gh api repos/thedataengineer/mahabharatha -X PATCH -f security_and_analysis[secret_scanning][status]=enabled -f security_and_analysis[secret_scanning_push_protection][status]=enabled",
         "issue": "#187"
       },
       {
         "id": "API-002",
         "title": "Set GitHub repository topics",
-        "command": "gh api repos/rocklambros/mahabharatha/topics -X PUT -f names='[\"claude-code\",\"parallel-execution\",\"ai-coding\",\"cli\",\"python\",\"developer-tools\",\"automation\",\"code-generation\",\"llm\"]'",
+        "command": "gh api repos/thedataengineer/mahabharatha/topics -X PUT -f names='[\"claude-code\",\"parallel-execution\",\"ai-coding\",\"cli\",\"python\",\"developer-tools\",\"automation\",\"code-generation\",\"llm\"]'",
         "issue": "#188"
       },
       {

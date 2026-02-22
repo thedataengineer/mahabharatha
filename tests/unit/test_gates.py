@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from mahabharatha.command_executor import CommandValidationError
-from mahabharatha.config import QualityGate, ZergConfig
+from mahabharatha.config import MahabharathaConfig, QualityGate
 from mahabharatha.constants import GateResult
 from mahabharatha.exceptions import GateFailureError, GateTimeoutError
 from mahabharatha.gates import GateRunner
@@ -16,7 +16,7 @@ from mahabharatha.types import GateRunResult
 class TestGateRunner:
     """Tests for GateRunner class."""
 
-    def test_create_runner(self, sample_config: ZergConfig) -> None:
+    def test_create_runner(self, sample_config: MahabharathaConfig) -> None:
         """Test creating a GateRunner."""
         runner = GateRunner(sample_config)
 
@@ -25,14 +25,14 @@ class TestGateRunner:
 
     def test_create_runner_default_config(self) -> None:
         """Test creating a GateRunner with default config."""
-        with patch.object(ZergConfig, "load") as mock_load:
-            mock_load.return_value = ZergConfig()
+        with patch.object(MahabharathaConfig, "load") as mock_load:
+            mock_load.return_value = MahabharathaConfig()
             runner = GateRunner()
 
         assert runner is not None
         mock_load.assert_called_once()
 
-    def test_run_gate_success(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_run_gate_success(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test running a passing gate."""
         runner = GateRunner(sample_config)
         gate = QualityGate(name="test", command="echo success", required=True)
@@ -43,7 +43,7 @@ class TestGateRunner:
         assert result.gate_name == "test"
         assert result.exit_code == 0
 
-    def test_run_gate_failure(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_run_gate_failure(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test running a failing gate."""
         runner = GateRunner(sample_config)
         # Use 'false' command which is a real executable that returns exit code 1
@@ -54,7 +54,7 @@ class TestGateRunner:
         assert result.result == GateResult.FAIL
         assert result.exit_code == 1
 
-    def test_run_gate_timeout(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_run_gate_timeout(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test running a gate that times out."""
         runner = GateRunner(sample_config)
         gate = QualityGate(name="test", command="echo test", required=True, timeout=5)
@@ -75,7 +75,7 @@ class TestGateRunner:
 
         assert result.result == GateResult.TIMEOUT
 
-    def test_run_gate_command_validation_error(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_run_gate_command_validation_error(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test running a gate that fails command validation."""
         runner = GateRunner(sample_config)
         gate = QualityGate(name="test", command="echo test", required=True)
@@ -91,7 +91,7 @@ class TestGateRunner:
         assert result.exit_code == -1
         assert "Command validation failed" in result.stderr
 
-    def test_run_gate_general_exception(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_run_gate_general_exception(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test running a gate that throws an unexpected exception."""
         runner = GateRunner(sample_config)
         gate = QualityGate(name="test", command="echo test", required=True)
@@ -107,7 +107,7 @@ class TestGateRunner:
         assert result.exit_code == -1
         assert "Unexpected error" in result.stderr
 
-    def test_run_gate_with_env(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_run_gate_with_env(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test running a gate with custom environment variables."""
         runner = GateRunner(sample_config)
         gate = QualityGate(name="test", command="echo test", required=True)
@@ -116,7 +116,7 @@ class TestGateRunner:
 
         assert result.result == GateResult.PASS
 
-    def test_run_gate_default_cwd(self, sample_config: ZergConfig) -> None:
+    def test_run_gate_default_cwd(self, sample_config: MahabharathaConfig) -> None:
         """Test running a gate with default working directory."""
         runner = GateRunner(sample_config)
         gate = QualityGate(name="test", command="pwd", required=True)
@@ -125,7 +125,7 @@ class TestGateRunner:
 
         assert result.result == GateResult.PASS
 
-    def test_run_all_gates_success(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_run_all_gates_success(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test running all gates successfully."""
         sample_config.quality_gates = [
             QualityGate(name="lint", command="echo lint", required=True),
@@ -139,7 +139,7 @@ class TestGateRunner:
         assert len(results) == 2
         assert all(r.result == GateResult.PASS for r in results)
 
-    def test_run_all_gates_stop_on_failure(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_run_all_gates_stop_on_failure(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test running gates stops on first failure."""
         sample_config.quality_gates = [
             QualityGate(name="fail", command="false", required=True),
@@ -154,7 +154,7 @@ class TestGateRunner:
         assert len(results) == 1
         assert results[0].gate_name == "fail"
 
-    def test_run_all_gates_optional_failure(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_run_all_gates_optional_failure(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test optional gate failure doesn't stop execution."""
         sample_config.quality_gates = [
             QualityGate(name="optional", command="false", required=False),
@@ -167,7 +167,7 @@ class TestGateRunner:
         assert all_passed is True
         assert len(results) == 2
 
-    def test_run_all_gates_continue_on_failure(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_run_all_gates_continue_on_failure(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test running all gates continues on failure when stop_on_failure=False."""
         sample_config.quality_gates = [
             QualityGate(name="fail", command="false", required=True),
@@ -180,7 +180,7 @@ class TestGateRunner:
         assert all_passed is False
         assert len(results) == 2
 
-    def test_run_required_only(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_run_required_only(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test running only required gates."""
         sample_config.quality_gates = [
             QualityGate(name="required", command="echo required", required=True),
@@ -194,7 +194,7 @@ class TestGateRunner:
         assert len(results) == 1
         assert results[0].gate_name == "required"
 
-    def test_run_all_gates_no_gates(self, sample_config: ZergConfig) -> None:
+    def test_run_all_gates_no_gates(self, sample_config: MahabharathaConfig) -> None:
         """Test running when no gates are configured."""
         sample_config.quality_gates = []
         runner = GateRunner(sample_config)
@@ -204,7 +204,7 @@ class TestGateRunner:
         assert all_passed is True
         assert not results
 
-    def test_run_all_gates_with_explicit_gates(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_run_all_gates_with_explicit_gates(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test running with explicitly provided gates list."""
         runner = GateRunner(sample_config)
         custom_gates = [
@@ -219,7 +219,7 @@ class TestGateRunner:
         assert results[0].gate_name == "custom1"
         assert results[1].gate_name == "custom2"
 
-    def test_run_gate_by_name(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_run_gate_by_name(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test running a gate by name."""
         sample_config.quality_gates = [
             QualityGate(name="lint", command="echo lint", required=True),
@@ -231,14 +231,14 @@ class TestGateRunner:
         assert result.gate_name == "lint"
         assert result.result == GateResult.PASS
 
-    def test_run_gate_by_name_not_found(self, sample_config: ZergConfig) -> None:
+    def test_run_gate_by_name_not_found(self, sample_config: MahabharathaConfig) -> None:
         """Test running a gate by name that doesn't exist."""
         runner = GateRunner(sample_config)
 
         with pytest.raises(ValueError, match="Gate not found"):
             runner.run_gate_by_name("nonexistent")
 
-    def test_check_result_pass(self, sample_config: ZergConfig) -> None:
+    def test_check_result_pass(self, sample_config: MahabharathaConfig) -> None:
         """Test check_result with passing result."""
         runner = GateRunner(sample_config)
         result = GateRunResult(
@@ -251,7 +251,7 @@ class TestGateRunner:
 
         assert runner.check_result(result) is True
 
-    def test_check_result_skip(self, sample_config: ZergConfig) -> None:
+    def test_check_result_skip(self, sample_config: MahabharathaConfig) -> None:
         """Test check_result with skipped result."""
         runner = GateRunner(sample_config)
         result = GateRunResult(
@@ -264,7 +264,7 @@ class TestGateRunner:
 
         assert runner.check_result(result) is True
 
-    def test_check_result_failure_raises(self, sample_config: ZergConfig) -> None:
+    def test_check_result_failure_raises(self, sample_config: MahabharathaConfig) -> None:
         """Test check_result raises on failure."""
         runner = GateRunner(sample_config)
         result = GateRunResult(
@@ -278,7 +278,7 @@ class TestGateRunner:
         with pytest.raises(GateFailureError):
             runner.check_result(result, raise_on_failure=True)
 
-    def test_check_result_timeout_raises(self, sample_config: ZergConfig) -> None:
+    def test_check_result_timeout_raises(self, sample_config: MahabharathaConfig) -> None:
         """Test check_result raises on timeout."""
         runner = GateRunner(sample_config)
         result = GateRunResult(
@@ -292,7 +292,7 @@ class TestGateRunner:
         with pytest.raises(GateTimeoutError):
             runner.check_result(result, raise_on_failure=True)
 
-    def test_check_result_error_raises(self, sample_config: ZergConfig) -> None:
+    def test_check_result_error_raises(self, sample_config: MahabharathaConfig) -> None:
         """Test check_result raises on error."""
         runner = GateRunner(sample_config)
         result = GateRunResult(
@@ -306,7 +306,7 @@ class TestGateRunner:
         with pytest.raises(GateFailureError):
             runner.check_result(result, raise_on_failure=True)
 
-    def test_check_result_no_raise(self, sample_config: ZergConfig) -> None:
+    def test_check_result_no_raise(self, sample_config: MahabharathaConfig) -> None:
         """Test check_result without raising on failure."""
         runner = GateRunner(sample_config)
         result = GateRunResult(
@@ -319,7 +319,7 @@ class TestGateRunner:
 
         assert runner.check_result(result, raise_on_failure=False) is False
 
-    def test_get_results(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_get_results(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test getting stored results."""
         runner = GateRunner(sample_config)
         gate = QualityGate(name="test", command="echo test", required=True)
@@ -329,7 +329,7 @@ class TestGateRunner:
 
         assert len(results) == 1
 
-    def test_get_results_returns_copy(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_get_results_returns_copy(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test get_results returns a copy."""
         runner = GateRunner(sample_config)
         gate = QualityGate(name="test", command="echo test", required=True)
@@ -341,7 +341,7 @@ class TestGateRunner:
         # Original should not be modified
         assert len(runner.get_results()) == 1
 
-    def test_clear_results(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_clear_results(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test clearing stored results."""
         runner = GateRunner(sample_config)
         gate = QualityGate(name="test", command="echo test", required=True)
@@ -352,7 +352,7 @@ class TestGateRunner:
 
         assert not results
 
-    def test_get_summary(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_get_summary(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test getting results summary."""
         sample_config.quality_gates = [
             QualityGate(name="pass", command="echo pass", required=True),
@@ -367,7 +367,7 @@ class TestGateRunner:
         assert summary["passed"] == 1
         assert summary["failed"] == 1
 
-    def test_get_summary_all_results_types(self, sample_config: ZergConfig) -> None:
+    def test_get_summary_all_results_types(self, sample_config: MahabharathaConfig) -> None:
         """Test get_summary counts all result types."""
         runner = GateRunner(sample_config)
 
@@ -414,7 +414,7 @@ class TestGateRunner:
         assert summary["error"] == 1
         assert summary["skipped"] == 1
 
-    def test_get_summary_empty(self, sample_config: ZergConfig) -> None:
+    def test_get_summary_empty(self, sample_config: MahabharathaConfig) -> None:
         """Test get_summary with no results."""
         runner = GateRunner(sample_config)
 
@@ -427,7 +427,7 @@ class TestGateRunner:
         assert summary["error"] == 0
         assert summary["skipped"] == 0
 
-    def test_run_gate_stores_result(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_run_gate_stores_result(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test that run_gate stores result in internal list."""
         runner = GateRunner(sample_config)
         gate = QualityGate(name="test", command="echo test", required=True)
@@ -436,7 +436,7 @@ class TestGateRunner:
         runner.run_gate(gate, cwd=tmp_path)
         assert len(runner._results) == 1
 
-    def test_run_gate_records_duration(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_run_gate_records_duration(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test that run_gate records execution duration."""
         runner = GateRunner(sample_config)
         gate = QualityGate(name="test", command="echo test", required=True)
@@ -445,7 +445,7 @@ class TestGateRunner:
 
         assert result.duration_ms >= 0
 
-    def test_run_gate_uses_gate_timeout(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_run_gate_uses_gate_timeout(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test that run_gate uses the timeout from gate config."""
         runner = GateRunner(sample_config)
         gate = QualityGate(name="test", command="echo test", required=True, timeout=60)
@@ -468,7 +468,7 @@ class TestGateRunner:
 class TestGateRunnerIntegration:
     """Integration tests for GateRunner."""
 
-    def test_full_workflow(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_full_workflow(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test a complete gate running workflow."""
         sample_config.quality_gates = [
             QualityGate(name="lint", command="echo linting", required=True, timeout=30),
@@ -502,7 +502,7 @@ class TestGateRunnerIntegration:
 class TestGateResultTracking:
     """Tests for gate result tracking behavior."""
 
-    def test_results_accumulate(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_results_accumulate(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test that results accumulate across multiple gate runs."""
         runner = GateRunner(sample_config)
         gate = QualityGate(name="test", command="echo test", required=True)
@@ -513,7 +513,7 @@ class TestGateResultTracking:
 
         assert len(runner.get_results()) == 3
 
-    def test_results_cleared_properly(self, sample_config: ZergConfig, tmp_path: Path) -> None:
+    def test_results_cleared_properly(self, sample_config: MahabharathaConfig, tmp_path: Path) -> None:
         """Test that clear_results properly clears all results."""
         runner = GateRunner(sample_config)
         gate = QualityGate(name="test", command="echo test", required=True)

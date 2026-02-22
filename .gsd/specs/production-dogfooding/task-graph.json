@@ -38,7 +38,7 @@
     {
       "id": "DF-L1-002",
       "title": "Create E2EHarness test infrastructure",
-      "description": "Create tests/e2e/harness.py. E2EHarness class that sets up a real git repo with .mahabharatha/ and .gsd/ directories, writes task-graph.json, creates ZergConfig, and runs Orchestrator.start(). Supports mode='mock' (patches invoke_claude_code with MockWorker) and mode='real' (uses actual Claude CLI). Returns E2EResult dataclass with success, tasks_completed, tasks_failed, levels_completed, merge_commits, duration_s fields. setup_repo() initializes git with initial commit. setup_task_graph(tasks) writes JSON. setup_config(overrides) writes config.yaml. run(workers=5) orchestrates execution.",
+      "description": "Create tests/e2e/harness.py. E2EHarness class that sets up a real git repo with .mahabharatha/ and .gsd/ directories, writes task-graph.json, creates MahabharathaConfig, and runs Orchestrator.start(). Supports mode='mock' (patches invoke_claude_code with MockWorker) and mode='real' (uses actual Claude CLI). Returns E2EResult dataclass with success, tasks_completed, tasks_failed, levels_completed, merge_commits, duration_s fields. setup_repo() initializes git with initial commit. setup_task_graph(tasks) writes JSON. setup_config(overrides) writes config.yaml. run(workers=5) orchestrates execution.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
@@ -69,7 +69,7 @@
     {
       "id": "DF-L1-003",
       "title": "Create plugin ABCs and PluginRegistry",
-      "description": "Create mahabharatha/plugins.py. Define ABCs: QualityGatePlugin(name property, run(ctx: GateContext) -> GateRunResult), LifecycleHookPlugin(name property, on_event(event: LifecycleEvent) -> None), LauncherPlugin(name property, create_launcher(config) -> WorkerLauncher). Define dataclasses: LifecycleEvent(event_type: str, data: dict, timestamp: datetime), GateContext(feature: str, level: int, cwd: Path, config: ZergConfig). Create PluginRegistry class with: _hooks dict, _gates dict, _launchers dict. Methods: register_hook(event_type, callback), register_gate(plugin), register_launcher(plugin), emit_event(event: LifecycleEvent) with per-hook exception catching, run_plugin_gate(name, ctx) -> GateRunResult, get_launcher(name) -> LauncherPlugin|None, load_yaml_hooks(hooks_config: list) to register shell command hooks, load_entry_points(group='mahabharatha.plugins') to discover via importlib.metadata.",
+      "description": "Create mahabharatha/plugins.py. Define ABCs: QualityGatePlugin(name property, run(ctx: GateContext) -> GateRunResult), LifecycleHookPlugin(name property, on_event(event: LifecycleEvent) -> None), LauncherPlugin(name property, create_launcher(config) -> WorkerLauncher). Define dataclasses: LifecycleEvent(event_type: str, data: dict, timestamp: datetime), GateContext(feature: str, level: int, cwd: Path, config: MahabharathaConfig). Create PluginRegistry class with: _hooks dict, _gates dict, _launchers dict. Methods: register_hook(event_type, callback), register_gate(plugin), register_launcher(plugin), emit_event(event: LifecycleEvent) with per-hook exception catching, run_plugin_gate(name, ctx) -> GateRunResult, get_launcher(name) -> LauncherPlugin|None, load_yaml_hooks(hooks_config: list) to register shell command hooks, load_entry_points(group='mahabharatha.plugins') to discover via importlib.metadata.",
       "phase": "foundation",
       "level": 1,
       "dependencies": [],
@@ -277,8 +277,8 @@
     },
     {
       "id": "DF-L2-005",
-      "title": "Integrate PluginsConfig into ZergConfig",
-      "description": "Modify mahabharatha/config.py. Add 'from mahabharatha.plugin_config import PluginsConfig' import. Add 'plugins: PluginsConfig = Field(default_factory=PluginsConfig)' field to ZergConfig class. Ensure ZergConfig.load() and save() handle the plugins section. Ensure ZergConfig.from_dict() parses plugins from YAML.",
+      "title": "Integrate PluginsConfig into MahabharathaConfig",
+      "description": "Modify mahabharatha/config.py. Add 'from mahabharatha.plugin_config import PluginsConfig' import. Add 'plugins: PluginsConfig = Field(default_factory=PluginsConfig)' field to MahabharathaConfig class. Ensure MahabharathaConfig.load() and save() handle the plugins section. Ensure MahabharathaConfig.from_dict() parses plugins from YAML.",
       "phase": "core",
       "level": 2,
       "dependencies": [
@@ -295,13 +295,13 @@
         ]
       },
       "acceptance_criteria": [
-        "ZergConfig has plugins attribute",
+        "MahabharathaConfig has plugins attribute",
         "Default PluginsConfig() when not specified",
         "YAML roundtrip preserves plugins section",
         "Existing config tests still pass"
       ],
       "verification": {
-        "command": "python -c \"from mahabharatha.config import ZergConfig; c = ZergConfig(); assert hasattr(c, 'plugins'); print(c.plugins)\"",
+        "command": "python -c \"from mahabharatha.config import MahabharathaConfig; c = MahabharathaConfig(); assert hasattr(c, 'plugins'); print(c.plugins)\"",
         "timeout_seconds": 30
       },
       "estimate_minutes": 8

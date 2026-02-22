@@ -14,7 +14,7 @@ from pathlib import Path
 
 import yaml
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 
 
 @dataclass
@@ -80,7 +80,7 @@ class E2EHarness:
         (repo_path / ".gsd" / "specs" / self.feature).mkdir(parents=True, exist_ok=True)
 
         # Write default config
-        config = ZergConfig()
+        config = MahabharathaConfig()
         config_path = repo_path / ".mahabharatha" / "config.yaml"
         config_data = config.to_dict()
         config_path.write_text(yaml.dump(config_data, default_flow_style=False, sort_keys=False))
@@ -163,7 +163,7 @@ class E2EHarness:
         return graph_path
 
     def setup_config(self, overrides: dict | None = None) -> Path:
-        """Create a ZergConfig with optional overrides and write it to disk.
+        """Create a MahabharathaConfig with optional overrides and write it to disk.
 
         Args:
             overrides: Dictionary of config overrides to merge into defaults.
@@ -177,7 +177,7 @@ class E2EHarness:
         if self.repo_path is None:
             raise RuntimeError("setup_repo() must be called before setup_config()")
 
-        config = ZergConfig.from_dict(overrides) if overrides else ZergConfig()
+        config = MahabharathaConfig.from_dict(overrides) if overrides else MahabharathaConfig()
 
         config_path = self.repo_path / ".mahabharatha" / "config.yaml"
         config_data = config.to_dict()

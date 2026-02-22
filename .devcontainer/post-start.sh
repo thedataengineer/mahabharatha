@@ -1,8 +1,8 @@
 #!/bin/bash
 
-WORKER_ID=${ZERG_WORKER_ID:-0}
-FEATURE=${ZERG_FEATURE:-unknown}
-BRANCH=${ZERG_BRANCH:-main}
+WORKER_ID=${MAHABHARATHA_WORKER_ID:-0}
+FEATURE=${MAHABHARATHA_FEATURE:-unknown}
+BRANCH=${MAHABHARATHA_BRANCH:-main}
 
 echo "═══════════════════════════════════════════════════"
 echo "  Factory Worker Starting"
@@ -31,7 +31,7 @@ echo "Worker $WORKER_ID ready for tasks"
 echo ""
 
 # If running in orchestrated mode, start Claude Code
-if [ "$ZERG_ORCHESTRATED" = "true" ]; then
+if [ "$MAHABHARATHA_ORCHESTRATED" = "true" ]; then
   echo "Starting Claude Code in worker mode..."
   exec claude --dangerously-skip-permissions \
     -p "You are Factory Worker $WORKER_ID. Run /worker to begin execution."

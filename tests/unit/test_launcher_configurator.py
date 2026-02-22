@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.constants import WorkerStatus
 from mahabharatha.launcher_configurator import LauncherConfigurator
 from mahabharatha.launcher_types import LauncherType
@@ -16,7 +16,7 @@ from mahabharatha.types import WorkerState
 
 @pytest.fixture
 def mock_config():
-    config = MagicMock(spec=ZergConfig)
+    config = MagicMock(spec=MahabharathaConfig)
     config.workers = MagicMock()
     config.workers.timeout_minutes = 30
     config.logging = MagicMock()
@@ -117,7 +117,7 @@ class TestGetWorkerImageName:
 
     def test_custom_image_from_config(self, tmp_path, mock_plugin_registry):
         """Config with container_image attribute returns custom name."""
-        config = MagicMock(spec=ZergConfig)
+        config = MagicMock(spec=MahabharathaConfig)
         config.container_image = "my-custom-image:v2"
         config.workers = MagicMock()
         config.workers.timeout_minutes = 30

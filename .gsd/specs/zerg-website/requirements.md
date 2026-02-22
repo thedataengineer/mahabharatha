@@ -10,7 +10,7 @@
 
 ## 1. Problem Statement
 
-The current MkDocs-based docs site at `https://rocklambros.github.io/mahabharatha/` needs a custom landing page that communicates MAHABHARATHA's value proposition — security, containerized parallel execution, context engineering, and token efficiency — in a way that's visually compelling and potentially viral.
+The current MkDocs-based docs site at `https://thedataengineer.github.io/mahabharatha/` needs a custom landing page that communicates MAHABHARATHA's value proposition — security, containerized parallel execution, context engineering, and token efficiency — in a way that's visually compelling and potentially viral.
 
 ## 2. Solution
 
@@ -34,7 +34,7 @@ Single-page landing site replacing MkDocs as the homepage. Pure HTML/CSS/JS with
 - Blog or dynamic content
 - User accounts / authentication
 - Analytics beyond what GitHub provides
-- Custom domain (uses `rocklambros.github.io/mahabharatha/`)
+- Custom domain (uses `thedataengineer.github.io/mahabharatha/`)
 - JavaScript frameworks (React, Vue, etc.)
 - Build step / bundler / node_modules
 
@@ -173,7 +173,7 @@ docs/
 
 ## 8. Acceptance Criteria
 
-1. Landing page loads at `https://rocklambros.github.io/mahabharatha/`
+1. Landing page loads at `https://thedataengineer.github.io/mahabharatha/`
 2. All 7 content sections render correctly
 3. Dark/light mode toggle works and persists via localStorage
 4. All 26 commands appear in cheat sheet table

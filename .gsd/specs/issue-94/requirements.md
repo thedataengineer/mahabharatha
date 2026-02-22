@@ -5,7 +5,7 @@
 - **Status**: REVIEW
 - **Created**: 2026-02-02
 - **Author**: MAHABHARATHA Plan Mode
-- **Source**: https://github.com/rocklambros/mahabharatha/issues/94
+- **Source**: https://github.com/thedataengineer/mahabharatha/issues/94
 
 ---
 
@@ -106,7 +106,7 @@ MAHABHARATHA users running `/mahabharatha:plan` to start feature development
 
 ### 5.3 Assumptions
 - `plan.md` and `plan.core.md` are kept in sync (same content)
-- Wiki is editable via git clone of `rocklambros/mahabharatha.wiki.git`
+- Wiki is editable via git clone of `thedataengineer/mahabharatha.wiki.git`
 - All 26 commands have corresponding wiki pages
 
 ---

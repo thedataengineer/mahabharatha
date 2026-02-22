@@ -92,7 +92,7 @@ Getting MAHABHARATHA running takes about 2 minutes:
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/rocklambros/mahabharatha.git && cd mahabharatha
+git clone https://github.com/thedataengineer/mahabharatha.git && cd mahabharatha
 
 # 2. Install MAHABHARATHA as an editable package (includes dev dependencies)
 pip install -e ".[dev]"
@@ -162,7 +162,7 @@ Want the full walkthrough? Head to the **[Tutorial](Tutorial)**.
 
 ## Resources
 
-- [GitHub Repository](https://github.com/rocklambros/mahabharatha) — Source code, issues, and discussions
+- [GitHub Repository](https://github.com/thedataengineer/mahabharatha) — Source code, issues, and discussions
 - [Security Rules](https://github.com/TikiTribe/claude-secure-coding-rules) — Auto-fetched secure coding rules that MAHABHARATHA applies
 
 ---

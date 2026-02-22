@@ -8,7 +8,7 @@
     {
       "id": "TASK-001",
       "title": "Architecture: mahabharatha/git/ package, GitRunner, types, config",
-      "description": "Create mahabharatha/git/ package. Extract GitRunner base from GitOps. Define shared types. Create GitConfig Pydantic model. Add GitConfig to ZergConfig. Replace mahabharatha/git_ops.py with backward-compatible shim.",
+      "description": "Create mahabharatha/git/ package. Extract GitRunner base from GitOps. Define shared types. Create GitConfig Pydantic model. Add GitConfig to MahabharathaConfig. Replace mahabharatha/git_ops.py with backward-compatible shim.",
       "issue": 49,
       "phase": "foundation",
       "level": 1,

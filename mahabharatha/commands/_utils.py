@@ -79,11 +79,11 @@ def detect_feature() -> str | None:
     """Detect active feature from project state.
 
     Priority order:
-    1. ZERG_FEATURE env var (terminal-session-scoped, multi-epic safe)
+    1. MAHABHARATHA_FEATURE env var (terminal-session-scoped, multi-epic safe)
     2. .gsd/.current-feature (explicit user intent from /mahabharatha:plan)
     3. .mahabharatha/state/*.json (most recently modified state file)
 
-    The ZERG_FEATURE env var allows terminal-scoped feature isolation,
+    The MAHABHARATHA_FEATURE env var allows terminal-scoped feature isolation,
     enabling multiple epics to run concurrently in separate terminals.
 
     The .gsd/.current-feature file is written by /mahabharatha:plan and reflects the
@@ -94,7 +94,7 @@ def detect_feature() -> str | None:
         Feature name or None if no active feature can be detected.
     """
     # Primary: env var (terminal-scoped, multi-epic safe)
-    env_feature = os.environ.get("ZERG_FEATURE", "").strip()
+    env_feature = os.environ.get("MAHABHARATHA_FEATURE", "").strip()
     if env_feature:
         return env_feature
 

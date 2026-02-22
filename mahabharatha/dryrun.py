@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from mahabharatha.assign import WorkerAssignment
-from mahabharatha.config import ZergConfig
+from mahabharatha.config import MahabharathaConfig
 from mahabharatha.gates import GateRunner
 from mahabharatha.preflight import PreflightChecker, PreflightReport
 from mahabharatha.rendering.dryrun_renderer import DryRunRenderer
@@ -114,14 +114,14 @@ class DryRunSimulator:
         task_data: dict[str, Any],
         workers: int,
         feature: str,
-        config: ZergConfig | None = None,
+        config: MahabharathaConfig | None = None,
         mode: str = "auto",
         run_gates: bool = False,
     ) -> None:
         self.task_data = task_data
         self.workers = workers
         self.feature = feature
-        self.config = config or ZergConfig()
+        self.config = config or MahabharathaConfig()
         self.mode = mode
         self.run_gates = run_gates
 

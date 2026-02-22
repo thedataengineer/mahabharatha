@@ -42,7 +42,7 @@ Source: Evil Martians study of 100+ pages
 ## Current Setup
 - MkDocs Material theme deployed via GitHub Pages
 - docs.yml workflow: push to main → build → deploy
-- URL: https://rocklambros.github.io/mahabharatha/
+- URL: https://thedataengineer.github.io/mahabharatha/
 - Existing palette: deep purple primary, amber accent
 - Logo: logo/zerg_logo.png
 - Content: commands, tutorial, config, plugins, architecture docs

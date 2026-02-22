@@ -8,7 +8,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from mahabharatha.config import ResourcesConfig, ZergConfig
+from mahabharatha.config import MahabharathaConfig, ResourcesConfig
 from mahabharatha.constants import WorkerStatus
 from mahabharatha.launcher_configurator import LauncherConfigurator
 from mahabharatha.launchers import ContainerLauncher
@@ -46,7 +46,7 @@ class TestContainerLauncherStartContainer:
         launcher._start_container(
             container_name="mahabharatha-worker-0",
             worktree_path=Path("/tmp/fake-worktrees/feature/worker-0"),
-            env={"ZERG_WORKER_ID": "0"},
+            env={"MAHABHARATHA_WORKER_ID": "0"},
         )
         cmd = mock_run.call_args[0][0]
         mem_idx = cmd.index("--memory")
@@ -59,7 +59,7 @@ class TestOrchestratorPassesLimits:
     def test_create_launcher_container_mode(self) -> None:
         from mahabharatha.orchestrator import Orchestrator
 
-        config = ZergConfig()
+        config = MahabharathaConfig()
         config.resources.container_memory_limit = "16g"
         config.resources.container_cpu_limit = 8.0
         orch = Orchestrator.__new__(Orchestrator)
@@ -80,7 +80,7 @@ class TestCleanupOrphanContainers:
         from mahabharatha.orchestrator import Orchestrator
 
         orch = Orchestrator.__new__(Orchestrator)
-        orch.config = ZergConfig()
+        orch.config = MahabharathaConfig()
         orch.launcher = MagicMock(spec=ContainerLauncher)
         orch._plugin_registry = PluginRegistry()
         orch._launcher_config = LauncherConfigurator(orch.config, Path("."), orch._plugin_registry)
@@ -107,7 +107,7 @@ class TestCheckContainerHealth:
         from mahabharatha.worker_registry import WorkerRegistry
 
         orch = Orchestrator.__new__(Orchestrator)
-        orch.config = ZergConfig()
+        orch.config = MahabharathaConfig()
         orch.launcher = MagicMock(spec=ContainerLauncher)
         orch.state = MagicMock()
         orch.registry = WorkerRegistry()

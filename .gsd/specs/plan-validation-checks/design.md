@@ -132,7 +132,7 @@ Flags:
 
 **Options Considered**:
 1. Check $ARGUMENTS string for "--skip-validation"
-2. Environment variable ZERG_SKIP_VALIDATION
+2. Environment variable MAHABHARATHA_SKIP_VALIDATION
 3. Config option in .mahabharatha/config.yaml
 
 **Decision**: Option 1 — Check $ARGUMENTS

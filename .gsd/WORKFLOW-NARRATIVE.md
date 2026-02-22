@@ -95,7 +95,7 @@ The orchestrator reads the task graph and identifies all Level 0 tasks. For each
 
 First, creating a git worktree. The orchestrator runs `git worktree add .mahabharatha-worktrees/{feature}/worker-{N} -b mahabharatha/{feature}/worker-{N}`. Each worker gets its own branch and its own directory. Changes in one worktree don't affect others until merge.
 
-Second, launching a devcontainer instance. The orchestrator runs `docker-compose` with environment variables that identify the worker: `ZERG_WORKER_ID`, `ZERG_FEATURE`, `ZERG_TASK_ID`. The container mounts the worker's worktree as `/workspace`. It mounts `.gsd/specs/` as read-only so the worker can read specifications but not modify them. It connects to the `mahabharatha-net` Docker network for inter-worker communication if needed.
+Second, launching a devcontainer instance. The orchestrator runs `docker-compose` with environment variables that identify the worker: `MAHABHARATHA_WORKER_ID`, `MAHABHARATHA_FEATURE`, `MAHABHARATHA_TASK_ID`. The container mounts the worker's worktree as `/workspace`. It mounts `.gsd/specs/` as read-only so the worker can read specifications but not modify them. It connects to the `mahabharatha-net` Docker network for inter-worker communication if needed.
 
 Third, spawning a Claude Code subagent inside the container. The orchestrator uses Claude's Task tool to create a specialized subagent. The subagent's system prompt comes from `.claude/agents/worker.md`, which includes the secure coding rules, the quality standards, and the execution protocol. The subagent receives the task specification as its initial prompt.
 
